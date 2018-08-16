@@ -1,0 +1,13 @@
+<div class="example-group-container" fxLayout="row" #el>
+  <div class="example-container" docsiTocArea #tocArea="docsiTocArea" [scrollContainer]="el">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="example-list-container">
+    <docsi-toc [tocArea]="tocArea">
+      <a *docsiTocLinkTemplate="let ctx;"
+          [routerLink]="[ctx.rootUrl]"
+          queryParamsHandling="preserve"
+          [fragment]="ctx.link.id">{{ ctx.link.name }}</a>
+    </docsi-toc>
+  </div>
+</div>

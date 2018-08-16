@@ -1,0 +1,40 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "NG SERVE - DEBUG",
+      "program": "${workspaceFolder}/node_modules/.bin/ng",
+      "args": [
+        "serve"
+      ]
+    },
+    {
+      "name": "ng serve - attach",
+      "type": "chrome",
+      "request": "attach",
+      "urlFilter": "http://localhost:4200*",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack:/*": "${webRoot}/*"
+      },
+      "port": 9222
+    },
+    {
+      "name": "ng test",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:9876/debug.html",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "ng e2e",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/protractor/bin/protractor",
+      "protocol": "inspector",
+      "args": ["${workspaceFolder}/protractor.conf.js"]
+    }
+  ]
+}

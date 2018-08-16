@@ -1,0 +1,38 @@
+:host {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+mat-sidenav-container {
+  height: 100%;
+}
+
+.main-view {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding: 15px 25px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background: rgb(250, 250, 250);
+
+  > div {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+
+  .main-router-outlet + * {
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+}

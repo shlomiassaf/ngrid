@@ -1,0 +1,17 @@
+<mat-sidenav-container autosize>
+  <mat-sidenav mode="side" opened>
+    <mat-nav-list>
+      <ng-container *ngFor="let g of registry.groups | async">
+        <h3 mat-subheader>{{ g.title }}</h3>
+        <mat-list-item *ngFor="let ex of g.examples" [routerLink]="['/', g.id, ex.id]">
+          <a matLine>{{ ex.title }}</a>
+        </mat-list-item>
+      </ng-container>
+    </mat-nav-list>
+  </mat-sidenav>
+  <div class="main-view">
+    <div>
+      <router-outlet class="main-router-outlet"></router-outlet>
+    </div>
+  </div>
+</mat-sidenav-container>

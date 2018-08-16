@@ -1,0 +1,19 @@
+<div>
+  <mat-tab-group *ngIf="multi">
+    <ng-container *ngFor="let c of code">
+      <mat-tab *ngIf="c.code">
+        <ng-template mat-tab-label>
+          <div fxLayout="column" fxLayoutAlign="center center" [matTooltip]="c.title && c.file">
+            <span>{{c.title || c.file}} [{{c.lang.toUpperCase()}}]</span>
+          </div>
+        </ng-template>
+        <div class="docsi-code-example">
+          <pre class="hljs"><code [innerHtml]="c.code"></code></pre>
+        </div>
+      </mat-tab>
+    </ng-container>
+  </mat-tab-group>
+  <div class="docsi-code-example" *ngIf="code && !multi">
+    <pre class="hljs"><code [innerHtml]="code.code"></code></pre>
+  </div>
+</div>

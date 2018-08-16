@@ -1,0 +1,19 @@
+@import './_sg-cdk-table.component-theme';
+
+@mixin sac-table-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  @include sg-cdk-table-theme($theme);
+
+  sg-table {
+    background: mat-color($background, 'card');
+  }
+}
+
+@mixin sac-table-typography($config) {
+  @include sg-cdk-table-typography($config);
+}

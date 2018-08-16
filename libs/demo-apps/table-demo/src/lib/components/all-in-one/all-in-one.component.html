@@ -1,0 +1,171 @@
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+
+<sg-table #sgTbl
+          blockUi
+          matSort
+          matCheckboxSelection="selection"
+          [usePagination]="usePagination"
+          focusMode="row"
+          [marginCellIndent]="marginCellIndent"
+          [detailRow]="detailRowPredicate" [singleDetailRow]="singleDetailRow"
+          [headerRow]="showHeader"
+          [footerRow]="showFooter"
+          [dataSource]="dataSource"
+          [columns]="columns"
+          style="height: 50%"
+          class="sg-boxed-table">
+          <!-- [columnGroupsDef]="columnGroupsDef"> -->
+
+  <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS SG-TABLE -->
+  <div *sgTableBlockUiDef class="sg-table-ui-block">
+    <mat-spinner></mat-spinner>
+  </div>
+  <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS SG-TABLE -->
+
+  <!-- DEFINING DEFAULT NO DATA TEMPATE FOR THIS SG-TABLE -->
+  <div *sgTableNoDataRef class="sg-table-no-data"><span>No Results</span></div>
+  <!-- DEFINING DEFAULT NO DATA TEMPATE FOR THIS SG-TABLE -->
+
+  <!-- DEFINING DEFAULT PAGINATOR TEMPATE FOR THIS SG-TABLE -->
+  <sg-table-paginator *sgTablePaginatorRef="let table" [table]="table" [paginator]="table.dataSource.paginator"></sg-table-paginator>
+  <!-- DEFINING DEFAULT PAGINATOR TEMPATE FOR THIS SG-TABLE -->
+
+  <!-- DETAIL ROW TEMPLATE DEFINITION-->
+  <sg-table-row *sgTableDetailRowParentRef="let row; table as table"
+                [detailRow]="row" [table]="table"
+                matRipple>
+  </sg-table-row>
+  <div *sgTableDetailRowDef="let row"
+       class="sg-detail-row" [@detailExpand]>
+    <div>
+      <h1>Detail Row</h1>
+      <pre>{{row | json}}</pre>
+    </div>
+  </div>
+  <!-- DETAIL ROW TEMPLATE DEFINITION-->
+
+
+  <!-- DEFAULT CELL TEMPLATE DEFINITION-->
+  <!-- We can omit this because the table has a default cell template similar to this. It is here for reference -->
+  <div *sgTableCellDef="'*'; value as value;"> {{value}} </div>
+  <!-- DEFAULT CELL TEMPLATE DEFINITION-->
+
+
+  <!-- SPECIFIC CELL TEMPLATE DEFINITION-->
+  <div *sgTableCellDef="'name'; value as value;"><b>{{value}}</b></div>
+  <div *sgTableCellDef="'currencyDynamic'; typeMatch: true; value as value; col as col; row as row">{{value | currency:col.typeData(row):'symbol':'1.0-2'}}</div>
+  <div *sgTableCellDef="'countryNameDynamic'; typeMatch: true; col as col; row as row">{{col.typeData(row)}}</div>
+  <div *sgTableCellDef="'settings.background'; value as value;" [style.background]="value"><b>{{value}}</b></div>
+  <div *sgTableCellDef="'avatar'; value as value;"><img [src]="value" /></div>
+  <div *sgTableCellDef="'settings.emailFrequency'; let ctx" (click)="emailFrequencyToggle = true">
+    <ng-container *ngIf="!emailFrequencyToggle">{{ctx.value}}</ng-container>
+    <mat-form-field *ngIf="emailFrequencyToggle">
+      <mat-select [value]="ctx.value" opended (selectionChange)="(emailFrequencyToggle = false) || true && ctx.value = $event.value">
+        <mat-option value="Daily">Daily</mat-option>
+        <mat-option value="Weakly">Weakly</mat-option>
+        <mat-option value="Yearly">Yearly</mat-option>
+        <mat-option value="Seldom">Seldom</mat-option>
+        <mat-option value="Often">Often</mat-option>
+        <mat-option value="Never">Never</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <!-- SPECIFIC DEFAULT CELL TEMPLATE DEFINITION-->
+
+  <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
+  <!-- We can omit this because the table has a default header cell template similar to this. It is here for reference -->
+  <div *sgTableHeaderCellDef="'*'; col as col">
+    <span style="text-decoration: underline; font-weight: bold">{{col.label}}</span>
+  </div>
+  <div *sgTableHeaderCellDef="'conutry'; typeMatch: true; col as col">
+    <span>🏳 {{col.label}} 🏳</span>
+  </div>
+  <div *sgTableHeaderCellDef="'language'; typeMatch: true; col as col">
+      <span>🌐 {{col.label}} 🌐</span>
+    </div>
+  <div *sgTableFooterCellDef="'*'; col as col">
+    <span style="opacity: 0.5">{{col.label}}</span>
+  </div>
+  <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
+
+  <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
+  <div *sgTableHeaderCellDef="'name'; col as col"><span style="font-size: 22px; font-weight: bold">{{col.label}}</span></div>
+  <!-- SPECIFIC HEADER DEFAULT CELL TEMPLATE DEFINITION-->
+
+</sg-table>
+
+<div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
+  <div class="example-feature-title" fxFlex="50%">Features</div>
+  <div class="example-feature-action" fxFlex fxLayout="column">
+    <mat-slide-toggle (change)="usePagination = $event.checked" [checked]="usePagination">Show Paginator</mat-slide-toggle>
+    <mat-slide-toggle (change)="marginCellIndent = $event.checked" [checked]="marginCellIndent">Use Margin In Cells</mat-slide-toggle>
+    <mat-slide-toggle (change)="showHeader = $event.checked" [checked]="showHeader">Show Header</mat-slide-toggle>
+    <mat-slide-toggle (change)="showFooter = $event.checked" [checked]="showFooter">Show Footer</mat-slide-toggle>
+  </div>
+</div>
+
+<div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
+  <div class="example-feature-title" fxFlex="50%">Detail Row</div>
+  <div class="example-feature-action" fxFlex fxLayout="column">
+    <mat-radio-group (change)="onDetailRowChange($event.value)" [value]="detailRow">
+      <mat-radio-button value="off">Off</mat-radio-button>
+      <mat-radio-button value="on">On</mat-radio-button>
+      <mat-radio-button value="predicate">Predicate (Even rows only)</mat-radio-button>
+    </mat-radio-group>
+    <mat-slide-toggle (change)="singleDetailRow = $event.checked" [checked]="singleDetailRow">Force Single Detail Row</mat-slide-toggle>
+  </div>
+</div>
+
+<div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
+  <div class="example-feature-title" fxFlex="50%">Enable Row Selection</div>
+  <div class="example-feature-action" fxFlex>
+    <mat-slide-toggle (change)="enableRowSelection = $event.checked" [checked]="enableRowSelection"></mat-slide-toggle>
+    <span *ngIf="enableRowSelection">
+      Selected ({{dataSource.selection.selected.length}}):
+      <span *ngFor="let item of dataSource.selection.selected; last as last">{{item.id}}<span *ngIf="!last">, </span> </span>
+    </span>
+  </div>
+</div>
+
+<div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
+  <div class="example-feature-title" fxFlex="50%">Sticky Header</div>
+  <div class="example-feature-action" fxFlex>
+    <mat-checkbox *ngFor="let h of sgTbl._headerRowDefs; index as i" (change)="setStickyRow(sgTbl, 'header', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
+  </div>
+</div>
+<div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
+  <div class="example-feature-title" fxFlex="50%">Sticky Footer</div>
+  <div class="example-feature-action" fxFlex>
+    <mat-checkbox *ngFor="let h of sgTbl._footerRowDefs; index as i" (change)="setStickyRow(sgTbl, 'footer', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
+  </div>
+</div>
+<div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
+  <div class="example-feature-title" fxFlex="50%">Sticky Column</div>
+  <div class="example-feature-action" fxFlex>
+    <mat-form-field>
+      <mat-select #selectColumn>
+        <mat-option *ngFor="let o of sgTbl._store.table" [value]="o">{{o.label}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-checkbox *ngIf="selectColumn?.selected?.value as c"
+                  (change)="setStickyColumns(sgTbl, 'start', c.orgProp, $event.checked)"
+                  [checked]="c.stickyStart">Sticky Start</mat-checkbox>
+    <mat-checkbox *ngIf="selectColumn?.selected?.value as c"
+                  (change)="setStickyColumns(sgTbl, 'end', c.orgProp, $event.checked)"
+                  [checked]="c.stickyEnd">Sticky End</mat-checkbox>
+  </div>
+</div>
+
+<div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
+  <div class="example-feature-title" fxFlex="50%" fxFlexAlign="center">Toggle Detail Row</div>
+  <div class="example-feature-action" fxFlex>
+    <mat-form-field>
+      <mat-select #toggleDetailRowSelect>
+        <mat-option *ngFor="let o of dataSource.renderedRows" [value]="o">{{o.id}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button (click)="toggleDetailRow(sgTbl, toggleDetailRowSelect.value)" [disabled]="!toggleDetailRowSelect.value">GO</button>
+  </div>
+</div>

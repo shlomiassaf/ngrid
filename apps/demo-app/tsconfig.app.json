@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc/apps/demo-app",
+    "types": [
+      "node"
+    ]
+  },
+  "exclude": [
+    "src/test.ts",
+    "**/*.spec.ts",
+    "karma.conf.ts"
+  ],
+  "include": [
+    "**/*.ts",
+    "../../libs/demo-apps/table-demo/src/index.ts"
+]
+}

@@ -1,0 +1,49 @@
+// BASED ON:
+// https://github.com/angular/material2/blob/edbbc1bd7299df96a2f9c4200c3832d433f9cf5c/src/lib/table/_table-theme.scss
+
+@import '~@angular/material/theming';
+
+@mixin sg-cdk-table-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .sg-cdk-table {
+    background: mat-color($background, 'card');
+  }
+
+  .sg-table-header-row, .sg-table-row, .sg-table-footer-row,
+  .sg-cdk-table .cdk-table-sticky {
+    background: inherit;
+  }
+
+  .sg-table-row, .sg-table-header-row, .sg-table-footer-row,
+  .sg-table-header-cell, .sg-table-cell, .sg-table-footer-cell {
+    border-color: mat-color($foreground, divider);
+  }
+
+  .sg-table-header-cell {
+    color: mat-color($foreground, secondary-text);
+  }
+
+  .sg-table-cell, .sg-table-footer-cell {
+    color: mat-color($foreground, text);
+  }
+}
+
+@mixin sg-cdk-table-typography($config) {
+  .sg-cdk-table {
+    font-family: mat-font-family($config);
+  }
+
+  .sg-table-header-cell {
+    font-size: mat-font-size($config, caption);
+    font-weight: mat-font-weight($config, body-2);
+  }
+
+  .sg-table-cell, .sg-table-footer-cell {
+    font-size: mat-font-size($config, body-1);
+  }
+}

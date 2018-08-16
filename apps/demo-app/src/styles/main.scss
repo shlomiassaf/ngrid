@@ -1,0 +1,18 @@
+@import './variables';
+
+$typography-config: sac-typography-config();
+@include mat-core($typography-config);
+
+@include sac-table-typography($typography-config);
+
+// Include the default theme styles.
+@include angular-material-theme($sac-shell-theme);
+@include sac-shell-app-theme($sac-shell-theme, $typography-config);
+@include sac-table-theme($sac-shell-theme);
+
+@import './highlightjs'; // load highlight.js styles
+@import './markdown'; // load markdown styles
+
+body {
+  -webkit-font-smoothing: antialiased;
+}

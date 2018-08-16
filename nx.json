@@ -7,5 +7,95 @@
     "tslint.json": "*",
     "nx.json": "*"
   },
-  "projects": {}
+  "projects": {
+    "demo-app": {
+      "tags": [
+        "demo-app"
+      ]
+    },
+    "demo-app-e2e": {
+      "tags": [
+        "e2e",
+        "demo-app"
+      ]
+    },
+    "table": {
+      "tags": [
+        "publish",
+        "table"
+      ]
+    },
+    "table-sticky": {
+      "tags": [
+        "publish-plugin",
+        "table",
+        "table-sticky"
+      ]
+    },
+    "table-detail-row": {
+      "tags": [
+        "publish-plugin",
+        "table",
+        "table-detail-row"
+      ]
+    },
+    "table-block-ui": {
+      "tags": [
+        "publish-plugin",
+        "table",
+        "table-block-ui"
+      ]
+    },
+    "table-mat-checkbox-column": {
+      "tags": [
+        "publish-plugin",
+        "table",
+        "table-mat-checkbox-column"
+      ]
+    },
+    "table-mat-paginator": {
+      "tags": [
+        "publish-plugin",
+        "table",
+        "table-mat-paginator"
+      ]
+    },
+    "table-mat-sort": {
+      "tags": [
+        "publish-plugin",
+        "table",
+        "table-mat-sort"
+      ]
+    },
+    "demo-apps-table-demo": {
+      "tags": [
+        "demo-app"
+      ]
+    },
+    "demo-apps-shared": {
+      "tags": [
+        "demo-app"
+      ]
+    },
+    "docsi": {
+      "tags": [
+        "publish-plugin docsi"
+      ]
+    },
+    "docsi-webpack": {
+      "tags": [
+        "publish-plugin docsi"
+      ]
+    },
+    "docsi-toc": {
+      "tags": [
+        "publish-plugin docsi"
+      ]
+    },
+    "docsi-material-suite": {
+      "tags": [
+        "publish-plugin docsi"
+      ]
+    }
+  }
 }

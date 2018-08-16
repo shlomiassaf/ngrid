@@ -1,0 +1,43 @@
+blockquote {
+  padding: 16px;
+  margin: 24px 0;
+
+  &.icon:before {
+    display: inline-block;
+    color: #ffffff;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+    margin-right: 16px;
+  }
+}
+
+blockquote.info {
+  border-left: 10px solid #1e88e5;
+  background: rgba(30,136,229,.1);
+  &.icon:before {
+    content: 'i';
+    background: #1e88e5;
+  }
+}
+
+blockquote.warn {
+  border-left: 10px solid #fb8c00;
+  background: rgba(251,140,0,.1);
+  &.icon:before {
+    content: 'w';
+    background: #fb8c00;
+  }
+}
+
+blockquote.error {
+  border-left: 10px solid #fb0000;
+  background: rgba(255,0,0,.1);
+  &.icon:before {
+    content: 'e';
+    background: #fb0000;
+  }
+}

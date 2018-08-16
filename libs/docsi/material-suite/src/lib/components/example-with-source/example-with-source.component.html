@@ -1,0 +1,16 @@
+<div fxLayout="column" class="mat-elevation-z3">
+  <mat-toolbar color="primary">
+    <span class="mat-h3" style="margin: 0" fxFlex="*">{{ title }}</span>
+    <button mat-icon-button matTooltip="View Source" (click)="viewSourceCode = !viewSourceCode">
+      <mat-icon>code</mat-icon>
+    </button>
+  </mat-toolbar>
+  <div fxLayout="column" class="section-code-and-component">
+    <div *ngIf="viewSourceCode">
+      <docsi-mat-source-code [extractedCodeGroup]="extractedCodeGroup" [query]="query"></docsi-mat-source-code>
+    </div>
+    <div class="{{ contentClass }}">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

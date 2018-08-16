@@ -1,0 +1,67 @@
+// BASED ON
+// https://github.com/angular/material2/blob/6df37099c3a1a026b961202df8755ec9933c3d14/src/lib/table/table.scss
+$sg-table-header-row-height: 56px;
+$sg-table-row-height: 48px;
+$sg-table-row-horizontal-padding: 24px;
+
+/**
+ * Flex-based table structure
+ */
+.sg-cdk-table {
+  display: block;
+}
+
+.sg-table-header-row {
+  min-height: $sg-table-header-row-height;
+}
+
+.sg-table-row, .sg-table-footer-row {
+  min-height: $sg-table-row-height;
+}
+
+.sg-table-row, .sg-table-header-row, .sg-table-footer-row {
+  display: flex;
+  // Define a border style, but then widths default to 3px. Reset them to 0px except the bottom
+  // which should be 1px;
+  border-width: 0;
+  border-bottom-width: 1px;
+  border-style: solid;
+  align-items: center;
+  box-sizing: border-box;
+
+  // Workaround for https://goo.gl/pFmjJD in IE 11. Adds a pseudo
+  // element that will stretch the row the correct height. See:
+  // https://connect.microsoft.com/IE/feedback/details/802625
+  &::after {
+    display: inline-block;
+    min-height: inherit;
+    content: '';
+  }
+}
+
+.sg-table-cell:first-child, .sg-table-header-cell:first-child, .sg-table-footer-cell:first-child {
+  padding-left: $sg-table-row-horizontal-padding;
+
+  [dir='rtl'] & {
+    padding-left: 0;
+    padding-right: $sg-table-row-horizontal-padding;
+  }
+}
+
+.sg-table-cell:last-child, .sg-table-header-cell:last-child, .sg-table-footer-cell:last-child {
+  padding-right: $sg-table-row-horizontal-padding;
+
+  [dir='rtl'] & {
+    padding-right: 0;
+    padding-left: $sg-table-row-horizontal-padding;
+  }
+}
+
+.sg-table-cell, .sg-table-header-cell, .sg-table-footer-cell {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  word-wrap: break-word;
+  min-height: inherit;
+}

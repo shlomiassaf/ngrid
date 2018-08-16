@@ -1,0 +1,28 @@
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR SG-TABLE -->
+<div *sgTableBlockUiDef class="sg-table-ui-block">
+  <mat-spinner></mat-spinner>
+</div>
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR SG-TABLE -->
+
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE NO DATA TEMPATE FOR SG-TABLE -->
+<div *sgTableNoDataRef class="sg-table-no-data">
+    No Data
+</div>
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE NO DATA TEMPATE FOR SG-TABLE -->
+
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE COLUMNS FOR SG-TABLE -->
+<div *sgTableCellDef="'*'; value as value;">{{value}}</div>
+<div *sgTableCellDef="'date'; typeMatch: true; value as value;">{{value | date: 'MMM dd, yyyy'}}</div>
+<div *sgTableCellDef="'number'; typeMatch: true; value as value;">{{value | number: '1.0-2'}}</div>
+<!-- Set's the currency based on a predefined currency in ISO format, provided in the `typeData` property of the column -->
+<div *sgTableCellDef="'currency'; typeMatch: true; value as value; col as col;">{{value | currency:col.typeData:'symbol':'1.0-2'}}</div>
+<div *sgTableCellDef="'datetime'; typeMatch: true; value as value;">{{value | date: 'MMM dd, yyyy  HH:mm'}}</div>
+<div *sgTableHeaderCellDef="'*'; col as col;">{{col.label}}</div>
+<div *sgTableFooterCellDef="'*'; col as col;">{{col.label}}</div>
+
+<sg-table-row *sgTableDetailRowParentRef="let row; table as table"
+              [detailRow]="row" [table]="table"
+              matRipple>
+</sg-table-row>
+
+<sac-example-group></sac-example-group>

@@ -1,0 +1,16 @@
+<mat-checkbox *sgTableHeaderCellDef="name; col as col;"
+              style="overflow: initial"
+              color="primary"
+              (click)="$event.stopPropagation()"
+              (change)="$event ? masterToggle() : null"
+              [checked]="isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
+</mat-checkbox>
+<mat-checkbox *sgTableCellDef="name; row as row;"
+              style="overflow: initial"
+              color="primary"
+              (click)="$event.stopPropagation()"
+              (change)="rowItemChange(row)"
+              [checked]="selection.isSelected(row)">
+</mat-checkbox>
+<span *sgTableFooterCellDef="name; col as col;">{{ length }}</span>

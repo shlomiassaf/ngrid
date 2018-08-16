@@ -1,0 +1,19 @@
+{
+  "name": "docsi",
+  "version": "0.0.1",
+  "dependencies": {
+    "loader-utils": "^1.1.0",
+    "webpack-sources": "^1.0.1",
+    "remark": "^9.0.0",
+    "remark-autolink-headings": "^5.0.0",
+    "remark-highlight.js": "^5.0.0",
+    "remark-html": "^8.0.0",
+    "remark-parse": "^5.0.0",
+    "remark-slug": "^5.1.0",
+    "unified": "^7.0.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
+  }
+}
