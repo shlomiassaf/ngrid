@@ -12,6 +12,7 @@
     "remark-html": "^8.0.0",
     "remark-parse": "^5.0.0",
     "remark-slug": "^5.1.0",
+    "typedoc": "^0.12.0",
     "unified": "^7.0.0"
   }
 }

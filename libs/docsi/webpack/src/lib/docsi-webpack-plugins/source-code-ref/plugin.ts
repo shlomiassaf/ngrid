@@ -6,15 +6,21 @@ import * as sources from 'webpack-sources';
 const { ConcatSource, OriginalSource } = sources;
 const { util: { createHash } } = webpack as any;
 
-import { NS } from '../unique-symbol';
-import { ExtractedCodeDependency, ExtractedCodeDependencyTemplate, ExtractedCodeModule, ExtractedCodeModuleFactory } from './models';
+import { NS } from '../../unique-symbol';
+import { SourceCodeRefDependency, SourceCodeRefDependencyTemplate, SourceCodeRefModule, SourceCodeRefModuleFactory } from './models';
 
-const pluginName = 'extract-code-parts-plugin';
+declare module '../metadata-file-emitter/plugin' {
+  interface DocsiMetadata {
+    extractCodeParts: { [key: string]: string };
+  }
+}
 
-class ExtractedCodeModuleIndexer {
-  private cache = new Map<string, { hash: string; module: ExtractedCodeModule }>();
+const pluginName = 'docsi-source-code-ref-webpack-plugin';
 
-  updateOrCreate(module: ExtractedCodeModule): { hash: string; module: ExtractedCodeModule } {
+class DocsiSourceCodeRefModuleIndexer {
+  private cache = new Map<string, { hash: string; module: SourceCodeRefModule }>();
+
+  updateOrCreate(module: SourceCodeRefModule): { hash: string; module: SourceCodeRefModule } {
     let cached = this.cache.get(module._identifier);
     if (!cached) {
       this.cache.set(module._identifier, cached = {
@@ -27,65 +33,58 @@ class ExtractedCodeModuleIndexer {
     return cached;
   }
 
-  toAsset(filenameGenerator: ExtractCodePartsPlugin['filnameGenerator']): any {
+  toAsset(filenameGenerator: DocsiSourceCodeRefWebpackPlugin['filenameGenerator']): any {
     const map: any = {};
     for (const c of Array.from(this.cache.values())) {
       map[c.hash] = filenameGenerator(c.module);
     }
-    const source = JSON.stringify(map);
-    return {
-      source: function() {
-        return source;
-      },
-      size: function() {
-        return source.length;
-      }
-    };
+    return map;
   }
 }
 
-export interface ExtractCodePartsPluginOptions {
-  indexFilename?: string;
-}
+export interface DocsiSourceCodeRefWebpackPluginOptions { }
 
-export class ExtractCodePartsPlugin implements webpack.Plugin {
-  private moduleIndex = new ExtractedCodeModuleIndexer();
+export class DocsiSourceCodeRefWebpackPlugin implements webpack.Plugin {
+  private moduleIndex = new DocsiSourceCodeRefModuleIndexer();
   private compilation: webpack.compilation.Compilation;
-  private extractedCodeModuleFactory = new ExtractedCodeModuleFactory();
+  private extractedCodeModuleFactory = new SourceCodeRefModuleFactory();
 
-  private options: ExtractCodePartsPluginOptions;
-  private filnameGenerator: (module: ExtractedCodeModule) => string
-    = (module: ExtractedCodeModule): string => `${module.hash}-${Path.basename(module.resourcePath)}.json`;
+  private options: DocsiSourceCodeRefWebpackPluginOptions;
+  private filenameGenerator: (module: SourceCodeRefModule) => string
+    = (module: SourceCodeRefModule): string => `${module.hash}-${Path.basename(module.resourcePath)}.json`;
 
-  constructor(options?: { indexFilename?: string; }) {
-    this.options = {
-      indexFilename: 'extracted-code-index.json',
-    };
-    // TODO: User might send required prop as falsy/invalid value.
+  constructor(options?: DocsiSourceCodeRefWebpackPluginOptions) {
+    this.options = { };
     Object.assign(this.options, options || {});
   }
 
   apply(compiler: webpack.Compiler): void {
-    compiler.hooks.emit.tapAsync(pluginName, (compilation, callback) => {
-      compilation.assets[this.options.indexFilename] = this.moduleIndex.toAsset(this.filnameGenerator);
-      callback();
-    });
 
-    compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
-      this.compilation = compilation;
-      compilation.dependencyFactories.set(ExtractedCodeDependency as any, this.extractedCodeModuleFactory as any);
-      compilation.dependencyTemplates.set(ExtractedCodeDependency as any, new ExtractedCodeDependencyTemplate() as any);
+    compiler.hooks.docsiMetadataNotifier.tap(pluginName, notifier => {
+      notifier('extractCodeParts', { index: {} as any });
 
-      compilation.hooks.normalModuleLoader
-        .tap(pluginName, (_loaderContext, m) => {
-          this.handleNormalModuleLoaderHook(_loaderContext, m)
-        } );
+      compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
+        this.compilation = compilation;
+        compilation.dependencyFactories.set(SourceCodeRefDependency as any, this.extractedCodeModuleFactory as any);
+        compilation.dependencyTemplates.set(SourceCodeRefDependency as any, new SourceCodeRefDependencyTemplate() as any);
 
-      compilation.mainTemplate.hooks.renderManifest
-        .tap(pluginName, (result: any[], { chunk }) => this.handleRenderManifestHook(result, chunk) );
+        compilation.hooks.normalModuleLoader
+          .tap(pluginName, (_loaderContext, m) => {
+            this.handleNormalModuleLoaderHook(_loaderContext, m)
+          } );
 
-      compilation.chunkTemplate.hooks.renderManifest
-        .tap(pluginName, (result, { chunk }) => this.handleRenderManifestHook(result, chunk) );
+        compilation.mainTemplate.hooks.renderManifest
+          .tap(pluginName, (result: any[], { chunk }) => this.handleRenderManifestHook(result, chunk) );
+
+        compilation.chunkTemplate.hooks.renderManifest
+          .tap(pluginName, (result, { chunk }) => this.handleRenderManifestHook(result, chunk) );
+      });
+
+      compiler.hooks.afterCompile.tapPromise(pluginName, () => {
+        notifier('extractCodeParts', this.moduleIndex.toAsset(this.filenameGenerator));
+        return Promise.resolve();
+        // metadata.extractCodeParts = this.moduleIndex.toAsset(this.filenameGenerator);
+      });
     });
   }
 
@@ -101,7 +100,7 @@ export class ExtractCodePartsPlugin implements webpack.Plugin {
           line.identifier = m.identifier();
         }
         const count = identifierCountMap.get(line.identifier) || 0;
-        const extractedCodeDependency = new ExtractedCodeDependency(line, loaderContext.resourcePath, m.context, count);
+        const extractedCodeDependency = new SourceCodeRefDependency(line, loaderContext.resourcePath, m.context, count);
 
         this.extractedCodeModuleFactory.invalidate(extractedCodeDependency);
         const extractedCodeModule = this.extractedCodeModuleFactory.create({ dependencies: [extractedCodeDependency] });
@@ -116,7 +115,7 @@ export class ExtractCodePartsPlugin implements webpack.Plugin {
 
   handleRenderManifestHook(result: any[],
                            chunk: any): void {
-    const renderedModules: ExtractedCodeModule[] = Array.from(chunk.modulesIterable)
+    const renderedModules: SourceCodeRefModule[] = Array.from(chunk.modulesIterable)
       .filter( (module: any) => module.type === NS ) as any;
 
     for (const m of renderedModules) {
@@ -130,7 +129,7 @@ export class ExtractCodePartsPlugin implements webpack.Plugin {
 
       result.push({
         render: () => this.renderContentAsset(chunk, [ m ]),
-        filenameTemplate: this.filnameGenerator(m),
+        filenameTemplate: this.filenameGenerator(m),
         pathOptions: {
           chunk: chunkForPath,
           contentHashType: NS,
@@ -142,7 +141,7 @@ export class ExtractCodePartsPlugin implements webpack.Plugin {
     }
   }
 
-  updateAndSetHash(module: ExtractedCodeModule): void {
+  updateAndSetHash(module: SourceCodeRefModule): void {
     const { hashFunction, hashDigest, hashDigestLength } = this.compilation.outputOptions;
     const hash = createHash(hashFunction);
     module.updateHash(hash);

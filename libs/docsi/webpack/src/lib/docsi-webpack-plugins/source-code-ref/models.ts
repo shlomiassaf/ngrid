@@ -1,6 +1,6 @@
 import * as webpack from 'webpack';
 
-import { NS } from '../unique-symbol';
+import { NS } from '../../unique-symbol';
 
 declare module 'webpack' {
   export class Dependency extends webpack.compilation.Dependency { }
@@ -33,7 +33,7 @@ declare module 'webpack' {
   }
 }
 
-export class ExtractedCodeDependency extends webpack.Dependency {
+export class SourceCodeRefDependency extends webpack.Dependency {
   identifier: string;
   resourcePath: string;
   identifierIndex: number;
@@ -54,11 +54,11 @@ export class ExtractedCodeDependency extends webpack.Dependency {
   }
 }
 
-export class ExtractedCodeDependencyTemplate {
+export class SourceCodeRefDependencyTemplate {
   apply() {}
 }
 
-export class ExtractedCodeModule extends webpack.Module {
+export class SourceCodeRefModule extends webpack.Module {
   _identifier: string;
   _identifierIndex: number;
   resourcePath: string;
@@ -67,7 +67,7 @@ export class ExtractedCodeModule extends webpack.Module {
 
   hash: string;
 
-  constructor(dependency: ExtractedCodeDependency) {
+  constructor(dependency: SourceCodeRefDependency) {
     super(NS, dependency.context);
     this._identifier = dependency.identifier;
     this._identifierIndex = dependency.identifierIndex;
@@ -116,18 +116,18 @@ export class ExtractedCodeModule extends webpack.Module {
   }
 }
 
-export class ExtractedCodeModuleFactory {
-  private cache = new Map<string, ExtractedCodeModule>();
+export class SourceCodeRefModuleFactory {
+  private cache = new Map<string, SourceCodeRefModule>();
 
   /**
    * Creates a new `ExtractedCodeModule` from the first dependency in `metadata.dependencies`.
    * If the depenceny has a module it will return it instead of creating a new one.
    */
-  create(metadata: { dependencies: ExtractedCodeDependency[] }, callback?: (err, extractedCodeModule: ExtractedCodeModule) => void): ExtractedCodeModule {
+  create(metadata: { dependencies: SourceCodeRefDependency[] }, callback?: (err, extractedCodeModule: SourceCodeRefModule) => void): SourceCodeRefModule {
     const dependency = metadata.dependencies[0];
     let extractedCodeModule = this.cache.get(dependency.identifier);
     if (!extractedCodeModule) {
-      extractedCodeModule = new ExtractedCodeModule(dependency);
+      extractedCodeModule = new SourceCodeRefModule(dependency);
       this.cache.set(dependency.identifier, extractedCodeModule);
     }
     if (callback) {
@@ -139,7 +139,7 @@ export class ExtractedCodeModuleFactory {
   /**
    * Removes, if exists, the ExtractedCodeModule for the provided ExtractedCodeDependency
    */
-  invalidate(dependency: ExtractedCodeDependency): boolean {
+  invalidate(dependency: SourceCodeRefDependency): boolean {
     return this.cache.delete(dependency.identifier);
   }
 }

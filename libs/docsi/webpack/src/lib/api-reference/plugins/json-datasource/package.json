@@ -1,0 +1,9 @@
+{
+  "name": "@tzadoc/json-datasource",
+  "main": "src/index.js",
+  "typings": "src/index.d.ts",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@tzadoc/typedoc-patches": "^0.0.1"
+  }
+}

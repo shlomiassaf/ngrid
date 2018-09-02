@@ -1,0 +1,29 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "declaration": false,
+    "sourceMap": false,
+    "inlineSources": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": false,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "types": [],
+    "lib": [
+      "dom",
+      "es2015"
+    ]
+  },
+  "include": [
+    "table/**/*.ts"
+  ],
+  "exclude": [
+    "table/src/test.ts",
+    "table/**/*.spec.ts",
+    "table/karma.conf.ts"
+  ]
+}

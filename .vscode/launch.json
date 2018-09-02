@@ -11,6 +11,17 @@
       ]
     },
     {
+      "type": "node",
+      "request": "launch",
+      "name": "TYPEDOC - DEBUG",
+      "program": "${workspaceFolder}/node_modules/.bin/typedoc",
+      "cwd": "${workspaceFolder}/libs/table",
+      "args": [
+        "--tsconfig",
+        "tsconfig.lib.json"
+      ]
+    },
+    {
       "name": "ng serve - attach",
       "type": "chrome",
       "request": "attach",
@@ -35,6 +46,16 @@
       "program": "${workspaceFolder}/node_modules/protractor/bin/protractor",
       "protocol": "inspector",
       "args": ["${workspaceFolder}/protractor.conf.js"]
+    },
+    {
+      "name": "[Node] Current TS File",
+      "type": "node",
+      "request": "launch",
+      "args": [ "${relativeFile}" ],
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "sourceMaps": true,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
     }
   ]
 }
