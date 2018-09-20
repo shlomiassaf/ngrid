@@ -4,11 +4,9 @@
 </div>
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR SG-TABLE -->
 
-<!-- DEFINING DEFAULT ADMIN MODULE WIDE NO DATA TEMPATE FOR SG-TABLE -->
-<div *sgTableNoDataRef class="sg-table-no-data">
-    No Data
-</div>
-<!-- DEFINING DEFAULT ADMIN MODULE WIDE NO DATA TEMPATE FOR SG-TABLE -->
+<!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS SG-TABLE -->
+<div *sgTableNoDataRef class="sg-table-no-data"><span>No Results</span></div>
+<!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS SG-TABLE -->
 
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE COLUMNS FOR SG-TABLE -->
 <div *sgTableCellDef="'*'; value as value;">{{value}}</div>

@@ -24,15 +24,6 @@
   }
 }
 
-.sg-table-container.no-data {
-  .sg-table-scroll-container {
-    flex: 0 0 0;
-    max-height: 0;
-    overflow: hidden;
-  }
-
-}
-
 sg-table {
   display: block;
 }
