@@ -57,6 +57,9 @@
       ],
       "@sac/docsi/material-suite": [
         "libs/docsi/material-suite/src/index.ts"
+      ],
+      "@sac/table/transpose": [
+        "libs/table/transpose/src/index.ts"
       ]
     }
   },

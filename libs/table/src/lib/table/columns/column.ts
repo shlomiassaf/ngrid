@@ -9,7 +9,7 @@ import {
   SgColumnDefinition,
   SgTableMetaCellTemplateContext,
   SgTableCellTemplateContext,
-  SgClolumnTypeDefinition
+  SgColumnTypeDefinition
 } from './types';
 import { initDefinitions, parseStyleWidth } from './utils';
 import { SgColumnGroup } from './group-column';
@@ -30,6 +30,12 @@ export class SgColumn implements SgColumnDefinition {
    */
   width?: string;
   minWidth?: number;
+
+  /**
+   * A place to store things...
+   * This must be an object, values are shadow-copied so persist data between multiple plugins.
+   */
+  data: any = {};
 
   get parsedWidth(): { value: number; type: 'px' | '%' } | undefined {
     return parseStyleWidth(this.width);
@@ -61,10 +67,9 @@ export class SgColumn implements SgColumnDefinition {
    * The type of the values in this column.
    * This is an additional level for matching columns to templates, grouping templates for a type.
    */
-  type?: string;
-  typeData?: any;
-  headerType?: SgClolumnTypeDefinition;
-  footerType?: SgClolumnTypeDefinition;
+  type?: SgColumnTypeDefinition;
+  headerType?: SgColumnTypeDefinition;
+  footerType?: SgColumnTypeDefinition;
 
   sort?: boolean | SgTableSorter;
 
@@ -78,13 +83,13 @@ export class SgColumn implements SgColumnDefinition {
   orgProp: string;
 
   /**
-   * The calculated width, used by sg-table to set the width used by the tempalte
+   * The calculated width, used by sg-table to set the width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
   cWidth: string;
   /**
-   * The calculated width, used by sg-table to set the width used by the tempalte
+   * The calculated width, used by sg-table to set the width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
@@ -112,7 +117,7 @@ export class SgColumn implements SgColumnDefinition {
   columnDef: SgTableColumnDef;
 
   /**
-   * An on-demand size info object, popuplated by `SgColumnSizeObserver`
+   * An on-demand size info object, populated by `SgColumnSizeObserver`
    */
   sizeInfo?: SgColumnSizeInfo;
 
@@ -134,10 +139,21 @@ export class SgColumn implements SgColumnDefinition {
       const path = def.path || def.prop.split('.');
       const prop = path.pop();
 
-      const baseDef: SgBaseColumnDefinition = Object.create(def);
-      baseDef.id = normalizeId(def.id || def.prop || def.label);
-      baseDef.label = 'label' in def ? def.label : prop;
-      initDefinitions(baseDef, this);
+      def = Object.create(def);
+      def.id = normalizeId(def.id || def.prop || def.label);
+      def.label = 'label' in def ? def.label : prop;
+
+      if (typeof def.type === 'string') {
+        def.type = { name: def.type } as any;
+      }
+      if (typeof def.headerType === 'string') {
+        def.headerType = { name: def.headerType } as any;
+      }
+      if (typeof def.footerType === 'string') {
+        def.footerType = { name: def.footerType } as any;
+      }
+
+      initDefinitions(def, this);
 
       this.prop = prop;
       this.orgProp = def.prop;

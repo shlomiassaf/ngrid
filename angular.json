@@ -595,6 +595,46 @@
           }
         }
       }
+    },
+    "table-transpose": {
+      "root": "libs/table/transpose",
+      "sourceRoot": "libs/table/transpose/src",
+      "projectType": "library",
+      "prefix": "sac",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/table/transpose/tsconfig.lib.json",
+            "project": "libs/table/transpose/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "libs/table/transpose/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/table/transpose/src/test.ts",
+            "tsConfig": "libs/table/transpose/tsconfig.spec.json",
+            "karmaConfig": "libs/table/transpose/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/table/transpose/tsconfig.lib.json",
+              "libs/table/transpose/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

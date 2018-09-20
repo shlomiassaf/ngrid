@@ -79,7 +79,7 @@ export class SgDataSourceAdapter<T = any, TData = any> {
    * @param skipInitial When set to true, will ignore the initial emission and wait for next emission fro the stream.
    * Use this for late binding, usually with a call to refresh() on the data source.
    */
-  constructor(private sourceFactory: (event: SgDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>),
+  constructor(public sourceFactory: (event: SgDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>),
               config?: false | Partial<Record<keyof SgDataSourceConfigurableTriggers, boolean>>,
               private skipInitial: boolean = false) {
     this.config = Object.assign({}, config || {});

@@ -16,6 +16,7 @@ import { CdkColumnDef, CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cd
 
 import { SgTableComponent } from '../table.component';
 import { COLUMN, SgColumn, SgColumnGroup } from '../columns';
+import { _SgTableMetaCellTemplateContext } from '../pipes/table-cell-context.pipe';
 
 /* TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
@@ -154,7 +155,7 @@ export class SgTableHeaderCellDirective extends CdkHeaderCell implements DoCheck
   ngAfterViewInit(): void {
     const col = this.columnDef.column;
     const tpl = col instanceof SgColumn ? col.headerCellTpl : col.template;
-    const view = this.vcRef.createEmbeddedView(tpl, { col: col as any, table: null });
+    const view = this.vcRef.createEmbeddedView(tpl, new _SgTableMetaCellTemplateContext(col as any, this.table));
     if (col instanceof SgColumn && col.sort) {
       const SortComponent = this.table.registry.getSingle('sortContainer');
       if (SortComponent) {

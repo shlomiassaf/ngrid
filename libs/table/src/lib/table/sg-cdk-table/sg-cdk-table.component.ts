@@ -12,7 +12,7 @@ import {
   ViewEncapsulation,
   ViewContainerRef
 } from '@angular/core';
-import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet } from '@angular/cdk/table';
+import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef } from '@angular/cdk/table';
 import { Directionality } from '@angular/cdk/bidi';
 
 import { SgTableComponent } from '../table.component';
@@ -46,6 +46,8 @@ export class SgCdkTableComponent<T> extends CdkTable<T> {
 
   private get _element(): HTMLElement { return this._elementRef.nativeElement; }
   private onRenderRows$: Subject<DataRowOutlet>;
+  // TODO: remove if https://github.com/angular/material2/pull/13000 is pushed
+  private _cachedRowDefs = { header: new Set<CdkHeaderRowDef>(), footer: new Set<CdkFooterRowDef>() };
 
   constructor(protected _differs: IterableDiffers,
               protected _changeDetectorRef: ChangeDetectorRef,
@@ -63,6 +65,36 @@ export class SgCdkTableComponent<T> extends CdkTable<T> {
     if (this.onRenderRows$) {
       this.onRenderRows$.complete();
     }
+  }
+
+  // TODO: remove if https://github.com/angular/material2/pull/13000 is pushed
+  addHeaderRowDef(headerRowDef: CdkHeaderRowDef): void {
+    super.addHeaderRowDef(headerRowDef);
+    this._cachedRowDefs.header.add(headerRowDef);
+  }
+
+  // TODO: remove if https://github.com/angular/material2/pull/13000 is pushed
+  clearHeaderRowDefs(): void {
+    const { header } = this._cachedRowDefs;
+    for (const rowDef of Array.from(header.values())) {
+      this.removeHeaderRowDef(rowDef);
+    }
+    header.clear();
+  }
+
+  // TODO: remove if https://github.com/angular/material2/pull/13000 is pushed
+  addFooterRowDef(footerRowDef: CdkFooterRowDef): void {
+    super.addFooterRowDef(footerRowDef);
+    this._cachedRowDefs.footer.add(footerRowDef);
+  }
+
+  // TODO: remove if https://github.com/angular/material2/pull/13000 is pushed
+  clearFooterRowDefs(): void {
+    const { footer } = this._cachedRowDefs;
+    for (const rowDef of Array.from(footer.values())) {
+      this.removeFooterRowDef(rowDef);
+    }
+    footer.clear();
   }
 
   addClass(cssClassName: string): void {

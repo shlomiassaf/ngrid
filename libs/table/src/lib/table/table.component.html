@@ -1,20 +1,21 @@
-<!-- HEADER ROW DEFINITION TEMPLATES -->
-<cdk-header-row *cdkHeaderRowDef="_store.tableIds"
-                class="sg-table-header-row"
-                [ngStyle]="_mainHeaderRowStyle"></cdk-header-row> <!-- TABLE HEADER ROW DEF, MUST BE LAST -->
-<ng-container *ngFor="let headers of _store.headerIds">   <!-- MULTI-HEADER ROW DEF -->
-  <cdk-header-row *cdkHeaderRowDef="headers.keys" class="sg-table-header-row" [class.sg-header-group-row]="headers.type === 'headerGroup'"></cdk-header-row>
-</ng-container>
-<!-- HEADER ROW DEFINITION TEMPLATES -->
+<!-- TABLE HEADER ROW DEF -->
+<cdk-header-row *cdkHeaderRowDef="_store.tableRow"
+                class="sg-table-header-row sg-table-header-row-main"
+                [ngStyle]="_mainHeaderRowStyle"></cdk-header-row>
 
-<!-- FOOTER ROW DEFINITION TEMPLATES -->
-<cdk-footer-row *cdkFooterRowDef="_store.tableIds" class="sg-table-footer-row"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
-<ng-container *ngFor="let footers of _store.footerIds">   <!-- MULTI-FOOTER ROW DEF -->
-  <cdk-footer-row *cdkFooterRowDef="footers" class="sg-table-footer-row"></cdk-footer-row>
+<!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
+<ng-container *ngFor="let row of _store.metaRows.header;">
+  <cdk-header-row *cdkHeaderRowDef="row.keys" class="sg-table-header-row {{ row.name }}" [class.sg-header-group-row]="row.isGroup"></cdk-header-row>
 </ng-container>
-<!-- FOOTER ROW DEFINITION TEMPLATES -->
 
-<div class="sg-table-container" [class.no-data]="!dataSource || dataSource.renderLength === 0">
+<!-- TABLE FOOTER ROW DEF -->
+<cdk-footer-row *cdkFooterRowDef="_store.tableRow" class="sg-table-footer-row"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
+<!-- MULTI-FOOTER ROW DEF -->
+<ng-container *ngFor="let row of _store.metaRows.footer">   <!-- MULTI-FOOTER ROW DEF -->
+  <cdk-footer-row *cdkFooterRowDef="row.keys" class="sg-table-footer-row {{ row.name }}"></cdk-footer-row>
+</ng-container>
+
+<div class="sg-table-container">
   <div class="sg-table-scroll-container">
     <sg-cdk-table [trackBy]="trackBy">
       <!-- Row templates. The columns used are set at the row template level -->
@@ -23,14 +24,14 @@
       <ng-container *ngFor="let meta of _store.meta">
         <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [sgTableColumnDef]="c">
           <sg-table-header-cell *cdkHeaderCellDef>
-            <ng-container *ngTemplateOutlet="c.template; context: { col: c, table: self }"></ng-container>
+            <ng-container *ngTemplateOutlet="c.template; context: (c | tableCellContext:self)"></ng-container>
           </sg-table-header-cell>
         </ng-container>
         <ng-container *ngIf="meta.footer as c" [sgTableColumnDef]="c">
-            <sg-table-footer-cell *cdkFooterCellDef>
-              <ng-container *ngTemplateOutlet="c.template; context: { col: c, table: self  }"></ng-container>
-            </sg-table-footer-cell>
-          </ng-container>
+          <sg-table-footer-cell *cdkFooterCellDef>
+            <ng-container *ngTemplateOutlet="c.template; context: (c | tableCellContext:self)"></ng-container>
+          </sg-table-footer-cell>
+        </ng-container>
       </ng-container>
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
 
@@ -43,20 +44,23 @@
         <!-- RECORD CELL DEF -->
         <sg-table-cell *cdkCellDef="let row"
                        [attr.tabindex]="cellFocus">
-          <ng-container *ngTemplateOutlet="c.cellTpl; context: (row | tableCellContext: c)"></ng-container>
+          <ng-container *ngTemplateOutlet="c.cellTpl; context: (row | tableCellContext:c:self)"></ng-container>
         </sg-table-cell>
 
         <!-- TABLE FOOTER CELL DEF -->
         <sg-table-footer-cell *cdkFooterCellDef>
-          <ng-container *ngTemplateOutlet="c.footerCellTpl; context: { col: c }"></ng-container>
+          <ng-container *ngTemplateOutlet="c.footerCellTpl; context: (c | tableCellContext:self)"></ng-container>
         </sg-table-footer-cell>
       </ng-container>
       <!-- HEADER-RECORD-FOOTER CELL DEF -->
 
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
-      <sg-table-row *cdkRowDef="let row; columns: _store.tableIds;"></sg-table-row>
+      <sg-table-row *cdkRowDef="let row; columns: _store.tableRow;"
+                    (click)="rowClicked.next({ event: $event, row: row })"></sg-table-row>
+
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
     </sg-cdk-table>
+    <div class="sg-table-space-fill"></div>
   </div>
 
   <ng-container #beforeContent></ng-container>

@@ -24,21 +24,20 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
-import { SgDataSource } from '../data-source';
+import { SgDataSource, DataSourceOf, createDS } from '../data-source';
 import { SgTablePaginatorKind } from '../paginator';
 import { SgCdkTableComponent } from './sg-cdk-table/sg-cdk-table.component';
 import { KillOnDestroy } from './utils';
 import { findCellDef } from './directives/cell-def';
 import { SgDetailsRowToggleEvent, SgColumnSizeInfo } from './types';
 import {
-  COLUMN_DEF,
   SgTableCellTemplateContext,
   SgTableMetaCellTemplateContext,
   SgColumn,
+  SgColumnStore, SgMetaColumnStore, SgTableColumnSet, SgTableColumnDefinitionSet,
 } from './columns';
 import { SgTableRegistryService } from './table-registry.service';
 import { RowWidthStaticAggregator } from './row-width-static-aggregator';
-import { SgColumnStore, SgMetaColumnStore } from './column-store';
 import { RowWidthDynamicAggregator, PADDING_END_STRATEGY, MARGIN_END_STRATEGY } from './group-column-size-strategy';
 
 import { SgTableEvents, SgTablePluginExtension } from './plugins';
@@ -50,6 +49,9 @@ const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border:
   selector: 'sg-table',
   templateUrl: './table.component.html',
   styleUrls: [ './table.component.scss' ],
+  host: {
+    '[class.sg-table-empty]': '!dataSource || dataSource.renderLength === 0',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [ SgTableRegistryService ]
@@ -120,6 +122,14 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
    */
   @Input() focusMode: 'row' | 'cell' | 'none' | '' | false | undefined;
 
+  @Input() get dataSourceOf(): DataSourceOf<T> { return this._dataSourceOf }
+  set dataSourceOf(value: DataSourceOf<T>) {
+    this._dataSourceOf = value
+    if (value && !this.dataSource) {
+      this.dataSource = createDS<T>().onTrigger( () => this._dataSourceOf || [] ).create();
+    }
+  }
+
   @Input() get dataSource(): SgDataSource<T> { return this._dataSource };
   set dataSource(value: SgDataSource<T>) {
     if (this._dataSource !== value) {
@@ -182,12 +192,13 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
   /**
    * The column definitions for this table.
    */
-  @Input() columns: Array<COLUMN_DEF>;
+  @Input() columns: SgTableColumnSet | SgTableColumnDefinitionSet;
 
   rowFocus: 0 | '' = '';
   cellFocus: 0 | '' = '';
 
   private _dataSource: SgDataSource<T>;
+  private _dataSourceOf: DataSourceOf<T>;
 
   @ViewChild('beforeContent', { read: ViewContainerRef}) _vcRefBefore: ViewContainerRef;
   @ViewChild('afterContent', { read: ViewContainerRef}) _vcRefAfter: ViewContainerRef;
@@ -199,6 +210,7 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
 
   @Output() toggleChange = new EventEmitter<SgDetailsRowToggleEvent<T>>();
+  @Output() rowClicked = new EventEmitter<{event: MouseEvent; row: T}>();
 
   readonly pluginEvents: Observable<SgTableEvents>;
   /**
@@ -216,7 +228,8 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
   private _pluginEvents: Subject<SgTableEvents>;
   private _plugin: Partial<SgTablePluginExtension> = {};
 
-  constructor(private cdr: ChangeDetectorRef, public registry: SgTableRegistryService) {
+  constructor(private cdr: ChangeDetectorRef,
+              public registry: SgTableRegistryService,) {
     this._pluginEvents = new Subject<SgTableEvents>();
     this.pluginEvents = this._pluginEvents.asObservable();
   }
@@ -261,8 +274,6 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
 
     // after invalidating the headers we now have optional header/headerGroups/footer rows added
     // we need to update the template with this data which will create new rows (header/footer)
-    this.cdr.markForCheck();
-    this.cdr.detectChanges();
     this.resetHeaderRowDefs();
     this.resetFooterRowDefs();
 
@@ -338,16 +349,18 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
         const g = m.headerGroup;
         g.update(this._store.table);
         const { pct, px } = rowWidth.calculateGroup(g);
-        // for groups we're adding px because these PX belong to groupped columns with fixed px
+        // for groups we're adding px because these PX belong to grouped columns with fixed px
         g.cWidth = `calc(${pct}% + ${px}px)`;
         g.cMinWidth = '';
       }
     }
 
-    this.resetHeaderRowDefs();
-    this.resetFooterRowDefs();
     this.attachCustomCellTemplates();
     this.attachCustomHeaderCellTemplates();
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+    this.resetHeaderRowDefs();
+    this.resetFooterRowDefs();
     this._pluginEvents.next({ kind: 'onInvalidateHeaders', rebuildColumns });
   }
 
@@ -462,11 +475,11 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
   private attachCustomHeaderCellTemplates(): void {
     const columns: Array<SgColumn | SgMetaColumnStore> = [].concat(this._store.table, this._store.meta);
     const defaultHeaderCellTemplate = this.registry.getMultiDefault('headerCell') || { tRef: this._fbHeaderCell };
-    const defaultFooterCellTempalte = this.registry.getMultiDefault('footerCell') || { tRef: this._fbFooterCell };
+    const defaultFooterCellTemplate = this.registry.getMultiDefault('footerCell') || { tRef: this._fbFooterCell };
     for (const col of columns) {
       if (col instanceof SgColumn) {
         const headerCellDef = findCellDef<T>(this.registry, col, 'headerCell', true) || defaultHeaderCellTemplate;
-        const footerCellDef = findCellDef<T>(this.registry, col, 'footerCell', true) || defaultFooterCellTempalte;
+        const footerCellDef = findCellDef<T>(this.registry, col, 'footerCell', true) || defaultFooterCellTemplate;
         col.headerCellTpl = headerCellDef.tRef;
         col.footerCellTpl = footerCellDef.tRef;
       } else {
@@ -479,7 +492,7 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
           col.headerGroup.template = headerCellDef.tRef;
         }
         if (col.footer) {
-          const footerCellDef = findCellDef(this.registry, col.footer, 'footerCell', true) || defaultFooterCellTempalte;
+          const footerCellDef = findCellDef(this.registry, col.footer, 'footerCell', true) || defaultFooterCellTemplate;
           col.footer.template = footerCellDef.tRef;
         }
       }
@@ -490,22 +503,26 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
     if (this._headerRowDefs) {
       // The table header (main, with column names) is always the last row def (index 0)
       // Because we want it to show last (after custom headers, group headers...) we first need to pull it and then push.
+
+      this._cdkTable.clearHeaderRowDefs();
       const arr = this._headerRowDefs.toArray();
       arr.push(arr.shift());
 
-      // We want the headers to render in the specify order defined in `arr`.
-      // Because the row definitions in CdkTable are stored in a Set we can't just add them one after the other and expect it to work.
-      // Existing items will keep their place... so we need to remove them all to clear the Set and then add them back again.
-      arr.forEach( rowDef => { this._cdkTable.removeHeaderRowDef(rowDef); this._cdkTable.addHeaderRowDef(rowDef); });
+      for (const rowDef of arr) {
+        this._cdkTable.addHeaderRowDef(rowDef);
+      }
     }
   }
 
   private resetFooterRowDefs(): void {
     if (this._footerRowDefs) {
+      this._cdkTable.clearFooterRowDefs();
       const arr = this._footerRowDefs.toArray();
-      arr.forEach( rowDef => { this._cdkTable.removeFooterRowDef(rowDef); this._cdkTable.addFooterRowDef(rowDef); });
       if (!this.footerRow) {
-        this._cdkTable.removeFooterRowDef(arr[0]);
+        arr.shift();
+      }
+      for (const rowDef of arr) {
+        this._cdkTable.addFooterRowDef(rowDef);
       }
     }
   }

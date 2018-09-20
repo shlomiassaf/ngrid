@@ -162,7 +162,7 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
       let detailRow = table.registry.getSingle('detailRowParent');
       if (detailRow) {
         this._detailRowDef = detailRow = detailRow.clone();
-        Object.defineProperty(detailRow, 'columns', { enumerable: true,  get: () => table._store.tableIds });
+        Object.defineProperty(detailRow, 'columns', { enumerable: true,  get: () => table._store.tableRow });
         Object.defineProperty(detailRow, 'when', { enumerable: true,  get: () => this._isDetailRow });
         detailRow.ngOnChanges({ columns: { isFirstChange: () => true, firstChange: true, currentValue: detailRow.columns, previousValue: null }});
       }

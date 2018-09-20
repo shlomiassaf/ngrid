@@ -2,4 +2,5 @@ export * from './types';
 export { SgMetaColumn } from './meta-column';
 export { SgColumn } from './column';
 export { SgColumnGroup } from './group-column';
-export { COLUMN, SgColumnFactoryResult, SgColumnFactory, columnFactory } from './factory';
+export { COLUMN, SgColumnFactory, columnFactory } from './factory';
+export { SgColumnStore, SgMetaColumnStore } from './column-store';

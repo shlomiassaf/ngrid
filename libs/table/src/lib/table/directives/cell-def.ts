@@ -5,19 +5,21 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { COLUMN, SgColumn, SgMetaColumn, SgClolumnTypeDefinition, SgTableCellTemplateContext, SgTableMetaCellTemplateContext } from '../columns';
+import { COLUMN, SgColumnTypeDefinitionDataMap, SgColumn, SgMetaColumn, SgTableCellTemplateContext, SgTableMetaCellTemplateContext } from '../columns';
 import { SgTableRegistryService } from '../table-registry.service';
 import { normalizeId } from '../utils';
 
 export interface SgTableCellDefDirectiveBase {
   name: string;
-  typeMatch: boolean;
+  type: keyof SgColumnTypeDefinitionDataMap;
 }
 
-export abstract class SgTableBaseCellDef<T, Z> implements OnInit, OnDestroy, SgTableCellDefDirectiveBase {
+export abstract class SgTableBaseCellDef<Z> implements OnInit, OnDestroy, SgTableCellDefDirectiveBase {
   name: string;
-  typeMatch: boolean;
-  constructor(public tRef: TemplateRef<Z>, protected registry: SgTableRegistryService) { }
+  type: keyof SgColumnTypeDefinitionDataMap;
+
+  constructor(public tRef: TemplateRef<Z>,
+              protected registry: SgTableRegistryService) { }
 
   ngOnInit(): void {
     // TODO: listen to property changes (name) and re-register cell
@@ -53,14 +55,14 @@ export abstract class SgTableBaseCellDef<T, Z> implements OnInit, OnDestroy, SgT
  *
  * Make sure you set the proper id of the property you want to override.
  * When the `id` is set explicitly in the table column definition, this is not a problem but when if it's not set
- * the table generate's a unique id based on a logic. If `name` is set the name is used, if no name is set
+ * the table generates a unique id based on a logic. If `name` is set the name is used, if no name is set
  * the `prop` is used (full with dot notation).
  */
 @Directive({
-  selector: '[sgTableHeaderCellDef]',
-  inputs: [ 'name:sgTableHeaderCellDef', 'typeMatch:sgTableHeaderCellDefTypeMatch' ]
+  selector: '[sgTableHeaderCellDef], [sgTableHeaderCellTypeDef]',
+  inputs: [ 'name:sgTableHeaderCellDef', 'type:sgTableHeaderCellTypeDef' ]
 })
-export class SgTableHeaderCellDefDirective<T> extends SgTableBaseCellDef<T, SgTableMetaCellTemplateContext<T>> {
+export class SgTableHeaderCellDefDirective<T> extends SgTableBaseCellDef<SgTableMetaCellTemplateContext<T>> {
   constructor(tRef: TemplateRef<SgTableMetaCellTemplateContext<T>>, registry: SgTableRegistryService) { super(tRef, registry); }
 }
 
@@ -75,29 +77,30 @@ export class SgTableHeaderCellDefDirective<T> extends SgTableBaseCellDef<T, SgTa
  *
  * Make sure you set the proper id of the property you want to override.
  * When the `id` is set explicitly in the table column definition, this is not a problem but when if it's not set
- * the table generate's a unique id based on a logic. If `name` is set the name is used, if no name is set
+ * the table generates a unique id based on a logic. If `name` is set the name is used, if no name is set
  * the `prop` is used (full with dot notation).
  */
 @Directive({
-  selector: '[sgTableCellDef]',
-  inputs: [ 'name:sgTableCellDef', 'typeMatch:sgTableCellDefTypeMatch' ]
+  selector: '[sgTableCellDef], [sgTableCellTypeDef]',
+  inputs: [ 'name:sgTableCellDef', 'type:sgTableCellTypeDef' ]
 })
-export class SgTableCellDefDirective<T> extends SgTableBaseCellDef<T, SgTableCellTemplateContext<T>> {
-  constructor(tRef: TemplateRef<SgTableCellTemplateContext<T>>, registry: SgTableRegistryService) { super(tRef, registry); }
+export class SgTableCellDefDirective<T, P extends keyof SgColumnTypeDefinitionDataMap = any> extends SgTableBaseCellDef<SgTableCellTemplateContext<T, P>> {
+  type: P;
+  constructor(tRef: TemplateRef<SgTableCellTemplateContext<any, P>>, registry: SgTableRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
-  selector: '[sgTableFooterCellDef]',
-  inputs: [ 'name:sgTableFooterCellDef', 'typeMatch:sgTableFooterCellDefTypeMatch' ]
+  selector: '[sgTableFooterCellDef], [sgTableFooterCellTypeDef]',
+  inputs: [ 'name:sgTableFooterCellDef', 'type:sgTableFooterCellTypeDef' ]
 })
-export class SgTableFooterCellDefDirective<T> extends SgTableBaseCellDef<T, SgTableMetaCellTemplateContext<T>> {
+export class SgTableFooterCellDefDirective<T> extends SgTableBaseCellDef<SgTableMetaCellTemplateContext<T>> {
   constructor(tRef: TemplateRef<SgTableMetaCellTemplateContext<T>>, registry: SgTableRegistryService) { super(tRef, registry); }
 }
 
-function findCellDefById<T extends SgTableCellDefDirectiveBase>(cellDefs: Array<T>, colDef: Partial<SgClolumnTypeDefinition> & { id: string }, searchParent?: boolean): T {
+function findCellDefById<T extends SgTableCellDefDirectiveBase>(cellDefs: Array<T>, colDef: Pick<SgMetaColumn, 'id' | 'type'>, searchParent?: boolean): T {
   for (const cellDef of cellDefs) {
-    if (cellDef.typeMatch) {
-      if (colDef.type && cellDef.name === colDef.type) {
+    if (cellDef.type) {
+      if (colDef.type && cellDef.type === colDef.type.name) {
         return cellDef;
       }
     } else {
@@ -116,17 +119,17 @@ export function findCellDef<T = any>(registry: SgTableRegistryService, colDef: C
   const cellDefs: SgTableCellDefDirectiveBase[] = registry.getMulti(kind);
 
   if (cellDefs) {
-    let type: Partial<SgClolumnTypeDefinition> & { id: string };
+    let type: Pick<SgMetaColumn, 'id' | 'type'>;
     if (colDef instanceof SgColumn) {
       switch (kind) {
         case 'headerCell':
           if (colDef.headerType) {
-            type = Object.assign({ id: colDef.id }, colDef.headerType);
+            type = { id: colDef.id, type: colDef.headerType };
           }
           break;
         case 'footerCell':
           if (colDef.footerType) {
-            type = Object.assign({ id: colDef.id }, colDef.footerType);
+            type = { id: colDef.id, type: colDef.footerType };
           }
           break;
       }

@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { SgColumnDefinition } from './columns/types';
+import { SgColumnDefinition } from '../columns/types';
 
 /**
  * Normalize an SgColumnDefinition id

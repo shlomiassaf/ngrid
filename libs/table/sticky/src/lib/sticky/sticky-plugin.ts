@@ -96,7 +96,7 @@ export class SgTableStickyPluginDirective implements OnDestroy {
     if (!this._startDiffer) {
       this._startDiffer = this._differs.find([]).create();
     }
-    this.appplyColumnDiff('start', value, this._startDiffer);
+    this.applyColumnDiff('start', value, this._startDiffer);
   }
 
   /**
@@ -112,7 +112,7 @@ export class SgTableStickyPluginDirective implements OnDestroy {
     if (!this._endDiffer) {
       this._endDiffer = this._differs.find([]).create();
     }
-    this.appplyColumnDiff('end', value, this._endDiffer);
+    this.applyColumnDiff('end', value, this._endDiffer);
   }
 
     /**
@@ -152,6 +152,8 @@ export class SgTableStickyPluginDirective implements OnDestroy {
   private _headerDiffer: IterableDiffer<'table' | number>;
   private _footerDiffer: IterableDiffer<'table' | number>;
 
+  private _columnCache: { start: Array<string | number>; end: Array<string | number>; } = { start: [], end: [] };
+
   constructor (protected readonly table: SgTableComponent<any>,
                protected readonly _differs: IterableDiffers) {
     TABLE_TO_STICKY_MAP.set(table, this);
@@ -161,22 +163,37 @@ export class SgTableStickyPluginDirective implements OnDestroy {
       this.table._cdkTable.updateStickyColumnStyles();
       this.table._cdkTable.updateStickyFooterRowStyles();
     });
+
+    this.table.pluginEvents.pipe(filter ( e => e.kind === 'onInvalidateHeaders' && e.rebuildColumns ))
+    .subscribe( () => {
+      if (this._startDiffer && this.table.isInit) {
+        this._startDiffer.diff([]);
+        this.applyColumnDiff('start', this._columnCache.start, this._startDiffer)
+      }
+
+      if (this._endDiffer && this.table.isInit) {
+        this._endDiffer.diff([]);
+        this.applyColumnDiff('end', this._columnCache.end, this._endDiffer)
+      }
+    });
   }
 
   ngOnDestroy(): void {
     TABLE_TO_STICKY_MAP.delete(this.table);
   }
 
-  protected appplyColumnDiff(type: 'start' | 'end', value: Array<string | number>, differ: IterableDiffer<string | number>): void {
+  protected applyColumnDiff(type: 'start' | 'end', value: Array<string | number>, differ: IterableDiffer<string | number>): void {
     if (!this.table.isInit) {
       const unsub = this.table.pluginEvents.subscribe( event => {
         if (event.kind === 'onInit') {
           unsub.unsubscribe();
-          this.appplyColumnDiff(type, value, differ);
+          this.applyColumnDiff(type, value, differ);
         }
       });
       return;
     }
+
+    this._columnCache[type] = value || [];
 
     const changes = differ.diff(value || []);
     const bulk: Array<[string | number, boolean]> = [];

@@ -1,7 +1,7 @@
 import { TemplateRef } from '@angular/core';
 
 import { SgTableColumnDef } from '../directives';
-import { SgMetaColumnDefinition, SgTableMetaCellTemplateContext } from './types';
+import { SgMetaColumnDefinition, SgTableMetaCellTemplateContext, SgColumnTypeDefinition } from './types';
 import { parseStyleWidth, initDefinitions } from './utils';
 
 export class SgMetaColumn implements SgMetaColumnDefinition {
@@ -22,12 +22,7 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
    * The type of the values in this column.
    * This is an additional level for matching columns to templates, grouping templates for a type.
    */
-  type?: string;
-  /**
-   * Optional value to be used by the template when rendering the cell.
-   * Any value is allowed, including functions which allow complex scenarions, for exapmle rendering a cell based on values from other cells.
-   */
-  typeData?: any;
+  type?: SgColumnTypeDefinition;
 
   /**
    * CSS class that get applied on the header and cell.
@@ -41,6 +36,12 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
    */
   width?: string;
   minWidth?: number;
+
+  /**
+   * A place to store things...
+   * This must be an object, values are shadow-copied so persist data between multiple plugins.
+   */
+  data: any = {};
   //#endregion SgBaseColumnDefinition
 
   //#region SgMetaColumnDefinition
@@ -90,5 +91,11 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
     initDefinitions(def, this);
     const copyKeys: Array<keyof SgMetaColumnDefinition> = ['kind', 'rowIndex'];
     copyKeys.forEach( k => k in def && (this[k] = def[k]) );
+
+    if (def instanceof SgMetaColumn === false) {
+      if (typeof def.type === 'string') {
+        this.type = { name: def.type } as any;
+      }
+    }
   }
 }

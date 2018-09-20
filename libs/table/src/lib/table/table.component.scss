@@ -14,6 +14,14 @@
   box-sizing: border-box;
   min-height: auto;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+
+  .sg-table-space-fill {
+    flex: 1 1 100%;
+    display: flex;
+    min-height: 0px;
+  }
 }
 
 .sg-table-container.no-data {

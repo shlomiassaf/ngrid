@@ -1,29 +1,23 @@
-import { SgBaseColumnDefinition, SgColumnDefinition, SgColumnGroupDefinition, SgMetaColumnDefinition } from './types';
+import {
+  SgBaseColumnDefinition,
+  SgColumnDefinition,
+  SgColumnGroupDefinition,
+  SgMetaColumnDefinition,
+  SgTableColumnDefinitionSet,
+  SgTableColumnSet,
+} from './types';
 import { SgMetaColumn } from './meta-column';
 import { SgColumn } from './column';
 import { SgColumnGroup } from './group-column';
 
 export type COLUMN = SgMetaColumn | SgColumn | SgColumnGroup;
 
-export interface SgColumnFactoryResult {
-  table: SgColumn[];
-  header: SgMetaColumn[];
-  footer: SgMetaColumn[];
-  headerGroup: SgColumnGroup[];
-  readonly all: COLUMN[];
-}
-
 export class SgColumnFactory {
-  private _pre = {
-    defaults: {
-      table: {} as Partial<SgColumnDefinition>,
-      header: {} as Partial<SgMetaColumnDefinition>,
-      footer: {} as Partial<SgMetaColumnDefinition>,
-    },
-    table: [] as SgColumnDefinition[],
-    header: [] as SgMetaColumnDefinition[],
-    footer: [] as SgMetaColumnDefinition[],
-    headerGroup: {} as { [rowIndex: number]: SgColumnGroupDefinition[] }
+  private _raw: SgTableColumnDefinitionSet = { table: [], header: [], footer: [], headerGroup: [] };
+  private _defaults = {
+    table: {} as Partial<SgColumnDefinition>,
+    header: {} as Partial<SgMetaColumnDefinition>,
+    footer: {} as Partial<SgMetaColumnDefinition>,
   };
 
   private _currentHeaderRow = 0;
@@ -32,24 +26,33 @@ export class SgColumnFactory {
   get currentHeaderRow(): number { return this._currentHeaderRow; }
   get currentFooterRow(): number { return this._currentFooterRow; }
 
-  build(): SgColumnFactoryResult {
-    const pre = this._pre;
-    this._pre = undefined;
+  build(): SgTableColumnSet {
+    const { _defaults, _raw } = this;
+    this._raw = this._defaults = undefined;
 
-    const table = pre.table.map( d => new SgColumn(Object.assign({}, pre.defaults.table, d)));
-    const header = pre.header.map( d => new SgMetaColumn(Object.assign({}, pre.defaults.header, d)));
-    const footer = pre.footer.map( d => new SgMetaColumn(Object.assign({}, pre.defaults.footer, d)));
-    const headerGroup = this.buildHeaderGroups(pre.headerGroup, table);
+    const table = _raw.table.map( d => new SgColumn(Object.assign({}, _defaults.table, d)));
+    const header = _raw.header.map( h => ({
+      rowIndex: h.rowIndex,
+      rowClassName: h.rowClassName,
+      cols: h.cols.map( c => new SgMetaColumn(Object.assign({}, _defaults.header, c)) )
+    }));
+    const footer = _raw.footer.map( f => ({
+      rowIndex: f.rowIndex,
+      rowClassName: f.rowClassName,
+      cols: f.cols.map( c => new SgMetaColumn(Object.assign({}, _defaults.footer, c)) )
+    }));
+    const headerGroup = _raw.headerGroup.map( hg => ({
+      rowIndex: hg.rowIndex,
+      rowClassName: hg.rowClassName,
+      cols: this.buildHeaderGroups(hg.rowIndex, hg.cols, table)
+    }));
+
     return {
       table,
       header,
       footer,
       headerGroup,
-      get all(): any {
-        return [...this.header, ...this.headerGroup, ...this.table, ...this.footer]
-      }
     };
-
   }
 
   /**
@@ -63,7 +66,7 @@ export class SgColumnFactory {
    */
   default(def: Partial<SgColumnDefinition>, type?: 'table'): this;
   default(def: Partial<SgColumnDefinition> | Partial<SgMetaColumnDefinition>, type: 'table' | 'header' | 'footer' = 'table'): this {
-    this._pre.defaults[type] = def;
+    this._defaults[type] = def;
     return this;
   }
 
@@ -72,21 +75,21 @@ export class SgColumnFactory {
    *
    * Table columns are mandatory, they are the columns that define the structure of the data source.
    *
-   * Each column will usually point to property on the row, altough you can create columns that does not
+   * Each column will usually point to property on the row, although you can create columns that does not
    * exist on the row and handle their rendering with a cell template.
    *
-   * Each table column is also a heder column and a footer column that display.
-   * The header and footer are automatically craeted, If you wish not to show them set headerRow/footerRow to false in SgTable.
+   * Each table column is also a header column and a footer column that display.
+   * The header and footer are automatically created, If you wish not to show them set headerRow/footerRow to false in SgTable.
    *
    */
   table(...defs: Array<SgColumnDefinition>): this {
-    this._pre.table.push(...defs);
+    this._raw.table.push(...defs);
     return this;
   }
 
   /**
    * Add a new header row with header columns.
-   * Creats an additional header row in position `currentHeaderRow` using the provided header column definitions.
+   * Creates an additional header row in position `currentHeaderRow` using the provided header column definitions.
    * Each definition represent a cell, the cell's does not have to align with the layout of table columns.
    *
    * All header row will position BEFORE the table column header row.
@@ -104,17 +107,25 @@ export class SgColumnFactory {
    *   header2 ->  d e f
    *   table   ->  1 2 3
    */
-  header(...defs: Array<Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this {
-    const headers = defs.map( d => {
+  header(rowClassName: string, ...defs: Array<Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this;
+  header(...defs: Array<Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this;
+  header(...defs: Array<string | Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this {
+    const rowIndex = this._currentHeaderRow++;
+    const rowClassName = this.getRowClass(defs, rowIndex);
+    const headers = defs.map( (d: Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition) => {
       const def: SgMetaColumnDefinition = {
         id: d.id,
         kind: 'header',
-        rowIndex: this._currentHeaderRow
+        rowIndex
       };
       return Object.assign(def, d);
     });
-    this._pre.header.push(...headers);
-    this._currentHeaderRow++;
+
+    this._raw.header.push({
+      rowIndex,
+      rowClassName,
+      cols: headers,
+    });
     return this;
   }
 
@@ -138,17 +149,25 @@ export class SgColumnFactory {
    *   footer1 ->  a b c
    *   footer2 ->  d e f
    */
-  footer(...defs: Array<Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this {
-    const footers = defs.map( d => {
+  footer(rowClassName: string, ...defs: Array<Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this;
+  footer(...defs: Array<Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this;
+  footer(...defs: Array<string | Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this {
+    const rowIndex = this._currentFooterRow++;
+    const rowClassName = this.getRowClass(defs, rowIndex);
+    const footers = defs.map( (d: Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition) => {
       const def: SgMetaColumnDefinition = {
         id: d.id,
         kind: 'footer',
-        rowIndex: this._currentFooterRow
+        rowIndex
       };
       return Object.assign(def, d);
     });
-    this._pre.footer.push(...footers);
-    this._currentFooterRow++;
+
+    this._raw.footer.push({
+      rowIndex,
+      rowClassName,
+      cols: footers,
+    });
     return this;
   }
 
@@ -174,71 +193,84 @@ export class SgColumnFactory {
    *   header2 ->  d e f
    *   table   ->  1 2 3
    */
-  headerGroup(...defs: Array<Partial<SgColumnGroupDefinition>>): this {
+  headerGroup(rowClassName: string, ...defs: Array<Partial<SgColumnGroupDefinition>>): this;
+  headerGroup(...defs: Array<Partial<SgColumnGroupDefinition>>): this;
+  headerGroup(...defs: Array<string | Partial<SgColumnGroupDefinition>>): this {
     // TODO: rowIndex in SgColumnGroupDefinition is mandatory but here we don't want it
     // but Partial is not good cause we allow not sending span and prop... need to fix.
-    const rowIndex = this._currentHeaderRow;
+    const rowIndex = this._currentHeaderRow++;
+    const rowClassName = this.getRowClass(defs, rowIndex);
     const headerGroups: any = defs.map( d => Object.assign({ rowIndex }, d) );
-    this._pre.headerGroup[rowIndex] = headerGroups;
 
-    this._currentHeaderRow += 1;
+    this._raw.headerGroup.push({
+      rowIndex,
+      rowClassName,
+      cols: headerGroups,
+    });
+
     return this;
   }
 
-  private buildHeaderGroups(headerGroupRows: { [rowIndex: number]: SgColumnGroupDefinition[] }, table: SgColumn[]): SgColumnGroup[] {
+  private getRowClass(defs: any[], fallbackRowIndex: number): string {
+    return typeof defs[0] === 'string' ? defs.shift() : `sg-table-row-index-${fallbackRowIndex.toString()}`;
+  }
+
+  private buildHeaderGroups(rowIndex: number, headerGroupDefs: SgColumnGroupDefinition[], table: SgColumn[]): SgColumnGroup[] {
     const headerGroup: SgColumnGroup[] = [];
 
-    const placeholderGroupMarker = {
-      data: { first: '', take: 0, columns: [] as SgColumn[] },
-      buildColumnGroup(pos: number): SgColumnGroup {
-        const def: SgColumnGroupDefinition =  { prop: this.data.first, span: this.data.take, rowIndex: pos };
-        const internalGroup = new SgColumnGroup(def, true);
-        internalGroup.columns = this.data.columns;
-        for (const c of internalGroup.columns) {
-          c.markInGroup(internalGroup);
-        }
-        this.data = { first: '', take: 0, columns: [] };
-        return internalGroup;
-      }
-    }
-
     // Building of header group rows requires some work.
-    // The user defined groups might not cover all headers so we need to add placeholder groups to cover these areas.
+    // The user defined groups might not cover all columns, creating gaps between group columns so we need to add placeholder groups to cover these gaps.
+    // Moreover, the user might not specify a `prop`, which we might need to complete.
     // We do that for each header group row.
-    for (const key in headerGroupRows) {
-      const rowIndex = Number(key);
-      const tableDefs = table.slice();
-      const defs = headerGroupRows[rowIndex];
+    //
+    // The end goal is to return a list of `SgColumnGroup` that span over the entire columns of the table.
+    //
+    // The logic is as follows:
+    // For each column in the table, find a matching column group - a group pointing at the column by having the same `prop`
+    // If found, check it's span and skip X amount of columns where X is the span.
+    // If a span is not defined then treat it as a greedy group that spans over all columns ahead until the next column that has a matching group column.
+    //
+    // If a column does not have a matching group column, search for group columns without a `prop` specified and when found set their `prop` to the current
+    // column so we will now use them as if it's a user provided group for this column...
+    //
+    // If no group columns exists (or left), we create an ad-hoc group column and we will now use them as if it's a user provided group for this column...
+    //
+    const tableDefs = table.slice();
+    const defs = headerGroupDefs.slice();
 
-      for (let i = 0; i < tableDefs.length; i++) {
-        const id = tableDefs[i].orgProp;
-        const idx = defs.findIndex( d => d.prop === id );
-        if (idx > -1) {
-          if (placeholderGroupMarker.data.first) {
-            headerGroup.push(placeholderGroupMarker.buildColumnGroup(rowIndex));
+    for (let i = 0, len = tableDefs.length; i < len; i++) {
+      const orgProp = tableDefs[i].orgProp;
+      const idx = defs.findIndex( d => d.prop === orgProp);
+      const columnGroupDef: SgColumnGroupDefinition = idx > -1
+        ? defs.splice(idx, 1)[0]
+        : defs.find( d => !d.prop ) || { prop: orgProp, rowIndex, span: undefined }
+      ;
+
+      columnGroupDef.prop = orgProp;
+      columnGroupDef.rowIndex = rowIndex;
+
+      let take = columnGroupDef.span;
+      if (! (take >= 0) ) {
+        take = 0;
+        for (let z = i+1; z < len; z++) {
+          if (defs.findIndex( d => d.prop === tableDefs[z].orgProp) === -1) {
+            take++;
           }
-          const columnGroupDef = defs[idx];
-          const group = new SgColumnGroup(columnGroupDef);
-          const take = columnGroupDef.span;
-          group.columns = tableDefs.slice(i, i + take + 1);
-          for (const c of group.columns) {
-            c.markInGroup(group);
+          else {
+            break;
           }
-          headerGroup.push(group);
-          i += take;
-        } else {
-          if (!placeholderGroupMarker.data.first) {
-            placeholderGroupMarker.data.first = tableDefs[i].orgProp;
-          } else {
-            placeholderGroupMarker.data.take++;
-          }
-          placeholderGroupMarker.data.columns.push(tableDefs[i]);
         }
       }
-      if (placeholderGroupMarker.data.first) {
-        headerGroup.push(placeholderGroupMarker.buildColumnGroup(rowIndex));
+      columnGroupDef.span = take;
+      const group = new SgColumnGroup(columnGroupDef);
+      group.columns = tableDefs.slice(i, i + take + 1);
+      for (const c of group.columns) {
+        c.markInGroup(group);
       }
+      headerGroup.push(group);
+      i += take;
     }
+
     return headerGroup;
   }
 }

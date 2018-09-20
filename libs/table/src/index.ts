@@ -6,7 +6,7 @@ export {
   SgDataSourceAdapter,
   SgDataSource, SgDataSourceOptions,
   SgTableSortInstructions, SgTableSortDefinition, SgTableSorter, applySort,
-  SgDataSourceFactory, createDS,
+  SgDataSourceFactory, createDS, DataSourceOf,
 } from './lib/data-source';
 
 export {
@@ -15,7 +15,7 @@ export {
 
   SgTableHeaderCellSortContainer,
 
-  SgColumn, SgMetaColumn, SgColumnFactory, SgColumnFactoryResult, COLUMN, COLUMN_DEF, columnFactory,
+  SgColumn, SgMetaColumn, SgColumnFactory, COLUMN, columnFactory,
 
   SgTableComponent, SgTableEvents, SgTablePluginExtension,
   SgTableRegistryService,
@@ -25,8 +25,11 @@ export {
   SgTableHeaderCellDefDirective,
   SgTableFooterCellDefDirective,
   SgTableNoDataRefDirective,
+  SgColumnTypeDefinition, SgColumnTypeDefinitionDataMap,
   SgColumnDefinition,
   SgColumnGroupDefinition,
+  SgColumnSet,
+  SgTableColumnSet, SgTableColumnDefinitionSet,
 
   SgTableCellTemplateContext,
   SgTableMetaCellTemplateContext,

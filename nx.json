@@ -96,6 +96,11 @@
       "tags": [
         "publish-plugin docsi"
       ]
+    },
+    "table-transpose": {
+      "tags": [
+        "publish-plugin table table-transpose"
+      ]
     }
   }
 }

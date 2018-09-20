@@ -1,15 +1,17 @@
 export * from './services';
-export { SgDetailsRowToggleEvent, SgTableHeaderCellSortContainer } from './types';
+export { SgDetailsRowToggleEvent, SgTableHeaderCellSortContainer} from './types';
 export * from './directives';
 
 export {
   SgTableMetaCellTemplateContext,
   SgTableCellTemplateContext,
+  SgColumnTypeDefinition, SgColumnTypeDefinitionDataMap,
   SgBaseColumnDefinition,
   SgMetaColumnDefinition,
   SgColumnDefinition,
   SgColumnGroupDefinition,
-  COLUMN_DEF,
+  SgColumnSet,
+  SgTableColumnSet, SgTableColumnDefinitionSet,
 
   META_COLUMN_TYPES,
   COLUMN_TYPES,
@@ -19,7 +21,6 @@ export {
   SgColumnGroup,
   COLUMN,
   SgColumnFactory,
-  SgColumnFactoryResult,
   columnFactory
 } from './columns';
 

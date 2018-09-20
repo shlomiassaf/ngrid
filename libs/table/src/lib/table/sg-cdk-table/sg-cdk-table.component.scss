@@ -5,6 +5,10 @@ $sg-cell-horizontal-indent: 12px;
 
 .sg-table-cell, .sg-table-header-cell, .sg-table-footer-cell {
   padding-left: $sg-cell-horizontal-indent;
+
+  &.cdk-table-sticky {
+    background: inherit;
+  }
 }
 
 .sg-table-margin-cells-indent {
@@ -59,11 +63,3 @@ $sg-cell-horizontal-indent: 12px;
   }
 }
 /* MULTI COLUMN AND COLSPAN */
-
-// sorting...
-.sg-cdk-table .sg-table-header-cell {
-  button {
-    text-align: start;
-  }
-}
-

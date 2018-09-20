@@ -10,18 +10,17 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  .sg-cdk-table {
-    background: mat-color($background, 'card');
-  }
-
-  .sg-table-header-row, .sg-table-row, .sg-table-footer-row,
-  .sg-cdk-table .cdk-table-sticky {
-    background: inherit;
+  .sg-table-row, .sg-table-header-row, .sg-table-footer-row {
+    position: relative;
   }
 
   .sg-table-row, .sg-table-header-row, .sg-table-footer-row,
   .sg-table-header-cell, .sg-table-cell, .sg-table-footer-cell {
     border-color: mat-color($foreground, divider);
+  }
+
+  .sg-table-row, .sg-table-header-row, .sg-table-footer-row {
+    background: mat-color($background, 'card');
   }
 
   .sg-table-header-cell {

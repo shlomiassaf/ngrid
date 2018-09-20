@@ -9,8 +9,10 @@
 
   @include sg-cdk-table-theme($theme);
 
-  sg-table {
-    background: mat-color($background, 'card');
+  .sg-table-scroll-container {
+    .sg-table-space-fill {
+      background: #ffffff;
+    }
   }
 }
 

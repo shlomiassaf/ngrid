@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -30,25 +31,33 @@ export class SgTableStickyModule {
     if (parentModule) {
       return;
     }
-    const stickyPluginConfig = config.get('stickyPlugin');
-    if (stickyPluginConfig) {
-      extPlugins.onNewTable.subscribe( table => {
-        if (!hasStickyPlugin(table)) {
 
-          if (stickyPluginConfig.headers) {
-            setStickyRow(table, 'header', stickyPluginConfig.headers.map(MAPPER));
+    let subscription: Subscription;
+    config.onUpdate('stickyPlugin').subscribe( config => {
+      if (subscription && !subscription.closed) {
+        subscription.unsubscribe();
+      }
+
+      const stickyPluginConfig = config.curr;
+      if (stickyPluginConfig) {
+        subscription = extPlugins.onNewTable.subscribe( table => {
+          if (!hasStickyPlugin(table)) {
+
+            if (stickyPluginConfig.headers) {
+              setStickyRow(table, 'header', stickyPluginConfig.headers.map(MAPPER));
+            }
+            if (stickyPluginConfig.footers) {
+              setStickyRow(table, 'footer', stickyPluginConfig.footers.map(MAPPER));
+            }
+            if (stickyPluginConfig.columnStart) {
+              setStickyColumns(table, 'start', stickyPluginConfig.columnStart.map(MAPPER));
+            }
+            if (stickyPluginConfig.columnEnd) {
+              setStickyColumns(table, 'end', stickyPluginConfig.columnEnd.map(MAPPER));
+            }
           }
-          if (stickyPluginConfig.footers) {
-            setStickyRow(table, 'footer', stickyPluginConfig.footers.map(MAPPER));
-          }
-          if (stickyPluginConfig.columnStart) {
-            setStickyColumns(table, 'start', stickyPluginConfig.columnStart.map(MAPPER));
-          }
-          if (stickyPluginConfig.columnEnd) {
-            setStickyColumns(table, 'end', stickyPluginConfig.columnEnd.map(MAPPER));
-          }
-        }
-      });
-    }
+        });
+      }
+    });
   }
 }
