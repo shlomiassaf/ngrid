@@ -6,6 +6,7 @@
           blockUi
           matSort
           matCheckboxSelection="selection"
+          [transpose]="toggleTranspose"
           [usePagination]="usePagination"
           focusMode="row"
           [marginCellIndent]="marginCellIndent"
@@ -100,6 +101,7 @@
   <div class="example-feature-title" fxFlex="50%">Features</div>
   <div class="example-feature-action" fxFlex fxLayout="column">
     <mat-slide-toggle (change)="usePagination = $event.checked" [checked]="usePagination">Show Paginator</mat-slide-toggle>
+    <mat-slide-toggle (change)="toggleTranspose = $event.checked" [checked]="toggleTranspose">Transpose</mat-slide-toggle>
     <mat-slide-toggle (change)="marginCellIndent = $event.checked" [checked]="marginCellIndent">Use Margin In Cells</mat-slide-toggle>
     <mat-slide-toggle (change)="showHeader = $event.checked" [checked]="showHeader">Show Header</mat-slide-toggle>
     <mat-slide-toggle (change)="showFooter = $event.checked" [checked]="showFooter">Show Footer</mat-slide-toggle>

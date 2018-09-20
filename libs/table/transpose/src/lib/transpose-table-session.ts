@@ -1,15 +1,17 @@
 import { Observable, isObservable, of as obsOf, from as obsFrom } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import {
   SgTableColumnDefinitionSet,
   SgTableComponent,
   SgDataSource,
   SgColumn,
+  SgDataSourceTriggerChangedEvent,
   KillOnDestroy,
 } from '@sac/table';
 
 export const LOCAL_COLUMN_DEF = Symbol('LOCAL_COLUMN_DEF');
+export const VIRTUAL_REFRESH = {};
 
 export class TransposeTableSession {
   dsSourceFactory: any;
@@ -19,6 +21,7 @@ export class TransposeTableSession {
   headerRow: boolean;
 
   private destroyed: boolean;
+  private rawSource: any[];
 
   constructor(private table: SgTableComponent<any>,
               private updateColumns: () => void,
@@ -30,14 +33,17 @@ export class TransposeTableSession {
     this.onDataSource(this.table.dataSource);
   }
 
-  destroy(): void {
+  destroy(updateTable: boolean): void {
     if (!this.destroyed) {
       this.destroyed = true;
       KillOnDestroy.kill(this, this.table);
 
       this.table.headerRow = this.headerRow;
       this.table.columns = this.columnsInput;
-      this.unPatchDataSource();
+      if (updateTable) {
+        this.table.invalidateHeader(true);
+        this.table.dataSource.refresh(VIRTUAL_REFRESH);
+      }
     }
   }
 
@@ -66,16 +72,28 @@ export class TransposeTableSession {
     if (ds) {
       this.ds = ds;
       this.dsSourceFactory = ds.adapter.sourceFactory;
-      this.ds.adapter.sourceFactory = event => {
-        const rawSource = this.dsSourceFactory(event);
+      this.ds.adapter.sourceFactory = (event: SgDataSourceTriggerChangedEvent) => {
+        const rawSource = event.data.changed && event.data.curr === VIRTUAL_REFRESH
+          ? this.ds.source
+          : this.dsSourceFactory(event)
+        ;
+
         if (rawSource === false) {
           return rawSource;
+        } else if (this.destroyed) {
+          this.unPatchDataSource();
+          return this.rawSource;
         }
+
         const obs: Observable<any[]> = isObservable(rawSource)
           ? rawSource
           : Array.isArray(rawSource) ? obsOf<any>(rawSource) : obsFrom(rawSource) // promise...
         ;
-        return obs.pipe(map(this.sourceFactoryWrapper));
+        return obs
+          .pipe(
+            tap( source => this.rawSource = source ),
+            map(this.sourceFactoryWrapper),
+          );
       }
     }
   }

@@ -12,11 +12,11 @@ import {
 export const EMPTY: any = Object.freeze({});
 
 /** @internal */
-export type DEEP_COMPERATORS<K extends keyof SgDataSourceTriggerCache> = {
+export type DEEP_COMPARATORS<K extends keyof SgDataSourceTriggerCache> = {
   [P in K]?: (prev: SgDataSourceTriggerCache[P], curr: SgDataSourceTriggerCache[P]) => boolean;
 };
 
-export const DEEP_COMPERATORS: DEEP_COMPERATORS<keyof SgDataSourceTriggerCache> = {
+export const DEEP_COMPARATORS: DEEP_COMPARATORS<keyof SgDataSourceTriggerCache> = {
   filter(prev: DataSourceFilter, curr: DataSourceFilter): boolean {
     return prev.filter === curr.filter
       && prev.type == curr.type;
@@ -43,11 +43,9 @@ export function fromRefreshDataWrapper<T>(change: SgDataSourceTriggerChange<Refr
   };
 }
 
-export function createChangeContainer<P extends keyof SgDataSourceTriggers>(
-  type: P,
-  value: SgDataSourceTriggers[P],
-  cache: SgDataSourceTriggerCache
-): SgDataSourceTriggerChangedEvent[P] {
+export function createChangeContainer<P extends keyof SgDataSourceTriggers>(type: P,
+                                                                            value: SgDataSourceTriggers[P],
+                                                                            cache: SgDataSourceTriggerCache): SgDataSourceTriggerChangedEvent[P] {
   if (type === 'pagination') {
     const pagination: SgDataSourceTriggers['pagination'] = (value || {}) as any;
     const cached = cache['pagination'];
@@ -73,7 +71,7 @@ export function createChangeContainer<P extends keyof SgDataSourceTriggers>(
     if (value === cachedValue) {
       return createNotChangedEvent(cachedValue);
     } else if (value !== EMPTY && cachedValue !== EMPTY) {
-      const fn: (prev: SgDataSourceTriggerCache[P], curr: SgDataSourceTriggerCache[P]) => boolean = DEEP_COMPERATORS[type];
+      const fn: (prev: SgDataSourceTriggerCache[P], curr: SgDataSourceTriggerCache[P]) => boolean = DEEP_COMPARATORS[type];
       if (fn(cachedValue, value as any)) {
         return createNotChangedEvent(cachedValue);
       }

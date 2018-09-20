@@ -1,4 +1,4 @@
-import { Observable, BehaviorSubject, Subscription, Subject, of } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, of } from 'rxjs';
 import { mapTo, skip } from 'rxjs/operators';
 
 import { SelectionModel, CollectionViewer } from '@angular/cdk/collections';

@@ -17,8 +17,8 @@ import {
 
 import { createChangeContainer, fromRefreshDataWrapper, EMPTY } from './data-source-adapter.helpers';
 
-const CUSTOM_BEHAVIOUR_TRIGGER_KEYS: Array<keyof SgDataSourceConfigurableTriggers> = ['sort', 'filter', 'pagination'];
-const TRIGGER_KEYS: Array<keyof SgDataSourceTriggers> = [...CUSTOM_BEHAVIOUR_TRIGGER_KEYS, 'data'];
+const CUSTOM_BEHAVIOR_TRIGGER_KEYS: Array<keyof SgDataSourceConfigurableTriggers> = ['sort', 'filter', 'pagination'];
+const TRIGGER_KEYS: Array<keyof SgDataSourceTriggers> = [...CUSTOM_BEHAVIOR_TRIGGER_KEYS, 'data'];
 const SOURCE_CHANGING_TOKEN = {};
 
 /**
@@ -36,44 +36,44 @@ export class SgDataSourceAdapter<T = any, TData = any> {
   private _lastSortedSource: T[];
 
   /**
-   * A Data Source adapter contains flow logic for the datasource and subsequent emissions of datasource's.
-   * The logic is determined by the combination of the config object and the souceFactory provided to this adapter, making this adapter actually a container.
+   * A Data Source adapter contains flow logic for the datasource and subsequent emissions of datasource instances.
+   * The logic is determined by the combination of the config object and the sourceFactory provided to this adapter, making this adapter actually a container.
    *
    * There are 4 triggers that are responsible for datasource emissions, when one of them is triggered it will invoke the `sourceFactory`
    * returning a new datasource, i.e. a new datasource emission.
    *
-   * The triggeres are: filter, sort, pagination and refresh.
+   * The triggers are: filter, sort, pagination and refresh.
    *
    * The refresh trigger does not effect the input sent to the `sourceFactory` function, it is just a mean to initiate a call to create a new
    * datasource without changing previous flow variables.
-   * It's important to note that calling `sourceFactory` with the same input 2 or more times does not gurantee identica response. For exapmle
+   * It's important to note that calling `sourceFactory` with the same input 2 or more times does not guarantee identical response. For example
    * calling a remote server that might change it's data between calls.
    *
-   * All other triggeres (3) will change the input sent to the `sourceFactory` function which will use them to return a datasource.
+   * All other triggers (3) will change the input sent to the `sourceFactory` function which will use them to return a datasource.
    *
-   * The input sent to `sourceFactory` is the values that each of the 3 triggeres yields, when one trigger changes a new value for it is sent
-   * and the last values of the other 2 triggeres is sent with it. i.e. the combination of the last known value for all 3 triggeres is sent.
+   * The input sent to `sourceFactory` is the values that each of the 3 triggers yields, when one trigger changes a new value for it is sent
+   * and the last values of the other 2 triggers is sent with it. i.e. the combination of the last known value for all 3 triggers is sent.
    *
    * To enable smart caching and data management `sourceFactory` does not get the raw values of each trigger. `sourceFactory` will get
    * an event object that contains metadata about each trigger, whether it triggered the change or not as well as old and new values.
    *
-   * The returned value from `sourceFactory` is then used as the datasource, applying all triggeres that are not overriden by the user.
+   * The returned value from `sourceFactory` is then used as the datasource, applying all triggers that are not overridden by the user.
    * The returned value of `sourceFactory` can be a `DataSourceOf` or `false.
    *   - `DataSourceOf` means a valid datasource, either observable/promise of array or an array.
    *   - `false` means skip, returning false will instruct the adapter to skip execution for this trigger cycle.
    *
    * Using a trigger is a binary configuration option, when a trigger is turned on it means that changes to it will be passed to the `sourceFactory`.
-   * When a trigger is turned off it is not listened to and `undefiend` will be sent as a value for it to the `sourceFactory`.
+   * When a trigger is turned off it is not listened to and `undefined` will be sent as a value for it to the `sourceFactory`.
    *
-   * The adapter comes with built in flow logic for all 3 triggers, when a trigger is turned off the adapter will take the result of `soruceFactory` and
-   * apply the default behaviour to it.
+   * The adapter comes with built in flow logic for all 3 triggers, when a trigger is turned off the adapter will take the result of `sourceFactory` and
+   * apply the default behavior to it.
    *
-   * For all tirggers, the default behaviour means client implementation. For filtering, client side filtering. For sorting, client side sorting.
+   * For all triggers, the default behavior means client implementation. For filtering, client side filtering. For sorting, client side sorting.
    * For Pagination, client side pagination.
    *
-   * You can opt in to one or more triggeres and implement your own behaviour inside the `sourceFactory`
+   * You can opt in to one or more triggers and implement your own behavior inside the `sourceFactory`
    * @param sourceFactory A function that returns the datasource based on flow instructions.
-   * The instructions are optional, they might or might not exist depending on the configuraiton of the adapter.
+   * The instructions are optional, they might or might not exist depending on the configuration of the adapter.
    * When `sourceFactory` returns false the entire trigger cycle is skipped.
    * @param config A configuration object describing how this adapter should behave.
    * @param skipInitial When set to true, will ignore the initial emission and wait for next emission fro the stream.
@@ -115,10 +115,10 @@ export class SgDataSourceAdapter<T = any, TData = any> {
       filter$.pipe( map( value => createChangeContainer('filter', value, this.cache) ), filter(changedFilter) ),
       sort$.pipe( map( value => createChangeContainer('sort', value, this.cache) ), filter(changedFilter) ),
       pagination$.pipe( map( value => createChangeContainer('pagination', value, this.cache) ), filter(changedFilter) ),
-      refresh.pipe( map( value => fromRefreshDataWrapper(createChangeContainer('data', value, this.cache)) ), filter(changedFilter) )
+      refresh.pipe( map( value => fromRefreshDataWrapper(createChangeContainer('data', value, this.cache)) ), filter(changedFilter) ),
     ];
 
-    const hasCustomBehaviour = CUSTOM_BEHAVIOUR_TRIGGER_KEYS.some( key => !!this.config[key] );
+    const hasCustomBehavior = CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( key => !!this.config[key] );
 
     return combineLatest(combine[0], combine[1], combine[2], combine[3])
       .pipe(
@@ -137,11 +137,11 @@ export class SgDataSourceAdapter<T = any, TData = any> {
           };
 
           const runHandle = data.changed
-            || ( hasCustomBehaviour && CUSTOM_BEHAVIOUR_TRIGGER_KEYS.some( k => !!this.config[k] && event[k].changed) );
+            || ( hasCustomBehavior && CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( k => !!this.config[k] && event[k].changed) );
 
           if (runHandle) {
             return this.runHandle(event).pipe(
-              tap( data => event.data.changed = true ), // if the user didn't return "false" from his handler, we infer data was changed!
+              tap( () => event.data.changed = true ), // if the user didn't return "false" from his handler, we infer data was changed!
               map( data => ({ event, data })),
             );
           } else {
@@ -153,16 +153,16 @@ export class SgDataSourceAdapter<T = any, TData = any> {
           const config = this.config;
           const event = response.event;
 
-          // mark which of the tirggers has changes
-          // The logic is based on the user's configuation and the incoming event
+          // mark which of the triggers has changes
+          // The logic is based on the user's configuration and the incoming event
           const withChanges: Partial<Record<keyof SgDataSourceConfigurableTriggers, boolean>> = {};
-          for (const key of CUSTOM_BEHAVIOUR_TRIGGER_KEYS) {
+          for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
             if (!config[key] && (isFirst || event[key].changed)) {
               withChanges[key] = true;
             }
           }
 
-          // When data changed, apply some logic (caching, opertaional, etc...)
+          // When data changed, apply some logic (caching, operational, etc...)
           if (event.data.changed) {
             // cache the data when it has changed.
             this._lastSource = response.data;
@@ -172,12 +172,12 @@ export class SgDataSourceAdapter<T = any, TData = any> {
               this._lastSortedSource = this._lastSource;
             } else {
               // When user is NOT sorting (we sort locally) AND the data has changed we need to apply sorting on it
-              // this might already be true (if sorting was the tirgger)...
+              // this might already be true (if sorting was the trigger)...
               withChanges.sort = true;
             }
           }
 
-          // When user is NOT applying pagination (we pagniate locally) AND if we (sort OR filter) locally we also need to paginate locally
+          // When user is NOT applying pagination (we paginate locally) AND if we (sort OR filter) locally we also need to paginate locally
           if (!config.pagination && (withChanges.sort || withChanges.filter)) {
             withChanges.pagination = true;
           }
@@ -208,8 +208,8 @@ export class SgDataSourceAdapter<T = any, TData = any> {
       );
   }
 
-  protected applyFilter(data: T[], dataSourcefilter: DataSourceFilter): T[] {
-    data = filteringFn(data, dataSourcefilter);
+  protected applyFilter(data: T[], dataSourceFilter: DataSourceFilter): T[] {
+    data = filteringFn(data, dataSourceFilter);
     if (!this.config.pagination) {
       this.resetPagination(data.length);
     }
@@ -246,7 +246,7 @@ export class SgDataSourceAdapter<T = any, TData = any> {
   }
 
   /**
-   * Execute the user-provded function that returns the data collection.
+   * Execute the user-provided function that returns the data collection.
    * This method wraps each of the triggers with a container providing metadata for the trigger. (Old value, was changed? and new value if changed)
    * This is where all cache logic is managed (createChangeContainer).
    *

@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { SgTableModule, SgTableRegistryService } from '@sac/table';
+import { SgTableTransposeModule } from '@sac/table/transpose';
 import { SgTableBlockUiModule } from '@sac/table/block-ui';
 import { SgTableDetailRowModule } from '@sac/table/detail-row';
 import { SgTableStickyModule } from '@sac/table/sticky';
@@ -27,6 +28,7 @@ import {
   StickyColumnTableExampleComponent,
   PaginatorTableExampleComponent,
   MatSortTableExampleComponent,
+  TransposeTableExampleComponent,
 } from './components';
 
 const MATERIAL = [
@@ -49,6 +51,7 @@ const TABLE_EXAMPLES = [
   StickyColumnTableExampleComponent,
   PaginatorTableExampleComponent,
   MatSortTableExampleComponent,
+  TransposeTableExampleComponent
 ];
 
 const ROUTES = [
@@ -58,6 +61,7 @@ const ROUTES = [
   { path: 'no-data', component: NoDataTableExampleComponent, data: { title: 'No Date' } },
   { path: 'sticky', component: StickyRowTableExampleComponent, data: { title: 'Sticky Plugin' } },
   { path: 'pagination', component: PaginatorTableExampleComponent, data: { title: 'Pagination' } },
+  { path: 'transpose', component: TransposeTableExampleComponent, data: { title: 'Transpose' } },
 ];
 
 @NgModule({
@@ -70,6 +74,7 @@ const ROUTES = [
     MATERIAL,
     SgTableModule,
     SgTableBlockUiModule,
+    SgTableTransposeModule,
     SgTableDetailRowModule,
     SgTableStickyModule,
     SgTableCheckboxModule,

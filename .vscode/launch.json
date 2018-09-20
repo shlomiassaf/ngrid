@@ -25,7 +25,7 @@
       "name": "ng serve - attach",
       "type": "chrome",
       "request": "attach",
-      "urlFilter": "http://localhost:4200*",
+      "urlFilter": "http://localhost:4201*",
       "webRoot": "${workspaceFolder}",
       "sourceMapPathOverrides": {
         "webpack:/*": "${webRoot}/*"

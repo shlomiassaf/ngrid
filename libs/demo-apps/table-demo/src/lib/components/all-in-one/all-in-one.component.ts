@@ -107,6 +107,7 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
   usePagination = 'pageNumber';
   showFooter = false;
   showHeader = true;
+  toggleTranspose = false;
   marginCellIndent = false;
   enableRowSelection = true;
   singleDetailRow = false;

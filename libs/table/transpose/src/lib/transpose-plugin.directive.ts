@@ -11,7 +11,7 @@ import {
   KillOnDestroy,
 } from '@sac/table';
 
-import { TransposeTableSession, LOCAL_COLUMN_DEF } from './transpose-table-session';
+import { TransposeTableSession, LOCAL_COLUMN_DEF, VIRTUAL_REFRESH } from './transpose-table-session';
 import { getCellValueTransformed, createTransformedColumn } from './utils';
 
 const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'sg-table-header-cell sg-table-transposed-header-cell' };
@@ -89,7 +89,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
   @Input() matchTemplates: boolean;
 
   private enabled: boolean = false;
-  private _header: SgColumnDefinition;
+  private _header: SgColumnDefinition = DEFAULT_HEADER_COLUMN;
   private tableState: TransposeTableSession;
   private columns: SgColumn[];
   private selfColumn: SgColumn;
@@ -111,7 +111,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
       if (!this.enabled) {
         this.disable(true);
       } else {
-        this.enable(!isFirst || this.table.dataSource.length > 0);
+        this.enable(!isFirst);
       }
     }
   }
@@ -122,13 +122,9 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
 
   disable(updateTable: boolean): void {
     if (this.tableState) {
-      this.columns = this.selfColumn = undefined;
-      this.tableState.destroy();
-      this.tableState = this.columns = this.selfColumn = undefined;
-      if (updateTable) {
-        this.table.invalidateHeader(true);
-        this.table.dataSource.refresh();
-      }
+      const { tableState } = this;
+      this.columns = this.selfColumn = this.tableState = this.columns = this.selfColumn = undefined;
+      tableState.destroy(updateTable);
     }
   }
 
@@ -167,7 +163,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
           } else {
             c.getValue = getCellValueTransformed;
             if (matchTemplates) {
-              Object.defineProperty(c, 'cellTpl', { get: () => currentColumn.cellTpl });
+              Object.defineProperty(c, 'cellTpl', { get: () => currentColumn.cellTpl, set: value => {} });
             }
           }
         }
@@ -184,6 +180,8 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
 
     if (refreshDataSource) {
       this.table.dataSource.refresh();
+    } else if (this.table.dataSource.length > 0) {
+      this.table.dataSource.refresh(VIRTUAL_REFRESH);
     }
   }
 

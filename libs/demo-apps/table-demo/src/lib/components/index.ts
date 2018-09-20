@@ -5,3 +5,4 @@ export { NoDataTableExampleComponent } from './no-data';
 export { StickyRowTableExampleComponent, StickyColumnTableExampleComponent } from './sticky';
 export { PaginatorTableExampleComponent } from './paginator';
 export { MatSortTableExampleComponent } from './mat-sort';
+export { TransposeTableExampleComponent } from './transpose/transpose.component';
