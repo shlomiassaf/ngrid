@@ -59,8 +59,8 @@ function emulateServerSideTokenPaginationCall(tokenOrPerPage: string | number) {
 })
 export class PaginatorTableExampleComponent {
 
-  columns = COLUMNS.table;
-  columnsPaginatorAsFooter = COLUMNS.all;
+  columns = columnFactory().table(...COLUMNS.table).build();
+  columnsPaginatorAsFooter = COLUMNS;
 
   clientSideDS = createDS<Person>().onTrigger( () => getPersons(500)) .create();
 

@@ -16,7 +16,14 @@ const COUNTRY_GETTER = {
   data: undefined as any
 }
 
-const COULMNS = columnFactory()
+declare module '@sac/table/src/lib/table/columns/types' {
+  interface SgColumnTypeDefinitionDataMap {
+    currencyFn: (row: Person) => string;
+    countryNameDynamic: (row: Person) => string;
+  }
+}
+
+const COLUMNS = columnFactory()
   .default({minWidth: 100})
   .table(
     { prop: 'selection', width: '48px' },
@@ -26,14 +33,14 @@ const COULMNS = columnFactory()
     { prop: 'birthdate', type: 'date' },
     { prop: 'bio' },
     { prop: 'email', minWidth: 250, width: '250px' },
-    { prop: 'country', headerType: { type: 'conutry' }, minWidth: 250, type: 'countryNameDynamic', typeData: COUNTRY_GETTER.name },
-    { prop: 'language', headerType: { type: 'language' } },
+    { prop: 'country', headerType: 'country', minWidth: 250, type: { name: 'countryNameDynamic', data: COUNTRY_GETTER.name } },
+    { prop: 'language', headerType: 'language' },
     { prop: 'lead' },
     { prop: 'avatar' },
     { prop: 'settings.background' },
     { prop: 'settings.timezone' },
     { prop: 'settings.emailFrequency' },
-    { prop: 'rate', type: 'currencyDynamic', typeData: COUNTRY_GETTER.currency, sort: true },
+    { prop: 'rate', type: { name: 'currencyFn', data: COUNTRY_GETTER.currency }, sort: true },
     { prop: 'lastLoginIp' }
   )
   .header(
@@ -93,7 +100,7 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
   detailRowPredicate: ( (index: number, rowData: Person) => boolean ) | true | undefined;
   detailRow: 'on' | 'off' | 'predicate' = 'off';
 
-  columns = COULMNS.all;
+  columns = COLUMNS;
 
   emailFrequencyToggle: boolean;
 
@@ -140,6 +147,6 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
   }
 
   applyFilter(filterValue: string) {
-    this.dataSource.setFilter(filterValue.trim(), COULMNS.table);
+    this.dataSource.setFilter(filterValue.trim(), this.columns.table);
   }
 }

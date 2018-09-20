@@ -36,8 +36,8 @@ const COLUMNS = columnFactory()
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StickyRowTableExampleComponent {
-  columns = COLUMNS.table; /* @sac-ignore-line:ex-row-3 */
-  columnsWithMultiHeaders = COLUMNS.all; /* @sac-ignore-line:ex-row-1 */ /* @sac-ignore-line:ex-row-2 */
+  columns = columnFactory().table(...COLUMNS.table).build(); /* @sac-ignore-line:ex-row-3 */
+  columnsWithMultiHeaders = COLUMNS; /* @sac-ignore-line:ex-row-1 */ /* @sac-ignore-line:ex-row-2 */
 
   dataSource = new SgDataSource<Person>(new SgDataSourceAdapter(
       () => getPersons(0).pipe(map( data => data.slice(0, 15) ))

@@ -29,7 +29,7 @@ const COLUMNS = columnFactory()
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatSortTableExampleComponent {
-  columns = COLUMNS.table;
+  columns = COLUMNS;
   simpleSortDS = createDS<Person>().onTrigger(() => getPersons(500)).create();
   defaultSortDS = createDS<Person>().onTrigger(() => getPersons(500)).create();
   progSortDS = createDS<Person>().onTrigger(() => getPersons(500)).create();

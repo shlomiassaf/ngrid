@@ -61,7 +61,7 @@
             [stickyFooter]="[0]"
             style="height: 40%; background: transparent"
             class="sg-boxed-table">
-    <div *sgTableFooterCellDef="'PAGINATOR'; typeMatch: true; table as table"
+    <div *sgTableFooterCellTypeDef="'PAGINATOR'; table as table"
         style="display: flex; justify-content: flex-end; width: 100%;">
       <sg-table-paginator [table]="table"
                           [paginator]="table.dataSource.paginator"></sg-table-paginator>

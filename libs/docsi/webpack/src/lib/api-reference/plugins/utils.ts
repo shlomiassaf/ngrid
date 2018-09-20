@@ -139,7 +139,7 @@ export function createEnumKey<T, P extends keyof T>(enumType: T, keyOrStrValue: 
   let strValue: P;
   let bitFlagMode: boolean;
   if (typeof keyOrStrValue === 'number' && typeof strValueOrBitFlagMode === 'string') {
-    flag = keyOrStrValue;
+    flag = keyOrStrValue as any;
     strValue = strValueOrBitFlagMode;
   } else {
     strValue = <any> keyOrStrValue;

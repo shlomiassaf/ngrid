@@ -12,11 +12,12 @@
 
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE COLUMNS FOR SG-TABLE -->
 <div *sgTableCellDef="'*'; value as value;">{{value}}</div>
-<div *sgTableCellDef="'date'; typeMatch: true; value as value;">{{value | date: 'MMM dd, yyyy'}}</div>
-<div *sgTableCellDef="'number'; typeMatch: true; value as value;">{{value | number: '1.0-2'}}</div>
-<!-- Set's the currency based on a predefined currency in ISO format, provided in the `typeData` property of the column -->
-<div *sgTableCellDef="'currency'; typeMatch: true; value as value; col as col;">{{value | currency:col.typeData:'symbol':'1.0-2'}}</div>
-<div *sgTableCellDef="'datetime'; typeMatch: true; value as value;">{{value | date: 'MMM dd, yyyy  HH:mm'}}</div>
+<div *sgTableCellDef="'*'; value as value;">{{value}}</div>
+<div *sgTableCellTypeDef="'date'; value as value;">{{value | date: 'MMM dd, yyyy'}}</div>
+<div *sgTableCellTypeDef="'number'; value as value;">{{value | number: '1.0-2'}}</div>
+<!-- Set's the currency based on a predefined currency in ISO format, provided in the `type.data` property of the column -->
+<div *sgTableCellTypeDef="'currency'; value as value; col as col;">{{value | currency:col.type.data:'symbol':'1.0-2'}}</div>
+<div *sgTableCellTypeDef="'datetime'; value as value;">{{value | date: 'MMM dd, yyyy  HH:mm'}}</div>
 <div *sgTableHeaderCellDef="'*'; col as col;">{{col.label}}</div>
 <div *sgTableFooterCellDef="'*'; col as col;">{{col.label}}</div>
 

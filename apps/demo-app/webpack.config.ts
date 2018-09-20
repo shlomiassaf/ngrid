@@ -30,19 +30,19 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
 
   webpackConfig.plugins.push(new DocsiMetadataFileEmitterWebpackPlugin());
   webpackConfig.plugins.push(new DocsiSourceCodeRefWebpackPlugin());
-  webpackConfig.plugins.push(new DocsiApiReferenceWebpackPlugin({
-    mode: 'mono-repo',
-    entryPoints: [
-      require.resolve('@sac/table'),
-      require.resolve('@sac/table/block-ui'),
-      require.resolve('@sac/table/detail-row'),
-      require.resolve('@sac/table/mat-checkbox-column'),
-      require.resolve('@sac/table/mat-paginator'),
-      require.resolve('@sac/table/mat-sort'),
-      require.resolve('@sac/table/sticky'),
-    ],
-    tsconfig: './libs/tsconfig.docsi-api-ref.json',
-  }));
+  // webpackConfig.plugins.push(new DocsiApiReferenceWebpackPlugin({
+  //   mode: 'mono-repo',
+  //   entryPoints: [
+  //     require.resolve('@sac/table'),
+  //     require.resolve('@sac/table/block-ui'),
+  //     require.resolve('@sac/table/detail-row'),
+  //     require.resolve('@sac/table/mat-checkbox-column'),
+  //     require.resolve('@sac/table/mat-paginator'),
+  //     require.resolve('@sac/table/mat-sort'),
+  //     require.resolve('@sac/table/sticky'),
+  //   ],
+  //   tsconfig: './libs/tsconfig.docsi-api-ref.json',
+  // }));
 
   return webpackConfig;
 }

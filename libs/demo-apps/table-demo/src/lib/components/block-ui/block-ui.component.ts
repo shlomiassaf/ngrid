@@ -19,7 +19,7 @@ const COLUMNS = columnFactory()
     { prop: 'id' },
     { prop: 'name' },
   )
-  .build().all;
+  .build();
 
 @Component({
   selector: 'sac-block-ui-table-example-component',

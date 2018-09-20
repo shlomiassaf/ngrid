@@ -24,13 +24,13 @@
   </div>
   <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS SG-TABLE -->
 
-  <!-- DEFINING DEFAULT NO DATA TEMPATE FOR THIS SG-TABLE -->
+  <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS SG-TABLE -->
   <div *sgTableNoDataRef class="sg-table-no-data"><span>No Results</span></div>
-  <!-- DEFINING DEFAULT NO DATA TEMPATE FOR THIS SG-TABLE -->
+  <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS SG-TABLE -->
 
-  <!-- DEFINING DEFAULT PAGINATOR TEMPATE FOR THIS SG-TABLE -->
+  <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS SG-TABLE -->
   <sg-table-paginator *sgTablePaginatorRef="let table" [table]="table" [paginator]="table.dataSource.paginator"></sg-table-paginator>
-  <!-- DEFINING DEFAULT PAGINATOR TEMPATE FOR THIS SG-TABLE -->
+  <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS SG-TABLE -->
 
   <!-- DETAIL ROW TEMPLATE DEFINITION-->
   <sg-table-row *sgTableDetailRowParentRef="let row; table as table"
@@ -55,16 +55,16 @@
 
   <!-- SPECIFIC CELL TEMPLATE DEFINITION-->
   <div *sgTableCellDef="'name'; value as value;"><b>{{value}}</b></div>
-  <div *sgTableCellDef="'currencyDynamic'; typeMatch: true; value as value; col as col; row as row">{{value | currency:col.typeData(row):'symbol':'1.0-2'}}</div>
-  <div *sgTableCellDef="'countryNameDynamic'; typeMatch: true; col as col; row as row">{{col.typeData(row)}}</div>
+  <div *sgTableCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data(row):'symbol':'1.0-2'}}</div>
+  <div *sgTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data(row) }}</div>
   <div *sgTableCellDef="'settings.background'; value as value;" [style.background]="value"><b>{{value}}</b></div>
   <div *sgTableCellDef="'avatar'; value as value;"><img [src]="value" /></div>
   <div *sgTableCellDef="'settings.emailFrequency'; let ctx" (click)="emailFrequencyToggle = true">
     <ng-container *ngIf="!emailFrequencyToggle">{{ctx.value}}</ng-container>
     <mat-form-field *ngIf="emailFrequencyToggle">
-      <mat-select [value]="ctx.value" opended (selectionChange)="(emailFrequencyToggle = false) || true && ctx.value = $event.value">
+      <mat-select [value]="ctx.value" opened (selectionChange)="(emailFrequencyToggle = false) || true && ctx.value = $event.value">
         <mat-option value="Daily">Daily</mat-option>
-        <mat-option value="Weakly">Weakly</mat-option>
+        <mat-option value="Weakly">Weekly</mat-option>
         <mat-option value="Yearly">Yearly</mat-option>
         <mat-option value="Seldom">Seldom</mat-option>
         <mat-option value="Often">Often</mat-option>
@@ -79,11 +79,11 @@
   <div *sgTableHeaderCellDef="'*'; col as col">
     <span style="text-decoration: underline; font-weight: bold">{{col.label}}</span>
   </div>
-  <div *sgTableHeaderCellDef="'conutry'; typeMatch: true; col as col">
+  <div *sgTableHeaderCellTypeDef="'country'; col as col">
     <span>🏳 {{col.label}} 🏳</span>
   </div>
-  <div *sgTableHeaderCellDef="'language'; typeMatch: true; col as col">
-      <span>🌐 {{col.label}} 🌐</span>
+  <div *sgTableHeaderCellTypeDef="'language'; col as col">
+    <span>🌐 {{col.label}} 🌐</span>
     </div>
   <div *sgTableFooterCellDef="'*'; col as col">
     <span style="opacity: 0.5">{{col.label}}</span>

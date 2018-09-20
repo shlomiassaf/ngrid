@@ -20,7 +20,7 @@ const COLUMNS = columnFactory()
     { prop: 'id' },
     { prop: 'name' },
   )
-  .build().all;
+  .build();
 
 @Component({
   selector: 'sac-no-data-table-example-component',

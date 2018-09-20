@@ -6,7 +6,7 @@ import { SourceCodeRefMetadata } from '@sac/docsi/webpack';
 /** Remove the variants of the second union of string literals from the first. */
 export type Diff<T extends string, U extends string> = ({ [P in T]: P } & { [P in U]: never } & { [x: string]: never })[T];
 /** Drop keys `K` from `T`. */
-export type Omit<T, K extends keyof T> = Pick<T, Diff<keyof T, K>>;
+export type Omit<T, K extends keyof any> = T extends any ? Pick<T, Exclude<keyof T, K>> : never;
 
 @Component({
   selector: 'docsi-bt-source-code-ref',

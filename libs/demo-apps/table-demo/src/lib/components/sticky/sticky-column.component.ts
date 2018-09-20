@@ -42,8 +42,8 @@ const COLUMNS = columnFactory()
 })
 export class StickyColumnTableExampleComponent {
 
-  columns = COLUMNS.table;
-  columnsWithMultiHeaders = COLUMNS.all;
+  columns = columnFactory().table(...COLUMNS.table).build();
+  columnsWithMultiHeaders = COLUMNS;
 
   dataSource = new SgDataSource<Person>(new SgDataSourceAdapter(
       () => getPersons(0).pipe(map( data => data.slice(0, 15) ))
