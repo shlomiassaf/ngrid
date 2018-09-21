@@ -13,6 +13,17 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "NG BUILD - DEBUG",
+      "program": "${workspaceFolder}/node_modules/.bin/ng",
+      "args": [
+        "build",
+        "table",
+        "--prod"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "TYPEDOC - DEBUG",
       "program": "${workspaceFolder}/node_modules/.bin/typedoc",
       "cwd": "${workspaceFolder}/libs/table",

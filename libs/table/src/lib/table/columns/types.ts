@@ -1,5 +1,5 @@
 import { SgTableComponent } from '../table.component';
-import { SgTableSorter } from '../../data-source';
+import { SgTableSorter } from '../../data-source/types';
 import { SgMetaColumn } from './meta-column';
 import { SgColumn } from './column';
 import { SgColumnGroup } from './group-column';

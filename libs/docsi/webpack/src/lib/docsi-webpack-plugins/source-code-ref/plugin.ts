@@ -63,7 +63,7 @@ export class DocsiSourceCodeRefWebpackPlugin implements webpack.Plugin {
     compiler.hooks.docsiMetadataNotifier.tap(pluginName, notifier => {
       notifier('extractCodeParts', { index: {} as any });
 
-      compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
+      compiler.hooks.compilation.tap(pluginName, (compilation) => {
         this.compilation = compilation;
         compilation.dependencyFactories.set(SourceCodeRefDependency as any, this.extractedCodeModuleFactory as any);
         compilation.dependencyTemplates.set(SourceCodeRefDependency as any, new SourceCodeRefDependencyTemplate() as any);

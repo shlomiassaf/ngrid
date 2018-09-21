@@ -1,11 +1,6 @@
 // tslint:disable:use-host-property-decorator
 
-import {
-  ChangeDetectorRef,
-  Directive,
-  Input,
-  TemplateRef,
-} from '@angular/core';
+import { Directive, TemplateRef } from '@angular/core';
 
 import { SgTableComponent } from '../table.component';
 import { SgTableSingleRegistryMap, SgTableRegistryService } from '../table-registry.service';
@@ -30,7 +25,7 @@ export abstract class SgTableSingleTemplateRegistryDirective<T, TKind extends ke
  */
 @Directive({ selector: '[sgTablePaginatorRef]' })
 export class SgTablePaginatorRefDirective extends SgTableSingleTemplateRegistryDirective<{ $implicit: SgTableComponent<any> }, 'paginator'> {
-  readonly kind = 'paginator';
+  readonly kind: 'paginator' = 'paginator';
   constructor(tRef: TemplateRef<{ $implicit: SgTableComponent<any> }>, registry: SgTableRegistryService) { super(tRef, registry); }
 }
 
@@ -48,7 +43,7 @@ export class SgTablePaginatorRefDirective extends SgTableSingleTemplateRegistryD
  */
 @Directive({ selector: '[sgTableNoDataRef]' })
 export class SgTableNoDataRefDirective extends SgTableSingleTemplateRegistryDirective<{ $implicit: SgTableComponent<any> }, 'noData'> {
-  readonly kind = 'noData';
+  readonly kind: 'noData' = 'noData';
   constructor(tRef: TemplateRef<{ $implicit: SgTableComponent<any> }>, registry: SgTableRegistryService) { super(tRef, registry); }
 }
 

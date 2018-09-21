@@ -2,7 +2,8 @@
 import { Directive, TemplateRef } from '@angular/core';
 import { SgTableComponent, SgTableRegistryService, SgTableSingleTemplateRegistryDirective } from '@sac/table';
 
-declare module '../../../../src/lib/table/table-registry.service' {
+// declare module '../../../../src/lib/table/table-registry.service' {
+declare module '@sac/table/lib/table/table-registry.service' {
   interface SgTableSingleRegistryMap {
     blocker?: SgTableBlockUiDefDirective;
   }

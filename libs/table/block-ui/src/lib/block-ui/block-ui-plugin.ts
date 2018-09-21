@@ -4,7 +4,8 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { SgTableComponent, KillOnDestroy } from '@sac/table';
 
-declare module '../../../../src/lib/table/plugins' {
+// declare module '../../../../src/lib/table/plugins' {
+declare module '@sac/table/lib/table/plugins' {
   interface SgTablePluginExtension {
     blockUi?: { blockUi: boolean | 'auto' | Observable<boolean> };
   }

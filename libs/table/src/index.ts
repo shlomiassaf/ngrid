@@ -1,4 +1,12 @@
 export {
+  SgTablePaginatorKind,
+  SgPaginator,
+  SgPagingPaginator,
+  SgTokenPaginator,
+  SgPaginatorChangeEvent
+} from './lib/paginator/index';
+
+export {
   SgDataSourceConfigurableTriggers,
   SgDataSourceTriggers,
   SgDataSourceTriggerChange,
@@ -7,7 +15,7 @@ export {
   SgDataSource, SgDataSourceOptions,
   SgTableSortInstructions, SgTableSortDefinition, SgTableSorter, applySort,
   SgDataSourceFactory, createDS, DataSourceOf,
-} from './lib/data-source';
+} from './lib/data-source/index';
 
 export {
   SG_TABLE_CONFIG, SgTableConfig, SgTableConfigService,
@@ -35,13 +43,7 @@ export {
   SgTableMetaCellTemplateContext,
   SgDetailsRowToggleEvent,
   KillOnDestroy
-} from './lib/table';
-export {
-  SgTablePaginatorKind,
-  SgPaginator,
-  SgPagingPaginator,
-  SgTokenPaginator,
-  SgPaginatorChangeEvent
-} from './lib/paginator';
+} from './lib/table/index';
+
 
 export { SgTableModule } from './lib/table.module';

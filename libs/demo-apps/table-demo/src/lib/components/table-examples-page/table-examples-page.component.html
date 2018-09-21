@@ -10,7 +10,6 @@
 
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE COLUMNS FOR SG-TABLE -->
 <div *sgTableCellDef="'*'; value as value;">{{value}}</div>
-<div *sgTableCellDef="'*'; value as value;">{{value}}</div>
 <div *sgTableCellTypeDef="'date'; value as value;">{{value | date: 'MMM dd, yyyy'}}</div>
 <div *sgTableCellTypeDef="'number'; value as value;">{{value | number: '1.0-2'}}</div>
 <!-- Set's the currency based on a predefined currency in ISO format, provided in the `type.data` property of the column -->

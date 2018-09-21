@@ -1,12 +1,12 @@
-import { SgTableDataSourceSortChange } from './types';
-import { DataSourceFilter } from './filtering';
+import { SgTableDataSourceSortChange, DataSourceFilter } from './types';
 
 import {
   RefreshDataWrapper,
   SgDataSourceTriggerChange,
   SgDataSourceTriggers,
   SgDataSourceTriggerCache,
-  SgDataSourceTriggerChangedEvent
+  SgDataSourceTriggerChangedEvent,
+  TriggerChangedEventFor,
 } from './data-source-adapter.types';
 
 export const EMPTY: any = Object.freeze({});
@@ -43,9 +43,11 @@ export function fromRefreshDataWrapper<T>(change: SgDataSourceTriggerChange<Refr
   };
 }
 
-export function createChangeContainer<P extends keyof SgDataSourceTriggers>(type: P,
-                                                                            value: SgDataSourceTriggers[P],
-                                                                            cache: SgDataSourceTriggerCache): SgDataSourceTriggerChangedEvent[P] {
+export type CoValue<P extends keyof SgDataSourceTriggerCache> = P extends keyof SgDataSourceTriggers ? SgDataSourceTriggers[P] : SgDataSourceTriggerCache[P];
+
+export function createChangeContainer<P extends keyof SgDataSourceTriggerCache>(type: P,
+                                                                                value: CoValue<P>,
+                                                                                cache: SgDataSourceTriggerCache): TriggerChangedEventFor<P> {
   if (type === 'pagination') {
     const pagination: SgDataSourceTriggers['pagination'] = (value || {}) as any;
     const cached = cache['pagination'];
@@ -64,16 +66,16 @@ export function createChangeContainer<P extends keyof SgDataSourceTriggers>(type
         event[k].curr = cached[k] = pagination[k][1];
       }
     }
-    return event;
+    return event as TriggerChangedEventFor<P>;
   } else {
     value = value || EMPTY;
     const cachedValue = cache[type];
     if (value === cachedValue) {
-      return createNotChangedEvent(cachedValue);
+      return createNotChangedEvent(cachedValue) as any;
     } else if (value !== EMPTY && cachedValue !== EMPTY) {
       const fn: (prev: SgDataSourceTriggerCache[P], curr: SgDataSourceTriggerCache[P]) => boolean = DEEP_COMPARATORS[type];
       if (fn(cachedValue, value as any)) {
-        return createNotChangedEvent(cachedValue);
+        return createNotChangedEvent(cachedValue) as any;
       }
     }
     cache[type] = value as any;

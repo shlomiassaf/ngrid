@@ -1,5 +1,4 @@
 import { Observable, ReplaySubject } from 'rxjs';
-import { filter } from 'rxjs/operators';
 
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 
@@ -12,17 +11,13 @@ export const SG_TABLE_CONFIG = new InjectionToken<SgTableConfig>('SG_TABLE_CONFI
 })
 export class SgTableConfigService {
 
-  onUpdate<T extends keyof SgTableConfig>(section: T): Observable<{ curr: SgTableConfig[T]; prev: SgTableConfig[T] | undefined; }> {
-    return this.getGetNotifier(section);
-  }
-
   private config = new Map<keyof SgTableConfig, any>();
   private configNotify = new Map<keyof SgTableConfig, ReplaySubject<any>>();
 
   constructor(@Optional() @Inject(SG_TABLE_CONFIG) _config: SgTableConfig) {
     if (_config) {
       for (const key of Object.keys(_config)) {
-        this.config.set(key as any, _config[key]);
+        (this.config as any).set(key, _config[key]);
       }
     }
   }
@@ -41,6 +36,10 @@ export class SgTableConfigService {
     Object.freeze(value);
     this.config.set(section, value);
     this.notify(section, value, prev);
+  }
+
+  onUpdate<T extends keyof SgTableConfig>(section: T): Observable<{ curr: SgTableConfig[T]; prev: SgTableConfig[T] | undefined; }> {
+    return this.getGetNotifier(section);
   }
 
   private getGetNotifier<T extends keyof SgTableConfig>(section: T): ReplaySubject<any> {

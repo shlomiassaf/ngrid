@@ -5,20 +5,34 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
   ElementRef,
   EmbeddedViewRef,
   IterableDiffers,
+  OnDestroy,
   Optional,
   ViewEncapsulation,
-  ViewContainerRef
+  ViewContainerRef,
+  Injector,
+  NgZone,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+
+import { Platform } from '@angular/cdk/platform';
 import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef } from '@angular/cdk/table';
 import { Directionality } from '@angular/cdk/bidi';
 
 import { SgTableComponent } from '../table.component';
 
+import { SgVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
+import { SgCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/virtual-scroll-viewport.component';
+
 /**
- * Wrapper for the CdkTable with Material design styles.
+ * Wrapper for the CdkTable that extends it's functionality to support various table features.
+ * This wrapper also applies Material Design table styles (i.e. `MatTable` styles).
+ *
+ * Most of the extensions are done using mixins, this is mostly for clarity and separation of the features added.
+ * This approach will allow easy removal when a feature is no longer required/implemented natively.
  */
 @Component({
   selector: 'sg-cdk-table',
@@ -31,7 +45,9 @@ import { SgTableComponent } from '../table.component';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SgCdkTableComponent<T> extends CdkTable<T> {
+export class SgCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
+
+  protected get _element(): HTMLElement { return this._elementRef.nativeElement; }
 
   get onRenderRows(): Observable<DataRowOutlet> {
     if (!this.onRenderRows$) {
@@ -44,28 +60,34 @@ export class SgCdkTableComponent<T> extends CdkTable<T> {
     this._element.style.minWidth = value;
   }
 
-  private get _element(): HTMLElement { return this._elementRef.nativeElement; }
   private onRenderRows$: Subject<DataRowOutlet>;
-  // TODO: remove if https://github.com/angular/material2/pull/13000 is pushed
-  private _cachedRowDefs = { header: new Set<CdkHeaderRowDef>(), footer: new Set<CdkFooterRowDef>() };
 
-  constructor(protected _differs: IterableDiffers,
-              protected _changeDetectorRef: ChangeDetectorRef,
-              protected _elementRef: ElementRef,
+  constructor(_differs: IterableDiffers,
+              _changeDetectorRef: ChangeDetectorRef,
+              _elementRef: ElementRef,
               @Attribute('role') role: string,
-              @Optional() protected readonly _dir: Directionality,
-              private table: SgTableComponent<T>) {
-    super(_differs, _changeDetectorRef, _elementRef, role, _dir);
+              @Optional() _dir: Directionality,
+              protected injector: Injector,
+              protected table: SgTableComponent<T>,
+              @Inject(DOCUMENT) _document?: any,
+              platform?: Platform) {
+    super(_differs, _changeDetectorRef, _elementRef, role, _dir, document, platform);
     this.table._cdkTable = this;
+    this.trackBy = this.table.trackBy;
   }
 
-
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     super.ngOnDestroy();
     if (this.onRenderRows$) {
       this.onRenderRows$.complete();
     }
+    this.virtualScrollDestroy();
   }
+
+  //#region CLEAR-ROW-DEFS
+
+  // TODO: remove if https://github.com/angular/material2/pull/13000 is pushed
+  private _cachedRowDefs = { header: new Set<CdkHeaderRowDef>(), footer: new Set<CdkFooterRowDef>() }; //tslint:disable-line
 
   // TODO: remove if https://github.com/angular/material2/pull/13000 is pushed
   addHeaderRowDef(headerRowDef: CdkHeaderRowDef): void {
@@ -96,7 +118,9 @@ export class SgCdkTableComponent<T> extends CdkTable<T> {
     }
     footer.clear();
   }
+  //#endregion CLEAR-ROW-DEFS
 
+  //#region CSS-CLASS-CONTROL
   addClass(cssClassName: string): void {
     this._element.classList.add(cssClassName);
   }
@@ -104,6 +128,54 @@ export class SgCdkTableComponent<T> extends CdkTable<T> {
   removeClass(cssClassName: string): void {
     this._element.classList.remove(cssClassName);
   }
+  //#endregion CSS-CLASS-CONTROL
+
+  //#region VIRTUAL-SCROLL
+  private forOf: SgVirtualScrollForOf<T>; //tslint:disable-line
+
+  updateStickyHeaderRowStyles(): void {
+    super.updateStickyHeaderRowStyles();
+    // if attached
+    if (this.forOf) {
+      // TODO: suggest exposing `_headerRowDefs` in material repp or try to get it's value (hint: clear-row-defs mixin)
+      this.forOf.setMetaRows(
+        this._getRenderedRows(this._headerRowOutlet),
+        (this as any)._headerRowDefs.map(def => def.sticky),
+        'top',
+      );
+    }
+  }
+
+  updateStickyFooterRowStyles(): void {
+    super.updateStickyFooterRowStyles();
+    // if attached
+    if (this.forOf) {
+      // TODO: suggest exposing `_footerRowDefs` in material repp or try to get it's value (hint: clear-row-defs mixin)
+      this.forOf.setMetaRows(
+        this._getRenderedRows(this._footerRowOutlet),
+        (this as any)._footerRowDefs.map(def => def.sticky),
+        'bottom',
+      );
+    }
+  }
+
+  attachViewPort(viewport: SgCdkVirtualScrollViewportComponent): void {
+    this.detachViewPort();
+    this.forOf = new SgVirtualScrollForOf<T>(this.table, this as any, viewport, this.injector.get(NgZone));
+  }
+
+  detachViewPort(): void {
+    if (this.forOf) {
+      this.forOf.destroy();
+      this.forOf = undefined;
+    }
+  }
+
+  private virtualScrollDestroy(): void {
+    super.ngOnDestroy();
+    this.detachViewPort();
+  }
+  //#endregion VIRTUAL-SCROLL
 
   /**
    * An alias for `_cacheRowDefs()`
@@ -121,7 +193,7 @@ export class SgCdkTableComponent<T> extends CdkTable<T> {
 
   /**
    * Force run change detection for rows.
-   * You can run it for spcific groups or for all rows.
+   * You can run it for specific groups or for all rows.
    */
   syncRows(rowTypes?: Array<'header' | 'table' | 'footer'>): void {
     if (!rowTypes) {

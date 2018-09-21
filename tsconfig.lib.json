@@ -1,0 +1,52 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@sac/table": [
+        "dist/@sac/table"
+      ],
+      "@sac/table/sticky": [
+        "dist/@sac/table/sticky"
+      ],
+      "@sac/table/detail-row": [
+        "dist/@sac/table/detail-row"
+      ],
+      "@sac/table/block-ui": [
+        "dist/@sac/table/block-ui"
+      ],
+      "@sac/table/mat-checkbox-column": [
+        "dist/@sac/table/mat-checkbox-colum"
+      ],
+      "@sac/table/mat-paginator": [
+        "dist/@sac/table/mat-paginator"
+      ],
+      "@sac/table/mat-sort": [
+        "dist/@sac/table/mat-sort"
+      ],
+      "@sac/demo-apps/table-demo": [
+        "libs/demo-apps/table-demo"
+      ],
+      "@sac/demo-apps/shared": [
+        "libs/demo-apps/shared"
+      ],
+      "@sac/table/transpose": [
+        "dist/@sac/table/transpose"
+      ],
+      "@sac/*": [
+        "dist/@sac/*"
+      ],
+      "@sac/docsi": [
+        "libs/docsi/src/index.ts"
+      ],
+      "@sac/docsi/webpack": [
+        "libs/docsi/webpack/src/index.ts"
+      ],
+      "@sac/docsi/toc": [
+        "libs/docsi/toc/src/index.ts"
+      ],
+      "@sac/docsi/material-suite": [
+        "libs/docsi/material-suite/src/index.ts"
+      ]
+    }
+  }
+}

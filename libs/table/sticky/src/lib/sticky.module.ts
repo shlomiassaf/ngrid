@@ -6,7 +6,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { SgTableModule, SgTableExternalPluginService, SgTableConfigService } from '@sac/table';
 import { SgTableStickyPluginDirective, setStickyRow, setStickyColumns, hasStickyPlugin } from './sticky/sticky-plugin';
 
-declare module '@sac/table/src/lib/table/services/config' {
+declare module '@sac/table/lib/table/services/config' {
   interface SgTableConfig {
     stickyPlugin?: {
       headers?: Array<'table' | number>;

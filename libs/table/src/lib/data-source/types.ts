@@ -1,4 +1,4 @@
-import { SgColumn } from '../table/columns';
+import { SgColumn } from '../table/columns/column';
 
 export type SgTableSortOrder = 'asc' | 'desc';
 
@@ -24,3 +24,16 @@ export interface SgTableDataSourceSortChange {
   column: SgColumn;
   sort: SgTableSortDefinition;
 }
+
+
+// FILTERING
+export type DataSourcePredicate = (item: any, properties: SgColumn[]) => boolean;
+export type DataSourceFilterToken = undefined | DataSourcePredicate | any;
+
+export interface DataSourceFilterType {
+  type: 'value' | 'predicate';
+  columns: SgColumn[];
+  filter: any | DataSourcePredicate;
+}
+
+export type DataSourceFilter = undefined | DataSourceFilterType ;

@@ -224,7 +224,6 @@ export class SgTableStickyPluginDirective implements OnDestroy {
     const changes = differ.diff(value || []);
     const bulk: Array<['table' | number, boolean]> = [];
     changes.forEachOperation((record: IterableChangeRecord<'table' | number>, prevIndex: number, currentIndex: number) => {
-      let state: boolean;
       if (record.previousIndex == null) {
         bulk.push([record.item, true]);
       } else if (currentIndex == null) {

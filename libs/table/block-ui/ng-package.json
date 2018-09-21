@@ -1,6 +1,6 @@
 {
-  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/libs/table/block-ui",
+  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../dist/@sac/table/block-ui",
   "deleteDestPath": false,
   "lib": {
     "entryFile": "src/index.ts"

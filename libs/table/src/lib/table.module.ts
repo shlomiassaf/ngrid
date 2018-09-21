@@ -1,6 +1,8 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { ScrollingModule as ScrollingModuleExp } from '@angular/cdk-experimental/scrolling';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
 
 import {
@@ -22,12 +24,15 @@ import {
   SgTablePaginatorRefDirective,
 
   SgColumnSizeObserver,
-} from './table';
+  SgCdkVirtualScrollViewportComponent,
+  SgCdkVirtualScrollDirective,
+} from './table/index';
 import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
+    ScrollingModule, ScrollingModuleExp,
     CdkTableModule,
   ],
   declarations: [
@@ -45,6 +50,8 @@ import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
     SgTableFooterCellDirective,
 
     SgColumnSizeObserver,
+    SgCdkVirtualScrollViewportComponent,
+    SgCdkVirtualScrollDirective,
 
     SgTableComponent,
     TableCellContextPipe
@@ -62,6 +69,7 @@ import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
     SgTableFooterCellDirective,
 
     SgColumnSizeObserver,
+    SgCdkVirtualScrollDirective,
 
     SgTableComponent,
   ]

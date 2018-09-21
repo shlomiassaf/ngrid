@@ -77,30 +77,31 @@ export class PaginatorTableExampleComponent {
   .setCustomTriggers('pagination')
   .create();
 
-  tokenDS = createDS<Person>().onTrigger( event => {
-    const { pagination } = event;
-    let pageChanged: string;
-    if (pagination.page.changed) {
-      pageChanged = pagination.page.curr;
-    }
-    if (!pageChanged) {
-      this.tokenDS.paginator.reset();
-    }
-    const { perPage } = this.tokenDS.paginator;
-    // emulate HTTP call with server side pagination instructions
-    return emulateServerSideTokenPaginationCall(pageChanged || perPage).pipe(
-      map( result => {
-        if (result.token) {
-          const paginator: SgTokenPaginator = <any> this.tokenDS.paginator;
-          paginator.addNext(result.token);
-        }
-        event.updateTotalLength(result.data.length);
-        return result.data;
-      })
-    );
-  })
-  .setCustomTriggers('pagination')
-  .create();
+  tokenDS = createDS<Person>()
+    .onTrigger( event => {
+      const { pagination } = event;
+      let pageChanged: string;
+      if (pagination.page.changed) {
+        pageChanged = pagination.page.curr;
+      }
+      if (!pageChanged) {
+        this.tokenDS.paginator.reset();
+      }
+      const { perPage } = this.tokenDS.paginator;
+      // emulate HTTP call with server side pagination instructions
+      return emulateServerSideTokenPaginationCall(pageChanged || perPage).pipe(
+        map( result => {
+          if (result.token) {
+            const paginator: SgTokenPaginator = <any> this.tokenDS.paginator;
+            paginator.addNext(result.token);
+          }
+          event.updateTotalLength(result.data.length);
+          return result.data;
+        })
+      );
+    })
+    .setCustomTriggers('pagination')
+    .create();
 
   footerRowDS = createDS<Person>().onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 20) )) ) .create();
 }

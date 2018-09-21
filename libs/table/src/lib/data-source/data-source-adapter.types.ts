@@ -1,6 +1,5 @@
 import { SgPaginatorChangeEvent } from '../paginator';
-import { SgTableDataSourceSortChange } from './types';
-import { DataSourceFilter } from './filtering';
+import { SgTableDataSourceSortChange, DataSourceFilter } from './types';
 
 /** @internal */
 export type RefreshDataWrapper<T> = { data: T };
@@ -59,3 +58,5 @@ export interface SgDataSourceTriggerChangedEvent<T = any> {
 }
 
 export type TriggerChangedEventResponse<T = any, TDate = any> = { event: SgDataSourceTriggerChangedEvent<TDate>; data: T[] };
+
+export type TriggerChangedEventFor<P extends keyof SgDataSourceTriggerCache> = P extends keyof SgDataSourceTriggerChangedEvent ? SgDataSourceTriggerChangedEvent[P] :  SgDataSourceTriggerChange<SgDataSourceTriggerCache[P]>;

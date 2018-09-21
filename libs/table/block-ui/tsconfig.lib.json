@@ -1,5 +1,5 @@
 {
-  "extends": "../../../tsconfig.json",
+  "extends": "../../../tsconfig.lib.json",
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/table/block-ui",
     "target": "es2015",

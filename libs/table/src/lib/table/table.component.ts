@@ -1,6 +1,7 @@
 import { Observable, Subject } from 'rxjs';
 
 import {
+  AfterViewInit,
   Component,
   Input,
   Output,
@@ -24,8 +25,9 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
-import { SgDataSource, DataSourceOf, createDS } from '../data-source';
 import { SgTablePaginatorKind } from '../paginator';
+import { SgCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
+import { SgDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { SgCdkTableComponent } from './sg-cdk-table/sg-cdk-table.component';
 import { KillOnDestroy } from './utils';
 import { findCellDef } from './directives/cell-def';
@@ -57,7 +59,7 @@ const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border:
   providers: [ SgTableRegistryService ]
 })
 @KillOnDestroy()
-export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestroy {
+export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnChanges, OnDestroy {
   readonly self = this;
 
   @Input() get marginCellIndent(): boolean { return this._marginCellIndent; };
@@ -115,7 +117,7 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
 
   /**
    * Set's the behavior of the table when tabbing.
-   * The default behaviour is none (rows and cells are not focusable)
+   * The default behavior is none (rows and cells are not focusable)
    *
    * Note that the focus mode has an effect on other functions, for example a detail row will toggle (open/close) using
    * ENTER / SPACE only when focusMode is set to `row`.
@@ -200,6 +202,7 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
   private _dataSource: SgDataSource<T>;
   private _dataSourceOf: DataSourceOf<T>;
 
+  @ViewChild(SgCdkVirtualScrollViewportComponent) viewport: SgCdkVirtualScrollViewportComponent;
   @ViewChild('beforeContent', { read: ViewContainerRef}) _vcRefBefore: ViewContainerRef;
   @ViewChild('afterContent', { read: ViewContainerRef}) _vcRefAfter: ViewContainerRef;
   @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<SgTableCellTemplateContext<T>>;
@@ -269,7 +272,9 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
   }
 
   ngAfterViewInit(): void {
-
+    if (this.viewport.enabled) {
+      this._cdkTable.attachViewPort(this.viewport);
+    }
     this.invalidateHeader(true);
 
     // after invalidating the headers we now have optional header/headerGroups/footer rows added
@@ -310,6 +315,9 @@ export class SgTableComponent<T> implements AfterContentInit, OnChanges, OnDestr
 
   ngOnDestroy(): void {
     this._pluginEvents.complete();
+    if (this.viewport) {
+      this._cdkTable.detachViewPort();
+    }
   }
 
   trackBy(index: number, item: any): any {

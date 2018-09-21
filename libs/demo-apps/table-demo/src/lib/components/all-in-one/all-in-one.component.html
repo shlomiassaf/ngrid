@@ -17,7 +17,6 @@
           [columns]="columns"
           style="height: 50%"
           class="sg-boxed-table">
-          <!-- [columnGroupsDef]="columnGroupsDef"> -->
 
   <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS SG-TABLE -->
   <div *sgTableBlockUiDef class="sg-table-ui-block">
@@ -100,7 +99,7 @@
 <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
   <div class="example-feature-title" fxFlex="50%">Features</div>
   <div class="example-feature-action" fxFlex fxLayout="column">
-    <mat-slide-toggle (change)="usePagination = $event.checked" [checked]="usePagination">Show Paginator</mat-slide-toggle>
+    <mat-slide-toggle (change)="usePagination = $event.checked ? 'pageNumber' : false" [checked]="usePagination">Show Paginator</mat-slide-toggle>
     <mat-slide-toggle (change)="toggleTranspose = $event.checked" [checked]="toggleTranspose">Transpose</mat-slide-toggle>
     <mat-slide-toggle (change)="marginCellIndent = $event.checked" [checked]="marginCellIndent">Use Margin In Cells</mat-slide-toggle>
     <mat-slide-toggle (change)="showHeader = $event.checked" [checked]="showHeader">Show Header</mat-slide-toggle>

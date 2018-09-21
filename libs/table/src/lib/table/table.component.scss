@@ -41,5 +41,9 @@ sg-table.sg-boxed-table .sg-table-container {
       background: #f5f5f5;
     }
   }
+}
 
+// WORKAROUND : https://github.com/angular/material2/issues/13231
+cdk-virtual-scroll-viewport .cdk-virtual-scroll-content-wrapper {
+  contain: none;
 }

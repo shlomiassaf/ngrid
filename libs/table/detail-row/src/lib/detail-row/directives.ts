@@ -10,7 +10,7 @@ import { CdkRowDef, RowContext } from '@angular/cdk/table';
 
 import { SgTableComponent, SgTableRegistryService, SgTableSingleTemplateRegistryDirective } from '@sac/table';
 
-declare module '../../../../src/lib/table/table-registry.service' {
+declare module '@sac/table/lib/table/table-registry.service' {
   interface SgTableSingleRegistryMap {
     detailRowParent?: SgTableDetailRowParentRefDirective<any>;
     detailRow?: SgTableDetailRowDefDirective;
@@ -26,7 +26,7 @@ export interface SgTableDetailRowContext<T> extends RowContext<T> {
  */
 @Directive({ selector: '[sgTableDetailRowDef]' })
 export class SgTableDetailRowDefDirective extends SgTableSingleTemplateRegistryDirective<{ $implicit: any }, 'detailRow'> {
-  readonly kind = 'detailRow';
+  readonly kind: 'detailRow' = 'detailRow';
   constructor(tRef: TemplateRef<{ $implicit: any }>, registry: SgTableRegistryService) { super(tRef, registry); }
 }
 

@@ -1,7 +1,9 @@
+import { map } from 'rxjs/operators';
+
 import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
-import { SgTableComponent, SgDataSource, columnFactory, SgDataSourceAdapter } from '@sac/table';
+import { SgTableComponent, SgDataSource, columnFactory, SgDataSourceAdapter, SgTablePaginatorKind } from '@sac/table';
 import { toggleDetailRow } from '@sac/table/detail-row';
 import { setStickyRow, setStickyColumns } from '@sac/table/sticky';
 
@@ -16,7 +18,7 @@ const COUNTRY_GETTER = {
   data: undefined as any
 }
 
-declare module '@sac/table/src/lib/table/columns/types' {
+declare module '@sac/table/lib/table/columns/types' {
   interface SgColumnTypeDefinitionDataMap {
     currencyFn: (row: Person) => string;
     countryNameDynamic: (row: Person) => string;
@@ -36,7 +38,7 @@ const COLUMNS = columnFactory()
     { prop: 'country', headerType: 'country', minWidth: 250, type: { name: 'countryNameDynamic', data: COUNTRY_GETTER.name } },
     { prop: 'language', headerType: 'language' },
     { prop: 'lead' },
-    { prop: 'avatar' },
+    // { prop: 'avatar' },
     { prop: 'settings.background' },
     { prop: 'settings.timezone' },
     { prop: 'settings.emailFrequency' },
@@ -93,7 +95,7 @@ const COLUMNS = columnFactory()
 export class AllInOneTableExampleComponent implements AfterViewInit {
 
   dataSource = new SgDataSource<Person>(new SgDataSourceAdapter(
-      () => getPersons()
+      () => getPersons(500).pipe(map( data => data.slice(0, 500) ))
     )
   );
 
@@ -104,7 +106,7 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
 
   emailFrequencyToggle: boolean;
 
-  usePagination = 'pageNumber';
+  usePagination: false | SgTablePaginatorKind = false// 'pageNumber';
   showFooter = false;
   showHeader = true;
   toggleTranspose = false;

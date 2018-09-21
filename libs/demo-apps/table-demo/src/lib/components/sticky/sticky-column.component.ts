@@ -4,7 +4,7 @@
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
-import { SgDataSource, columnFactory, SgDataSourceAdapter } from '@sac/table';
+import { createDS, columnFactory } from '@sac/table';
 
 import { Person, getPersons } from '../../services';
 
@@ -42,13 +42,12 @@ const COLUMNS = columnFactory()
 })
 export class StickyColumnTableExampleComponent {
 
-  columns = columnFactory().table(...COLUMNS.table).build();
+  columns1 = columnFactory().table(...COLUMNS.table).build();
   columnsWithMultiHeaders = COLUMNS;
 
-  dataSource = new SgDataSource<Person>(new SgDataSourceAdapter(
-      () => getPersons(0).pipe(map( data => data.slice(0, 15) ))
-    )
-  );
+  dataSource = createDS<Person>()
+    .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 15) ) ) )
+    .create();
 }
 /* @sac-example:ex-column-3 */
 /* @sac-example:ex-column-2 */

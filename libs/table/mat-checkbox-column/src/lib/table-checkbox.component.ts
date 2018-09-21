@@ -3,7 +3,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 import {
   SgTableComponent,
-  SgTableRegistryService,
   SgTableHeaderCellDefDirective,
   SgTableCellDefDirective,
   SgTableFooterCellDefDirective,

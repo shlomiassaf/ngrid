@@ -5,7 +5,6 @@ import { SgTableColumnDef } from '../directives';
 import { normalizeId, deepPathGet, deepPathSet } from '../utils';
 import { SgColumnSizeInfo } from '../types';
 import {
-  SgBaseColumnDefinition,
   SgColumnDefinition,
   SgTableMetaCellTemplateContext,
   SgTableCellTemplateContext,

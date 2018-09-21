@@ -16,7 +16,8 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@sac/table": [
+      "@sac/table*": [
+        "libs/table/src*",
         "libs/table/src/index.ts"
       ],
       "@sac/table/sticky": [

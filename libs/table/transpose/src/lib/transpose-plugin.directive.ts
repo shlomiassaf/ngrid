@@ -16,7 +16,7 @@ import { getCellValueTransformed, createTransformedColumn } from './utils';
 
 const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'sg-table-header-cell sg-table-transposed-header-cell' };
 
-declare module '@sac/table/src/lib/table/services/config' {
+declare module '@sac/table/lib/table/services/config' {
   interface SgTableConfig {
     transposePlugin: {
       header?: Partial<SgColumnDefinition>;

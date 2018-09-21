@@ -1,16 +1,5 @@
 import { SgColumn } from '../table/columns';
-
-export type DataSourcePredicate = (item: any, properties: SgColumn[]) => boolean;
-export type DataSourceFilterToken = undefined | DataSourcePredicate | any;
-
-export interface DataSourceFilterType {
-  type: 'value' | 'predicate';
-  columns: SgColumn[];
-  filter: any | DataSourcePredicate;
-}
-
-
-export type DataSourceFilter = undefined | DataSourceFilterType ;
+import { DataSourceFilter, DataSourceFilterToken, DataSourcePredicate } from './types';
 
 export function createFilter(value: DataSourceFilterToken, columns: SgColumn[]): DataSourceFilter {
   return value === undefined

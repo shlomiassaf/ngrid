@@ -46,7 +46,7 @@ export interface SgPaginator<TPage> {
 }
 
 export class SgTokenPaginator implements SgPaginator<string> {
-  readonly kind = 'token';
+  readonly kind: 'token' = 'token';
   noCacheMode: boolean;
 
   get perPage(): number { return this._perPage; }
@@ -156,7 +156,7 @@ export class SgTokenPaginator implements SgPaginator<string> {
 }
 
 export class SgPagingPaginator implements SgPaginator<number> {
-  readonly kind = 'pageNumber';
+  readonly kind: 'pageNumber' = 'pageNumber';
   noCacheMode: boolean;
 
   get perPage(): number { return this._perPage; }
@@ -215,7 +215,6 @@ export class SgPagingPaginator implements SgPaginator<number> {
 
   /**
    * The amount of pages in this paginator
-   * @returns {number}
    */
   get totalPages(): number {
     return this._totalPages;

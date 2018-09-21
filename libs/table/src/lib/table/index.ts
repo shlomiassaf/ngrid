@@ -1,6 +1,6 @@
-export * from './services';
+export * from './services/index';
+export * from './directives/index';
 export { SgDetailsRowToggleEvent, SgTableHeaderCellSortContainer} from './types';
-export * from './directives';
 
 export {
   SgTableMetaCellTemplateContext,
@@ -22,7 +22,7 @@ export {
   COLUMN,
   SgColumnFactory,
   columnFactory
-} from './columns';
+} from './columns/index';
 
 export { SgCdkTableComponent } from './sg-cdk-table/sg-cdk-table.component';
 
@@ -30,5 +30,6 @@ export { SgTableEvents, SgTablePluginExtension } from './plugins';
 export { SgTableComponent } from './table.component';
 export { SgTableRegistryService } from './table-registry.service';
 
-export { SgColumnSizeObserver } from './features/column-size-observer';
-export * from './utils';
+export { SgColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';
+export * from './features/virtual-scroll/index';
+export * from './utils/index';

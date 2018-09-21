@@ -1,10 +1,10 @@
 import { Observable, Subject, combineLatest, of, from, isObservable } from 'rxjs';
-import { filter, map, switchMap, skip, tap, debounceTime } from 'rxjs/operators';
+import { filter, map, switchMap, skip, tap, debounceTime, delay } from 'rxjs/operators';
 
 import { DataSourceOf } from './data-source';
 import { SgPaginator, SgPaginatorChangeEvent } from '../paginator';
-import { SgTableDataSourceSortChange } from './types';
-import { filter as filteringFn, DataSourceFilter } from './filtering';
+import { SgTableDataSourceSortChange, DataSourceFilter } from './types';
+import { filter as filteringFn } from './filtering';
 import { applySort } from './sorting';
 
 import {
@@ -12,7 +12,8 @@ import {
   SgDataSourceConfigurableTriggers,
   SgDataSourceTriggers,
   SgDataSourceTriggerCache,
-  SgDataSourceTriggerChangedEvent
+  SgDataSourceTriggerChangedEvent,
+  TriggerChangedEventFor,
 } from './data-source-adapter.types';
 
 import { createChangeContainer, fromRefreshDataWrapper, EMPTY } from './data-source-adapter.helpers';
@@ -27,6 +28,7 @@ const SOURCE_CHANGING_TOKEN = {};
 export class SgDataSourceAdapter<T = any, TData = any> {
   onSourceChanged: Observable<T[]>;
   onSourceChanging: Observable<void>;
+
   protected paginator?: SgPaginator<any>;
   private readonly config: Partial<Record<keyof SgDataSourceConfigurableTriggers, boolean>>;
   private cache: SgDataSourceTriggerCache<TData> = { filter: EMPTY, sort: EMPTY, pagination: {}, data: EMPTY };
@@ -107,10 +109,10 @@ export class SgDataSourceAdapter<T = any, TData = any> {
 
     const refresh = this.skipInitial ? this._refresh$.pipe(skip(1)) : this._refresh$.asObservable();
     const combine: [
-      Observable<SgDataSourceTriggerChangedEvent['filter']>,
-      Observable<SgDataSourceTriggerChangedEvent['sort']>,
-      Observable<SgDataSourceTriggerChangedEvent['pagination']>,
-      Observable<SgDataSourceTriggerChangedEvent['data']>
+      Observable<TriggerChangedEventFor<'filter'>>,
+      Observable<TriggerChangedEventFor<'sort'>>,
+      Observable<TriggerChangedEventFor<'pagination'>>,
+      Observable<TriggerChangedEventFor<'data'>>
     ] = [
       filter$.pipe( map( value => createChangeContainer('filter', value, this.cache) ), filter(changedFilter) ),
       sort$.pipe( map( value => createChangeContainer('sort', value, this.cache) ), filter(changedFilter) ),
@@ -203,6 +205,8 @@ export class SgDataSourceAdapter<T = any, TData = any> {
             event[k].changed = false;
           }
           event.pagination.page.changed = event.pagination.perPage.changed = false;
+          // const viewChange = this.cache.viewChange;
+          // return data.slice(viewChange.start, viewChange.end);
           return data;
         })
       );
@@ -279,8 +283,9 @@ export class SgDataSourceAdapter<T = any, TData = any> {
     ;
 
     return obs.pipe(
+      delay(0),
       map( data => Array.isArray(data) ? data : [] ),
-      tap( data => setTimeout(() => this._onSourceChange$.next(data) ) )
+      tap( data => this._onSourceChange$.next(data) )
     );
   }
 }

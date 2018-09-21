@@ -1,14 +1,14 @@
 import { Observable, BehaviorSubject, Subject, of } from 'rxjs';
 import { mapTo, skip } from 'rxjs/operators';
 
-import { SelectionModel, CollectionViewer } from '@angular/cdk/collections';
+import { SelectionModel, CollectionViewer, ListRange } from '@angular/cdk/collections';
 import { DataSource } from '@angular/cdk/table';
 
 import { KillOnDestroy } from '../table/utils';
 import { SgColumn } from '../table/columns';
 import { SgTablePaginatorKind, SgPaginator, SgPagingPaginator, SgTokenPaginator } from '../paginator';
-import { SgTableSortDefinition, SgTableDataSourceSortChange } from './types';
-import { createFilter, DataSourceFilter, DataSourceFilterToken } from './filtering';
+import { DataSourceFilter, DataSourceFilterToken, SgTableSortDefinition, SgTableDataSourceSortChange } from './types';
+import { createFilter } from './filtering';
 import { SgDataSourceAdapter } from './data-source-adapter';
 
 export type DataSourceOf<T> = T[] | Promise<T[]> | Observable<T[]>;
@@ -49,6 +49,7 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
    */
   readonly onSourceChanged: Observable<void>;
   get onSourceChanging(): Observable<void> { return this._adapter.onSourceChanging; }
+  readonly onViewDataChanging: Observable<T[]>;
   readonly onRenderedDataChanged: Observable<void>;
   readonly onError: Observable<Error>;
   /**
@@ -59,7 +60,7 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
 
   /**
    * When set to True will not disconnect upon table disconnection, otherwise unsubscribe from the
-   * datatsource when the table disconnects.
+   * datasource when the table disconnects.
    */
   readonly keepAlive: boolean;
 
@@ -96,8 +97,9 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
 
   protected readonly _selection = new SelectionModel<T>(true, []);
   protected readonly _tableConnectionChange$ = new Subject<boolean>();
+  protected readonly _onViewDataChanging$ = new Subject<T[]>();
   protected readonly _renderData$ = new BehaviorSubject<T[]>([]);
-  protected readonly _filter$ = new BehaviorSubject<DataSourceFilter>(undefined);
+  protected readonly _filter$: BehaviorSubject<DataSourceFilter> = new BehaviorSubject<DataSourceFilter>(undefined);
   protected readonly _sort$ = new BehaviorSubject<SgTableDataSourceSortChange>({ column: null, sort: null });
   protected _onError$ = new Subject<Error>();
 
@@ -115,8 +117,9 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
 
     this.adapter = adapter;
 
-    // emit source changed event everytime adapter get's new data
+    // emit source changed event every time adapter gets new data
     this.onSourceChanged = this.adapter.onSourceChanged.pipe(mapTo(undefined));
+    this.onViewDataChanging = this._onViewDataChanging$.asObservable();
     this.onRenderedDataChanged = this._renderData$.pipe(skip(1), mapTo(undefined));
     this.onError = this._onError$.asObservable();
     this.tableConnectionChange = this._tableConnectionChange$.asObservable();
@@ -145,6 +148,7 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
     if (!this._disposed) {
       KillOnDestroy.kill(this);
       this._adapter.dispose();
+      this._onViewDataChanging$.complete();
       this._renderData$.complete();
       this._filter$.complete();
       this._sort$.complete();
@@ -162,22 +166,51 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
 
   connect(cv: CollectionViewer): Observable<T[]> {
     if (this._disposed) {
-      throw new Error('SgDataSource is disposed. Use `keepAlive` if you move datasoruce between tables.');
+      throw new Error('SgDataSource is disposed. Use `keepAlive` if you move datasource between tables.');
     }
-    this._updateProcessingLogic();
+    this._updateProcessingLogic(cv);
     this._tableConnectionChange$.next(this._tableConnected = true);
     return this._renderData$;
   }
 
-  private _updateProcessingLogic(): void {
+  private _updateProcessingLogic(cv: CollectionViewer): void {
     const pagination = this._paginator ? this._paginator.onChange : of(undefined);
     const stream = this._adapter.updateProcessingLogic(this._filter$, this._sort$, pagination);
 
     KillOnDestroy.kill(this, PROCESSING_SUBSCRIPTION_GROUP)
+
+    const trimToRange = (range: ListRange, data: any[]) => data.slice(range.start, range.end) ;
+
+    let lastRange: ListRange;
+    let skipViewChange: boolean;
+
+    cv.viewChange
+      .pipe(KillOnDestroy(this, PROCESSING_SUBSCRIPTION_GROUP))
+      .subscribe( range => {
+        if (lastRange && lastRange.start === range.start && lastRange.end === range.end) {
+          return;
+        }
+        lastRange = range;
+        if (!skipViewChange) {
+          const data = this.source;
+          if (range && data && data.length) {
+            this._renderData$.next(trimToRange(lastRange, data));
+          }
+        }
+      });
+
     stream
       .pipe(KillOnDestroy(this, PROCESSING_SUBSCRIPTION_GROUP))
       .subscribe(
-        data => this._renderData$.next(data),
+        data => {
+          skipViewChange = true;
+          this._onViewDataChanging$.next(data);
+          if (lastRange && data && data.length) {
+            data = trimToRange(lastRange, data);
+          }
+          this._renderData$.next(data);
+          skipViewChange = false;
+        },
         error => { this._onError$.next(error) }
       );
 
