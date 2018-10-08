@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { MatRippleModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -29,6 +30,7 @@ import {
   PaginatorTableExampleComponent,
   MatSortTableExampleComponent,
   TransposeTableExampleComponent,
+  DetailRowExampleComponent
 } from './components';
 
 const MATERIAL = [
@@ -51,7 +53,8 @@ const TABLE_EXAMPLES = [
   StickyColumnTableExampleComponent,
   PaginatorTableExampleComponent,
   MatSortTableExampleComponent,
-  TransposeTableExampleComponent
+  TransposeTableExampleComponent,
+  DetailRowExampleComponent,
 ];
 
 const ROUTES = [
@@ -62,6 +65,7 @@ const ROUTES = [
   { path: 'sticky', component: StickyRowTableExampleComponent, data: { title: 'Sticky Plugin' } },
   { path: 'pagination', component: PaginatorTableExampleComponent, data: { title: 'Pagination' } },
   { path: 'transpose', component: TransposeTableExampleComponent, data: { title: 'Transpose' } },
+  { path: 'detail-row', component: DetailRowExampleComponent, data: { title: 'Detail Row' } },
 ];
 
 @NgModule({
@@ -71,7 +75,7 @@ const ROUTES = [
       { path: '', component: TableExamplesPageComponent, children: ROUTES },
     ]),
     SharedModule,
-    MATERIAL,
+    MATERIAL, MatRippleModule,
     SgTableModule,
     SgTableBlockUiModule,
     SgTableTransposeModule,
@@ -81,6 +85,7 @@ const ROUTES = [
     SgTablePaginatorModule,
     SgTableMatSortModule
   ],
+  exports: [ MatRippleModule ], // we need this for detail-row
   providers: [ SgTableRegistryService ],
 })
 export class TableDemoModule {
