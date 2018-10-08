@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CdkTableModule } from '@angular/cdk/table';
 import { SgTableModule } from '@sac/table';
 
-import { SgTableDetailRowParentRefDirective, SgTableDetailRowDefDirective } from './detail-row/directives';
+import { SgTableDetailRowParentRefDirective, SgTableDetailRowDefDirective, SgTableDefaultDetailRowParentComponent } from './detail-row/directives';
 import { SgTableDetailRowPluginDirective } from './detail-row/detail-row-plugin';
 import { SgTableDetailRowComponent } from './detail-row/row';
 
@@ -17,8 +17,8 @@ const DETAIL_ROW = [
 
 @NgModule({
   imports: [ CommonModule, CdkTableModule, SgTableModule ],
-  declarations: [ DETAIL_ROW ],
+  declarations: [ DETAIL_ROW, SgTableDefaultDetailRowParentComponent ],
   exports: [ DETAIL_ROW ],
-  entryComponents: [ SgTableDetailRowComponent  ]
+  entryComponents: [ SgTableDetailRowComponent, SgTableDefaultDetailRowParentComponent ]
 })
 export class SgTableDetailRowModule { }

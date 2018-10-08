@@ -1,9 +1,9 @@
-import { Directive, EmbeddedViewRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { SgTableComponent, KillOnDestroy } from '@sac/table';
 import { SgTableDetailRowComponent } from './row';
-import { SgTableDetailRowParentRefDirective, SgTableDetailRowContext } from './directives';
+import { SgTableDetailRowParentRefDirective, SgTableDetailRowContext, SgTableDefaultDetailRowParentComponent } from './directives';
 
 export const ROW_WHEN_TRUE = () => true;
 export const ROW_WHEN_FALSE = () => false;
@@ -82,8 +82,9 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
   private _detailRowRows = new Map<any, SgTableDetailRowComponent>();
   private _detailRow: ( (index: number, rowData: T) => boolean ) | boolean;
   private _detailRowDef: SgTableDetailRowParentRefDirective<T>;
+  private _defaultParentRef: ComponentRef<SgTableDefaultDetailRowParentComponent>;
 
-  constructor(private table: SgTableComponent<any>) {
+  constructor(private table: SgTableComponent<any>, private injector: Injector) {
     TABLE_TO_DETAIL_ROW_MAP.set(table, this);
 
     const unsub = table.pluginEvents.subscribe( event => {
@@ -147,6 +148,9 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this._defaultParentRef) {
+      this._defaultParentRef.destroy();
+    }
     TABLE_TO_DETAIL_ROW_MAP.delete(this.table);
   }
 
@@ -179,6 +183,13 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
         Object.defineProperty(detailRow, 'columns', { enumerable: true,  get: () => table._store.tableRow });
         Object.defineProperty(detailRow, 'when', { enumerable: true,  get: () => this._isDetailRow });
         detailRow.ngOnChanges({ columns: { isFirstChange: () => true, firstChange: true, currentValue: detailRow.columns, previousValue: null }});
+      } else if (!this._defaultParentRef) {
+        // TODO: move to module? set in root registry? put elsewhere to avoid table sync (see event of registry change)...
+        this._defaultParentRef = this.injector.get(ComponentFactoryResolver)
+          .resolveComponentFactory(SgTableDefaultDetailRowParentComponent)
+          .create(this.injector);
+        this._defaultParentRef.changeDetectorRef.detectChanges();
+        return;
       }
     }
     this.resetTableRowDefs();

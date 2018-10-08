@@ -1,5 +1,6 @@
 // tslint:disable:use-host-property-decorator
 import {
+  Component,
   Directive,
   IterableDiffers,
   OnInit,
@@ -54,3 +55,13 @@ export class SgTableDetailRowParentRefDirective<T> extends CdkRowDef<T> implemen
     this.registry.setSingle('detailRowParent',  undefined);
   }
 }
+
+/**
+ * Use to set the a default `sgTableDetailRowParentRef` if the user did not set one.
+ * @internal
+ */
+@Component({
+  selector: 'sg-table-default-detail-row-parent',
+  template: `<sg-table-row *sgTableDetailRowParentRef="let row; table as table" [detailRow]="row" [table]="table"></sg-table-row>`,
+})
+export class SgTableDefaultDetailRowParentComponent { }

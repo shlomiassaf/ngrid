@@ -95,6 +95,8 @@ export class SgTableRegistryService implements OnDestroy {
     }
   }
 
+  getRoot(): SgTableRegistryService { return this.root; }
+
   /**
    * Returns the registered value for the single `kind`.
    * If not found will try to search the parent.
