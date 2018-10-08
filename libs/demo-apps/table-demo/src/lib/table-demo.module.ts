@@ -10,7 +10,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
-import { SgTableModule, SgTableRegistryService } from '@sac/table';
+import { SgTableModule, SgTableRegistryService, SgTableConfigService, NoVirtualScrollStrategy } from '@sac/table';
 import { SgTableTransposeModule } from '@sac/table/transpose';
 import { SgTableBlockUiModule } from '@sac/table/block-ui';
 import { SgTableDetailRowModule } from '@sac/table/detail-row';
@@ -89,8 +89,15 @@ const ROUTES = [
   providers: [ SgTableRegistryService ],
 })
 export class TableDemoModule {
-  constructor(registry: ExampleGroupRegistryService) {
+  constructor(registry: ExampleGroupRegistryService, config: SgTableConfigService) {
     registry.registerGroupFromRoutes({ id: 'table', title: 'Table' }, ROUTES);
+
+    /* SET DEFAULT SCROLL STRATEGY TO NO SCROLL */
+    // config.set('virtualScroll', {
+    //   defaultStrategy() {
+    //     return new NoVirtualScrollStrategy();
+    //   }
+    // });
   }
 }
 

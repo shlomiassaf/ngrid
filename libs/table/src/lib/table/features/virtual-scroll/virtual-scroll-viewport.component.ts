@@ -21,7 +21,28 @@ import {
   ScrollDispatcher,
 } from '@angular/cdk/scrolling';
 import { AutoSizeVirtualScrollStrategy } from '@angular/cdk-experimental/scrolling';
+
+import { SgTableConfigService } from '../../services/config';
 import { NoVirtualScrollStrategy } from './strategies';
+
+declare module '../../services/config' {
+  interface SgTableConfig {
+    virtualScroll?: {
+      defaultStrategy?(): VirtualScrollStrategy;
+    }
+  }
+}
+
+function resolveScrollStrategy(config: SgTableConfigService, scrollStrategy?: VirtualScrollStrategy): VirtualScrollStrategy {
+  if (!scrollStrategy && config.has('virtualScroll')) {
+    const virtualScrollConfig = config.get('virtualScroll');
+    if (typeof virtualScrollConfig.defaultStrategy === 'function') {
+      scrollStrategy = virtualScrollConfig.defaultStrategy();
+    }
+  }
+
+  return scrollStrategy || new AutoSizeVirtualScrollStrategy(100, 200);
+}
 
 @Component({
   selector: 'sg-cdk-virtual-scroll-viewport',
@@ -53,11 +74,18 @@ export class SgCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpor
   constructor(elementRef: ElementRef<HTMLElement>,
               cdr: ChangeDetectorRef,
               ngZone: NgZone,
-              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) sgScrollStrategy: VirtualScrollStrategy,
+              config: SgTableConfigService,
+              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) scrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher) {
-    super(elementRef, cdr, ngZone, sgScrollStrategy || (sgScrollStrategy = new AutoSizeVirtualScrollStrategy(100, 200)), dir, scrollDispatcher);
-    this.enabled = !(sgScrollStrategy instanceof NoVirtualScrollStrategy);
+    super(elementRef,
+          cdr,
+          ngZone,
+          scrollStrategy = resolveScrollStrategy(config, scrollStrategy),
+          dir,
+          scrollDispatcher
+      );
+    this.enabled = !(scrollStrategy instanceof NoVirtualScrollStrategy);
     this.offsetChange = this.offsetChange$.asObservable();
   }
 

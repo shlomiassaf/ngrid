@@ -39,6 +39,8 @@ export {
   SgColumnSet,
   SgTableColumnSet, SgTableColumnDefinitionSet,
 
+  NoVirtualScrollStrategy,
+
   SgTableCellTemplateContext,
   SgTableMetaCellTemplateContext,
   KillOnDestroy
