@@ -7,3 +7,4 @@ export { PaginatorTableExampleComponent } from './paginator';
 export { MatSortTableExampleComponent } from './mat-sort';
 export { TransposeTableExampleComponent } from './transpose/transpose.component';
 export { DetailRowExampleComponent } from './detail-row/detail-row.component';
+export { VirtualScrollTableExampleComponent } from './virtual-scroll/virtual-scroll.component';

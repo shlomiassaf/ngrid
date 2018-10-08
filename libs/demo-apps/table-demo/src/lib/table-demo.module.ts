@@ -10,7 +10,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
-import { SgTableModule, SgTableRegistryService, SgTableConfigService, NoVirtualScrollStrategy } from '@sac/table';
+import { SgTableModule, SgTableRegistryService } from '@sac/table';
 import { SgTableTransposeModule } from '@sac/table/transpose';
 import { SgTableBlockUiModule } from '@sac/table/block-ui';
 import { SgTableDetailRowModule } from '@sac/table/detail-row';
@@ -30,7 +30,8 @@ import {
   PaginatorTableExampleComponent,
   MatSortTableExampleComponent,
   TransposeTableExampleComponent,
-  DetailRowExampleComponent
+  DetailRowExampleComponent,
+  VirtualScrollTableExampleComponent
 } from './components';
 
 const MATERIAL = [
@@ -55,6 +56,7 @@ const TABLE_EXAMPLES = [
   MatSortTableExampleComponent,
   TransposeTableExampleComponent,
   DetailRowExampleComponent,
+  VirtualScrollTableExampleComponent,
 ];
 
 const ROUTES = [
@@ -66,6 +68,8 @@ const ROUTES = [
   { path: 'pagination', component: PaginatorTableExampleComponent, data: { title: 'Pagination' } },
   { path: 'transpose', component: TransposeTableExampleComponent, data: { title: 'Transpose' } },
   { path: 'detail-row', component: DetailRowExampleComponent, data: { title: 'Detail Row' } },
+  { path: 'virtual-scroll', component: VirtualScrollTableExampleComponent, data: { title: 'Virtual Scroll' } },
+
 ];
 
 @NgModule({
@@ -89,15 +93,8 @@ const ROUTES = [
   providers: [ SgTableRegistryService ],
 })
 export class TableDemoModule {
-  constructor(registry: ExampleGroupRegistryService, config: SgTableConfigService) {
+  constructor(registry: ExampleGroupRegistryService) {
     registry.registerGroupFromRoutes({ id: 'table', title: 'Table' }, ROUTES);
-
-    /* SET DEFAULT SCROLL STRATEGY TO NO SCROLL */
-    // config.set('virtualScroll', {
-    //   defaultStrategy() {
-    //     return new NoVirtualScrollStrategy();
-    //   }
-    // });
   }
 }
 

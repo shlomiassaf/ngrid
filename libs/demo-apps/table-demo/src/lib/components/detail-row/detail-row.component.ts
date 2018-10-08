@@ -55,8 +55,8 @@ export class DetailRowExampleComponent  {
         break;
     }
   }
-
-/* @sac-example:ex-4 */}
+}
+/* @sac-example:ex-4 */
 /* @sac-example:ex-3 */
 /* @sac-example:ex-2 */
 /* @sac-example:ex-1 */
