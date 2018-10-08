@@ -1,7 +1,7 @@
-import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
+import { Directive, EmbeddedViewRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { SgTableComponent, SgDetailsRowToggleEvent, KillOnDestroy } from '@sac/table';
+import { SgTableComponent, KillOnDestroy } from '@sac/table';
 import { SgTableDetailRowComponent } from './row';
 import { SgTableDetailRowParentRefDirective, SgTableDetailRowContext } from './directives';
 
@@ -16,6 +16,12 @@ export function toggleDetailRow<T = any>(table: SgTableComponent<T>, row: T, for
   }
 }
 
+export interface SgDetailsRowToggleEvent<T = any> {
+  row: T;
+  expended: boolean;
+  toggle(): void;
+}
+
 @Directive({ selector: 'sg-table[detailRow]' })
 @KillOnDestroy()
 export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
@@ -24,7 +30,7 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
    *
    * A detail row is an additional row added below a row rendered with the context of the row above it.
    *
-   * You can enable/disable detail row for the entire table by setting `detailRow` to true/false respectivly.
+   * You can enable/disable detail row for the entire table by setting `detailRow` to true/false respectively.
    * To control detail row per row, provide a predicate.
    */
   @Input() get detailRow(): ( (index: number, rowData: T) => boolean ) | boolean { return this._detailRow; }
@@ -62,6 +68,13 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
     }
   }
 
+  /**
+   * A list of columns that will not trigger a detail row toggle when clicked.
+   */
+  @Input() excludeToggleFrom: string[];
+
+  @Output() toggleChange = new EventEmitter<SgDetailsRowToggleEvent<T>>();
+
   private _openedRow?: SgDetailsRowToggleEvent<T>;
   private _forceSingle: boolean;
   private _isSimpleRow: (index: number, rowData: T) => boolean = ROW_WHEN_TRUE;
@@ -73,26 +86,12 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
   constructor(private table: SgTableComponent<any>) {
     TABLE_TO_DETAIL_ROW_MAP.set(table, this);
 
-    table.toggleChange
-      .pipe(KillOnDestroy(this))
-      .subscribe( event => {
-        // logic for closing previous row
-        const isSelf = this._openedRow && this._openedRow.row === event.row;
-        if (event.expended) {
-          if (this._forceSingle && this._openedRow && this._openedRow.expended && !isSelf) {
-            this._openedRow.toggle();
-          }
-          this._openedRow = event;
-        } else if (isSelf) {
-          this._openedRow = undefined;
-        }
-      });
+    const unsub = table.pluginEvents.subscribe( event => {
+      if (event.kind === 'onInit') {
+        unsub.unsubscribe();
 
-      const unsub = table.pluginEvents.subscribe( event => {
-        if (event.kind === 'onInit') {
-          unsub.unsubscribe();
-
-          table.registry.changes.subscribe( changes => {
+        table.registry.changes
+          .subscribe( changes => {
             for (const c of changes) {
               switch (c.type) {
                 case 'detailRowParent':
@@ -107,28 +106,28 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
             }
           });
 
-          table._cdkTable.onRenderRows
-            .subscribe( rowOutlet => {
-              if (this.detailRow) {
-                const viewContainer = rowOutlet.viewContainer;
-                for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
-                  const viewRef = viewContainer.get(renderIndex) as EmbeddedViewRef<SgTableDetailRowContext<T>>;
-                  const context = viewRef.context;
-                  context.table = this.table;
-                }
+        table._cdkTable.onRenderRows
+          .subscribe( rowOutlet => {
+            if (this.detailRow) {
+              const viewContainer = rowOutlet.viewContainer;
+              for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
+                const viewRef = viewContainer.get(renderIndex) as EmbeddedViewRef<SgTableDetailRowContext<T>>;
+                const context = viewRef.context;
+                context.table = this.table;
               }
-            });
+            }
+          });
 
-          // if we start with an initial value, then update the table cause we didn't do that
-          // when it was set (we cant cause we're not init)
-          // otherwise just setup the parent.
-          if (this._detailRow) {
-            this.updateTable();
-          } else {
-            this.setupDetailRowParent();
-          }
+        // if we start with an initial value, then update the table cause we didn't do that
+        // when it was set (we cant cause we're not init)
+        // otherwise just setup the parent.
+        if (this._detailRow) {
+          this.updateTable();
+        } else {
+          this.setupDetailRowParent();
         }
-      });
+      }
+    });
   }
 
   addDetailRow(detailRow: SgTableDetailRowComponent): void {
@@ -149,6 +148,21 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
 
   ngOnDestroy(): void {
     TABLE_TO_DETAIL_ROW_MAP.delete(this.table);
+  }
+
+  /** @internal */
+  detailRowToggled(event: SgDetailsRowToggleEvent<T>): void {
+    // logic for closing previous row
+    const isSelf = this._openedRow && this._openedRow.row === event.row;
+    if (event.expended) {
+      if (this._forceSingle && this._openedRow && this._openedRow.expended && !isSelf) {
+        this._openedRow.toggle();
+      }
+      this._openedRow = event;
+    } else if (isSelf) {
+      this._openedRow = undefined;
+    }
+    this.toggleChange.emit(event);
   }
 
   private setupDetailRowParent(): void {

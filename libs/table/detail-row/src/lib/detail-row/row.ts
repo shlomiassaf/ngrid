@@ -11,7 +11,7 @@ import {
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
-import { SgTableComponent } from '@sac/table';
+import { SgTableComponent, KillOnDestroy } from '@sac/table';
 import { SgTableDetailRowPluginDirective } from './detail-row-plugin';
 
 @Component({
@@ -21,7 +21,6 @@ import { SgTableDetailRowPluginDirective } from './detail-row-plugin';
     'class': 'sg-table-row sg-row-detail-parent',
     'role': 'row',
     '[attr.tabindex]': 'table?.rowFocus',
-    '(click)': 'toggle()',
     '(keydown)': 'handleKeydown($event)'
   },
   providers: [
@@ -31,6 +30,7 @@ import { SgTableDetailRowPluginDirective } from './detail-row-plugin';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
+@KillOnDestroy()
 export class SgTableDetailRowComponent extends CdkRow implements OnInit, OnDestroy {
 
   get expended(): boolean {
@@ -42,17 +42,29 @@ export class SgTableDetailRowComponent extends CdkRow implements OnInit, OnDestr
 
   private get _element(): HTMLElement { return this.elRef.nativeElement; }
   private opened: boolean = false;
+  private plugin: SgTableDetailRowPluginDirective<any>;
 
   constructor(private vcRef: ViewContainerRef, private elRef: ElementRef) {
     super();
   }
 
   ngOnInit(): void {
-    SgTableDetailRowPluginDirective.get(this.table).addDetailRow(this);
+    this.plugin = SgTableDetailRowPluginDirective.get(this.table); // TODO: THROW IF NO PLUGIN...
+    this.plugin.addDetailRow(this);
+    this.table.cellClick
+      .pipe(KillOnDestroy(this))
+      .subscribe( event => {
+        if (event.row === this.row) {
+          const { excludeToggleFrom } = this.plugin;
+          if (!excludeToggleFrom || !excludeToggleFrom.some( c => event.column.id === c )) {
+            this.toggle();
+          }
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    SgTableDetailRowPluginDirective.get(this.table).removeDetailRow(this);
+    this.plugin.removeDetailRow(this);
   }
 
   toggle(forceState?: boolean): void {
@@ -68,7 +80,7 @@ export class SgTableDetailRowComponent extends CdkRow implements OnInit, OnDestr
       if (this.opened) {
         this._element.classList.add('sg-row-detail-opened');
       }
-      this.table.toggleChange.emit(this);
+      this.plugin.detailRowToggled(this);
     }
   }
 

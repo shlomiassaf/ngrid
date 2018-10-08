@@ -31,7 +31,7 @@ import { SgDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { SgCdkTableComponent } from './sg-cdk-table/sg-cdk-table.component';
 import { KillOnDestroy } from './utils';
 import { findCellDef } from './directives/cell-def';
-import { SgDetailsRowToggleEvent, SgColumnSizeInfo } from './types';
+import { SgColumnSizeInfo } from './types';
 import {
   SgTableCellTemplateContext,
   SgTableMetaCellTemplateContext,
@@ -42,6 +42,7 @@ import { SgTableRegistryService } from './table-registry.service';
 import { RowWidthStaticAggregator } from './row-width-static-aggregator';
 import { RowWidthDynamicAggregator, PADDING_END_STRATEGY, MARGIN_END_STRATEGY } from './group-column-size-strategy';
 
+import { SgTableCellClickEvent } from './events';
 import { SgTableEvents, SgTablePluginExtension } from './plugins';
 import { Notify } from './services';
 
@@ -212,8 +213,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
 
-  @Output() toggleChange = new EventEmitter<SgDetailsRowToggleEvent<T>>();
-  @Output() rowClicked = new EventEmitter<{event: MouseEvent; row: T}>();
+  @Output() cellClick = new EventEmitter<SgTableCellClickEvent<T>>();
 
   readonly pluginEvents: Observable<SgTableEvents>;
   /**
@@ -235,6 +235,11 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
               public registry: SgTableRegistryService,) {
     this._pluginEvents = new Subject<SgTableEvents>();
     this.pluginEvents = this._pluginEvents.asObservable();
+  }
+
+  /** @internal */
+  onCellClicked(source: MouseEvent, column: SgColumn, row: T) {
+    this.cellClick.emit({ source, column, row });
   }
 
   ngAfterContentInit(): void {

@@ -44,7 +44,8 @@
 
         <!-- RECORD CELL DEF -->
         <sg-table-cell *cdkCellDef="let row"
-                       [attr.tabindex]="cellFocus">
+                       [attr.tabindex]="cellFocus"
+                       (click)="onCellClicked($event, c, row)">
           <ng-container *ngTemplateOutlet="c.cellTpl; context: (row | tableCellContext:c:self)"></ng-container>
         </sg-table-cell>
 
@@ -56,8 +57,7 @@
       <!-- HEADER-RECORD-FOOTER CELL DEF -->
 
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
-      <sg-table-row *cdkRowDef="let row; columns: _store.tableRow;"
-                    (click)="rowClicked.next({ event: $event, row: row })"></sg-table-row>
+      <sg-table-row *cdkRowDef="let row; columns: _store.tableRow;"></sg-table-row>
 
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
     </sg-cdk-table>

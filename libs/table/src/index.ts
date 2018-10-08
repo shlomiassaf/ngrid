@@ -41,7 +41,6 @@ export {
 
   SgTableCellTemplateContext,
   SgTableMetaCellTemplateContext,
-  SgDetailsRowToggleEvent,
   KillOnDestroy
 } from './lib/table/index';
 

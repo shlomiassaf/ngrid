@@ -1,6 +1,6 @@
 export * from './services/index';
 export * from './directives/index';
-export { SgDetailsRowToggleEvent, SgTableHeaderCellSortContainer} from './types';
+export { SgTableHeaderCellSortContainer } from './types';
 
 export {
   SgTableMetaCellTemplateContext,
@@ -26,6 +26,7 @@ export {
 
 export { SgCdkTableComponent } from './sg-cdk-table/sg-cdk-table.component';
 
+export * from './events';
 export { SgTableEvents, SgTablePluginExtension } from './plugins';
 export { SgTableComponent } from './table.component';
 export { SgTableRegistryService } from './table-registry.service';
