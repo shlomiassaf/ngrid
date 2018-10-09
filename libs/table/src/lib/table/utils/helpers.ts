@@ -1,5 +1,7 @@
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
+
 import { SgColumnDefinition } from '../columns/types';
 import { SgColumnStore } from '../columns/column-store';
 import { SgColumn } from '../columns/column';
@@ -51,7 +53,7 @@ export function deepPathSet(item: any, col: SgColumnDefinition, value: any): voi
  *   - Row's representing data items (data-rowtype="data") can omit the type attribute and the function will infer it.
  *
  */
-export function metadataFromElement(element: Element, store: SgColumnStore): [ 'meta-header', SgMetaColumn | SgColumnGroup ] | [ 'meta-footer' , SgMetaColumn ] | ['header' | 'footer', SgColumn] | ['data', SgColumn, number] | undefined  {
+export function metadataFromElement(element: Element, store: SgColumnStore, vcRef: ViewContainerRef): [ 'meta-header', SgMetaColumn | SgColumnGroup ] | [ 'meta-footer' , SgMetaColumn ] | ['header' | 'footer', SgColumn] | ['data', SgColumn, number] | undefined  {
   while (element.parentElement) {
     if (element.parentElement.getAttribute('role') === 'row') {
       let row: Element = element.parentElement;
@@ -65,16 +67,24 @@ export function metadataFromElement(element: Element, store: SgColumnStore): [ '
       let rowIndex = 0;
       switch (rowType) {
         case 'data':
+          const sourceRow = row;
           const tagName = row.tagName;
           while (row.previousElementSibling) {
             rowIndex++;
             row = row.previousElementSibling;
           }
-          while (tagName !== row.tagName) {
+          // while (tagName !== row.tagName) {
+          //   rowIndex--;
+          //   row = row.nextElementSibling;
+          // }
+          rowIndex = Math.min(rowIndex, vcRef.length - 1);
+          while (rowIndex > -1) {
+            if ((vcRef.get(rowIndex) as EmbeddedViewRef<any>).rootNodes[0] === sourceRow) {
+              return [rowType, store.find(store.tableRow[colIndex]).data, rowIndex];
+            }
             rowIndex--;
-            row = row.nextElementSibling;
           }
-          return [rowType, store.find(store.tableRow[colIndex]).data, rowIndex];
+          return;
         case 'header':
         case 'footer':
           return [rowType, store.find(store.tableRow[colIndex]).data];

@@ -56,9 +56,12 @@ export class SgCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     return this.onRenderRows$.asObservable();
   }
 
-  set minWidth(value: string) {
-    this._element.style.minWidth = value;
+  get minWidth(): string | null { return this._minWidth; }
+  set minWidth(value: string | null) {
+    this._element.style.minWidth = this._minWidth = value || null;
   }
+
+  private _minWidth: string | null = null;
 
   private onRenderRows$: Subject<DataRowOutlet>;
 

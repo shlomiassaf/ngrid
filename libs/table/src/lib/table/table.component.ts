@@ -240,7 +240,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
 
   /** @internal */
   onCellClicked(source: MouseEvent) {
-    const metadata = metadataFromElement(source.target as any, this._store);
+    const metadata = metadataFromElement(source.target as any, this._store, this._cdkTable._rowOutlet.viewContainer);
     if (metadata && metadata[0] === 'data') {
       const row = this.dataSource.renderedData[metadata[2] as number];
       this.cellClick.emit({ source, column: metadata[1] as SgColumn, row });
