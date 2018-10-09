@@ -31,7 +31,8 @@ import {
   MatSortTableExampleComponent,
   TransposeTableExampleComponent,
   DetailRowExampleComponent,
-  VirtualScrollTableExampleComponent
+  VirtualScrollTableExampleComponent,
+  EventsTableExampleComponent,
 } from './components';
 
 const MATERIAL = [
@@ -57,6 +58,7 @@ const TABLE_EXAMPLES = [
   TransposeTableExampleComponent,
   DetailRowExampleComponent,
   VirtualScrollTableExampleComponent,
+  EventsTableExampleComponent,
 ];
 
 const ROUTES = [
@@ -69,6 +71,7 @@ const ROUTES = [
   { path: 'transpose', component: TransposeTableExampleComponent, data: { title: 'Transpose' } },
   { path: 'detail-row', component: DetailRowExampleComponent, data: { title: 'Detail Row' } },
   { path: 'virtual-scroll', component: VirtualScrollTableExampleComponent, data: { title: 'Virtual Scroll' } },
+  { path: 'events', component: EventsTableExampleComponent, data: { title: 'Events' } },
 
 ];
 

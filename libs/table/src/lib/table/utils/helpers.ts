@@ -1,6 +1,10 @@
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { SgColumnDefinition } from '../columns/types';
+import { SgColumnStore } from '../columns/column-store';
+import { SgColumn } from '../columns/column';
+import { SgMetaColumn } from '../columns/meta-column';
+import { SgColumnGroup } from '../columns/group-column';
 
 /**
  * Normalize an SgColumnDefinition id
@@ -35,12 +39,69 @@ export function deepPathSet(item: any, col: SgColumnDefinition, value: any): voi
   item[ col.prop ] = value;
 }
 
+/**
+ * Returns table metadata for a given element.
+ * The element can be a table row element (any type of) OR a nested element (any level) of a table row element.
+ *
+ * This function works under the following assumptions:
+ *
+ *   - The immediate child of a table row element is a table cell element.
+ *   - Each row element MUST contains the type identifier attribute "data-rowtype" (except "data" rows)
+ *   - Allowed values for "data-rowtype" are: 'header' | 'meta-header' | 'footer' | 'meta-footer' | 'data'
+ *   - Row's representing data items (data-rowtype="data") can omit the type attribute and the function will infer it.
+ *
+ */
+export function metadataFromElement(element: Element, store: SgColumnStore): [ 'meta-header', SgMetaColumn | SgColumnGroup ] | [ 'meta-footer' , SgMetaColumn ] | ['header' | 'footer', SgColumn] | ['data', SgColumn, number] | undefined  {
+  while (element) {
+    if (element.parentElement.getAttribute('role') === 'row') {
+      let row: Element = element.parentElement;
+      const rowType: 'header' | 'meta-header' | 'footer' | 'meta-footer' | 'data' = row.getAttribute('data-rowtype') as any || 'data';
+
+      let colIndex = 0;
+      while (element = element.previousElementSibling) {
+        colIndex++;
+      }
+
+      let rowIndex = 0;
+      switch (rowType) {
+        case 'data':
+          const tagName = row.tagName;
+          while (row.previousElementSibling) {
+            rowIndex++;
+            row = row.previousElementSibling;
+          }
+          while (tagName !== row.tagName) {
+            rowIndex--;
+            row = row.nextElementSibling;
+          }
+          return [rowType, store.find(store.tableRow[colIndex]).data, rowIndex];
+        case 'header':
+        case 'footer':
+          return [rowType, store.find(store.tableRow[colIndex]).data];
+        default:
+          while (row.previousElementSibling && row.previousElementSibling.getAttribute('data-rowtype') === rowType) {
+            rowIndex++;
+            row = row.previousElementSibling;
+          }
+          if (rowType === 'meta-footer') {
+            return [ rowType, store.find(store.metaRows.footer[rowIndex].keys[colIndex]).footer ];
+          } else {
+            const rowInfo = store.metaRows.header[rowIndex];
+            const record = store.find(rowInfo.keys[colIndex]);
+            return [ rowType, rowInfo.isGroup ? record.headerGroup : record.header ];
+          }
+      }
+    }
+    element = element.parentElement;
+  }
+}
+
 //#region untilComponentDestroyed
 /**
  * Emits the values emitted by the source Observable until a the angular component instance is destroyed. (`ngOnDestory` is called).
  * If the component already implements `ngOnDestroy` it will wrap it.
  *
- * You can also destory on-demand by providing a handler and use `KillOnDestroy.kill` to unsubscribe.
+ * You can also destroy on-demand by providing a handler and use `KillOnDestroy.kill` to unsubscribe.
  * Note that using the same handler id for multiple subscriptions will kill all of them together, i.e. the handler is also a group.
  *
  * > WARNING: Do not apply operators that subscribe internally (e.g. combineLatest, switchMap) after the `killOnDestroy` operator.

@@ -1,24 +1,25 @@
 <!-- TABLE HEADER ROW DEF -->
 <cdk-header-row *cdkHeaderRowDef="_store.tableRow"
+                data-rowtype="header"
                 class="sg-table-header-row sg-table-header-row-main"
                 [ngStyle]="_mainHeaderRowStyle"></cdk-header-row>
 
 <!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
 <ng-container *ngFor="let row of _store.metaRows.header;">
-  <cdk-header-row *cdkHeaderRowDef="row.keys" class="sg-table-header-row {{ row.name }}" [class.sg-header-group-row]="row.isGroup"></cdk-header-row>
+  <cdk-header-row *cdkHeaderRowDef="row.keys" data-rowtype="meta-header" class="sg-table-header-row {{ row.name }}" [class.sg-header-group-row]="row.isGroup"></cdk-header-row>
 </ng-container>
 
 <!-- TABLE FOOTER ROW DEF -->
-<cdk-footer-row *cdkFooterRowDef="_store.tableRow" class="sg-table-footer-row"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
+<cdk-footer-row *cdkFooterRowDef="_store.tableRow" data-rowtype="footer" class="sg-table-footer-row"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
 <!-- MULTI-FOOTER ROW DEF -->
 <ng-container *ngFor="let row of _store.metaRows.footer">   <!-- MULTI-FOOTER ROW DEF -->
-  <cdk-footer-row *cdkFooterRowDef="row.keys" class="sg-table-footer-row {{ row.name }}"></cdk-footer-row>
+  <cdk-footer-row *cdkFooterRowDef="row.keys" data-rowtype="meta-footer" class="sg-table-footer-row {{ row.name }}"></cdk-footer-row>
 </ng-container>
 
 <div class="sg-table-container">
   <!-- <div class="sg-table-scroll-container"> -->
   <sg-cdk-virtual-scroll-viewport class="sg-table-scroll-container">
-    <sg-cdk-table>
+    <sg-cdk-table (click)="onCellClicked($event)">
       <!-- Row templates. The columns used are set at the row template level -->
 
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
@@ -44,8 +45,7 @@
 
         <!-- RECORD CELL DEF -->
         <sg-table-cell *cdkCellDef="let row"
-                       [attr.tabindex]="cellFocus"
-                       (click)="onCellClicked($event, c, row)">
+                       [attr.tabindex]="cellFocus">
           <ng-container *ngTemplateOutlet="c.cellTpl; context: (row | tableCellContext:c:self)"></ng-container>
         </sg-table-cell>
 

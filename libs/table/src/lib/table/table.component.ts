@@ -45,6 +45,7 @@ import { RowWidthDynamicAggregator, PADDING_END_STRATEGY, MARGIN_END_STRATEGY } 
 import { SgTableCellClickEvent } from './events';
 import { SgTableEvents, SgTablePluginExtension } from './plugins';
 import { Notify } from './services';
+import { metadataFromElement } from './utils';
 
 const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border: 'none', visibility: 'collapse' };
 
@@ -238,8 +239,12 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
   }
 
   /** @internal */
-  onCellClicked(source: MouseEvent, column: SgColumn, row: T) {
-    this.cellClick.emit({ source, column, row });
+  onCellClicked(source: MouseEvent) {
+    const metadata = metadataFromElement(source.target as any, this._store);
+    if (metadata[0] === 'data') {
+      const row = this.dataSource.renderedData[metadata[2] as number];
+      this.cellClick.emit({ source, column: metadata[1] as SgColumn, row });
+    }
   }
 
   ngAfterContentInit(): void {

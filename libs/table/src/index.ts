@@ -41,6 +41,7 @@ export {
 
   NoVirtualScrollStrategy,
 
+  SgTableCellClickEvent,
   SgTableCellTemplateContext,
   SgTableMetaCellTemplateContext,
   KillOnDestroy
