@@ -41,7 +41,7 @@ export function deepPathSet(item: any, col: SgColumnDefinition, value: any): voi
 
 /**
  * Returns table metadata for a given element.
- * The element can be a table row element (any type of) OR a nested element (any level) of a table row element.
+ * The element can be a table cell element (any type of) OR a nested element (any level) of a table cell element.
  *
  * This function works under the following assumptions:
  *
@@ -52,7 +52,7 @@ export function deepPathSet(item: any, col: SgColumnDefinition, value: any): voi
  *
  */
 export function metadataFromElement(element: Element, store: SgColumnStore): [ 'meta-header', SgMetaColumn | SgColumnGroup ] | [ 'meta-footer' , SgMetaColumn ] | ['header' | 'footer', SgColumn] | ['data', SgColumn, number] | undefined  {
-  while (element) {
+  while (element.parentElement) {
     if (element.parentElement.getAttribute('role') === 'row') {
       let row: Element = element.parentElement;
       const rowType: 'header' | 'meta-header' | 'footer' | 'meta-footer' | 'data' = row.getAttribute('data-rowtype') as any || 'data';
