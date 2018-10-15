@@ -1,7 +1,9 @@
+import { first } from 'rxjs/operators';
 import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { SgTableComponent, KillOnDestroy } from '@sac/table';
+import { SgTableComponent, SgTableExternalPluginService, KillOnDestroy } from '@sac/table';
+import { SgTableTargetEventsPlugin } from '@sac/table/target-events';
 import { SgTableDetailRowComponent } from './row';
 import { SgTableDetailRowParentRefDirective, SgTableDetailRowContext, SgTableDefaultDetailRowParentComponent } from './directives';
 
@@ -87,9 +89,22 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
   constructor(private table: SgTableComponent<any>, private injector: Injector) {
     TABLE_TO_DETAIL_ROW_MAP.set(table, this);
 
-    const unsub = table.pluginEvents.subscribe( event => {
+    let subscription = table.pluginEvents.subscribe( event => {
       if (event.kind === 'onInit') {
-        unsub.unsubscribe();
+        subscription.unsubscribe();
+        subscription = undefined;
+
+        // Depends on target-events plugin
+        // if it's not set, create it.
+        // TODO: this is not optimal.... lifecycle events are out of sync, if needed.
+        const extPlugins = injector.get(SgTableExternalPluginService);
+        extPlugins.onNewTable.pipe(first()).subscribe( table => {
+          if (!table.plugin('targetEvents')) {
+            const targetEvents = new SgTableTargetEventsPlugin(table, injector);
+            event.registerPlugin('targetEvents', targetEvents);
+            targetEvents.init();
+          }
+        });
 
         table.registry.changes
           .subscribe( changes => {
@@ -101,7 +116,7 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
                     this._detailRowDef = undefined;
                   }
                   this.setupDetailRowParent();
-                  table._cdkTable.syncRows(['table']);
+                  // table._cdkTable.syncRows('data');
                   break;
               }
             }

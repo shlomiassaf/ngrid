@@ -1,5 +1,7 @@
 # Detail Row
 
+I> Requires `@sac/table/target-event` plugin
+
 <docsi-mat-example-with-source title="Detail Row" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@sac-example:ex-1-->
   <sg-table blockUi [dataSource]="ds1" [columns]="columns" detailRow>

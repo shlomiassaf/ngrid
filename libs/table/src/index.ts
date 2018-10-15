@@ -23,7 +23,7 @@ export {
 
   SgTableHeaderCellSortContainer,
 
-  SgColumn, SgMetaColumn, SgColumnFactory, COLUMN, columnFactory,
+  SgColumn, SgMetaColumn, SgColumnGroup, SgColumnFactory, COLUMN, columnFactory,
 
   SgTableComponent, SgTableEvents, SgTablePluginExtension,
   SgTableRegistryService,

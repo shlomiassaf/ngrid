@@ -51,14 +51,23 @@ export class SgTableDetailRowComponent extends CdkRow implements OnInit, OnDestr
   ngOnInit(): void {
     this.plugin = SgTableDetailRowPluginDirective.get(this.table); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
-    this.table.cellClick
+    const tradeEvents = this.table.plugin('targetEvents');
+    tradeEvents.cellClick
       .pipe(KillOnDestroy(this))
       .subscribe( event => {
-        if (event.row === this.row) {
+        if (event.type === 'data' && event.row === this.row) {
           const { excludeToggleFrom } = this.plugin;
           if (!excludeToggleFrom || !excludeToggleFrom.some( c => event.column.id === c )) {
             this.toggle();
           }
+        }
+      });
+
+    tradeEvents.rowClick
+      .pipe(KillOnDestroy(this))
+      .subscribe( event => {
+        if (!event.root && event.type === 'data' && event.row === this.row) {
+          this.toggle();
         }
       });
   }

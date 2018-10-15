@@ -8,4 +8,4 @@ export { MatSortTableExampleComponent } from './mat-sort';
 export { TransposeTableExampleComponent } from './transpose/transpose.component';
 export { DetailRowExampleComponent } from './detail-row/detail-row.component';
 export { VirtualScrollTableExampleComponent } from './virtual-scroll/virtual-scroll.component';
-export { EventsTableExampleComponent } from './events/events.component';
+export { TargetEventsTableExampleComponent } from './target-events/target-events.component';

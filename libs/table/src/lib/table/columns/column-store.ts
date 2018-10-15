@@ -9,12 +9,13 @@ export interface SgMetaColumnStore {
   header?: SgMetaColumn;
   footer?: SgMetaColumn;
   headerGroup?: SgColumnGroup;
+  footerGroup?: SgColumnGroup;
 }
 
 export class SgColumnStore {
   metaRows: {
     header: Array<{ name: string; keys: string[], isGroup?: boolean }>;
-    footer: Array<{ name: string; keys: string[] }>;
+    footer: Array<{ name: string; keys: string[], isGroup?: boolean }>;
   }
   tableRow: string[];
 

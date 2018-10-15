@@ -4,8 +4,6 @@ import {
   AfterViewInit,
   Component,
   Input,
-  Output,
-  EventEmitter,
   ChangeDetectionStrategy,
   ViewChild,
   ViewChildren,
@@ -42,10 +40,8 @@ import { SgTableRegistryService } from './table-registry.service';
 import { RowWidthStaticAggregator } from './row-width-static-aggregator';
 import { RowWidthDynamicAggregator, PADDING_END_STRATEGY, MARGIN_END_STRATEGY } from './group-column-size-strategy';
 
-import { SgTableCellClickEvent } from './events';
 import { SgTableEvents, SgTablePluginExtension } from './plugins';
 import { Notify } from './services';
-import { metadataFromElement } from './utils';
 
 const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border: 'none', visibility: 'collapse' };
 
@@ -214,8 +210,6 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
 
-  @Output() cellClick = new EventEmitter<SgTableCellClickEvent<T>>();
-
   readonly pluginEvents: Observable<SgTableEvents>;
   /**
    * True when the component is initialized (after AfterViewInit)
@@ -236,15 +230,6 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
               public registry: SgTableRegistryService,) {
     this._pluginEvents = new Subject<SgTableEvents>();
     this.pluginEvents = this._pluginEvents.asObservable();
-  }
-
-  /** @internal */
-  onCellClicked(source: MouseEvent) {
-    const metadata = metadataFromElement(source.target as any, this._store, this._cdkTable._rowOutlet.viewContainer);
-    if (metadata && metadata[0] === 'data') {
-      const row = this.dataSource.renderedData[metadata[2] as number];
-      this.cellClick.emit({ source, column: metadata[1] as SgColumn, row });
-    }
   }
 
   ngAfterContentInit(): void {
@@ -301,7 +286,6 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
     });
 
     this.setupPaginator();
-
     Notify.onNewTable.next(this);
   }
 
@@ -412,7 +396,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
       this._cdkTable.minWidth = `${rowWidth.totalMinWidth}px`;
     }
 
-    this._cdkTable.syncRows(['header']);
+    this._cdkTable.syncRows('header');
     this._pluginEvents.next({ kind: 'onResizeRow' });
   }
 

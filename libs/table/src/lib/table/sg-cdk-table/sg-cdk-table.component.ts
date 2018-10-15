@@ -198,26 +198,38 @@ export class SgCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
    * Force run change detection for rows.
    * You can run it for specific groups or for all rows.
    */
-  syncRows(rowTypes?: Array<'header' | 'table' | 'footer'>): void {
-    if (!rowTypes) {
-      rowTypes = [ 'header', 'table', 'footer'];
+  syncRows(rowType?: 'all', detectChanges?: boolean): void;
+  syncRows(rowType: 'header' | 'data' | 'footer', detectChanges: boolean, ...rows: number[]): void;
+  syncRows(rowType: 'header' | 'data' | 'footer', ...rows: number[]): void;
+  syncRows(rowType: 'header' | 'data' | 'footer' | 'all' = 'all', ...rows: any[]): void {
+    const detectChanges: boolean = typeof rows[0] === 'boolean' ? rows.shift() : false;
+
+    let vcRef: ViewContainerRef;
+    switch(rowType) {
+      case 'header':
+        vcRef = this._headerRowOutlet.viewContainer;
+        break;
+      case 'data':
+        vcRef = this._rowOutlet.viewContainer;
+        break;
+      case 'footer':
+        vcRef = this._footerRowOutlet.viewContainer;
+        break;
+      default:
+        this._changeDetectorRef.markForCheck();
+        if (detectChanges) {
+          this._changeDetectorRef.detectChanges();
+        }
+        return;
     }
 
-    const arr: ViewContainerRef[] = rowTypes.map( t => {
-      switch(t) {
-        case 'header':
-          return this._headerRowOutlet.viewContainer;
-        case 'table':
-          return this._rowOutlet.viewContainer;
-        case 'footer':
-          return this._footerRowOutlet.viewContainer;
-      }
-    });
+    const useSpecificRows = rows.length > 0;
+    const count = useSpecificRows ? rows.length : vcRef.length;
 
-    for (const vcRef of arr) {
-      for (let renderIndex = 0, count = vcRef.length; renderIndex < count; renderIndex++) {
-        const viewRef = vcRef.get(renderIndex) as EmbeddedViewRef<any>;
-        viewRef.markForCheck();
+    for (let renderIndex = 0; renderIndex < count; renderIndex++) {
+      const viewRef = vcRef.get(useSpecificRows ? rows[renderIndex] : renderIndex) as EmbeddedViewRef<any>;
+      viewRef.markForCheck();
+      if (detectChanges) {
         viewRef.detectChanges();
       }
     }

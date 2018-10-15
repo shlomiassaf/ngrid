@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { SgTableModule, SgTableRegistryService } from '@sac/table';
+import { SgTableTargetEventsModule } from '@sac/table/target-events';
 import { SgTableTransposeModule } from '@sac/table/transpose';
 import { SgTableBlockUiModule } from '@sac/table/block-ui';
 import { SgTableDetailRowModule } from '@sac/table/detail-row';
@@ -32,7 +33,7 @@ import {
   TransposeTableExampleComponent,
   DetailRowExampleComponent,
   VirtualScrollTableExampleComponent,
-  EventsTableExampleComponent,
+  TargetEventsTableExampleComponent,
 } from './components';
 
 const MATERIAL = [
@@ -58,7 +59,7 @@ const TABLE_EXAMPLES = [
   TransposeTableExampleComponent,
   DetailRowExampleComponent,
   VirtualScrollTableExampleComponent,
-  EventsTableExampleComponent,
+  TargetEventsTableExampleComponent,
 ];
 
 const ROUTES = [
@@ -71,7 +72,7 @@ const ROUTES = [
   { path: 'transpose', component: TransposeTableExampleComponent, data: { title: 'Transpose' } },
   { path: 'detail-row', component: DetailRowExampleComponent, data: { title: 'Detail Row' } },
   { path: 'virtual-scroll', component: VirtualScrollTableExampleComponent, data: { title: 'Virtual Scroll' } },
-  { path: 'events', component: EventsTableExampleComponent, data: { title: 'Events' } },
+  { path: 'target-events', component: TargetEventsTableExampleComponent, data: { title: 'Target Events' } },
 
 ];
 
@@ -84,6 +85,7 @@ const ROUTES = [
     SharedModule,
     MATERIAL, MatRippleModule,
     SgTableModule,
+    SgTableTargetEventsModule,
     SgTableBlockUiModule,
     SgTableTransposeModule,
     SgTableDetailRowModule,

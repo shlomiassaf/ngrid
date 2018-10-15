@@ -101,6 +101,11 @@
       "tags": [
         "publish-plugin table table-transpose"
       ]
+    },
+    "table-target-events": {
+      "tags": [
+        "publish-plugin table table-target-events"
+      ]
     }
   }
 }
