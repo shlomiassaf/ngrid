@@ -27,7 +27,7 @@ import { AppComponent } from './app.component';
     // `path` of ExampleGroup must match the group id!
     RouterModule.forRoot(
       [
-        { path: 'table', loadChildren: '@sac/demo-apps/table-demo#TableDemoModule' }
+        { path: 'table-demo', loadChildren: '@sac/demo-apps/table-demo#TableDemoModule' },
       ],
       {
         useHash: false,

@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@sac/table';
 
-import { Person, getPersons } from '../../services';
+import { Person, getPersons } from '../../../services';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})

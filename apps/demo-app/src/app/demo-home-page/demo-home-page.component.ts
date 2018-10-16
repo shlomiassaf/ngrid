@@ -10,6 +10,7 @@ import { ExampleGroupRegistryService } from '@sac/demo-apps/shared';
 })
 export class DemoHomePageComponent {
 
-  constructor(public registry: ExampleGroupRegistryService) { }
+  constructor(public registry: ExampleGroupRegistryService) {
+  }
 
 }

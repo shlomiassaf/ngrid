@@ -17,7 +17,6 @@
 </ng-container>
 
 <div class="sg-table-container">
-  <!-- <div class="sg-table-scroll-container"> -->
   <sg-cdk-virtual-scroll-viewport class="sg-table-scroll-container">
     <sg-cdk-table>
       <!-- Row templates. The columns used are set at the row template level -->
@@ -63,7 +62,6 @@
     </sg-cdk-table>
     <div [style.minWidth]="_cdkTable?.minWidth" class="sg-table-space-fill"></div>
   </sg-cdk-virtual-scroll-viewport>
-  <!-- </div> -->
 
   <ng-container #beforeContent></ng-container>
   <ng-content></ng-content>

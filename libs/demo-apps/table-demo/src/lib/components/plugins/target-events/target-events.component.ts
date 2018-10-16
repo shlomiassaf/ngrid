@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { createDS, columnFactory } from '@sac/table';
 import { SgTableRowEvent, SgTableCellEvent } from '@sac/table/target-events';
 
-import { Person, getPersons } from '../../services';
+import { Person, getPersons } from '../../../services';
 
 function isCellEvent<T>(event: SgTableRowEvent<T> | SgTableCellEvent<T>): event is SgTableCellEvent<T> {
   return !!(event as  SgTableCellEvent<T>).cellTarget;
@@ -94,38 +94,19 @@ export class TargetEventsTableExampleComponent {
 
   onEnterLeaveEvents(event: SgTableRowEvent<Person> | SgTableCellEvent<Person>, isEnter = false) {
     if (isCellEvent(event)) {
-      if (!isEnter) {
-        event.cellTarget.style.background = null;
+      if (isEnter) {
+        event.cellTarget.classList.add('cell-hovered');
+        event.rowTarget.classList.add('row-cell-hovered');
       } else {
-        const cmap = {
-          data: 'red',
-          header: 'yellow',
-          footer: 'pink',
-          meta: 'green',
-          'meta-group': 'blue',
-        }
-        const cmapBg = {
-          data: `rgba(255,0,0,0.25)`,
-          header: `rgba(255,255,0,0.25)`,
-          footer: `rgba(255,192,203,0.25)`,
-          meta: `rgba(0,128,0,0.25)`,
-          'meta-group': `rgba(0,0,255,0.25)`,
-        }
-        event.cellTarget.style.background = cmap[event.subType] || cmap[event.type];
-        event.rowTarget.style.background = cmapBg[event.subType] || cmapBg[event.type];
+        event.cellTarget.classList.remove('cell-hovered');
+        event.rowTarget.classList.remove('row-cell-hovered');
       }
     } else {
-      if (!isEnter) {
-        event.rowTarget.style.background = 'inherit';
-      } else if (!event.root) {
-        const cmap = {
-          data: `rgba(255,0,0,1)`,
-          header: `rgba(255,255,0,1)`,
-          footer: `rgba(255,192,203,1)`,
-          meta: `rgba(0,128,0,1)`,
-          'meta-group': `rgba(0,0,255,1)`,
-        }
-        event.rowTarget.style.background = cmap[event.subType] || cmap[event.type];
+      if (isEnter) {
+        event.rowTarget.classList.add('row-hovered');
+      } else {
+        event.rowTarget.classList.remove('row-hovered');
+        event.rowTarget.classList.remove('row-cell-hovered');
       }
     }
   }

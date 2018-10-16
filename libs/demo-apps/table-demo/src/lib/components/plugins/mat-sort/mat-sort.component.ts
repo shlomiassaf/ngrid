@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { columnFactory, createDS, SgColumn } from '@sac/table';
 import { SgTableMatSortDirective } from '@sac/table/mat-sort';
 
-import { Person, getPersons } from '../../services';
+import { Person, getPersons } from '../../../services';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})

@@ -10,7 +10,7 @@
 
 <docsi-mat-example-with-source title="Cell/Row -> Enter/Leave Events" contentClass="mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@sac-example:ex-2-->
-  <sg-table blockUi [dataSource]="ds2" [columns]="columns2" footerRow
+  <sg-table blockUi [dataSource]="ds2" [columns]="columns2" vScrollNone footerRow
             (cellEnter)="onEnterLeaveEvents($event, true)" (cellLeave)="onEnterLeaveEvents($event)"
             (rowEnter)="onEnterLeaveEvents($event, true)" (rowLeave)="onEnterLeaveEvents($event)"></sg-table>
   <!--@sac-example:ex-2-->

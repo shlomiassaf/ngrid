@@ -24,6 +24,7 @@ import { SharedModule, ExampleGroupRegistryService } from '@sac/demo-apps/shared
 import {
   TableExamplesPageComponent,
   AllInOneTableExampleComponent,
+  RowHeightTableExampleComponent,
   BlockUiTableExampleComponent,
   NoDataTableExampleComponent,
   StickyRowTableExampleComponent,
@@ -50,6 +51,7 @@ const MATERIAL = [
 const TABLE_EXAMPLES = [
   TableExamplesPageComponent,
   AllInOneTableExampleComponent,
+  RowHeightTableExampleComponent,
   BlockUiTableExampleComponent,
   NoDataTableExampleComponent,
   StickyRowTableExampleComponent,
@@ -64,15 +66,21 @@ const TABLE_EXAMPLES = [
 
 const ROUTES = [
   { path: 'all-in-one', component: AllInOneTableExampleComponent, data: { title: 'All In One' } },
+  { path: 'row-height', component: RowHeightTableExampleComponent, data: { title: 'Row Height' } },
+  { path: 'no-data', component: NoDataTableExampleComponent, data: { title: 'No Date' } },
+  { path: 'pagination', component: PaginatorTableExampleComponent, data: { title: 'Pagination' } },
+
+
+];
+
+const PLUGIN_ROUTES = [
+  { path: 'target-events', component: TargetEventsTableExampleComponent, data: { title: 'Target Events' } },
   { path: 'block-ui', component: BlockUiTableExampleComponent, data: { title: 'Block UI' } },
   { path: 'mat-sort', component: MatSortTableExampleComponent, data: { title: 'Sorting with mat-sort' } },
-  { path: 'no-data', component: NoDataTableExampleComponent, data: { title: 'No Date' } },
-  { path: 'sticky', component: StickyRowTableExampleComponent, data: { title: 'Sticky Plugin' } },
-  { path: 'pagination', component: PaginatorTableExampleComponent, data: { title: 'Pagination' } },
+  { path: 'sticky', component: StickyRowTableExampleComponent, data: { title: 'Sticky' } },
   { path: 'transpose', component: TransposeTableExampleComponent, data: { title: 'Transpose' } },
   { path: 'detail-row', component: DetailRowExampleComponent, data: { title: 'Detail Row' } },
   { path: 'virtual-scroll', component: VirtualScrollTableExampleComponent, data: { title: 'Virtual Scroll' } },
-  { path: 'target-events', component: TargetEventsTableExampleComponent, data: { title: 'Target Events' } },
 
 ];
 
@@ -80,7 +88,8 @@ const ROUTES = [
   declarations: TABLE_EXAMPLES,
   imports: [
     RouterModule.forChild([
-      { path: '', component: TableExamplesPageComponent, children: ROUTES },
+      { path: 'table', component: TableExamplesPageComponent, children: ROUTES },
+      { path: 'plugins', component: TableExamplesPageComponent, children: PLUGIN_ROUTES },
     ]),
     SharedModule,
     MATERIAL, MatRippleModule,
@@ -100,11 +109,13 @@ const ROUTES = [
 export class TableDemoModule {
   constructor(registry: ExampleGroupRegistryService) {
     registry.registerGroupFromRoutes({ id: 'table', title: 'Table' }, ROUTES);
+    registry.registerGroupFromRoutes({ id: 'plugins', title: 'Plugins' }, PLUGIN_ROUTES);
   }
 }
 
 declare module '@sac/demo-apps/shared/src/lib/example-group/example-group-registry.service' {
   interface ExampleGroupMap {
-    table: ExampleGroupMetadata
+    table: ExampleGroupMetadata;
+    'plugins': ExampleGroupMetadata;
   }
 }

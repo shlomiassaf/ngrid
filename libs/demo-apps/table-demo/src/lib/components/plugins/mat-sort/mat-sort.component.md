@@ -18,9 +18,7 @@
             usePagination
             blockUi
             [dataSource]="simpleSortDS"
-            [columns]="columns"
-            style="height: 40%"
-            class="sg-boxed-table">
+            [columns]="columns">
     <sg-table-paginator *sgTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.dataSource.paginator"></sg-table-paginator>
@@ -46,9 +44,7 @@
             usePagination
             blockUi
             [dataSource]="defaultSortDS"
-            [columns]="columns"
-            style="height: 40%"
-            class="sg-boxed-table">
+            [columns]="columns">
     <sg-table-paginator *sgTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.dataSource.paginator"></sg-table-paginator>
@@ -76,9 +72,7 @@
             usePagination
             blockUi
             [dataSource]="progSortDS"
-            [columns]="columns"
-            style="height: 40%"
-            class="sg-boxed-table">
+            [columns]="columns">
     <sg-table-paginator *sgTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.dataSource.paginator"></sg-table-paginator>

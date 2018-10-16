@@ -28,9 +28,7 @@ E> Block
   <!--@sac-example:ex-1-->
   <sg-table blockUi
             [dataSource]="autoDataSource"
-            [columns]="columns"
-            style="height: 250px"
-            class="sg-boxed-table">
+            [columns]="columns">
   </sg-table>
   <button mat-button (click)="refresh()">Refresh</button>
   <!--@sac-example:ex-1-->
@@ -54,9 +52,7 @@ E> Block
             #blockUi="blockUi"
             blockUi="false"
             [dataSource]="manualDataSource"
-            [columns]="columns"
-            style="height: 250px"
-            class="sg-boxed-table">
+            [columns]="columns">
   </sg-table>
   <button mat-button (click)="tbl.plugin('blockUi').blockUi = !tbl.plugin('blockUi').blockUi">Toggle Block UI (plugin interface)</button>
   <button mat-button (click)="blockUi.blockUi = !blockUi.blockUi">Toggle Block UI (plugin instance)</button>
