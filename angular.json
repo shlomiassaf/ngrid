@@ -296,126 +296,6 @@
         }
       }
     },
-    "table-material-selection-column": {
-      "root": "libs/table/material/selection-column",
-      "sourceRoot": "libs/table/material/selection-column/src",
-      "projectType": "library",
-      "prefix": "sac",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/table/material/selection-column/tsconfig.lib.json",
-            "project": "libs/table/material/selection-column/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "libs/table/material/selection-column/ng-package.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "libs/table/material/selection-column/src/test.ts",
-            "tsConfig": "libs/table/material/selection-column/tsconfig.spec.json",
-            "karmaConfig": "libs/table/material/selection-column/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/table/material/selection-column/tsconfig.lib.json",
-              "libs/table/material/selection-column/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "table-material-paginator": {
-      "root": "libs/table/material/paginator",
-      "sourceRoot": "libs/table/material/paginator/src",
-      "projectType": "library",
-      "prefix": "sac",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/table/material/paginator/tsconfig.lib.json",
-            "project": "libs/table/material/paginator/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "libs/table/material/paginator/ng-package.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "libs/table/material/paginator/src/test.ts",
-            "tsConfig": "libs/table/material/paginator/tsconfig.spec.json",
-            "karmaConfig": "libs/table/material/paginator/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/table/material/paginator/tsconfig.lib.json",
-              "libs/table/material/paginator/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "table-material-sort": {
-      "root": "libs/table/material/sort",
-      "sourceRoot": "libs/table/material/sort/src",
-      "projectType": "library",
-      "prefix": "sac",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/table/material/sort/tsconfig.lib.json",
-            "project": "libs/table/material/sort/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "libs/table/material/sort/ng-package.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "libs/table/material/sort/src/test.ts",
-            "tsConfig": "libs/table/material/sort/tsconfig.spec.json",
-            "karmaConfig": "libs/table/material/sort/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/table/material/sort/tsconfig.lib.json",
-              "libs/table/material/sort/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
     "demo-apps-table-demo": {
       "root": "libs/demo-apps/table-demo",
       "sourceRoot": "libs/demo-apps/table-demo/src",
@@ -656,6 +536,166 @@
             "tsConfig": [
               "libs/table/target-events/tsconfig.lib.json",
               "libs/table/target-events/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "table-material-selection-column": {
+      "root": "libs/table/material/selection-column",
+      "sourceRoot": "libs/table/material/selection-column/src",
+      "projectType": "library",
+      "prefix": "sac",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/table/material/selection-column/tsconfig.lib.json",
+            "project": "libs/table/material/selection-column/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "libs/table/material/selection-column/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/table/material/selection-column/src/test.ts",
+            "tsConfig": "libs/table/material/selection-column/tsconfig.spec.json",
+            "karmaConfig": "libs/table/material/selection-column/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/table/material/selection-column/tsconfig.lib.json",
+              "libs/table/material/selection-column/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "table-material-paginator": {
+      "root": "libs/table/material/paginator",
+      "sourceRoot": "libs/table/material/paginator/src",
+      "projectType": "library",
+      "prefix": "sac",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/table/material/paginator/tsconfig.lib.json",
+            "project": "libs/table/material/paginator/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "libs/table/material/paginator/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/table/material/paginator/src/test.ts",
+            "tsConfig": "libs/table/material/paginator/tsconfig.spec.json",
+            "karmaConfig": "libs/table/material/paginator/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/table/material/paginator/tsconfig.lib.json",
+              "libs/table/material/paginator/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "table-material-sort": {
+      "root": "libs/table/material/sort",
+      "sourceRoot": "libs/table/material/sort/src",
+      "projectType": "library",
+      "prefix": "sac",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/table/material/sort/tsconfig.lib.json",
+            "project": "libs/table/material/sort/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "libs/table/material/sort/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/table/material/sort/src/test.ts",
+            "tsConfig": "libs/table/material/sort/tsconfig.spec.json",
+            "karmaConfig": "libs/table/material/sort/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/table/material/sort/tsconfig.lib.json",
+              "libs/table/material/sort/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "table-material-cell-tooltip": {
+      "root": "libs/table/material/cell-tooltip",
+      "sourceRoot": "libs/table/material/cell-tooltip/src",
+      "projectType": "library",
+      "prefix": "sac",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/table/material/cell-tooltip/tsconfig.lib.json",
+            "project": "libs/table/material/cell-tooltip/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "libs/table/material/cell-tooltip/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/table/material/cell-tooltip/src/test.ts",
+            "tsConfig": "libs/table/material/cell-tooltip/tsconfig.spec.json",
+            "karmaConfig": "libs/table/material/cell-tooltip/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/table/material/cell-tooltip/tsconfig.lib.json",
+              "libs/table/material/cell-tooltip/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

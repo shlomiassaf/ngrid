@@ -5,6 +5,8 @@ export { PaginatorTableExampleComponent } from './paginator';
 export { NoDataTableExampleComponent } from './no-data';
 
 export { BlockUiTableExampleComponent } from './plugins/block-ui';
+export { CellTooltipTableExampleComponent } from './plugins/cell-tooltip/cell-tooltip.component';
+
 export { StickyRowTableExampleComponent, StickyColumnTableExampleComponent } from './plugins/sticky';
 export { MatSortTableExampleComponent } from './plugins/mat-sort';
 export { TransposeTableExampleComponent } from './plugins/transpose/transpose.component';

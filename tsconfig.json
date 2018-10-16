@@ -29,15 +29,6 @@
       "@sac/table/block-ui": [
         "libs/table/block-ui/src/index.ts"
       ],
-      "@sac/table/material/selection-column": [
-        "libs/table/material/selection-column/src/index.ts"
-      ],
-      "@sac/table/material/paginator": [
-        "libs/table/material/paginator/src/index.ts"
-      ],
-      "@sac/table/material/sort": [
-        "libs/table/material/sort/src/index.ts"
-      ],
       "@sac/demo-apps/table-demo": [
         "libs/demo-apps/table-demo/src/index.ts"
       ],
@@ -64,6 +55,18 @@
       ],
       "@sac/table/target-events": [
         "libs/table/target-events/src/index.ts"
+      ],
+      "@sac/table/material/selection-column": [
+        "libs/table/material/selection-column/src/index.ts"
+      ],
+      "@sac/table/material/paginator": [
+        "libs/table/material/paginator/src/index.ts"
+      ],
+      "@sac/table/material/sort": [
+        "libs/table/material/sort/src/index.ts"
+      ],
+      "@sac/table/material/cell-toolip": [
+        "libs/table/material/cell-toolip/src/index.ts"
       ],
       "@sac/table/material": [
         "libs/table/material/src/index.ts"

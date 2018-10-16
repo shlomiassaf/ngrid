@@ -24,6 +24,7 @@ import {
   AllInOneTableExampleComponent,
   RowHeightTableExampleComponent,
   BlockUiTableExampleComponent,
+  CellTooltipTableExampleComponent,
   NoDataTableExampleComponent,
   StickyRowTableExampleComponent,
   StickyColumnTableExampleComponent,
@@ -51,6 +52,7 @@ const TABLE_EXAMPLES = [
   AllInOneTableExampleComponent,
   RowHeightTableExampleComponent,
   BlockUiTableExampleComponent,
+  CellTooltipTableExampleComponent,
   NoDataTableExampleComponent,
   StickyRowTableExampleComponent,
   StickyColumnTableExampleComponent,
@@ -74,6 +76,7 @@ const ROUTES = [
 const PLUGIN_ROUTES = [
   { path: 'target-events', component: TargetEventsTableExampleComponent, data: { title: 'Target Events' } },
   { path: 'block-ui', component: BlockUiTableExampleComponent, data: { title: 'Block UI' } },
+  { path: 'cell-tooltip', component: CellTooltipTableExampleComponent, data: { title: 'Cell Tooltip' } },
   { path: 'mat-sort', component: MatSortTableExampleComponent, data: { title: 'Sorting with mat-sort' } },
   { path: 'sticky', component: StickyRowTableExampleComponent, data: { title: 'Sticky' } },
   { path: 'transpose', component: TransposeTableExampleComponent, data: { title: 'Transpose' } },
