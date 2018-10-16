@@ -16,9 +16,7 @@ import { SgTableTransposeModule } from '@sac/table/transpose';
 import { SgTableBlockUiModule } from '@sac/table/block-ui';
 import { SgTableDetailRowModule } from '@sac/table/detail-row';
 import { SgTableStickyModule } from '@sac/table/sticky';
-import { SgTableCheckboxModule } from '@sac/table/material/selection-column';
-import { SgTablePaginatorModule } from '@sac/table/material/paginator';
-import { SgTableMatSortModule } from '@sac/table/material/sort';
+import { SgTableMaterialModule } from '@sac/table/material';
 
 import { SharedModule, ExampleGroupRegistryService } from '@sac/demo-apps/shared';
 import {
@@ -99,9 +97,7 @@ const PLUGIN_ROUTES = [
     SgTableTransposeModule,
     SgTableDetailRowModule,
     SgTableStickyModule,
-    SgTableCheckboxModule,
-    SgTablePaginatorModule,
-    SgTableMatSortModule
+    SgTableMaterialModule,
   ],
   exports: [ MatRippleModule ], // we need this for detail-row
   providers: [ SgTableRegistryService ],
