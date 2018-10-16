@@ -41,7 +41,7 @@ export class CellTooltipTableExampleComponent {
     .create();
 
   getTooltipMessage(event: SgTableCellEvent<Person>): string {
-    return `${event.colIndex} / ${event.rowIndex} -> ${event.rowIndex % 2 ? 'ODD' : 'EVEN'} ROW`
+    return `${event.colIndex} / ${event.rowIndex} -> ${event.rowIndex % 2 ? 'ODD' : 'EVEN'} ROW\n\n${event.cellTarget.innerText}`;
   }
 }
 /* @sac-example:ex-3 */
