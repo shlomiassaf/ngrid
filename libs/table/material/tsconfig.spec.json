@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/table/mat-sort",
+    "outDir": "../../../dist/out-tsc/libs/table/material",
     "types": [
       "jasmine",
       "node"

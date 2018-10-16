@@ -1,7 +1,7 @@
 {
-  "extends": "../../../tsconfig.lib.json",
+  "extends": "../../../../tsconfig.lib.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/table/mat-checkbox-column",
+    "outDir": "../../../../dist/out-tsc/libs/table/material/selection-column",
     "target": "es2015",
     "module": "es2015",
     "moduleResolution": "node",

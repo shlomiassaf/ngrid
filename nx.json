@@ -46,25 +46,28 @@
         "table-block-ui"
       ]
     },
-    "table-mat-checkbox-column": {
+    "table-material-selection-column": {
       "tags": [
         "publish-plugin",
         "table",
-        "table-mat-checkbox-column"
+        "material",
+        "selection-column"
       ]
     },
-    "table-mat-paginator": {
+    "table-material-paginator": {
       "tags": [
         "publish-plugin",
         "table",
-        "table-mat-paginator"
+        "material",
+        "paginator"
       ]
     },
-    "table-mat-sort": {
+    "table-material-sort": {
       "tags": [
         "publish-plugin",
         "table",
-        "table-mat-sort"
+        "material",
+        "sort"
       ]
     },
     "demo-apps-table-demo": {
@@ -105,6 +108,11 @@
     "table-target-events": {
       "tags": [
         "publish-plugin table table-target-events"
+      ]
+    },
+    "table-material": {
+      "tags": [
+        "publish-plugin table table-material"
       ]
     }
   }

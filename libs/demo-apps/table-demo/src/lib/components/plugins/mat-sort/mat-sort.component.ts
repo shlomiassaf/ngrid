@@ -4,7 +4,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 import { columnFactory, createDS, SgColumn } from '@sac/table';
-import { SgTableMatSortDirective } from '@sac/table/mat-sort';
+import { SgTableMatSortDirective } from '@sac/table/material/sort';
 
 import { Person, getPersons } from '../../../services';
 
