@@ -11,8 +11,9 @@ import {
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
-import { SgTableComponent, KillOnDestroy } from '@sac/table';
-import { SgTableDetailRowPluginDirective } from './detail-row-plugin';
+import { SgTableComponent, SgTablePluginController, KillOnDestroy } from '@sac/table';
+
+import { SgTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
 
 @Component({
   selector: 'sg-table-row[detailRow]',
@@ -49,9 +50,10 @@ export class SgTableDetailRowComponent extends CdkRow implements OnInit, OnDestr
   }
 
   ngOnInit(): void {
-    this.plugin = SgTableDetailRowPluginDirective.get(this.table); // TODO: THROW IF NO PLUGIN...
+    const controller = SgTablePluginController.find(this.table);
+    this.plugin = controller.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
-    const tradeEvents = this.table.plugin('targetEvents');
+    const tradeEvents = controller.getPlugin('targetEvents');
     tradeEvents.cellClick
       .pipe(KillOnDestroy(this))
       .subscribe( event => {

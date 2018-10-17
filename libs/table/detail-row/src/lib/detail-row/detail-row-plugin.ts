@@ -2,19 +2,30 @@ import { first } from 'rxjs/operators';
 import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { SgTableComponent, SgTableExternalPluginService, KillOnDestroy } from '@sac/table';
+import { SgTableComponent, SgTablePluginController, TablePlugin, KillOnDestroy } from '@sac/table';
+
 import { SgTableTargetEventsPlugin } from '@sac/table/target-events';
 import { SgTableDetailRowComponent } from './row';
 import { SgTableDetailRowParentRefDirective, SgTableDetailRowContext, SgTableDefaultDetailRowParentComponent } from './directives';
 
+declare module '@sac/table/lib/ext/types' {
+  interface SgTablePluginExtension {
+    detailRow?: SgTableDetailRowPluginDirective<any>;
+  }
+}
+
+export const PLUGIN_KEY: 'detailRow' = 'detailRow';
+
 export const ROW_WHEN_TRUE = () => true;
 export const ROW_WHEN_FALSE = () => false;
-const TABLE_TO_DETAIL_ROW_MAP = new WeakMap<SgTableComponent<any>, SgTableDetailRowPluginDirective<any>>();
 
 export function toggleDetailRow<T = any>(table: SgTableComponent<T>, row: T, forceState?: boolean): boolean | void {
-  const plugin = TABLE_TO_DETAIL_ROW_MAP.get(table);
-  if (plugin) {
-    return plugin.toggleDetailRow(row, forceState);
+  const controller = SgTablePluginController.find(table);
+  if (controller) {
+    const plugin = controller.getPlugin(PLUGIN_KEY);
+    if (plugin) {
+      return plugin.toggleDetailRow(row, forceState);
+    }
   }
 }
 
@@ -24,6 +35,7 @@ export interface SgDetailsRowToggleEvent<T = any> {
   toggle(): void;
 }
 
+@TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'sg-table[detailRow]' })
 @KillOnDestroy()
 export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
@@ -85,26 +97,21 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
   private _detailRow: ( (index: number, rowData: T) => boolean ) | boolean;
   private _detailRowDef: SgTableDetailRowParentRefDirective<T>;
   private _defaultParentRef: ComponentRef<SgTableDefaultDetailRowParentComponent>;
+  private _removePlugin: (table: SgTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>, private injector: Injector) {
-    TABLE_TO_DETAIL_ROW_MAP.set(table, this);
+  constructor(private table: SgTableComponent<any>, pluginCtrl: SgTablePluginController<T>, private injector: Injector) {
+    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    let subscription = table.pluginEvents.subscribe( event => {
+    let subscription = pluginCtrl.events.subscribe( event => {
       if (event.kind === 'onInit') {
         subscription.unsubscribe();
         subscription = undefined;
 
         // Depends on target-events plugin
         // if it's not set, create it.
-        // TODO: this is not optimal.... lifecycle events are out of sync, if needed.
-        const extPlugins = injector.get(SgTableExternalPluginService);
-        extPlugins.onNewTable.pipe(first()).subscribe( table => {
-          if (!table.plugin('targetEvents')) {
-            const targetEvents = new SgTableTargetEventsPlugin(table, injector);
-            event.registerPlugin('targetEvents', targetEvents);
-            targetEvents.init();
-          }
-        });
+        if (!pluginCtrl.hasPlugin('targetEvents')) {
+          pluginCtrl.createPlugin('targetEvents');
+        }
 
         table.registry.changes
           .subscribe( changes => {
@@ -166,7 +173,7 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
     if (this._defaultParentRef) {
       this._defaultParentRef.destroy();
     }
-    TABLE_TO_DETAIL_ROW_MAP.delete(this.table);
+    this._removePlugin(this.table);
   }
 
   /** @internal */
@@ -238,9 +245,5 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
     // TODO: This is risky, the setter logic might change.
     // for example, if material will chack for change in `multiTemplateDataRows` setter from previous value...
     this.table._cdkTable.multiTemplateDataRows = !!this._detailRow;
-  }
-
-  static get<T>(table: SgTableComponent<T>): SgTableDetailRowPluginDirective<T> | undefined {
-    return TABLE_TO_DETAIL_ROW_MAP.get(table);
   }
 }

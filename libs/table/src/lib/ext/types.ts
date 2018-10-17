@@ -1,8 +1,13 @@
 import { SgDataSource } from '../data-source';
 
+export interface SgTablePlugin { }
+
+export interface SgTablePluginExtension { }
+
+export interface SgTablePluginExtensionFactories { }
+
 export interface SgTableOnInitEvent {
   kind: 'onInit';
-  registerPlugin<P extends keyof SgTablePluginExtension>(name: P, iface: SgTablePluginExtension[P]): void;
 }
 
 export interface SgTableOnResizeRowtEvent {
@@ -26,4 +31,4 @@ export type SgTableEvents =
   | SgTableOnInvalidateHeadersEvent
   | SgTableOnDataSourcetEvent;
 
-export interface SgTablePluginExtension { }
+

@@ -3,8 +3,8 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
-import { SgTableModule, SgTableExternalPluginService, SgTableConfigService } from '@sac/table';
-import { SgTableStickyPluginDirective, setStickyRow, setStickyColumns, hasStickyPlugin } from './sticky/sticky-plugin';
+import { SgTableModule, SgTablePluginController, SgTableConfigService } from '@sac/table';
+import { SgTableStickyPluginDirective, setStickyRow, setStickyColumns } from './sticky/sticky-plugin';
 
 declare module '@sac/table/lib/table/services/config' {
   interface SgTableConfig {
@@ -26,23 +26,17 @@ const MAPPER = <T>(v: T): [T, boolean] => [v, true];
 })
 export class SgTableStickyModule {
   constructor(@Optional() @SkipSelf() parentModule: SgTableStickyModule,
-              extPlugins: SgTableExternalPluginService,
-              config: SgTableConfigService) {
+  configService: SgTableConfigService) {
     if (parentModule) {
       return;
     }
 
-    let subscription: Subscription;
-    config.onUpdate('stickyPlugin').subscribe( config => {
-      if (subscription && !subscription.closed) {
-        subscription.unsubscribe();
-      }
-
-      const stickyPluginConfig = config.curr;
-      if (stickyPluginConfig) {
-        subscription = extPlugins.onNewTable.subscribe( table => {
-          if (!hasStickyPlugin(table)) {
-
+    SgTablePluginController.created
+      .subscribe( event => {
+        const { table, controller } = event;
+        if (controller && !controller.hasPlugin('sticky')) {
+          const stickyPluginConfig = configService.get('stickyPlugin');
+          if (stickyPluginConfig) {
             if (stickyPluginConfig.headers) {
               setStickyRow(table, 'header', stickyPluginConfig.headers.map(MAPPER));
             }
@@ -56,8 +50,7 @@ export class SgTableStickyModule {
               setStickyColumns(table, 'end', stickyPluginConfig.columnEnd.map(MAPPER));
             }
           }
-        });
-      }
-    });
+        }
+      });
   }
 }

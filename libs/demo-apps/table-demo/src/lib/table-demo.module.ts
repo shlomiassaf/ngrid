@@ -10,7 +10,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
-import { SgTableModule, SgTableRegistryService } from '@sac/table';
+import { SgTableModule, SgTableRegistryService, SgTableConfigService } from '@sac/table';
 import { SgTableTargetEventsModule } from '@sac/table/target-events';
 import { SgTableTransposeModule } from '@sac/table/transpose';
 import { SgTableBlockUiModule } from '@sac/table/block-ui';
@@ -68,9 +68,8 @@ const ROUTES = [
   { path: 'all-in-one', component: AllInOneTableExampleComponent, data: { title: 'All In One' } },
   { path: 'row-height', component: RowHeightTableExampleComponent, data: { title: 'Row Height' } },
   { path: 'no-data', component: NoDataTableExampleComponent, data: { title: 'No Date' } },
+  { path: 'virtual-scroll', component: VirtualScrollTableExampleComponent, data: { title: 'Virtual Scroll' } },
   { path: 'pagination', component: PaginatorTableExampleComponent, data: { title: 'Pagination' } },
-
-
 ];
 
 const PLUGIN_ROUTES = [
@@ -81,8 +80,6 @@ const PLUGIN_ROUTES = [
   { path: 'sticky', component: StickyRowTableExampleComponent, data: { title: 'Sticky' } },
   { path: 'transpose', component: TransposeTableExampleComponent, data: { title: 'Transpose' } },
   { path: 'detail-row', component: DetailRowExampleComponent, data: { title: 'Detail Row' } },
-  { path: 'virtual-scroll', component: VirtualScrollTableExampleComponent, data: { title: 'Virtual Scroll' } },
-
 ];
 
 @NgModule({
@@ -106,7 +103,8 @@ const PLUGIN_ROUTES = [
   providers: [ SgTableRegistryService ],
 })
 export class TableDemoModule {
-  constructor(registry: ExampleGroupRegistryService) {
+  constructor(registry: ExampleGroupRegistryService, config: SgTableConfigService) {
+    config.set('cellTooltip', { autoSetAll: true });
     registry.registerGroupFromRoutes({ id: 'table', title: 'Table' }, ROUTES);
     registry.registerGroupFromRoutes({ id: 'plugins', title: 'Plugins' }, PLUGIN_ROUTES);
   }

@@ -1,17 +1,23 @@
 import { fromEvent } from 'rxjs';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
-import { SgTableComponent, KillOnDestroy } from '@sac/table';
+import { SgTableComponent, SgTablePluginController, TablePlugin, KillOnDestroy } from '@sac/table';
 
 import * as Events from './events';
 import { matrixRowFromRow, isRowContainer, findCellIndex, findParentCell } from './utils';
 
-declare module '@sac/table/lib/table/plugins' {
+declare module '@sac/table/lib/ext/types' {
   interface SgTablePluginExtension {
     targetEvents?: SgTableTargetEventsPlugin;
   }
+  interface SgTablePluginExtensionFactories {
+    targetEvents: keyof typeof SgTableTargetEventsPlugin;
+  }
 }
 
+const PLUGIN_KEY: 'targetEvents' = 'targetEvents';
+
+@TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
 export class SgTableTargetEventsPlugin<T = any> {
   rowClick = new EventEmitter<Events.SgTableRowEvent<T>>();
   rowEnter = new EventEmitter<Events.SgTableRowEvent<T>>();
@@ -22,12 +28,31 @@ export class SgTableTargetEventsPlugin<T = any> {
   cellLeave = new EventEmitter<Events.SgTableCellEvent<T>>();
 
   private cdr: ChangeDetectorRef;
+  private _removePlugin: (table: SgTableComponent<any>) => void;
 
-  constructor(protected table: SgTableComponent<any>, protected injector: Injector) {
+  constructor(protected table: SgTableComponent<any>, protected injector: Injector, pluginCtrl: SgTablePluginController) {
+    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     this.cdr = injector.get(ChangeDetectorRef);
+    if (table.isInit) {
+      this.init();
+    } else {
+      let subscription = pluginCtrl.events
+        .subscribe( event => {
+          if (event.kind === 'onInit') {
+            this.init();
+            subscription.unsubscribe();
+            subscription = undefined;
+          }
+        });
+    }
   }
 
-  init(): void {
+  static create<T = any>(table: SgTableComponent<any>, injector: Injector): SgTableTargetEventsPlugin<T> {
+    const pluginCtrl = SgTablePluginController.find(table);
+    return new SgTableTargetEventsPlugin<T>(table, injector, pluginCtrl);
+  }
+
+  private init(): void {
     this.setupDomEvents();
   }
 
@@ -198,6 +223,10 @@ export class SgTableTargetEventsPlugin<T = any> {
       });
   }
 
+  destroy(): void {
+    this._removePlugin(this.table);
+  }
+
   private syncRow(event: Events.SgTableRowEvent<T> | Events.SgTableCellEvent<T>): void {
     this.table._cdkTable.syncRows(event.type, event.rowIndex);
   }
@@ -210,17 +239,12 @@ export class SgTableTargetEventsPlugin<T = any> {
 @KillOnDestroy()
 export class SgTableTargetEventsPluginDirective<T> extends SgTableTargetEventsPlugin<T> implements OnDestroy {
 
-  constructor(table: SgTableComponent<any>, injector: Injector) {
-    super(table, injector);
-    let subscription = table.pluginEvents.subscribe( event => {
-      if (event.kind === 'onInit') {
-        event.registerPlugin('targetEvents', this);
-        this.init();
-        subscription.unsubscribe();
-        subscription = undefined;
-      }
-    });
+  constructor(table: SgTableComponent<any>, injector: Injector, pluginCtrl: SgTablePluginController) {
+    super(table, injector, pluginCtrl);
   }
 
-  ngOnDestroy(): void {  }
+  ngOnDestroy() {
+    this.destroy();
+  }
+
 }

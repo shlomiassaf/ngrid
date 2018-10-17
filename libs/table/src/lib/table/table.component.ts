@@ -1,9 +1,9 @@
-import { Observable, Subject } from 'rxjs';
-
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   Input,
+  Injector,
   ChangeDetectionStrategy,
   ViewChild,
   ViewChildren,
@@ -17,12 +17,13 @@ import {
   TemplateRef,
   ViewContainerRef,
   EmbeddedViewRef,
-  isDevMode
+  isDevMode, forwardRef
 } from '@angular/core';
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
+import { SgTablePluginController, SgTablePluginContext } from '../ext/plugin-control';
 import { SgTablePaginatorKind } from '../paginator';
 import { SgCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { SgDataSource, DataSourceOf, createDS } from '../data-source/index';
@@ -40,10 +41,11 @@ import { SgTableRegistryService } from './table-registry.service';
 import { RowWidthStaticAggregator } from './row-width-static-aggregator';
 import { RowWidthDynamicAggregator, PADDING_END_STRATEGY, MARGIN_END_STRATEGY } from './group-column-size-strategy';
 
-import { SgTableEvents, SgTablePluginExtension } from './plugins';
-import { Notify } from './services';
-
 const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border: 'none', visibility: 'collapse' };
+
+export function pluginControllerFactory(table: { _plugin: SgTablePluginContext; }) {
+  return table._plugin.controller;
+}
 
 @Component({
   selector: 'sg-table',
@@ -54,7 +56,14 @@ const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border:
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  providers: [ SgTableRegistryService ]
+  providers: [
+    SgTableRegistryService,
+    {
+      provide: SgTablePluginController,
+      useFactory: pluginControllerFactory,
+      deps: [forwardRef(() => SgTableComponent)],
+    }
+  ]
 })
 @KillOnDestroy()
 export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnChanges, OnDestroy {
@@ -63,10 +72,10 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
   @Input() get marginCellIndent(): boolean { return this._marginCellIndent; };
   /**
    * Set's the margin cell indentation strategy.
-   * Margin cell indentation strategy apply margin to cells instead of paddings and define's all cell box-sizing to border-box.
+   * Margin cell indentation strategy apply margin to cells instead of paddings and defines all cell box-sizing to border-box.
    *
    * When not set (default) the table will use a padding cell indentation strategy.
-   * Padding cell indentation strategy apply padding to cells and define's all cell box-sizing to content-box.
+   * Padding cell indentation strategy apply padding to cells and defines all cell box-sizing to content-box.
    */
   set marginCellIndent(value: boolean) {
     value = coerceBooleanProperty(value);
@@ -142,7 +151,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
 
       const prev = this._dataSource;
       this._dataSource = this._cdkTable.dataSource = value;
-      this._pluginEvents.next({
+      this._plugin.emitEvent({
         kind: 'onDataSource',
         prev,
         curr: value
@@ -210,7 +219,6 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
 
-  readonly pluginEvents: Observable<SgTableEvents>;
   /**
    * True when the component is initialized (after AfterViewInit)
    */
@@ -223,19 +231,35 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
   private _pagination: SgTablePaginatorKind | false;
   private _noCachePaginator = false;
   private _totalMinWidth: string;
-  private _pluginEvents: Subject<SgTableEvents>;
-  private _plugin: Partial<SgTablePluginExtension> = {};
 
-  constructor(private cdr: ChangeDetectorRef,
-              public registry: SgTableRegistryService,) {
-    this._pluginEvents = new Subject<SgTableEvents>();
-    this.pluginEvents = this._pluginEvents.asObservable();
+  private _plugin: SgTablePluginContext;
+
+  constructor(injector: Injector,
+              vcRef: ViewContainerRef,
+              elRef: ElementRef<any>,
+              private cdr: ChangeDetectorRef,
+              public registry: SgTableRegistryService) {
+
+    // Create an injector for the extensions/plugins
+    // This injector allow plugins (that choose so) to provide a factory function for runtime use.
+    // I.E: as if they we're created by angular via template...
+    // This allows seamless plugin-to-plugin dependencies without requiring specific template syntax.
+    // And also allows auto plugin binding (app wide) without the need for template syntax.
+    const pluginInjector = Injector.create({
+      providers: [
+        { provide: ViewContainerRef, useValue: vcRef },
+        { provide: ElementRef, useValue: cdr },
+        { provide: ChangeDetectorRef, useValue: elRef },
+      ],
+      parent: injector,
+    });
+    this._plugin = new SgTablePluginContext(this, pluginInjector);
   }
 
   ngAfterContentInit(): void {
     // no need to unsubscribe, the reg service is per table instance and it will destroy when this table destroy.
     // Also, at this point initial changes from templates provided in the content are already inside so they will not trigger
-    // the order here is very important, because component top of this table will fire lifecycle hooks AFTER this component
+    // the order here is very important, because component top of this table will fire life cycle hooks AFTER this component
     // so if we have a top level component registering a template on top it will not show unless we listen.
     this.registry.changes.subscribe( changes => {
       let tableCell = false;
@@ -278,15 +302,9 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
     this.resetFooterRowDefs();
 
     Object.defineProperty(this, 'isInit', { value: true });
-    this._pluginEvents.next({
-      kind: 'onInit',
-      registerPlugin: <P extends keyof SgTablePluginExtension>(name: P, iface: SgTablePluginExtension[P]) => {
-        this._plugin[name] = iface;
-      }
-    });
+    this._plugin.emitEvent({ kind: 'onInit' });
 
     this.setupPaginator();
-    Notify.onNewTable.next(this);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -308,7 +326,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
   }
 
   ngOnDestroy(): void {
-    this._pluginEvents.complete();
+    this._plugin.destroy();
     if (this.viewport) {
       this._cdkTable.detachViewPort();
     }
@@ -363,7 +381,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
     this.cdr.detectChanges();
     this.resetHeaderRowDefs();
     this.resetFooterRowDefs();
-    this._pluginEvents.next({ kind: 'onInvalidateHeaders', rebuildColumns });
+    this._plugin.emitEvent({ kind: 'onInvalidateHeaders', rebuildColumns });
   }
 
   resizeRows(data: SgColumnSizeInfo[]): void {
@@ -397,7 +415,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
     }
 
     this._cdkTable.syncRows('header');
-    this._pluginEvents.next({ kind: 'onResizeRow' });
+    this._plugin.emitEvent({ kind: 'onResizeRow' });
   }
 
   /**
@@ -425,10 +443,6 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
       vcRef.remove(idx);
       return true;
     }
-  }
-
-  plugin<P extends keyof SgTablePluginExtension>(name: P): SgTablePluginExtension[P] | undefined {
-    return this._plugin[name];
   }
 
   private setupNoData(): void {

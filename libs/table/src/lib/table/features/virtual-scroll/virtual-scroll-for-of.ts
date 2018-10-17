@@ -5,6 +5,7 @@ import { NgZone, ViewContainerRef } from '@angular/core';
 import { CollectionViewer, ListRange } from '@angular/cdk/collections';
 
 import { SgTableComponent } from '../../table.component';
+import { SgTablePluginController } from '../../../ext/plugin-control';
 import { SgDataSource } from '../../../data-source/data-source';
 import { SgCdkTableComponent } from '../../sg-cdk-table/sg-cdk-table.component';
 import { SgCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
@@ -43,7 +44,7 @@ export class SgVirtualScrollForOf<T> implements CollectionViewer {
               private ngZone: NgZone) {
     this.viewChange = this.cdkTable.viewChange;
 
-    table.pluginEvents
+    SgTablePluginController.find(table).events
       .pipe( takeUntil(this.destroyed) )
       .subscribe( event => {
         if (event.kind === 'onDataSource') {

@@ -4,7 +4,7 @@
     <!--@sac-example:ex-column-1-->
   <sg-table [stickyColumnStart]="['id', 'name']"
             [dataSource]="dataSource"
-            [columns]="columns1">
+            [columns]="columns1" style="height: 300px">
   </sg-table>
     <!--@sac-example:ex-column-1-->
 </docsi-mat-example-with-source>
@@ -13,7 +13,7 @@
   <!--@sac-example:ex-column-2-->
   <sg-table [stickyColumnEnd]="['settings.timezone', 'settings.emailFrequency']"
             [dataSource]="dataSource"
-            [columns]="columns1">
+            [columns]="columns1" style="height: 300px">
   </sg-table>
     <!--@sac-example:ex-column-2-->
 </docsi-mat-example-with-source>
@@ -22,7 +22,7 @@
   <!--@sac-example:ex-column-3-->
   <sg-table [stickyColumnStart]="['id', 'name']" [stickyColumnEnd]="['settings.timezone', 'settings.emailFrequency']"
             [dataSource]="dataSource"
-            [columns]="columns1">
+            [columns]="columns1" style="height: 300px">
   </sg-table>
   <!--@sac-example:ex-column-3-->
 </docsi-mat-example-with-source>

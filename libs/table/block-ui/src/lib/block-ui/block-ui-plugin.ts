@@ -2,15 +2,17 @@ import { Observable, isObservable } from 'rxjs';
 import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { SgTableComponent, KillOnDestroy } from '@sac/table';
+import { SgTableComponent, KillOnDestroy, SgTablePluginController, TablePlugin } from '@sac/table';
 
-// declare module '../../../../src/lib/table/plugins' {
-declare module '@sac/table/lib/table/plugins' {
+declare module '@sac/table/lib/ext/types' {
   interface SgTablePluginExtension {
     blockUi?: { blockUi: boolean | 'auto' | Observable<boolean> };
   }
 }
 
+const PLUGIN_KEY: 'blockUi' = 'blockUi';
+
+@TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'sg-table[blockUi]', exportAs: 'blockUi' })
 @KillOnDestroy()
 export class SgTableBlockUiPluginDirective<T> implements OnDestroy {
@@ -27,15 +29,15 @@ export class SgTableBlockUiPluginDirective<T> implements OnDestroy {
    *     The UI will be block is toggled based on the value, i.e. `true` will block and false will unblock.
    *
    *   - Notification mode (INPUT: Observable<boolean>)
-   *     Similar to Manual mode but controleld by a stream boolean value.
+   *     Similar to Manual mode but controlled by a stream boolean value.
    *
    * **Note about Notification mode**
-   * Notificaiton mode accepts an observable, at the point where the value is set the block state does not change (if it was "on" it will stay "on" and vice versa)
+   * Notification mode accepts an observable, at the point where the value is set the block state does not change (if it was "on" it will stay "on" and vice versa)
    * It will only change on the first emission, this is important to understand.
    *
    * For example, if the current block state is off and we pass a `Subject`, the state remains off until the next emission
    * of the `Subject` is `true`. If it already emitted `true` before the assignment it will not be taken into account. This is why
-   * using `BehaviouralSubject` is prefered.
+   * using `BehaviouralSubject` is preferred.
    *
    * Also note that when sending an observable it is treated as "notifier", do not send cold observable as they get subscribed to.
    * For example, sending the returned value from `HttpClient` will probably result in 2 HTTP calls, if you already subscribed to it
@@ -69,8 +71,10 @@ export class SgTableBlockUiPluginDirective<T> implements OnDestroy {
   private _blockInProgress: boolean = false;
   private _blockUi: boolean | 'auto' | Observable<boolean>;
   private _blockerEmbeddedVRef: EmbeddedViewRef<any>;
+  private _removePlugin: (table: SgTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>) {
+  constructor(private table: SgTableComponent<any>, pluginCtrl: SgTablePluginController<T>) {
+    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     table.registry.changes.subscribe( changes => {
       for (const c of changes) {
@@ -82,37 +86,37 @@ export class SgTableBlockUiPluginDirective<T> implements OnDestroy {
       }
     });
 
-    table.pluginEvents.subscribe( event => {
-      if (event.kind === 'onInit') {
-        event.registerPlugin('blockUi', this);
-      }
-      if (event.kind === 'onDataSource') {
-        const { prev, curr } = event;
-        if (prev) {
-          KillOnDestroy.kill(this, prev);
+    pluginCtrl.events
+      .subscribe( event => {
+        if (event.kind === 'onDataSource') {
+          const { prev, curr } = event;
+          if (prev) {
+            KillOnDestroy.kill(this, prev);
+          }
+          curr.onSourceChanging
+            .pipe(KillOnDestroy(this, curr))
+            .subscribe( () => {
+              if (this._blockUi === 'auto') {
+                this._blockInProgress = true;
+                this.setupBlocker();
+              }
+            });
+          curr.onSourceChanged
+            .pipe(KillOnDestroy(this, curr))
+            .subscribe( () => {
+              if (this._blockUi === 'auto') {
+                this._blockInProgress = false;
+                this.setupBlocker();
+              }
+            });
         }
-        curr.onSourceChanging
-          .pipe(KillOnDestroy(this, curr))
-          .subscribe( () => {
-            if (this._blockUi === 'auto') {
-              this._blockInProgress = true;
-              this.setupBlocker();
-            }
-          });
-        curr.onSourceChanged
-          .pipe(KillOnDestroy(this, curr))
-          .subscribe( () => {
-            if (this._blockUi === 'auto') {
-              this._blockInProgress = false;
-              this.setupBlocker();
-            }
-          });
-      }
-    });
+      });
   }
 
 
-  ngOnDestroy(): void {  }
+  ngOnDestroy(): void {
+    this._removePlugin(this.table);
+  }
 
   private setupBlocker(): void {
     const state = this._blockInProgress;

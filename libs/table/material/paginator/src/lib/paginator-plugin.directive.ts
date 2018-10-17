@@ -1,8 +1,18 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef, DoCheck } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { SgTableComponent } from '@sac/table';
+import { SgTableComponent, SgTablePluginController, TablePlugin } from '@sac/table';
+
 import { SgPaginatorComponent } from './table-paginator.component';
 
+declare module '@sac/table/lib/ext/types' {
+  interface SgTablePluginExtension {
+    matPaginator?: SgTableMatPaginatorDirective;
+  }
+}
+
+const PLUGIN_KEY: 'matPaginator' = 'matPaginator';
+
+@TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'sg-table[matPaginator]' })
 export class SgTableMatPaginatorDirective implements OnDestroy, DoCheck {
   /**
@@ -39,8 +49,14 @@ export class SgTableMatPaginatorDirective implements OnDestroy, DoCheck {
   private _enabled: boolean;
   private cmpRef: ComponentRef<SgPaginatorComponent>;
   private instance: SgPaginatorComponent;
+  private _removePlugin: (table: SgTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>, private cfr: ComponentFactoryResolver, private injector: Injector) { }
+  constructor(private table: SgTableComponent<any>,
+              private cfr: ComponentFactoryResolver,
+              private injector: Injector,
+              pluginCtrl: SgTablePluginController) {
+    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
+  }
 
   ngDoCheck(): void { }
 
@@ -48,6 +64,7 @@ export class SgTableMatPaginatorDirective implements OnDestroy, DoCheck {
     if (this.cmpRef) {
       this.cmpRef.destroy();
     }
+    this._removePlugin(this.table);
   }
 
   private setPaginator(): void {

@@ -19,13 +19,12 @@ export {
 
 export {
   SG_TABLE_CONFIG, SgTableConfig, SgTableConfigService,
-  SgTableExternalPluginService,
 
   SgTableHeaderCellSortContainer,
 
   SgColumn, SgMetaColumn, SgColumnGroup, SgColumnFactory, COLUMN, columnFactory,
 
-  SgTableComponent, SgTableEvents, SgTablePluginExtension,
+  SgTableComponent,
   SgTableRegistryService,
 
   SgTableSingleTemplateRegistryDirective,
@@ -47,5 +46,18 @@ export {
   KillOnDestroy
 } from './lib/table/index';
 
+export {
+  SgTablePlugin,
+  SgTablePluginExtension,
+  SgTableOnInitEvent,
+  SgTableOnResizeRowtEvent,
+  SgTableOnInvalidateHeadersEvent,
+  SgTableOnDataSourcetEvent,
+  SgTableEvents,
+ } from './lib/ext/types';
+
+ export { TablePlugin, TablePluginMetadata } from './lib/ext/table-plugin';
+
+export { SgTablePluginController } from './lib/ext/plugin-control';
 
 export { SgTableModule } from './lib/table.module';

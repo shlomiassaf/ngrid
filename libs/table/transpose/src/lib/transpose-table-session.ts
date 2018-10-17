@@ -4,6 +4,7 @@ import { map, tap } from 'rxjs/operators';
 import {
   SgTableColumnDefinitionSet,
   SgTableComponent,
+  SgTablePluginController,
   SgDataSource,
   SgColumn,
   SgDataSourceTriggerChangedEvent,
@@ -24,6 +25,7 @@ export class TransposeTableSession {
   private rawSource: any[];
 
   constructor(private table: SgTableComponent<any>,
+              private pluginCtrl: SgTablePluginController,
               private updateColumns: () => void,
               private sourceFactoryWrapper: (results: any[]) => any[]) {
     this.init();
@@ -50,11 +52,11 @@ export class TransposeTableSession {
   private init(): void {
     this.headerRow = this.table.headerRow;
     this.table.headerRow = false;
-    this.table.pluginEvents
+    this.pluginCtrl.events
       .pipe(KillOnDestroy(this, this.table))
       .subscribe( e => e.kind === 'onInvalidateHeaders' && e.rebuildColumns && this.onInvalidateHeaders() );
 
-    this.table.pluginEvents
+    this.pluginCtrl.events
       .pipe(KillOnDestroy(this, this.table))
       .subscribe( e => e.kind === 'onDataSource' && this.onDataSource(e.curr) );
   }

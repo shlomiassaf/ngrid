@@ -1,23 +1,33 @@
-import { Directive } from '@angular/core';
+import { Directive, OnDestroy } from '@angular/core';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 
-import { SgTableComponent, KillOnDestroy, SgTableSortDefinition } from '@sac/table';
+import { SgTableComponent, SgTablePluginController, TablePlugin, KillOnDestroy, SgTableSortDefinition } from '@sac/table';
 
 Object.defineProperty(MatSortHeader.prototype, 'column', {
   set: function(value: any) { this.id = value.id; }
 });
 
 
+declare module '@sac/table/lib/ext/types' {
+  interface SgTablePluginExtension {
+    matSort?: SgTableMatSortDirective;
+  }
+}
+const PLUGIN_KEY: 'matSort' = 'matSort';
+
+@TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'sg-table[matSort]', exportAs: 'sgMatSort' })
 @KillOnDestroy()
-export class SgTableMatSortDirective {
+export class SgTableMatSortDirective implements OnDestroy {
+  private _removePlugin: (table: SgTableComponent<any>) => void;
 
-  constructor(public table: SgTableComponent<any>, public sort: MatSort) {
+  constructor(public table: SgTableComponent<any>, pluginCtrl: SgTablePluginController, public sort: MatSort) {
+    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     table.registry.setSingle('sortContainer', MatSortHeader as any)
 
     this.sort.sortChange.pipe(KillOnDestroy(this)).subscribe(s => this.onSort(s));
 
-    table.pluginEvents
+    pluginCtrl.events
       .subscribe( e => {
         if (e.kind === 'onInvalidateHeaders') {
           const table = this.table;
@@ -48,6 +58,10 @@ export class SgTableMatSortDirective {
             });
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    this._removePlugin(this.table);
   }
 
   private onSort(sort: Sort): void {

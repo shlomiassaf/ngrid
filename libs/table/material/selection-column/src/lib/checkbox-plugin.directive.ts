@@ -1,8 +1,18 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 
-import { SgTableComponent, KillOnDestroy } from '@sac/table';
+import { SgTableComponent, SgTablePluginController, TablePlugin, KillOnDestroy } from '@sac/table';
+
 import { SgTableCheckboxComponent } from './table-checkbox.component';
 
+declare module '@sac/table/lib/ext/types' {
+  interface SgTablePluginExtension {
+    matCheckboxSelection?: SgTableMatCheckboxSelectionDirective;
+  }
+}
+
+const PLUGIN_KEY: 'matCheckboxSelection' = 'matCheckboxSelection';
+
+@TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'sg-table[matCheckboxSelection]' })
 @KillOnDestroy()
 export class SgTableMatCheckboxSelectionDirective implements OnDestroy {
@@ -30,12 +40,19 @@ export class SgTableMatCheckboxSelectionDirective implements OnDestroy {
   }
   private _name: string;
   private cmpRef: ComponentRef<SgTableCheckboxComponent>;
+  private _removePlugin: (table: SgTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>, private cfr: ComponentFactoryResolver, private injector: Injector) { }
+  constructor(private table: SgTableComponent<any>,
+              private cfr: ComponentFactoryResolver,
+              private injector: Injector,
+              pluginCtrl: SgTablePluginController) {
+    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
+  }
 
   ngOnDestroy() {
     if (this.cmpRef) {
       this.cmpRef.destroy();
     }
+    this._removePlugin(this.table);
   }
 }

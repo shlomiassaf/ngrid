@@ -1,16 +1,16 @@
 import { filter } from 'rxjs/operators';
 import { Directive, Input, IterableDiffers, IterableDiffer, IterableChangeRecord, OnDestroy } from '@angular/core';
 
-import { SgTableComponent } from '@sac/table';
+import { SgTableComponent, SgTablePluginController, TablePlugin } from '@sac/table';
 
-const TABLE_TO_STICKY_MAP = new WeakMap<SgTableComponent<any>, SgTableStickyPluginDirective>();
 
-/**
- * Returns true if the table is attached to an SgTableStickyPluginDirective instance
- */
-export function hasStickyPlugin(table: SgTableComponent<any>): boolean {
-  return TABLE_TO_STICKY_MAP.has(table);
+declare module '@sac/table/lib/ext/types' {
+  interface SgTablePluginExtension {
+    sticky?: SgTableStickyPluginDirective;
+  }
 }
+
+export const PLUGIN_KEY: 'sticky' = 'sticky';
 
 export function setStickyRow(table: SgTableComponent<any>, type: 'header' | 'footer', bulk: Array<['table' | number, boolean]>): void;
 export function setStickyRow(table: SgTableComponent<any>, type: 'header' | 'footer', value: 'table' | number, state: boolean): void;
@@ -81,6 +81,7 @@ export function setStickyColumns(table: SgTableComponent<any>, type: 'start' | '
   }
 }
 
+@TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'sg-table[stickyColumnStart], sg-table[stickyColumnEnd], sg-table[stickyHeader], sg-table[stickyFooter]' })
 export class SgTableStickyPluginDirective implements OnDestroy {
   /**
@@ -153,38 +154,43 @@ export class SgTableStickyPluginDirective implements OnDestroy {
   private _footerDiffer: IterableDiffer<'table' | number>;
 
   private _columnCache: { start: Array<string | number>; end: Array<string | number>; } = { start: [], end: [] };
+  private _removePlugin: (table: SgTableComponent<any>) => void;
 
   constructor (protected readonly table: SgTableComponent<any>,
-               protected readonly _differs: IterableDiffers) {
-    TABLE_TO_STICKY_MAP.set(table, this);
+               protected readonly _differs: IterableDiffers,
+               protected readonly pluginCtrl: SgTablePluginController) {
+    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    table.pluginEvents.pipe(filter( e => e.kind === 'onResizeRow')).subscribe( () => {
-      this.table._cdkTable.updateStickyHeaderRowStyles();
-      this.table._cdkTable.updateStickyColumnStyles();
-      this.table._cdkTable.updateStickyFooterRowStyles();
-    });
+    pluginCtrl.events
+      .pipe(filter( e => e.kind === 'onResizeRow'))
+      .subscribe( () => {
+        this.table._cdkTable.updateStickyHeaderRowStyles();
+        this.table._cdkTable.updateStickyColumnStyles();
+        this.table._cdkTable.updateStickyFooterRowStyles();
+      });
 
-    this.table.pluginEvents.pipe(filter ( e => e.kind === 'onInvalidateHeaders' && e.rebuildColumns ))
-    .subscribe( () => {
-      if (this._startDiffer && this.table.isInit) {
-        this._startDiffer.diff([]);
-        this.applyColumnDiff('start', this._columnCache.start, this._startDiffer)
-      }
+      pluginCtrl.events
+        .pipe(filter ( e => e.kind === 'onInvalidateHeaders' && e.rebuildColumns ))
+        .subscribe( () => {
+          if (this._startDiffer && this.table.isInit) {
+            this._startDiffer.diff([]);
+            this.applyColumnDiff('start', this._columnCache.start, this._startDiffer)
+          }
 
-      if (this._endDiffer && this.table.isInit) {
-        this._endDiffer.diff([]);
-        this.applyColumnDiff('end', this._columnCache.end, this._endDiffer)
-      }
-    });
+          if (this._endDiffer && this.table.isInit) {
+            this._endDiffer.diff([]);
+            this.applyColumnDiff('end', this._columnCache.end, this._endDiffer)
+          }
+        });
   }
 
   ngOnDestroy(): void {
-    TABLE_TO_STICKY_MAP.delete(this.table);
+    this._removePlugin(this.table);
   }
 
   protected applyColumnDiff(type: 'start' | 'end', value: Array<string | number>, differ: IterableDiffer<string | number>): void {
     if (!this.table.isInit) {
-      const unsub = this.table.pluginEvents.subscribe( event => {
+      const unsub = this.pluginCtrl.events.subscribe( event => {
         if (event.kind === 'onInit') {
           unsub.unsubscribe();
           this.applyColumnDiff(type, value, differ);
@@ -212,7 +218,7 @@ export class SgTableStickyPluginDirective implements OnDestroy {
 
   protected applyRowDiff(type: 'header' | 'footer', value: Array<'table' | number>, differ: IterableDiffer<'table' | number>): void {
     if (!this.table.isInit) {
-      const unsub = this.table.pluginEvents.subscribe( event => {
+      const unsub = this.pluginCtrl.events.subscribe( event => {
         if (event.kind === 'onInit') {
           unsub.unsubscribe();
           this.applyRowDiff(type, value, differ);

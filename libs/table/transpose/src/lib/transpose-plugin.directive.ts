@@ -7,7 +7,9 @@ import {
   SgColumnDefinition,
   SgTableColumnDefinitionSet,
   SgTableComponent,
+  SgTablePluginController,
   SgColumn,
+  TablePlugin,
   KillOnDestroy,
 } from '@sac/table';
 
@@ -25,6 +27,13 @@ declare module '@sac/table/lib/table/services/config' {
     }
   }
 }
+
+declare module '@sac/table/lib/ext/types' {
+  interface SgTablePluginExtension {
+    transpose?: SgTableTransposePluginDirective;
+  }
+}
+const PLUGIN_KEY: 'transpose' = 'transpose';
 
 /**
  * Transpose plugin.
@@ -44,6 +53,8 @@ declare module '@sac/table/lib/table/services/config' {
  * > Note that transposing a table might not play nice with other plugins and/or features.
  * For example, using pagination with transpose make no sense.
  */
+
+@TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'sg-table[transpose]' })
 @KillOnDestroy()
 export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
@@ -93,8 +104,10 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
   private tableState: TransposeTableSession;
   private columns: SgColumn[];
   private selfColumn: SgColumn;
+  private _removePlugin: (table: SgTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>, config: SgTableConfigService) {
+  constructor(private table: SgTableComponent<any>, private pluginCtrl: SgTablePluginController, config: SgTableConfigService) {
+    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     const transposePlugin = config.get('transposePlugin');
     if (transposePlugin) {
       this.header = transposePlugin.header;
@@ -117,6 +130,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._removePlugin(this.table);
     this.disable(false);
   }
 
@@ -174,6 +188,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
 
     this.tableState = new TransposeTableSession(
       this.table,
+      this.pluginCtrl,
       () => this.updateColumns(this.table._store.table),
       sourceFactoryWrapper,
     );
