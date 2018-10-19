@@ -262,11 +262,7 @@ export class SgColumnFactory {
         }
       }
       columnGroupDef.span = take;
-      const group = new SgColumnGroup(columnGroupDef);
-      group.columns = tableDefs.slice(i, i + take + 1);
-      for (const c of group.columns) {
-        c.markInGroup(group);
-      }
+      const group = new SgColumnGroup(columnGroupDef, tableDefs.slice(i, i + take + 1));
       headerGroup.push(group);
       i += take;
     }

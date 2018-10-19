@@ -6,7 +6,12 @@
 
 <!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
 <ng-container *ngFor="let row of _store.metaRows.header;">
-  <cdk-header-row *cdkHeaderRowDef="row.keys" data-rowtype="meta-header" class="sg-table-header-row {{ row.name }}" [class.sg-header-group-row]="row.isGroup"></cdk-header-row>
+  <ng-container *ngIf="row.isGroup">
+      <cdk-header-row *cdkHeaderRowDef="row.keys" data-rowtype="meta-header" class="sg-table-header-row sg-header-group-row {{ row.name }}"></cdk-header-row>
+  </ng-container>
+  <ng-container *ngIf="!row.isGroup">
+      <cdk-header-row *cdkHeaderRowDef="row.keys" data-rowtype="meta-header" class="sg-table-header-row {{ row.name }}"></cdk-header-row>
+  </ng-container>
 </ng-container>
 
 <!-- TABLE FOOTER ROW DEF -->
@@ -37,7 +42,7 @@
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
 
        <!-- HEADER-RECORD-FOOTER CELL DEF -->
-      <ng-container *ngFor="let c of _store.table" [sgTableColumnDef]="c">
+      <ng-container *ngFor="let c of _store.allTable" [sgTableColumnDef]="c">
         <!-- TABLE HEADER CELL DEF -->
         <sg-table-header-cell *cdkHeaderCellDef
                               [observeSize]="c"></sg-table-header-cell>

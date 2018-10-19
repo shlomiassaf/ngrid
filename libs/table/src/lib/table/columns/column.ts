@@ -111,6 +111,13 @@ export class SgColumn implements SgColumnDefinition {
   footerCellTpl: TemplateRef<SgTableMetaCellTemplateContext<any>>;
 
   /**
+   * Used by the library as a logical flag representing the column hidden state.
+   * This flag does not effect the UI, changing it will not change he hidden state in the UI.
+   * Do not set this value manually.
+   */
+  hidden: boolean;
+
+  /**
    * The column def for this column.
    */
   columnDef: SgTableColumnDef;

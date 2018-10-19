@@ -104,7 +104,19 @@ export interface SgColumnGroupDefinition extends SgBaseColumnDefinition {
    * The index (zero based) of the header row this header group column is attached to, used for multi-header setup.
    */
   rowIndex: number;
+  /**
+   * The table's column that is the first child column for this group.
+   */
   prop: string;
+
+  /**
+   * The total span of the group (excluding the first child - i.e. prop).
+   * The span and prop are used to get the child columns of this group.
+   * The span is not dynamic, once the columns are set they don't change.
+   *
+   * For example, if a we have a span of 2 and the column at the 2nd position is hidden it will still count as
+   * being spanned although the UI will span only 1 column... (because the 2nd is hidden...)
+   */
   span: number;
 }
 

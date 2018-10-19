@@ -64,7 +64,6 @@ export function updateColumnWidths(rowWidth: RowWidthStaticAggregator, tableColu
 
     if (m.headerGroup) {
       const g = m.headerGroup;
-      g.update(tableColumns);
       const { pct, px } = rowWidth.calculateGroup(g);
       // for groups we're adding px because these PX belong to grouped columns with fixed px
       g.cWidth = `calc(${pct}% + ${px}px)`;

@@ -9,12 +9,20 @@ export class SgColumnGroup extends SgMetaColumn implements SgColumnGroupDefiniti
   span: number;
   //#endregion SgColumnGroupDefinition
 
+  /**
+   * Returns the visible state of the column.
+   * The column is visible if AT LEAST ONE child column is visible (i.e. not hidden)
+   */
+  get isVisible(): boolean {
+    return this.columns.some( c => !c.hidden );
+  }
+
   /** @internal */
   orgWidth?: string;
   /** @internal */
-  columns: SgColumn[];
+  readonly columns: SgColumn[];
 
-  constructor(def: SgColumnGroup | SgColumnGroupDefinition, public readonly placeholder = false) {
+  constructor(def: SgColumnGroup | SgColumnGroupDefinition, columns: SgColumn[], public readonly placeholder = false) {
     super(def instanceof SgColumnGroup
       ? def
       : Object.assign(
@@ -27,7 +35,6 @@ export class SgColumnGroup extends SgMetaColumn implements SgColumnGroupDefiniti
     );
     if (def instanceof SgColumnGroup) {
       this.orgWidth = def.orgWidth;
-      this.columns = def.columns.slice();
     } else {
       if (this.width) {
         this.orgWidth = this.width;
@@ -35,18 +42,8 @@ export class SgColumnGroup extends SgMetaColumn implements SgColumnGroupDefiniti
     }
     this.prop = def.prop;
     this.span = def.span;
-  }
-
-  update(table: SgColumn[]): void {
-    const firstId = this.columns[0].id;
-    const idx = table.findIndex( c => c.id === firstId);
-    if (this.columns) {
-      for (const c of this.columns) {
-        c.markNotInGroup(this);
-      }
-    }
-    this.columns = table.slice(idx, idx + this.columns.length);
-    for (const c of this.columns) {
+    this.columns = columns;
+    for (const c of columns) {
       c.markInGroup(this);
     }
   }

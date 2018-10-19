@@ -13,53 +13,45 @@ export interface SgMetaColumnStore {
   footerGroup?: SgColumnGroup;
 }
 
+export interface SgColumnStoreMetaRow {
+  name: string;
+  keys: string[];
+  isGroup?: boolean;
+}
+
 export class SgColumnStore {
-  metaRows: {
-    header: Array<{ name: string; keys: string[], isGroup?: boolean }>;
-    footer: Array<{ name: string; keys: string[], isGroup?: boolean }>;
-  }
+  metaRows: { header: Array<SgColumnStoreMetaRow>; footer: Array<SgColumnStoreMetaRow>; };
+
   tableRow: string[];
 
   meta: SgMetaColumnStore[];
   table: SgColumn[];
   allTable: SgColumn[];
 
-  private byName = new Map<string, SgMetaColumnStore & { data?: SgColumn }>();
+  set hidden(value: string[]) {
+    this._hidden = value
+    this.setHidden();
+  }
 
+  private _metaRows: { header: Array<SgColumnStoreMetaRow & { allKeys?: string[] }>; footer: Array<SgColumnStoreMetaRow & { allKeys?: string[] }>; };
+  private _hidden: string[];
+  private byName = new Map<string, SgMetaColumnStore & { data?: SgColumn }>();
 
   constructor() {
     this.resetIds();
     this.resetColumns();
   }
 
-  setExcluded(...columnIds: string[]): void {
-    this.tableRow = [];
-    this.table = [];
-    for (const c of this.allTable) {
-      if (columnIds.indexOf(c.id) === -1) {
-        this.table.push(c);
-        this.tableRow.push(c.id);
-      }
-    }
-    updateColumnWidths(this.reCalcRowWidth(), this.table, this.meta);
-  }
-
   find(id: string): SgMetaColumnStore & { data?: SgColumn } | undefined {
     return this.byName.get(id);
-  }
-
-  reCalcRowWidth(): RowWidthStaticAggregator {
-    const rowWidth = new RowWidthStaticAggregator();
-    for (const column of this.table) {
-      rowWidth.aggColumn(column);
-    }
-    return rowWidth;
   }
 
   invalidate(columnSet: SgTableColumnDefinitionSet | SgTableColumnSet): void {
     const rowWidth = new RowWidthStaticAggregator();
     this.resetColumns();
     this.resetIds();
+
+    const hidden = this._hidden || [];
 
     const getColumnRecord = (id: string, collection?: any[]) => {
       let columnRecord = this.byName.get(id);
@@ -78,9 +70,13 @@ export class SgColumnStore {
       const columnRecord = getColumnRecord(column.id);
       columnRecord.data = column;
       this.allTable.push(column);
-      this.table.push(column);
-      this.tableRow.push(column.id);
-      rowWidth.aggColumn(column);
+
+      column.hidden = hidden.indexOf(column.id) > -1;
+      if (!column.hidden) {
+        this.table.push(column);
+        this.tableRow.push(column.id);
+        rowWidth.aggColumn(column);
+      }
     }
 
     for (const rowDef of columnSet.header) {
@@ -90,17 +86,25 @@ export class SgColumnStore {
         const column = metaCol.header || (metaCol.header = new SgMetaColumn(def));
         keys.push(column.id);
       }
-      this.metaRows.header[rowDef.rowIndex] = { name: rowDef.rowClassName, keys };
+      this._metaRows.header[rowDef.rowIndex] = { name: rowDef.rowClassName, keys };
     }
 
     for (const rowDef of columnSet.headerGroup) {
       const keys: string[] = [];
+      const allKeys: string[] = [];
       for (const def of rowDef.cols) {
         const metaCol = getColumnRecord(def.id, this.meta);
-        const column = metaCol.headerGroup || (metaCol.headerGroup = new SgColumnGroup(def, !!(def as SgColumnGroup).placeholder));
-        keys.push(column.id);
+
+        const idx = this.allTable.findIndex( c => c.id === def.prop);
+        const groupColumns = this.allTable.slice(idx, idx + def.span + 1);
+
+        const column = metaCol.headerGroup || (metaCol.headerGroup = new SgColumnGroup(def, groupColumns, !!(def as SgColumnGroup).placeholder));
+        allKeys.push(column.id);
+        if (column.isVisible) {
+          keys.push(column.id);
+        }
       }
-      this.metaRows.header[rowDef.rowIndex] = { name: rowDef.rowClassName, keys, isGroup: true };
+      this._metaRows.header[rowDef.rowIndex] = { name: rowDef.rowClassName, keys, allKeys, isGroup: true };
     }
 
     for (const rowDef of columnSet.footer) {
@@ -110,9 +114,35 @@ export class SgColumnStore {
         const column = metaCol.footer || (metaCol.footer = new SgMetaColumn(def));
         keys.push(column.id);
       }
-      this.metaRows.footer.push({ name: rowDef.rowClassName, keys });
+      this._metaRows.footer.push({ name: rowDef.rowClassName, keys });
     }
     updateColumnWidths(rowWidth, this.table, this.meta);
+  }
+
+  private setHidden(): void {
+    this.tableRow = [];
+    this.table = [];
+    for (const c of this.allTable) {
+      c.hidden = this._hidden.indexOf(c.id) > -1;
+      if (!c.hidden) {
+        this.table.push(c);
+        this.tableRow.push(c.id);
+      }
+    }
+    for (const h of this._metaRows.header) {
+      if (h.isGroup) {
+        h.keys = h.allKeys.filter( key => this.find(key).headerGroup.isVisible );
+      }
+    }
+    updateColumnWidths(this.getStaticWidth(), this.table, this.meta);
+  }
+
+  private getStaticWidth(): RowWidthStaticAggregator {
+    const rowWidth = new RowWidthStaticAggregator();
+    for (const column of this.table) {
+      rowWidth.aggColumn(column);
+    }
+    return rowWidth;
   }
 
   private resetColumns(): void {
@@ -124,6 +154,6 @@ export class SgColumnStore {
 
   private resetIds(): void {
     this.tableRow = [];
-    this.metaRows = { header: [], footer: [] };
+    this._metaRows = this.metaRows = { header: [], footer: [] };
   }
 }

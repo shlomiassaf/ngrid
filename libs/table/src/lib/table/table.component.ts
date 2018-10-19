@@ -281,8 +281,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
     if (this._colHideDiffer) {
       const changes = this._colHideDiffer.diff(this._hideColumns);
       if (changes) {
-        const hidden = this._hideColumns || [];
-        this._store.setExcluded(...hidden);
+        this._store.hidden = this._hideColumns || [];
         this._totalMinWidth = '';
         this._cdkTable.syncRows('header');
       }
@@ -394,9 +393,13 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
     for (const m of this._store.meta) {
       const g = m.headerGroup;
       if (g) {
-        const cols = data.filter( d => d.column.isInGroup(g) );
-        const groupWidth = rowWidth.aggColumns(cols);
-        g.cWidth = `${groupWidth}px`;
+        if (g.isVisible) {
+          const cols = data.filter( d => !d.column.hidden && d.column.isInGroup(g) );
+          const groupWidth = rowWidth.aggColumns(cols);
+          g.cWidth = `${groupWidth}px`;
+        } else {
+          g.cWidth = `0px`;
+        }
         g.columnDef.markForCheck();
       }
     }
