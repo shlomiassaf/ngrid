@@ -1,8 +1,5 @@
-// TODO: @angular-devkit/core/node_modules/rxjs uses different rxjs with breaking changes, replace when they align.
-// import { Observable } from 'rxjs';
-// import { tap } from 'rxjs/operators';
-import { Observable } from '@angular-devkit/core/node_modules/rxjs';
-import { tap } from '@angular-devkit/core/node_modules/rxjs/operators';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { BuildEvent, BuilderConfiguration } from '@angular-devkit/architect';
 import * as ngPackagr from 'ng-packagr';

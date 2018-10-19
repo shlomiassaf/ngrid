@@ -1,8 +1,9 @@
+import '../../../../typedoc-patchs/src/patching';
 import * as Path from 'path';
 import * as FS from 'fs';
 import * as ts from 'typedoc/node_modules/typescript';
 
-import { Reflection,  ReflectionKind } from 'typedoc';
+import { Reflection, ReflectionKind } from 'typedoc';
 import { ConverterComponent } from 'typedoc/dist/lib/converter/components';
 import { Converter } from 'typedoc/dist/lib/converter/converter';
 import { Context } from 'typedoc/dist/lib/converter/context';
@@ -63,7 +64,7 @@ export class MonoRepoLibraryPlugin extends ConverterComponent {
    *
    * @param context  The context object describing the current state the converter is in.
    */
-  private onBeginResolve(context:Context) {
+  private onBeginResolve(context: Context) {
     this.monoRepo.packages.forEach( pkg => {
       const sortedContainers = sortContainersByDependency(<any> pkg.modules, pkg.depGraph);
 

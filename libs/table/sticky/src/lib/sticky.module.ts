@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -26,7 +26,7 @@ const MAPPER = <T>(v: T): [T, boolean] => [v, true];
 })
 export class SgTableStickyModule {
   constructor(@Optional() @SkipSelf() parentModule: SgTableStickyModule,
-  configService: SgTableConfigService) {
+              configService: SgTableConfigService) {
     if (parentModule) {
       return;
     }
@@ -35,21 +35,25 @@ export class SgTableStickyModule {
       .subscribe( event => {
         const { table, controller } = event;
         if (controller && !controller.hasPlugin('sticky')) {
-          const stickyPluginConfig = configService.get('stickyPlugin');
-          if (stickyPluginConfig) {
-            if (stickyPluginConfig.headers) {
-              setStickyRow(table, 'header', stickyPluginConfig.headers.map(MAPPER));
-            }
-            if (stickyPluginConfig.footers) {
-              setStickyRow(table, 'footer', stickyPluginConfig.footers.map(MAPPER));
-            }
-            if (stickyPluginConfig.columnStart) {
-              setStickyColumns(table, 'start', stickyPluginConfig.columnStart.map(MAPPER));
-            }
-            if (stickyPluginConfig.columnEnd) {
-              setStickyColumns(table, 'end', stickyPluginConfig.columnEnd.map(MAPPER));
-            }
-          }
+          controller.events
+            .pipe( filter( e => e.kind === 'onInit' ), first() )
+            .subscribe( event => {
+              const stickyPluginConfig = configService.get('stickyPlugin');
+              if (stickyPluginConfig) {
+                if (stickyPluginConfig.headers) {
+                  setStickyRow(table, 'header', stickyPluginConfig.headers.map(MAPPER));
+                }
+                if (stickyPluginConfig.footers) {
+                  setStickyRow(table, 'footer', stickyPluginConfig.footers.map(MAPPER));
+                }
+                if (stickyPluginConfig.columnStart) {
+                  setStickyColumns(table, 'start', stickyPluginConfig.columnStart.map(MAPPER));
+                }
+                if (stickyPluginConfig.columnEnd) {
+                  setStickyColumns(table, 'end', stickyPluginConfig.columnEnd.map(MAPPER));
+                }
+              }
+            });
         }
       });
   }

@@ -81,7 +81,7 @@ export class SgTableCheckboxComponent implements AfterViewInit {
     KillOnDestroy.kill(this, this.table);
     if (this._selection) {
       this.length = this.selection.selected.length || '';
-      this.selection.onChange
+      this.selection.changed
         .pipe(KillOnDestroy(this, this.table))
         .subscribe( () => (this.length = this.selection.selected.length || '') );
     } else {

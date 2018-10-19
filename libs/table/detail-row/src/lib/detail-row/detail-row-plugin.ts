@@ -1,10 +1,8 @@
-import { first } from 'rxjs/operators';
 import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { SgTableComponent, SgTablePluginController, TablePlugin, KillOnDestroy } from '@sac/table';
 
-import { SgTableTargetEventsPlugin } from '@sac/table/target-events';
 import { SgTableDetailRowComponent } from './row';
 import { SgTableDetailRowParentRefDirective, SgTableDetailRowContext, SgTableDefaultDetailRowParentComponent } from './directives';
 

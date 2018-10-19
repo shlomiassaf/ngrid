@@ -144,24 +144,7 @@ export class SgTableCellTooltipDirective<T> implements CellTooltipOptions, OnDes
       const params = this.initArgs.slice() as SgTableCellTooltipDirective<any>['initArgs'];
       params[1] = new ElementRef<any>(event.cellTarget);
 
-      // TODO TODO TODO
-      // When moving to TS 3+ use spread in constructor signature
-      // SEE https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#tuples-in-rest-parameters-and-spread-expressions
-      // CODE:
-      // this.toolTip = new MatTooltip(...params);
-      this.toolTip = new MatTooltip(
-        params[0],
-        params[1],
-        params[2],
-        params[3],
-        params[4],
-        params[5],
-        params[6],
-        params[7],
-        params[8],
-        params[9],
-        params[10],
-      );
+      this.toolTip = new MatTooltip(...params);
 
       const message = this.message || (this.lastConfig && this.lastConfig.message) || DEFAULT_OPTIONS.message;
       this.toolTip.message = message(event);

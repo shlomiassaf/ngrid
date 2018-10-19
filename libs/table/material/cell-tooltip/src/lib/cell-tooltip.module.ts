@@ -4,10 +4,12 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { SgTableModule, SgTablePluginController, SgTableConfigService } from '@sac/table';
+import { SgTableTargetEventsModule } from '@sac/table/target-events';
+
 import { SgTableCellTooltipDirective } from './cell-tooltip.directive';
 
 @NgModule({
-  imports: [ CommonModule, MatTooltipModule, OverlayModule, SgTableModule ],
+  imports: [ CommonModule, MatTooltipModule, OverlayModule, SgTableModule, SgTableTargetEventsModule ],
   declarations: [ SgTableCellTooltipDirective ],
   exports: [ SgTableCellTooltipDirective, MatTooltipModule ],
 })

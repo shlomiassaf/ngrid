@@ -1,5 +1,3 @@
-const toposort = require('toposort');
-
 import * as Path from 'path';
 import * as FS from 'fs';
 import * as ts from 'typedoc/node_modules/typescript';
