@@ -17,7 +17,8 @@ import {
   TemplateRef,
   ViewContainerRef,
   EmbeddedViewRef,
-  isDevMode, forwardRef
+  NgZone,
+  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck
 } from '@angular/core';
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -38,7 +39,6 @@ import {
   SgColumnStore, SgMetaColumnStore, SgTableColumnSet, SgTableColumnDefinitionSet,
 } from './columns';
 import { SgTableRegistryService } from './table-registry.service';
-import { RowWidthStaticAggregator } from './row-width-static-aggregator';
 import { RowWidthDynamicAggregator, PADDING_END_STRATEGY, MARGIN_END_STRATEGY } from './group-column-size-strategy';
 
 const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border: 'none', visibility: 'collapse' };
@@ -66,7 +66,7 @@ export function pluginControllerFactory(table: { _plugin: SgTablePluginContext; 
   ]
 })
 @KillOnDestroy()
-export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnChanges, OnDestroy {
+export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
   readonly self = this;
 
   @Input() get marginCellIndent(): boolean { return this._marginCellIndent; };
@@ -203,6 +203,11 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
    */
   @Input() columns: SgTableColumnSet | SgTableColumnDefinitionSet;
 
+  @Input() set hideColumns(value: string[]) {
+    this._hideColumns = value;
+    this._hideColumnsDirty = true;
+  }
+
   rowFocus: 0 | '' = '';
   cellFocus: 0 | '' = '';
 
@@ -226,6 +231,9 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
 
   _cdkTable: SgCdkTableComponent<T>;
   _store: SgColumnStore = new SgColumnStore();
+  private _hideColumnsDirty: boolean;
+  private _hideColumns: string[];
+  private _colHideDiffer: IterableDiffer<string>;
   private _noDateEmbeddedVRef: EmbeddedViewRef<any>;
   private _paginatorEmbeddedVRef: EmbeddedViewRef<any>;
   private _pagination: SgTablePaginatorKind | false;
@@ -237,6 +245,8 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
   constructor(injector: Injector,
               vcRef: ViewContainerRef,
               elRef: ElementRef<any>,
+              private differs: IterableDiffers,
+              private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
               public registry: SgTableRegistryService) {
 
@@ -254,6 +264,29 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
       parent: injector,
     });
     this._plugin = new SgTablePluginContext(this, pluginInjector);
+  }
+
+  ngDoCheck(): void {
+    if (this._hideColumnsDirty) {
+      this._hideColumnsDirty = false;
+      const value = this._hideColumns;
+      if (!this._colHideDiffer && value) {
+        try {
+          this._colHideDiffer = this.differs.find(value).create();
+        } catch (e) {
+          throw new Error(`Cannot find a differ supporting object '${value}. hideColumns only supports binding to Iterables such as Arrays.`);
+        }
+      }
+    }
+    if (this._colHideDiffer) {
+      const changes = this._colHideDiffer.diff(this._hideColumns);
+      if (changes) {
+        const hidden = this._hideColumns || [];
+        this._store.setExcluded(...hidden);
+        this._totalMinWidth = '';
+        this._cdkTable.syncRows('header');
+      }
+    }
   }
 
   ngAfterContentInit(): void {
@@ -294,7 +327,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
     if (this.viewport.enabled) {
       this._cdkTable.attachViewPort(this.viewport);
     }
-    this.invalidateHeader(true);
+    this.invalidateHeader();
 
     // after invalidating the headers we now have optional header/headerGroups/footer rows added
     // we need to update the template with this data which will create new rows (header/footer)
@@ -320,7 +353,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
     }
 
     if ( processColumns === true ) {
-      this.invalidateHeader(true);
+      this.invalidateHeader();
       this._cdkTable.syncRows();
     }
   }
@@ -339,49 +372,15 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
   /**
    * Invalidates the header, including a full rebuild of column headers
    */
-  invalidateHeader(rebuildColumns: boolean = false): void {
-    const rowWidth = new RowWidthStaticAggregator();
-    this._store.invalidate(this.columns, rowWidth, rebuildColumns);
-
-    for (const c of this._store.table) {
-      let width;
-      if (c.width) {
-        width = c.width;
-      } else {
-        const { pct, px } = rowWidth.calculateDefault();
-        width =`calc(${pct}% - ${px}px)`
-      }
-      c.cWidth = width;
-
-      const minWidth = c.minWidth || 0;
-      c.cMinWidth = `${minWidth}px`;
-    }
-
-    for (const m of this._store.meta) {
-      for (const c of [m.header, m.footer]) {
-        if (c) {
-          c.cWidth = c.width || '';
-          c.cMinWidth = c.minWidth ?`${c.minWidth}px` : '';
-        }
-      }
-
-      if (m.headerGroup) {
-        const g = m.headerGroup;
-        g.update(this._store.table);
-        const { pct, px } = rowWidth.calculateGroup(g);
-        // for groups we're adding px because these PX belong to grouped columns with fixed px
-        g.cWidth = `calc(${pct}% + ${px}px)`;
-        g.cMinWidth = '';
-      }
-    }
-
+  invalidateHeader(): void {
+    this._store.invalidate(this.columns);
     this.attachCustomCellTemplates();
     this.attachCustomHeaderCellTemplates();
     this.cdr.markForCheck();
     this.cdr.detectChanges();
     this.resetHeaderRowDefs();
     this.resetFooterRowDefs();
-    this._plugin.emitEvent({ kind: 'onInvalidateHeaders', rebuildColumns });
+    this._plugin.emitEvent({ kind: 'onInvalidateHeaders' });
   }
 
   resizeRows(data: SgColumnSizeInfo[]): void {
@@ -414,8 +413,10 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, OnC
       this._cdkTable.minWidth = `${rowWidth.totalMinWidth}px`;
     }
 
-    this._cdkTable.syncRows('header');
-    this._plugin.emitEvent({ kind: 'onResizeRow' });
+    this.ngZone.run( () => {
+      this._cdkTable.syncRows('header');
+      this._plugin.emitEvent({ kind: 'onResizeRow' });
+    });
   }
 
   /**

@@ -3,6 +3,7 @@ import { SgMetaColumn } from './meta-column';
 import { SgColumn } from './column';
 import { SgColumnGroup } from './group-column';
 import { RowWidthStaticAggregator } from '../row-width-static-aggregator';
+import { updateColumnWidths } from '../utils/helpers';
 
 export interface SgMetaColumnStore {
   id: string;
@@ -21,26 +22,43 @@ export class SgColumnStore {
 
   meta: SgMetaColumnStore[];
   table: SgColumn[];
+  allTable: SgColumn[];
 
   private byName = new Map<string, SgMetaColumnStore & { data?: SgColumn }>();
+
 
   constructor() {
     this.resetIds();
     this.resetColumns();
   }
 
+  setExcluded(...columnIds: string[]): void {
+    this.tableRow = [];
+    this.table = [];
+    for (const c of this.allTable) {
+      if (columnIds.indexOf(c.id) === -1) {
+        this.table.push(c);
+        this.tableRow.push(c.id);
+      }
+    }
+    updateColumnWidths(this.reCalcRowWidth(), this.table, this.meta);
+  }
+
   find(id: string): SgMetaColumnStore & { data?: SgColumn } | undefined {
     return this.byName.get(id);
   }
 
-  invalidate(columnSet: SgTableColumnDefinitionSet | SgTableColumnSet, rowWidth: RowWidthStaticAggregator, rebuildColumns = false): void {
-    if (rebuildColumns) {
-      this.resetColumns();
-    } else {
-      // for (const m of this.meta) {
-        // meta.set(m.id, m);
-      // }
+  reCalcRowWidth(): RowWidthStaticAggregator {
+    const rowWidth = new RowWidthStaticAggregator();
+    for (const column of this.table) {
+      rowWidth.aggColumn(column);
     }
+    return rowWidth;
+  }
+
+  invalidate(columnSet: SgTableColumnDefinitionSet | SgTableColumnSet): void {
+    const rowWidth = new RowWidthStaticAggregator();
+    this.resetColumns();
     this.resetIds();
 
     const getColumnRecord = (id: string, collection?: any[]) => {
@@ -56,14 +74,11 @@ export class SgColumnStore {
 
     for (const def of columnSet.table) {
       let column: SgColumn;
-      if (rebuildColumns) {
-        column = new SgColumn(def);
-        const columnRecord = getColumnRecord(column.id);
-        columnRecord.data = column;
-        this.table.push(column);
-      } else {
-        column = this.table.find( c => c.prop === def.prop );
-      }
+      column = new SgColumn(def);
+      const columnRecord = getColumnRecord(column.id);
+      columnRecord.data = column;
+      this.allTable.push(column);
+      this.table.push(column);
       this.tableRow.push(column.id);
       rowWidth.aggColumn(column);
     }
@@ -97,9 +112,11 @@ export class SgColumnStore {
       }
       this.metaRows.footer.push({ name: rowDef.rowClassName, keys });
     }
+    updateColumnWidths(rowWidth, this.table, this.meta);
   }
 
   private resetColumns(): void {
+    this.allTable = [];
     this.table = [];
     this.meta = [];
     this.byName.clear();

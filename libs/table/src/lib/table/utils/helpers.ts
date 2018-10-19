@@ -2,6 +2,9 @@ import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { SgColumnDefinition } from '../columns/types';
+import { SgColumn } from '../columns/column';
+import { SgMetaColumnStore } from '../columns/column-store';
+import { RowWidthStaticAggregator } from '../row-width-static-aggregator';
 
 /**
  * Normalize an SgColumnDefinition id
@@ -34,6 +37,40 @@ export function deepPathSet(item: any, col: SgColumnDefinition, value: any): voi
     }
   }
   item[ col.prop ] = value;
+}
+
+export function updateColumnWidths(rowWidth: RowWidthStaticAggregator, tableColumns: SgColumn[], metaColumns: SgMetaColumnStore[]): void {
+  for (const c of tableColumns) {
+    let width;
+    if (c.width) {
+      width = c.width;
+    } else {
+      const { pct, px } = rowWidth.calculateDefault();
+      width =`calc(${pct}% - ${px}px)`
+    }
+    c.cWidth = width;
+
+    const minWidth = c.minWidth || 0;
+    c.cMinWidth = `${minWidth}px`;
+  }
+
+  for (const m of metaColumns) {
+    for (const c of [m.header, m.footer]) {
+      if (c) {
+        c.cWidth = c.width || '';
+        c.cMinWidth = c.minWidth ?`${c.minWidth}px` : '';
+      }
+    }
+
+    if (m.headerGroup) {
+      const g = m.headerGroup;
+      g.update(tableColumns);
+      const { pct, px } = rowWidth.calculateGroup(g);
+      // for groups we're adding px because these PX belong to grouped columns with fixed px
+      g.cWidth = `calc(${pct}% + ${px}px)`;
+      g.cMinWidth = '';
+    }
+  }
 }
 
 //#region untilComponentDestroyed

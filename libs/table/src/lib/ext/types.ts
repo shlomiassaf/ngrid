@@ -16,7 +16,6 @@ export interface SgTableOnResizeRowtEvent {
 
 export interface SgTableOnInvalidateHeadersEvent {
   kind: 'onInvalidateHeaders';
-  rebuildColumns: boolean;
 }
 
 export interface SgTableOnDataSourcetEvent {

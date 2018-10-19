@@ -43,7 +43,7 @@ export class TransposeTableSession {
       this.table.headerRow = this.headerRow;
       this.table.columns = this.columnsInput;
       if (updateTable) {
-        this.table.invalidateHeader(true);
+        this.table.invalidateHeader();
         this.table.dataSource.refresh(VIRTUAL_REFRESH);
       }
     }
@@ -54,7 +54,7 @@ export class TransposeTableSession {
     this.table.headerRow = false;
     this.pluginCtrl.events
       .pipe(KillOnDestroy(this, this.table))
-      .subscribe( e => e.kind === 'onInvalidateHeaders' && e.rebuildColumns && this.onInvalidateHeaders() );
+      .subscribe( e => e.kind === 'onInvalidateHeaders' && this.onInvalidateHeaders() );
 
     this.pluginCtrl.events
       .pipe(KillOnDestroy(this, this.table))

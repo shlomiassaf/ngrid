@@ -6,6 +6,7 @@
           blockUi
           matSort
           cellTooltip
+          [hideColumns]="hideColumns"
           matCheckboxSelection="selection"
           [transpose]="toggleTranspose"
           [usePagination]="usePagination"
@@ -105,6 +106,20 @@
     <mat-slide-toggle (change)="marginCellIndent = $event.checked" [checked]="marginCellIndent">Use Margin In Cells</mat-slide-toggle>
     <mat-slide-toggle (change)="showHeader = $event.checked" [checked]="showHeader">Show Header</mat-slide-toggle>
     <mat-slide-toggle (change)="showFooter = $event.checked" [checked]="showFooter">Show Footer</mat-slide-toggle>
+  </div>
+</div>
+
+<div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
+  <div class="example-feature-title" fxFlex="50%">Hide Columns</div>
+  <div class="example-feature-action" fxFlex>
+    <mat-form-field>
+      <mat-select #selectHiddenColumn>
+        <mat-option *ngFor="let o of sgTbl._store.allTable" [value]="o">{{o.label}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-checkbox *ngIf="selectHiddenColumn?.selected?.value as c"
+                  (change)="toggleColumn(c.id)"
+                  [checked]="hideColumns.indexOf(c.id) > -1">Sticky Start</mat-checkbox>
   </div>
 </div>
 

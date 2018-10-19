@@ -109,6 +109,7 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
   usePagination: false | SgTablePaginatorKind = false// 'pageNumber';
   showFooter = false;
   showHeader = true;
+  hideColumns: string[] = [];
   toggleTranspose = false;
   marginCellIndent = false;
   enableRowSelection = true;
@@ -132,6 +133,15 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
     this.dataSource.refresh();
   }
 
+  toggleColumn(id: string): void {
+    const idx = this.hideColumns.indexOf(id);
+    if (idx === -1) {
+      this.hideColumns.push(id);
+    } else {
+      this.hideColumns.splice(idx, 1);
+    }
+  }
+
   onDetailRowChange(value: 'on' | 'off' | 'predicate') : void {
     switch(value) {
       case 'off':
@@ -145,6 +155,7 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
         break;
     }
   }
+
   toggleDetailRow(sgTbl: SgTableComponent<any>, item: Person): void {
     toggleDetailRow(sgTbl, item)
   }

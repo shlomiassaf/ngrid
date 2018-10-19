@@ -170,7 +170,7 @@ export class SgTableStickyPluginDirective implements OnDestroy {
       });
 
       pluginCtrl.events
-        .pipe(filter ( e => e.kind === 'onInvalidateHeaders' && e.rebuildColumns ))
+        .pipe(filter ( e => e.kind === 'onInvalidateHeaders' ))
         .subscribe( () => {
           if (this._startDiffer && this.table.isInit) {
             this._startDiffer.diff([]);

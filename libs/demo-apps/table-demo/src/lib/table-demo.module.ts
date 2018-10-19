@@ -9,6 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { SgTableModule, SgTableRegistryService, SgTableConfigService } from '@sac/table';
 import { SgTableTargetEventsModule } from '@sac/table/target-events';
@@ -22,6 +23,7 @@ import { SharedModule, ExampleGroupRegistryService } from '@sac/demo-apps/shared
 import {
   TableExamplesPageComponent,
   AllInOneTableExampleComponent,
+  HideColumnsTableExampleComponent,
   RowHeightTableExampleComponent,
   BlockUiTableExampleComponent,
   CellTooltipTableExampleComponent,
@@ -45,11 +47,13 @@ const MATERIAL = [
   MatRadioModule,
   MatFormFieldModule,
   MatSlideToggleModule,
+  MatButtonToggleModule,
 ];
 
 const TABLE_EXAMPLES = [
   TableExamplesPageComponent,
   AllInOneTableExampleComponent,
+  HideColumnsTableExampleComponent,
   RowHeightTableExampleComponent,
   BlockUiTableExampleComponent,
   CellTooltipTableExampleComponent,
@@ -66,6 +70,7 @@ const TABLE_EXAMPLES = [
 
 const ROUTES = [
   { path: 'all-in-one', component: AllInOneTableExampleComponent, data: { title: 'All In One' } },
+  { path: 'hide-columns', component: HideColumnsTableExampleComponent, data: { title: 'Hide Columns' } },
   { path: 'row-height', component: RowHeightTableExampleComponent, data: { title: 'Row Height' } },
   { path: 'no-data', component: NoDataTableExampleComponent, data: { title: 'No Date' } },
   { path: 'virtual-scroll', component: VirtualScrollTableExampleComponent, data: { title: 'Virtual Scroll' } },

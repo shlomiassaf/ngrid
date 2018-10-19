@@ -31,7 +31,7 @@ export class SgTableMatSortDirective implements OnDestroy {
       .subscribe( e => {
         if (e.kind === 'onInvalidateHeaders') {
           const table = this.table;
-          if (e.rebuildColumns && table.dataSource && !table.dataSource.sort.column) {
+          if (table.dataSource && !table.dataSource.sort.column) {
             if (this.sort && this.sort.active) {
               this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' });
             }

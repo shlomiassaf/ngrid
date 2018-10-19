@@ -163,7 +163,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
         local.footer = prev.footer;
         local[LOCAL_COLUMN_DEF] = true;
 
-        this.table.invalidateHeader(true);
+        this.table.invalidateHeader();
 
         const matchTemplates = coerceBooleanProperty(this.matchTemplates);
         const { prop } = this._header;
