@@ -8,6 +8,7 @@ export { VirtualScrollTableExampleComponent } from './virtual-scroll/virtual-scr
 
 export { BlockUiTableExampleComponent } from './plugins/block-ui';
 export { CellTooltipTableExampleComponent } from './plugins/cell-tooltip/cell-tooltip.component';
+export { SelectionColumnTableExampleComponent } from './plugins/selection-column/selection-column.component';
 export { StickyRowTableExampleComponent, StickyColumnTableExampleComponent } from './plugins/sticky';
 export { MatSortTableExampleComponent } from './plugins/mat-sort';
 export { TransposeTableExampleComponent } from './plugins/transpose/transpose.component';

@@ -51,8 +51,8 @@ export class SgTableMatCheckboxSelectionDirective implements OnDestroy {
    *
    * The default value is `all`
    */
-  @Input() get bulkSelectMode(): 'all' | 'view' { return this._bulkSelectMode; }
-  set bulkSelectMode(value: 'all' | 'view') {
+  @Input() get bulkSelectMode(): 'all' | 'view' | 'none' { return this._bulkSelectMode; }
+  set bulkSelectMode(value: 'all' | 'view' | 'none') {
     if (value !== this._bulkSelectMode) {
       this._bulkSelectMode = value;
       if (this.cmpRef) {
@@ -62,7 +62,7 @@ export class SgTableMatCheckboxSelectionDirective implements OnDestroy {
   }
 
   private _name: string;
-  private _bulkSelectMode: 'all' | 'view';
+  private _bulkSelectMode: 'all' | 'view' | 'none';
   private cmpRef: ComponentRef<SgTableCheckboxComponent>;
   private _removePlugin: (table: SgTableComponent<any>) => void;
 

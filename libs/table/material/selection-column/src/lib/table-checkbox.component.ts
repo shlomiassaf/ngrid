@@ -34,8 +34,14 @@ export class SgTableCheckboxComponent implements AfterViewInit {
    *
    * The default value is `all`
    */
-  @Input() bulkSelectMode: 'all' | 'view' = 'all';
-
+  @Input() get bulkSelectMode(): 'all' | 'view' | 'none' { return this._bulkSelectMode; }
+  set bulkSelectMode(value: 'all' | 'view' | 'none') {
+    if (value !== this._bulkSelectMode) {
+      this._bulkSelectMode = value;
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
+    }
+  }
   /**
    * A Custom selection model, optional.
    * If not set, the selection model from the DataSource is used.
@@ -59,6 +65,7 @@ export class SgTableCheckboxComponent implements AfterViewInit {
   length: number;
 
   private _selection: SelectionModel<any>;
+  private _bulkSelectMode: 'all' | 'view' | 'none';
 
   constructor(@Optional() public table: SgTableComponent<any>, private cdr: ChangeDetectorRef) {}
 
