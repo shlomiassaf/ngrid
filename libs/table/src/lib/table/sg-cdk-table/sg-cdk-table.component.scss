@@ -49,14 +49,21 @@ $sg-cell-horizontal-indent: 12px;
 
 
 /* MULTI COLUMN AND COLSPAN */
-.sg-header-group-row {
-}
-
 .sg-table-header-cell.sg-header-group-cell {
   display: flex;
   align-items: center;
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
-  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  position: relative;
+
+  &:not(:first-child):before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    // right: 0;
+    bottom: 0;
+    left: 0;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
 
   &.sg-header-group-cell-placeholder {
     border: none;

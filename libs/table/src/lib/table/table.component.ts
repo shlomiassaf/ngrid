@@ -279,11 +279,15 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
       }
     }
     if (this._colHideDiffer) {
-      const changes = this._colHideDiffer.diff(this._hideColumns);
+      const hideColumns = this._hideColumns || [];
+      const changes = this._colHideDiffer.diff(hideColumns);
       if (changes) {
-        this._store.hidden = this._hideColumns || [];
+        this._store.hidden = hideColumns;
         this._totalMinWidth = '';
         this._cdkTable.syncRows('header');
+      }
+      if (!this._hideColumns) {
+        this._colHideDiffer = undefined;
       }
     }
   }
