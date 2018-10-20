@@ -228,9 +228,11 @@ export class SgCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
 
     for (let renderIndex = 0; renderIndex < count; renderIndex++) {
       const viewRef = vcRef.get(useSpecificRows ? rows[renderIndex] : renderIndex) as EmbeddedViewRef<any>;
-      viewRef.markForCheck();
-      if (detectChanges) {
-        viewRef.detectChanges();
+      if (viewRef) {
+        viewRef.markForCheck();
+        if (detectChanges) {
+          viewRef.detectChanges();
+        }
       }
     }
   }

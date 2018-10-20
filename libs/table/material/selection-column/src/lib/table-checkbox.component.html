@@ -3,8 +3,8 @@
               color="primary"
               (click)="$event.stopPropagation()"
               (change)="$event ? masterToggle() : null"
-              [checked]="isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()">
+              [checked]="allSelected"
+              [indeterminate]="length > 0 && !allSelected">
 </mat-checkbox>
 <mat-checkbox *sgTableCellDef="name; row as row;"
               style="overflow: initial"
@@ -13,4 +13,4 @@
               (change)="rowItemChange(row)"
               [checked]="selection.isSelected(row)">
 </mat-checkbox>
-<span *sgTableFooterCellDef="name; col as col;">{{ length }}</span>
+<span *sgTableFooterCellDef="name; col as col;">{{ length ? length : '' }}</span>

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, Optional } from '@angular/core';
+import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, Optional, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 
 import {
@@ -13,7 +13,8 @@ import {
   selector: 'sg-table-checkbox',
   templateUrl: './table-checkbox.component.html',
   styleUrls: ['./table-checkbox.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 @KillOnDestroy()
 export class SgTableCheckboxComponent implements AfterViewInit {
@@ -23,6 +24,17 @@ export class SgTableCheckboxComponent implements AfterViewInit {
    *
    **/
   @Input() name: string;
+
+  /**
+   * Defines the behavior when clicking on the bulk select checkbox (header).
+   * There are 2 options:
+   *
+   * - all: Will select all items in the current collection
+   * - view: Will select only the rendered items in the view
+   *
+   * The default value is `all`
+   */
+  @Input() bulkSelectMode: 'all' | 'view' = 'all';
 
   /**
    * A Custom selection model, optional.
@@ -43,11 +55,12 @@ export class SgTableCheckboxComponent implements AfterViewInit {
   @ViewChild(SgTableCellDefDirective) cellDef: SgTableCellDefDirective<any>;
   @ViewChild(SgTableFooterCellDefDirective) footerDef: SgTableFooterCellDefDirective<any>;
 
-  length: number | '' = '';
+  allSelected = false;
+  length: number;
 
   private _selection: SelectionModel<any>;
 
-  constructor(@Optional() public table: SgTableComponent<any>) {}
+  constructor(@Optional() public table: SgTableComponent<any>, private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
 
@@ -61,15 +74,11 @@ export class SgTableCheckboxComponent implements AfterViewInit {
     registry.addMulti('footerCell', this.footerDef);
   }
 
-  isAllSelected(): boolean {
-    return !this.selection.isEmpty() && this.selection.selected.length === this.table.dataSource.renderedData.length;
-  }
-
   masterToggle(): void {
-    if (this.isAllSelected()) {
+    if (this.allSelected) {
       this.selection.clear();
     } else {
-      this.table.dataSource.renderedData.forEach(data => this.selection.select(data));
+      this.getCollection().forEach(data => this.selection.select(data));
     }
   }
 
@@ -77,15 +86,26 @@ export class SgTableCheckboxComponent implements AfterViewInit {
     this.selection.toggle(row);
   }
 
+  private getCollection() {
+    const { dataSource } = this.table;
+    return this.bulkSelectMode === 'view' ? dataSource.renderedData : dataSource.source;
+  }
+
   private setupSelection(): void {
     KillOnDestroy.kill(this, this.table);
     if (this._selection) {
-      this.length = this.selection.selected.length || '';
+      this.length = this.selection.selected.length;
       this.selection.changed
         .pipe(KillOnDestroy(this, this.table))
-        .subscribe( () => (this.length = this.selection.selected.length || '') );
+        .subscribe( () => {
+          const { length } = this.getCollection();
+          this.allSelected = !this.selection.isEmpty() && this.selection.selected.length === length;
+          this.length = this.selection.selected.length;
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
+        });
     } else {
-      this.length = '';
+      this.length = 0;
     }
   }
 }
