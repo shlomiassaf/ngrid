@@ -1,3 +1,4 @@
+import { first } from 'rxjs/operators';
 import {
   AfterViewInit,
   Component,
@@ -39,6 +40,7 @@ import {
   SgColumnStore, SgMetaColumnStore, SgTableColumnSet, SgTableColumnDefinitionSet,
 } from './columns';
 import { SgTableRegistryService } from './table-registry.service';
+import { SgTableConfigService } from './services/config';
 import { RowWidthDynamicAggregator, PADDING_END_STRATEGY, MARGIN_END_STRATEGY } from './group-column-size-strategy';
 
 const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border: 'none', visibility: 'collapse' };
@@ -69,7 +71,7 @@ export function pluginControllerFactory(table: { _plugin: SgTablePluginContext; 
 export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
   readonly self = this;
 
-  @Input() get marginCellIndent(): boolean { return this._marginCellIndent; };
+  @Input() get boxSpaceModel(): 'padding' | 'margin' { return this._boxSpaceModel; };
   /**
    * Set's the margin cell indentation strategy.
    * Margin cell indentation strategy apply margin to cells instead of paddings and defines all cell box-sizing to border-box.
@@ -77,28 +79,28 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
    * When not set (default) the table will use a padding cell indentation strategy.
    * Padding cell indentation strategy apply padding to cells and defines all cell box-sizing to content-box.
    */
-  set marginCellIndent(value: boolean) {
-    value = coerceBooleanProperty(value);
-    if (value !== this._marginCellIndent) {
-      this._marginCellIndent = value;
-      if (value) {
-        this._cdkTable.addClass('sg-table-margin-cells-indent');
-      } else {
-        this._cdkTable.removeClass('sg-table-margin-cells-indent');
-      }
+  set boxSpaceModel(value: 'padding' | 'margin') {
+    if (this._boxSpaceModel !== value) {
+      this._boxSpaceModel = value;
       if (this.isInit) {
-        this.resizeRows(this._store.table.map( c => c.sizeInfo ));
+        // The UI changes are applied by toggle the `sg-table-margin-cell-box-model` CSS class.
+        // This is managed through binding in `SgCdkTableComponent`.
+        // After this change we need to measure the cell's width again so we trigger a resizeRows call.
+        // We must run it deferred to allow binding to commit.
+        this.ngZone.onStable.pipe(first()).subscribe( () => {
+          this.resizeRows(this._store.table.map( c => c.sizeInfo ));
+        });
       }
     }
   }
-  _marginCellIndent = false;
+  _boxSpaceModel: 'padding' | 'margin';
 
   /**
    * Show/Hide the header row.
    * Default: true
    */
-  @Input() get headerRow(): boolean { return !this._mainHeaderRowStyle; };
-  set headerRow(value: boolean) {
+  @Input() get showHeader(): boolean { return !this._mainHeaderRowStyle; };
+  set showHeader(value: boolean) {
     /* The header row is always rendered, show/hide is implemented through CSS.
        This is required because width alignment is based on the cell's of the header row. */
     value = coerceBooleanProperty(value);
@@ -111,16 +113,16 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
    * Show/Hide the footer row.
    * Default: false
    */
-  @Input() get footerRow(): boolean { return this._footerRow; };
-  set footerRow(value: boolean) {
+  @Input() get showFooter(): boolean { return this._showFooter; };
+  set showFooter(value: boolean) {
     // When false, the footer row is not rendered, unlike the header row which is always rendered.
     value = coerceBooleanProperty(value);
-    if (this._footerRow !== value) {
-      this._footerRow = value;
+    if (this._showFooter !== value) {
+      this._showFooter = value;
       this.resetFooterRowDefs();
     }
   }
-  _footerRow = false;
+  _showFooter: boolean;
 
   /**
    * Set's the behavior of the table when tabbing.
@@ -248,7 +250,12 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
               private differs: IterableDiffers,
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
+              private config: SgTableConfigService,
               public registry: SgTableRegistryService) {
+    const tableConfig = config.get('table');
+    this.boxSpaceModel = tableConfig.boxSpaceModel;
+    this.showHeader = tableConfig.showHeader;
+    this.showFooter = tableConfig.showFooter;
 
     // Create an injector for the extensions/plugins
     // This injector allow plugins (that choose so) to provide a factory function for runtime use.
@@ -388,7 +395,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
 
   resizeRows(data: SgColumnSizeInfo[]): void {
     // stores and calculates width for columns added to it. Aggregate's the total width of all added columns.
-    const rowWidth = new RowWidthDynamicAggregator(this._marginCellIndent ? MARGIN_END_STRATEGY : PADDING_END_STRATEGY);
+    const rowWidth = new RowWidthDynamicAggregator(this._boxSpaceModel === 'margin' ? MARGIN_END_STRATEGY : PADDING_END_STRATEGY);
 
     // From all meta columns (header/footer/headerGroup) we filter only `headerGroup` columns.
     // For each we calculate it's width from all of the columns that the headerGroup "groups".
@@ -542,7 +549,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
     if (this._footerRowDefs) {
       this._cdkTable.clearFooterRowDefs();
       const arr = this._footerRowDefs.toArray();
-      if (!this.footerRow) {
+      if (!this.showFooter) {
         arr.shift();
       }
       for (const rowDef of arr) {

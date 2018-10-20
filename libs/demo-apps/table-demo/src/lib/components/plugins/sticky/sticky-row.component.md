@@ -15,7 +15,7 @@ Sticky row's is a core feature from `cdk-table` but comes as a plugin.
 
 <docsi-mat-example-with-source title="Sticky Footer using [stickyFooter] directive" contentClass="mat-elevation-z7" [query]="[{section: 'ex-row-2'}]">
   <!--@sac-example:ex-row-2-->
-  <sg-table [stickyFooter]="['table']" footerRow
+  <sg-table [stickyFooter]="['table']" showFooter
             [dataSource]="dataSource"
             [columns]="columns" style="height: 300px">
   </sg-table>

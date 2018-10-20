@@ -111,7 +111,7 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
   showHeader = true;
   hideColumns: string[] = [];
   toggleTranspose = false;
-  marginCellIndent = false;
+  boxSpaceModel: 'padding' | 'margin' = 'padding';
   enableRowSelection = true;
   singleDetailRow = false;
 

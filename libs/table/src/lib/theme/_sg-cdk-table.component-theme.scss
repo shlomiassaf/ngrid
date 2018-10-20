@@ -19,6 +19,11 @@
     border-color: mat-color($foreground, divider);
   }
 
+  // border of "padding" cell box model (not .sg-table-margin-cell-box-model)
+  .sg-table-header-cell.sg-header-group-cell:before {
+    border-color: mat-color($foreground, divider);
+  }
+
   .sg-table-row, .sg-table-header-row, .sg-table-footer-row {
     background: mat-color($background, 'card');
   }

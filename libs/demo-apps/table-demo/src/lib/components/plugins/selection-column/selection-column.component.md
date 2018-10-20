@@ -15,7 +15,7 @@ Bulk mode defines the behavior of bulk select, there are 3 modes:
 <docsi-mat-example-with-source title="Bulk Mode & Virtual Scroll" contentClass="mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@sac-example:ex-2-->
   <sg-table #sgTbl matCheckboxSelection="selection" [bulkSelectMode]="bulkSelectMode"
-            class="sg-table-cell-ellipsis" footerRow [stickyHeader]="['table']" [stickyFooter]="['table']" [dataSource]="ds2" [columns]="columns2" style="height: 300px"></sg-table>
+            class="sg-table-cell-ellipsis" showFooter [stickyHeader]="['table']" [stickyFooter]="['table']" [dataSource]="ds2" [columns]="columns2" style="height: 300px"></sg-table>
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" style="margin: 8px 16px">
     <h3>Bulk Mode: </h3>
     <mat-button-toggle-group>

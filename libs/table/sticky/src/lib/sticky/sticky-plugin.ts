@@ -19,7 +19,7 @@ export function setStickyRow(table: SgTableComponent<any>, type: 'header' | 'foo
   const queryList = isHeader ? table._headerRowDefs : table._footerRowDefs;
   const bulk: Array<['table' | number, boolean]> = Array.isArray(valueOrBulk) ? valueOrBulk : [ [valueOrBulk, state] ];
 
-  const addOneIfMainExists = (isHeader && table.headerRow) || (!isHeader && table.footerRow) ? 1 : 0;
+  const addOneIfMainExists = (isHeader && table.showHeader) || (!isHeader && table.showFooter) ? 1 : 0;
 
   let changed: boolean;
   for (const [value, state] of bulk) {

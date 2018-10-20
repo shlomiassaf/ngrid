@@ -2,7 +2,19 @@ import { Observable, ReplaySubject } from 'rxjs';
 
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 
-export interface SgTableConfig { }
+export interface SgTableConfig {
+  table: {
+    showHeader?: boolean;
+    showFooter?: boolean;
+    boxSpaceModel?: 'padding' | 'margin';
+  }
+}
+
+const DEFAULT_TABLE_CONFIG: SgTableConfig['table'] = {
+  showHeader: true,
+  showFooter: false,
+  boxSpaceModel: 'padding',
+};
 
 export const SG_TABLE_CONFIG = new InjectionToken<SgTableConfig>('SG_TABLE_CONFIG');
 
@@ -20,6 +32,12 @@ export class SgTableConfigService {
         (this.config as any).set(key, _config[key]);
       }
     }
+
+    const tableConfig = this.config.get('table') || {};
+    this.config.set('table', {
+      ...DEFAULT_TABLE_CONFIG,
+      ...tableConfig,
+    });
   }
 
   has(section: keyof SgTableConfig): boolean {

@@ -39,8 +39,9 @@ import { SgCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/
   exportAs: 'sgCdkTable',
   template: CDK_TABLE_TEMPLATE,
   styleUrls: ['./sg-cdk-table.component.scss'],
-  host: {
+  host: { // tslint:disable-line:use-host-property-decorator
     'class': 'sg-cdk-table',
+    '[class.sg-table-margin-cell-box-model]': `table.boxSpaceModel === 'margin'`
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -122,16 +123,6 @@ export class SgCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     footer.clear();
   }
   //#endregion CLEAR-ROW-DEFS
-
-  //#region CSS-CLASS-CONTROL
-  addClass(cssClassName: string): void {
-    this._element.classList.add(cssClassName);
-  }
-
-  removeClass(cssClassName: string): void {
-    this._element.classList.remove(cssClassName);
-  }
-  //#endregion CSS-CLASS-CONTROL
 
   //#region VIRTUAL-SCROLL
   private forOf: SgVirtualScrollForOf<T>; //tslint:disable-line
