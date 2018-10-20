@@ -7,6 +7,14 @@
   }
 }
 
+.balance-negative {
+  background: rgba(red, 0.33);
+}
+
+.balance-positive {
+  background: rgba(green, 0.33);
+}
+
 .sg-detail-row {
   padding: 10px 40px;
   overflow: hidden;

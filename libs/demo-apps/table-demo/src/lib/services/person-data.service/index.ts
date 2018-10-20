@@ -11,11 +11,12 @@ export interface Person {
   bio: string;
   language: string;
   lead: boolean;
-  avater: string;
+  balance: number;
   settings: {
     background: string;
     timezone: string;
     emailFrequency: 'Daily' | 'Weekly' | 'Yearly' | 'Often' | 'Seldom' | 'Never';
+    avatar: string;
   };
   lastLoginIp: string;
 }

@@ -20,6 +20,7 @@ import {
   SgTableCellDirective,
   SgTableFooterCellDirective,
 
+  ParentNgStyleDirective, ParentNgClassDirective,
   SgTableNoDataRefDirective,
   SgTablePaginatorRefDirective,
 
@@ -39,6 +40,7 @@ import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
     SgCdkTableComponent,
     SgTableColumnDef,
     SgTableRowComponent,
+    ParentNgStyleDirective, ParentNgClassDirective,
     SgTableNoDataRefDirective,
     SgTablePaginatorRefDirective,
 
@@ -58,6 +60,7 @@ import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
   ],
   exports: [
     SgTableRowComponent,
+    ParentNgStyleDirective, ParentNgClassDirective,
     SgTableNoDataRefDirective,
     SgTablePaginatorRefDirective,
 

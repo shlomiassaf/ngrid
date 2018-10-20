@@ -31,18 +31,19 @@ const COLUMNS = columnFactory()
     { prop: 'selection', width: '48px' },
     { prop: 'id', sort: true, width: '40px' },
     { prop: 'name', sort: true },
+    { prop: 'email', minWidth: 250, width: '150px' },
+    { prop: 'country', headerType: 'country', width: '150px', type: { name: 'countryNameDynamic', data: COUNTRY_GETTER.name } },
+    { prop: 'language', headerType: 'language', width: '125px' },
+    { prop: 'lead', type: 'visualBool', width: '24px' },
+    { prop: 'rate', type: { name: 'currencyFn', data: COUNTRY_GETTER.currency }, sort: true },
+    { prop: 'balance', sort: true },
     { prop: 'gender', width: '50px' },
     { prop: 'birthdate', type: 'date' },
     { prop: 'bio' },
-    { prop: 'email', minWidth: 250, width: '250px' },
-    { prop: 'country', headerType: 'country', minWidth: 250, type: { name: 'countryNameDynamic', data: COUNTRY_GETTER.name } },
-    { prop: 'language', headerType: 'language' },
-    { prop: 'lead' },
-    // { prop: 'avatar' },
+    { prop: 'settings.avatar', width: '40px' },
     { prop: 'settings.background' },
     { prop: 'settings.timezone' },
-    { prop: 'settings.emailFrequency' },
-    { prop: 'rate', type: { name: 'currencyFn', data: COUNTRY_GETTER.currency }, sort: true },
+    { prop: 'settings.emailFrequency' }
     { prop: 'lastLoginIp' }
   )
   .header(
@@ -68,11 +69,21 @@ const COLUMNS = columnFactory()
     {
       prop: 'name',
       span: 3,
-      label: 'Personal Info',
+      label: 'Contact Info',
     },
     {
-      prop: 'settings.background',
+      prop: 'gender',
       span: 2,
+      label: 'Personal Info',
+    },
+    { // WE'RE NOT LINEAR HERE, GROUP COLUMNS ORDER IS BASED ON COLUMN ORDER
+      prop: 'rate',
+      span: 1,
+      label: 'Finance',
+    },
+    {
+      prop: 'settings.avatar',
+      span: 3,
       label: 'User Settings',
     }
   )

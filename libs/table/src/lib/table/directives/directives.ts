@@ -19,7 +19,6 @@ export abstract class SgTableSingleTemplateRegistryDirective<T, TKind extends ke
   }
 }
 
-
 /**
  * Marks the element as the display element for pagination
  */

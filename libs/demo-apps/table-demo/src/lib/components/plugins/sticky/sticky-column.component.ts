@@ -16,7 +16,7 @@ const COLUMNS = columnFactory()
     { prop: 'gender' },
     { prop: 'birthdate', type: 'date' },
     { prop: 'lead' },
-    { prop: 'avatar' },
+    { prop: 'settings.avatar' },
     { prop: 'settings.background' },
     { prop: 'settings.timezone' },
     { prop: 'settings.emailFrequency' },

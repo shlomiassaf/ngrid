@@ -31,6 +31,7 @@ export {
   SgTableCellDefDirective,
   SgTableHeaderCellDefDirective,
   SgTableFooterCellDefDirective,
+  ParentNgStyleDirective, ParentNgClassDirective,
   SgTableNoDataRefDirective,
   SgColumnTypeDefinition, SgColumnTypeDefinitionDataMap,
   SgColumnDefinition,

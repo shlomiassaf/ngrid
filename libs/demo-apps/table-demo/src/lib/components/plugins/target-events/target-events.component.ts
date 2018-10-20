@@ -33,7 +33,7 @@ const COLUMNS2 = columnFactory()
     { prop: 'email', minWidth: 250, width: '250px' },
     { prop: 'language', headerType: 'language' },
     { prop: 'lead' },
-    { prop: 'avatar' },
+    { prop: 'settings.avatar' },
     { prop: 'settings.background' },
     { prop: 'settings.timezone' },
     { prop: 'settings.emailFrequency' },
@@ -49,8 +49,8 @@ const COLUMNS2 = columnFactory()
       label: 'Personal Info',
     },
     {
-      prop: 'settings.background',
-      span: 2,
+      prop: 'settings.avatar',
+      span: 3,
       label: 'User Settings',
     }
   )

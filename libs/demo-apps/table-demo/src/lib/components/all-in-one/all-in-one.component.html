@@ -59,8 +59,9 @@
   <div *sgTableCellDef="'name'; value as value;"><b>{{value}}</b></div>
   <div *sgTableCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data(row):'symbol':'1.0-2'}}</div>
   <div *sgTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data(row) }}</div>
-  <div *sgTableCellDef="'settings.background'; value as value;" [style.background]="value"><b>{{value}}</b></div>
-  <div *sgTableCellDef="'avatar'; value as value;"><img [src]="value" /></div>
+  <div *sgTableCellDef="'balance'; value as value;" [parentNgClass]="{ 'balance-negative': value < 0, 'balance-positive': value > 0 }">{{ value | number:'1.0-0'}}</div>
+  <div *sgTableCellDef="'settings.background'; value as value;" [parentNgStyle]="{ backgroundColor: value }"><b>{{value}}</b></div>
+  <div *sgTableCellDef="'settings.avatar'; value as value;"><img [src]="value" height="40px" /></div>
   <div *sgTableCellDef="'settings.emailFrequency'; let ctx" (click)="emailFrequencyToggle = true">
     <ng-container *ngIf="!emailFrequencyToggle">{{ctx.value}}</ng-container>
     <mat-form-field *ngIf="emailFrequencyToggle">
