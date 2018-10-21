@@ -28,7 +28,16 @@ export class SgColumn implements SgColumnDefinition {
    * Examples: '50%', '50px'
    */
   width?: string;
+  /**
+   * This minimum width in pixels
+   * This is an absolute value, thus a number.
+   */
   minWidth?: number;
+  /**
+   * This maximum width in pixels
+   * This is an absolute value, thus a number.
+   */
+  maxWidth?: number;
 
   /**
    * A place to store things...
@@ -88,11 +97,18 @@ export class SgColumn implements SgColumnDefinition {
    */
   cWidth: string;
   /**
-   * The calculated width, used by sg-table to set the width used by the template
+   * The calculated minimum width, used by sg-table to set the min-width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
   cMinWidth: string;
+
+  /**
+   * The calculated maximum width, used by sg-table to set the max-width used by the template
+   * This value is not copied when creating a new instance
+   * @internal
+   */
+  cMaxWidth: string;
 
   /**
    * Used by sg-table to apply custom cell template, or the default when not set.
@@ -126,6 +142,9 @@ export class SgColumn implements SgColumnDefinition {
    * An on-demand size info object, populated by `SgColumnSizeObserver`
    */
   sizeInfo?: SgColumnSizeInfo;
+
+  /** @internal */
+  maxWidthLock: boolean;
 
   /**
    * Groups that this column belongs to.
@@ -168,7 +187,7 @@ export class SgColumn implements SgColumnDefinition {
       }
     }
 
-    const copyKeys: Array<keyof SgColumn> = ['sort', 'minWidth', 'headerType', 'footerType'];
+    const copyKeys: Array<keyof SgColumn> = ['sort', 'headerType', 'footerType'];
     copyKeys.forEach(k => k in def && (this[k as any] = def[k]));
   }
 
@@ -207,5 +226,25 @@ export class SgColumn implements SgColumnDefinition {
 
   isInGroup(g: SgColumnGroup): boolean {
     return this.groups && this.groups.has(g);
+  }
+
+  /**
+   * Calculates if the column width is locked by a maximum by checking if the given width is equal to the max width.
+   * If the result of the calculation (true/false) does not equal the previous lock state it will set the new lock state
+   * and return true.
+   * Otherwise return false.
+   * @internal
+   */
+  checkMaxWidthLock(actualWidth: number): boolean {
+    if (actualWidth === this.maxWidth) {
+      if (!this.maxWidthLock) {
+        this.maxWidthLock = true;
+        return true;
+      }
+    } else if (this.maxWidthLock) {
+      this.maxWidthLock = false;
+      return true;
+    }
+    return false;
   }
 }

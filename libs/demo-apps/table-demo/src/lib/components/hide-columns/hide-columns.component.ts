@@ -27,7 +27,7 @@ const COLUMNS2 = columnFactory()
     { prop: 'name', sort: true },
     { prop: 'gender', width: '50px' },
     { prop: 'birthdate', type: 'date' },
-    { prop: 'bio' },
+    { prop: 'bio', minWidth: 100, maxWidth: 150 },
     { prop: 'email', minWidth: 250, width: '250px' },
     { prop: 'country' },
     { prop: 'language', headerType: 'language' },

@@ -7,6 +7,12 @@ export interface IndentStrategy {
 }
 
 export class RowWidthDynamicAggregator {
+  /**
+   * When true, it indicates that one (or more) columns has changed the max width lock state.
+   * @readonly
+   */
+  maxWidthLockChanged: boolean;
+
   get totalMinWidth(): number { return this._totalMinWidth; };
   private readonly cols = new Map<SgColumnSizeInfo, number>();
   private _totalMinWidth = 0;
@@ -18,7 +24,6 @@ export class RowWidthDynamicAggregator {
       return this.cols.get(columnInfo);
     } else {
       let width = 0;
-      const style = columnInfo.style;
       if (columnInfo.column.minWidth) {
         width += columnInfo.column.minWidth;
       }
@@ -32,8 +37,15 @@ export class RowWidthDynamicAggregator {
   aggColumns(columnInfos: SgColumnSizeInfo[]): number {
     let sum = 0;
     for (const c of columnInfos) {
-      this.aggColumn(c);
+      const space = this.aggColumn(c);
       sum += c.width + this.strategy.groupCell(c);
+
+      if (c.column.maxWidth) {
+        const actualWidth = c.width - (space - (c.column.minWidth || 0));
+        if (c.column.checkMaxWidthLock(actualWidth)) {
+          this.maxWidthLockChanged = true;
+        }
+      }
     }
     return sum - this.strategy.group(columnInfos);
   }

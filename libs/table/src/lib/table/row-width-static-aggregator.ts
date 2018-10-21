@@ -7,9 +7,9 @@ export interface ColumnWidth {
 
 /**
  * Calculate row width based on static column definition.
- * It is static because it does not take into account realtime DOM measurments.
+ * It is static because it does not take into account real time DOM measurements.
  *
- * Realtime DOM measurments are more accurate as they take into account the style.
+ * Real time DOM measurements are more accurate as they take into account the style.
  * For example, margin, padding, etc...
  */
 export class RowWidthStaticAggregator {
@@ -42,6 +42,9 @@ export class RowWidthStaticAggregator {
         default:
           throw new Error(`Invalid width "${column.width}" in column ${column.prop}. Valid values are ##% or ##px (50% / 50px)`);
       }
+    } else if (column.maxWidthLock) {
+      agg.pxCount += 1;
+      agg.px += column.maxWidth;
     } else {
       agg.count += 1;
     }
@@ -56,7 +59,7 @@ export class RowWidthStaticAggregator {
    * pct is the total width in percent that the column should spread taking into account columns with fixed % width.
    * px is the total width in pixels that the column should shrink taking into account columns with fixed pixel width.
    *
-   * The algorithem is simple:
+   * The algorithm is simple:
    *  1) Sum all columns with fixed percent width
    *  2) From the entire row width (100%) deduct the total fixed width (step 1).
    *     This result represents the % left for all columns without a fixed width (percent and pixel).
@@ -66,7 +69,7 @@ export class RowWidthStaticAggregator {
    *
    *  For 2 & 3 we get values that we need to spread even between all of the columns without fixed width (percent and pixel).
    *  The exact width is the total percent left (2) minus the total width in pixel taken by columns with fixed with.
-   *  We now need to devide the result from 2 & 3 by the result from 4.
+   *  We now need to divide the result from 2 & 3 by the result from 4.
    *
    * Both values should be used together on the `width` style property using the `calc` function:
    * e.g.: `calc(${pct}% - ${px}px)`

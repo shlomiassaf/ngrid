@@ -69,7 +69,16 @@ export interface SgBaseColumnDefinition {
    * Examples: '50%', '50px'
    */
   width?: string;
+  /**
+   * This minimum width in pixels
+   * This is an absolute value, thus a number.
+   */
   minWidth?: number;
+  /**
+   * This maximum width in pixels
+   * This is an absolute value, thus a number.
+   */
+  maxWidth?: number;
 
   /**
    * A place to store things...

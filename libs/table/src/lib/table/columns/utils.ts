@@ -10,7 +10,7 @@ export function parseStyleWidth(exp: string): { value: number, type: 'px' | '%'}
 }
 
 export function initDefinitions<T extends SgBaseColumnDefinition>(def: SgBaseColumnDefinition, target: T): void {
-  const copyKeys: Array<keyof SgBaseColumnDefinition> = ['id', 'label', 'css', 'minWidth', 'width', 'type'];
+  const copyKeys: Array<keyof SgBaseColumnDefinition> = ['id', 'label', 'css', 'minWidth', 'width', 'maxWidth', 'type'];
   copyKeys.forEach( k => k in def && (target[k] = def[k]) );
   if (def.data) {
     target.data = Object.assign(target.data || {}, def.data);

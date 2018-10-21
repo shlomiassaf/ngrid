@@ -46,6 +46,14 @@ export class SgColumnStore {
     return this.byName.get(id);
   }
 
+  getStaticWidth(): RowWidthStaticAggregator {
+    const rowWidth = new RowWidthStaticAggregator();
+    for (const column of this.table) {
+      rowWidth.aggColumn(column);
+    }
+    return rowWidth;
+  }
+
   invalidate(columnSet: SgTableColumnDefinitionSet | SgTableColumnSet): void {
     const rowWidth = new RowWidthStaticAggregator();
     this.resetColumns();
@@ -135,14 +143,6 @@ export class SgColumnStore {
       }
     }
     updateColumnWidths(this.getStaticWidth(), this.table, this.meta);
-  }
-
-  private getStaticWidth(): RowWidthStaticAggregator {
-    const rowWidth = new RowWidthStaticAggregator();
-    for (const column of this.table) {
-      rowWidth.aggColumn(column);
-    }
-    return rowWidth;
   }
 
   private resetColumns(): void {

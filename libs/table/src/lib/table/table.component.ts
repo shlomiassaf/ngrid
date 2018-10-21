@@ -30,7 +30,7 @@ import { SgTablePaginatorKind } from '../paginator';
 import { SgCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { SgDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { SgCdkTableComponent } from './sg-cdk-table/sg-cdk-table.component';
-import { KillOnDestroy } from './utils';
+import { updateColumnWidths, KillOnDestroy } from './utils';
 import { findCellDef } from './directives/cell-def';
 import { SgColumnSizeInfo } from './types';
 import {
@@ -407,9 +407,9 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
         if (g.isVisible) {
           const cols = data.filter( d => !d.column.hidden && d.column.isInGroup(g) );
           const groupWidth = rowWidth.aggColumns(cols);
-          g.cWidth = `${groupWidth}px`;
+          g.cMaxWidth = g.cWidth = `${groupWidth}px`;
         } else {
-          g.cWidth = `0px`;
+          g.cMaxWidth = g.cWidth = `0px`;
         }
         g.columnDef.markForCheck();
       }
@@ -418,6 +418,14 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
     // if this is a table without groups
     if (rowWidth.totalMinWidth === 0) {
       rowWidth.aggColumns(data);
+    }
+
+    // if the max lock state has changed we need to update re-calculate the static width's again.
+    if (rowWidth.maxWidthLockChanged) {
+       updateColumnWidths(this._store.getStaticWidth(), this._store.table, this._store.meta);
+       data.forEach( d => d.column.columnDef.markForCheck() );
+       this.resizeRows(data);
+       return;
     }
 
     if (!this._totalMinWidth ) {

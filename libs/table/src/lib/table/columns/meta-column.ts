@@ -35,7 +35,16 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
    * Examples: '50%', '50px'
    */
   width?: string;
+  /**
+   * This minimum width in pixels
+   * This is an absolute value, thus a number.
+   */
   minWidth?: number;
+  /**
+   * This maximum width in pixels
+   * This is an absolute value, thus a number.
+   */
+  maxWidth?: number;
 
   /**
    * A place to store things...
@@ -70,18 +79,24 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
   template: TemplateRef<SgTableMetaCellTemplateContext<any>>;
 
     /**
-   * The calculated width, used by sg-table to set the width used by the tempalte
+   * The calculated width, used by sg-table to set the width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
   cWidth: string;
   /**
-   * The calculated width, used by sg-table to set the width used by the tempalte
+   * The calculated minimum width, used by sg-table to set the min-width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
   cMinWidth: string;
 
+  /**
+   * The calculated maximum width, used by sg-table to set the max-width used by the template
+   * This value is not copied when creating a new instance
+   * @internal
+   */
+  cMaxWidth: string;
     /**
    * The column def for this column.
    */

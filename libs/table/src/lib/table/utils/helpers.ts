@@ -49,26 +49,21 @@ export function updateColumnWidths(rowWidth: RowWidthStaticAggregator, tableColu
       width =`calc(${pct}% - ${px}px)`
     }
     c.cWidth = width;
-
-    const minWidth = c.minWidth || 0;
-    c.cMinWidth = `${minWidth}px`;
+    c.cMinWidth = c.minWidth ? `${c.minWidth}px` : '';
+    c.cMaxWidth = c.maxWidth ? `${c.maxWidth}px` : c.cWidth;
   }
 
   for (const m of metaColumns) {
     for (const c of [m.header, m.footer]) {
       if (c) {
         c.cWidth = c.width || '';
-        c.cMinWidth = c.minWidth ?`${c.minWidth}px` : '';
+        c.cMinWidth = c.minWidth ? `${c.minWidth}px` : '';
+        c.cMaxWidth = c.maxWidth ? `${c.maxWidth}px` : c.cWidth;
       }
     }
 
-    if (m.headerGroup) {
-      const g = m.headerGroup;
-      const { pct, px } = rowWidth.calculateGroup(g);
-      // for groups we're adding px because these PX belong to grouped columns with fixed px
-      g.cWidth = `calc(${pct}% + ${px}px)`;
-      g.cMinWidth = '';
-    }
+    // We don't handle groups because they are handled by `SgTableComponent.resizeRows()`
+    // which set the width for each.
   }
 }
 

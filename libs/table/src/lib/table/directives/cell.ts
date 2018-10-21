@@ -52,7 +52,7 @@ export class SgTableColumnDef extends CdkColumnDef implements DoCheck, OnDestroy
   }
 
   get isDirty(): boolean {
-    if (this._markedForCheck) {
+    if (this._markedForCheck && !this._isDirty) {
       this._markedForCheck = false;
       this._isDirty = !!this._colDiffer.diff(this._column);
     }
@@ -108,7 +108,7 @@ const HEADER_GROUP_CSS = `sg-header-group-cell`;
 const HEADER_GROUP_PLACE_HOLDER_CSS = `sg-header-group-cell-placeholder`;
 
 function setWidth(el: HTMLElement, column: COLUMN) {
-  el.style.cssText = `min-width: ${column.cMinWidth}; width: ${column.cWidth}; max-width: ${column.cWidth}; `;
+  el.style.cssText = `min-width: ${column.cMinWidth}; width: ${column.cWidth}; max-width: ${column.cMaxWidth}; `;
 }
 
 function initCellElement(el: HTMLElement, column: COLUMN): void {
@@ -184,25 +184,41 @@ export class SgTableHeaderCellDirective extends CdkHeaderCell implements DoCheck
     'role': 'gridcell',
   },
 })
-export class SgTableCellDirective extends CdkCell {
+export class SgTableCellDirective extends CdkCell implements DoCheck {
+  private el: HTMLElement;
 
   constructor(private columnDef: SgTableColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
-    initCellElement(elementRef.nativeElement, columnDef.column);
+    this.el = elementRef.nativeElement;
+    initCellElement(this.el, columnDef.column);
   }
 
-  // TODO: implement CD through columnDef differ.
+  // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
+  ngDoCheck(): void {
+    if (this.columnDef.isDirty) {
+      setWidth(this.el, this.columnDef.column);
+    }
+  }
 }
 
 @Directive({ selector: 'sg-table-footer-cell' })
-export class SgTableFooterCellDirective extends CdkFooterCell {
+export class SgTableFooterCellDirective extends CdkFooterCell implements DoCheck {
+  private el: HTMLElement;
+
   constructor(private columnDef: SgTableColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
+    this.el = elementRef.nativeElement;
     const column = columnDef.column;
-    const el = elementRef.nativeElement;
-    const name = el.tagName.toLowerCase();
-    el.classList.add(name);
-    el.setAttribute('role', 'gridcell');
-    initCellElement(el, column);
+    const name = this.el.tagName.toLowerCase();
+    this.el.classList.add(name);
+    this.el.setAttribute('role', 'gridcell');
+    initCellElement(this.el, column);
+  }
+
+  // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
+  ngDoCheck(): void {
+    if (this.columnDef.isDirty) {
+      setWidth(this.el, this.columnDef.column);
+    }
   }
 }
