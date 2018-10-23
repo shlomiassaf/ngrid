@@ -2,7 +2,7 @@ import { SgTableColumnDefinitionSet, SgTableColumnSet } from './types';
 import { SgMetaColumn } from './meta-column';
 import { SgColumn } from './column';
 import { SgColumnGroup } from './group-column';
-import { RowWidthStaticAggregator } from '../row-width-static-aggregator';
+import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 import { updateColumnWidths } from '../utils/helpers';
 
 export interface SgMetaColumnStore {
@@ -46,16 +46,16 @@ export class SgColumnStore {
     return this.byName.get(id);
   }
 
-  getStaticWidth(): RowWidthStaticAggregator {
-    const rowWidth = new RowWidthStaticAggregator();
+  getStaticWidth(): StaticColumnWidthLogic {
+    const rowWidth = new StaticColumnWidthLogic();
     for (const column of this.table) {
-      rowWidth.aggColumn(column);
+      rowWidth.addColumn(column);
     }
     return rowWidth;
   }
 
   invalidate(columnSet: SgTableColumnDefinitionSet | SgTableColumnSet): void {
-    const rowWidth = new RowWidthStaticAggregator();
+    const rowWidth = new StaticColumnWidthLogic();
     this.resetColumns();
     this.resetIds();
 
@@ -83,7 +83,7 @@ export class SgColumnStore {
       if (!column.hidden) {
         this.table.push(column);
         this.tableRow.push(column.id);
-        rowWidth.aggColumn(column);
+        rowWidth.addColumn(column);
       }
     }
 

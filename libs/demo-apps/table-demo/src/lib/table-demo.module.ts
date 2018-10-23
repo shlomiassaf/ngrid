@@ -24,6 +24,7 @@ import {
   TableExamplesPageComponent,
   AllInOneTableExampleComponent,
   HideColumnsTableExampleComponent,
+  ColumnWidthTableExampleComponent,
   RowHeightTableExampleComponent,
   BlockUiTableExampleComponent,
   CellTooltipTableExampleComponent,
@@ -55,6 +56,7 @@ const TABLE_EXAMPLES = [
   TableExamplesPageComponent,
   AllInOneTableExampleComponent,
   HideColumnsTableExampleComponent,
+  ColumnWidthTableExampleComponent,
   RowHeightTableExampleComponent,
   BlockUiTableExampleComponent,
   CellTooltipTableExampleComponent,
@@ -73,6 +75,7 @@ const TABLE_EXAMPLES = [
 const ROUTES = [
   { path: 'all-in-one', component: AllInOneTableExampleComponent, data: { title: 'All In One' } },
   { path: 'hide-columns', component: HideColumnsTableExampleComponent, data: { title: 'Hide Columns' } },
+  { path: 'column-width', component: ColumnWidthTableExampleComponent, data: { title: 'Column Width' } },
   { path: 'row-height', component: RowHeightTableExampleComponent, data: { title: 'Row Height' } },
   { path: 'no-data', component: NoDataTableExampleComponent, data: { title: 'No Date' } },
   { path: 'virtual-scroll', component: VirtualScrollTableExampleComponent, data: { title: 'Virtual Scroll' } },

@@ -43,7 +43,7 @@ const COLUMNS = columnFactory()
     { prop: 'settings.avatar', width: '40px' },
     { prop: 'settings.background' },
     { prop: 'settings.timezone' },
-    { prop: 'settings.emailFrequency' }
+    { prop: 'settings.emailFrequency' },
     { prop: 'lastLoginIp' }
   )
   .header(

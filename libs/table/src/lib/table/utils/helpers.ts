@@ -4,7 +4,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { SgColumnDefinition } from '../columns/types';
 import { SgColumn } from '../columns/column';
 import { SgMetaColumnStore } from '../columns/column-store';
-import { RowWidthStaticAggregator } from '../row-width-static-aggregator';
+import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 
 /**
  * Normalize an SgColumnDefinition id
@@ -39,13 +39,13 @@ export function deepPathSet(item: any, col: SgColumnDefinition, value: any): voi
   item[ col.prop ] = value;
 }
 
-export function updateColumnWidths(rowWidth: RowWidthStaticAggregator, tableColumns: SgColumn[], metaColumns: SgMetaColumnStore[]): void {
+export function updateColumnWidths(rowWidth: StaticColumnWidthLogic, tableColumns: SgColumn[], metaColumns: SgMetaColumnStore[]): void {
+  const { pct, px } = rowWidth.defaultColumnWidth;
   for (const c of tableColumns) {
     let width;
     if (c.width) {
       width = c.width;
     } else {
-      const { pct, px } = rowWidth.calculateDefault();
       width =`calc(${pct}% - ${px}px)`
     }
     c.cWidth = width;

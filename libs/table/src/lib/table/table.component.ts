@@ -41,7 +41,12 @@ import {
 } from './columns';
 import { SgTableRegistryService } from './table-registry.service';
 import { SgTableConfigService } from './services/config';
-import { RowWidthDynamicAggregator, PADDING_END_STRATEGY, MARGIN_END_STRATEGY } from './group-column-size-strategy';
+import {
+  DynamicColumnWidthLogic,
+  BoxModelSpaceStrategy,
+  DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY,
+  DYNAMIC_MARGIN_BOX_MODEL_SPACE_STRATEGY
+} from './col-width-logic/dynamic-column-width';
 
 const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border: 'none', visibility: 'collapse' };
 
@@ -53,7 +58,7 @@ export function pluginControllerFactory(table: { _plugin: SgTablePluginContext; 
   selector: 'sg-table',
   templateUrl: './table.component.html',
   styleUrls: [ './table.component.scss' ],
-  host: {
+  host: { // tslint:disable-line:use-host-property-decorator
     '[class.sg-table-empty]': '!dataSource || dataSource.renderLength === 0',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,7 +76,6 @@ export function pluginControllerFactory(table: { _plugin: SgTablePluginContext; 
 export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
   readonly self = this;
 
-  @Input() get boxSpaceModel(): 'padding' | 'margin' { return this._boxSpaceModel; };
   /**
    * Set's the margin cell indentation strategy.
    * Margin cell indentation strategy apply margin to cells instead of paddings and defines all cell box-sizing to border-box.
@@ -79,21 +83,25 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
    * When not set (default) the table will use a padding cell indentation strategy.
    * Padding cell indentation strategy apply padding to cells and defines all cell box-sizing to content-box.
    */
+  @Input() get boxSpaceModel(): 'padding' | 'margin' { return this._boxSpaceModel; };
   set boxSpaceModel(value: 'padding' | 'margin') {
     if (this._boxSpaceModel !== value) {
       this._boxSpaceModel = value;
+      this._cellWidthLogic = value === 'margin'
+        ? DYNAMIC_MARGIN_BOX_MODEL_SPACE_STRATEGY
+        : DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY
+      ;
       if (this.isInit) {
         // The UI changes are applied by toggle the `sg-table-margin-cell-box-model` CSS class.
         // This is managed through binding in `SgCdkTableComponent`.
         // After this change we need to measure the cell's width again so we trigger a resizeRows call.
         // We must run it deferred to allow binding to commit.
-        this.ngZone.onStable.pipe(first()).subscribe( () => {
-          this.resizeRows(this._store.table.map( c => c.sizeInfo ));
-        });
+        this.ngZone.onStable.pipe(first()).subscribe( () => this.resizeRows(this._store.table.map( c => c.sizeInfo ))  );
       }
     }
   }
-  _boxSpaceModel: 'padding' | 'margin';
+  private _boxSpaceModel: 'padding' | 'margin';
+  private _cellWidthLogic: BoxModelSpaceStrategy;
 
   /**
    * Show/Hide the header row.
@@ -240,7 +248,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
   private _paginatorEmbeddedVRef: EmbeddedViewRef<any>;
   private _pagination: SgTablePaginatorKind | false;
   private _noCachePaginator = false;
-  private _totalMinWidth: string;
+  private _minimumRowWidth: string;
 
   private _plugin: SgTablePluginContext;
 
@@ -290,7 +298,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
       const changes = this._colHideDiffer.diff(hideColumns);
       if (changes) {
         this._store.hidden = hideColumns;
-        this._totalMinWidth = '';
+        this._minimumRowWidth = '';
         this._cdkTable.syncRows('header');
       }
       if (!this._hideColumns) {
@@ -395,7 +403,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
 
   resizeRows(data: SgColumnSizeInfo[]): void {
     // stores and calculates width for columns added to it. Aggregate's the total width of all added columns.
-    const rowWidth = new RowWidthDynamicAggregator(this._boxSpaceModel === 'margin' ? MARGIN_END_STRATEGY : PADDING_END_STRATEGY);
+    const rowWidth = new DynamicColumnWidthLogic(this._cellWidthLogic);
 
     // From all meta columns (header/footer/headerGroup) we filter only `headerGroup` columns.
     // For each we calculate it's width from all of the columns that the headerGroup "groups".
@@ -406,7 +414,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
       if (g) {
         if (g.isVisible) {
           const cols = data.filter( d => !d.column.hidden && d.column.isInGroup(g) );
-          const groupWidth = rowWidth.aggColumns(cols);
+          const groupWidth = rowWidth.addGroup(cols);
           g.cMaxWidth = g.cWidth = `${groupWidth}px`;
         } else {
           g.cMaxWidth = g.cWidth = `0px`;
@@ -416,8 +424,8 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
     }
 
     // if this is a table without groups
-    if (rowWidth.totalMinWidth === 0) {
-      rowWidth.aggColumns(data);
+    if (rowWidth.minimumRowWidth === 0) {
+      rowWidth.addGroup(data);
     }
 
     // if the max lock state has changed we need to update re-calculate the static width's again.
@@ -428,11 +436,11 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
        return;
     }
 
-    if (!this._totalMinWidth ) {
+    if (!this._minimumRowWidth ) {
       // We calculate the total minimum width of the table
       // We do it once, to set the minimum width based on the initial setup.
       // Note that we don't apply strategy here, we want the entire length of the table!
-      this._cdkTable.minWidth = `${rowWidth.totalMinWidth}px`;
+      this._cdkTable.minWidth = `${rowWidth.minimumRowWidth}px`;
     }
 
     this.ngZone.run( () => {
