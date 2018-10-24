@@ -57,6 +57,7 @@ export interface CellTooltipOptions {
 @Directive({ selector: '[cellTooltip]', exportAs: 'sgOverflowTooltip' })
 @KillOnDestroy()
 export class SgTableCellTooltipDirective<T> implements CellTooltipOptions, OnDestroy {
+  static get PLUGIN_KEY(): 'cellTooltip' { return PLUGIN_KEY; }
 
   // tslint:disable-next-line:no-input-rename
   @Input('cellTooltip') canShow: (event: SgTableCellEvent<T>) => boolean;

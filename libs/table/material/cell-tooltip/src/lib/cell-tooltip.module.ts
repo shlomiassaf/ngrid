@@ -22,14 +22,19 @@ export class SgTableCellTooltipModule {
 
     SgTablePluginController.created
       .subscribe( event => {
-        const cellTooltipConfig = configService.get('cellTooltip');
+        // Do not remove the explicit reference to `SgTableCellTooltipDirective`
+        // We use `SgTableCellTooltipDirective.PLUGIN_KEY` to create a direct reference to `SgTableCellTooltipDirective`
+        // which will disable dead code elimination for the `SgTableCellTooltipDirective` plugin.
+        // If it is not set, using the plugin will only work when it is used in templates, other wise, if used programmatically (`autoSetAll`)
+        // CLI prod builds will remove the plugin's code.
+        const cellTooltipConfig = configService.get(SgTableCellTooltipDirective.PLUGIN_KEY);
         if (cellTooltipConfig && cellTooltipConfig.autoSetAll === true) {
           const pluginCtrl = event.controller;
           let subscription = pluginCtrl.events
             .subscribe( evt => {
               if (evt.kind === 'onInit') {
-                if (!pluginCtrl.hasPlugin('cellTooltip')) {
-                  pluginCtrl.createPlugin('cellTooltip');
+                if (!pluginCtrl.hasPlugin(SgTableCellTooltipDirective.PLUGIN_KEY)) {
+                  pluginCtrl.createPlugin(SgTableCellTooltipDirective.PLUGIN_KEY);
                 }
                 subscription.unsubscribe();
                 subscription = undefined;
