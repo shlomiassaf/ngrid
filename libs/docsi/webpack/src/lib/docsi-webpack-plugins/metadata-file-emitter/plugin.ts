@@ -21,7 +21,7 @@ export class DocsiMetadataFileEmitterWebpackPlugin implements webpack.Plugin {
     const metadata: DocsiMetadata = {} as any;
     const updateModule = () => {
       (compiler.inputFileSystem as any)._webpackCompilerHost
-        .writeFile('/Users/shlomiassaf/Desktop/Code/shlomi/__LIB__/sac/docsi-client-metadata.js', `module.exports = ${JSON.stringify(metadata, null, 2)};`);
+        .writeFile('/Users/shlomiassaf/Desktop/Code/shlomi/__LIB__/neg/docsi-client-metadata.js', `module.exports = ${JSON.stringify(metadata, null, 2)};`);
     }
     const notifier = <T extends keyof DocsiMetadata>(key: T, value: DocsiMetadata[T]) => {
       metadata[key] = value;

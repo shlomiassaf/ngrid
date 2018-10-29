@@ -22,10 +22,10 @@ import { Platform } from '@angular/cdk/platform';
 import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef } from '@angular/cdk/table';
 import { Directionality } from '@angular/cdk/bidi';
 
-import { SgTableComponent } from '../table.component';
+import { NegTableComponent } from '../table.component';
 
-import { SgVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
-import { SgCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/virtual-scroll-viewport.component';
+import { NegVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
+import { NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/virtual-scroll-viewport.component';
 
 /**
  * Wrapper for the CdkTable that extends it's functionality to support various table features.
@@ -35,18 +35,18 @@ import { SgCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/
  * This approach will allow easy removal when a feature is no longer required/implemented natively.
  */
 @Component({
-  selector: 'sg-cdk-table',
-  exportAs: 'sgCdkTable',
+  selector: 'neg-cdk-table',
+  exportAs: 'negCdkTable',
   template: CDK_TABLE_TEMPLATE,
-  styleUrls: ['./sg-cdk-table.component.scss'],
+  styleUrls: ['./neg-cdk-table.component.scss'],
   host: { // tslint:disable-line:use-host-property-decorator
-    'class': 'sg-cdk-table',
-    '[class.sg-table-margin-cell-box-model]': `table.boxSpaceModel === 'margin'`
+    'class': 'neg-cdk-table',
+    '[class.neg-table-margin-cell-box-model]': `isMarginSpace`
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SgCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
+export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
 
   protected get _element(): HTMLElement { return this._elementRef.nativeElement; }
 
@@ -62,6 +62,8 @@ export class SgCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     this._element.style.minWidth = this._minWidth = value || null;
   }
 
+  get isMarginSpace(): boolean { return this.table.boxSpaceModel === 'margin'; }
+
   private _minWidth: string | null = null;
 
   private onRenderRows$: Subject<DataRowOutlet>;
@@ -72,7 +74,7 @@ export class SgCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
               @Attribute('role') role: string,
               @Optional() _dir: Directionality,
               protected injector: Injector,
-              protected table: SgTableComponent<T>,
+              protected table: NegTableComponent<T>,
               @Inject(DOCUMENT) _document?: any,
               platform?: Platform) {
     super(_differs, _changeDetectorRef, _elementRef, role, _dir, document, platform);
@@ -125,7 +127,7 @@ export class SgCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
   //#endregion CLEAR-ROW-DEFS
 
   //#region VIRTUAL-SCROLL
-  private forOf: SgVirtualScrollForOf<T>; //tslint:disable-line
+  private forOf: NegVirtualScrollForOf<T>; //tslint:disable-line
 
   updateStickyHeaderRowStyles(): void {
     super.updateStickyHeaderRowStyles();
@@ -153,9 +155,9 @@ export class SgCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     }
   }
 
-  attachViewPort(viewport: SgCdkVirtualScrollViewportComponent): void {
+  attachViewPort(viewport: NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent): void {
     this.detachViewPort();
-    this.forOf = new SgVirtualScrollForOf<T>(this.table, this as any, viewport, this.injector.get(NgZone));
+    this.forOf = new NegVirtualScrollForOf<T>(this.table, this as any, viewport, this.injector.get(NgZone));
   }
 
   detachViewPort(): void {

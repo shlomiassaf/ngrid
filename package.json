@@ -1,11 +1,11 @@
 {
-  "name": "sac",
+  "name": "neg",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build-table": "ng build table --prod && cp libs/table/material/_theming.scss dist/@neg/table/material/_theming.scss && cp -R libs/table/material/theme dist/@neg/table/material/theme",
     "test": "ng test",
     "lint": "./node_modules/.bin/nx lint && ng lint",
     "e2e": "ng e2e",

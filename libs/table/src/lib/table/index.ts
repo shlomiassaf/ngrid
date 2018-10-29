@@ -1,35 +1,35 @@
 export * from './services/index';
 export * from './directives/index';
-export { SgTableHeaderCellSortContainer } from './types';
+export { NegTableHeaderCellSortContainer } from './types';
 
 export {
-  SgTableMetaCellTemplateContext,
-  SgTableCellTemplateContext,
-  SgColumnTypeDefinition, SgColumnTypeDefinitionDataMap,
-  SgBaseColumnDefinition,
-  SgMetaColumnDefinition,
-  SgColumnDefinition,
-  SgColumnGroupDefinition,
-  SgColumnSet,
-  SgTableColumnSet, SgTableColumnDefinitionSet,
+  NegTableMetaCellTemplateContext,
+  NegTableCellTemplateContext,
+  NegColumnTypeDefinition, NegColumnTypeDefinitionDataMap,
+  NegCdkVirtualScrollViewportComponentBaseColumnDefinition,
+  NegMetaColumnDefinition,
+  NegColumnDefinition,
+  NegColumnGroupDefinition,
+  NegColumnSet,
+  NegTableColumnSet, NegTableColumnDefinitionSet,
 
   META_COLUMN_TYPES,
   COLUMN_TYPES,
 
-  SgMetaColumn,
-  SgColumn,
-  SgColumnGroup,
+  NegMetaColumn,
+  NegColumn,
+  NegColumnGroup,
   COLUMN,
-  SgColumnFactory,
+  NegColumnFactory,
   columnFactory
 } from './columns/index';
 
-export { SgCdkTableComponent } from './sg-cdk-table/sg-cdk-table.component';
+export { NegCdkTableComponent } from './neg-cdk-table/neg-cdk-table.component';
 
 export * from './events';
-export { SgTableComponent } from './table.component';
-export { SgTableRegistryService } from './table-registry.service';
+export { NegTableComponent } from './table.component';
+export { NegTableRegistryService } from './table-registry.service';
 
-export { SgColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';
+export { NegColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';
 export * from './features/virtual-scroll/index';
 export * from './utils/index';

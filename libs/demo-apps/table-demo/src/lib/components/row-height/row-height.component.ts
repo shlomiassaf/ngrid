@@ -1,10 +1,10 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@sac/table';
+import { createDS, columnFactory } from '@neg/table';
 
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -20,7 +20,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-row-height-table-example-component',
+  selector: 'neg-row-height-table-example-component',
   templateUrl: './row-height.component.html',
   styleUrls: ['./row-height.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -34,6 +34,6 @@ export class RowHeightTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @sac-example:ex-3 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-1 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-1 */

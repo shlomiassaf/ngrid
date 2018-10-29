@@ -7,7 +7,7 @@ import { MatListModule } from '@angular/material/list';
 
 import { NxModule } from '@nrwl/nx';
 
-import { SharedModule } from '@sac/demo-apps/shared';
+import { SharedModule } from '@neg/demo-apps/shared';
 import { DemoHomePageComponent } from './demo-home-page/demo-home-page.component';
 
 import { AppComponent } from './app.component';
@@ -27,7 +27,7 @@ import { AppComponent } from './app.component';
     // `path` of ExampleGroup must match the group id!
     RouterModule.forRoot(
       [
-        { path: 'table-demo', loadChildren: '@sac/demo-apps/table-demo#TableDemoModule' },
+        { path: 'table-demo', loadChildren: '@neg/demo-apps/table-demo#TableDemoModule' },
       ],
       {
         useHash: false,

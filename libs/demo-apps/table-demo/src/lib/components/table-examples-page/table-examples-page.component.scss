@@ -1,4 +1,4 @@
-.sg-table-ui-block {
+.neg-table-ui-block {
   position: absolute;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
   justify-content: center;
 }
 
-.sg-table-no-data {
+.neg-table-no-data {
   display: flex;
   place-content: center center;
   position: absolute;
@@ -26,16 +26,16 @@
   }
 }
 
-.sg-row-detail-parent {
+.neg-row-detail-parent {
   &:focus {
     outline: none;
   }
-  &.sg-row-detail-opened {
+  &.neg-row-detail-opened {
     background: #f5f5f5;
   }
 }
 
-.sg-detail-row {
+.neg-detail-row {
   padding: 10px 40px;
   overflow: hidden;
 }

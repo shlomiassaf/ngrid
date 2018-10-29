@@ -1,13 +1,13 @@
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { SgColumnDefinition } from '../columns/types';
-import { SgColumn } from '../columns/column';
-import { SgMetaColumnStore } from '../columns/column-store';
+import { NegColumnDefinition } from '../columns/types';
+import { NegColumn } from '../columns/column';
+import { NegMetaColumnStore } from '../columns/column-store';
 import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 
 /**
- * Normalize an SgColumnDefinition id
+ * Normalize an NegColumnDefinition id
  */
 export function normalizeId(value: string): string {
   return value.replace(/ /g, '_');
@@ -16,7 +16,7 @@ export function normalizeId(value: string): string {
 /**
  * Given an object (item) and a path, returns the value at the path
  */
-export function deepPathGet(item: any, col: SgColumnDefinition): any {
+export function deepPathGet(item: any, col: NegColumnDefinition): any {
   if ( col.path ) {
     for ( const p of col.path ) {
       item = item[ p ];
@@ -29,7 +29,7 @@ export function deepPathGet(item: any, col: SgColumnDefinition): any {
 /**
  * Given an object (item) and a path, returns the value at the path
  */
-export function deepPathSet(item: any, col: SgColumnDefinition, value: any): void {
+export function deepPathSet(item: any, col: NegColumnDefinition, value: any): void {
   if ( col.path ) {
     for ( const p of col.path ) {
       item = item[ p ];
@@ -39,7 +39,7 @@ export function deepPathSet(item: any, col: SgColumnDefinition, value: any): voi
   item[ col.prop ] = value;
 }
 
-export function updateColumnWidths(rowWidth: StaticColumnWidthLogic, tableColumns: SgColumn[], metaColumns: SgMetaColumnStore[]): void {
+export function updateColumnWidths(rowWidth: StaticColumnWidthLogic, tableColumns: NegColumn[], metaColumns: NegMetaColumnStore[]): void {
   const { pct, px } = rowWidth.defaultColumnWidth;
   for (const c of tableColumns) {
     let width;
@@ -62,7 +62,7 @@ export function updateColumnWidths(rowWidth: StaticColumnWidthLogic, tableColumn
       }
     }
 
-    // We don't handle groups because they are handled by `SgTableComponent.resizeRows()`
+    // We don't handle groups because they are handled by `NegTableComponent.resizeRows()`
     // which set the width for each.
   }
 }

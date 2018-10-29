@@ -1,11 +1,11 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@sac/table';
+import { createDS, columnFactory } from '@neg/table';
 
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS1 = columnFactory()
   .default({minWidth: 100})
@@ -47,7 +47,7 @@ const COLUMNS2 = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-hide-columns-table-example-component',
+  selector: 'neg-hide-columns-table-example-component',
   templateUrl: './hide-columns.component.html',
   styleUrls: ['./hide-columns.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -74,6 +74,6 @@ export class HideColumnsTableExampleComponent {
     }
   }
 }
-/* @sac-example:ex-3 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-1 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-1 */

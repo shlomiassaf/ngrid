@@ -1,48 +1,48 @@
-import { SgTableColumnDefinitionSet, SgTableColumnSet } from './types';
-import { SgMetaColumn } from './meta-column';
-import { SgColumn } from './column';
-import { SgColumnGroup } from './group-column';
+import { NegTableColumnDefinitionSet, NegTableColumnSet } from './types';
+import { NegMetaColumn } from './meta-column';
+import { NegColumn } from './column';
+import { NegColumnGroup } from './group-column';
 import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 import { updateColumnWidths } from '../utils/helpers';
 
-export interface SgMetaColumnStore {
+export interface NegMetaColumnStore {
   id: string;
-  header?: SgMetaColumn;
-  footer?: SgMetaColumn;
-  headerGroup?: SgColumnGroup;
-  footerGroup?: SgColumnGroup;
+  header?: NegMetaColumn;
+  footer?: NegMetaColumn;
+  headerGroup?: NegColumnGroup;
+  footerGroup?: NegColumnGroup;
 }
 
-export interface SgColumnStoreMetaRow {
+export interface NegColumnStoreMetaRow {
   name: string;
   keys: string[];
   isGroup?: boolean;
 }
 
-export class SgColumnStore {
-  metaRows: { header: Array<SgColumnStoreMetaRow>; footer: Array<SgColumnStoreMetaRow>; };
+export class NegColumnStore {
+  metaRows: { header: Array<NegColumnStoreMetaRow>; footer: Array<NegColumnStoreMetaRow>; };
 
   tableRow: string[];
 
-  meta: SgMetaColumnStore[];
-  table: SgColumn[];
-  allTable: SgColumn[];
+  meta: NegMetaColumnStore[];
+  table: NegColumn[];
+  allTable: NegColumn[];
 
   set hidden(value: string[]) {
     this._hidden = value
     this.setHidden();
   }
 
-  private _metaRows: { header: Array<SgColumnStoreMetaRow & { allKeys?: string[] }>; footer: Array<SgColumnStoreMetaRow & { allKeys?: string[] }>; };
+  private _metaRows: { header: Array<NegColumnStoreMetaRow & { allKeys?: string[] }>; footer: Array<NegColumnStoreMetaRow & { allKeys?: string[] }>; };
   private _hidden: string[];
-  private byName = new Map<string, SgMetaColumnStore & { data?: SgColumn }>();
+  private byName = new Map<string, NegMetaColumnStore & { data?: NegColumn }>();
 
   constructor() {
     this.resetIds();
     this.resetColumns();
   }
 
-  find(id: string): SgMetaColumnStore & { data?: SgColumn } | undefined {
+  find(id: string): NegMetaColumnStore & { data?: NegColumn } | undefined {
     return this.byName.get(id);
   }
 
@@ -54,7 +54,7 @@ export class SgColumnStore {
     return rowWidth;
   }
 
-  invalidate(columnSet: SgTableColumnDefinitionSet | SgTableColumnSet): void {
+  invalidate(columnSet: NegTableColumnDefinitionSet | NegTableColumnSet): void {
     const rowWidth = new StaticColumnWidthLogic();
     this.resetColumns();
     this.resetIds();
@@ -73,8 +73,8 @@ export class SgColumnStore {
     }
 
     for (const def of columnSet.table) {
-      let column: SgColumn;
-      column = new SgColumn(def);
+      let column: NegColumn;
+      column = new NegColumn(def);
       const columnRecord = getColumnRecord(column.id);
       columnRecord.data = column;
       this.allTable.push(column);
@@ -91,7 +91,7 @@ export class SgColumnStore {
       const keys: string[] = [];
       for (const def of rowDef.cols) {
         const metaCol = getColumnRecord(def.id, this.meta);
-        const column = metaCol.header || (metaCol.header = new SgMetaColumn(def));
+        const column = metaCol.header || (metaCol.header = new NegMetaColumn(def));
         keys.push(column.id);
       }
       this._metaRows.header[rowDef.rowIndex] = { name: rowDef.rowClassName, keys };
@@ -106,7 +106,7 @@ export class SgColumnStore {
         const idx = this.allTable.findIndex( c => c.id === def.prop);
         const groupColumns = this.allTable.slice(idx, idx + def.span + 1);
 
-        const column = metaCol.headerGroup || (metaCol.headerGroup = new SgColumnGroup(def, groupColumns, !!(def as SgColumnGroup).placeholder));
+        const column = metaCol.headerGroup || (metaCol.headerGroup = new NegColumnGroup(def, groupColumns, !!(def as NegColumnGroup).placeholder));
         allKeys.push(column.id);
         if (column.isVisible) {
           keys.push(column.id);
@@ -119,7 +119,7 @@ export class SgColumnStore {
       const keys: string[] = [];
       for (const def of rowDef.cols) {
         const metaCol = getColumnRecord(def.id, this.meta);
-        const column = metaCol.footer || (metaCol.footer = new SgMetaColumn(def));
+        const column = metaCol.footer || (metaCol.footer = new NegMetaColumn(def));
         keys.push(column.id);
       }
       this._metaRows.footer.push({ name: rowDef.rowClassName, keys });

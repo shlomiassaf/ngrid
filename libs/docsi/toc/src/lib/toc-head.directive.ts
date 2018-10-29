@@ -9,7 +9,7 @@ import { TocLink, createLink } from './toc-link';
  * Automatically set H1, H2 and H3 elements that has an `id` attribute (`<h1 id="4">Title</h1>`).
  * To exclude an H1, H2 or H3 elements (that has an id) add the class `no-toc` to it.
  *
- * Other elements can also be used as link headers, to mark them add the `sacTocHead` attribute to
+ * Other elements can also be used as link headers, to mark them add the `negTocHead` attribute to
  * them following and id attribute. If the element is not an [[HTMLHeadingElement]] (Hx) it is
  * mandatory to set the `level` (1 to n) attribute. (`<a id="link" name="title" level="2"></a>`)
  *
@@ -54,7 +54,7 @@ export class TocHeadDirective implements AfterViewInit, OnDestroy {
    * Mandatory, unless the element is Hx which will result in x being the level.
    *
    * > When used as directive, the supported elements are h1, h2 and h3.
-   * To use height H elements add the `sacTocHead` attribute (level will be taken from tag name)
+   * To use height H elements add the `negTocHead` attribute (level will be taken from tag name)
    */
 
   @HostBinding('attr.level')

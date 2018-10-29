@@ -1,21 +1,21 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 
-import { SgTableComponent, SgTablePluginController, TablePlugin, KillOnDestroy } from '@sac/table';
+import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy } from '@neg/table';
 
-import { SgTableCheckboxComponent } from './table-checkbox.component';
+import { NegTableCheckboxComponent } from './table-checkbox.component';
 
-declare module '@sac/table/lib/ext/types' {
-  interface SgTablePluginExtension {
-    matCheckboxSelection?: SgTableMatCheckboxSelectionDirective;
+declare module '@neg/table/lib/ext/types' {
+  interface NegTablePluginExtension {
+    matCheckboxSelection?: NegTableMatCheckboxSelectionDirective;
   }
 }
 
 const PLUGIN_KEY: 'matCheckboxSelection' = 'matCheckboxSelection';
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'sg-table[matCheckboxSelection]' })
+@Directive({ selector: 'neg-table[matCheckboxSelection]' })
 @KillOnDestroy()
-export class SgTableMatCheckboxSelectionDirective implements OnDestroy {
+export class NegTableMatCheckboxSelectionDirective implements OnDestroy {
   /**
    * Add's a selection column using material's `mat-checkbox` in the column specified.
    */
@@ -30,7 +30,7 @@ export class SgTableMatCheckboxSelectionDirective implements OnDestroy {
         }
       } else {
         if (!this.cmpRef) {
-          this.cmpRef = this.cfr.resolveComponentFactory(SgTableCheckboxComponent).create(this.injector);
+          this.cmpRef = this.cfr.resolveComponentFactory(NegTableCheckboxComponent).create(this.injector);
           this.cmpRef.instance.table = this.table;
           if (this._bulkSelectMode) {
             this.cmpRef.instance.bulkSelectMode = this._bulkSelectMode;
@@ -63,13 +63,13 @@ export class SgTableMatCheckboxSelectionDirective implements OnDestroy {
 
   private _name: string;
   private _bulkSelectMode: 'all' | 'view' | 'none';
-  private cmpRef: ComponentRef<SgTableCheckboxComponent>;
-  private _removePlugin: (table: SgTableComponent<any>) => void;
+  private cmpRef: ComponentRef<NegTableCheckboxComponent>;
+  private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>,
+  constructor(private table: NegTableComponent<any>,
               private cfr: ComponentFactoryResolver,
               private injector: Injector,
-              pluginCtrl: SgTablePluginController) {
+              pluginCtrl: NegTablePluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
   }
 

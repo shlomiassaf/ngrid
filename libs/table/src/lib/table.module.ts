@@ -6,27 +6,27 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
 
 import {
-  SG_TABLE_CONFIG, SgTableConfig,
-  SgCdkTableComponent,
-  SgTableComponent,
+  NEG_TABLE_CONFIG, NegTableConfig,
+  NegCdkTableComponent,
+  NegTableComponent,
 
-  SgTableRowComponent,
+  NegTableRowComponent,
 
-  SgTableColumnDef,
-  SgTableHeaderCellDefDirective,
-  SgTableFooterCellDefDirective,
-  SgTableCellDefDirective,
-  SgTableHeaderCellDirective,
-  SgTableCellDirective,
-  SgTableFooterCellDirective,
+  NegTableColumnDef,
+  NegTableHeaderCellDefDirective,
+  NegTableFooterCellDefDirective,
+  NegTableCellDefDirective,
+  NegTableHeaderCellDirective,
+  NegTableCellDirective,
+  NegTableFooterCellDirective,
 
   ParentNgStyleDirective, ParentNgClassDirective,
-  SgTableNoDataRefDirective,
-  SgTablePaginatorRefDirective,
+  NegTableNoDataRefDirective,
+  NegTablePaginatorRefDirective,
 
-  SgColumnSizeObserver,
-  SgCdkVirtualScrollViewportComponent,
-  SgCdkVirtualScrollDirective,
+  NegColumnSizeObserver,
+  NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent,
+  NegCdkVirtualScrollViewportComponentCdkVirtualScrollDirective,
 } from './table/index';
 import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
 
@@ -37,52 +37,52 @@ import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
     CdkTableModule,
   ],
   declarations: [
-    SgCdkTableComponent,
-    SgTableColumnDef,
-    SgTableRowComponent,
+    NegCdkTableComponent,
+    NegTableColumnDef,
+    NegTableRowComponent,
     ParentNgStyleDirective, ParentNgClassDirective,
-    SgTableNoDataRefDirective,
-    SgTablePaginatorRefDirective,
+    NegTableNoDataRefDirective,
+    NegTablePaginatorRefDirective,
 
-    SgTableHeaderCellDefDirective,
-    SgTableFooterCellDefDirective,
-    SgTableCellDefDirective,
-    SgTableHeaderCellDirective,
-    SgTableCellDirective,
-    SgTableFooterCellDirective,
+    NegTableHeaderCellDefDirective,
+    NegTableFooterCellDefDirective,
+    NegTableCellDefDirective,
+    NegTableHeaderCellDirective,
+    NegTableCellDirective,
+    NegTableFooterCellDirective,
 
-    SgColumnSizeObserver,
-    SgCdkVirtualScrollViewportComponent,
-    SgCdkVirtualScrollDirective,
+    NegColumnSizeObserver,
+    NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent,
+    NegCdkVirtualScrollViewportComponentCdkVirtualScrollDirective,
 
-    SgTableComponent,
+    NegTableComponent,
     TableCellContextPipe
   ],
   exports: [
-    SgTableRowComponent,
+    NegTableRowComponent,
     ParentNgStyleDirective, ParentNgClassDirective,
-    SgTableNoDataRefDirective,
-    SgTablePaginatorRefDirective,
+    NegTableNoDataRefDirective,
+    NegTablePaginatorRefDirective,
 
-    SgTableHeaderCellDefDirective,
-    SgTableFooterCellDefDirective,
-    SgTableCellDefDirective,
-    SgTableHeaderCellDirective,
-    SgTableCellDirective,
-    SgTableFooterCellDirective,
+    NegTableHeaderCellDefDirective,
+    NegTableFooterCellDefDirective,
+    NegTableCellDefDirective,
+    NegTableHeaderCellDirective,
+    NegTableCellDirective,
+    NegTableFooterCellDirective,
 
-    SgColumnSizeObserver,
-    SgCdkVirtualScrollDirective,
+    NegColumnSizeObserver,
+    NegCdkVirtualScrollViewportComponentCdkVirtualScrollDirective,
 
-    SgTableComponent,
+    NegTableComponent,
   ]
 })
-export class SgTableModule {
-  static forRoot(config?: SgTableConfig): ModuleWithProviders {
+export class NegTableModule {
+  static forRoot(config?: NegTableConfig): ModuleWithProviders {
     return {
-      ngModule: SgTableModule,
+      ngModule: NegTableModule,
       providers: [
-        { provide: SG_TABLE_CONFIG, useValue: config },
+        { provide: NEG_TABLE_CONFIG, useValue: config },
       ]
     };
   }

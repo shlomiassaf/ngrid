@@ -5,17 +5,17 @@ By default the row height is not limited, there is a minimum row height set via 
 i> The minimum limit for a row size can be changed via CSS overrides. The default is 48px
 
 <docsi-mat-example-with-source title="Row Height" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@sac-example:ex-1-->
-  <sg-table blockUi [dataSource]="ds1" [columns]="columns" style="height: 300px"></sg-table>
-  <!--@sac-example:ex-1-->
+  <!--@neg-example:ex-1-->
+  <neg-table blockUi [dataSource]="ds1" [columns]="columns" style="height: 300px"></neg-table>
+  <!--@neg-example:ex-1-->
 </docsi-mat-example-with-source>
 
 Because it's CSS, the maximum row height might be controlled by CSS (`max-height`), let's try:
 
 <docsi-mat-example-with-source title="Limit row height with cell overflow" contentClass="mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@sac-example:ex-2-->
-  <sg-table class="max-row-height-72" blockUi [dataSource]="ds1" [columns]="columns" style="height: 300px"></sg-table>
-  <!--@sac-example:ex-2-->
+  <!--@neg-example:ex-2-->
+  <neg-table class="max-row-height-72" blockUi [dataSource]="ds1" [columns]="columns" style="height: 300px"></neg-table>
+  <!--@neg-example:ex-2-->
 </docsi-mat-example-with-source>
 
 Not what we wanted...
@@ -23,18 +23,18 @@ Not what we wanted...
 The problem when setting `max-width` is overflow, when the cell's content view height is greater then the maximum width we set.
 To solve this the global theme comes with CSS helpers to make sure content does not overflow:
 
-- .sg-table-cell-ellipsis
-- .sg-table-header-cell-ellipsis
-- .sg-table-footer-cell-ellipsis
+- .neg-table-cell-ellipsis
+- .neg-table-header-cell-ellipsis
+- .neg-table-footer-cell-ellipsis
 
 When applying one or more of the above, when a relevant cell overflows, the overflow content is hidden and an ellipsis is added.
 
 But now the maximum height has no effect, the height can be controlled only through the `min-height` property.
 
 <docsi-mat-example-with-source title="Limit row height with cell overflow" contentClass="mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@sac-example:ex-3-->
-  <sg-table class="sg-table-cell-ellipsis max-row-height-72 min-row-height-64" blockUi [dataSource]="ds1" [columns]="columns" style="height: 300px"></sg-table>
-  <!--@sac-example:ex-3-->
+  <!--@neg-example:ex-3-->
+  <neg-table class="neg-table-cell-ellipsis max-row-height-72 min-row-height-64" blockUi [dataSource]="ds1" [columns]="columns" style="height: 300px"></neg-table>
+  <!--@neg-example:ex-3-->
 </docsi-mat-example-with-source>
 
 W> Using `min-height` to change the table's row height is not recommended, instead apply the overflow helpers and use cell's to determine heights.

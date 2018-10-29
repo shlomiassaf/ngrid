@@ -1,33 +1,33 @@
-import { SgDataSource } from '../data-source';
+import { NegDataSource } from '../data-source';
 
-export interface SgTablePlugin { }
+export interface NegTablePlugin { }
 
-export interface SgTablePluginExtension { }
+export interface NegTablePluginExtension { }
 
-export interface SgTablePluginExtensionFactories { }
+export interface NegTablePluginExtensionFactories { }
 
-export interface SgTableOnInitEvent {
+export interface NegTableOnInitEvent {
   kind: 'onInit';
 }
 
-export interface SgTableOnResizeRowtEvent {
+export interface NegTableOnResizeRowtEvent {
   kind: 'onResizeRow';
 }
 
-export interface SgTableOnInvalidateHeadersEvent {
+export interface NegTableOnInvalidateHeadersEvent {
   kind: 'onInvalidateHeaders';
 }
 
-export interface SgTableOnDataSourcetEvent {
+export interface NegTableOnDataSourcetEvent {
   kind: 'onDataSource';
-  prev: SgDataSource<any>;
-  curr: SgDataSource<any>;
+  prev: NegDataSource<any>;
+  curr: NegDataSource<any>;
 }
 
-export type SgTableEvents =
-  | SgTableOnInitEvent
-  | SgTableOnResizeRowtEvent
-  | SgTableOnInvalidateHeadersEvent
-  | SgTableOnDataSourcetEvent;
+export type NegTableEvents =
+  | NegTableOnInitEvent
+  | NegTableOnResizeRowtEvent
+  | NegTableOnInvalidateHeadersEvent
+  | NegTableOnDataSourcetEvent;
 
 

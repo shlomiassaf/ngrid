@@ -2,22 +2,22 @@ import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, Optional
 import { SelectionModel } from '@angular/cdk/collections';
 
 import {
-  SgTableComponent,
-  SgTableHeaderCellDefDirective,
-  SgTableCellDefDirective,
-  SgTableFooterCellDefDirective,
+  NegTableComponent,
+  NegTableHeaderCellDefDirective,
+  NegTableCellDefDirective,
+  NegTableFooterCellDefDirective,
   KillOnDestroy
-} from '@sac/table';
+} from '@neg/table';
 
 @Component({
-  selector: 'sg-table-checkbox',
+  selector: 'neg-table-checkbox',
   templateUrl: './table-checkbox.component.html',
   styleUrls: ['./table-checkbox.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 @KillOnDestroy()
-export class SgTableCheckboxComponent implements AfterViewInit {
+export class NegTableCheckboxComponent implements AfterViewInit {
   /**
    * Unique name for the checkbox column.
    * When not set, the name 'checkbox' is used.
@@ -57,9 +57,9 @@ export class SgTableCheckboxComponent implements AfterViewInit {
     }
   }
 
-  @ViewChild(SgTableHeaderCellDefDirective) headerDef: SgTableHeaderCellDefDirective<any>;
-  @ViewChild(SgTableCellDefDirective) cellDef: SgTableCellDefDirective<any>;
-  @ViewChild(SgTableFooterCellDefDirective) footerDef: SgTableFooterCellDefDirective<any>;
+  @ViewChild(NegTableHeaderCellDefDirective) headerDef: NegTableHeaderCellDefDirective<any>;
+  @ViewChild(NegTableCellDefDirective) cellDef: NegTableCellDefDirective<any>;
+  @ViewChild(NegTableFooterCellDefDirective) footerDef: NegTableFooterCellDefDirective<any>;
 
   allSelected = false;
   length: number;
@@ -67,7 +67,7 @@ export class SgTableCheckboxComponent implements AfterViewInit {
   private _selection: SelectionModel<any>;
   private _bulkSelectMode: 'all' | 'view' | 'none';
 
-  constructor(@Optional() public table: SgTableComponent<any>, private cdr: ChangeDetectorRef) {}
+  constructor(@Optional() public table: NegTableComponent<any>, private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
 

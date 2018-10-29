@@ -1,37 +1,37 @@
-import { SgColumn, SgMetaColumn, SgColumnGroup } from '@sac/table';
+import { NegColumn, NegMetaColumn, NegColumnGroup } from '@neg/table';
 
 export type ROW_TYPE = 'header' | 'data' | 'footer';
 export interface ROW_META_TYPE {
-  data: SgColumn;
-  meta: SgMetaColumn;
-  'meta-group': SgColumnGroup;
+  data: NegColumn;
+  meta: NegMetaColumn;
+  'meta-group': NegColumnGroup;
 }
 
-export interface SgTableMatrixRow<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> {
+export interface NegTableMatrixRow<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> {
   type: RType;
   subType: RMetaType;
   rowIndex: number;
 }
 
-export interface SgTableMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends SgTableMatrixRow<RType, RMetaType> {
+export interface NegTableMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends NegTableMatrixRow<RType, RMetaType> {
   colIndex: number;
 }
 
-export interface SgTableDataMatrixRow<T = any> extends SgTableMatrixRow<'data'> {
+export interface NegTableDataMatrixRow<T = any> extends NegTableMatrixRow<'data'> {
   row: T;
 }
 
-export interface SgTableColumnMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends SgTableMatrixPoint<RType, RMetaType> {
+export interface NegTableColumnMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends NegTableMatrixPoint<RType, RMetaType> {
   column: ROW_META_TYPE[RMetaType];
 }
 
-export interface SgTableDataMatrixPoint<T = any> extends SgTableColumnMatrixPoint<'data'> {
+export interface NegTableDataMatrixPoint<T = any> extends NegTableColumnMatrixPoint<'data'> {
   row: T;
 }
 
-export type SgTableCellEvent<T = any> = { source: MouseEvent; cellTarget: HTMLElement; rowTarget: HTMLElement; }
-  & (SgTableDataMatrixPoint<T> | SgTableColumnMatrixPoint<'header' | 'footer'> | SgTableColumnMatrixPoint<'header' | 'footer', 'meta'>  | SgTableColumnMatrixPoint<'header' | 'footer', 'meta-group'>);
+export type NegTableCellEvent<T = any> = { source: MouseEvent; cellTarget: HTMLElement; rowTarget: HTMLElement; }
+  & (NegTableDataMatrixPoint<T> | NegTableColumnMatrixPoint<'header' | 'footer'> | NegTableColumnMatrixPoint<'header' | 'footer', 'meta'>  | NegTableColumnMatrixPoint<'header' | 'footer', 'meta-group'>);
 
-export type SgTableRowEvent<T = any> = { source: MouseEvent; rowTarget: HTMLElement; root?: SgTableCellEvent<T>; }
-  & (SgTableDataMatrixRow<T> | SgTableMatrixRow<'header' | 'footer'> | SgTableMatrixRow<'header' | 'footer', 'meta'>  | SgTableMatrixRow<'header' | 'footer', 'meta-group'>);
+export type NegTableRowEvent<T = any> = { source: MouseEvent; rowTarget: HTMLElement; root?: NegTableCellEvent<T>; }
+  & (NegTableDataMatrixRow<T> | NegTableMatrixRow<'header' | 'footer'> | NegTableMatrixRow<'header' | 'footer', 'meta'>  | NegTableMatrixRow<'header' | 'footer', 'meta-group'>);
 

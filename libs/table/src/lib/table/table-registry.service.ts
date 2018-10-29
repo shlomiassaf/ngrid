@@ -8,41 +8,41 @@ import {
 } from '@angular/core';
 
 import {
-  SgTableCellDefDirective,
-  SgTableHeaderCellDefDirective,
-  SgTableFooterCellDefDirective,
-  SgTableNoDataRefDirective,
-  SgTablePaginatorRefDirective
+  NegTableCellDefDirective,
+  NegTableHeaderCellDefDirective,
+  NegTableFooterCellDefDirective,
+  NegTableNoDataRefDirective,
+  NegTablePaginatorRefDirective
 } from './directives';
 
-import { SgColumn } from './columns/column';
+import { NegColumn } from './columns/column';
 import { KillOnDestroy } from './utils';
 
 export interface RegistryChangedEvent {
   op: 'add' | 'remove';
-  type: keyof SgTableMultiRegistryMap | keyof SgTableSingleRegistryMap;
+  type: keyof NegTableMultiRegistryMap | keyof NegTableSingleRegistryMap;
   value: any;
 }
 
-export interface SgTableHeaderSortContainer {
-  column: SgColumn;
+export interface NegTableHeaderSortContainer {
+  column: NegColumn;
 }
 /**
  * A map of valid single-item value that can be registered, and their type.
  */
-export interface SgTableSingleRegistryMap {
-  sortContainer?: Type<SgTableHeaderSortContainer>;
-  noData?: SgTableNoDataRefDirective;
-  paginator?: SgTablePaginatorRefDirective;
+export interface NegTableSingleRegistryMap {
+  sortContainer?: Type<NegTableHeaderSortContainer>;
+  noData?: NegTableNoDataRefDirective;
+  paginator?: NegTablePaginatorRefDirective;
 }
 
 /**
  * A map of valid multi-item value that can be registered, and their type (the single type, i.e. T in Array<T>)
  */
-export interface SgTableMultiRegistryMap {
-  headerCell?: SgTableHeaderCellDefDirective<any>;
-  tableCell?: SgTableCellDefDirective<any>;
-  footerCell?: SgTableFooterCellDefDirective<any>;
+export interface NegTableMultiRegistryMap {
+  headerCell?: NegTableHeaderCellDefDirective<any>;
+  tableCell?: NegTableCellDefDirective<any>;
+  footerCell?: NegTableFooterCellDefDirective<any>;
 }
 
 /**
@@ -71,20 +71,20 @@ export interface SgTableMultiRegistryMap {
  */
 @Injectable()
 @KillOnDestroy()
-export class SgTableRegistryService implements OnDestroy {
+export class NegTableRegistryService implements OnDestroy {
 
   readonly changes: Observable<RegistryChangedEvent[]>;
-  get parent(): SgTableRegistryService | undefined { return this._parent; }
+  get parent(): NegTableRegistryService | undefined { return this._parent; }
 
-  protected root: SgTableRegistryService & { bufferedData?: RegistryChangedEvent[] };
+  protected root: NegTableRegistryService & { bufferedData?: RegistryChangedEvent[] };
 
-  protected _multi: { [K in keyof SgTableMultiRegistryMap]: Array<SgTableMultiRegistryMap[K]> } = {};
-  protected _multiDefaults: SgTableMultiRegistryMap = {};
-  protected _singles: SgTableSingleRegistryMap = {};
+  protected _multi: { [K in keyof NegTableMultiRegistryMap]: Array<NegTableMultiRegistryMap[K]> } = {};
+  protected _multiDefaults: NegTableMultiRegistryMap = {};
+  protected _singles: NegTableSingleRegistryMap = {};
 
   protected readonly changes$: Subject<RegistryChangedEvent[]>;
 
-  constructor(@Optional() @SkipSelf() private _parent?: SgTableRegistryService) {
+  constructor(@Optional() @SkipSelf() private _parent?: NegTableRegistryService) {
     this.changes$ = new Subject();
     this.changes = this.changes$.asObservable();
     if (this._parent) {
@@ -95,17 +95,17 @@ export class SgTableRegistryService implements OnDestroy {
     }
   }
 
-  getRoot(): SgTableRegistryService { return this.root; }
+  getRoot(): NegTableRegistryService { return this.root; }
 
   /**
    * Returns the registered value for the single `kind`.
    * If not found will try to search the parent.
    */
-  getSingle<P extends keyof SgTableSingleRegistryMap>(kind: P): SgTableSingleRegistryMap[P] | undefined {
+  getSingle<P extends keyof NegTableSingleRegistryMap>(kind: P): NegTableSingleRegistryMap[P] | undefined {
     return this._singles[kind] || (this._parent && this._parent.getSingle(kind));
   }
 
-  setSingle<P extends keyof SgTableSingleRegistryMap>(kind: P, value: SgTableSingleRegistryMap[P] | undefined): void {
+  setSingle<P extends keyof NegTableSingleRegistryMap>(kind: P, value: NegTableSingleRegistryMap[P] | undefined): void {
     const previous = this.getSingle(kind);
     if (value !== previous) {
       this._singles[kind] = value;
@@ -117,11 +117,11 @@ export class SgTableRegistryService implements OnDestroy {
    * Returns the registered default value for the multi `kind`.
    * If not found will try to search the parent.
    */
-  getMultiDefault<P extends keyof SgTableMultiRegistryMap>(kind: P): SgTableMultiRegistryMap[P] | undefined {
+  getMultiDefault<P extends keyof NegTableMultiRegistryMap>(kind: P): NegTableMultiRegistryMap[P] | undefined {
     return this._multiDefaults[kind] || (this._parent && this._parent.getMultiDefault(kind));
   }
 
-  setMultiDefault<P extends keyof SgTableMultiRegistryMap>(kind: P, value: SgTableMultiRegistryMap[P] | undefined): void {
+  setMultiDefault<P extends keyof NegTableMultiRegistryMap>(kind: P, value: NegTableMultiRegistryMap[P] | undefined): void {
     const previous = this.getMultiDefault(kind);
     if (value !== previous) {
       this._multiDefaults[kind] = value;
@@ -133,11 +133,11 @@ export class SgTableRegistryService implements OnDestroy {
    * Returns the registered values for the multi `kind`.
    * If not found WILL NOT search the parent.
    */
-  getMulti<T extends keyof SgTableMultiRegistryMap>(kind: T): Array<SgTableMultiRegistryMap[T]> | undefined {
+  getMulti<T extends keyof NegTableMultiRegistryMap>(kind: T): Array<NegTableMultiRegistryMap[T]> | undefined {
     return this._multi[kind];
   }
 
-  addMulti<T extends keyof SgTableMultiRegistryMap>(kind: T, cellDef: SgTableMultiRegistryMap[T]): void {
+  addMulti<T extends keyof NegTableMultiRegistryMap>(kind: T, cellDef: NegTableMultiRegistryMap[T]): void {
     const multi = this.getMulti(kind) || (this._multi[kind] = []);
     multi.push(cellDef);
     if (cellDef.name === '*') {
@@ -146,7 +146,7 @@ export class SgTableRegistryService implements OnDestroy {
     this.emitChanges({ op: 'add', type: kind, value: cellDef })
   }
 
-  removeMulti<T extends keyof SgTableMultiRegistryMap>(kind: T, cellDef: SgTableMultiRegistryMap[T]): void {
+  removeMulti<T extends keyof NegTableMultiRegistryMap>(kind: T, cellDef: NegTableMultiRegistryMap[T]): void {
     const multi = this.getMulti(kind);
     if (multi) {
       const idx = multi.indexOf(cellDef);

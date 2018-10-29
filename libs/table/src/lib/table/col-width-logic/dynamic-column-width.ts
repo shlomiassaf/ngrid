@@ -1,9 +1,9 @@
-import { SgColumnSizeInfo } from '../types';
+import { NegColumnSizeInfo } from '../types';
 
 export interface BoxModelSpaceStrategy {
-  cell(col: SgColumnSizeInfo): number;
-  groupCell(col: SgColumnSizeInfo): number;
-  group(cols: SgColumnSizeInfo[]): number;
+  cell(col: NegColumnSizeInfo): number;
+  groupCell(col: NegColumnSizeInfo): number;
+  group(cols: NegColumnSizeInfo[]): number;
 }
 
 /**
@@ -11,14 +11,14 @@ export interface BoxModelSpaceStrategy {
  * It also provide the minimum required row width for the total columns added up to that point.
  *
  * The `DynamicColumnWidthLogic` takes into account real-time DOM measurements (especially box-model metadata), hence "dynamic".
- * It performs the calculation based on `SgColumn` and actual DOM size metadata.
+ * It performs the calculation based on `NegColumn` and actual DOM size metadata.
  *
  * The `DynamicColumnWidthLogic` has 3 responsibilities:
  *
  * - It is responsible for enforcing the `maxWidth` boundary constraint for every column it processes by calculating the actual width
- * of a column and calling `SgColumn.checkMaxWidthLock` to verify if max width lock has changed due to the new actual width.
+ * of a column and calling `NegColumn.checkMaxWidthLock` to verify if max width lock has changed due to the new actual width.
  *
- * - It calculates the absolute width for a group of columns, so `SgGroupColumn` can have an exact size that wraps it's children.
+ * - It calculates the absolute width for a group of columns, so `NegCdkVirtualScrollViewportComponentGroupColumn` can have an exact size that wraps it's children.
  *
  * - It calculates the `minimumRowWidth`, which represents the minimum width required width of the row, i.e. table.
  *
@@ -33,7 +33,7 @@ export class DynamicColumnWidthLogic {
 
   get minimumRowWidth(): number { return this._minimumRowWidth; };
 
-  private readonly cols = new Map<SgColumnSizeInfo, number>();
+  private readonly cols = new Map<NegColumnSizeInfo, number>();
   private _minimumRowWidth = 0;
 
   constructor(private strategy: BoxModelSpaceStrategy) { }
@@ -48,7 +48,7 @@ export class DynamicColumnWidthLogic {
    *
    * Note that once `maxWidthLockChanged` is set to true it will never change.
    */
-  addColumn(columnInfo: SgColumnSizeInfo): void {
+  addColumn(columnInfo: NegColumnSizeInfo): void {
     if (!this.cols.has(columnInfo)) {
       const { column } = columnInfo;
       const width = (column.minWidth || 0) + this.strategy.cell(columnInfo);
@@ -68,12 +68,12 @@ export class DynamicColumnWidthLogic {
    * Run each of the columns through `addColumn` and returns the sum of the width all columns using
    * the box model space strategy.
    *
-   * The result represents the absolute width to be used in a `SgColumnGroup`.
+   * The result represents the absolute width to be used in a `NegColumnGroup`.
    *
    * > Note that when a table has multiple column-group rows each column is the child of multiple group column, hence calling `addColumn` with the
    * same group more then once. However, since `addColumn()` ignores columns it already processed it is safe.
    */
-  addGroup(columnInfos: SgColumnSizeInfo[]): number {
+  addGroup(columnInfos: NegColumnSizeInfo[]): number {
     let sum = 0;
     for (const c of columnInfos) {
       this.addColumn(c);
@@ -85,28 +85,28 @@ export class DynamicColumnWidthLogic {
 }
 
 export const DYNAMIC_MARGIN_BOX_MODEL_SPACE_STRATEGY: BoxModelSpaceStrategy = {
-  cell(col: SgColumnSizeInfo): number {
+  cell(col: NegColumnSizeInfo): number {
     const style = col.style;
     return parseInt(style.marginLeft) + parseInt(style.marginRight)
   },
-  groupCell(col: SgColumnSizeInfo): number {
+  groupCell(col: NegColumnSizeInfo): number {
     return this.cell(col);
   },
-  group(cols: SgColumnSizeInfo[]): number {
+  group(cols: NegColumnSizeInfo[]): number {
     const len = cols.length;
     return len > 0 ? parseInt(cols[0].style.marginLeft) + parseInt(cols[len - 1].style.marginRight) : 0;
   }
 };
 
 export const DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY: BoxModelSpaceStrategy = {
-  cell(col: SgColumnSizeInfo): number {
+  cell(col: NegColumnSizeInfo): number {
     const style = col.style;
     return parseInt(style.paddingLeft) + parseInt(style.paddingRight)
   },
-  groupCell(col: SgColumnSizeInfo): number {
+  groupCell(col: NegColumnSizeInfo): number {
     return 0;
   },
-  group(cols: SgColumnSizeInfo[]): number {
+  group(cols: NegColumnSizeInfo[]): number {
     const len = cols.length;
     return len > 0 ? parseInt(cols[0].style.paddingLeft) + parseInt(cols[len - 1].style.paddingRight) : 0;
   }

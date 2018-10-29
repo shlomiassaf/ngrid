@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { DocsiMetadata, ApiReferenceMap } from '@sac/docsi/webpack';
+import { DocsiMetadata, ApiReferenceMap } from '@neg/docsi/webpack';
 
-const DOCSI_METADATA = require('/Users/shlomiassaf/Desktop/Code/shlomi/__LIB__/sac/docsi-client-metadata');
+const DOCSI_METADATA = require('/Users/shlomiassaf/Desktop/Code/shlomi/__LIB__/neg/docsi-client-metadata');
 
 @Injectable({ providedIn: 'root' })
 export class DocsiMetadataService implements DocsiMetadata {

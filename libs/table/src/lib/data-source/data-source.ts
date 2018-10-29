@@ -5,16 +5,16 @@ import { SelectionModel, CollectionViewer, ListRange } from '@angular/cdk/collec
 import { DataSource } from '@angular/cdk/table';
 
 import { KillOnDestroy } from '../table/utils';
-import { SgColumn } from '../table/columns';
-import { SgTablePaginatorKind, SgPaginator, SgPagingPaginator, SgTokenPaginator } from '../paginator';
-import { DataSourceFilter, DataSourceFilterToken, SgTableSortDefinition, SgTableDataSourceSortChange } from './types';
+import { NegColumn } from '../table/columns';
+import { NegTablePaginatorKind, NegPaginator, NegPagingPaginator, NegTokenPaginator } from '../paginator';
+import { DataSourceFilter, DataSourceFilterToken, NegTableSortDefinition, NegTableDataSourceSortChange } from './types';
 import { createFilter } from './filtering';
-import { SgDataSourceAdapter } from './data-source-adapter';
+import { NegDataSourceAdapter } from './data-source-adapter';
 
 export type DataSourceOf<T> = T[] | Promise<T[]> | Observable<T[]>;
 const PROCESSING_SUBSCRIPTION_GROUP = {};
 
-export interface SgDataSourceOptions {
+export interface NegDataSourceOptions {
   /**
    * When set to True will not disconnect upon table disconnection, otherwise does.
    */
@@ -28,18 +28,18 @@ export interface SgDataSourceOptions {
   skipInitial?: boolean;
 }
 
-export class SgDataSource<T = any, TData = any> extends DataSource<T> {
+export class NegDataSource<T = any, TData = any> extends DataSource<T> {
 
-  get pagination(): SgTablePaginatorKind | false { return this._pagination; }
-  set pagination(value: SgTablePaginatorKind | false) {
+  get pagination(): NegTablePaginatorKind | false { return this._pagination; }
+  set pagination(value: NegTablePaginatorKind | false) {
     if (this._pagination !== value) {
       this._pagination = value;
       switch (value) {
         case 'pageNumber':
-          this._paginator = new SgPagingPaginator();
+          this._paginator = new NegPagingPaginator();
           break;
         case 'token':
-          this._paginator = new SgTokenPaginator();
+          this._paginator = new NegTokenPaginator();
           break;
         default:
           this._paginator = undefined;
@@ -63,7 +63,7 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
    * An event that fires when the connection state to a table has changed.
    */
   readonly tableConnectionChange: Observable<boolean>;
-  readonly sortChange: Observable<SgTableDataSourceSortChange>;
+  readonly sortChange: Observable<NegTableDataSourceSortChange>;
 
   /**
    * When set to True will not disconnect upon table disconnection, otherwise unsubscribe from the
@@ -78,8 +78,8 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
    */
   readonly skipInitial: boolean;
 
-  get adapter(): SgDataSourceAdapter { return this._adapter; };
-  set adapter(value: SgDataSourceAdapter) {
+  get adapter(): NegDataSourceAdapter { return this._adapter; };
+  set adapter(value: NegDataSourceAdapter) {
     if (this._adapter !== value) {
       this._adapter = value;
       if (this.pagination) {
@@ -88,7 +88,7 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
     }
   }
 
-  get sort(): SgTableDataSourceSortChange { return this._sort$.value; }
+  get sort(): NegTableDataSourceSortChange { return this._sort$.value; }
 
   get renderedData(): T[] { return this._renderData$.value; }
 
@@ -100,7 +100,7 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
 
   get source(): T[] { return this._source || []; }
 
-  get paginator(): SgPaginator<any> { return this._paginator; }
+  get paginator(): NegPaginator<any> { return this._paginator; }
 
   get renderedRows(): T[] { return this._renderData$.value || []; }
 
@@ -114,19 +114,19 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
   protected readonly _onViewDataChanging$ = new Subject<T[]>();
   protected readonly _renderData$ = new BehaviorSubject<T[]>([]);
   protected readonly _filter$: BehaviorSubject<DataSourceFilter> = new BehaviorSubject<DataSourceFilter>(undefined);
-  protected readonly _sort$ = new BehaviorSubject<SgTableDataSourceSortChange>({ column: null, sort: null });
+  protected readonly _sort$ = new BehaviorSubject<NegTableDataSourceSortChange>({ column: null, sort: null });
   protected _onError$ = new Subject<Error>();
 
-  protected _paginator: SgPaginator<any>;
+  protected _paginator: NegPaginator<any>;
 
-  private _pagination: SgTablePaginatorKind | false;
-  private _adapter: SgDataSourceAdapter;
+  private _pagination: NegTablePaginatorKind | false;
+  private _adapter: NegDataSourceAdapter;
   private _source: T[];
   private _disposed: boolean;
   private _tableConnected: boolean;
   private _lastRefresh: TData;
 
-  constructor(adapter: SgDataSourceAdapter<T, TData>, options?: SgDataSourceOptions) {
+  constructor(adapter: NegDataSourceAdapter<T, TData>, options?: NegDataSourceOptions) {
     super();
     options = options || {};
 
@@ -156,14 +156,14 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
     }
   }
 
-  setFilter(value: DataSourceFilterToken, columns: SgColumn[]): void {
+  setFilter(value: DataSourceFilterToken, columns: NegColumn[]): void {
     if (!columns || columns.length === 0) {
       throw new Error('Invalid filter definitions, columns are mandatory.');
     }
     this._filter$.next(createFilter(value, columns));
   }
 
-  setSort(column: SgColumn, sort: SgTableSortDefinition): void {
+  setSort(column: NegColumn, sort: NegTableSortDefinition): void {
     this._sort$.next({ column, sort });
   }
 
@@ -190,7 +190,7 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
 
   connect(cv: CollectionViewer): Observable<T[]> {
     if (this._disposed) {
-      throw new Error('SgDataSource is disposed. Use `keepAlive` if you move datasource between tables.');
+      throw new Error('NegDataSource is disposed. Use `keepAlive` if you move datasource between tables.');
     }
     this._tableConnected = true
     this._updateProcessingLogic(cv);

@@ -10,7 +10,7 @@ const options = {
   // enforcePublicApi: true
   // libraryType: 'standalone',
   // enforcePublicApi: [
-  //   '/Users/shlomiassaf/Desktop/Code/shlomi/__LIB__/sac/libs/table/src/index.ts'
+  //   '/Users/shlomiassaf/Desktop/Code/shlomi/__LIB__/neg/libs/table/src/index.ts'
   // ]
 };
 

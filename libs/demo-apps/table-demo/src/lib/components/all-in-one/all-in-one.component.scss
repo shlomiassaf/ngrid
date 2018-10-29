@@ -1,8 +1,8 @@
-.sg-row-detail-parent {
+.neg-row-detail-parent {
   &:focus {
     outline: none;
   }
-  &.sg-row-detail-opened {
+  &.neg-row-detail-opened {
     background: #f5f5f5;
   }
 }
@@ -15,7 +15,7 @@
   background: rgba(green, 0.33);
 }
 
-.sg-detail-row {
+.neg-detail-row {
   padding: 10px 40px;
   overflow: hidden;
 }

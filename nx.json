@@ -1,5 +1,5 @@
 {
-  "npmScope": "sac",
+  "npmScope": "neg",
   "implicitDependencies": {
     "angular.json": "*",
     "package.json": "*",

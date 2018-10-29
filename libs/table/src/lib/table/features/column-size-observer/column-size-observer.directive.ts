@@ -7,28 +7,28 @@ import {
   OnDestroy
 } from '@angular/core';
 
-import { SgTableComponent } from '../../table.component';
-import { SgColumn } from '../../columns';
+import { NegTableComponent } from '../../table.component';
+import { NegColumn } from '../../columns';
 
-const SG_TABLE_MAP = new Map<SgTableComponent<any>, SgTableGroupHeaderSizeController>();
+const NEG_TABLE_MAP = new Map<NegTableComponent<any>, NegTableGroupHeaderSizeController>();
 
-class SgTableGroupHeaderSizeController {
-  private entries: WeakMap<any, SgColumnSizeObserver>;
+class NegTableGroupHeaderSizeController {
+  private entries: WeakMap<any, NegColumnSizeObserver>;
   private ro: ResizeObserver;
-  private columns: SgColumnSizeObserver[] = [];
+  private columns: NegColumnSizeObserver[] = [];
 
-  constructor(private table: SgTableComponent<any>) {
-    this.entries = new WeakMap<any, SgColumnSizeObserver>();
+  constructor(private table: NegTableComponent<any>) {
+    this.entries = new WeakMap<any, NegColumnSizeObserver>();
     this.ro = new ResizeObserver( entries => this.onResize(entries) );
   }
 
-  add(col: SgColumnSizeObserver): void {
+  add(col: NegColumnSizeObserver): void {
     this.entries.set(col.target, col);
     this.ro.observe(col.target);
     this.columns.push(col);
   }
 
-  remove(col: SgColumnSizeObserver): void {
+  remove(col: NegColumnSizeObserver): void {
     this.ro.unobserve(col.target);
     this.entries.delete(col.target);
     const idx = this.columns.indexOf(col);
@@ -37,7 +37,7 @@ class SgTableGroupHeaderSizeController {
     }
     if (this.columns.length === 0) {
       this.ro.disconnect();
-      SG_TABLE_MAP.delete(this.table);
+      NEG_TABLE_MAP.delete(this.table);
     }
   }
 
@@ -48,11 +48,11 @@ class SgTableGroupHeaderSizeController {
     }
   }
 
-  static get(table: SgTableComponent<any>): SgTableGroupHeaderSizeController {
-    let controller = SG_TABLE_MAP.get(table);
+  static get(table: NegTableComponent<any>): NegTableGroupHeaderSizeController {
+    let controller = NEG_TABLE_MAP.get(table);
     if (!controller) {
-      controller = new SgTableGroupHeaderSizeController(table);
-      SG_TABLE_MAP.set(table, controller);
+      controller = new NegTableGroupHeaderSizeController(table);
+      NEG_TABLE_MAP.set(table, controller);
     }
     return controller;
   }
@@ -60,17 +60,17 @@ class SgTableGroupHeaderSizeController {
 
 /**
  * A directive that listen to size changes from the element of a cell, using ResizeObserver.
- * When a change occures it will emit it to the SgTable host of this directive, along with all other observed columns for the table.
+ * When a change occures it will emit it to the NegTable host of this directive, along with all other observed columns for the table.
  *
- * In other words, all columns of a table, marked with `SgColumnSizeObserver`, will be sent.
+ * In other words, all columns of a table, marked with `NegColumnSizeObserver`, will be sent.
  *
  * Because most of the size changes concern all columns of a row and because ResizeObserver will emit them all in the same event
  * an entire row should emit once, with all columns.
  */
-@Directive({ selector: 'sg-table-cell[observeSize], sg-table-header-cell[observeSize]' })
-export class SgColumnSizeObserver implements OnDestroy {
-  @Input('observeSize') get column(): SgColumn { return this._column; };
-  set column(value: SgColumn) {
+@Directive({ selector: 'neg-table-cell[observeSize], neg-table-header-cell[observeSize]' })
+export class NegColumnSizeObserver implements OnDestroy {
+  @Input('observeSize') get column(): NegColumn { return this._column; };
+  set column(value: NegColumn) {
     if (this._column) {
       this._column.sizeInfo = undefined;
     }
@@ -89,11 +89,11 @@ export class SgColumnSizeObserver implements OnDestroy {
    */
   get style(): CSSStyleDeclaration { return getComputedStyle(this.target); }
 
-  private _column: SgColumn;
-  private controller: SgTableGroupHeaderSizeController;
+  private _column: NegColumn;
+  private controller: NegTableGroupHeaderSizeController;
 
-  constructor(el: ElementRef, table: SgTableComponent<any>) {
-    this.controller = SgTableGroupHeaderSizeController.get(table);
+  constructor(el: ElementRef, table: NegTableComponent<any>) {
+    this.controller = NegTableGroupHeaderSizeController.get(table);
     this.target = el.nativeElement;
     this.controller.add(this);
   }

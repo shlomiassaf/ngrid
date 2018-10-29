@@ -14,13 +14,13 @@ import {
 } from '@angular/core';
 import { CdkColumnDef, CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
 
-import { SgTableComponent } from '../table.component';
-import { COLUMN, SgColumn, SgColumnGroup } from '../columns';
-import { _SgTableMetaCellTemplateContext } from '../pipes/table-cell-context.pipe';
+import { NegTableComponent } from '../table.component';
+import { COLUMN, NegColumn, NegColumnGroup } from '../columns';
+import { _NegTableMetaCellTemplateContext } from '../pipes/table-cell-context.pipe';
 
 /* TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
-  SgTableColumnDef use's the default object KeyValueDiffer provides with angular.
+  NegTableColumnDef use's the default object KeyValueDiffer provides with angular.
   This differ will perform the diff on the entire object which IS NOT REQUIRED!
   We need to create a custom differ that does the diff on selected properties only.
 */
@@ -29,13 +29,13 @@ import { _SgTableMetaCellTemplateContext } from '../pipes/table-cell-context.pip
  * Defines a set of cells available for a table column.
  */
 @Directive({
-  selector: '[sgTableColumnDef]',
+  selector: '[negTableColumnDef]',
   providers: [
-    { provide: CdkColumnDef, useExisting: SgTableColumnDef }
+    { provide: CdkColumnDef, useExisting: NegTableColumnDef }
   ],
 })
-export class SgTableColumnDef extends CdkColumnDef implements DoCheck, OnDestroy {
-  @Input('sgTableColumnDef') get column(): COLUMN { return this._column; };
+export class NegTableColumnDef extends CdkColumnDef implements DoCheck, OnDestroy {
+  @Input('negTableColumnDef') get column(): COLUMN { return this._column; };
   set column(value: COLUMN) {
     if (this._column !== value) {
       this._column = value;
@@ -73,12 +73,12 @@ export class SgTableColumnDef extends CdkColumnDef implements DoCheck, OnDestroy
    * Lazy means it will run the check only when the diff is requested (i.e. querying the `hasChanged` property).
    * This allow aggregation of changes between CD cycles, i.e. calling `markForCheck()` multiple times within the same CD cycle does not hit performance.
    *
-   * Once marked for check, `sgTableColumnDef` handles it's dirty (`isDirty`) state automatically, when `isDirty` is true it will remain true until the
-   * CD cycle ends, i.e. until `ngDoCheck()` hits. This means that only children of `sgTableColumnDef` can relay on `isDirty`, all children will run their
-   * `ngDoCheck()` before `ngDoCheck()` of `sgTableColumnDef`.
+   * Once marked for check, `negTableColumnDef` handles it's dirty (`isDirty`) state automatically, when `isDirty` is true it will remain true until the
+   * CD cycle ends, i.e. until `ngDoCheck()` hits. This means that only children of `negTableColumnDef` can relay on `isDirty`, all children will run their
+   * `ngDoCheck()` before `ngDoCheck()` of `negTableColumnDef`.
    *
    * This is a how we notify all cell directives about changes in a column. It is done through angular's CD logic and does not require manual
-   * CD kicks and special channels between sgTableColumnDef and it's children.
+   * CD kicks and special channels between negTableColumnDef and it's children.
    */
   markForCheck(): void {
     if (!this._colDiffer) {
@@ -104,8 +104,8 @@ export class SgTableColumnDef extends CdkColumnDef implements DoCheck, OnDestroy
 }
 
 
-const HEADER_GROUP_CSS = `sg-header-group-cell`;
-const HEADER_GROUP_PLACE_HOLDER_CSS = `sg-header-group-cell-placeholder`;
+const HEADER_GROUP_CSS = `neg-header-group-cell`;
+const HEADER_GROUP_PLACE_HOLDER_CSS = `neg-header-group-cell-placeholder`;
 
 function setWidth(el: HTMLElement, column: COLUMN) {
   el.style.cssText = `min-width: ${column.cMinWidth}; width: ${column.cWidth}; max-width: ${column.cMaxWidth}; `;
@@ -123,18 +123,18 @@ function initCellElement(el: HTMLElement, column: COLUMN): void {
 
 /** Header cell template container that adds the right classes and role. */
 @Component({
-  selector: 'sg-table-header-cell',
+  selector: 'neg-table-header-cell',
   template: `<ng-container #vcRef></ng-container>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class SgTableHeaderCellDirective extends CdkHeaderCell implements DoCheck {
+export class NegTableHeaderCellDirective extends CdkHeaderCell implements DoCheck {
   @ViewChild('vcRef', { read: ViewContainerRef }) vcRef: ViewContainerRef;
 
   private el: HTMLElement;
 
-  constructor(private columnDef: SgTableColumnDef,
-              private table: SgTableComponent<any>,
+  constructor(private columnDef: NegTableColumnDef,
+              private table: NegTableComponent<any>,
               private cfr: ComponentFactoryResolver,
               elementRef: ElementRef) {
     super(columnDef, elementRef);
@@ -144,7 +144,7 @@ export class SgTableHeaderCellDirective extends CdkHeaderCell implements DoCheck
     el.classList.add(name);
     el.setAttribute('role', 'columnheader');
 
-    if (column instanceof SgColumnGroup) {
+    if (column instanceof NegColumnGroup) {
       el.classList.add(HEADER_GROUP_CSS);
       if (column.placeholder) {
         el.classList.add(HEADER_GROUP_PLACE_HOLDER_CSS);
@@ -154,9 +154,9 @@ export class SgTableHeaderCellDirective extends CdkHeaderCell implements DoCheck
 
   ngAfterViewInit(): void {
     const col = this.columnDef.column;
-    const tpl = col instanceof SgColumn ? col.headerCellTpl : col.template;
-    const view = this.vcRef.createEmbeddedView(tpl, new _SgTableMetaCellTemplateContext(col as any, this.table));
-    if (col instanceof SgColumn && col.sort) {
+    const tpl = col instanceof NegColumn ? col.headerCellTpl : col.template;
+    const view = this.vcRef.createEmbeddedView(tpl, new _NegTableMetaCellTemplateContext(col as any, this.table));
+    if (col instanceof NegColumn && col.sort) {
       const SortComponent = this.table.registry.getSingle('sortContainer');
       if (SortComponent) {
         const factory = this.cfr.resolveComponentFactory(SortComponent);
@@ -178,16 +178,16 @@ export class SgTableHeaderCellDirective extends CdkHeaderCell implements DoCheck
 
 /** Cell template container that adds the right classes and role. */
 @Directive({
-  selector: 'sg-table-cell',
+  selector: 'neg-table-cell',
   host: {
-    'class': 'sg-table-cell',
+    'class': 'neg-table-cell',
     'role': 'gridcell',
   },
 })
-export class SgTableCellDirective extends CdkCell implements DoCheck {
+export class NegTableCellDirective extends CdkCell implements DoCheck {
   private el: HTMLElement;
 
-  constructor(private columnDef: SgTableColumnDef, elementRef: ElementRef) {
+  constructor(private columnDef: NegTableColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
     this.el = elementRef.nativeElement;
     initCellElement(this.el, columnDef.column);
@@ -201,11 +201,11 @@ export class SgTableCellDirective extends CdkCell implements DoCheck {
   }
 }
 
-@Directive({ selector: 'sg-table-footer-cell' })
-export class SgTableFooterCellDirective extends CdkFooterCell implements DoCheck {
+@Directive({ selector: 'neg-table-footer-cell' })
+export class NegTableFooterCellDirective extends CdkFooterCell implements DoCheck {
   private el: HTMLElement;
 
-  constructor(private columnDef: SgTableColumnDef, elementRef: ElementRef) {
+  constructor(private columnDef: NegTableColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
     this.el = elementRef.nativeElement;
     const column = columnDef.column;

@@ -22,18 +22,18 @@ import {
 } from '@angular/cdk/scrolling';
 import { AutoSizeVirtualScrollStrategy } from '@angular/cdk-experimental/scrolling';
 
-import { SgTableConfigService } from '../../services/config';
+import { NegTableConfigService } from '../../services/config';
 import { NoVirtualScrollStrategy } from './strategies';
 
 declare module '../../services/config' {
-  interface SgTableConfig {
+  interface NegTableConfig {
     virtualScroll?: {
       defaultStrategy?(): VirtualScrollStrategy;
     }
   }
 }
 
-function resolveScrollStrategy(config: SgTableConfigService, scrollStrategy?: VirtualScrollStrategy): VirtualScrollStrategy {
+function resolveScrollStrategy(config: NegTableConfigService, scrollStrategy?: VirtualScrollStrategy): VirtualScrollStrategy {
   if (!scrollStrategy && config.has('virtualScroll')) {
     const virtualScrollConfig = config.get('virtualScroll');
     if (typeof virtualScrollConfig.defaultStrategy === 'function') {
@@ -45,7 +45,7 @@ function resolveScrollStrategy(config: SgTableConfigService, scrollStrategy?: Vi
 }
 
 @Component({
-  selector: 'sg-cdk-virtual-scroll-viewport',
+  selector: 'neg-cdk-virtual-scroll-viewport',
   templateUrl: 'virtual-scroll-viewport.component.html',
   host: {
     class: 'cdk-virtual-scroll-viewport',
@@ -55,7 +55,7 @@ function resolveScrollStrategy(config: SgTableConfigService, scrollStrategy?: Vi
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SgCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewport implements OnInit, OnDestroy {
+export class NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewport implements OnInit, OnDestroy {
 
   readonly enabled: boolean;
 
@@ -74,7 +74,7 @@ export class SgCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpor
   constructor(elementRef: ElementRef<HTMLElement>,
               cdr: ChangeDetectorRef,
               ngZone: NgZone,
-              config: SgTableConfigService,
+              config: NegTableConfigService,
               @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) scrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher) {

@@ -1,11 +1,11 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@sac/table';
+import { createDS, columnFactory } from '@neg/table';
 
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS1 = columnFactory()
   .default({minWidth: 100})
@@ -23,7 +23,7 @@ const COLUMNS1 = columnFactory()
 
 
 @Component({
-  selector: 'sac-selection-column-table-example-component',
+  selector: 'neg-selection-column-table-example-component',
   templateUrl: './selection-column.component.html',
   styleUrls: ['./selection-column.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -40,6 +40,6 @@ export class SelectionColumnTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @sac-example:ex-3 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-1 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-1 */

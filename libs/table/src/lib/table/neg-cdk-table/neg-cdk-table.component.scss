@@ -1,10 +1,10 @@
-@import './sg-cdk-table.component.from-material';
+@import './neg-cdk-table.component.from-material';
 
-$sg-table-row-horizontal-margin: $sg-table-row-horizontal-padding;
-$sg-cell-horizontal-indent: 12px;
+$neg-table-row-horizontal-margin: $neg-table-row-horizontal-padding;
+$neg-cell-horizontal-indent: 12px;
 
-.sg-table-cell, .sg-table-header-cell, .sg-table-footer-cell {
-  padding-left: $sg-cell-horizontal-indent;
+.neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
+  padding-left: $neg-cell-horizontal-indent;
 
   &.cdk-table-sticky {
     background: inherit;
@@ -12,16 +12,16 @@ $sg-cell-horizontal-indent: 12px;
 }
 
 /* MULTI COLUMN AND COLUMN SPAN */
-.sg-table-header-cell.sg-header-group-cell {
+.neg-table-header-cell.neg-header-group-cell {
   display: flex;
   align-items: center;
 
-  &.sg-header-group-cell-placeholder {
+  &.neg-header-group-cell-placeholder {
     border: none;
   }
 }
 
-.sg-cdk-table:not(.sg-table-margin-cell-box-model) .sg-table-header-cell.sg-header-group-cell {
+.neg-cdk-table:not(.neg-table-margin-cell-box-model) .neg-table-header-cell.neg-header-group-cell {
   position: relative;
 
   &:not(:first-child):before {
@@ -36,7 +36,7 @@ $sg-cell-horizontal-indent: 12px;
   }
 }
 
-.sg-cdk-table.sg-table-margin-cell-box-model .sg-table-header-cell.sg-header-group-cell {
+.neg-cdk-table.neg-table-margin-cell-box-model .neg-table-header-cell.neg-header-group-cell {
   &:not(:last-child) {
     border-right-width: 1px;
     border-right-style: solid;
@@ -44,35 +44,35 @@ $sg-cell-horizontal-indent: 12px;
 }
 /* MULTI COLUMN AND COLUMN SPAN */
 
-.sg-table-margin-cell-box-model {
-  .sg-table-cell, .sg-table-header-cell, .sg-table-footer-cell {
+.neg-table-margin-cell-box-model {
+  .neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
     box-sizing: border-box;
 
-    margin-left: $sg-cell-horizontal-indent;
+    margin-left: $neg-cell-horizontal-indent;
     padding-left: 0;
     padding-right: 0;
 
     &:first-child {
-      margin-left: $sg-table-row-horizontal-margin;
+      margin-left: $neg-table-row-horizontal-margin;
       padding-left: 0;
       padding-right: 0;
 
       [dir='rtl'] & {
         margin-left: 0;
-        margin-right: $sg-table-row-horizontal-margin;
+        margin-right: $neg-table-row-horizontal-margin;
         padding-left: 0;
         padding-right: 0;
       }
     }
 
     &:last-child {
-      margin-right: $sg-table-row-horizontal-margin;
+      margin-right: $neg-table-row-horizontal-margin;
       padding-left: 0;
       padding-right: 0;
 
       [dir='rtl'] & {
         margin-right: 0;
-        margin-left: $sg-table-row-horizontal-margin;
+        margin-left: $neg-table-row-horizontal-margin;
         padding-left: 0;
         padding-right: 0;
       }

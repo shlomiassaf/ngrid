@@ -2,30 +2,30 @@ import { Observable, isObservable, of as obsOf, from as obsFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import {
-  SgTableColumnDefinitionSet,
-  SgTableComponent,
-  SgTablePluginController,
-  SgDataSource,
-  SgColumn,
-  SgDataSourceTriggerChangedEvent,
+  NegTableColumnDefinitionSet,
+  NegTableComponent,
+  NegTablePluginController,
+  NegDataSource,
+  NegColumn,
+  NegDataSourceTriggerChangedEvent,
   KillOnDestroy,
-} from '@sac/table';
+} from '@neg/table';
 
 export const LOCAL_COLUMN_DEF = Symbol('LOCAL_COLUMN_DEF');
 export const VIRTUAL_REFRESH = {};
 
 export class TransposeTableSession {
   dsSourceFactory: any;
-  ds: SgDataSource<any>;
-  columnsInput: SgTableColumnDefinitionSet;
-  storeColumns: SgColumn[];
+  ds: NegDataSource<any>;
+  columnsInput: NegTableColumnDefinitionSet;
+  storeColumns: NegColumn[];
   headerRow: boolean;
 
   private destroyed: boolean;
   private rawSource: any[];
 
-  constructor(private table: SgTableComponent<any>,
-              private pluginCtrl: SgTablePluginController,
+  constructor(private table: NegTableComponent<any>,
+              private pluginCtrl: NegTablePluginController,
               private updateColumns: () => void,
               private sourceFactoryWrapper: (results: any[]) => any[]) {
     this.init();
@@ -69,12 +69,12 @@ export class TransposeTableSession {
     }
   }
 
-  private onDataSource(ds?: SgDataSource): void {
+  private onDataSource(ds?: NegDataSource): void {
     this.unPatchDataSource();
     if (ds) {
       this.ds = ds;
       this.dsSourceFactory = ds.adapter.sourceFactory;
-      this.ds.adapter.sourceFactory = (event: SgDataSourceTriggerChangedEvent) => {
+      this.ds.adapter.sourceFactory = (event: NegDataSourceTriggerChangedEvent) => {
         const rawSource = event.data.changed && event.data.curr === VIRTUAL_REFRESH
           ? this.ds.source
           : this.dsSourceFactory(event)

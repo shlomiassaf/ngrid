@@ -2,13 +2,13 @@
 
 import { Directive, TemplateRef } from '@angular/core';
 
-import { SgTableComponent } from '../table.component';
-import { SgTableSingleRegistryMap, SgTableRegistryService } from '../table-registry.service';
+import { NegTableComponent } from '../table.component';
+import { NegTableSingleRegistryMap, NegTableRegistryService } from '../table-registry.service';
 
-export abstract class SgTableSingleTemplateRegistryDirective<T, TKind extends keyof SgTableSingleRegistryMap> {
+export abstract class NegTableSingleTemplateRegistryDirective<T, TKind extends keyof NegTableSingleRegistryMap> {
   abstract readonly kind: TKind;
 
-  constructor(public tRef: TemplateRef<T>, protected registry: SgTableRegistryService) { }
+  constructor(public tRef: TemplateRef<T>, protected registry: NegTableRegistryService) { }
 
   ngOnInit(): void {
     this.registry.setSingle(this.kind, this as any);
@@ -22,10 +22,10 @@ export abstract class SgTableSingleTemplateRegistryDirective<T, TKind extends ke
 /**
  * Marks the element as the display element for pagination
  */
-@Directive({ selector: '[sgTablePaginatorRef]' })
-export class SgTablePaginatorRefDirective extends SgTableSingleTemplateRegistryDirective<{ $implicit: SgTableComponent<any> }, 'paginator'> {
+@Directive({ selector: '[negTablePaginatorRef]' })
+export class NegTablePaginatorRefDirective extends NegTableSingleTemplateRegistryDirective<{ $implicit: NegTableComponent<any> }, 'paginator'> {
   readonly kind: 'paginator' = 'paginator';
-  constructor(tRef: TemplateRef<{ $implicit: SgTableComponent<any> }>, registry: SgTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<{ $implicit: NegTableComponent<any> }>, registry: NegTableRegistryService) { super(tRef, registry); }
 }
 
 /**
@@ -33,16 +33,16 @@ export class SgTablePaginatorRefDirective extends SgTableSingleTemplateRegistryD
  *
  * @example
  * ```html
- *   <sg-table>
- *     <div *sgTableNoDataRef style="height: 100%; display: flex; align-items: center; justify-content: center">
+ *   <neg-table>
+ *     <div *negTableNoDataRef style="height: 100%; display: flex; align-items: center; justify-content: center">
  *       <span>No Data</span>
  *     </div>
- *   </sg-table>
+ *   </neg-table>
  * ```
  */
-@Directive({ selector: '[sgTableNoDataRef]' })
-export class SgTableNoDataRefDirective extends SgTableSingleTemplateRegistryDirective<{ $implicit: SgTableComponent<any> }, 'noData'> {
+@Directive({ selector: '[negTableNoDataRef]' })
+export class NegTableNoDataRefDirective extends NegTableSingleTemplateRegistryDirective<{ $implicit: NegTableComponent<any> }, 'noData'> {
   readonly kind: 'noData' = 'noData';
-  constructor(tRef: TemplateRef<{ $implicit: SgTableComponent<any> }>, registry: SgTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<{ $implicit: NegTableComponent<any> }>, registry: NegTableRegistryService) { super(tRef, registry); }
 }
 

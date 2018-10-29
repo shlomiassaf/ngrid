@@ -1,12 +1,12 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
-/* @sac-example:ex-4 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-4 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@sac/table';
+import { createDS, columnFactory } from '@neg/table';
 
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -19,7 +19,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-detail-row',
+  selector: 'neg-detail-row',
   templateUrl: './detail-row.component.html',
   styleUrls: ['./detail-row.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -55,7 +55,7 @@ export class DetailRowExampleComponent  {
     }
   }
 }
-/* @sac-example:ex-4 */
-/* @sac-example:ex-3 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-1 */
+/* @neg-example:ex-4 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-1 */

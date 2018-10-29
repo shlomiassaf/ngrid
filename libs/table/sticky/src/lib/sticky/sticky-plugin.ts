@@ -1,20 +1,20 @@
 import { filter } from 'rxjs/operators';
 import { Directive, Input, IterableDiffers, IterableDiffer, IterableChangeRecord, OnDestroy } from '@angular/core';
 
-import { SgTableComponent, SgTablePluginController, TablePlugin } from '@sac/table';
+import { NegTableComponent, NegTablePluginController, TablePlugin } from '@neg/table';
 
 
-declare module '@sac/table/lib/ext/types' {
-  interface SgTablePluginExtension {
-    sticky?: SgTableStickyPluginDirective;
+declare module '@neg/table/lib/ext/types' {
+  interface NegTablePluginExtension {
+    sticky?: NegTableStickyPluginDirective;
   }
 }
 
 export const PLUGIN_KEY: 'sticky' = 'sticky';
 
-export function setStickyRow(table: SgTableComponent<any>, type: 'header' | 'footer', bulk: Array<['table' | number, boolean]>): void;
-export function setStickyRow(table: SgTableComponent<any>, type: 'header' | 'footer', value: 'table' | number, state: boolean): void;
-export function setStickyRow(table: SgTableComponent<any>, type: 'header' | 'footer', valueOrBulk: Array<['table' | number, boolean]> | 'table' | number, state?: boolean): void {
+export function setStickyRow(table: NegTableComponent<any>, type: 'header' | 'footer', bulk: Array<['table' | number, boolean]>): void;
+export function setStickyRow(table: NegTableComponent<any>, type: 'header' | 'footer', value: 'table' | number, state: boolean): void;
+export function setStickyRow(table: NegTableComponent<any>, type: 'header' | 'footer', valueOrBulk: Array<['table' | number, boolean]> | 'table' | number, state?: boolean): void {
   const isHeader = type === 'header';
   const queryList = isHeader ? table._headerRowDefs : table._footerRowDefs;
   const bulk: Array<['table' | number, boolean]> = Array.isArray(valueOrBulk) ? valueOrBulk : [ [valueOrBulk, state] ];
@@ -51,9 +51,9 @@ export function setStickyRow(table: SgTableComponent<any>, type: 'header' | 'foo
   }
 }
 
-export function setStickyColumns(table: SgTableComponent<any>, type: 'start' | 'end', bulk: Array<[string | number, boolean]>): void;
-export function setStickyColumns(table: SgTableComponent<any>, type: 'start' | 'end', value: string  | number, state: boolean): void;
-export function setStickyColumns(table: SgTableComponent<any>, type: 'start' | 'end', valueOrBulk: Array<[string  | number, boolean]> | string  | number, state?: boolean): void {
+export function setStickyColumns(table: NegTableComponent<any>, type: 'start' | 'end', bulk: Array<[string | number, boolean]>): void;
+export function setStickyColumns(table: NegTableComponent<any>, type: 'start' | 'end', value: string  | number, state: boolean): void;
+export function setStickyColumns(table: NegTableComponent<any>, type: 'start' | 'end', valueOrBulk: Array<[string  | number, boolean]> | string  | number, state?: boolean): void {
   const bulk: Array<[string | number, boolean]> = Array.isArray(valueOrBulk) ? valueOrBulk : [ [valueOrBulk, state] ];
   let changed: boolean;
   for (let [columnId, state] of bulk) {
@@ -82,8 +82,8 @@ export function setStickyColumns(table: SgTableComponent<any>, type: 'start' | '
 }
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'sg-table[stickyColumnStart], sg-table[stickyColumnEnd], sg-table[stickyHeader], sg-table[stickyFooter]' })
-export class SgTableStickyPluginDirective implements OnDestroy {
+@Directive({ selector: 'neg-table[stickyColumnStart], neg-table[stickyColumnEnd], neg-table[stickyHeader], neg-table[stickyFooter]' })
+export class NegTableStickyPluginDirective implements OnDestroy {
   /**
    * Set the header rows you want to apply sticky positioning to.
    * Valid values are:
@@ -154,11 +154,11 @@ export class SgTableStickyPluginDirective implements OnDestroy {
   private _footerDiffer: IterableDiffer<'table' | number>;
 
   private _columnCache: { start: Array<string | number>; end: Array<string | number>; } = { start: [], end: [] };
-  private _removePlugin: (table: SgTableComponent<any>) => void;
+  private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor (protected readonly table: SgTableComponent<any>,
+  constructor (protected readonly table: NegTableComponent<any>,
                protected readonly _differs: IterableDiffers,
-               protected readonly pluginCtrl: SgTablePluginController) {
+               protected readonly pluginCtrl: NegTablePluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     pluginCtrl.events

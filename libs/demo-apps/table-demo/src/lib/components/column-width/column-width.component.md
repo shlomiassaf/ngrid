@@ -1,6 +1,6 @@
 # Column Width
 
-Column width is set though column definition in `SgColumn`.
+Column width is set though column definition in `NegColumn`.
 
 We set the width in the **width** property, which accepts a string value representing the width in pixels or percentage. (e.g. "100px" or "50%")
 
@@ -55,9 +55,9 @@ If you resize the browser you will see that **name** and **gender** remain fixed
 Note that the width for **bio** is not set, the table will assign a width to it.
 
 <docsi-mat-example-with-source title="Column Width" contentClass="mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@sac-example:ex-1-->
-  <sg-table [dataSource]="ds1" [columns]="columns1" style="height: 300px"></sg-table>
-  <!--@sac-example:ex-1-->
+  <!--@neg-example:ex-1-->
+  <neg-table [dataSource]="ds1" [columns]="columns1" style="height: 300px"></neg-table>
+  <!--@neg-example:ex-1-->
 </docsi-mat-example-with-source>
 
 Let's review the CSS width assigned to each column:
@@ -82,9 +82,9 @@ For example, if we have 4 columns, each with a minimum width of 300 pixels and o
 because the actual table size is 1200 which is 4 columns X 300px.
 
 <docsi-mat-example-with-source title="Minimum Column Width" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@sac-example:ex-2-->
-  <sg-table [dataSource]="ds2" [columns]="columns2" style="height: 300px"></sg-table>
-  <!--@sac-example:ex-2-->
+  <!--@neg-example:ex-2-->
+  <neg-table [dataSource]="ds2" [columns]="columns2" style="height: 300px"></neg-table>
+  <!--@neg-example:ex-2-->
 </docsi-mat-example-with-source>
 
 ## Maximum Width
@@ -98,7 +98,7 @@ In the example below, notice how we set a maximum width to **gender** (50) and *
 We did not set any width related option in the remaining columns so they will split the remaining space evenly.
 
 <docsi-mat-example-with-source title="Maximum Column Width" contentClass="mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@sac-example:ex-3-->
-  <sg-table [dataSource]="ds3" [columns]="columns3" style="height: 300px"></sg-table>
-  <!--@sac-example:ex-3-->
+  <!--@neg-example:ex-3-->
+  <neg-table [dataSource]="ds3" [columns]="columns3" style="height: 300px"></neg-table>
+  <!--@neg-example:ex-3-->
 </docsi-mat-example-with-source>

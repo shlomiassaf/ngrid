@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { SourceCodeRef } from '@sac/docsi/webpack';
+import { SourceCodeRef } from '@neg/docsi/webpack';
 import { ExtractedCodeGroup } from '../models';
 import { normalizeExtractCode } from '../utils';
 import { DocsiMetadataService } from './docsi-metadata.service';

@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 @import './shell-app.theme';
 
-@import '../../../../libs/table/theme';
+@import '../../../../libs/material/theme';
 
-$sac-shell-theme: sac-default-light-theme();
+$neg-shell-theme: neg-default-light-theme();

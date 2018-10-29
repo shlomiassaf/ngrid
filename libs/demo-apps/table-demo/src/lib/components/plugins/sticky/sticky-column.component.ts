@@ -1,12 +1,12 @@
-/* @sac-example:ex-column-1 */
-/* @sac-example:ex-column-2 */
-/* @sac-example:ex-column-3 */
+/* @neg-example:ex-column-1 */
+/* @neg-example:ex-column-2 */
+/* @neg-example:ex-column-3 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
-import { createDS, columnFactory } from '@sac/table';
+import { createDS, columnFactory } from '@neg/table';
 
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 200})
@@ -34,7 +34,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-sticky-column-table-example-component',
+  selector: 'neg-sticky-column-table-example-component',
   templateUrl: './sticky-column.component.html',
   styleUrls: ['./sticky-column.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -47,6 +47,6 @@ export class StickyColumnTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @sac-example:ex-column-3 */
-/* @sac-example:ex-column-2 */
-/* @sac-example:ex-column-1 */
+/* @neg-example:ex-column-3 */
+/* @neg-example:ex-column-2 */
+/* @neg-example:ex-column-1 */

@@ -1,19 +1,19 @@
-import { SgColumnGroupDefinition } from './types';
-import { SgMetaColumn } from './meta-column';
-import { SgColumn } from './column';
+import { NegColumnGroupDefinition } from './types';
+import { NegMetaColumn } from './meta-column';
+import { NegColumn } from './column';
 
-const SG_COLUMN_GROUP_MARK = Symbol('SgColumnGroup');
+const NEG_COLUMN_GROUP_MARK = Symbol('NegColumnGroup');
 
-function isSgColumnGroup(def: SgColumnGroupDefinition): def is SgColumnGroup {
-  return def instanceof SgColumnGroup || def[SG_COLUMN_GROUP_MARK] === true;
+function isNegColumnGroup(def: NegColumnGroupDefinition): def is NegColumnGroup {
+  return def instanceof NegColumnGroup || def[NEG_COLUMN_GROUP_MARK] === true;
 }
 
-export class SgColumnGroup extends SgMetaColumn implements SgColumnGroupDefinition {
+export class NegColumnGroup extends NegMetaColumn implements NegColumnGroupDefinition {
 
-  //#region SgColumnGroupDefinition
+  //#region NegColumnGroupDefinition
   prop: string;
   span: number;
-  //#endregion SgColumnGroupDefinition
+  //#endregion NegColumnGroupDefinition
 
   /**
    * Returns the visible state of the column.
@@ -26,16 +26,16 @@ export class SgColumnGroup extends SgMetaColumn implements SgColumnGroupDefiniti
   /** @internal */
   orgWidth?: string;
   /** @internal */
-  readonly columns: SgColumn[];
+  readonly columns: NegColumn[];
 
-  constructor(def: SgColumnGroup | SgColumnGroupDefinition, columns: SgColumn[], public readonly placeholder = false) {
-    super(isSgColumnGroup(def)
+  constructor(def: NegColumnGroup | NegColumnGroupDefinition, columns: NegColumn[], public readonly placeholder = false) {
+    super(isNegColumnGroup(def)
       ? def
       : { id: `group-${def.prop}-span-${def.span}-row-${def.rowIndex}`, kind: 'header' as 'header', ...(def as any) }
     );
 
-    this[SG_COLUMN_GROUP_MARK] = true;
-    if (isSgColumnGroup(def)) {
+    this[NEG_COLUMN_GROUP_MARK] = true;
+    if (isNegColumnGroup(def)) {
       this.orgWidth = def.orgWidth;
     } else {
       if (this.width) {

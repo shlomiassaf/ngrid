@@ -2,24 +2,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SgTableCheckboxModule } from '@sac/table/material/selection-column';
-import { SgTablePaginatorModule } from '@sac/table/material/paginator';
-import { SgTableMatSortModule } from '@sac/table/material/sort';
-import { SgTableCellTooltipModule } from '@sac/table/material/cell-tooltip';
+import { NegTableCheckboxModule } from '@neg/table/material/selection-column';
+import { NegTablePaginatorModule } from '@neg/table/material/paginator';
+import { NegTableMatSortModule } from '@neg/table/material/sort';
+import { NegTableCellTooltipModule } from '@neg/table/material/cell-tooltip';
 
 @NgModule({
   imports: [
     CommonModule,
-    SgTableCheckboxModule,
-    SgTablePaginatorModule,
-    SgTableMatSortModule,
-    SgTableCellTooltipModule,
+    NegTableCheckboxModule,
+    NegTablePaginatorModule,
+    NegTableMatSortModule,
+    NegTableCellTooltipModule,
   ],
   exports: [
-    SgTableCheckboxModule,
-    SgTablePaginatorModule,
-    SgTableMatSortModule,
-    SgTableCellTooltipModule,
+    NegTableCheckboxModule,
+    NegTablePaginatorModule,
+    NegTableMatSortModule,
+    NegTableCellTooltipModule,
   ]
 })
-export class SgTableMaterialModule { }
+export class NegTableMaterialModule { }

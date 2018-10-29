@@ -11,15 +11,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-import { SgTableModule, SgTableRegistryService, SgTableConfigService } from '@sac/table';
-import { SgTableTargetEventsModule } from '@sac/table/target-events';
-import { SgTableTransposeModule } from '@sac/table/transpose';
-import { SgTableBlockUiModule } from '@sac/table/block-ui';
-import { SgTableDetailRowModule } from '@sac/table/detail-row';
-import { SgTableStickyModule } from '@sac/table/sticky';
-import { SgTableMaterialModule } from '@sac/table/material';
+import { NegTableModule, NegTableRegistryService, NegTableConfigService } from '@neg/table';
+import { NegTableTargetEventsModule } from '@neg/table/target-events';
+import { NegTableTransposeModule } from '@neg/table/transpose';
+import { NegTableBlockUiModule } from '@neg/table/block-ui';
+import { NegTableDetailRowModule } from '@neg/table/detail-row';
+import { NegTableStickyModule } from '@neg/table/sticky';
+import { NegTableMaterialModule } from '@neg/table/material';
 
-import { SharedModule, ExampleGroupRegistryService } from '@sac/demo-apps/shared';
+import { SharedModule, ExampleGroupRegistryService } from '@neg/demo-apps/shared';
 import {
   TableExamplesPageComponent,
   AllInOneTableExampleComponent,
@@ -102,26 +102,26 @@ const PLUGIN_ROUTES = [
     ]),
     SharedModule,
     MATERIAL, MatRippleModule,
-    SgTableModule,
-    SgTableTargetEventsModule,
-    SgTableBlockUiModule,
-    SgTableTransposeModule,
-    SgTableDetailRowModule,
-    SgTableStickyModule,
-    SgTableMaterialModule,
+    NegTableModule,
+    NegTableTargetEventsModule,
+    NegTableBlockUiModule,
+    NegTableTransposeModule,
+    NegTableDetailRowModule,
+    NegTableStickyModule,
+    NegTableMaterialModule,
   ],
   exports: [ MatRippleModule ], // we need this for detail-row
-  providers: [ SgTableRegistryService ],
+  providers: [ NegTableRegistryService ],
 })
 export class TableDemoModule {
-  constructor(registry: ExampleGroupRegistryService, config: SgTableConfigService) {
+  constructor(registry: ExampleGroupRegistryService, config: NegTableConfigService) {
     config.set('cellTooltip', { autoSetAll: true });
     registry.registerGroupFromRoutes({ id: 'table', title: 'Table' }, ROUTES);
     registry.registerGroupFromRoutes({ id: 'plugins', title: 'Plugins' }, PLUGIN_ROUTES);
   }
 }
 
-declare module '@sac/demo-apps/shared/src/lib/example-group/example-group-registry.service' {
+declare module '@neg/demo-apps/shared/src/lib/example-group/example-group-registry.service' {
   interface ExampleGroupMap {
     table: ExampleGroupMetadata;
     'plugins': ExampleGroupMetadata;

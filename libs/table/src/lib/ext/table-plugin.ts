@@ -1,12 +1,12 @@
-import { SgTablePluginExtension, SgTablePluginExtensionFactories } from './types';
+import { NegTablePluginExtension, NegTablePluginExtensionFactories } from './types';
 
 /** @internal */
-export const PLUGIN_STORE = new Map<keyof SgTablePluginExtension, TablePluginMetadata & { target: any }>();
+export const PLUGIN_STORE = new Map<keyof NegTablePluginExtension, TablePluginMetadata & { target: any }>();
 
-export interface TablePluginMetadata<P extends keyof SgTablePluginExtension = keyof SgTablePluginExtension> {
+export interface TablePluginMetadata<P extends keyof NegTablePluginExtension = keyof NegTablePluginExtension> {
   id: P;
-  factory?: P extends keyof SgTablePluginExtensionFactories
-    ? SgTablePluginExtensionFactories[P]
+  factory?: P extends keyof NegTablePluginExtensionFactories
+    ? NegTablePluginExtensionFactories[P]
     : never
   ;
 }

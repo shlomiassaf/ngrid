@@ -6,15 +6,15 @@ $footer-cell-color: pink;
 .cell-hovered {
   border: 2px solid $data-cell-color;
 
-  &.sg-table-header-cell {
+  &.neg-table-header-cell {
     border: 2px solid $header-cell-color;
   }
 
-  &.sg-header-group-cell {
+  &.neg-header-group-cell {
     border: 2px solid $header-cell-group-color;
   }
 
-  &.sg-table-footer-cell {
+  &.neg-table-footer-cell {
     border: 2px solid $footer-cell-color;
   }
 }
@@ -27,21 +27,21 @@ $footer-cell-color: pink;
     background: transparentize($data-cell-color, 0.75);
   }
 
-  &.sg-table-header-row {
+  &.neg-table-header-row {
     background: $header-cell-color;
     &.row-cell-hovered {
       background: transparentize($header-cell-color, 0.75);
     }
   }
 
-  &.sg-header-group-row {
+  &.neg-header-group-row {
     background: $header-cell-group-color;
     &.row-cell-hovered {
       background: transparentize($header-cell-group-color, 0.75);
     }
   }
 
-  &.sg-table-footer-row {
+  &.neg-table-footer-row {
     background: $footer-cell-color;
     &.row-cell-hovered {
       background: transparentize($footer-cell-color, 0.75);

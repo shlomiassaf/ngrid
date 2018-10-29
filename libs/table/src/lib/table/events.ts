@@ -1,7 +1,7 @@
-import { SgColumn } from './columns/column';
+import { NegColumn } from './columns/column';
 
-export interface SgTableCellClickEvent<T = any> {
+export interface NegTableCellClickEvent<T = any> {
   source: MouseEvent;
-  column: SgColumn;
+  column: NegColumn;
   row: T;
 }

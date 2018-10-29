@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SgTableCheckboxComponent } from './table-checkbox.component';
+import { NegTableCheckboxComponent } from './table-checkbox.component';
 
-describe('SgTableCheckboxComponent', () => {
-  let component: SgTableCheckboxComponent;
-  let fixture: ComponentFixture<SgTableCheckboxComponent>;
+describe('NegTableCheckboxComponent', () => {
+  let component: NegTableCheckboxComponent;
+  let fixture: ComponentFixture<NegTableCheckboxComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SgTableCheckboxComponent ]
+      declarations: [ NegTableCheckboxComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SgTableCheckboxComponent);
+    fixture = TestBed.createComponent(NegTableCheckboxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

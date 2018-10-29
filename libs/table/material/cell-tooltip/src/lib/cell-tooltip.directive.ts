@@ -15,11 +15,11 @@ import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Platform} from '@angular/cdk/platform';
 import { TooltipPosition, MatTooltipDefaultOptions, MatTooltip, MAT_TOOLTIP_SCROLL_STRATEGY, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
-import { SgTableComponent, SgTablePluginController, TablePlugin, KillOnDestroy, SgTableConfigService } from '@sac/table';
-import { SgTableCellEvent } from '@sac/table/target-events';
+import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy, NegTableConfigService } from '@neg/table';
+import { NegTableCellEvent } from '@neg/table/target-events';
 
-declare module '@sac/table/lib/table/services/config' {
-  interface SgTableConfig {
+declare module '@neg/table/lib/table/services/config' {
+  interface NegTableConfig {
     cellTooltip?: CellTooltipOptions & {
       /** When set to true will apply the default cell tooltip to ALL tables */
       autoSetAll?: boolean;
@@ -27,41 +27,41 @@ declare module '@sac/table/lib/table/services/config' {
   }
 }
 
-declare module '@sac/table/lib/ext/types' {
-  interface SgTablePluginExtension {
-    cellTooltip?: SgTableCellTooltipDirective<any>;
+declare module '@neg/table/lib/ext/types' {
+  interface NegTablePluginExtension {
+    cellTooltip?: NegTableCellTooltipDirective<any>;
   }
-  interface SgTablePluginExtensionFactories {
-    cellTooltip: keyof typeof SgTableCellTooltipDirective;
+  interface NegTablePluginExtensionFactories {
+    cellTooltip: keyof typeof NegTableCellTooltipDirective;
   }
 }
 
 const PLUGIN_KEY: 'cellTooltip' = 'cellTooltip';
 
 const DEFAULT_OPTIONS: CellTooltipOptions = {
-  canShow: (event: SgTableCellEvent<any>): boolean => {
+  canShow: (event: NegTableCellEvent<any>): boolean => {
     const element = (event.cellTarget.firstElementChild || event.cellTarget) as HTMLElement;
     return element.scrollWidth > element.offsetWidth;
   },
-  message: (event: SgTableCellEvent<any>): string => {
+  message: (event: NegTableCellEvent<any>): string => {
     return event.cellTarget.innerText;
   }
 };
 
 export interface CellTooltipOptions {
-  canShow?: (event: SgTableCellEvent<any>) => boolean;
-  message?: (event: SgTableCellEvent<any>) => string;
+  canShow?: (event: NegTableCellEvent<any>) => boolean;
+  message?: (event: NegTableCellEvent<any>) => string;
 }
 
 @TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
-@Directive({ selector: '[cellTooltip]', exportAs: 'sgOverflowTooltip' })
+@Directive({ selector: '[cellTooltip]', exportAs: 'negOverflowTooltip' })
 @KillOnDestroy()
-export class SgTableCellTooltipDirective<T> implements CellTooltipOptions, OnDestroy {
-  static get PLUGIN_KEY(): 'cellTooltip' { return PLUGIN_KEY; }
+export class NegTableCellTooltipDirective<T> implements CellTooltipOptions, OnDestroy {
+  static readonly PLUGIN_KEY: 'cellTooltip' = PLUGIN_KEY;
 
   // tslint:disable-next-line:no-input-rename
-  @Input('cellTooltip') canShow: (event: SgTableCellEvent<T>) => boolean;
-  @Input() message: (event: SgTableCellEvent<T>) => string;
+  @Input('cellTooltip') canShow: (event: NegTableCellEvent<T>) => boolean;
+  @Input() message: (event: NegTableCellEvent<T>) => string;
 
   /** See Material docs for MatTooltip */
   @Input() position: TooltipPosition;
@@ -76,12 +76,12 @@ export class SgTableCellTooltipDirective<T> implements CellTooltipOptions, OnDes
 
   private toolTip: MatTooltip;
   private lastConfig: CellTooltipOptions;
-  private _removePlugin: (table: SgTableComponent<any>) => void;
+  private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>, private injector: Injector, pluginCtrl: SgTablePluginController) {
+  constructor(private table: NegTableComponent<any>, private injector: Injector, pluginCtrl: NegTablePluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    const configService = injector.get(SgTableConfigService);
+    const configService = injector.get(NegTableConfigService);
 
     this.initArgs = [
       injector.get(Overlay),
@@ -115,8 +115,8 @@ export class SgTableCellTooltipDirective<T> implements CellTooltipOptions, OnDes
     }
   }
 
-  static create<T = any>(table: SgTableComponent<any>, injector: Injector): SgTableCellTooltipDirective<T> {
-    return new SgTableCellTooltipDirective<T>(table, injector, SgTablePluginController.find(table));
+  static create<T = any>(table: NegTableComponent<any>, injector: Injector): NegTableCellTooltipDirective<T> {
+    return new NegTableCellTooltipDirective<T>(table, injector, NegTablePluginController.find(table));
   }
 
   ngOnDestroy(): void {
@@ -124,7 +124,7 @@ export class SgTableCellTooltipDirective<T> implements CellTooltipOptions, OnDes
     this.killTooltip();
   }
 
-  private init(pluginCtrl: SgTablePluginController): void {
+  private init(pluginCtrl: NegTablePluginController): void {
     // Depends on target-events plugin
     // if it's not set, create it.
     const targetEventsPlugin = pluginCtrl.getPlugin('targetEvents') || pluginCtrl.createPlugin('targetEvents');
@@ -137,12 +137,12 @@ export class SgTableCellTooltipDirective<T> implements CellTooltipOptions, OnDes
       .subscribe( event => this.cellLeave(event) );
   }
 
-  private cellEnter(event: SgTableCellEvent<T>): void {
+  private cellEnter(event: NegTableCellEvent<T>): void {
     this.killTooltip();
 
     const canShow = this.canShow || (this.lastConfig && this.lastConfig.canShow) || DEFAULT_OPTIONS.canShow;
     if (canShow(event)) {
-      const params = this.initArgs.slice() as SgTableCellTooltipDirective<any>['initArgs'];
+      const params = this.initArgs.slice() as NegTableCellTooltipDirective<any>['initArgs'];
       params[1] = new ElementRef<any>(event.cellTarget);
 
       this.toolTip = new MatTooltip(...params);
@@ -166,7 +166,7 @@ export class SgTableCellTooltipDirective<T> implements CellTooltipOptions, OnDes
     }
   }
 
-  private cellLeave(event: SgTableCellEvent<T>): void {
+  private cellLeave(event: NegTableCellEvent<T>): void {
     this.killTooltip();
   }
 

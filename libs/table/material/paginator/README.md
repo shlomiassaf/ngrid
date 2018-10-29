@@ -1,6 +1,6 @@
 # Material Paginator implementation
 
-A Plugin for `sg-table` with a `Paginator` impelementation using components from `@angular/material`.
+A Plugin for `neg-table` with a `Paginator` impelementation using components from `@angular/material`.
 
 ## Impotred `@angular/material` modules
 
@@ -16,9 +16,9 @@ A Plugin for `sg-table` with a `Paginator` impelementation using components from
 ## Usage
 **Using a component & the paginator ref instruction**
 ```html
-<sg-table>
-  <sg-table-paginator *sgTablePaginatorRef="let table" [table]="table" [paginator]="table.dataSource.paginator"></sg-table-paginator>
-</sg-table>
+<neg-table>
+  <neg-table-paginator *negTablePaginatorRef="let table" [table]="table" [paginator]="table.dataSource.paginator"></neg-table-paginator>
+</neg-table>
 ```
 
-> TIP: You can use `sgTablePaginatorRef` outside of the table, (root component), to define a gloal paginator.
+> TIP: You can use `negTablePaginatorRef` outside of the table, (root component), to define a gloal paginator.

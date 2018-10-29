@@ -1,27 +1,27 @@
 import { Directive, OnDestroy } from '@angular/core';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 
-import { SgTableComponent, SgTablePluginController, TablePlugin, KillOnDestroy, SgTableSortDefinition } from '@sac/table';
+import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy, NegTableSortDefinition } from '@neg/table';
 
 Object.defineProperty(MatSortHeader.prototype, 'column', {
   set: function(value: any) { this.id = value.id; }
 });
 
 
-declare module '@sac/table/lib/ext/types' {
-  interface SgTablePluginExtension {
-    matSort?: SgTableMatSortDirective;
+declare module '@neg/table/lib/ext/types' {
+  interface NegTablePluginExtension {
+    matSort?: NegTableMatSortDirective;
   }
 }
 const PLUGIN_KEY: 'matSort' = 'matSort';
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'sg-table[matSort]', exportAs: 'sgMatSort' })
+@Directive({ selector: 'neg-table[matSort]', exportAs: 'negMatSort' })
 @KillOnDestroy()
-export class SgTableMatSortDirective implements OnDestroy {
-  private _removePlugin: (table: SgTableComponent<any>) => void;
+export class NegTableMatSortDirective implements OnDestroy {
+  private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor(public table: SgTableComponent<any>, pluginCtrl: SgTablePluginController, public sort: MatSort) {
+  constructor(public table: NegTableComponent<any>, pluginCtrl: NegTablePluginController, public sort: MatSort) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     table.registry.setSingle('sortContainer', MatSortHeader as any)
 
@@ -71,7 +71,7 @@ export class SgTableMatSortDirective implements OnDestroy {
     if ( !column || !column.sort ) {
       return;
     } else {
-      const newSort: SgTableSortDefinition = { };
+      const newSort: NegTableSortDefinition = { };
       const sortFn = typeof column.sort === 'function' && column.sort;
       if (sort.direction) {
         newSort.order = sort.direction;

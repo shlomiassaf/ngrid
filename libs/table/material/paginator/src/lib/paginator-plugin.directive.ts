@@ -1,20 +1,20 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef, DoCheck } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { SgTableComponent, SgTablePluginController, TablePlugin } from '@sac/table';
+import { NegTableComponent, NegTablePluginController, TablePlugin } from '@neg/table';
 
-import { SgPaginatorComponent } from './table-paginator.component';
+import { NegPaginatorComponent } from './table-paginator.component';
 
-declare module '@sac/table/lib/ext/types' {
-  interface SgTablePluginExtension {
-    matPaginator?: SgTableMatPaginatorDirective;
+declare module '@neg/table/lib/ext/types' {
+  interface NegTablePluginExtension {
+    matPaginator?: NegTableMatPaginatorDirective;
   }
 }
 
 const PLUGIN_KEY: 'matPaginator' = 'matPaginator';
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'sg-table[matPaginator]' })
-export class SgTableMatPaginatorDirective implements OnDestroy, DoCheck {
+@Directive({ selector: 'neg-table[matPaginator]' })
+export class NegTableMatPaginatorDirective implements OnDestroy, DoCheck {
   /**
    * Add's a selection column using material's `mat-checkbox` in the column specified.
    */
@@ -28,10 +28,10 @@ export class SgTableMatPaginatorDirective implements OnDestroy, DoCheck {
           this.cmpRef.destroy();
           this.cmpRef = undefined;
         }
-        this.ngDoCheck = SgTableMatPaginatorDirective.prototype.ngDoCheck;
+        this.ngDoCheck = NegTableMatPaginatorDirective.prototype.ngDoCheck;
       } else {
         if (!this.cmpRef) {
-          this.cmpRef = this.cfr.resolveComponentFactory(SgPaginatorComponent).create(this.injector);
+          this.cmpRef = this.cfr.resolveComponentFactory(NegPaginatorComponent).create(this.injector);
           this.instance = this.cmpRef.instance;
           this.instance.table = this.table;
         }
@@ -47,14 +47,14 @@ export class SgTableMatPaginatorDirective implements OnDestroy, DoCheck {
     }
   }
   private _enabled: boolean;
-  private cmpRef: ComponentRef<SgPaginatorComponent>;
-  private instance: SgPaginatorComponent;
-  private _removePlugin: (table: SgTableComponent<any>) => void;
+  private cmpRef: ComponentRef<NegPaginatorComponent>;
+  private instance: NegPaginatorComponent;
+  private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>,
+  constructor(private table: NegTableComponent<any>,
               private cfr: ComponentFactoryResolver,
               private injector: Injector,
-              pluginCtrl: SgTablePluginController) {
+              pluginCtrl: NegTablePluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
   }
 

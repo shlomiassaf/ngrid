@@ -1,17 +1,17 @@
 
     import { async, TestBed } from '@angular/core/testing';
-    import { SgMaterialModule } from './material.module';
+    import { NegMaterialModule } from './material.module';
     
-    describe('SgMaterialModule', () => {
+    describe('NegMaterialModule', () => {
       beforeEach(async(() => {
         TestBed.configureTestingModule({
-          imports: [ SgMaterialModule ]
+          imports: [ NegMaterialModule ]
         })
         .compileComponents();
       }));
     
       it('should create', () => {
-        expect(SgMaterialModule).toBeDefined();
+        expect(NegMaterialModule).toBeDefined();
       });
     });
           

@@ -1,13 +1,13 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@sac/table';
+import { createDS, columnFactory } from '@neg/table';
 
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 @Component({
-  selector: 'sac-column-width-table-example-component',
+  selector: 'neg-column-width-table-example-component',
   templateUrl: './column-width.component.html',
   styleUrls: ['./column-width.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -47,6 +47,6 @@ export class ColumnWidthTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @sac-example:ex-3 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-1 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-1 */

@@ -1,54 +1,54 @@
-$sac-shell-primary: mat-palette($mat-blue);
-$sac-shell-accent:  mat-palette($mat-light-green);
+$neg-shell-primary: mat-palette($mat-blue);
+$neg-shell-accent:  mat-palette($mat-light-green);
 
-@function sac-default-light-theme() {
-  $sac-shell-theme: mat-light-theme($sac-shell-primary, $sac-shell-accent);
+@function neg-default-light-theme() {
+  $neg-shell-theme: mat-light-theme($neg-shell-primary, $neg-shell-accent);
 
   $background-background: #F8F9FD;
 
-  $sac-default-light-theme-background: (
+  $neg-default-light-theme-background: (
     app-bar: #ffffff, // overwriting default color, when no primary/accent/warn are set.
     background: $background-background,
   );
 
   $foreground-text: #4A4A4A;
 
-  $sac-default-light-theme-foreground: (
+  $neg-default-light-theme-foreground: (
     text: $foreground-text,
     text-header: #3F5972,
     text-success: #4caf50,
     text-error: #f44336,
   );
 
-  $sac-shell-theme: map-merge($sac-shell-theme, (
-    background: map-merge($mat-light-theme-background, $sac-default-light-theme-background),
-    foreground: map-merge($mat-light-theme-foreground, $sac-default-light-theme-foreground)
+  $neg-shell-theme: map-merge($neg-shell-theme, (
+    background: map-merge($mat-light-theme-background, $neg-default-light-theme-background),
+    foreground: map-merge($mat-light-theme-foreground, $neg-default-light-theme-foreground)
   ));
 
-  @return $sac-shell-theme;
+  @return $neg-shell-theme;
 }
 
-@function sac-default-dark-theme() {
-  $sac-shell-theme: mat-dark-theme($sac-shell-primary, $sac-shell-accent);
+@function neg-default-dark-theme() {
+  $neg-shell-theme: mat-dark-theme($neg-shell-primary, $neg-shell-accent);
 
-  $sac-default-dark-theme-background: (
+  $neg-default-dark-theme-background: (
   );
 
-  $sac-default-dark-theme-foreground: (
+  $neg-default-dark-theme-foreground: (
     text-header: rgb(64, 90, 114),
     text-success: #4caf50,
     text-error: #f44336
   );
 
-  $sac-shell-theme: map-merge($sac-shell-theme, (
-    background: map-merge($mat-dark-theme-background, $sac-default-dark-theme-background),
-    foreground: map-merge($mat-dark-theme-foreground, $sac-default-dark-theme-foreground)
+  $neg-shell-theme: map-merge($neg-shell-theme, (
+    background: map-merge($mat-dark-theme-background, $neg-default-dark-theme-background),
+    foreground: map-merge($mat-dark-theme-foreground, $neg-default-dark-theme-foreground)
   ));
 
-  @return $sac-shell-theme;
+  @return $neg-shell-theme;
 }
 
-@function sac-typography-config() {
+@function neg-typography-config() {
   @return mat-typography-config(
     $display-3: mat-typography-level(56px, 56px, 300),
     $display-2: mat-typography-level(45px, 48px, 300),
@@ -57,7 +57,7 @@ $sac-shell-accent:  mat-palette($mat-light-green);
   );
 }
 
-@mixin sac-shell-app-theme($theme, $typography-config, $typography-selector: '.mat-typography') {
+@mixin neg-shell-app-theme($theme, $typography-config, $typography-selector: '.mat-typography') {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);

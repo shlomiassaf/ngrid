@@ -1,17 +1,17 @@
 import { TemplateRef } from '@angular/core';
 
-import { SgTableColumnDef } from '../directives';
-import { SgMetaColumnDefinition, SgTableMetaCellTemplateContext, SgColumnTypeDefinition } from './types';
+import { NegTableColumnDef } from '../directives';
+import { NegMetaColumnDefinition, NegTableMetaCellTemplateContext, NegColumnTypeDefinition } from './types';
 import { parseStyleWidth, initDefinitions } from './utils';
 
-const SG_META_COLUMN_MARK = Symbol('SgMetaColumn');
+const NEG_META_COLUMN_MARK = Symbol('NegMetaColumn');
 
-function isSgMetaColumn(def: SgMetaColumnDefinition): def is SgMetaColumn {
-  return def instanceof SgMetaColumn || def[SG_META_COLUMN_MARK] === true;
+function isNegMetaColumn(def: NegMetaColumnDefinition): def is NegMetaColumn {
+  return def instanceof NegMetaColumn || def[NEG_META_COLUMN_MARK] === true;
 }
 
-export class SgMetaColumn implements SgMetaColumnDefinition {
-  //#region SgBaseColumnDefinition
+export class NegMetaColumn implements NegMetaColumnDefinition {
+  //#region NegCdkVirtualScrollViewportComponentBaseColumnDefinition
 
    /**
    * A Unique ID for the column.
@@ -28,7 +28,7 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
    * The type of the values in this column.
    * This is an additional level for matching columns to templates, grouping templates for a type.
    */
-  type?: SgColumnTypeDefinition;
+  type?: NegColumnTypeDefinition;
 
   /**
    * CSS class that get applied on the header and cell.
@@ -57,9 +57,9 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
    * This must be an object, values are shadow-copied so persist data between multiple plugins.
    */
   data: any = {};
-  //#endregion SgBaseColumnDefinition
+  //#endregion NegCdkVirtualScrollViewportComponentBaseColumnDefinition
 
-  //#region SgMetaColumnDefinition
+  //#region NegMetaColumnDefinition
 
   kind: 'header' | 'footer';
 
@@ -71,7 +71,7 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
    * row do not set a rowIndex.
    */
   rowIndex: number;
-//#endregion SgMetaColumnDefinition
+//#endregion NegMetaColumnDefinition
 
   get parsedWidth(): { value: number, type: 'px' | '%'} | undefined { return parseStyleWidth(this.width) } // TODO: cache
 
@@ -79,26 +79,26 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
   stickyEnd: boolean;
 
   /**
-   * Used by sg-table to apply a custom header/footer cell template, or the default when not set.
+   * Used by neg-table to apply a custom header/footer cell template, or the default when not set.
    * @internal
    */
-  template: TemplateRef<SgTableMetaCellTemplateContext<any>>;
+  template: TemplateRef<NegTableMetaCellTemplateContext<any>>;
 
     /**
-   * The calculated width, used by sg-table to set the width used by the template
+   * The calculated width, used by neg-table to set the width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
   cWidth: string;
   /**
-   * The calculated minimum width, used by sg-table to set the min-width used by the template
+   * The calculated minimum width, used by neg-table to set the min-width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
   cMinWidth: string;
 
   /**
-   * The calculated maximum width, used by sg-table to set the max-width used by the template
+   * The calculated maximum width, used by neg-table to set the max-width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
@@ -106,15 +106,15 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
     /**
    * The column def for this column.
    */
-  columnDef: SgTableColumnDef;
+  columnDef: NegTableColumnDef;
 
-  constructor(def: SgMetaColumnDefinition) {
-    this[SG_META_COLUMN_MARK] = true;
+  constructor(def: NegMetaColumnDefinition) {
+    this[NEG_META_COLUMN_MARK] = true;
     initDefinitions(def, this);
-    const copyKeys: Array<keyof SgMetaColumnDefinition> = ['kind', 'rowIndex'];
+    const copyKeys: Array<keyof NegMetaColumnDefinition> = ['kind', 'rowIndex'];
     copyKeys.forEach( k => k in def && (this[k] = def[k]) );
 
-    if (!isSgMetaColumn(def)) {
+    if (!isNegMetaColumn(def)) {
       if (typeof def.type === 'string') {
         this.type = { name: def.type } as any;
       }

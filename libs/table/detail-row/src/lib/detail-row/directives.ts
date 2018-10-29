@@ -9,39 +9,39 @@ import {
 } from '@angular/core';
 import { CdkRowDef, RowContext } from '@angular/cdk/table';
 
-import { SgTableComponent, SgTableRegistryService, SgTableSingleTemplateRegistryDirective } from '@sac/table';
+import { NegTableComponent, NegTableRegistryService, NegTableSingleTemplateRegistryDirective } from '@neg/table';
 
-declare module '@sac/table/lib/table/table-registry.service' {
-  interface SgTableSingleRegistryMap {
-    detailRowParent?: SgTableDetailRowParentRefDirective<any>;
-    detailRow?: SgTableDetailRowDefDirective;
+declare module '@neg/table/lib/table/table-registry.service' {
+  interface NegTableSingleRegistryMap {
+    detailRowParent?: NegTableDetailRowParentRefDirective<any>;
+    detailRow?: NegTableDetailRowDefDirective;
   }
 }
 
-export interface SgTableDetailRowContext<T> extends RowContext<T> {
-  table: SgTableComponent<T>;
+export interface NegTableDetailRowContext<T> extends RowContext<T> {
+  table: NegTableComponent<T>;
 }
 
 /**
  * Marks the element as the display element for the detail row itself.
  */
-@Directive({ selector: '[sgTableDetailRowDef]' })
-export class SgTableDetailRowDefDirective extends SgTableSingleTemplateRegistryDirective<{ $implicit: any }, 'detailRow'> {
+@Directive({ selector: '[negTableDetailRowDef]' })
+export class NegTableDetailRowDefDirective extends NegTableSingleTemplateRegistryDirective<{ $implicit: any }, 'detailRow'> {
   readonly kind: 'detailRow' = 'detailRow';
-  constructor(tRef: TemplateRef<{ $implicit: any }>, registry: SgTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<{ $implicit: any }>, registry: NegTableRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
-  selector: '[sgTableDetailRowParentRef]',
-  inputs: ['columns: sgTableDetailRowParentRef', 'when: sgTableDetailRowParentRefWhen'],
+  selector: '[negTableDetailRowParentRef]',
+  inputs: ['columns: negTableDetailRowParentRef', 'when: negTableDetailRowParentRefWhen'],
 })
-export class SgTableDetailRowParentRefDirective<T> extends CdkRowDef<T> implements OnInit, OnDestroy {
+export class NegTableDetailRowParentRefDirective<T> extends CdkRowDef<T> implements OnInit, OnDestroy {
 
-  constructor(template: TemplateRef<SgTableDetailRowContext<T>>, _differs: IterableDiffers, protected registry: SgTableRegistryService) {
+  constructor(template: TemplateRef<NegTableDetailRowContext<T>>, _differs: IterableDiffers, protected registry: NegTableRegistryService) {
     super(template, _differs);
   }
 
-  clone(): SgTableDetailRowParentRefDirective<T> {
+  clone(): NegTableDetailRowParentRefDirective<T> {
     const clone = Object.create(this);
     this._columnsDiffer = this.columns = undefined;
     return clone;
@@ -57,11 +57,11 @@ export class SgTableDetailRowParentRefDirective<T> extends CdkRowDef<T> implemen
 }
 
 /**
- * Use to set the a default `sgTableDetailRowParentRef` if the user did not set one.
+ * Use to set the a default `negTableDetailRowParentRef` if the user did not set one.
  * @internal
  */
 @Component({
-  selector: 'sg-table-default-detail-row-parent',
-  template: `<sg-table-row *sgTableDetailRowParentRef="let row; table as table" [detailRow]="row" [table]="table"></sg-table-row>`,
+  selector: 'neg-table-default-detail-row-parent',
+  template: `<neg-table-row *negTableDetailRowParentRef="let row; table as table" [detailRow]="row" [table]="table"></neg-table-row>`,
 })
-export class SgTableDefaultDetailRowParentComponent { }
+export class NegTableDefaultDetailRowParentComponent { }

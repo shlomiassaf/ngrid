@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/@sac/table/target-events",
+  "dest": "../../../dist/@neg/table/target-events",
   "lib": {
     "entryFile": "src/index.ts"
   }

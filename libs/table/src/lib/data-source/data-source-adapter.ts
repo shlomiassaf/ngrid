@@ -2,36 +2,36 @@ import { Observable, Subject, combineLatest, of, from, isObservable } from 'rxjs
 import { filter, map, switchMap, skip, tap, debounceTime, delay } from 'rxjs/operators';
 
 import { DataSourceOf } from './data-source';
-import { SgPaginator, SgPaginatorChangeEvent } from '../paginator';
-import { SgTableDataSourceSortChange, DataSourceFilter } from './types';
+import { NegPaginator, NegPaginatorChangeEvent } from '../paginator';
+import { NegTableDataSourceSortChange, DataSourceFilter } from './types';
 import { filter as filteringFn } from './filtering';
 import { applySort } from './sorting';
 
 import {
   RefreshDataWrapper,
-  SgDataSourceConfigurableTriggers,
-  SgDataSourceTriggers,
-  SgDataSourceTriggerCache,
-  SgDataSourceTriggerChangedEvent,
+  NegDataSourceConfigurableTriggers,
+  NegDataSourceTriggers,
+  NegDataSourceTriggerCache,
+  NegDataSourceTriggerChangedEvent,
   TriggerChangedEventFor,
 } from './data-source-adapter.types';
 
 import { createChangeContainer, fromRefreshDataWrapper, EMPTY } from './data-source-adapter.helpers';
 
-const CUSTOM_BEHAVIOR_TRIGGER_KEYS: Array<keyof SgDataSourceConfigurableTriggers> = ['sort', 'filter', 'pagination'];
-const TRIGGER_KEYS: Array<keyof SgDataSourceTriggers> = [...CUSTOM_BEHAVIOR_TRIGGER_KEYS, 'data'];
+const CUSTOM_BEHAVIOR_TRIGGER_KEYS: Array<keyof NegDataSourceConfigurableTriggers> = ['sort', 'filter', 'pagination'];
+const TRIGGER_KEYS: Array<keyof NegDataSourceTriggers> = [...CUSTOM_BEHAVIOR_TRIGGER_KEYS, 'data'];
 const SOURCE_CHANGING_TOKEN = {};
 
 /**
  * An adapter that handles changes
  */
-export class SgDataSourceAdapter<T = any, TData = any> {
+export class NegDataSourceAdapter<T = any, TData = any> {
   onSourceChanged: Observable<T[]>;
   onSourceChanging: Observable<void>;
 
-  protected paginator?: SgPaginator<any>;
-  private readonly config: Partial<Record<keyof SgDataSourceConfigurableTriggers, boolean>>;
-  private cache: SgDataSourceTriggerCache<TData> = { filter: EMPTY, sort: EMPTY, pagination: {}, data: EMPTY };
+  protected paginator?: NegPaginator<any>;
+  private readonly config: Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>>;
+  private cache: NegDataSourceTriggerCache<TData> = { filter: EMPTY, sort: EMPTY, pagination: {}, data: EMPTY };
   private _onSourceChange$: Subject<any | T[]>;
   private _refresh$: Subject<RefreshDataWrapper<TData>>;
   private _lastSource: T[];
@@ -79,8 +79,8 @@ export class SgDataSourceAdapter<T = any, TData = any> {
    * When `sourceFactory` returns false the entire trigger cycle is skipped.
    * @param config A configuration object describing how this adapter should behave.
    */
-  constructor(public sourceFactory: (event: SgDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>),
-              config?: false | Partial<Record<keyof SgDataSourceConfigurableTriggers, boolean>>) {
+  constructor(public sourceFactory: (event: NegDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>),
+              config?: false | Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>>) {
     this.config = Object.assign({}, config || {});
     this.initStreams();
   }
@@ -94,13 +94,13 @@ export class SgDataSourceAdapter<T = any, TData = any> {
     this._refresh$.next({ data });
   }
 
-  setPaginator(paginator: SgPaginator<any> | undefined): void {
+  setPaginator(paginator: NegPaginator<any> | undefined): void {
     this.paginator = paginator;
   }
 
   updateProcessingLogic(filter$: Observable<DataSourceFilter>,
-                        sort$: Observable<SgTableDataSourceSortChange>,
-                        pagination$: Observable<SgPaginatorChangeEvent>): Observable<T[]> {
+                        sort$: Observable<NegTableDataSourceSortChange>,
+                        pagination$: Observable<NegPaginatorChangeEvent>): Observable<T[]> {
     this._lastSource = undefined;
     const changedFilter = e => !this._lastSource || e.changed;
 
@@ -122,7 +122,7 @@ export class SgDataSourceAdapter<T = any, TData = any> {
       .pipe(
         debounceTime(0), // defer to next loop cycle, until no more incoming
         switchMap( ([filter, sort, pagination, data ]) => {
-          const event: SgDataSourceTriggerChangedEvent<TData> = {
+          const event: NegDataSourceTriggerChangedEvent<TData> = {
             filter,
             sort,
             pagination,
@@ -153,7 +153,7 @@ export class SgDataSourceAdapter<T = any, TData = any> {
 
           // mark which of the triggers has changes
           // The logic is based on the user's configuration and the incoming event
-          const withChanges: Partial<Record<keyof SgDataSourceConfigurableTriggers, boolean>> = {};
+          const withChanges: Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>> = {};
           for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
             if (!config[key] && (isFirst || event[key].changed)) {
               withChanges[key] = true;
@@ -216,7 +216,7 @@ export class SgDataSourceAdapter<T = any, TData = any> {
     return data;
   }
 
-  protected applySort(data: T[], event: SgTableDataSourceSortChange): T[] {
+  protected applySort(data: T[], event: NegTableDataSourceSortChange): T[] {
     return applySort(event.column, event.sort, data);
   }
 
@@ -263,7 +263,7 @@ export class SgDataSourceAdapter<T = any, TData = any> {
    * When the response is false that handler wants to skip this cycle, this means that onSourceChanged will not emit and
    * a dead-end observable is returned (observable that will never emit).
    */
-  private runHandle(event: SgDataSourceTriggerChangedEvent<TData>): Observable<T[]> {
+  private runHandle(event: NegDataSourceTriggerChangedEvent<TData>): Observable<T[]> {
     this._onSourceChange$.next(SOURCE_CHANGING_TOKEN);
 
     const result = this.sourceFactory(event);

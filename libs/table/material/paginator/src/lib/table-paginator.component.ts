@@ -9,12 +9,12 @@ import {
 } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
-import { SgPagingPaginator, SgPaginatorChangeEvent, SgTableComponent, KillOnDestroy } from '@sac/table';
+import { NegPagingPaginator, NegPaginatorChangeEvent, NegTableComponent, KillOnDestroy } from '@neg/table';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
 
 @Component({
-  selector: 'sg-table-paginator',
+  selector: 'neg-table-paginator',
   templateUrl: './table-paginator.component.html',
   styleUrls: ['./table-paginator.component.scss'],
   host: {
@@ -24,7 +24,7 @@ const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
   encapsulation: ViewEncapsulation.None
 })
 @KillOnDestroy()
-export class SgPaginatorComponent implements OnDestroy {
+export class NegPaginatorComponent implements OnDestroy {
   pages: number[] = [];
   pageSizes: number[] = DEFAULT_PAGE_SIZE_OPTIONS.slice();
 
@@ -35,8 +35,8 @@ export class SgPaginatorComponent implements OnDestroy {
     this.updatePageSizes();
   }
 
-  @Input() get paginator(): SgPagingPaginator { return this._paginator; }
-  set paginator(value: SgPagingPaginator) {
+  @Input() get paginator(): NegPagingPaginator { return this._paginator; }
+  set paginator(value: NegPagingPaginator) {
     if (this._paginator === value) {
       return;
     }
@@ -53,12 +53,12 @@ export class SgPaginatorComponent implements OnDestroy {
     }
   }
 
-  @Input() table: SgTableComponent<any>;
+  @Input() table: NegTableComponent<any>;
 
   private _pageSizeOptions: number[];
-  private _paginator: SgPagingPaginator;
+  private _paginator: NegPagingPaginator;
 
-  constructor(@Optional() table: SgTableComponent<any>,
+  constructor(@Optional() table: NegTableComponent<any>,
               public _intl: MatPaginatorIntl,
               private cdr: ChangeDetectorRef) {
     if (table) {
@@ -80,7 +80,7 @@ export class SgPaginatorComponent implements OnDestroy {
     this.pageSizes.sort((a, b) => a - b);
   }
 
-  private handlePageChange(event: SgPaginatorChangeEvent): void {
+  private handlePageChange(event: NegPaginatorChangeEvent): void {
     if (this.pages.length !== this.paginator.totalPages) {
       const pages = this.pages = [];
       for (let i = 1, len = this.paginator.totalPages+1; i<len; i++) { pages.push(i); }

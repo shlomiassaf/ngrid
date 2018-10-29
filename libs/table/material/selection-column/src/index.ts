@@ -1,1 +1,1 @@
-export { SgTableCheckboxModule } from './lib/table-checkbox.module';
+export { NegTableCheckboxModule } from './lib/table-checkbox.module';

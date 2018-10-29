@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MatSortModule, MatSortHeader } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 
-import { SgTableModule } from '@sac/table';
-import { SgTableMatSortDirective } from './mat-sort.directive';
+import { NegTableModule } from '@neg/table';
+import { NegTableMatSortDirective } from './mat-sort.directive';
 
 @NgModule({
-  imports: [ CommonModule, MatButtonModule, MatSortModule, SgTableModule ],
-  declarations: [ SgTableMatSortDirective ],
-  exports: [ SgTableMatSortDirective, MatSortModule ],
+  imports: [ CommonModule, MatButtonModule, MatSortModule, NegTableModule ],
+  declarations: [ NegTableMatSortDirective ],
+  exports: [ NegTableMatSortDirective, MatSortModule ],
   entryComponents: [ MatSortHeader ]
 })
-export class SgTableMatSortModule { }
+export class NegTableMatSortModule { }

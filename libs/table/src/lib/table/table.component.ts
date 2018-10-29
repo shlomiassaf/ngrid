@@ -25,22 +25,22 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
-import { SgTablePluginController, SgTablePluginContext } from '../ext/plugin-control';
-import { SgTablePaginatorKind } from '../paginator';
-import { SgCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
-import { SgDataSource, DataSourceOf, createDS } from '../data-source/index';
-import { SgCdkTableComponent } from './sg-cdk-table/sg-cdk-table.component';
+import { NegTablePluginController, NegTablePluginContext } from '../ext/plugin-control';
+import { NegTablePaginatorKind } from '../paginator';
+import { NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
+import { NegDataSource, DataSourceOf, createDS } from '../data-source/index';
+import { NegCdkTableComponent } from './neg-cdk-table/neg-cdk-table.component';
 import { updateColumnWidths, KillOnDestroy } from './utils';
 import { findCellDef } from './directives/cell-def';
-import { SgColumnSizeInfo } from './types';
+import { NegColumnSizeInfo } from './types';
 import {
-  SgTableCellTemplateContext,
-  SgTableMetaCellTemplateContext,
-  SgColumn,
-  SgColumnStore, SgMetaColumnStore, SgTableColumnSet, SgTableColumnDefinitionSet,
+  NegTableCellTemplateContext,
+  NegTableMetaCellTemplateContext,
+  NegColumn,
+  NegColumnStore, NegMetaColumnStore, NegTableColumnSet, NegTableColumnDefinitionSet,
 } from './columns';
-import { SgTableRegistryService } from './table-registry.service';
-import { SgTableConfigService } from './services/config';
+import { NegTableRegistryService } from './table-registry.service';
+import { NegTableConfigService } from './services/config';
 import {
   DynamicColumnWidthLogic,
   BoxModelSpaceStrategy,
@@ -50,30 +50,30 @@ import {
 
 const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border: 'none', visibility: 'collapse' };
 
-export function pluginControllerFactory(table: { _plugin: SgTablePluginContext; }) {
+export function pluginControllerFactory(table: { _plugin: NegTablePluginContext; }) {
   return table._plugin.controller;
 }
 
 @Component({
-  selector: 'sg-table',
+  selector: 'neg-table',
   templateUrl: './table.component.html',
   styleUrls: [ './table.component.scss' ],
   host: { // tslint:disable-line:use-host-property-decorator
-    '[class.sg-table-empty]': '!dataSource || dataSource.renderLength === 0',
+    '[class.neg-table-empty]': '!dataSource || dataSource.renderLength === 0',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
-    SgTableRegistryService,
+    NegTableRegistryService,
     {
-      provide: SgTablePluginController,
+      provide: NegTablePluginController,
       useFactory: pluginControllerFactory,
-      deps: [forwardRef(() => SgTableComponent)],
+      deps: [forwardRef(() => NegTableComponent)],
     }
   ]
 })
 @KillOnDestroy()
-export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
+export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
   readonly self = this;
 
   /**
@@ -92,8 +92,8 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
         : DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY
       ;
       if (this.isInit) {
-        // The UI changes are applied by toggle the `sg-table-margin-cell-box-model` CSS class.
-        // This is managed through binding in `SgCdkTableComponent`.
+        // The UI changes are applied by toggle the `neg-table-margin-cell-box-model` CSS class.
+        // This is managed through binding in `NegCdkTableComponent`.
         // After this change we need to measure the cell's width again so we trigger a resizeRows call.
         // We must run it deferred to allow binding to commit.
         this.ngZone.onStable.pipe(first()).subscribe( () => this.resizeRows(this._store.table.map( c => c.sizeInfo ))  );
@@ -149,8 +149,8 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
     }
   }
 
-  @Input() get dataSource(): SgDataSource<T> { return this._dataSource };
-  set dataSource(value: SgDataSource<T>) {
+  @Input() get dataSource(): NegDataSource<T> { return this._dataSource };
+  set dataSource(value: NegDataSource<T>) {
     if (this._dataSource !== value) {
       this.setupPaginator();
 
@@ -181,8 +181,8 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
     }
   }
 
-  @Input() get usePagination(): SgTablePaginatorKind | false { return this._pagination; }
-  set usePagination(value: SgTablePaginatorKind | false) {
+  @Input() get usePagination(): NegTablePaginatorKind | false { return this._pagination; }
+  set usePagination(value: NegTablePaginatorKind | false) {
     if ((value as any) === '') {
       value = 'pageNumber';
     }
@@ -211,7 +211,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
   /**
    * The column definitions for this table.
    */
-  @Input() columns: SgTableColumnSet | SgTableColumnDefinitionSet;
+  @Input() columns: NegTableColumnSet | NegTableColumnDefinitionSet;
 
   @Input() set hideColumns(value: string[]) {
     this._hideColumns = value;
@@ -221,15 +221,15 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
   rowFocus: 0 | '' = '';
   cellFocus: 0 | '' = '';
 
-  private _dataSource: SgDataSource<T>;
+  private _dataSource: NegDataSource<T>;
   private _dataSourceOf: DataSourceOf<T>;
 
-  @ViewChild(SgCdkVirtualScrollViewportComponent) viewport: SgCdkVirtualScrollViewportComponent;
+  @ViewChild(NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent) viewport: NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent;
   @ViewChild('beforeContent', { read: ViewContainerRef}) _vcRefBefore: ViewContainerRef;
   @ViewChild('afterContent', { read: ViewContainerRef}) _vcRefAfter: ViewContainerRef;
-  @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<SgTableCellTemplateContext<T>>;
-  @ViewChild('fbHeaderCell', { read: TemplateRef}) _fbHeaderCell: TemplateRef<SgTableMetaCellTemplateContext<T>>;
-  @ViewChild('fbFooterCell', { read: TemplateRef}) _fbFooterCell: TemplateRef<SgTableMetaCellTemplateContext<T>>;
+  @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<NegTableCellTemplateContext<T>>;
+  @ViewChild('fbHeaderCell', { read: TemplateRef}) _fbHeaderCell: TemplateRef<NegTableMetaCellTemplateContext<T>>;
+  @ViewChild('fbFooterCell', { read: TemplateRef}) _fbFooterCell: TemplateRef<NegTableMetaCellTemplateContext<T>>;
   @ViewChild(CdkRowDef) _tableRowDef: CdkRowDef<T>;
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
@@ -239,18 +239,18 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
    */
   readonly isInit: boolean;
 
-  _cdkTable: SgCdkTableComponent<T>;
-  _store: SgColumnStore = new SgColumnStore();
+  _cdkTable: NegCdkTableComponent<T>;
+  _store: NegColumnStore = new NegColumnStore();
   private _hideColumnsDirty: boolean;
   private _hideColumns: string[];
   private _colHideDiffer: IterableDiffer<string>;
   private _noDateEmbeddedVRef: EmbeddedViewRef<any>;
   private _paginatorEmbeddedVRef: EmbeddedViewRef<any>;
-  private _pagination: SgTablePaginatorKind | false;
+  private _pagination: NegTablePaginatorKind | false;
   private _noCachePaginator = false;
   private _minimumRowWidth: string;
 
-  private _plugin: SgTablePluginContext;
+  private _plugin: NegTablePluginContext;
 
   constructor(injector: Injector,
               vcRef: ViewContainerRef,
@@ -258,8 +258,8 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
               private differs: IterableDiffers,
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
-              private config: SgTableConfigService,
-              public registry: SgTableRegistryService) {
+              private config: NegTableConfigService,
+              public registry: NegTableRegistryService) {
     const tableConfig = config.get('table');
     this.boxSpaceModel = tableConfig.boxSpaceModel;
     this.showHeader = tableConfig.showHeader;
@@ -278,7 +278,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
       ],
       parent: injector,
     });
-    this._plugin = new SgTablePluginContext(this, pluginInjector);
+    this._plugin = new NegTablePluginContext(this, pluginInjector);
   }
 
   ngDoCheck(): void {
@@ -401,7 +401,7 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
     this._plugin.emitEvent({ kind: 'onInvalidateHeaders' });
   }
 
-  resizeRows(data: SgColumnSizeInfo[]): void {
+  resizeRows(data: NegColumnSizeInfo[]): void {
     // stores and calculates width for columns added to it. Aggregate's the total width of all added columns.
     const rowWidth = new DynamicColumnWidthLogic(this._cellWidthLogic);
 
@@ -520,11 +520,11 @@ export class SgTableComponent<T> implements AfterContentInit, AfterViewInit, DoC
   }
 
   private attachCustomHeaderCellTemplates(): void {
-    const columns: Array<SgColumn | SgMetaColumnStore> = [].concat(this._store.table, this._store.meta);
+    const columns: Array<NegColumn | NegMetaColumnStore> = [].concat(this._store.table, this._store.meta);
     const defaultHeaderCellTemplate = this.registry.getMultiDefault('headerCell') || { tRef: this._fbHeaderCell };
     const defaultFooterCellTemplate = this.registry.getMultiDefault('footerCell') || { tRef: this._fbFooterCell };
     for (const col of columns) {
-      if (col instanceof SgColumn) {
+      if (col instanceof NegColumn) {
         const headerCellDef = findCellDef<T>(this.registry, col, 'headerCell', true) || defaultHeaderCellTemplate;
         const footerCellDef = findCellDef<T>(this.registry, col, 'footerCell', true) || defaultFooterCellTemplate;
         col.headerCellTpl = headerCellDef.tRef;

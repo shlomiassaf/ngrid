@@ -1,5 +1,5 @@
 
-import { SourceCodeRef } from '@sac/docsi/webpack';
+import { SourceCodeRef } from '@neg/docsi/webpack';
 
 export function normalizeExtractCode(code: SourceCodeRef[]): SourceCodeRef[] {
   if (!code) {

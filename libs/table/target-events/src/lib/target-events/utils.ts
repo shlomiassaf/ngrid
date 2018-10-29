@@ -1,8 +1,8 @@
 import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
-import { SgTableMatrixRow } from './events';
+import { NegTableMatrixRow } from './events';
 
 /**
- * Returns true if the element is a row element (`sg-table-row`, `cdk-row`).
+ * Returns true if the element is a row element (`neg-table-row`, `cdk-row`).
  *
  * This function works under the following assumptions:
  *
@@ -50,11 +50,11 @@ export function findCellIndex(cell: Element): number {
  *   - Allowed values for "data-rowtype" are: 'header' | 'meta-header' | 'footer' | 'meta-footer' | 'data'
  *   - Row's representing data items (data-rowtype="data") can omit the type attribute and the function will infer it.
  *
- * NOTE that this function DOES NOT identify subType of `meta-group` (`SgTableMatrixRow<'header' | 'footer', 'meta-group'>`), it will return it as
+ * NOTE that this function DOES NOT identify subType of `meta-group` (`NegTableMatrixRow<'header' | 'footer', 'meta-group'>`), it will return it as
  * 'meta`, you need to handle this case specifically.
  */
 export function matrixRowFromRow(row: Element,
-                                 vcRef: ViewContainerRef): SgTableMatrixRow<'data'> | SgTableMatrixRow<'header' | 'footer'> | SgTableMatrixRow<'header' | 'footer', 'meta'> | undefined  {
+                                 vcRef: ViewContainerRef): NegTableMatrixRow<'data'> | NegTableMatrixRow<'header' | 'footer'> | NegTableMatrixRow<'header' | 'footer', 'meta'> | undefined  {
   const rowAttrType: 'header' | 'data' | 'footer' | 'meta-header' | 'meta-footer' = row.getAttribute('data-rowtype') as any || 'data';
 
   // TODO: Error if rowAttrType is not one of the allowed values!
@@ -74,7 +74,7 @@ export function matrixRowFromRow(row: Element,
             type: 'data',
             subType: 'data',
             rowIndex,
-          } as { rowIndex: number } & SgTableMatrixRow<'data'>;
+          } as { rowIndex: number } & NegTableMatrixRow<'data'>;
         }
         rowIndex--;
       }
@@ -85,7 +85,7 @@ export function matrixRowFromRow(row: Element,
         type: rowAttrType,
         subType: 'data',
         rowIndex,
-      } as SgTableMatrixRow<'header' | 'footer'>;
+      } as NegTableMatrixRow<'header' | 'footer'>;
     default:
       while (row.previousElementSibling && row.previousElementSibling.getAttribute('data-rowtype') === rowAttrType) {
         rowIndex++;
@@ -95,6 +95,6 @@ export function matrixRowFromRow(row: Element,
         type: rowAttrType === 'meta-footer' ? 'footer' : 'header',
         subType: 'meta',
         rowIndex,
-      } as SgTableMatrixRow<'header' | 'footer', 'meta'>;
+      } as NegTableMatrixRow<'header' | 'footer', 'meta'>;
   }
 }

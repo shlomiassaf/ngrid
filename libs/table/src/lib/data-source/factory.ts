@@ -1,19 +1,19 @@
-import { SgDataSource, DataSourceOf, SgDataSourceOptions } from './data-source';
-import { SgDataSourceAdapter } from './data-source-adapter';
+import { NegDataSource, DataSourceOf, NegDataSourceOptions } from './data-source';
+import { NegDataSourceAdapter } from './data-source-adapter';
 import {
-  SgDataSourceConfigurableTriggers,
-  SgDataSourceTriggerChangedEvent,
+  NegDataSourceConfigurableTriggers,
+  NegDataSourceTriggerChangedEvent,
  } from './data-source-adapter.types';
 
 interface AdapterParams<T> {
-  onTrigger?: (event: SgDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>);
-  customTriggers?: false | Partial<Record<keyof SgDataSourceConfigurableTriggers, boolean>>;
+  onTrigger?: (event: NegDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>);
+  customTriggers?: false | Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>>;
 }
 
-export class SgDataSourceFactory<T, TData = any> {
+export class NegDataSourceFactory<T, TData = any> {
   private _adapter: AdapterParams<T> = { };
-  private _dsOptions: SgDataSourceOptions = { };
-  private _onCreated: (dataSource: SgDataSource<T, TData>) => void;
+  private _dsOptions: NegDataSourceOptions = { };
+  private _onCreated: (dataSource: NegDataSource<T, TData>) => void;
 
   /**
    * Set the main trigger handler.
@@ -22,7 +22,7 @@ export class SgDataSourceFactory<T, TData = any> {
    * By default the handler is triggered only when the datasource is required.
    * This can happend when:
    *   - The table connected to the datasource.
-   *   - A manual call to `SgDataSource.refresh()` was invoked.
+   *   - A manual call to `NegDataSource.refresh()` was invoked.
    *
    * There are additional triggers (filter/sort/pagiantion) which occur when their values change, e.g. when
    * a filter has change or when a page in the paginator was changed.
@@ -32,7 +32,7 @@ export class SgDataSourceFactory<T, TData = any> {
    *
    * To handle additional trigger you need to explicitly set them using `setCustomTriggers`.
    */
-  onTrigger(handler: (event: SgDataSourceTriggerChangedEvent<TData>) => (false | DataSourceOf<T>)): this {
+  onTrigger(handler: (event: NegDataSourceTriggerChangedEvent<TData>) => (false | DataSourceOf<T>)): this {
     this._adapter.onTrigger = handler;
     return this;
   }
@@ -44,7 +44,7 @@ export class SgDataSourceFactory<T, TData = any> {
    *
    * You can mix and match, e.g. support only paging from the server, or only paging and sorting, and leave filtering for the client side.
    */
-  setCustomTriggers(...triggers: Array<keyof SgDataSourceConfigurableTriggers>): this {
+  setCustomTriggers(...triggers: Array<keyof NegDataSourceConfigurableTriggers>): this {
     if (triggers.length === 0) {
       this._adapter.customTriggers = false;
     } else {
@@ -72,18 +72,18 @@ export class SgDataSourceFactory<T, TData = any> {
     return this;
   }
 
-  onCreated(handler: (dataSource: SgDataSource<T, TData>) => void ): this {
+  onCreated(handler: (dataSource: NegDataSource<T, TData>) => void ): this {
     this._onCreated = handler;
     return this;
   }
 
-  create(): SgDataSource<T, TData> {
+  create(): NegDataSource<T, TData> {
     const _adapter = this._adapter;
-    const adapter = new SgDataSourceAdapter<T, TData>(
+    const adapter = new NegDataSourceAdapter<T, TData>(
       _adapter.onTrigger,
       _adapter.customTriggers || false,
     )
-    const ds = new SgDataSource<T, TData>(adapter, this._dsOptions);
+    const ds = new NegDataSource<T, TData>(adapter, this._dsOptions);
     if (this._onCreated) {
       this._onCreated(ds);
     }
@@ -91,6 +91,6 @@ export class SgDataSourceFactory<T, TData = any> {
   }
 }
 
-export function createDS<T, TData = T[]>(): SgDataSourceFactory<T, TData> {
-  return new SgDataSourceFactory<T, TData>();
+export function createDS<T, TData = T[]>(): NegDataSourceFactory<T, TData> {
+  return new NegDataSourceFactory<T, TData>();
 }

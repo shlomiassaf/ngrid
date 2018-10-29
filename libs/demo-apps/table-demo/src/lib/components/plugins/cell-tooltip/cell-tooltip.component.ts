@@ -1,12 +1,12 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@sac/table';
-import { SgTableCellEvent } from '@sac/table/target-events';
+import { createDS, columnFactory } from '@neg/table';
+import { NegTableCellEvent } from '@neg/table/target-events';
 
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -21,7 +21,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-cell-tooltip-table-example-component',
+  selector: 'neg-cell-tooltip-table-example-component',
   templateUrl: './cell-tooltip.component.html',
   styleUrls: ['./cell-tooltip.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -38,10 +38,10 @@ export class CellTooltipTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 
-  getTooltipMessage(event: SgTableCellEvent<Person>): string {
+  getTooltipMessage(event: NegTableCellEvent<Person>): string {
     return `${event.colIndex} / ${event.rowIndex} -> ${event.rowIndex % 2 ? 'ODD' : 'EVEN'} ROW\n\n${event.cellTarget.innerText}`;
   }
 }
-/* @sac-example:ex-3 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-1 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-1 */

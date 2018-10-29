@@ -1,2 +1,2 @@
-export { SgTableCellTooltipModule } from './lib/cell-tooltip.module';
-export { SgTableCellTooltipDirective, CellTooltipOptions } from './lib/cell-tooltip.directive';
+export { NegTableCellTooltipModule } from './lib/cell-tooltip.module';
+export { NegTableCellTooltipDirective, CellTooltipOptions } from './lib/cell-tooltip.directive';

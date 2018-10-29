@@ -4,20 +4,20 @@ import { takeUntil, map } from 'rxjs/operators';
 import { NgZone, ViewContainerRef } from '@angular/core';
 import { CollectionViewer, ListRange } from '@angular/cdk/collections';
 
-import { SgTableComponent } from '../../table.component';
-import { SgTablePluginController } from '../../../ext/plugin-control';
-import { SgDataSource } from '../../../data-source/data-source';
-import { SgCdkTableComponent } from '../../sg-cdk-table/sg-cdk-table.component';
-import { SgCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
+import { NegTableComponent } from '../../table.component';
+import { NegTablePluginController } from '../../../ext/plugin-control';
+import { NegDataSource } from '../../../data-source/data-source';
+import { NegCdkTableComponent } from '../../neg-cdk-table/neg-cdk-table.component';
+import { NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import { splitRange, updateStickyRows, measureRangeSize, StickyDirectionVt } from './utils';
 
-export class SgVirtualScrollForOf<T> implements CollectionViewer {
+export class NegVirtualScrollForOf<T> implements CollectionViewer {
   viewChange: Observable<ListRange>;
 
   dataStream: Observable<T[] | ReadonlyArray<T>>;
 
   private destroyed = new Subject<void>();
-  private ds: SgDataSource<T>;
+  private ds: NegDataSource<T>;
 
   private get vcRefs(): { header: ViewContainerRef; data: ViewContainerRef; footer: ViewContainerRef; } {
     const value = {
@@ -38,13 +38,13 @@ export class SgVirtualScrollForOf<T> implements CollectionViewer {
   private header = { rows: [] as HTMLElement[], sticky: [] as boolean[] };
   private footer = { rows: [] as HTMLElement[], sticky: [] as boolean[] };
 
-  constructor(table: SgTableComponent<T>,
-              private cdkTable: SgCdkTableComponent<T>,
-              private viewport: SgCdkVirtualScrollViewportComponent,
+  constructor(table: NegTableComponent<T>,
+              private cdkTable: NegCdkTableComponent<T>,
+              private viewport: NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent,
               private ngZone: NgZone) {
     this.viewChange = this.cdkTable.viewChange;
 
-    SgTablePluginController.find(table).events
+    NegTablePluginController.find(table).events
       .pipe( takeUntil(this.destroyed) )
       .subscribe( event => {
         if (event.kind === 'onDataSource') {
@@ -99,7 +99,7 @@ export class SgVirtualScrollForOf<T> implements CollectionViewer {
     this.destroyed.complete();
   }
 
-  private attachView(ds: SgDataSource<T>): void {
+  private attachView(ds: NegDataSource<T>): void {
     if (ds) {
       this.ds = ds;
       this._renderedRanges = [ { start: 0, end: 0 }, this.cdkTable.viewChange.value, { start: 0, end: 0 } ];

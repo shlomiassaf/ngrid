@@ -1,12 +1,12 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
-import { columnFactory, createDS, SgColumn } from '@sac/table';
-import { SgTableMatSortDirective } from '@sac/table/material/sort';
+import { columnFactory, createDS, NegColumn } from '@neg/table';
+import { NegTableMatSortDirective } from '@neg/table/material/sort';
 
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -22,7 +22,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-mat-sort-table-example-component',
+  selector: 'neg-mat-sort-table-example-component',
   templateUrl: './mat-sort.component.html',
   styleUrls: ['./mat-sort.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -36,14 +36,14 @@ export class MatSortTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 
-  toggleActive(matSort: SgTableMatSortDirective, column: SgColumn, state: boolean): void {
+  toggleActive(matSort: NegTableMatSortDirective, column: NegColumn, state: boolean): void {
     matSort.table.dataSource.setSort(column, { order: state ? 'asc' : undefined });
   }
 
-  isActive(matSort: SgTableMatSortDirective, column: SgColumn): boolean {
+  isActive(matSort: NegTableMatSortDirective, column: NegColumn): boolean {
     return matSort.sort.active === column.id && !!matSort.sort.direction;
   }
 }
-/* @sac-example:ex-3 */
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */

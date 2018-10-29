@@ -1,2 +1,2 @@
-export { SgTableMatSortDirective }  from './lib/mat-sort.directive';
-export { SgTableMatSortModule } from './lib/mat-sort.module';
+export { NegTableMatSortDirective }  from './lib/mat-sort.directive';
+export { NegTableMatSortModule } from './lib/mat-sort.module';

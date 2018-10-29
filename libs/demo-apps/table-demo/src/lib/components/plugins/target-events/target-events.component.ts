@@ -1,15 +1,15 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@sac/table';
-import { SgTableRowEvent, SgTableCellEvent } from '@sac/table/target-events';
+import { createDS, columnFactory } from '@neg/table';
+import { NegTableRowEvent, NegTableCellEvent } from '@neg/table/target-events';
 
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
-function isCellEvent<T>(event: SgTableRowEvent<T> | SgTableCellEvent<T>): event is SgTableCellEvent<T> {
-  return !!(event as  SgTableCellEvent<T>).cellTarget;
+function isCellEvent<T>(event: NegTableRowEvent<T> | NegTableCellEvent<T>): event is NegTableCellEvent<T> {
+  return !!(event as  NegTableCellEvent<T>).cellTarget;
 }
 
 const COLUMNS = columnFactory()
@@ -60,7 +60,7 @@ const COLUMNS2 = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-target-events-table-example-component',
+  selector: 'neg-target-events-table-example-component',
   templateUrl: './target-events.component.html',
   styleUrls: ['./target-events.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -77,7 +77,7 @@ export class TargetEventsTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 
-  onClickEvents(event: SgTableRowEvent<Person> | SgTableCellEvent<Person>) {
+  onClickEvents(event: NegTableRowEvent<Person> | NegTableCellEvent<Person>) {
     let cellSuffix = '';
     if (isCellEvent(event)) {
       cellSuffix = `  CELL: ${event.colIndex}`;
@@ -89,7 +89,7 @@ export class TargetEventsTableExampleComponent {
     alert(`CLICK EVENT at ROW: ${event.rowIndex}${cellSuffix}\nType: ${event.type}\nSubType: ${event.subType}`);
   }
 
-  onEnterLeaveEvents(event: SgTableRowEvent<Person> | SgTableCellEvent<Person>, isEnter = false) {
+  onEnterLeaveEvents(event: NegTableRowEvent<Person> | NegTableCellEvent<Person>, isEnter = false) {
     if (isCellEvent(event)) {
       if (isEnter) {
         event.cellTarget.classList.add('cell-hovered');
@@ -108,6 +108,6 @@ export class TargetEventsTableExampleComponent {
     }
   }
 }
-/* @sac-example:ex-3 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-1 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-1 */

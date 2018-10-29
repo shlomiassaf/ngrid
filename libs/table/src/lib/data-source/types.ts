@@ -1,38 +1,38 @@
-import { SgColumn } from '../table/columns/column';
+import { NegColumn } from '../table/columns/column';
 
-export type SgTableSortOrder = 'asc' | 'desc';
+export type NegTableSortOrder = 'asc' | 'desc';
 
-export interface SgTableSortInstructions {
-  order?: SgTableSortOrder;
+export interface NegTableSortInstructions {
+  order?: NegTableSortOrder;
 }
 
 /**
  * Event fired when sort changes.
  */
-export interface SgTableSortDefinition extends SgTableSortInstructions {
-  sortFn?: SgTableSorter;
+export interface NegTableSortDefinition extends NegTableSortInstructions {
+  sortFn?: NegTableSorter;
 }
 
 /**
- * A function that can sort a dataset based on `SgTableSortInstructions`
+ * A function that can sort a dataset based on `NegTableSortInstructions`
  */
-export interface SgTableSorter<T = any> {
-  (column: SgColumn, sort: SgTableSortInstructions, data: T[]): T[];
+export interface NegTableSorter<T = any> {
+  (column: NegColumn, sort: NegTableSortInstructions, data: T[]): T[];
 }
 
-export interface SgTableDataSourceSortChange {
-  column: SgColumn;
-  sort: SgTableSortDefinition;
+export interface NegTableDataSourceSortChange {
+  column: NegColumn;
+  sort: NegTableSortDefinition;
 }
 
 
 // FILTERING
-export type DataSourcePredicate = (item: any, properties: SgColumn[]) => boolean;
+export type DataSourcePredicate = (item: any, properties: NegColumn[]) => boolean;
 export type DataSourceFilterToken = undefined | DataSourcePredicate | any;
 
 export interface DataSourceFilterType {
   type: 'value' | 'predicate';
-  columns: SgColumn[];
+  columns: NegColumn[];
   filter: any | DataSourcePredicate;
 }
 

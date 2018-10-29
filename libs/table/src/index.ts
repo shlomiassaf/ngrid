@@ -1,64 +1,64 @@
 export {
-  SgTablePaginatorKind,
-  SgPaginator,
-  SgPagingPaginator,
-  SgTokenPaginator,
-  SgPaginatorChangeEvent
+  NegTablePaginatorKind,
+  NegPaginator,
+  NegPagingPaginator,
+  NegTokenPaginator,
+  NegPaginatorChangeEvent
 } from './lib/paginator/index';
 
 export {
-  SgDataSourceConfigurableTriggers,
-  SgDataSourceTriggers,
-  SgDataSourceTriggerChange,
-  SgDataSourceTriggerChangedEvent,
-  SgDataSourceAdapter,
-  SgDataSource, SgDataSourceOptions,
-  SgTableSortInstructions, SgTableSortDefinition, SgTableSorter, applySort,
-  SgDataSourceFactory, createDS, DataSourceOf,
+  NegDataSourceConfigurableTriggers,
+  NegDataSourceTriggers,
+  NegDataSourceTriggerChange,
+  NegDataSourceTriggerChangedEvent,
+  NegDataSourceAdapter,
+  NegDataSource, NegDataSourceOptions,
+  NegTableSortInstructions, NegTableSortDefinition, NegTableSorter, applySort,
+  NegDataSourceFactory, createDS, DataSourceOf,
 } from './lib/data-source/index';
 
 export {
-  SG_TABLE_CONFIG, SgTableConfig, SgTableConfigService,
+  NEG_TABLE_CONFIG, NegTableConfig, NegTableConfigService,
 
-  SgTableHeaderCellSortContainer,
+  NegTableHeaderCellSortContainer,
 
-  SgColumn, SgMetaColumn, SgColumnGroup, SgColumnFactory, COLUMN, columnFactory,
+  NegColumn, NegMetaColumn, NegColumnGroup, NegColumnFactory, COLUMN, columnFactory,
 
-  SgTableComponent,
-  SgTableRegistryService,
+  NegTableComponent,
+  NegTableRegistryService,
 
-  SgTableSingleTemplateRegistryDirective,
-  SgTableCellDefDirective,
-  SgTableHeaderCellDefDirective,
-  SgTableFooterCellDefDirective,
+  NegTableSingleTemplateRegistryDirective,
+  NegTableCellDefDirective,
+  NegTableHeaderCellDefDirective,
+  NegTableFooterCellDefDirective,
   ParentNgStyleDirective, ParentNgClassDirective,
-  SgTableNoDataRefDirective,
-  SgColumnTypeDefinition, SgColumnTypeDefinitionDataMap,
-  SgColumnDefinition,
-  SgColumnGroupDefinition,
-  SgColumnSet,
-  SgTableColumnSet, SgTableColumnDefinitionSet,
+  NegTableNoDataRefDirective,
+  NegColumnTypeDefinition, NegColumnTypeDefinitionDataMap,
+  NegColumnDefinition,
+  NegColumnGroupDefinition,
+  NegColumnSet,
+  NegTableColumnSet, NegTableColumnDefinitionSet,
 
   NoVirtualScrollStrategy,
 
-  SgTableCellClickEvent,
-  SgTableCellTemplateContext,
-  SgTableMetaCellTemplateContext,
+  NegTableCellClickEvent,
+  NegTableCellTemplateContext,
+  NegTableMetaCellTemplateContext,
   KillOnDestroy
 } from './lib/table/index';
 
 export {
-  SgTablePlugin,
-  SgTablePluginExtension,
-  SgTableOnInitEvent,
-  SgTableOnResizeRowtEvent,
-  SgTableOnInvalidateHeadersEvent,
-  SgTableOnDataSourcetEvent,
-  SgTableEvents,
+  NegTablePlugin,
+  NegTablePluginExtension,
+  NegTableOnInitEvent,
+  NegTableOnResizeRowtEvent,
+  NegTableOnInvalidateHeadersEvent,
+  NegTableOnDataSourcetEvent,
+  NegTableEvents,
  } from './lib/ext/types';
 
  export { TablePlugin, TablePluginMetadata } from './lib/ext/table-plugin';
 
-export { SgTablePluginController } from './lib/ext/plugin-control';
+export { NegTablePluginController } from './lib/ext/plugin-control';
 
-export { SgTableModule } from './lib/table.module';
+export { NegTableModule } from './lib/table.module';

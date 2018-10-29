@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
-import { SgTableModule } from '@sac/table';
-import { SgTableTargetEventsPluginDirective } from './target-events/target-events-plugin';
+import { NegTableModule } from '@neg/table';
+import { NegTableTargetEventsPluginDirective } from './target-events/target-events-plugin';
 
 
 @NgModule({
-  imports: [ CommonModule, CdkTableModule, SgTableModule ],
-  declarations: [ SgTableTargetEventsPluginDirective ],
-  exports: [ SgTableTargetEventsPluginDirective  ]
+  imports: [ CommonModule, CdkTableModule, NegTableModule ],
+  declarations: [ NegTableTargetEventsPluginDirective ],
+  exports: [ NegTableTargetEventsPluginDirective  ]
 })
-export class SgTableTargetEventsModule { }
+export class NegTableTargetEventsModule { }

@@ -1,53 +1,53 @@
 // BASED ON:
 // https://github.com/angular/material2/blob/edbbc1bd7299df96a2f9c4200c3832d433f9cf5c/src/lib/table/_table-theme.scss
 
-@import '~@angular/material/theming';
+// THIS FILE REQUIRE @import '~@angular/material/theming';
 
-@mixin sg-cdk-table-theme($theme) {
+@mixin neg-cdk-table-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  .sg-table-row, .sg-table-header-row, .sg-table-footer-row {
+  .neg-table-row, .neg-table-header-row, .neg-table-footer-row {
     position: relative;
   }
 
-  .sg-table-row, .sg-table-header-row, .sg-table-footer-row,
-  .sg-table-header-cell, .sg-table-cell, .sg-table-footer-cell {
+  .neg-table-row, .neg-table-header-row, .neg-table-footer-row,
+  .neg-table-header-cell, .neg-table-cell, .neg-table-footer-cell {
     border-color: mat-color($foreground, divider);
   }
 
-  // border of "padding" cell box model (not .sg-table-margin-cell-box-model)
-  .sg-table-header-cell.sg-header-group-cell:before {
+  // border of "padding" cell box model (not .neg-table-margin-cell-box-model)
+  .neg-table-header-cell.neg-header-group-cell:before {
     border-color: mat-color($foreground, divider);
   }
 
-  .sg-table-row, .sg-table-header-row, .sg-table-footer-row {
+  .neg-table-row, .neg-table-header-row, .neg-table-footer-row {
     background: mat-color($background, 'card');
   }
 
-  .sg-table-header-cell {
+  .neg-table-header-cell {
     color: mat-color($foreground, secondary-text);
   }
 
-  .sg-table-cell, .sg-table-footer-cell {
+  .neg-table-cell, .neg-table-footer-cell {
     color: mat-color($foreground, text);
   }
 }
 
-@mixin sg-cdk-table-typography($config) {
-  .sg-cdk-table {
+@mixin neg-cdk-table-typography($config) {
+  .neg-cdk-table {
     font-family: mat-font-family($config);
   }
 
-  .sg-table-header-cell {
+  .neg-table-header-cell {
     font-size: mat-font-size($config, caption);
     font-weight: mat-font-weight($config, body-2);
   }
 
-  .sg-table-cell, .sg-table-footer-cell {
+  .neg-table-cell, .neg-table-footer-cell {
     font-size: mat-font-size($config, body-1);
   }
 }

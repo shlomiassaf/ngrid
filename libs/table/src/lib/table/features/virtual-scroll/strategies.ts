@@ -25,14 +25,14 @@ export function _vScrollStrategyFactory(directive: { _scrollStrategy: VirtualScr
 
 /** A virtual scroll strategy that supports unknown or dynamic size items. */
 @Directive({
-  selector: 'sg-table[vScrollAuto], sg-table[vScrollFixed], sg-table[vScrollNone]',
+  selector: 'neg-table[vScrollAuto], neg-table[vScrollFixed], neg-table[vScrollNone]',
   providers: [{
     provide: VIRTUAL_SCROLL_STRATEGY,
     useFactory: _vScrollStrategyFactory,
-    deps: [forwardRef(() => SgCdkVirtualScrollDirective)],
+    deps: [forwardRef(() => NegCdkVirtualScrollViewportComponentCdkVirtualScrollDirective)],
   }],
 })
-export class SgCdkVirtualScrollDirective implements OnChanges {
+export class NegCdkVirtualScrollViewportComponentCdkVirtualScrollDirective implements OnChanges {
   /**
    * The size of the items in the list (in pixels).
    * Valid for `vScrollFixed` only!

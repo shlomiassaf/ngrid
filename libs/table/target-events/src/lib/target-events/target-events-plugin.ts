@@ -1,36 +1,36 @@
 import { fromEvent } from 'rxjs';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
-import { SgTableComponent, SgTablePluginController, TablePlugin, KillOnDestroy } from '@sac/table';
+import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy } from '@neg/table';
 
 import * as Events from './events';
 import { matrixRowFromRow, isRowContainer, findCellIndex, findParentCell } from './utils';
 
-declare module '@sac/table/lib/ext/types' {
-  interface SgTablePluginExtension {
-    targetEvents?: SgTableTargetEventsPlugin;
+declare module '@neg/table/lib/ext/types' {
+  interface NegTablePluginExtension {
+    targetEvents?: NegTableTargetEventsPlugin;
   }
-  interface SgTablePluginExtensionFactories {
-    targetEvents: keyof typeof SgTableTargetEventsPlugin;
+  interface NegTablePluginExtensionFactories {
+    targetEvents: keyof typeof NegTableTargetEventsPlugin;
   }
 }
 
 const PLUGIN_KEY: 'targetEvents' = 'targetEvents';
 
 @TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
-export class SgTableTargetEventsPlugin<T = any> {
-  rowClick = new EventEmitter<Events.SgTableRowEvent<T>>();
-  rowEnter = new EventEmitter<Events.SgTableRowEvent<T>>();
-  rowLeave = new EventEmitter<Events.SgTableRowEvent<T>>();
+export class NegTableTargetEventsPlugin<T = any> {
+  rowClick = new EventEmitter<Events.NegTableRowEvent<T>>();
+  rowEnter = new EventEmitter<Events.NegTableRowEvent<T>>();
+  rowLeave = new EventEmitter<Events.NegTableRowEvent<T>>();
 
-  cellClick = new EventEmitter<Events.SgTableCellEvent<T>>();
-  cellEnter = new EventEmitter<Events.SgTableCellEvent<T>>();
-  cellLeave = new EventEmitter<Events.SgTableCellEvent<T>>();
+  cellClick = new EventEmitter<Events.NegTableCellEvent<T>>();
+  cellEnter = new EventEmitter<Events.NegTableCellEvent<T>>();
+  cellLeave = new EventEmitter<Events.NegTableCellEvent<T>>();
 
   private cdr: ChangeDetectorRef;
-  private _removePlugin: (table: SgTableComponent<any>) => void;
+  private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor(protected table: SgTableComponent<any>, protected injector: Injector, pluginCtrl: SgTablePluginController) {
+  constructor(protected table: NegTableComponent<any>, protected injector: Injector, pluginCtrl: NegTablePluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     this.cdr = injector.get(ChangeDetectorRef);
     if (table.isInit) {
@@ -47,9 +47,9 @@ export class SgTableTargetEventsPlugin<T = any> {
     }
   }
 
-  static create<T = any>(table: SgTableComponent<any>, injector: Injector): SgTableTargetEventsPlugin<T> {
-    const pluginCtrl = SgTablePluginController.find(table);
-    return new SgTableTargetEventsPlugin<T>(table, injector, pluginCtrl);
+  static create<T = any>(table: NegTableComponent<any>, injector: Injector): NegTableTargetEventsPlugin<T> {
+    const pluginCtrl = NegTablePluginController.find(table);
+    return new NegTableTargetEventsPlugin<T>(table, injector, pluginCtrl);
   }
 
   private init(): void {
@@ -61,13 +61,13 @@ export class SgTableTargetEventsPlugin<T = any> {
     const cdkTable = table._cdkTable;
     const cdkTableElement: HTMLElement = cdkTable['_element'];
 
-    const createCellEvent = (cellTarget: HTMLElement, source: MouseEvent): Events.SgTableCellEvent<T> | undefined => {
+    const createCellEvent = (cellTarget: HTMLElement, source: MouseEvent): Events.NegTableCellEvent<T> | undefined => {
       const rowTarget = cellTarget.parentElement;
       const matrixPoint = matrixRowFromRow(rowTarget, cdkTable._rowOutlet.viewContainer);
       if (matrixPoint) {
-        const event: Events.SgTableCellEvent<T> = { ...matrixPoint, source, cellTarget, rowTarget } as any;
+        const event: Events.NegTableCellEvent<T> = { ...matrixPoint, source, cellTarget, rowTarget } as any;
         if (matrixPoint.type === 'data') {
-          (event as Events.SgTableDataMatrixPoint<T>).row = table.dataSource.renderedData[matrixPoint.rowIndex];
+          (event as Events.NegTableDataMatrixPoint<T>).row = table.dataSource.renderedData[matrixPoint.rowIndex];
         }
 
         /* `metadataFromElement()` does not provide column information nor the column itself. This will extend functionality to add the columnIndex and column.
@@ -93,9 +93,9 @@ export class SgTableTargetEventsPlugin<T = any> {
       }
     }
 
-    const createRowEvent = (rowTarget: HTMLElement, source: MouseEvent, root?: Events.SgTableCellEvent<T>): Events.SgTableRowEvent<T> | undefined => {
+    const createRowEvent = (rowTarget: HTMLElement, source: MouseEvent, root?: Events.NegTableCellEvent<T>): Events.NegTableRowEvent<T> | undefined => {
       if (root) {
-        const event: Events.SgTableRowEvent<T> = {
+        const event: Events.NegTableRowEvent<T> = {
           source,
           rowTarget,
           type: root.type,
@@ -104,15 +104,15 @@ export class SgTableTargetEventsPlugin<T = any> {
           root
         } as any;
         if (root.type === 'data') {
-          (event as Events.SgTableDataMatrixRow<T>).row = root.row;
+          (event as Events.NegTableDataMatrixRow<T>).row = root.row;
         }
         return event;
       } else {
         const matrixPoint = matrixRowFromRow(rowTarget, cdkTable._rowOutlet.viewContainer);
         if (matrixPoint) {
-          const event: Events.SgTableRowEvent<T> = { ...matrixPoint, source, rowTarget } as any;
+          const event: Events.NegTableRowEvent<T> = { ...matrixPoint, source, rowTarget } as any;
           if (matrixPoint.type === 'data') {
-            (event as Events.SgTableDataMatrixRow<T>).row = table.dataSource.renderedData[matrixPoint.rowIndex];
+            (event as Events.NegTableDataMatrixRow<T>).row = table.dataSource.renderedData[matrixPoint.rowIndex];
           }
 
           /*  If `subType !== 'data'` it can only be `meta` because `metadataFromElement()` does not handle `meta-group` subType.
@@ -135,9 +135,9 @@ export class SgTableTargetEventsPlugin<T = any> {
       }
     }
 
-    let lastCellEnterEvent: Events.SgTableCellEvent<T>;
-    let lastRowEnterEvent: Events.SgTableRowEvent<T>;
-    const emitCellLeave = (source: MouseEvent): Events.SgTableCellEvent<T> | undefined => {
+    let lastCellEnterEvent: Events.NegTableCellEvent<T>;
+    let lastRowEnterEvent: Events.NegTableRowEvent<T>;
+    const emitCellLeave = (source: MouseEvent): Events.NegTableCellEvent<T> | undefined => {
       if (lastCellEnterEvent) {
         const lastCellEnterEventTemp = lastCellEnterEvent;
         this.cellLeave.emit(Object.assign({}, lastCellEnterEventTemp, { source }));
@@ -145,7 +145,7 @@ export class SgTableTargetEventsPlugin<T = any> {
         return lastCellEnterEventTemp;
       }
     }
-    const emitRowLeave = (source: MouseEvent): Events.SgTableRowEvent<T> | undefined => {
+    const emitRowLeave = (source: MouseEvent): Events.NegTableRowEvent<T> | undefined => {
       if (lastRowEnterEvent) {
         const lastRowEnterEventTemp = lastRowEnterEvent;
         this.rowLeave.emit(Object.assign({}, lastRowEnterEventTemp, { source }));
@@ -175,7 +175,7 @@ export class SgTableTargetEventsPlugin<T = any> {
 
     fromEvent(cdkTableElement, 'mouseleave')
       .subscribe( (source: MouseEvent) => {
-        let lastEvent: Events.SgTableRowEvent<T> | Events.SgTableCellEvent<T> = emitCellLeave(source);
+        let lastEvent: Events.NegTableRowEvent<T> | Events.NegTableCellEvent<T> = emitCellLeave(source);
         lastEvent = emitRowLeave(source) || lastEvent;
         lastEvent && this.syncRow(lastEvent);
       });
@@ -186,8 +186,8 @@ export class SgTableTargetEventsPlugin<T = any> {
         const lastCellTarget = lastCellEnterEvent && lastCellEnterEvent.cellTarget;
         const lastRowTarget = lastRowEnterEvent && lastRowEnterEvent.rowTarget;
 
-        let cellEvent: Events.SgTableCellEvent<T>;
-        let lastEvent: Events.SgTableRowEvent<T> | Events.SgTableCellEvent<T>;
+        let cellEvent: Events.NegTableCellEvent<T>;
+        let lastEvent: Events.NegTableRowEvent<T> | Events.NegTableCellEvent<T>;
 
         if (lastCellTarget !== cellTarget) {
           lastEvent = emitCellLeave(source) || lastEvent;
@@ -227,19 +227,19 @@ export class SgTableTargetEventsPlugin<T = any> {
     this._removePlugin(this.table);
   }
 
-  private syncRow(event: Events.SgTableRowEvent<T> | Events.SgTableCellEvent<T>): void {
+  private syncRow(event: Events.NegTableRowEvent<T> | Events.NegTableCellEvent<T>): void {
     this.table._cdkTable.syncRows(event.type, event.rowIndex);
   }
 }
 
 @Directive({
-  selector: 'sg-table[rowClick], sg-table[rowEnter], sg-table[rowLeave], sg-table[cellClick], sg-table[cellEnter], sg-table[cellLeave]',
+  selector: 'neg-table[rowClick], neg-table[rowEnter], neg-table[rowLeave], neg-table[cellClick], neg-table[cellEnter], neg-table[cellLeave]',
   outputs: [ 'rowClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellEnter', 'cellLeave' ]
 })
 @KillOnDestroy()
-export class SgTableTargetEventsPluginDirective<T> extends SgTableTargetEventsPlugin<T> implements OnDestroy {
+export class NegTableTargetEventsPluginDirective<T> extends NegTableTargetEventsPlugin<T> implements OnDestroy {
 
-  constructor(table: SgTableComponent<any>, injector: Injector, pluginCtrl: SgTablePluginController) {
+  constructor(table: NegTableComponent<any>, injector: Injector, pluginCtrl: NegTablePluginController) {
     super(table, injector, pluginCtrl);
   }
 

@@ -1,1 +1,1 @@
-export { SgTableTransposeModule } from './lib/transpose.module';
+export { NegTableTransposeModule } from './lib/transpose.module';

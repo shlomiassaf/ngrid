@@ -1,4 +1,4 @@
-import { SgBaseColumnDefinition, SgColumnDefinition, SgColumnGroupDefinition } from './types';
+import { NegCdkVirtualScrollViewportComponentBaseColumnDefinition, NegColumnDefinition, NegColumnGroupDefinition } from './types';
 
 const RE_PARSE_STYLE_LENGTH_UNIT = /((?:\d*\.)?\d+)(%|px)$/;
 
@@ -9,21 +9,21 @@ export function parseStyleWidth(exp: string): { value: number, type: 'px' | '%'}
   }
 }
 
-export function initDefinitions<T extends SgBaseColumnDefinition>(def: SgBaseColumnDefinition, target: T): void {
-  const copyKeys: Array<keyof SgBaseColumnDefinition> = ['id', 'label', 'css', 'minWidth', 'width', 'maxWidth', 'type'];
+export function initDefinitions<T extends NegCdkVirtualScrollViewportComponentBaseColumnDefinition>(def: NegCdkVirtualScrollViewportComponentBaseColumnDefinition, target: T): void {
+  const copyKeys: Array<keyof NegCdkVirtualScrollViewportComponentBaseColumnDefinition> = ['id', 'label', 'css', 'minWidth', 'width', 'maxWidth', 'type'];
   copyKeys.forEach( k => k in def && (target[k] = def[k]) );
   if (def.data) {
     target.data = Object.assign(target.data || {}, def.data);
   }
 }
 
-export function isColumnDefinition(obj: any): obj is SgColumnDefinition {
-  // TODO: Get rid of this duckt-type type matching. Accept solid instances in SgTable.columns instead of interfaces.
+export function isColumnDefinition(obj: any): obj is NegColumnDefinition {
+  // TODO: Get rid of this duckt-type type matching. Accept solid instances in NegTable.columns instead of interfaces.
   return !!obj.prop && !obj.hasOwnProperty('span');
 }
 
 
-export function isColumnGroupDefinition(obj: any): obj is SgColumnGroupDefinition {
-  // TODO: Get rid of this duckt-type type matching. Accept solid instances in SgTable.columns instead of interfaces.
+export function isColumnGroupDefinition(obj: any): obj is NegColumnGroupDefinition {
+  // TODO: Get rid of this duckt-type type matching. Accept solid instances in NegTable.columns instead of interfaces.
   return !!obj.prop && obj.hasOwnProperty('span');
 }

@@ -2,7 +2,7 @@
   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>
 
-<sg-table #sgTbl
+<neg-table #negTbl
           blockUi
           matSort
           cellTooltip
@@ -18,29 +18,29 @@
           [dataSource]="dataSource"
           [columns]="columns"
           style="height: 50%"
-          class="sg-table-cell-ellipsis sg-table-header-cell-ellipsis">
+          class="neg-table-cell-ellipsis neg-table-header-cell-ellipsis">
 
-  <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS SG-TABLE -->
-  <div *sgTableBlockUiDef class="sg-table-ui-block">
+  <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS NEG-TABLE -->
+  <div *negTableBlockUiDef class="neg-table-ui-block">
     <mat-spinner></mat-spinner>
   </div>
-  <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS SG-TABLE -->
+  <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS NEG-TABLE -->
 
-  <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS SG-TABLE -->
-  <div *sgTableNoDataRef class="sg-table-no-data"><span>No Results</span></div>
-  <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS SG-TABLE -->
+  <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS NEG-TABLE -->
+  <div *negTableNoDataRef class="neg-table-no-data"><span>No Results</span></div>
+  <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS NEG-TABLE -->
 
-  <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS SG-TABLE -->
-  <sg-table-paginator *sgTablePaginatorRef="let table" [table]="table" [paginator]="table.dataSource.paginator"></sg-table-paginator>
-  <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS SG-TABLE -->
+  <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS NEG-TABLE -->
+  <neg-table-paginator *negTablePaginatorRef="let table" [table]="table" [paginator]="table.dataSource.paginator"></neg-table-paginator>
+  <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS NEG-TABLE -->
 
   <!-- DETAIL ROW TEMPLATE DEFINITION-->
-  <sg-table-row *sgTableDetailRowParentRef="let row; table as table"
+  <neg-table-row *negTableDetailRowParentRef="let row; table as table"
                 [detailRow]="row" [table]="table"
                 matRipple>
-  </sg-table-row>
-  <div *sgTableDetailRowDef="let row"
-       class="sg-detail-row" [@detailExpand]>
+  </neg-table-row>
+  <div *negTableDetailRowDef="let row"
+       class="neg-detail-row" [@detailExpand]>
     <div>
       <h1>Detail Row</h1>
       <pre>{{row | json}}</pre>
@@ -51,18 +51,18 @@
 
   <!-- DEFAULT CELL TEMPLATE DEFINITION-->
   <!-- We can omit this because the table has a default cell template similar to this. It is here for reference -->
-  <div *sgTableCellDef="'*'; value as value;"> {{value}} </div>
+  <div *negTableCellDef="'*'; value as value;"> {{value}} </div>
   <!-- DEFAULT CELL TEMPLATE DEFINITION-->
 
 
   <!-- SPECIFIC CELL TEMPLATE DEFINITION-->
-  <div *sgTableCellDef="'name'; value as value;"><b>{{value}}</b></div>
-  <div *sgTableCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data(row):'symbol':'1.0-2'}}</div>
-  <div *sgTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data(row) }}</div>
-  <div *sgTableCellDef="'balance'; value as value;" [parentNgClass]="{ 'balance-negative': value < 0, 'balance-positive': value > 0 }">{{ value | number:'1.0-0'}}</div>
-  <div *sgTableCellDef="'settings.background'; value as value;" [parentNgStyle]="{ backgroundColor: value }"><b>{{value}}</b></div>
-  <div *sgTableCellDef="'settings.avatar'; value as value;"><img [src]="value" height="40px" /></div>
-  <div *sgTableCellDef="'settings.emailFrequency'; let ctx" (click)="emailFrequencyToggle = true">
+  <div *negTableCellDef="'name'; value as value;"><b>{{value}}</b></div>
+  <div *negTableCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data(row):'symbol':'1.0-2'}}</div>
+  <div *negTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data(row) }}</div>
+  <div *negTableCellDef="'balance'; value as value;" [parentNgClass]="{ 'balance-negative': value < 0, 'balance-positive': value > 0 }">{{ value | number:'1.0-0'}}</div>
+  <div *negTableCellDef="'settings.background'; value as value;" [parentNgStyle]="{ backgroundColor: value }"><b>{{value}}</b></div>
+  <div *negTableCellDef="'settings.avatar'; value as value;"><img [src]="value" height="40px" /></div>
+  <div *negTableCellDef="'settings.emailFrequency'; let ctx" (click)="emailFrequencyToggle = true">
     <ng-container *ngIf="!emailFrequencyToggle">{{ctx.value}}</ng-container>
     <mat-form-field *ngIf="emailFrequencyToggle">
       <mat-select [value]="ctx.value" opened (selectionChange)="(emailFrequencyToggle = false) || true && ctx.value = $event.value">
@@ -79,25 +79,25 @@
 
   <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
   <!-- We can omit this because the table has a default header cell template similar to this. It is here for reference -->
-  <div *sgTableHeaderCellDef="'*'; col as col">
+  <div *negTableHeaderCellDef="'*'; col as col">
     <span style="text-decoration: underline; font-weight: bold">{{col.label}}</span>
   </div>
-  <div *sgTableHeaderCellTypeDef="'country'; col as col">
+  <div *negTableHeaderCellTypeDef="'country'; col as col">
     <span>🏳 {{col.label}} 🏳</span>
   </div>
-  <div *sgTableHeaderCellTypeDef="'language'; col as col">
+  <div *negTableHeaderCellTypeDef="'language'; col as col">
     <span>🌐 {{col.label}} 🌐</span>
     </div>
-  <div *sgTableFooterCellDef="'*'; col as col">
+  <div *negTableFooterCellDef="'*'; col as col">
     <span style="opacity: 0.5">{{col.label}}</span>
   </div>
   <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
 
   <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
-  <div *sgTableHeaderCellDef="'name'; col as col"><span style="font-size: 22px; font-weight: bold">{{col.label}}</span></div>
+  <div *negTableHeaderCellDef="'name'; col as col"><span style="font-size: 22px; font-weight: bold">{{col.label}}</span></div>
   <!-- SPECIFIC HEADER DEFAULT CELL TEMPLATE DEFINITION-->
 
-</sg-table>
+</neg-table>
 
 <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
   <div class="example-feature-title" fxFlex="50%">Features</div>
@@ -115,7 +115,7 @@
   <div class="example-feature-action" fxFlex>
     <mat-form-field>
       <mat-select #selectHiddenColumn>
-        <mat-option *ngFor="let o of sgTbl._store.allTable" [value]="o">{{o.label}}</mat-option>
+        <mat-option *ngFor="let o of negTbl._store.allTable" [value]="o">{{o.label}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-checkbox *ngIf="selectHiddenColumn?.selected?.value as c"
@@ -150,13 +150,13 @@
 <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
   <div class="example-feature-title" fxFlex="50%">Sticky Header</div>
   <div class="example-feature-action" fxFlex>
-    <mat-checkbox *ngFor="let h of sgTbl._headerRowDefs; index as i" (change)="setStickyRow(sgTbl, 'header', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
+    <mat-checkbox *ngFor="let h of negTbl._headerRowDefs; index as i" (change)="setStickyRow(negTbl, 'header', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
   </div>
 </div>
 <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
   <div class="example-feature-title" fxFlex="50%">Sticky Footer</div>
   <div class="example-feature-action" fxFlex>
-    <mat-checkbox *ngFor="let h of sgTbl._footerRowDefs; index as i" (change)="setStickyRow(sgTbl, 'footer', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
+    <mat-checkbox *ngFor="let h of negTbl._footerRowDefs; index as i" (change)="setStickyRow(negTbl, 'footer', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
   </div>
 </div>
 <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
@@ -164,14 +164,14 @@
   <div class="example-feature-action" fxFlex>
     <mat-form-field>
       <mat-select #selectColumn>
-        <mat-option *ngFor="let o of sgTbl._store.table" [value]="o">{{o.label}}</mat-option>
+        <mat-option *ngFor="let o of negTbl._store.table" [value]="o">{{o.label}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-checkbox *ngIf="selectColumn?.selected?.value as c"
-                  (change)="setStickyColumns(sgTbl, 'start', c.orgProp, $event.checked)"
+                  (change)="setStickyColumns(negTbl, 'start', c.orgProp, $event.checked)"
                   [checked]="c.stickyStart">Sticky Start</mat-checkbox>
     <mat-checkbox *ngIf="selectColumn?.selected?.value as c"
-                  (change)="setStickyColumns(sgTbl, 'end', c.orgProp, $event.checked)"
+                  (change)="setStickyColumns(negTbl, 'end', c.orgProp, $event.checked)"
                   [checked]="c.stickyEnd">Sticky End</mat-checkbox>
   </div>
 </div>
@@ -184,6 +184,6 @@
         <mat-option *ngFor="let o of dataSource.renderedRows" [value]="o">{{o.id}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <button (click)="toggleDetailRow(sgTbl, toggleDetailRowSelect.value)" [disabled]="!toggleDetailRowSelect.value">GO</button>
+    <button (click)="toggleDetailRow(negTbl, toggleDetailRowSelect.value)" [disabled]="!toggleDetailRowSelect.value">GO</button>
   </div>
 </div>

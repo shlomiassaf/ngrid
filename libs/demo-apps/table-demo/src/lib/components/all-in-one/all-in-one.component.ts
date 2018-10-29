@@ -1,13 +1,13 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
-import { SgTableComponent, createDS, columnFactory, SgTablePaginatorKind } from '@sac/table';
-import { toggleDetailRow } from '@sac/table/detail-row';
-import { setStickyRow, setStickyColumns } from '@sac/table/sticky';
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { NegTableComponent, createDS, columnFactory, NegTablePaginatorKind } from '@neg/table';
+import { toggleDetailRow } from '@neg/table/detail-row';
+import { setStickyRow, setStickyColumns } from '@neg/table/sticky';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 // A function that returns the currency value placed in a `SecurityWithMarketDataDto` object.
-// implementation is an IIFE that returns the getValue method bound to an SgColumn instance of the currency column...
+// implementation is an IIFE that returns the getValue method bound to an NegColumn instance of the currency column...
 const COUNTRY_GETTER = {
   currency: row => COUNTRY_GETTER.data.countries[row.country].currencies[0],
   name: row => COUNTRY_GETTER.flag(row) + ' ' + COUNTRY_GETTER.data.countries[row.country].name,
@@ -15,8 +15,8 @@ const COUNTRY_GETTER = {
   data: undefined as any
 }
 
-declare module '@sac/table/lib/table/columns/types' {
-  interface SgColumnTypeDefinitionDataMap {
+declare module '@neg/table/lib/table/columns/types' {
+  interface NegColumnTypeDefinitionDataMap {
     currencyFn: (row: Person) => string;
     countryNameDynamic: (row: Person) => string;
   }
@@ -87,7 +87,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-all-in-one-table-example-component',
+  selector: 'neg-all-in-one-table-example-component',
   templateUrl: './all-in-one.component.html',
   styleUrls: ['./all-in-one.component.scss'],
   animations: [
@@ -114,7 +114,7 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
 
   emailFrequencyToggle: boolean;
 
-  usePagination: false | SgTablePaginatorKind = false// 'pageNumber';
+  usePagination: false | NegTablePaginatorKind = false// 'pageNumber';
   showFooter = false;
   showHeader = true;
   hideColumns: string[] = [];
@@ -123,7 +123,7 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
   enableRowSelection = true;
   singleDetailRow = false;
 
-  @ViewChild(SgTableComponent) sgTable: SgTableComponent<any>;
+  @ViewChild(NegTableComponent) negTable: NegTableComponent<any>;
 
   setStickyRow = setStickyRow;
   setStickyColumns = setStickyColumns;
@@ -161,8 +161,8 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
     }
   }
 
-  toggleDetailRow(sgTbl: SgTableComponent<any>, item: Person): void {
-    toggleDetailRow(sgTbl, item)
+  toggleDetailRow(negTbl: NegTableComponent<any>, item: Person): void {
+    toggleDetailRow(negTbl, item)
   }
 
   applyFilter(filterValue: string) {

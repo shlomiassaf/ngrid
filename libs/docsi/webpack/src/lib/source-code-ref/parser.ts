@@ -52,7 +52,7 @@ export interface ParserResult {
 export function parse(content: string, lang: string): ParserResult {
   const parser = lexer.getLanguageLexerGroup(lang as any);
   if (!parser) {
-    throw new Error(`${lang} is not supported by the sac code extraction loader`);
+    throw new Error(`${lang} is not supported by the neg code extraction loader`);
   }
 
   const lines = content.split(OS.EOL);

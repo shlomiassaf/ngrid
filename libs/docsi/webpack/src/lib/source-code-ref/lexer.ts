@@ -39,17 +39,17 @@ export function getLanguageLexerGroup(lang: keyof LanguageToLexerGroupMap): Lexe
 }
 
 setLexerGroup('htmlStyle', {
-  section: /<!--\s*@sac-example:(.+)\s*-->/,
-  ignore: /<!--\s*@sac-ignore:(.+)\s*-->/,
-  ignoreLine: /<!--\s*@sac-ignore-line\s*(?!:\s*-->):?(.+)?-->/,
-  ignoreNextLine: /<!--\s*@sac-ignore-next-line\s*(?!:\s*-->):?(.+)?-->/
+  section: /<!--\s*@neg-example:(.+)\s*-->/,
+  ignore: /<!--\s*@neg-ignore:(.+)\s*-->/,
+  ignoreLine: /<!--\s*@neg-ignore-line\s*(?!:\s*-->):?(.+)?-->/,
+  ignoreNextLine: /<!--\s*@neg-ignore-next-line\s*(?!:\s*-->):?(.+)?-->/
 });
 
 setLexerGroup('codeStyle', {
-  section: /\/\*\s*@sac-example:(.+)\*\//,
-  ignore: /\/\*\s*@sac-ignore:(.+)\*\//,
-  ignoreLine: /\/\*\s*@sac-ignore-line\s*(?!:\s*\*\/):?(.+)?\*\//,
-  ignoreNextLine: /\/\*\s*@sac-ignore-next-line\s*(?!:\s*\*\/):?(.+)?\*\//
+  section: /\/\*\s*@neg-example:(.+)\*\//,
+  ignore: /\/\*\s*@neg-ignore:(.+)\*\//,
+  ignoreLine: /\/\*\s*@neg-ignore-line\s*(?!:\s*\*\/):?(.+)?\*\//,
+  ignoreNextLine: /\/\*\s*@neg-ignore-next-line\s*(?!:\s*\*\/):?(.+)?\*\//
 });
 
 bindLanguage('html', 'htmlStyle');

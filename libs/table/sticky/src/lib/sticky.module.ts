@@ -3,11 +3,11 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
-import { SgTableModule, SgTablePluginController, SgTableConfigService } from '@sac/table';
-import { SgTableStickyPluginDirective, setStickyRow, setStickyColumns } from './sticky/sticky-plugin';
+import { NegTableModule, NegTablePluginController, NegTableConfigService } from '@neg/table';
+import { NegTableStickyPluginDirective, setStickyRow, setStickyColumns } from './sticky/sticky-plugin';
 
-declare module '@sac/table/lib/table/services/config' {
-  interface SgTableConfig {
+declare module '@neg/table/lib/table/services/config' {
+  interface NegTableConfig {
     stickyPlugin?: {
       headers?: Array<'table' | number>;
       footers?: Array<'table' | number>;
@@ -20,18 +20,18 @@ declare module '@sac/table/lib/table/services/config' {
 const MAPPER = <T>(v: T): [T, boolean] => [v, true];
 
 @NgModule({
-  imports: [ CommonModule, CdkTableModule, SgTableModule ],
-  declarations: [ SgTableStickyPluginDirective ],
-  exports: [ SgTableStickyPluginDirective ],
+  imports: [ CommonModule, CdkTableModule, NegTableModule ],
+  declarations: [ NegTableStickyPluginDirective ],
+  exports: [ NegTableStickyPluginDirective ],
 })
-export class SgTableStickyModule {
-  constructor(@Optional() @SkipSelf() parentModule: SgTableStickyModule,
-              configService: SgTableConfigService) {
+export class NegTableStickyModule {
+  constructor(@Optional() @SkipSelf() parentModule: NegTableStickyModule,
+              configService: NegTableConfigService) {
     if (parentModule) {
       return;
     }
 
-    SgTablePluginController.created
+    NegTablePluginController.created
       .subscribe( event => {
         const { table, controller } = event;
         if (controller && !controller.hasPlugin('sticky')) {

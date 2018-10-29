@@ -1,1 +1,1 @@
-export { SgPaginatorComponent } from './table-paginator.component';
+export { NegPaginatorComponent } from './table-paginator.component';

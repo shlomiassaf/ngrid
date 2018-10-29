@@ -2,10 +2,10 @@ import { Observable, isObservable } from 'rxjs';
 import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { SgTableComponent, KillOnDestroy, SgTablePluginController, TablePlugin } from '@sac/table';
+import { NegTableComponent, KillOnDestroy, NegTablePluginController, TablePlugin } from '@neg/table';
 
-declare module '@sac/table/lib/ext/types' {
-  interface SgTablePluginExtension {
+declare module '@neg/table/lib/ext/types' {
+  interface NegTablePluginExtension {
     blockUi?: { blockUi: boolean | 'auto' | Observable<boolean> };
   }
 }
@@ -13,12 +13,12 @@ declare module '@sac/table/lib/ext/types' {
 const PLUGIN_KEY: 'blockUi' = 'blockUi';
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'sg-table[blockUi]', exportAs: 'blockUi' })
+@Directive({ selector: 'neg-table[blockUi]', exportAs: 'blockUi' })
 @KillOnDestroy()
-export class SgTableBlockUiPluginDirective<T> implements OnDestroy {
+export class NegTableBlockUiPluginDirective<T> implements OnDestroy {
 
   /**
-   * Blocks the UI with the template defined via `SgTableBlockUiDefDirective`.
+   * Blocks the UI with the template defined via `NegTableBlockUiDefDirective`.
    * If a template does not exist blocking is ignored.
    *
    * There are 3 operation modes, the modes are set based on the input value:
@@ -41,7 +41,7 @@ export class SgTableBlockUiPluginDirective<T> implements OnDestroy {
    *
    * Also note that when sending an observable it is treated as "notifier", do not send cold observable as they get subscribed to.
    * For example, sending the returned value from `HttpClient` will probably result in 2 HTTP calls, if you already subscribed to it
-   * > The default value is `auto` which means that `<sg-table blockUi>` is similar to `<sg-table blockUi="auto">`
+   * > The default value is `auto` which means that `<neg-table blockUi>` is similar to `<neg-table blockUi="auto">`
    */
   @Input() get blockUi(): boolean | 'auto' | Observable<boolean> { return this._blockUi; }
   set blockUi(value: boolean | 'auto' | Observable<boolean>) {
@@ -71,9 +71,9 @@ export class SgTableBlockUiPluginDirective<T> implements OnDestroy {
   private _blockInProgress: boolean = false;
   private _blockUi: boolean | 'auto' | Observable<boolean>;
   private _blockerEmbeddedVRef: EmbeddedViewRef<any>;
-  private _removePlugin: (table: SgTableComponent<any>) => void;
+  private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>, pluginCtrl: SgTablePluginController<T>) {
+  constructor(private table: NegTableComponent<any>, pluginCtrl: NegTablePluginController<T>) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     table.registry.changes.subscribe( changes => {

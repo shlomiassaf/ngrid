@@ -1,12 +1,12 @@
 export {
-  SgTableMatrixRow,
-  SgTableDataMatrixRow,
-  SgTableMatrixPoint,
-  SgTableDataMatrixPoint,
-  SgTableCellEvent,
-  SgTableRowEvent,
+  NegTableMatrixRow,
+  NegTableDataMatrixRow,
+  NegTableMatrixPoint,
+  NegTableDataMatrixPoint,
+  NegTableCellEvent,
+  NegTableRowEvent,
 } from './lib/target-events/events';
 
-export { SgTableTargetEventsPlugin } from './lib/target-events/target-events-plugin';
+export { NegTableTargetEventsPlugin } from './lib/target-events/target-events-plugin';
 
-export { SgTableTargetEventsModule } from './lib/target-events.module';
+export { NegTableTargetEventsModule } from './lib/target-events.module';

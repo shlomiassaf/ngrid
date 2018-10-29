@@ -1,0 +1,46 @@
+@import './_neg-cdk-table.component-theme';
+
+@mixin neg-table-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  @include neg-cdk-table-theme($theme);
+
+  .neg-table-scroll-container {
+    .neg-table-space-fill {
+      background: #ffffff;
+    }
+  }
+
+  neg-table.neg-table-cell-ellipsis .neg-cdk-table {
+    .neg-table-cell, .neg-table-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  neg-table.neg-table-header-cell-ellipsis .neg-cdk-table {
+    .neg-table-header-cell, .neg-table-header-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  neg-table.neg-table-footer-cell-ellipsis .neg-cdk-table {
+    .neg-table-footer-cell, .neg-table-footer-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+}
+
+@mixin neg-table-typography($config) {
+  @include neg-cdk-table-typography($config);
+}

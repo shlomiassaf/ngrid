@@ -13,9 +13,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
 
-import { DocsiModule } from '@sac/docsi';
-import { DocsiTocModule } from '@sac/docsi/toc';
-import { DocsiMaterialSuiteModule } from '@sac/docsi/material-suite';
+import { DocsiModule } from '@neg/docsi';
+import { DocsiTocModule } from '@neg/docsi/toc';
+import { DocsiMaterialSuiteModule } from '@neg/docsi/material-suite';
 
 import { ExampleGroupComponent } from './example-group';
 

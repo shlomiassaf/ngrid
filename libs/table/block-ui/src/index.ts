@@ -1,1 +1,1 @@
-export { SgTableBlockUiModule } from './lib/table-block-ui.module';
+export { NegTableBlockUiModule } from './lib/table-block-ui.module';

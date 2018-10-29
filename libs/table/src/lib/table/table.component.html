@@ -1,72 +1,72 @@
 <!-- TABLE HEADER ROW DEF -->
 <cdk-header-row *cdkHeaderRowDef="_store.tableRow"
                 data-rowtype="header"
-                class="sg-table-header-row sg-table-header-row-main"
+                class="neg-table-header-row neg-table-header-row-main"
                 [ngStyle]="_mainHeaderRowStyle"></cdk-header-row>
 
 <!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
 <ng-container *ngFor="let row of _store.metaRows.header;">
   <ng-container *ngIf="row.isGroup">
-      <cdk-header-row *cdkHeaderRowDef="row.keys" data-rowtype="meta-header" class="sg-table-header-row sg-header-group-row {{ row.name }}"></cdk-header-row>
+      <cdk-header-row *cdkHeaderRowDef="row.keys" data-rowtype="meta-header" class="neg-table-header-row neg-header-group-row {{ row.name }}"></cdk-header-row>
   </ng-container>
   <ng-container *ngIf="!row.isGroup">
-      <cdk-header-row *cdkHeaderRowDef="row.keys" data-rowtype="meta-header" class="sg-table-header-row {{ row.name }}"></cdk-header-row>
+      <cdk-header-row *cdkHeaderRowDef="row.keys" data-rowtype="meta-header" class="neg-table-header-row {{ row.name }}"></cdk-header-row>
   </ng-container>
 </ng-container>
 
 <!-- TABLE FOOTER ROW DEF -->
-<cdk-footer-row *cdkFooterRowDef="_store.tableRow" data-rowtype="footer" class="sg-table-footer-row"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
+<cdk-footer-row *cdkFooterRowDef="_store.tableRow" data-rowtype="footer" class="neg-table-footer-row"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
 <!-- MULTI-FOOTER ROW DEF -->
 <ng-container *ngFor="let row of _store.metaRows.footer">   <!-- MULTI-FOOTER ROW DEF -->
-  <cdk-footer-row *cdkFooterRowDef="row.keys" data-rowtype="meta-footer" class="sg-table-footer-row {{ row.name }}"></cdk-footer-row>
+  <cdk-footer-row *cdkFooterRowDef="row.keys" data-rowtype="meta-footer" class="neg-table-footer-row {{ row.name }}"></cdk-footer-row>
 </ng-container>
 
-<div class="sg-table-container">
-  <sg-cdk-virtual-scroll-viewport class="sg-table-scroll-container">
-    <sg-cdk-table>
+<div class="neg-table-container">
+  <neg-cdk-virtual-scroll-viewport class="neg-table-scroll-container">
+    <neg-cdk-table>
       <!-- Row templates. The columns used are set at the row template level -->
 
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
       <ng-container *ngFor="let meta of _store.meta">
-        <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [sgTableColumnDef]="c">
-          <sg-table-header-cell *cdkHeaderCellDef>
+        <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [negTableColumnDef]="c">
+          <neg-table-header-cell *cdkHeaderCellDef>
             <ng-container *ngTemplateOutlet="c.template; context: (c | tableCellContext:self)"></ng-container>
-          </sg-table-header-cell>
+          </neg-table-header-cell>
         </ng-container>
-        <ng-container *ngIf="meta.footer as c" [sgTableColumnDef]="c">
-          <sg-table-footer-cell *cdkFooterCellDef>
+        <ng-container *ngIf="meta.footer as c" [negTableColumnDef]="c">
+          <neg-table-footer-cell *cdkFooterCellDef>
             <ng-container *ngTemplateOutlet="c.template; context: (c | tableCellContext:self)"></ng-container>
-          </sg-table-footer-cell>
+          </neg-table-footer-cell>
         </ng-container>
       </ng-container>
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
 
        <!-- HEADER-RECORD-FOOTER CELL DEF -->
-      <ng-container *ngFor="let c of _store.allTable" [sgTableColumnDef]="c">
+      <ng-container *ngFor="let c of _store.allTable" [negTableColumnDef]="c">
         <!-- TABLE HEADER CELL DEF -->
-        <sg-table-header-cell *cdkHeaderCellDef
-                              [observeSize]="c"></sg-table-header-cell>
+        <neg-table-header-cell *cdkHeaderCellDef
+                              [observeSize]="c"></neg-table-header-cell>
 
         <!-- RECORD CELL DEF -->
-        <sg-table-cell *cdkCellDef="let row"
+        <neg-table-cell *cdkCellDef="let row"
                        [attr.tabindex]="cellFocus">
           <ng-container *ngTemplateOutlet="c.cellTpl; context: (row | tableCellContext:c:self)"></ng-container>
-        </sg-table-cell>
+        </neg-table-cell>
 
         <!-- TABLE FOOTER CELL DEF -->
-        <sg-table-footer-cell *cdkFooterCellDef>
+        <neg-table-footer-cell *cdkFooterCellDef>
           <ng-container *ngTemplateOutlet="c.footerCellTpl; context: (c | tableCellContext:self)"></ng-container>
-        </sg-table-footer-cell>
+        </neg-table-footer-cell>
       </ng-container>
       <!-- HEADER-RECORD-FOOTER CELL DEF -->
 
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
-      <sg-table-row *cdkRowDef="let row; columns: _store.tableRow;"></sg-table-row>
+      <neg-table-row *cdkRowDef="let row; columns: _store.tableRow;"></neg-table-row>
 
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
-    </sg-cdk-table>
-    <div [style.minWidth]="_cdkTable?.minWidth" class="sg-table-space-fill"></div>
-  </sg-cdk-virtual-scroll-viewport>
+    </neg-cdk-table>
+    <div [style.minWidth]="_cdkTable?.minWidth" class="neg-table-space-fill"></div>
+  </neg-cdk-virtual-scroll-viewport>
 
   <ng-container #beforeContent></ng-container>
   <ng-content></ng-content>

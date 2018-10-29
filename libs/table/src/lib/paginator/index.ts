@@ -1,1 +1,1 @@
-export { SgTablePaginatorKind, SgPaginator, SgTokenPaginator, SgPagingPaginator, SgPaginatorChangeEvent } from './paginator';
+export { NegTablePaginatorKind, NegPaginator, NegTokenPaginator, NegPagingPaginator, NegPaginatorChangeEvent } from './paginator';

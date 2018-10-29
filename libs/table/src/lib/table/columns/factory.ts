@@ -1,23 +1,23 @@
 import {
-  SgBaseColumnDefinition,
-  SgColumnDefinition,
-  SgColumnGroupDefinition,
-  SgMetaColumnDefinition,
-  SgTableColumnDefinitionSet,
-  SgTableColumnSet,
+  NegCdkVirtualScrollViewportComponentBaseColumnDefinition,
+  NegColumnDefinition,
+  NegColumnGroupDefinition,
+  NegMetaColumnDefinition,
+  NegTableColumnDefinitionSet,
+  NegTableColumnSet,
 } from './types';
-import { SgMetaColumn } from './meta-column';
-import { SgColumn } from './column';
-import { SgColumnGroup } from './group-column';
+import { NegMetaColumn } from './meta-column';
+import { NegColumn } from './column';
+import { NegColumnGroup } from './group-column';
 
-export type COLUMN = SgMetaColumn | SgColumn | SgColumnGroup;
+export type COLUMN = NegMetaColumn | NegColumn | NegColumnGroup;
 
-export class SgColumnFactory {
-  private _raw: SgTableColumnDefinitionSet = { table: [], header: [], footer: [], headerGroup: [] };
+export class NegColumnFactory {
+  private _raw: NegTableColumnDefinitionSet = { table: [], header: [], footer: [], headerGroup: [] };
   private _defaults = {
-    table: {} as Partial<SgColumnDefinition>,
-    header: {} as Partial<SgMetaColumnDefinition>,
-    footer: {} as Partial<SgMetaColumnDefinition>,
+    table: {} as Partial<NegColumnDefinition>,
+    header: {} as Partial<NegMetaColumnDefinition>,
+    footer: {} as Partial<NegMetaColumnDefinition>,
   };
 
   private _currentHeaderRow = 0;
@@ -26,20 +26,20 @@ export class SgColumnFactory {
   get currentHeaderRow(): number { return this._currentHeaderRow; }
   get currentFooterRow(): number { return this._currentFooterRow; }
 
-  build(): SgTableColumnSet {
+  build(): NegTableColumnSet {
     const { _defaults, _raw } = this;
     this._raw = this._defaults = undefined;
 
-    const table = _raw.table.map( d => new SgColumn({ ..._defaults.table, ...d }));
+    const table = _raw.table.map( d => new NegColumn({ ..._defaults.table, ...d }));
     const header = _raw.header.map( h => ({
       rowIndex: h.rowIndex,
       rowClassName: h.rowClassName,
-      cols: h.cols.map( c => new SgMetaColumn( { ..._defaults.header, ...c } )),
+      cols: h.cols.map( c => new NegMetaColumn( { ..._defaults.header, ...c } )),
     }));
     const footer = _raw.footer.map( f => ({
       rowIndex: f.rowIndex,
       rowClassName: f.rowClassName,
-      cols: f.cols.map( c => new SgMetaColumn({ ..._defaults.footer, ...c }) )
+      cols: f.cols.map( c => new NegMetaColumn({ ..._defaults.footer, ...c }) )
     }));
     const headerGroup = _raw.headerGroup.map( hg => ({
       rowIndex: hg.rowIndex,
@@ -60,12 +60,12 @@ export class SgColumnFactory {
    * @param def
    * @param type
    */
-  default(def: Partial<SgMetaColumnDefinition>, type: 'header' | 'footer'): this;
+  default(def: Partial<NegMetaColumnDefinition>, type: 'header' | 'footer'): this;
   /**
    * Set the default column definition for table columns.
    */
-  default(def: Partial<SgColumnDefinition>, type?: 'table'): this;
-  default(def: Partial<SgColumnDefinition> | Partial<SgMetaColumnDefinition>, type: 'table' | 'header' | 'footer' = 'table'): this {
+  default(def: Partial<NegColumnDefinition>, type?: 'table'): this;
+  default(def: Partial<NegColumnDefinition> | Partial<NegMetaColumnDefinition>, type: 'table' | 'header' | 'footer' = 'table'): this {
     this._defaults[type] = def;
     return this;
   }
@@ -79,10 +79,10 @@ export class SgColumnFactory {
    * exist on the row and handle their rendering with a cell template.
    *
    * Each table column is also a header column and a footer column that display.
-   * The header and footer are automatically created, If you wish not to show them set headerRow/footerRow to false in SgTable.
+   * The header and footer are automatically created, If you wish not to show them set headerRow/footerRow to false in NegTable.
    *
    */
-  table(...defs: Array<SgColumnDefinition>): this {
+  table(...defs: Array<NegColumnDefinition>): this {
     this._raw.table.push(...defs);
     return this;
   }
@@ -107,13 +107,13 @@ export class SgColumnFactory {
    *   header2 ->  d e f
    *   table   ->  1 2 3
    */
-  header(rowClassName: string, ...defs: Array<Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this;
-  header(...defs: Array<Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this;
-  header(...defs: Array<string | Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this {
+  header(rowClassName: string, ...defs: Array<Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this;
+  header(...defs: Array<Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this;
+  header(...defs: Array<string | Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this {
     const rowIndex = this._currentHeaderRow++;
     const rowClassName = this.getRowClass(defs, rowIndex);
-    const headers = defs.map( (d: Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition) => {
-      const def: SgMetaColumnDefinition = {
+    const headers = defs.map( (d: Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition) => {
+      const def: NegMetaColumnDefinition = {
         id: d.id,
         kind: 'header',
         rowIndex
@@ -149,13 +149,13 @@ export class SgColumnFactory {
    *   footer1 ->  a b c
    *   footer2 ->  d e f
    */
-  footer(rowClassName: string, ...defs: Array<Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this;
-  footer(...defs: Array<Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this;
-  footer(...defs: Array<string | Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition>): this {
+  footer(rowClassName: string, ...defs: Array<Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this;
+  footer(...defs: Array<Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this;
+  footer(...defs: Array<string | Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this {
     const rowIndex = this._currentFooterRow++;
     const rowClassName = this.getRowClass(defs, rowIndex);
-    const footers = defs.map( (d: Partial<SgMetaColumnDefinition> & SgBaseColumnDefinition) => {
-      const def: SgMetaColumnDefinition = {
+    const footers = defs.map( (d: Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition) => {
+      const def: NegMetaColumnDefinition = {
         id: d.id,
         kind: 'footer',
         rowIndex
@@ -193,10 +193,10 @@ export class SgColumnFactory {
    *   header2 ->  d e f
    *   table   ->  1 2 3
    */
-  headerGroup(rowClassName: string, ...defs: Array<Partial<SgColumnGroupDefinition>>): this;
-  headerGroup(...defs: Array<Partial<SgColumnGroupDefinition>>): this;
-  headerGroup(...defs: Array<string | Partial<SgColumnGroupDefinition>>): this {
-    // TODO: rowIndex in SgColumnGroupDefinition is mandatory but here we don't want it
+  headerGroup(rowClassName: string, ...defs: Array<Partial<NegColumnGroupDefinition>>): this;
+  headerGroup(...defs: Array<Partial<NegColumnGroupDefinition>>): this;
+  headerGroup(...defs: Array<string | Partial<NegColumnGroupDefinition>>): this {
+    // TODO: rowIndex in NegColumnGroupDefinition is mandatory but here we don't want it
     // but Partial is not good cause we allow not sending span and prop... need to fix.
     const rowIndex = this._currentHeaderRow++;
     const rowClassName = this.getRowClass(defs, rowIndex);
@@ -212,18 +212,18 @@ export class SgColumnFactory {
   }
 
   private getRowClass(defs: any[], fallbackRowIndex: number): string {
-    return typeof defs[0] === 'string' ? defs.shift() : `sg-table-row-index-${fallbackRowIndex.toString()}`;
+    return typeof defs[0] === 'string' ? defs.shift() : `neg-table-row-index-${fallbackRowIndex.toString()}`;
   }
 
-  private buildHeaderGroups(rowIndex: number, headerGroupDefs: SgColumnGroupDefinition[], table: SgColumn[]): SgColumnGroup[] {
-    const headerGroup: SgColumnGroup[] = [];
+  private buildHeaderGroups(rowIndex: number, headerGroupDefs: NegColumnGroupDefinition[], table: NegColumn[]): NegColumnGroup[] {
+    const headerGroup: NegColumnGroup[] = [];
 
     // Building of header group rows requires some work.
     // The user defined groups might not cover all columns, creating gaps between group columns so we need to add placeholder groups to cover these gaps.
     // Moreover, the user might not specify a `prop`, which we might need to complete.
     // We do that for each header group row.
     //
-    // The end goal is to return a list of `SgColumnGroup` that span over the entire columns of the table.
+    // The end goal is to return a list of `NegColumnGroup` that span over the entire columns of the table.
     //
     // The logic is as follows:
     // For each column in the table, find a matching column group - a group pointing at the column by having the same `prop`
@@ -241,7 +241,7 @@ export class SgColumnFactory {
     for (let i = 0, len = tableDefs.length; i < len; i++) {
       const orgProp = tableDefs[i].orgProp;
       const idx = defs.findIndex( d => d.prop === orgProp);
-      const columnGroupDef: SgColumnGroupDefinition = idx > -1
+      const columnGroupDef: NegColumnGroupDefinition = idx > -1
         ? defs.splice(idx, 1)[0]
         : defs.find( d => !d.prop ) || { prop: orgProp, rowIndex, span: undefined }
       ;
@@ -262,7 +262,7 @@ export class SgColumnFactory {
         }
       }
       columnGroupDef.span = take;
-      const group = new SgColumnGroup(columnGroupDef, tableDefs.slice(i, i + take + 1));
+      const group = new NegColumnGroup(columnGroupDef, tableDefs.slice(i, i + take + 1));
       headerGroup.push(group);
       i += take;
     }
@@ -271,6 +271,6 @@ export class SgColumnFactory {
   }
 }
 
-export function columnFactory(): SgColumnFactory {
-  return new SgColumnFactory()
+export function columnFactory(): NegColumnFactory {
+  return new NegColumnFactory()
 }

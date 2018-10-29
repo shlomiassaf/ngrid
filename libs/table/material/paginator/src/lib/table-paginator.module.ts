@@ -5,18 +5,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 
-import { SgTableModule } from '@sac/table';
-import { SgPaginatorComponent } from './table-paginator.component';
+import { NegTableModule } from '@neg/table';
+import { NegPaginatorComponent } from './table-paginator.component';
 // TODO: Remove MatPaginatorModule and the initial code in the constructor
 // set the styles in the SCSS.
 
 @NgModule({
-  imports: [ CommonModule, MatPaginatorModule, MatSelectModule, MatTooltipModule, MatButtonModule, SgTableModule ],
-  declarations: [ SgPaginatorComponent ],
-  exports: [ SgPaginatorComponent ],
-  entryComponents: [ SgPaginatorComponent, MatPaginator ]
+  imports: [ CommonModule, MatPaginatorModule, MatSelectModule, MatTooltipModule, MatButtonModule, NegTableModule ],
+  declarations: [ NegPaginatorComponent ],
+  exports: [ NegPaginatorComponent ],
+  entryComponents: [ NegPaginatorComponent, MatPaginator ]
 })
-export class SgTablePaginatorModule {
+export class NegTablePaginatorModule {
   constructor(cf: ComponentFactoryResolver, injector: Injector) {
     // this is a workaround to ensure CSS from mat slider is loaded, otherwise it is omitted.
     cf.resolveComponentFactory(MatPaginator).create(injector);

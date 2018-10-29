@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core';
 
-import { ExtractedCodeGroup, ExtractedCodeQuery } from '@sac/docsi';
+import { ExtractedCodeGroup, ExtractedCodeQuery } from '@neg/docsi';
 
 export interface CodeViewItem {
   file?: string;

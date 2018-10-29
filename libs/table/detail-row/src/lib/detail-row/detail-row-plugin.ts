@@ -1,14 +1,14 @@
 import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { SgTableComponent, SgTablePluginController, TablePlugin, KillOnDestroy } from '@sac/table';
+import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy } from '@neg/table';
 
-import { SgTableDetailRowComponent } from './row';
-import { SgTableDetailRowParentRefDirective, SgTableDetailRowContext, SgTableDefaultDetailRowParentComponent } from './directives';
+import { NegTableDetailRowComponent } from './row';
+import { NegTableDetailRowParentRefDirective, NegTableDetailRowContext, NegTableDefaultDetailRowParentComponent } from './directives';
 
-declare module '@sac/table/lib/ext/types' {
-  interface SgTablePluginExtension {
-    detailRow?: SgTableDetailRowPluginDirective<any>;
+declare module '@neg/table/lib/ext/types' {
+  interface NegTablePluginExtension {
+    detailRow?: NegTableDetailRowPluginDirective<any>;
   }
 }
 
@@ -17,8 +17,8 @@ export const PLUGIN_KEY: 'detailRow' = 'detailRow';
 export const ROW_WHEN_TRUE = () => true;
 export const ROW_WHEN_FALSE = () => false;
 
-export function toggleDetailRow<T = any>(table: SgTableComponent<T>, row: T, forceState?: boolean): boolean | void {
-  const controller = SgTablePluginController.find(table);
+export function toggleDetailRow<T = any>(table: NegTableComponent<T>, row: T, forceState?: boolean): boolean | void {
+  const controller = NegTablePluginController.find(table);
   if (controller) {
     const plugin = controller.getPlugin(PLUGIN_KEY);
     if (plugin) {
@@ -27,16 +27,16 @@ export function toggleDetailRow<T = any>(table: SgTableComponent<T>, row: T, for
   }
 }
 
-export interface SgDetailsRowToggleEvent<T = any> {
+export interface NegDetailsRowToggleEvent<T = any> {
   row: T;
   expended: boolean;
   toggle(): void;
 }
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'sg-table[detailRow]' })
+@Directive({ selector: 'neg-table[detailRow]' })
 @KillOnDestroy()
-export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
+export class NegTableDetailRowPluginDirective<T> implements OnDestroy {
   /**
    * Detail row control (none / all rows / selective rows)
    *
@@ -85,19 +85,19 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
    */
   @Input() excludeToggleFrom: string[];
 
-  @Output() toggleChange = new EventEmitter<SgDetailsRowToggleEvent<T>>();
+  @Output() toggleChange = new EventEmitter<NegDetailsRowToggleEvent<T>>();
 
-  private _openedRow?: SgDetailsRowToggleEvent<T>;
+  private _openedRow?: NegDetailsRowToggleEvent<T>;
   private _forceSingle: boolean;
   private _isSimpleRow: (index: number, rowData: T) => boolean = ROW_WHEN_TRUE;
   private _isDetailRow: (index: number, rowData: T) => boolean = ROW_WHEN_FALSE;
-  private _detailRowRows = new Map<any, SgTableDetailRowComponent>();
+  private _detailRowRows = new Map<any, NegTableDetailRowComponent>();
   private _detailRow: ( (index: number, rowData: T) => boolean ) | boolean;
-  private _detailRowDef: SgTableDetailRowParentRefDirective<T>;
-  private _defaultParentRef: ComponentRef<SgTableDefaultDetailRowParentComponent>;
-  private _removePlugin: (table: SgTableComponent<any>) => void;
+  private _detailRowDef: NegTableDetailRowParentRefDirective<T>;
+  private _defaultParentRef: ComponentRef<NegTableDefaultDetailRowParentComponent>;
+  private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>, pluginCtrl: SgTablePluginController<T>, private injector: Injector) {
+  constructor(private table: NegTableComponent<any>, pluginCtrl: NegTablePluginController<T>, private injector: Injector) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     let subscription = pluginCtrl.events.subscribe( event => {
@@ -132,7 +132,7 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
             if (this.detailRow) {
               const viewContainer = rowOutlet.viewContainer;
               for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
-                const viewRef = viewContainer.get(renderIndex) as EmbeddedViewRef<SgTableDetailRowContext<T>>;
+                const viewRef = viewContainer.get(renderIndex) as EmbeddedViewRef<NegTableDetailRowContext<T>>;
                 const context = viewRef.context;
                 context.table = this.table;
               }
@@ -151,11 +151,11 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
     });
   }
 
-  addDetailRow(detailRow: SgTableDetailRowComponent): void {
+  addDetailRow(detailRow: NegTableDetailRowComponent): void {
     this._detailRowRows.set(detailRow.row, detailRow);
   }
 
-  removeDetailRow(detailRow: SgTableDetailRowComponent): void {
+  removeDetailRow(detailRow: NegTableDetailRowComponent): void {
     this._detailRowRows.delete(detailRow.row);
   }
 
@@ -175,7 +175,7 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
   }
 
   /** @internal */
-  detailRowToggled(event: SgDetailsRowToggleEvent<T>): void {
+  detailRowToggled(event: NegDetailsRowToggleEvent<T>): void {
     // logic for closing previous row
     const isSelf = this._openedRow && this._openedRow.row === event.row;
     if (event.expended) {
@@ -206,7 +206,7 @@ export class SgTableDetailRowPluginDirective<T> implements OnDestroy {
       } else if (!this._defaultParentRef) {
         // TODO: move to module? set in root registry? put elsewhere to avoid table sync (see event of registry change)...
         this._defaultParentRef = this.injector.get(ComponentFactoryResolver)
-          .resolveComponentFactory(SgTableDefaultDetailRowParentComponent)
+          .resolveComponentFactory(NegTableDefaultDetailRowParentComponent)
           .create(this.injector);
         this._defaultParentRef.changeDetectorRef.detectChanges();
         return;

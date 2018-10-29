@@ -5,50 +5,50 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { COLUMN, SgColumnTypeDefinitionDataMap, SgColumn, SgMetaColumn, SgTableCellTemplateContext, SgTableMetaCellTemplateContext } from '../columns';
-import { SgTableRegistryService } from '../table-registry.service';
+import { COLUMN, NegColumnTypeDefinitionDataMap, NegColumn, NegMetaColumn, NegTableCellTemplateContext, NegTableMetaCellTemplateContext } from '../columns';
+import { NegTableRegistryService } from '../table-registry.service';
 import { normalizeId } from '../utils';
 
-export interface SgTableCellDefDirectiveBase {
+export interface NegTableCellDefDirectiveBase {
   name: string;
-  type: keyof SgColumnTypeDefinitionDataMap;
+  type: keyof NegColumnTypeDefinitionDataMap;
 }
 
-export abstract class SgTableBaseCellDef<Z> implements OnInit, OnDestroy, SgTableCellDefDirectiveBase {
+export abstract class NegTableBaseCellDef<Z> implements OnInit, OnDestroy, NegTableCellDefDirectiveBase {
   name: string;
-  type: keyof SgColumnTypeDefinitionDataMap;
+  type: keyof NegColumnTypeDefinitionDataMap;
 
   constructor(public tRef: TemplateRef<Z>,
-              protected registry: SgTableRegistryService) { }
+              protected registry: NegTableRegistryService) { }
 
   ngOnInit(): void {
     // TODO: listen to property changes (name) and re-register cell
-    if (this instanceof SgTableHeaderCellDefDirective) {
+    if (this instanceof NegTableHeaderCellDefDirective) {
       this.registry.addMulti('headerCell', this);
-    } else if (this instanceof SgTableCellDefDirective) {
+    } else if (this instanceof NegTableCellDefDirective) {
       this.registry.addMulti('tableCell', this);
-    } else if (this instanceof SgTableFooterCellDefDirective) {
+    } else if (this instanceof NegTableFooterCellDefDirective) {
       this.registry.addMulti('footerCell', this);
     }
   }
 
   ngOnDestroy(): void {
-    if (this instanceof SgTableHeaderCellDefDirective) {
+    if (this instanceof NegTableHeaderCellDefDirective) {
       this.registry.removeMulti('headerCell', this);
-    } else if (this instanceof SgTableCellDefDirective) {
+    } else if (this instanceof NegTableCellDefDirective) {
       this.registry.removeMulti('tableCell', this);
-    } else if (this instanceof SgTableFooterCellDefDirective) {
+    } else if (this instanceof NegTableFooterCellDefDirective) {
       this.registry.removeMulti('footerCell', this);
     }
   }
 }
 
 /**
- * Header Cell definition for the sg-table.
+ * Header Cell definition for the neg-table.
  * Captures the template of a column's data row header cell as well as header cell-specific properties.
  *
- * `sgTableHeaderCellDef` does the same thing that `matHeaderCellDef` and `cdkHeaderCellDef` do with one difference,
- * `sgTableHeaderCellDef` is independent and does not require a column definition parent, instead it accept the ID of
+ * `negTableHeaderCellDef` does the same thing that `matHeaderCellDef` and `cdkHeaderCellDef` do with one difference,
+ * `negTableHeaderCellDef` is independent and does not require a column definition parent, instead it accept the ID of
  * the header cell.
  *
  * NOTE: Defining '*' as id will declare the header cell template as default, replacing the table's default header cell template.
@@ -59,18 +59,18 @@ export abstract class SgTableBaseCellDef<Z> implements OnInit, OnDestroy, SgTabl
  * the `prop` is used (full with dot notation).
  */
 @Directive({
-  selector: '[sgTableHeaderCellDef], [sgTableHeaderCellTypeDef]',
-  inputs: [ 'name:sgTableHeaderCellDef', 'type:sgTableHeaderCellTypeDef' ]
+  selector: '[negTableHeaderCellDef], [negTableHeaderCellTypeDef]',
+  inputs: [ 'name:negTableHeaderCellDef', 'type:negTableHeaderCellTypeDef' ]
 })
-export class SgTableHeaderCellDefDirective<T> extends SgTableBaseCellDef<SgTableMetaCellTemplateContext<T>> {
-  constructor(tRef: TemplateRef<SgTableMetaCellTemplateContext<T>>, registry: SgTableRegistryService) { super(tRef, registry); }
+export class NegTableHeaderCellDefDirective<T> extends NegTableBaseCellDef<NegTableMetaCellTemplateContext<T>> {
+  constructor(tRef: TemplateRef<NegTableMetaCellTemplateContext<T>>, registry: NegTableRegistryService) { super(tRef, registry); }
 }
 
 /**
- * Cell definition for the sg-table.
+ * Cell definition for the neg-table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  *
- * `sgTableCellDef` does the same thing that `matCellDef` and `cdkCellDef` do with one difference, `sgTableCellDef` is
+ * `negTableCellDef` does the same thing that `matCellDef` and `cdkCellDef` do with one difference, `negTableCellDef` is
  * independent and does not require a column definition parent, instead it accept the ID of the cell.
  *
  * NOTE: Defining '*' as id will declare the cell template as default, replacing the table's default cell template.
@@ -81,23 +81,23 @@ export class SgTableHeaderCellDefDirective<T> extends SgTableBaseCellDef<SgTable
  * the `prop` is used (full with dot notation).
  */
 @Directive({
-  selector: '[sgTableCellDef], [sgTableCellTypeDef]',
-  inputs: [ 'name:sgTableCellDef', 'type:sgTableCellTypeDef' ]
+  selector: '[negTableCellDef], [negTableCellTypeDef]',
+  inputs: [ 'name:negTableCellDef', 'type:negTableCellTypeDef' ]
 })
-export class SgTableCellDefDirective<T, P extends keyof SgColumnTypeDefinitionDataMap = any> extends SgTableBaseCellDef<SgTableCellTemplateContext<T, P>> {
+export class NegTableCellDefDirective<T, P extends keyof NegColumnTypeDefinitionDataMap = any> extends NegTableBaseCellDef<NegTableCellTemplateContext<T, P>> {
   type: P;
-  constructor(tRef: TemplateRef<SgTableCellTemplateContext<any, P>>, registry: SgTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<NegTableCellTemplateContext<any, P>>, registry: NegTableRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
-  selector: '[sgTableFooterCellDef], [sgTableFooterCellTypeDef]',
-  inputs: [ 'name:sgTableFooterCellDef', 'type:sgTableFooterCellTypeDef' ]
+  selector: '[negTableFooterCellDef], [negTableFooterCellTypeDef]',
+  inputs: [ 'name:negTableFooterCellDef', 'type:negTableFooterCellTypeDef' ]
 })
-export class SgTableFooterCellDefDirective<T> extends SgTableBaseCellDef<SgTableMetaCellTemplateContext<T>> {
-  constructor(tRef: TemplateRef<SgTableMetaCellTemplateContext<T>>, registry: SgTableRegistryService) { super(tRef, registry); }
+export class NegTableFooterCellDefDirective<T> extends NegTableBaseCellDef<NegTableMetaCellTemplateContext<T>> {
+  constructor(tRef: TemplateRef<NegTableMetaCellTemplateContext<T>>, registry: NegTableRegistryService) { super(tRef, registry); }
 }
 
-function findCellDefById<T extends SgTableCellDefDirectiveBase>(cellDefs: Array<T>, colDef: Pick<SgMetaColumn, 'id' | 'type'>, searchParent?: boolean): T {
+function findCellDefById<T extends NegTableCellDefDirectiveBase>(cellDefs: Array<T>, colDef: Pick<NegMetaColumn, 'id' | 'type'>, searchParent?: boolean): T {
   for (const cellDef of cellDefs) {
     if (cellDef.type) {
       if (colDef.type && cellDef.type === colDef.type.name) {
@@ -112,15 +112,15 @@ function findCellDefById<T extends SgTableCellDefDirectiveBase>(cellDefs: Array<
   }
 }
 
-export function findCellDef<T = any>(registry: SgTableRegistryService, colDef: SgColumn, kind: 'tableCell',  searchParent?: boolean): SgTableCellDefDirective<T>;
-export function findCellDef<T = any>(registry: SgTableRegistryService, colDef: SgMetaColumn | SgColumn, kind: 'headerCell', searchParent?: boolean): SgTableHeaderCellDefDirective<T>;
-export function findCellDef<T = any>(registry: SgTableRegistryService, colDef: SgMetaColumn | SgColumn, kind: 'footerCell', searchParent?: boolean): SgTableFooterCellDefDirective<T>;
-export function findCellDef<T = any>(registry: SgTableRegistryService, colDef: COLUMN, kind: 'headerCell' | 'footerCell' | 'tableCell', searchParent?: boolean): SgTableCellDefDirective<T> | SgTableHeaderCellDefDirective<T> | SgTableFooterCellDefDirective <T> {
-  const cellDefs: SgTableCellDefDirectiveBase[] = registry.getMulti(kind);
+export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: NegColumn, kind: 'tableCell',  searchParent?: boolean): NegTableCellDefDirective<T>;
+export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: NegMetaColumn | NegColumn, kind: 'headerCell', searchParent?: boolean): NegTableHeaderCellDefDirective<T>;
+export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: NegMetaColumn | NegColumn, kind: 'footerCell', searchParent?: boolean): NegTableFooterCellDefDirective<T>;
+export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: COLUMN, kind: 'headerCell' | 'footerCell' | 'tableCell', searchParent?: boolean): NegTableCellDefDirective<T> | NegTableHeaderCellDefDirective<T> | NegTableFooterCellDefDirective <T> {
+  const cellDefs: NegTableCellDefDirectiveBase[] = registry.getMulti(kind);
 
   if (cellDefs) {
-    let type: Pick<SgMetaColumn, 'id' | 'type'>;
-    if (colDef instanceof SgColumn) {
+    let type: Pick<NegMetaColumn, 'id' | 'type'>;
+    if (colDef instanceof NegColumn) {
       switch (kind) {
         case 'headerCell':
           if (colDef.headerType) {

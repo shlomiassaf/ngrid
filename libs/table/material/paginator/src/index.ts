@@ -1,1 +1,1 @@
-export { SgTablePaginatorModule } from './lib/table-paginator.module';
+export { NegTablePaginatorModule } from './lib/table-paginator.module';

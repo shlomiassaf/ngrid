@@ -3,38 +3,38 @@ import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { SgTableModule, SgTablePluginController, SgTableConfigService } from '@sac/table';
-import { SgTableTargetEventsModule } from '@sac/table/target-events';
+import { NegTableModule, NegTablePluginController, NegTableConfigService } from '@neg/table';
+import { NegTableTargetEventsModule } from '@neg/table/target-events';
 
-import { SgTableCellTooltipDirective } from './cell-tooltip.directive';
+import { NegTableCellTooltipDirective } from './cell-tooltip.directive';
 
 @NgModule({
-  imports: [ CommonModule, MatTooltipModule, OverlayModule, SgTableModule, SgTableTargetEventsModule ],
-  declarations: [ SgTableCellTooltipDirective ],
-  exports: [ SgTableCellTooltipDirective, MatTooltipModule ],
+  imports: [ CommonModule, MatTooltipModule, OverlayModule, NegTableModule, NegTableTargetEventsModule ],
+  declarations: [ NegTableCellTooltipDirective ],
+  exports: [ NegTableCellTooltipDirective, MatTooltipModule ],
 })
-export class SgTableCellTooltipModule {
-  constructor(@Optional() @SkipSelf() parentModule: SgTableCellTooltipModule,
-              configService: SgTableConfigService) {
+export class NegTableCellTooltipModule {
+  constructor(@Optional() @SkipSelf() parentModule: NegTableCellTooltipModule,
+              configService: NegTableConfigService) {
     if (parentModule) {
       return;
     }
 
-    SgTablePluginController.created
+    NegTablePluginController.created
       .subscribe( event => {
-        // Do not remove the explicit reference to `SgTableCellTooltipDirective`
-        // We use `SgTableCellTooltipDirective.PLUGIN_KEY` to create a direct reference to `SgTableCellTooltipDirective`
-        // which will disable dead code elimination for the `SgTableCellTooltipDirective` plugin.
+        // Do not remove the explicit reference to `NegTableCellTooltipDirective`
+        // We use `NegTableCellTooltipDirective.PLUGIN_KEY` to create a direct reference to `NegTableCellTooltipDirective`
+        // which will disable dead code elimination for the `NegTableCellTooltipDirective` plugin.
         // If it is not set, using the plugin will only work when it is used in templates, other wise, if used programmatically (`autoSetAll`)
         // CLI prod builds will remove the plugin's code.
-        const cellTooltipConfig = configService.get(SgTableCellTooltipDirective.PLUGIN_KEY);
+        const cellTooltipConfig = configService.get(NegTableCellTooltipDirective.PLUGIN_KEY);
         if (cellTooltipConfig && cellTooltipConfig.autoSetAll === true) {
           const pluginCtrl = event.controller;
           let subscription = pluginCtrl.events
             .subscribe( evt => {
               if (evt.kind === 'onInit') {
-                if (!pluginCtrl.hasPlugin(SgTableCellTooltipDirective.PLUGIN_KEY)) {
-                  pluginCtrl.createPlugin(SgTableCellTooltipDirective.PLUGIN_KEY);
+                if (!pluginCtrl.hasPlugin(NegTableCellTooltipDirective.PLUGIN_KEY)) {
+                  pluginCtrl.createPlugin(NegTableCellTooltipDirective.PLUGIN_KEY);
                 }
                 subscription.unsubscribe();
                 subscription = undefined;

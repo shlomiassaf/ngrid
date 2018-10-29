@@ -11,46 +11,46 @@ import {
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
-import { SgTableComponent, SgTablePluginController, KillOnDestroy } from '@sac/table';
+import { NegTableComponent, NegTablePluginController, KillOnDestroy } from '@neg/table';
 
-import { SgTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
+import { NegTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
 
 @Component({
-  selector: 'sg-table-row[detailRow]',
+  selector: 'neg-table-row[detailRow]',
   template: CDK_ROW_TEMPLATE,
   host: {
-    'class': 'sg-table-row sg-row-detail-parent',
+    'class': 'neg-table-row neg-row-detail-parent',
     'role': 'row',
     '[attr.tabindex]': 'table?.rowFocus',
     '(keydown)': 'handleKeydown($event)'
   },
   providers: [
-    { provide: CdkRow, useExisting: SgTableDetailRowComponent }
+    { provide: CdkRow, useExisting: NegTableDetailRowComponent }
   ],
-  exportAs: 'sgTableDetailRow',
+  exportAs: 'negTableDetailRow',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 @KillOnDestroy()
-export class SgTableDetailRowComponent extends CdkRow implements OnInit, OnDestroy {
+export class NegTableDetailRowComponent extends CdkRow implements OnInit, OnDestroy {
 
   get expended(): boolean {
     return this.opened;
   }
 
   @Input('detailRow') row: any;
-  @Input() table: SgTableComponent<any>;
+  @Input() table: NegTableComponent<any>;
 
   private get _element(): HTMLElement { return this.elRef.nativeElement; }
   private opened: boolean = false;
-  private plugin: SgTableDetailRowPluginDirective<any>;
+  private plugin: NegTableDetailRowPluginDirective<any>;
 
   constructor(private vcRef: ViewContainerRef, private elRef: ElementRef) {
     super();
   }
 
   ngOnInit(): void {
-    const controller = SgTablePluginController.find(this.table);
+    const controller = NegTablePluginController.find(this.table);
     this.plugin = controller.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
     const tradeEvents = controller.getPlugin('targetEvents');
@@ -82,14 +82,14 @@ export class SgTableDetailRowComponent extends CdkRow implements OnInit, OnDestr
     if (this.opened !== forceState) {
       if ( this.opened ) {
         this.vcRef.clear();
-        this._element.classList.remove('sg-row-detail-opened');
+        this._element.classList.remove('neg-row-detail-opened');
       } else {
         this.render();
       }
       this.opened = this.vcRef.length > 0;
 
       if (this.opened) {
-        this._element.classList.add('sg-row-detail-opened');
+        this._element.classList.add('neg-row-detail-opened');
       }
       this.plugin.detailRowToggled(this);
     }

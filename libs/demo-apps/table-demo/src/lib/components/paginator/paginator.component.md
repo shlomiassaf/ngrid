@@ -12,7 +12,7 @@ The table comes with native support for **logical** pagination in 3 flavors:
 ## Logical Pagination
 
 Logical pagination means that the table does not include any concrete UI implementation, this is provided by plugins.
-In the following examples we use the `@sac/table/mat-paginator" which is a  paginator based on the Material Design spec.
+In the following examples we use the `@neg/table/mat-paginator" which is a  paginator based on the Material Design spec.
 
 In fact, pagination itself is a native datasource feature and the table does not handle any logic, only the datasource.
 
@@ -23,16 +23,16 @@ Client side pagination is applied when the entire datasource is available offlin
 In this scenario the entire process is handled automatically by the table, based on external configuration input.
 
 <docsi-mat-example-with-source title="Client side Paginator" contentClass="mat-elevation-z7" query="[{section: 'ex-1'}]">
-  <!--@sac-example:ex-1-->
-  <sg-table usePagination
+  <!--@neg-example:ex-1-->
+  <neg-table usePagination
             blockUi
             [dataSource]="clientSideDS"
             [columns]="columns">
-    <sg-table-paginator *sgTablePaginatorRef="let table"
+    <neg-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.dataSource.paginator"></sg-table-paginator>
-  </sg-table>
-  <!--@sac-example:ex-1-->
+                        [paginator]="table.dataSource.paginator"></neg-table-paginator>
+  </neg-table>
+  <!--@neg-example:ex-1-->
 </docsi-mat-example-with-source>
 
 Changing the current pages done synchronously because the data exists.
@@ -53,16 +53,16 @@ SKIP and the number or rows to TAKE.
 Regardless, it is the same information, transforming from one method to the other is simple math.
 
 <docsi-mat-example-with-source title="Page number based Server side Paginator" contentClass="mat-elevation-z7" query="[{section: 'ex-2'}]">
-    <!--@sac-example:ex-2-->
-  <sg-table usePagination
+    <!--@neg-example:ex-2-->
+  <neg-table usePagination
             blockUi
             [dataSource]="pageNumberDS"
             [columns]="columns">
-    <sg-table-paginator *sgTablePaginatorRef="let table"
+    <neg-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.dataSource.paginator"></sg-table-paginator>
-  </sg-table>
-  <!--@sac-example:ex-2-->
+                        [paginator]="table.dataSource.paginator"></neg-table-paginator>
+  </neg-table>
+  <!--@neg-example:ex-2-->
 </docsi-mat-example-with-source>
 
 ### Tokens
@@ -73,16 +73,16 @@ From that point, the response is the data set with an additional token that we c
 With this method might be missing the total amount of rows/pages depending on the implementation.
 
 <docsi-mat-example-with-source title="Token based based Server side Paginator" contentClass="mat-elevation-z7" query="[{section: 'ex-3'}]">
-    <!--@sac-example:ex-3-->
-  <sg-table usePagination="token"
+    <!--@neg-example:ex-3-->
+  <neg-table usePagination="token"
             blockUi
             [dataSource]="tokenDS"
             [columns]="columns">
-    <sg-table-paginator *sgTablePaginatorRef="let table"
+    <neg-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.dataSource.paginator"></sg-table-paginator>
-  </sg-table>
-  <!--@sac-example:ex-3-->
+                        [paginator]="table.dataSource.paginator"></neg-table-paginator>
+  </neg-table>
+  <!--@neg-example:ex-3-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Paginator using footer row with [stickyFooter]" contentClass="mat-elevation-z7" query="[{section: 'ex-4'}]">
@@ -93,18 +93,18 @@ With this method might be missing the total amount of rows/pages depending on th
     <p>
       The default behaviour, using a dedicated slot will comes after footer rows and will always stick to the bottom
     </p>
-    <!--@sac-example:ex-4-->
-  <sg-table usePagination
+    <!--@neg-example:ex-4-->
+  <neg-table usePagination
             blockUi
             [dataSource]="footerRowDS"
             [columns]="columnsPaginatorAsFooter"
             [stickyFooter]="[0]"
             style="background: transparent">
-    <div *sgTableFooterCellTypeDef="'PAGINATOR'; table as table"
+    <div *negTableFooterCellTypeDef="'PAGINATOR'; table as table"
         style="display: flex; justify-content: flex-end; width: 100%;">
-      <sg-table-paginator [table]="table"
-                          [paginator]="table.dataSource.paginator"></sg-table-paginator>
+      <neg-table-paginator [table]="table"
+                          [paginator]="table.dataSource.paginator"></neg-table-paginator>
     </div>
-  </sg-table>
-  <!--@sac-example:ex-4-->
+  </neg-table>
+  <!--@neg-example:ex-4-->
 </docsi-mat-example-with-source>

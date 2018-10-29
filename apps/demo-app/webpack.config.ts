@@ -1,5 +1,5 @@
 import { Configuration } from 'webpack';
-import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin, DocsiApiReferenceWebpackPlugin } from '@sac/docsi/webpack';
+import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin, DocsiApiReferenceWebpackPlugin } from '@neg/docsi/webpack';
 
 function applyLoaders(webpackConfig: Configuration) {
   // We have custom loaders, for webpack to be aware of them we tell it the directory the are in.
@@ -33,13 +33,13 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   // webpackConfig.plugins.push(new DocsiApiReferenceWebpackPlugin({
   //   mode: 'mono-repo',
   //   entryPoints: [
-  //     require.resolve('@sac/table'),
-  //     require.resolve('@sac/table/block-ui'),
-  //     require.resolve('@sac/table/detail-row'),
-  //     require.resolve('@sac/table/mat-checkbox-column'),
-  //     require.resolve('@sac/table/mat-paginator'),
-  //     require.resolve('@sac/table/mat-sort'),
-  //     require.resolve('@sac/table/sticky'),
+  //     require.resolve('@neg/table'),
+  //     require.resolve('@neg/table/block-ui'),
+  //     require.resolve('@neg/table/detail-row'),
+  //     require.resolve('@neg/table/mat-checkbox-column'),
+  //     require.resolve('@neg/table/mat-paginator'),
+  //     require.resolve('@neg/table/mat-sort'),
+  //     require.resolve('@neg/table/sticky'),
   //   ],
   //   tsconfig: './libs/tsconfig.docsi-api-ref.json',
   // }));

@@ -3,34 +3,34 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import {
   columnFactory,
-  SgTableConfigService,
-  SgColumnDefinition,
-  SgTableColumnDefinitionSet,
-  SgTableComponent,
-  SgTablePluginController,
-  SgColumn,
+  NegTableConfigService,
+  NegColumnDefinition,
+  NegTableColumnDefinitionSet,
+  NegTableComponent,
+  NegTablePluginController,
+  NegColumn,
   TablePlugin,
   KillOnDestroy,
-} from '@sac/table';
+} from '@neg/table';
 
 import { TransposeTableSession, LOCAL_COLUMN_DEF, VIRTUAL_REFRESH } from './transpose-table-session';
 import { getCellValueTransformed, createTransformedColumn } from './utils';
 
-const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'sg-table-header-cell sg-table-transposed-header-cell' };
+const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'neg-table-header-cell neg-table-transposed-header-cell' };
 
-declare module '@sac/table/lib/table/services/config' {
-  interface SgTableConfig {
+declare module '@neg/table/lib/table/services/config' {
+  interface NegTableConfig {
     transposePlugin: {
-      header?: Partial<SgColumnDefinition>;
-      defaultCol?: Partial<SgColumnDefinition>;
+      header?: Partial<NegColumnDefinition>;
+      defaultCol?: Partial<NegColumnDefinition>;
       matchTemplates?: boolean;
     }
   }
 }
 
-declare module '@sac/table/lib/ext/types' {
-  interface SgTablePluginExtension {
-    transpose?: SgTableTransposePluginDirective;
+declare module '@neg/table/lib/ext/types' {
+  interface NegTablePluginExtension {
+    transpose?: NegTableTransposePluginDirective;
   }
 }
 const PLUGIN_KEY: 'transpose' = 'transpose';
@@ -55,9 +55,9 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
  */
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'sg-table[transpose]' })
+@Directive({ selector: 'neg-table[transpose]' })
 @KillOnDestroy()
-export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
+export class NegTableTransposePluginDirective implements OnChanges, OnDestroy {
 
   @Input() transpose: boolean;
 
@@ -70,7 +70,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
    * ```js
    * {
    *  prop: '__transpose__',
-   *  css: 'sg-table-header-cell sg-table-transposed-header-cell',
+   *  css: 'neg-table-header-cell neg-table-transposed-header-cell',
    * }
    * ```
    *
@@ -81,7 +81,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
    * When using this approach the column defined on the table is used as is (no merging). Just make sure you use the right `prop` value for it.
    * e.g. if `header` is not set here its `__transpose__` otherwise, the actual `prop` value.
    */
-  @Input('transposeHeaderCol') set header(value: Partial<SgColumnDefinition>) {
+  @Input('transposeHeaderCol') set header(value: Partial<NegColumnDefinition>) {
     this._header = Object.assign({}, DEFAULT_HEADER_COLUMN, value || {})
   }
 
@@ -89,7 +89,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
    * Column definitions to be used as the base default definitions for the new transposed columns.
    * This is an optional value, when not set no default's are applied.
    */
-  @Input('transposeDefaultCol') defaultCol: Partial<SgColumnDefinition>;
+  @Input('transposeDefaultCol') defaultCol: Partial<NegColumnDefinition>;
 
   /**
    * When true, will try to use the original template of the cell, i.e. the template that would have been used
@@ -100,13 +100,13 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
   @Input() matchTemplates: boolean;
 
   private enabled: boolean = false;
-  private _header: SgColumnDefinition = DEFAULT_HEADER_COLUMN;
+  private _header: NegColumnDefinition = DEFAULT_HEADER_COLUMN;
   private tableState: TransposeTableSession;
-  private columns: SgColumn[];
-  private selfColumn: SgColumn;
-  private _removePlugin: (table: SgTableComponent<any>) => void;
+  private columns: NegColumn[];
+  private selfColumn: NegColumn;
+  private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor(private table: SgTableComponent<any>, private pluginCtrl: SgTablePluginController, config: SgTableConfigService) {
+  constructor(private table: NegTableComponent<any>, private pluginCtrl: NegTablePluginController, config: NegTableConfigService) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     const transposePlugin = config.get('transposePlugin');
     if (transposePlugin) {
@@ -149,7 +149,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
 
     const sourceFactoryWrapper = (results: any[]) => {
       if (results) {
-        const local: SgTableColumnDefinitionSet = this.table.columns = columnFactory()
+        const local: NegTableColumnDefinitionSet = this.table.columns = columnFactory()
         .default(this.defaultCol || {})
         .table(
           this.selfColumn,
@@ -167,10 +167,10 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
 
         const matchTemplates = coerceBooleanProperty(this.matchTemplates);
         const { prop } = this._header;
-        let currentColumn: SgColumn;
+        let currentColumn: NegColumn;
         for (const c of this.table._store.table) {
           if (c.orgProp === prop) {
-            c.getValue = (row: SgColumn) => {
+            c.getValue = (row: NegColumn) => {
               currentColumn = row;
               return row.label as any;
             };
@@ -200,7 +200,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
     }
   }
 
-  private updateColumns(columns: SgColumn[]): void {
+  private updateColumns(columns: NegColumn[]): void {
     const { prop } = this._header;
     this.columns = [];
     for (const c of columns) {
@@ -211,7 +211,7 @@ export class SgTableTransposePluginDirective implements OnChanges, OnDestroy {
       }
     }
     if (!this.selfColumn) {
-      this.selfColumn = new SgColumn(this._header);
+      this.selfColumn = new NegColumn(this._header);
     }
   }
 }

@@ -1,6 +1,6 @@
 import { Observable, BehaviorSubject } from 'rxjs';
 
-export type SgTablePaginatorKind = 'pageNumber' | 'token';
+export type NegTablePaginatorKind = 'pageNumber' | 'token';
 
 /**
  * An object with properties representing the change in the paginator.
@@ -9,14 +9,14 @@ export type SgTablePaginatorKind = 'pageNumber' | 'token';
  *
  * The properties that can change are page, perPage and total.
  */
-export interface SgPaginatorChangeEvent<T = any> {
+export interface NegPaginatorChangeEvent<T = any> {
   page?: [T, T];
   perPage?: [number, number];
   total?: [number, number];
 }
 
-export interface SgPaginator<TPage> {
-  kind: SgTablePaginatorKind;
+export interface NegPaginator<TPage> {
+  kind: NegTablePaginatorKind;
   /**
    * When true will assume that the datasource represents a single page.
    * This is common in server side pagination where pervious data is not cached and each pages is fetched and set as is, i.e. the datasource
@@ -34,7 +34,7 @@ export interface SgPaginator<TPage> {
   readonly totalPages: number;
   readonly range: [number, number];
 
-  onChange: Observable<SgPaginatorChangeEvent<TPage>>;
+  onChange: Observable<NegPaginatorChangeEvent<TPage>>;
   reset(): void;
   canMove(value: TPage): boolean;
   hasNext(): boolean;
@@ -45,7 +45,7 @@ export interface SgPaginator<TPage> {
 
 }
 
-export class SgTokenPaginator implements SgPaginator<string> {
+export class NegTokenPaginator implements NegPaginator<string> {
   readonly kind: 'token' = 'token';
   noCacheMode: boolean;
 
@@ -56,7 +56,7 @@ export class SgTokenPaginator implements SgPaginator<string> {
     }
 
     if (this._perPage !== value) {
-      const changes: SgPaginatorChangeEvent<string> = { perPage: [this._perPage, this._perPage = value] };
+      const changes: NegPaginatorChangeEvent<string> = { perPage: [this._perPage, this._perPage = value] };
       this.emit(changes);
     }
   }
@@ -77,7 +77,7 @@ export class SgTokenPaginator implements SgPaginator<string> {
 
   get total(): number { return this._total; }
   set total(value: number) {
-    const changes: SgPaginatorChangeEvent<string> = { total: [this._total, this._total = value] };
+    const changes: NegPaginatorChangeEvent<string> = { total: [this._total, this._total = value] };
     this.emit(changes);
   }
 
@@ -97,9 +97,9 @@ export class SgTokenPaginator implements SgPaginator<string> {
     return this._range;
   }
 
-  readonly onChange: Observable<SgPaginatorChangeEvent<string>>;
-  protected onChange$: BehaviorSubject<SgPaginatorChangeEvent<string>>;
-  protected queuedChanges: SgPaginatorChangeEvent<string> | undefined;
+  readonly onChange: Observable<NegPaginatorChangeEvent<string>>;
+  protected onChange$: BehaviorSubject<NegPaginatorChangeEvent<string>>;
+  protected queuedChanges: NegPaginatorChangeEvent<string> | undefined;
   protected _range: [number, number];
   protected _perPage: number = 10;
   protected _page: any;
@@ -108,7 +108,7 @@ export class SgTokenPaginator implements SgPaginator<string> {
   protected _cursor: number;
 
   constructor() {
-    this.onChange$ = new BehaviorSubject<SgPaginatorChangeEvent<string>>({page: [null, null]});
+    this.onChange$ = new BehaviorSubject<NegPaginatorChangeEvent<string>>({page: [null, null]});
     this.onChange = this.onChange$.asObservable();
     this.reset();
   }
@@ -140,7 +140,7 @@ export class SgTokenPaginator implements SgPaginator<string> {
     }
   }
 
-  private emit(changes: SgPaginatorChangeEvent<string>): void {
+  private emit(changes: NegPaginatorChangeEvent<string>): void {
     this._range = undefined;
     if (this.queuedChanges) {
       Object.assign(this.queuedChanges, changes);
@@ -155,7 +155,7 @@ export class SgTokenPaginator implements SgPaginator<string> {
   }
 }
 
-export class SgPagingPaginator implements SgPaginator<number> {
+export class NegPagingPaginator implements NegPaginator<number> {
   readonly kind: 'pageNumber' = 'pageNumber';
   noCacheMode: boolean;
 
@@ -166,7 +166,7 @@ export class SgPagingPaginator implements SgPaginator<number> {
     }
 
     if (this._perPage !== value) {
-      const changes: SgPaginatorChangeEvent<number> = { perPage: [this._perPage, this._perPage = value] };
+      const changes: NegPaginatorChangeEvent<number> = { perPage: [this._perPage, this._perPage = value] };
 
       const prev = this._page;
       this.calcPages();
@@ -201,7 +201,7 @@ export class SgPagingPaginator implements SgPaginator<number> {
     }
 
     if (this._total !== value) {
-      const changes: SgPaginatorChangeEvent<number> = { total: [this._total, this._total = value] };
+      const changes: NegPaginatorChangeEvent<number> = { total: [this._total, this._total = value] };
 
       const prev = this._page;
       this.calcPages();
@@ -232,8 +232,8 @@ export class SgPagingPaginator implements SgPaginator<number> {
     return this._range;
   }
 
-  readonly onChange: Observable<SgPaginatorChangeEvent<number>>;
-  protected onChange$: BehaviorSubject<SgPaginatorChangeEvent<number>>;
+  readonly onChange: Observable<NegPaginatorChangeEvent<number>>;
+  protected onChange$: BehaviorSubject<NegPaginatorChangeEvent<number>>;
 
   private _total: number = 0;
   private _perPage: number = 10;
@@ -241,10 +241,10 @@ export class SgPagingPaginator implements SgPaginator<number> {
   private _totalPages: number = 0;
   private _range: [number, number];
 
-  private queuedChanges: SgPaginatorChangeEvent<number> | undefined;
+  private queuedChanges: NegPaginatorChangeEvent<number> | undefined;
 
   constructor() {
-    this.onChange$ = new BehaviorSubject<SgPaginatorChangeEvent<number>>({page: [null, 1]});
+    this.onChange$ = new BehaviorSubject<NegPaginatorChangeEvent<number>>({page: [null, 1]});
     this.onChange = this.onChange$.asObservable();
   }
 
@@ -275,7 +275,7 @@ export class SgPagingPaginator implements SgPaginator<number> {
     }
   }
 
-  private emit(changes: SgPaginatorChangeEvent<number>): void {
+  private emit(changes: NegPaginatorChangeEvent<number>): void {
     this._range = undefined;
     if (this.queuedChanges) {
       Object.assign(this.queuedChanges, changes);

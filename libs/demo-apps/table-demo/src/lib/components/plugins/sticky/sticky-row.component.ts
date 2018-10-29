@@ -1,12 +1,12 @@
-/* @sac-example:ex-row-1 */
-/* @sac-example:ex-row-2 */
-/* @sac-example:ex-row-3 */
+/* @neg-example:ex-row-1 */
+/* @neg-example:ex-row-2 */
+/* @neg-example:ex-row-3 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
-import { createDS, columnFactory } from '@sac/table';
+import { createDS, columnFactory } from '@neg/table';
 
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -29,20 +29,20 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-sticky-row-table-example-component',
+  selector: 'neg-sticky-row-table-example-component',
   templateUrl: './sticky-row.component.html',
   styleUrls: ['./sticky-row.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StickyRowTableExampleComponent {
-  columns = columnFactory().table(...COLUMNS.table).build(); /* @sac-ignore-line:ex-row-3 */
-  columnsWithMultiHeaders = COLUMNS; /* @sac-ignore-line:ex-row-1 */ /* @sac-ignore-line:ex-row-2 */
+  columns = columnFactory().table(...COLUMNS.table).build(); /* @neg-ignore-line:ex-row-3 */
+  columnsWithMultiHeaders = COLUMNS; /* @neg-ignore-line:ex-row-1 */ /* @neg-ignore-line:ex-row-2 */
 
   dataSource = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @sac-example:ex-row-3 */
-/* @sac-example:ex-row-2 */
-/* @sac-example:ex-row-1 */
+/* @neg-example:ex-row-3 */
+/* @neg-example:ex-row-2 */
+/* @neg-example:ex-row-1 */

@@ -1,11 +1,11 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
-import { createDS, columnFactory } from '@sac/table';
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { createDS, columnFactory } from '@neg/table';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 200})
@@ -16,7 +16,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-block-ui-table-example-component',
+  selector: 'neg-block-ui-table-example-component',
   templateUrl: './block-ui.component.html',
   styleUrls: ['./block-ui.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -35,5 +35,5 @@ export class BlockUiTableExampleComponent {
     this.autoDataSource.refresh();
   }
 }
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */

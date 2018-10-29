@@ -1,25 +1,25 @@
 import { TemplateRef } from '@angular/core';
 
-import { SgTableSorter } from '../../data-source/types';
-import { SgTableColumnDef } from '../directives';
+import { NegTableSorter } from '../../data-source/types';
+import { NegTableColumnDef } from '../directives';
 import { normalizeId, deepPathGet, deepPathSet } from '../utils';
-import { SgColumnSizeInfo } from '../types';
+import { NegColumnSizeInfo } from '../types';
 import {
-  SgColumnDefinition,
-  SgTableMetaCellTemplateContext,
-  SgTableCellTemplateContext,
-  SgColumnTypeDefinition
+  NegColumnDefinition,
+  NegTableMetaCellTemplateContext,
+  NegTableCellTemplateContext,
+  NegColumnTypeDefinition
 } from './types';
 import { initDefinitions, parseStyleWidth } from './utils';
-import { SgColumnGroup } from './group-column';
+import { NegColumnGroup } from './group-column';
 
-const SG_COLUMN_MARK = Symbol('SgColumn');
+const NEG_COLUMN_MARK = Symbol('NegColumn');
 
-function isSgColumn(def: SgColumnDefinition): def is SgColumn {
-  return def instanceof SgColumn || def[SG_COLUMN_MARK] === true;
+function isNegColumn(def: NegColumnDefinition): def is NegColumn {
+  return def instanceof NegColumn || def[NEG_COLUMN_MARK] === true;
 }
 
-export class SgColumn implements SgColumnDefinition {
+export class NegColumn implements NegColumnDefinition {
   id: string;
   label?: string;
 
@@ -81,11 +81,11 @@ export class SgColumn implements SgColumnDefinition {
    * The type of the values in this column.
    * This is an additional level for matching columns to templates, grouping templates for a type.
    */
-  type?: SgColumnTypeDefinition;
-  headerType?: SgColumnTypeDefinition;
-  footerType?: SgColumnTypeDefinition;
+  type?: NegColumnTypeDefinition;
+  headerType?: NegColumnTypeDefinition;
+  footerType?: NegColumnTypeDefinition;
 
-  sort?: boolean | SgTableSorter;
+  sort?: boolean | NegTableSorter;
 
   stickyStart: boolean;
   stickyEnd: boolean;
@@ -97,40 +97,40 @@ export class SgColumn implements SgColumnDefinition {
   orgProp: string;
 
   /**
-   * The calculated width, used by sg-table to set the width used by the template
+   * The calculated width, used by neg-table to set the width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
   cWidth: string;
   /**
-   * The calculated minimum width, used by sg-table to set the min-width used by the template
+   * The calculated minimum width, used by neg-table to set the min-width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
   cMinWidth: string;
 
   /**
-   * The calculated maximum width, used by sg-table to set the max-width used by the template
+   * The calculated maximum width, used by neg-table to set the max-width used by the template
    * This value is not copied when creating a new instance
    * @internal
    */
   cMaxWidth: string;
 
   /**
-   * Used by sg-table to apply custom cell template, or the default when not set.
+   * Used by neg-table to apply custom cell template, or the default when not set.
    * @internal
    */
-  cellTpl: TemplateRef<SgTableCellTemplateContext<any>>;
+  cellTpl: TemplateRef<NegTableCellTemplateContext<any>>;
   /**
-   * Used by sg-table to apply a custom header cell template, or the default when not set.
+   * Used by neg-table to apply a custom header cell template, or the default when not set.
    * @internal
    */
-  headerCellTpl: TemplateRef<SgTableMetaCellTemplateContext<any>>;
+  headerCellTpl: TemplateRef<NegTableMetaCellTemplateContext<any>>;
   /**
-   * Used by sg-table to apply a custom footer cell template, or the default when not set.
+   * Used by neg-table to apply a custom footer cell template, or the default when not set.
    * @internal
    */
-  footerCellTpl: TemplateRef<SgTableMetaCellTemplateContext<any>>;
+  footerCellTpl: TemplateRef<NegTableMetaCellTemplateContext<any>>;
 
   /**
    * Used by the library as a logical flag representing the column hidden state.
@@ -142,12 +142,12 @@ export class SgColumn implements SgColumnDefinition {
   /**
    * The column def for this column.
    */
-  columnDef: SgTableColumnDef;
+  columnDef: NegTableColumnDef;
 
   /**
-   * An on-demand size info object, populated by `SgColumnSizeObserver`
+   * An on-demand size info object, populated by `NegColumnSizeObserver`
    */
-  sizeInfo?: SgColumnSizeInfo;
+  sizeInfo?: NegColumnSizeInfo;
 
   /** @internal */
   maxWidthLock: boolean;
@@ -155,12 +155,12 @@ export class SgColumn implements SgColumnDefinition {
   /**
    * Groups that this column belongs to.
    */
-  private groups?: Set<SgColumnGroup>;
+  private groups?: Set<NegColumnGroup>;
 
-  constructor(def: SgColumnDefinition) {
-    this[SG_COLUMN_MARK] = true;
+  constructor(def: NegColumnDefinition) {
+    this[NEG_COLUMN_MARK] = true;
 
-    if (isSgColumn(def)) {
+    if (isNegColumn(def)) {
       initDefinitions(def, this);
       this.prop = def.prop;
       this.path = def.path;
@@ -195,7 +195,7 @@ export class SgColumn implements SgColumnDefinition {
       }
     }
 
-    const copyKeys: Array<keyof SgColumn> = ['sort', 'headerType', 'footerType'];
+    const copyKeys: Array<keyof NegColumn> = ['sort', 'headerType', 'footerType'];
     copyKeys.forEach(k => k in def && (this[k as any] = def[k]));
   }
 
@@ -217,9 +217,9 @@ export class SgColumn implements SgColumnDefinition {
    * Mark's that this column belong to the provided group.
    * > Note that this internal to the column and does not effect the group in any way.
    */
-  markInGroup(g: SgColumnGroup): void {
+  markInGroup(g: NegColumnGroup): void {
     if (!this.groups) {
-      this.groups = new Set<SgColumnGroup>();
+      this.groups = new Set<NegColumnGroup>();
     }
     this.groups.add(g);
   }
@@ -228,11 +228,11 @@ export class SgColumn implements SgColumnDefinition {
    * Mark's that this column does not belong to the provided group.
    * > Note that this internal to the column and does not effect the group in any way.
    */
-  markNotInGroup(g: SgColumnGroup): boolean {
+  markNotInGroup(g: NegColumnGroup): boolean {
     return this.groups && this.groups.delete(g);
   }
 
-  isInGroup(g: SgColumnGroup): boolean {
+  isInGroup(g: NegColumnGroup): boolean {
     return this.groups && this.groups.has(g);
   }
 

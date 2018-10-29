@@ -1,2 +1,2 @@
 export { setStickyRow, setStickyColumns  } from './lib/sticky/sticky-plugin';
-export { SgTableStickyModule } from './lib/sticky.module';
+export { NegTableStickyModule } from './lib/sticky.module';

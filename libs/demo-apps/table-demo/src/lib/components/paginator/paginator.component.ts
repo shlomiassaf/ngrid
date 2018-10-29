@@ -1,13 +1,13 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
-/* @sac-example:ex-4 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-4 */
 import { from as rxFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
-import { createDS, columnFactory, SgTokenPaginator } from '@sac/table';
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { createDS, columnFactory, NegTokenPaginator } from '@neg/table';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -51,7 +51,7 @@ function emulateServerSideTokenPaginationCall(datasource: DemoDataSource, tokenO
 }
 
 @Component({
-  selector: 'sac-paginator-table-example-component',
+  selector: 'neg-paginator-table-example-component',
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -91,7 +91,7 @@ export class PaginatorTableExampleComponent {
       return emulateServerSideTokenPaginationCall(this.datasource, pageChanged || perPage).pipe(
         map( result => {
           if (result.token) {
-            const paginator: SgTokenPaginator = <any> this.tokenDS.paginator;
+            const paginator: NegTokenPaginator = <any> this.tokenDS.paginator;
             paginator.addNext(result.token);
           }
           event.updateTotalLength(result.data.length);
@@ -106,7 +106,7 @@ export class PaginatorTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @sac-example:ex-4 */
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
+/* @neg-example:ex-4 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */

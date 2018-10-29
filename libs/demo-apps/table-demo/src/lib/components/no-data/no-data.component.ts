@@ -1,10 +1,10 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, OnDestroy } from '@angular/core';
 
-import { createDS, columnFactory } from '@sac/table';
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+import { createDS, columnFactory } from '@neg/table';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 200})
@@ -15,7 +15,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'sac-no-data-table-example-component',
+  selector: 'neg-no-data-table-example-component',
   templateUrl: './no-data.component.html',
   styleUrls: ['./no-data.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -62,6 +62,6 @@ export class NoDataTableExampleComponent implements OnDestroy {
     }
   }
 }
-/* @sac-example:ex-3 */
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */

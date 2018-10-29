@@ -1,7 +1,7 @@
-/* @sac-example:ex-1 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-3 */
-/* @sac-example:ex-4 */
+/* @neg-example:ex-1 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-4 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
@@ -9,11 +9,11 @@ import { AutoSizeVirtualScrollStrategy } from '@angular/cdk-experimental/scrolli
 import {
   createDS,
   columnFactory,
-  SgTableComponent,
-  SgTableConfigService,
+  NegTableComponent,
+  NegTableConfigService,
   NoVirtualScrollStrategy
-} from '@sac/table';
-import { Person, DemoDataSource } from '@sac/demo-apps/shared';
+} from '@neg/table';
+import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -27,7 +27,7 @@ const COLUMNS = columnFactory()
 
 
 @Component({
-  selector: 'sac-virtual-scroll-table-example-component',
+  selector: 'neg-virtual-scroll-table-example-component',
   templateUrl: './virtual-scroll.component.html',
   styleUrls: ['./virtual-scroll.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -54,7 +54,7 @@ export class VirtualScrollTableExampleComponent {
 
   ds4: VirtualScrollTableExampleComponent['ds3'];
 
-  constructor(private config: SgTableConfigService, private datasource: DemoDataSource) {}
+  constructor(private config: NegTableConfigService, private datasource: DemoDataSource) {}
 
   setDefaultStrategy(type: 'auto' | 'fixed' | 'none', count: string): void {
     /* SET DEFAULT SCROLL STRATEGY TO NO SCROLL */
@@ -75,11 +75,11 @@ export class VirtualScrollTableExampleComponent {
       .create();
   }
 
-  loadData(table: SgTableComponent<any>): void {
+  loadData(table: NegTableComponent<any>): void {
     table.dataSource.refresh();
   }
 }
-/* @sac-example:ex-4 */
-/* @sac-example:ex-3 */
-/* @sac-example:ex-2 */
-/* @sac-example:ex-1 */
+/* @neg-example:ex-4 */
+/* @neg-example:ex-3 */
+/* @neg-example:ex-2 */
+/* @neg-example:ex-1 */
