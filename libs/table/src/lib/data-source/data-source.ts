@@ -19,6 +19,13 @@ export interface SgDataSourceOptions {
    * When set to True will not disconnect upon table disconnection, otherwise does.
    */
   keepAlive?: boolean;
+  /**
+   * Skip the first trigger emission.
+   * Use this for late binding, usually with a call to refresh() on the data source.
+   *
+   * Note that only the internal trigger call is skipped, a custom calls to refresh will go through
+   */
+  skipInitial?: boolean;
 }
 
 export class SgDataSource<T = any, TData = any> extends DataSource<T> {
@@ -63,6 +70,13 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
    * datasource when the table disconnects.
    */
   readonly keepAlive: boolean;
+  /**
+   * Skip the first trigger emission.
+   * Use this for late binding, usually with a call to refresh() on the data source.
+   *
+   * Note that only the internal trigger call is skipped, a custom calls to refresh will go through
+   */
+  readonly skipInitial: boolean;
 
   get adapter(): SgDataSourceAdapter { return this._adapter; };
   set adapter(value: SgDataSourceAdapter) {
@@ -110,6 +124,7 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
   private _source: T[];
   private _disposed: boolean;
   private _tableConnected: boolean;
+  private _lastRefresh: TData;
 
   constructor(adapter: SgDataSourceAdapter<T, TData>, options?: SgDataSourceOptions) {
     super();
@@ -125,12 +140,20 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
     this.tableConnectionChange = this._tableConnectionChange$.asObservable();
 
     this.keepAlive = options.keepAlive || false;
+    this.skipInitial = options.skipInitial || false;
     this.sortChange = this._sort$.asObservable();
   }
 
-  // workaround to refresh the page since row header and row can't communicate
+  /**
+   * A custom trigger that invokes a manual data source change with the provided data value in the `data` property at tht event.
+   * @param data
+   */
   refresh(data?: TData): void {
-    this._adapter.refresh(data);
+    if (this._tableConnected) {
+      this._adapter.refresh(data);
+    } else {
+      this._lastRefresh = data;
+    }
   }
 
   setFilter(value: DataSourceFilterToken, columns: SgColumn[]): void {
@@ -158,6 +181,7 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
   }
 
   disconnect(cv: CollectionViewer): void {
+    this._lastRefresh = undefined;
     this._tableConnectionChange$.next(this._tableConnected = false);
     if (this.keepAlive === false) {
       this.dispose();
@@ -168,8 +192,9 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
     if (this._disposed) {
       throw new Error('SgDataSource is disposed. Use `keepAlive` if you move datasource between tables.');
     }
+    this._tableConnected = true
     this._updateProcessingLogic(cv);
-    this._tableConnectionChange$.next(this._tableConnected = true);
+    this._tableConnectionChange$.next(this._tableConnected);
     return this._renderData$;
   }
 
@@ -218,7 +243,13 @@ export class SgDataSource<T = any, TData = any> extends DataSource<T> {
       .pipe(KillOnDestroy(this, PROCESSING_SUBSCRIPTION_GROUP))
       .subscribe( source => this._source = source || [] );
 
-    this._adapter.refresh(); // _refresh$ is a Subject, we must emit once so combineLatest will work
+    if (this._lastRefresh !== undefined) {
+      this._adapter.refresh(this._lastRefresh);
+      this._lastRefresh = undefined;
+    } else if (!this.skipInitial) {
+      // _refresh$ is a Subject, we must emit once so combineLatest will work
+      this.refresh();
+    }
   }
 }
 

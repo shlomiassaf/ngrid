@@ -78,12 +78,9 @@ export class SgDataSourceAdapter<T = any, TData = any> {
    * The instructions are optional, they might or might not exist depending on the configuration of the adapter.
    * When `sourceFactory` returns false the entire trigger cycle is skipped.
    * @param config A configuration object describing how this adapter should behave.
-   * @param skipInitial When set to true, will ignore the initial emission and wait for next emission fro the stream.
-   * Use this for late binding, usually with a call to refresh() on the data source.
    */
   constructor(public sourceFactory: (event: SgDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>),
-              config?: false | Partial<Record<keyof SgDataSourceConfigurableTriggers, boolean>>,
-              private skipInitial: boolean = false) {
+              config?: false | Partial<Record<keyof SgDataSourceConfigurableTriggers, boolean>>) {
     this.config = Object.assign({}, config || {});
     this.initStreams();
   }
@@ -107,7 +104,6 @@ export class SgDataSourceAdapter<T = any, TData = any> {
     this._lastSource = undefined;
     const changedFilter = e => !this._lastSource || e.changed;
 
-    const refresh = this.skipInitial ? this._refresh$.pipe(skip(1)) : this._refresh$.asObservable();
     const combine: [
       Observable<TriggerChangedEventFor<'filter'>>,
       Observable<TriggerChangedEventFor<'sort'>>,
@@ -117,7 +113,7 @@ export class SgDataSourceAdapter<T = any, TData = any> {
       filter$.pipe( map( value => createChangeContainer('filter', value, this.cache) ), filter(changedFilter) ),
       sort$.pipe( map( value => createChangeContainer('sort', value, this.cache) ), filter(changedFilter) ),
       pagination$.pipe( map( value => createChangeContainer('pagination', value, this.cache) ), filter(changedFilter) ),
-      refresh.pipe( map( value => fromRefreshDataWrapper(createChangeContainer('data', value, this.cache)) ), filter(changedFilter) ),
+      this._refresh$.pipe( map( value => fromRefreshDataWrapper(createChangeContainer('data', value, this.cache)) ), filter(changedFilter) ),
     ];
 
     const hasCustomBehavior = CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( key => !!this.config[key] );

@@ -8,7 +8,6 @@ import {
 interface AdapterParams<T> {
   onTrigger?: (event: SgDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>);
   customTriggers?: false | Partial<Record<keyof SgDataSourceConfigurableTriggers, boolean>>;
-  skipInitial?: boolean;
 }
 
 export class SgDataSourceFactory<T, TData = any> {
@@ -60,9 +59,11 @@ export class SgDataSourceFactory<T, TData = any> {
   /**
    * Skip the first trigger emission.
    * Use this for late binding, usually with a call to refresh() on the data source.
+   *
+   * Note that only the internal trigger call is skipped, a custom calls to refresh will go through
    */
   skipInitialTrigger(): this {
-    this._adapter.skipInitial = true;
+    this._dsOptions.skipInitial = true;
     return this;
   }
 
@@ -81,7 +82,6 @@ export class SgDataSourceFactory<T, TData = any> {
     const adapter = new SgDataSourceAdapter<T, TData>(
       _adapter.onTrigger,
       _adapter.customTriggers || false,
-      _adapter.skipInitial || false
     )
     const ds = new SgDataSource<T, TData>(adapter, this._dsOptions);
     if (this._onCreated) {
