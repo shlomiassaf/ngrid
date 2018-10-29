@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 
 import { createDS, columnFactory } from '@sac/table';
 
-import { Person, getPersons } from '../../../services';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -28,21 +28,13 @@ const COLUMNS = columnFactory()
 export class TransposeTableExampleComponent {
 
   columns = COLUMNS;
-
   transposeToggle = false;
 
-  ds1 = createDS<Person>()
-    .onTrigger( () => getPersons().pipe(map( data => data.slice(0, 5) )) )
-    .create();
+  ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 5) ).create();
+  ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
+  ds3 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 25) ).create();
 
-  ds2 = createDS<Person>()
-    .onTrigger( () => getPersons().pipe(map( data => data.slice(0, 15) )) )
-    .create();
-
-  ds3 = createDS<Person>()
-    .onTrigger( () => getPersons().pipe(map( data => data.slice(0, 25) )) )
-    .create();
-
+  constructor(private datasource: DemoDataSource) { }
 }
 /* @sac-example:ex-3 */
 /* @sac-example:ex-1 */

@@ -1,13 +1,10 @@
-import { map } from 'rxjs/operators';
-
 import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
-import { SgTableComponent, SgDataSource, columnFactory, SgDataSourceAdapter, SgTablePaginatorKind } from '@sac/table';
+import { SgTableComponent, createDS, columnFactory, SgTablePaginatorKind } from '@sac/table';
 import { toggleDetailRow } from '@sac/table/detail-row';
 import { setStickyRow, setStickyColumns } from '@sac/table/sticky';
-
-import { Person, getPersons, getCountryData } from '../../services';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
 // A function that returns the currency value placed in a `SecurityWithMarketDataDto` object.
 // implementation is an IIFE that returns the getValue method bound to an SgColumn instance of the currency column...
@@ -105,10 +102,10 @@ const COLUMNS = columnFactory()
 })
 export class AllInOneTableExampleComponent implements AfterViewInit {
 
-  dataSource = new SgDataSource<Person>(new SgDataSourceAdapter(
-      () => getPersons(500).pipe(map( data => data.slice(0, 500) ))
-    )
-  );
+
+  dataSource = createDS<Person>()
+    .onTrigger( () => this.datasource.getPeople(500, 500) )
+    .create();
 
   detailRowPredicate: ( (index: number, rowData: Person) => boolean ) | true | undefined;
   detailRow: 'on' | 'off' | 'predicate' = 'off';
@@ -133,11 +130,8 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
 
   private detailRowEvenPredicate = (index: number, rowData: Person) => index % 2 !== 0;
 
-  constructor() {
-    const s = getCountryData().subscribe( data => {
-      COUNTRY_GETTER.data = data;
-      s.unsubscribe();
-    });
+  constructor(private datasource: DemoDataSource) {
+    datasource.getCountries().then( c => COUNTRY_GETTER.data = c );
   }
 
   ngAfterViewInit(): void {

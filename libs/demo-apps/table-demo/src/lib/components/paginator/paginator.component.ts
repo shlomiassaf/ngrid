@@ -2,12 +2,12 @@
 /* @sac-example:ex-2 */
 /* @sac-example:ex-3 */
 /* @sac-example:ex-4 */
+import { from as rxFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 import { createDS, columnFactory, SgTokenPaginator } from '@sac/table';
-
-import { Person, getPersons } from '../../services';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -22,8 +22,8 @@ const COLUMNS = columnFactory()
   )
   .build();
 
-function emulateServerSidePageNumberPaginationCall(page: number, perPage: number) {
-  return getPersons(500).pipe(map( data => {
+function emulateServerSidePageNumberPaginationCall(datasource: DemoDataSource, page: number, perPage: number) {
+  return rxFrom(datasource.getPeople(500, 5000)).pipe(map( data => {
     const start = (page - 1) * perPage;
     const end = Math.min(data.length, start + perPage);
     return {
@@ -33,18 +33,18 @@ function emulateServerSidePageNumberPaginationCall(page: number, perPage: number
   }));
 }
 
-function emulateServerSideTokenPaginationCall(tokenOrPerPage: string | number) {
+function emulateServerSideTokenPaginationCall(datasource: DemoDataSource, tokenOrPerPage: string | number) {
   const createToken = (page: number, perPage: number) => btoa(JSON.stringify({ page, perPage }));
 
   if (typeof tokenOrPerPage === 'string') {
     const instructions: { page: number, perPage: number } = JSON.parse(atob(tokenOrPerPage));
     const { page, perPage } = instructions;
-    return emulateServerSidePageNumberPaginationCall(page, perPage).pipe(
+    return emulateServerSidePageNumberPaginationCall(datasource, page, perPage).pipe(
       map( result => ({ token: createToken(page + 1, perPage), data: result.data }) )
     );
   } else {
     const token = createToken(2, tokenOrPerPage);
-    return emulateServerSidePageNumberPaginationCall(1, tokenOrPerPage).pipe(
+    return emulateServerSidePageNumberPaginationCall(datasource, 1, tokenOrPerPage).pipe(
       map( result => ({ token, data: result.data }) )
     );
   }
@@ -61,13 +61,12 @@ export class PaginatorTableExampleComponent {
 
   columns = columnFactory().table(...COLUMNS.table).build();
   columnsPaginatorAsFooter = COLUMNS;
-
-  clientSideDS = createDS<Person>().onTrigger( () => getPersons(500)) .create();
+  clientSideDS = createDS<Person>().onTrigger( () => this.datasource.getPeople(1000, 5000) ).create();
 
   pageNumberDS = createDS<Person>().onTrigger( event => {
     const { page, perPage } = this.pageNumberDS.paginator;
     // emulate HTTP call with server side pagination instructions
-    return emulateServerSidePageNumberPaginationCall(page, perPage).pipe(
+    return emulateServerSidePageNumberPaginationCall(this.datasource, page, perPage).pipe(
       map( result => {
         event.updateTotalLength(result.total);
         return result.data;
@@ -89,7 +88,7 @@ export class PaginatorTableExampleComponent {
       }
       const { perPage } = this.tokenDS.paginator;
       // emulate HTTP call with server side pagination instructions
-      return emulateServerSideTokenPaginationCall(pageChanged || perPage).pipe(
+      return emulateServerSideTokenPaginationCall(this.datasource, pageChanged || perPage).pipe(
         map( result => {
           if (result.token) {
             const paginator: SgTokenPaginator = <any> this.tokenDS.paginator;
@@ -103,7 +102,9 @@ export class PaginatorTableExampleComponent {
     .setCustomTriggers('pagination')
     .create();
 
-  footerRowDS = createDS<Person>().onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 20) )) ) .create();
+  footerRowDS = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 20) ).create();
+
+  constructor(private datasource: DemoDataSource) { }
 }
 /* @sac-example:ex-4 */
 /* @sac-example:ex-1 */

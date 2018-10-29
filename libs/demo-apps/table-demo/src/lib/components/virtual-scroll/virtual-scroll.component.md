@@ -25,12 +25,12 @@
   <!--@sac-example:ex-4-->
   <b>Array Size</b>
   <mat-select #select value="500" style="width:200px">
+    <mat-option value="100">100</mat-option>
     <mat-option value="500">500</mat-option>
     <mat-option value="1000">1000</mat-option>
-    <mat-option value="2000">2000</mat-option>
-    <mat-option value="3000">3000</mat-option>
-    <mat-option value="4000">4000</mat-option>
-    <mat-option value="5000">5000</mat-option>
+    <mat-option value="10000">10000</mat-option>
+    <mat-option value="50000">50000</mat-option>
+    <mat-option value="100000">100000</mat-option>
   </mat-select>
   <mat-radio-group (change)="setDefaultStrategy($event.value, select.value)" [disabled]="!!ds4">
     <mat-radio-button value="auto">Auto Size</mat-radio-button>

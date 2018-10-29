@@ -2,17 +2,11 @@
 /* @sac-example:ex-2 */
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 import { createDS, columnFactory } from '@sac/table';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
-const MOCKDATA = [
-  { id: 1, name: 'Jhon' },
-  { id: 2, name: 'Gayle ' },
-  { id: 3, name: 'Lannie' },
-  { id: 4, name: 'Lindsy' },
-  { id: 5, name: 'Elden' }
-]
 const COLUMNS = columnFactory()
   .default({minWidth: 200})
   .table(
@@ -28,19 +22,14 @@ const COLUMNS = columnFactory()
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BlockUiTableExampleComponent implements OnDestroy {
+export class BlockUiTableExampleComponent {
 
   columns = COLUMNS;
 
-  autoDataSource = createDS<any>().onTrigger( () => of(MOCKDATA).pipe(delay(1000)) ).create();
-  manualDataSource = createDS<any>().onTrigger( () => of(MOCKDATA) ).create();
+  autoDataSource = createDS<Person>().onTrigger( () => this.datasource.getPeople(1000) ).create();
+  manualDataSource = createDS<Person>().onTrigger( () => this.datasource.getPeople(1000) ).create();
 
-  currentDynamicStep = 0;
-
-  ngOnDestroy(): void {
-    this.autoDataSource.dispose();
-    this.manualDataSource.dispose();
-  }
+  constructor(private datasource: DemoDataSource) { }
 
   refresh(): void {
     this.autoDataSource.refresh();

@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { createDS, columnFactory } from '@sac/table';
 import { SgTableRowEvent, SgTableCellEvent } from '@sac/table/target-events';
 
-import { Person, getPersons } from '../../../services';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
 function isCellEvent<T>(event: SgTableRowEvent<T> | SgTableCellEvent<T>): event is SgTableCellEvent<T> {
   return !!(event as  SgTableCellEvent<T>).cellTarget;
@@ -72,13 +72,10 @@ export class TargetEventsTableExampleComponent {
   columns = COLUMNS;
   columns2 = COLUMNS2;
 
-  ds1 = createDS<Person>()
-    .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 15) )) )
-    .create();
+  ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
+  ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 5) ).create();
 
-  ds2 = createDS<Person>()
-    .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 5) )) )
-    .create();
+  constructor(private datasource: DemoDataSource) { }
 
   onClickEvents(event: SgTableRowEvent<Person> | SgTableCellEvent<Person>) {
     let cellSuffix = '';

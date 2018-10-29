@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 
 import { createDS, columnFactory } from '@sac/table';
 
-import { Person, getPersons } from '../../../services';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 200})
@@ -43,10 +43,9 @@ const COLUMNS = columnFactory()
 export class StickyColumnTableExampleComponent {
 
   columns1 = columnFactory().table(...COLUMNS.table).build();
+  dataSource = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
 
-  dataSource = createDS<Person>()
-    .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 15) ) ) )
-    .create();
+  constructor(private datasource: DemoDataSource) { }
 }
 /* @sac-example:ex-column-3 */
 /* @sac-example:ex-column-2 */

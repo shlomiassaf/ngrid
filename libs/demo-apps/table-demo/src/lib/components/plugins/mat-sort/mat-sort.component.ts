@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { columnFactory, createDS, SgColumn } from '@sac/table';
 import { SgTableMatSortDirective } from '@sac/table/material/sort';
 
-import { Person, getPersons } from '../../../services';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -30,9 +30,11 @@ const COLUMNS = columnFactory()
 })
 export class MatSortTableExampleComponent {
   columns = COLUMNS;
-  simpleSortDS = createDS<Person>().onTrigger(() => getPersons(500)).create();
-  defaultSortDS = createDS<Person>().onTrigger(() => getPersons(500)).create();
-  progSortDS = createDS<Person>().onTrigger(() => getPersons(500)).create();
+  simpleSortDS = createDS<Person>().onTrigger( () => this.datasource.getPeople(500) ).create();
+  defaultSortDS = createDS<Person>().onTrigger( () => this.datasource.getPeople(500) ).create();
+  progSortDS = createDS<Person>().onTrigger( () => this.datasource.getPeople(500) ).create();
+
+  constructor(private datasource: DemoDataSource) { }
 
   toggleActive(matSort: SgTableMatSortDirective, column: SgColumn, state: boolean): void {
     matSort.table.dataSource.setSort(column, { order: state ? 'asc' : undefined });

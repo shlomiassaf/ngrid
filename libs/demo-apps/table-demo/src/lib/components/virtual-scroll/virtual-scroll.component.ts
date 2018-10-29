@@ -13,8 +13,7 @@ import {
   SgTableConfigService,
   NoVirtualScrollStrategy
 } from '@sac/table';
-
-import { Person, getPersons } from '../../services';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -38,25 +37,24 @@ export class VirtualScrollTableExampleComponent {
 
 
   columns = COLUMNS;
-
   ds1 = createDS<Person>()
     .skipInitialTrigger()
-    .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 500) )) )
+    .onTrigger( () => this.datasource.getPeople(0, 500) )
     .create();
 
   ds2 = createDS<Person>()
     .skipInitialTrigger()
-    .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 500) )) )
+    .onTrigger( () => this.datasource.getPeople(0, 500) )
     .create();
 
   ds3 = createDS<Person>()
     .skipInitialTrigger()
-    .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 500) )) )
+    .onTrigger( () => this.datasource.getPeople(0, 500) )
     .create();
 
   ds4: VirtualScrollTableExampleComponent['ds3'];
 
-  constructor(private config: SgTableConfigService) {}
+  constructor(private config: SgTableConfigService, private datasource: DemoDataSource) {}
 
   setDefaultStrategy(type: 'auto' | 'fixed' | 'none', count: string): void {
     /* SET DEFAULT SCROLL STRATEGY TO NO SCROLL */
@@ -73,7 +71,7 @@ export class VirtualScrollTableExampleComponent {
       }
     });
     this.ds4 = createDS<Person>()
-      .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, Number(count)) )) )
+      .onTrigger( () => this.datasource.getPeople(0, Number(count)) )
       .create();
   }
 

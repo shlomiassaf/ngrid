@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@sac/table';
 
-import { Person, getPersons } from '../../services';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
 const COLUMNS1 = columnFactory()
   .default({minWidth: 100})
@@ -57,16 +57,13 @@ export class HideColumnsTableExampleComponent {
 
   hideColumns1: string[] = [];
   columns1 = COLUMNS1;
-  ds1 = createDS<Person>()
-    .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 15) )) )
-    .create();
+  ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
 
   hideColumns2: string[] = [];
   columns2 = COLUMNS2;
-  ds2 = createDS<Person>()
-    .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 15) )) )
-    .create();
+  ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
 
+  constructor(private datasource: DemoDataSource) { }
 
   toggleColumn(coll: string[], id: string): void {
     const idx = coll.indexOf(id);

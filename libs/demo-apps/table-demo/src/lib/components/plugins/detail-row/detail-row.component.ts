@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@sac/table';
 
-import { Person, getPersons } from '../../../services';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -29,10 +29,7 @@ export class DetailRowExampleComponent  {
 
 
   columns = COLUMNS;
-
-  ds1 = createDS<Person>()
-    .onTrigger( () => getPersons().pipe(map( data => data.slice(0, 5) )) )
-    .create();
+  ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 5) ).create();
 
 
   forceSingle: boolean;
@@ -41,6 +38,8 @@ export class DetailRowExampleComponent  {
   detailRow: 'on' | 'off' | 'predicate' = 'off';
   detailRowPredicate: ( (index: number, rowData: Person) => boolean ) | true | undefined;
   private detailRowEvenPredicate = (index: number, rowData: Person) => index % 2 !== 0;
+
+  constructor(private datasource: DemoDataSource) { }
 
   onDetailRowChange(value: 'on' | 'off' | 'predicate') : void {
     switch(value) {

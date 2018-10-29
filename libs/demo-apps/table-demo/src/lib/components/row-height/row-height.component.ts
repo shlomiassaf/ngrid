@@ -1,11 +1,10 @@
 /* @sac-example:ex-1 */
 /* @sac-example:ex-2 */
 /* @sac-example:ex-3 */
-import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@sac/table';
 
-import { Person, getPersons } from '../../services';
+import { Person, DemoDataSource } from '@sac/demo-apps/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -31,10 +30,9 @@ export class RowHeightTableExampleComponent {
 
 
   columns = COLUMNS;
-  ds1 = createDS<Person>()
-    .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 15) )) )
-    .create();
+  ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
 
+  constructor(private datasource: DemoDataSource) { }
 }
 /* @sac-example:ex-3 */
 /* @sac-example:ex-2 */
