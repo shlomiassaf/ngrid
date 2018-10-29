@@ -30,16 +30,16 @@ export class SgColumnFactory {
     const { _defaults, _raw } = this;
     this._raw = this._defaults = undefined;
 
-    const table = _raw.table.map( d => new SgColumn(Object.assign({}, _defaults.table, d)));
+    const table = _raw.table.map( d => new SgColumn({ ..._defaults.table, ...d }));
     const header = _raw.header.map( h => ({
       rowIndex: h.rowIndex,
       rowClassName: h.rowClassName,
-      cols: h.cols.map( c => new SgMetaColumn(Object.assign({}, _defaults.header, c)) )
+      cols: h.cols.map( c => new SgMetaColumn( { ..._defaults.header, ...c } )),
     }));
     const footer = _raw.footer.map( f => ({
       rowIndex: f.rowIndex,
       rowClassName: f.rowClassName,
-      cols: f.cols.map( c => new SgMetaColumn(Object.assign({}, _defaults.footer, c)) )
+      cols: f.cols.map( c => new SgMetaColumn({ ..._defaults.footer, ...c }) )
     }));
     const headerGroup = _raw.headerGroup.map( hg => ({
       rowIndex: hg.rowIndex,

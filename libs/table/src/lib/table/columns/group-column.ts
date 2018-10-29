@@ -2,6 +2,12 @@ import { SgColumnGroupDefinition } from './types';
 import { SgMetaColumn } from './meta-column';
 import { SgColumn } from './column';
 
+const SG_COLUMN_GROUP_MARK = Symbol('SgColumnGroup');
+
+function isSgColumnGroup(def: SgColumnGroupDefinition): def is SgColumnGroup {
+  return def instanceof SgColumnGroup || def[SG_COLUMN_GROUP_MARK] === true;
+}
+
 export class SgColumnGroup extends SgMetaColumn implements SgColumnGroupDefinition {
 
   //#region SgColumnGroupDefinition
@@ -23,17 +29,13 @@ export class SgColumnGroup extends SgMetaColumn implements SgColumnGroupDefiniti
   readonly columns: SgColumn[];
 
   constructor(def: SgColumnGroup | SgColumnGroupDefinition, columns: SgColumn[], public readonly placeholder = false) {
-    super(def instanceof SgColumnGroup
+    super(isSgColumnGroup(def)
       ? def
-      : Object.assign(
-          {
-            id: `group-${def.prop}-span-${def.span}-row-${def.rowIndex}`,
-            kind: 'header' as 'header'
-          },
-          def
-        )
+      : { id: `group-${def.prop}-span-${def.span}-row-${def.rowIndex}`, kind: 'header' as 'header', ...(def as any) }
     );
-    if (def instanceof SgColumnGroup) {
+
+    this[SG_COLUMN_GROUP_MARK] = true;
+    if (isSgColumnGroup(def)) {
       this.orgWidth = def.orgWidth;
     } else {
       if (this.width) {

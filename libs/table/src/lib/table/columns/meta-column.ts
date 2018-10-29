@@ -4,6 +4,12 @@ import { SgTableColumnDef } from '../directives';
 import { SgMetaColumnDefinition, SgTableMetaCellTemplateContext, SgColumnTypeDefinition } from './types';
 import { parseStyleWidth, initDefinitions } from './utils';
 
+const SG_META_COLUMN_MARK = Symbol('SgMetaColumn');
+
+function isSgMetaColumn(def: SgMetaColumnDefinition): def is SgMetaColumn {
+  return def instanceof SgMetaColumn || def[SG_META_COLUMN_MARK] === true;
+}
+
 export class SgMetaColumn implements SgMetaColumnDefinition {
   //#region SgBaseColumnDefinition
 
@@ -103,11 +109,12 @@ export class SgMetaColumn implements SgMetaColumnDefinition {
   columnDef: SgTableColumnDef;
 
   constructor(def: SgMetaColumnDefinition) {
+    this[SG_META_COLUMN_MARK] = true;
     initDefinitions(def, this);
     const copyKeys: Array<keyof SgMetaColumnDefinition> = ['kind', 'rowIndex'];
     copyKeys.forEach( k => k in def && (this[k] = def[k]) );
 
-    if (def instanceof SgMetaColumn === false) {
+    if (!isSgMetaColumn(def)) {
       if (typeof def.type === 'string') {
         this.type = { name: def.type } as any;
       }

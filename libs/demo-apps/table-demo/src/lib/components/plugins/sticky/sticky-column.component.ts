@@ -43,7 +43,6 @@ const COLUMNS = columnFactory()
 export class StickyColumnTableExampleComponent {
 
   columns1 = columnFactory().table(...COLUMNS.table).build();
-  columnsWithMultiHeaders = COLUMNS;
 
   dataSource = createDS<Person>()
     .onTrigger( () => getPersons(0).pipe(map( data => data.slice(0, 15) ) ) )

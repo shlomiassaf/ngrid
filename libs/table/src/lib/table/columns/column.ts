@@ -13,6 +13,12 @@ import {
 import { initDefinitions, parseStyleWidth } from './utils';
 import { SgColumnGroup } from './group-column';
 
+const SG_COLUMN_MARK = Symbol('SgColumn');
+
+function isSgColumn(def: SgColumnDefinition): def is SgColumn {
+  return def instanceof SgColumn || def[SG_COLUMN_MARK] === true;
+}
+
 export class SgColumn implements SgColumnDefinition {
   id: string;
   label?: string;
@@ -152,7 +158,9 @@ export class SgColumn implements SgColumnDefinition {
   private groups?: Set<SgColumnGroup>;
 
   constructor(def: SgColumnDefinition) {
-    if (def instanceof SgColumn) {
+    this[SG_COLUMN_MARK] = true;
+
+    if (isSgColumn(def)) {
       initDefinitions(def, this);
       this.prop = def.prop;
       this.path = def.path;
@@ -162,7 +170,7 @@ export class SgColumn implements SgColumnDefinition {
       }
     } else {
       const path = def.path || def.prop.split('.');
-      const prop = path.pop();
+      const prop = def.path ? def.prop : path.pop();
 
       def = Object.create(def);
       def.id = normalizeId(def.id || def.prop || def.label);
