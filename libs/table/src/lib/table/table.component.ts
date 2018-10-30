@@ -27,7 +27,7 @@ import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table'
 
 import { NegTablePluginController, NegTablePluginContext } from '../ext/plugin-control';
 import { NegTablePaginatorKind } from '../paginator';
-import { NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
+import { NegCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { NegDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { NegCdkTableComponent } from './neg-cdk-table/neg-cdk-table.component';
 import { updateColumnWidths, KillOnDestroy } from './utils';
@@ -224,7 +224,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   private _dataSource: NegDataSource<T>;
   private _dataSourceOf: DataSourceOf<T>;
 
-  @ViewChild(NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent) viewport: NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent;
+  @ViewChild(NegCdkVirtualScrollViewportComponent) viewport: NegCdkVirtualScrollViewportComponent;
   @ViewChild('beforeContent', { read: ViewContainerRef}) _vcRefBefore: ViewContainerRef;
   @ViewChild('afterContent', { read: ViewContainerRef}) _vcRefAfter: ViewContainerRef;
   @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<NegTableCellTemplateContext<T>>;
@@ -342,9 +342,6 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   }
 
   ngAfterViewInit(): void {
-    if (this.viewport.enabled) {
-      this._cdkTable.attachViewPort(this.viewport);
-    }
     this.invalidateHeader();
 
     // after invalidating the headers we now have optional header/headerGroups/footer rows added
@@ -356,6 +353,9 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     this._plugin.emitEvent({ kind: 'onInit' });
 
     this.setupPaginator();
+    if (this.viewport.enabled) {
+      this._cdkTable.attachViewPort(this.viewport);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -383,7 +383,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     }
   }
 
-  trackBy(index: number, item: any): any {
+  trackBy(index: number, item: T): any {
     return item;
   }
 

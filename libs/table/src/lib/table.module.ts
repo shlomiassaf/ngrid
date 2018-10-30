@@ -25,8 +25,8 @@ import {
   NegTablePaginatorRefDirective,
 
   NegColumnSizeObserver,
-  NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent,
-  NegCdkVirtualScrollViewportComponentCdkVirtualScrollDirective,
+  NegCdkVirtualScrollViewportComponent,
+  NegCdkVirtualScrollDirective,
 } from './table/index';
 import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
 
@@ -52,8 +52,8 @@ import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
     NegTableFooterCellDirective,
 
     NegColumnSizeObserver,
-    NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent,
-    NegCdkVirtualScrollViewportComponentCdkVirtualScrollDirective,
+    NegCdkVirtualScrollViewportComponent,
+    NegCdkVirtualScrollDirective,
 
     NegTableComponent,
     TableCellContextPipe
@@ -72,7 +72,7 @@ import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
     NegTableFooterCellDirective,
 
     NegColumnSizeObserver,
-    NegCdkVirtualScrollViewportComponentCdkVirtualScrollDirective,
+    NegCdkVirtualScrollDirective,
 
     NegTableComponent,
   ]

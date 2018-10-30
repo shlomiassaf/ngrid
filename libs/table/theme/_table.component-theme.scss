@@ -1,0 +1,125 @@
+@import './_neg-cdk-table.component-theme';
+
+@mixin neg-table-theme($tableTheme) {
+  @include neg-cdk-table-theme($tableTheme);
+
+  $space-fill-background: map-get($tableTheme, space-fill-background);
+
+  .neg-table-scroll-container {
+    .neg-table-space-fill {
+      background: $space-fill-background;
+    }
+  }
+
+  neg-table.neg-table-cell-ellipsis .neg-cdk-table {
+    .neg-table-cell, .neg-table-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  neg-table.neg-table-header-cell-ellipsis .neg-cdk-table {
+    .neg-table-header-cell, .neg-table-header-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  neg-table.neg-table-footer-cell-ellipsis .neg-cdk-table {
+    .neg-table-footer-cell, .neg-table-footer-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+}
+
+@mixin neg-table-spacing($spacingTheme) {
+
+  $header-row-height: map-get($spacingTheme, header-row-height);
+  $row-height: map-get($spacingTheme, row-height);
+  $footer-row-height: map-get($spacingTheme, footer-row-height);
+  $row-spacing: map-get($spacingTheme, row-spacing);
+  $cell-spacing: map-get($spacingTheme, cell-spacing);
+
+  .neg-table-header-row {
+    min-height: $header-row-height;
+  }
+  
+  .neg-table-row {
+    min-height: $row-height;
+  }
+
+  .neg-table-footer-row {
+    min-height: $footer-row-height;
+  }
+
+  .neg-table-cell:first-child, .neg-table-header-cell:first-child, .neg-table-footer-cell:first-child {
+    padding-left: $row-spacing;
+  
+    [dir='rtl'] & {
+      padding-left: 0;
+      padding-right: $row-spacing;
+    }
+  }
+  
+  .neg-table-cell:last-child, .neg-table-header-cell:last-child, .neg-table-footer-cell:last-child {
+    padding-right: $row-spacing;
+  
+    [dir='rtl'] & {
+      padding-right: 0;
+      padding-left: $row-spacing;
+    }
+  }
+
+  .neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
+    padding-left: $cell-spacing;
+  
+    &.cdk-table-sticky {
+      background: inherit;
+    }
+  }
+
+  .neg-table-margin-cell-box-model {
+    .neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
+      box-sizing: border-box;
+  
+      margin-left: $cell-spacing;
+      padding-left: 0;
+      padding-right: 0;
+  
+      &:first-child {
+        margin-left: $row-spacing;
+        padding-left: 0;
+        padding-right: 0;
+  
+        [dir='rtl'] & {
+          margin-left: 0;
+          margin-right: $row-spacing;
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+  
+      &:last-child {
+        margin-right: $row-spacing;
+        padding-left: 0;
+        padding-right: 0;
+  
+        [dir='rtl'] & {
+          margin-right: 0;
+          margin-left: $row-spacing;
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+    }
+  }
+}
+
+@mixin neg-table-typography($config) {
+  @include neg-cdk-table-typography($config);
+}

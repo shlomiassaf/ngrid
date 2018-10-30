@@ -8,13 +8,23 @@ import { NegTableComponent } from '../../table.component';
 import { NegTablePluginController } from '../../../ext/plugin-control';
 import { NegDataSource } from '../../../data-source/data-source';
 import { NegCdkTableComponent } from '../../neg-cdk-table/neg-cdk-table.component';
-import { NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
+import { NegCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import { splitRange, updateStickyRows, measureRangeSize, StickyDirectionVt } from './utils';
 
-export class NegVirtualScrollForOf<T> implements CollectionViewer {
+export interface NgeVirtualTableRowInfo {
+  readonly headerLength: number;
+  readonly rowLength: number;
+  readonly footerLength: number;
+}
+
+export class NegVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTableRowInfo {
   viewChange: Observable<ListRange>;
 
   dataStream: Observable<T[] | ReadonlyArray<T>>;
+
+  get headerLength(): number { return this.vcRefs.header.length  }
+  get rowLength(): number { return this.vcRefs.data.length  }
+  get footerLength(): number { return this.vcRefs.footer.length  }
 
   private destroyed = new Subject<void>();
   private ds: NegDataSource<T>;
@@ -40,7 +50,7 @@ export class NegVirtualScrollForOf<T> implements CollectionViewer {
 
   constructor(table: NegTableComponent<T>,
               private cdkTable: NegCdkTableComponent<T>,
-              private viewport: NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent,
+              private viewport: NegCdkVirtualScrollViewportComponent,
               private ngZone: NgZone) {
     this.viewChange = this.cdkTable.viewChange;
 

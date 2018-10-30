@@ -23,6 +23,7 @@ import { SharedModule, ExampleGroupRegistryService } from '@neg/demo-apps/shared
 import {
   TableExamplesPageComponent,
   AllInOneTableExampleComponent,
+  GeneralDemoTableExampleComponent,
   HideColumnsTableExampleComponent,
   ColumnWidthTableExampleComponent,
   RowHeightTableExampleComponent,
@@ -55,6 +56,7 @@ const MATERIAL = [
 const TABLE_EXAMPLES = [
   TableExamplesPageComponent,
   AllInOneTableExampleComponent,
+  GeneralDemoTableExampleComponent,
   HideColumnsTableExampleComponent,
   ColumnWidthTableExampleComponent,
   RowHeightTableExampleComponent,
@@ -74,6 +76,7 @@ const TABLE_EXAMPLES = [
 
 const ROUTES = [
   { path: 'all-in-one', component: AllInOneTableExampleComponent, data: { title: 'All In One' } },
+  { path: 'demo', component: GeneralDemoTableExampleComponent, data: { title: 'Demo' } },
   { path: 'hide-columns', component: HideColumnsTableExampleComponent, data: { title: 'Hide Columns' } },
   { path: 'column-width', component: ColumnWidthTableExampleComponent, data: { title: 'Column Width' } },
   { path: 'row-height', component: RowHeightTableExampleComponent, data: { title: 'Row Height' } },

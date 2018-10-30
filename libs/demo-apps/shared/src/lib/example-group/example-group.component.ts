@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'neg-example-group',
   templateUrl: './example-group.component.html',
   styleUrls: [ './example-group.component.scss' ]
 })
-export class ExampleGroupComponent { }
+export class ExampleGroupComponent {
+  @Input() hideToc: boolean;
+}

@@ -1,22 +1,11 @@
 // BASED ON
 // https://github.com/angular/material2/blob/6df37099c3a1a026b961202df8755ec9933c3d14/src/lib/table/table.scss
-$neg-table-header-row-height: 56px;
-$neg-table-row-height: 48px;
-$neg-table-row-horizontal-padding: 24px;
 
 /**
  * Flex-based table structure
  */
 .neg-cdk-table {
   display: block;
-}
-
-.neg-table-header-row {
-  min-height: $neg-table-header-row-height;
-}
-
-.neg-table-row, .neg-table-footer-row {
-  min-height: $neg-table-row-height;
 }
 
 .neg-table-row, .neg-table-header-row, .neg-table-footer-row {
@@ -36,24 +25,6 @@ $neg-table-row-horizontal-padding: 24px;
     display: inline-block;
     min-height: inherit;
     content: '';
-  }
-}
-
-.neg-table-cell:first-child, .neg-table-header-cell:first-child, .neg-table-footer-cell:first-child {
-  padding-left: $neg-table-row-horizontal-padding;
-
-  [dir='rtl'] & {
-    padding-left: 0;
-    padding-right: $neg-table-row-horizontal-padding;
-  }
-}
-
-.neg-table-cell:last-child, .neg-table-header-cell:last-child, .neg-table-footer-cell:last-child {
-  padding-right: $neg-table-row-horizontal-padding;
-
-  [dir='rtl'] & {
-    padding-right: 0;
-    padding-left: $neg-table-row-horizontal-padding;
   }
 }
 

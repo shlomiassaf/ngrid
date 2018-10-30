@@ -19,11 +19,12 @@ import {
   VIRTUAL_SCROLL_STRATEGY,
   VirtualScrollStrategy,
   ScrollDispatcher,
+  CdkVirtualForOf,
 } from '@angular/cdk/scrolling';
-import { AutoSizeVirtualScrollStrategy } from '@angular/cdk-experimental/scrolling';
 
 import { NegTableConfigService } from '../../services/config';
-import { NoVirtualScrollStrategy } from './strategies';
+import { NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies';
+import { NgeVirtualTableRowInfo } from './virtual-scroll-for-of';
 
 declare module '../../services/config' {
   interface NegTableConfig {
@@ -41,13 +42,14 @@ function resolveScrollStrategy(config: NegTableConfigService, scrollStrategy?: V
     }
   }
 
-  return scrollStrategy || new AutoSizeVirtualScrollStrategy(100, 200);
+  return scrollStrategy || new TableAutoSizeVirtualScrollStrategy(100, 200);
 }
 
 @Component({
   selector: 'neg-cdk-virtual-scroll-viewport',
   templateUrl: 'virtual-scroll-viewport.component.html',
-  host: {
+  styleUrls: [ './virtual-scroll-viewport.component.scss' ],
+  host: { // tslint:disable-line:use-host-property-decorator
     class: 'cdk-virtual-scroll-viewport',
     '[class.cdk-virtual-scroll-orientation-horizontal]': 'orientation === "horizontal"',
     '[class.cdk-virtual-scroll-orientation-vertical]': 'orientation === "vertical"'
@@ -55,7 +57,7 @@ function resolveScrollStrategy(config: NegTableConfigService, scrollStrategy?: V
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewport implements OnInit, OnDestroy {
+export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewport implements OnInit, OnDestroy {
 
   readonly enabled: boolean;
 
@@ -67,6 +69,8 @@ export class NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportCompone
    */
   readonly offsetChange: Observable<number>;
 
+  totalContentSize = 0;
+
   private offsetChange$ = new Subject<number>();
   private offset: number;
   private isCDPending: boolean;
@@ -75,18 +79,33 @@ export class NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportCompone
               cdr: ChangeDetectorRef,
               ngZone: NgZone,
               config: NegTableConfigService,
-              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) scrollStrategy: VirtualScrollStrategy,
+              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) private negScrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher) {
     super(elementRef,
           cdr,
           ngZone,
-          scrollStrategy = resolveScrollStrategy(config, scrollStrategy),
+          negScrollStrategy = resolveScrollStrategy(config, negScrollStrategy),
           dir,
           scrollDispatcher
       );
-    this.enabled = !(scrollStrategy instanceof NoVirtualScrollStrategy);
+    this.enabled = !(negScrollStrategy instanceof NoVirtualScrollStrategy);
     this.offsetChange = this.offsetChange$.asObservable();
+  }
+
+  /**
+   * Sets the total size of all content (in pixels), including content that is not currently
+   * rendered.
+   */
+  setTotalContentSize(size: number) {
+    super.setTotalContentSize(this.totalContentSize = size);
+  }
+
+  attach(forOf: CdkVirtualForOf<any> & NgeVirtualTableRowInfo) {
+    super.attach(forOf);
+    if (this.negScrollStrategy instanceof TableAutoSizeVirtualScrollStrategy) {
+      this.negScrollStrategy.averager.setRowInfo(forOf);
+    }
   }
 
   ngOnInit(): void {

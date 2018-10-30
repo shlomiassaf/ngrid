@@ -1,16 +1,5 @@
 @import './neg-cdk-table.component.from-material';
 
-$neg-table-row-horizontal-margin: $neg-table-row-horizontal-padding;
-$neg-cell-horizontal-indent: 12px;
-
-.neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
-  padding-left: $neg-cell-horizontal-indent;
-
-  &.cdk-table-sticky {
-    background: inherit;
-  }
-}
-
 /* MULTI COLUMN AND COLUMN SPAN */
 .neg-table-header-cell.neg-header-group-cell {
   display: flex;
@@ -44,38 +33,3 @@ $neg-cell-horizontal-indent: 12px;
 }
 /* MULTI COLUMN AND COLUMN SPAN */
 
-.neg-table-margin-cell-box-model {
-  .neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
-    box-sizing: border-box;
-
-    margin-left: $neg-cell-horizontal-indent;
-    padding-left: 0;
-    padding-right: 0;
-
-    &:first-child {
-      margin-left: $neg-table-row-horizontal-margin;
-      padding-left: 0;
-      padding-right: 0;
-
-      [dir='rtl'] & {
-        margin-left: 0;
-        margin-right: $neg-table-row-horizontal-margin;
-        padding-left: 0;
-        padding-right: 0;
-      }
-    }
-
-    &:last-child {
-      margin-right: $neg-table-row-horizontal-margin;
-      padding-left: 0;
-      padding-right: 0;
-
-      [dir='rtl'] & {
-        margin-right: 0;
-        margin-left: $neg-table-row-horizontal-margin;
-        padding-left: 0;
-        padding-right: 0;
-      }
-    }
-  }
-}

@@ -39,7 +39,7 @@ export {
   NegColumnSet,
   NegTableColumnSet, NegTableColumnDefinitionSet,
 
-  NoVirtualScrollStrategy,
+  NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy,
 
   NegTableCellClickEvent,
   NegTableCellTemplateContext,

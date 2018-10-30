@@ -2,16 +2,15 @@
 /* @neg-example:ex-2 */
 /* @neg-example:ex-3 */
 /* @neg-example:ex-4 */
-import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
-import { AutoSizeVirtualScrollStrategy } from '@angular/cdk-experimental/scrolling';
 import {
   createDS,
   columnFactory,
   NegTableComponent,
   NegTableConfigService,
-  NoVirtualScrollStrategy
+  NoVirtualScrollStrategy,
+  TableAutoSizeVirtualScrollStrategy,
 } from '@neg/table';
 import { Person, DemoDataSource } from '@neg/demo-apps/shared';
 
@@ -62,7 +61,7 @@ export class VirtualScrollTableExampleComponent {
       defaultStrategy() {
         switch (type) {
           case 'auto':
-            return new AutoSizeVirtualScrollStrategy(100, 200);
+            return new TableAutoSizeVirtualScrollStrategy(100, 200);
           case 'fixed':
             return new FixedSizeVirtualScrollStrategy(48, 100, 200);
           case 'none':

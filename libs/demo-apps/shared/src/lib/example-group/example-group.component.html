@@ -1,8 +1,8 @@
 <div class="example-group-container" fxLayout="row" #el>
-  <div class="example-container" docsiTocArea #tocArea="docsiTocArea" [scrollContainer]="el">
+  <div class="example-container" [class.example-container-toc]="!hideToc" docsiTocArea #tocArea="docsiTocArea" [scrollContainer]="el">
     <router-outlet></router-outlet>
   </div>
-  <div class="example-list-container">
+  <div *ngIf="!hideToc" class="example-list-container">
     <docsi-toc [tocArea]="tocArea">
       <a *docsiTocLinkTemplate="let ctx;"
           [routerLink]="[ctx.rootUrl]"

@@ -3,12 +3,12 @@
 
 // THIS FILE REQUIRE @import '~@angular/material/theming';
 
-@mixin neg-cdk-table-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@mixin neg-cdk-table-theme($tableTheme) {
+  $border-color: map-get($tableTheme, border-color);
+  $row-background: map-get($tableTheme, row-background);
+  $header-cell-color: map-get($tableTheme, header-cell-color);
+  $cell-color: map-get($tableTheme, cell-color);
+  $footer-cell-color: map-get($tableTheme, footer-cell-color);
 
   .neg-table-row, .neg-table-header-row, .neg-table-footer-row {
     position: relative;
@@ -16,24 +16,28 @@
 
   .neg-table-row, .neg-table-header-row, .neg-table-footer-row,
   .neg-table-header-cell, .neg-table-cell, .neg-table-footer-cell {
-    border-color: mat-color($foreground, divider);
+    border-color: $border-color;
   }
 
   // border of "padding" cell box model (not .neg-table-margin-cell-box-model)
   .neg-table-header-cell.neg-header-group-cell:before {
-    border-color: mat-color($foreground, divider);
+    border-color: $border-color;
   }
 
   .neg-table-row, .neg-table-header-row, .neg-table-footer-row {
-    background: mat-color($background, 'card');
+    background: $row-background;
   }
 
   .neg-table-header-cell {
-    color: mat-color($foreground, secondary-text);
+    color: $header-cell-color;
   }
 
-  .neg-table-cell, .neg-table-footer-cell {
-    color: mat-color($foreground, text);
+  .neg-table-cell {
+    color: $cell-color;
+  }
+
+  .neg-table-footer-cell {
+    color: $footer-cell-color;
   }
 }
 

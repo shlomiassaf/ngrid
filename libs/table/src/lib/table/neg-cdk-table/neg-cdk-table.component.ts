@@ -25,7 +25,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { NegTableComponent } from '../table.component';
 
 import { NegVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
-import { NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/virtual-scroll-viewport.component';
+import { NegCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/virtual-scroll-viewport.component';
 
 /**
  * Wrapper for the CdkTable that extends it's functionality to support various table features.
@@ -155,7 +155,7 @@ export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     }
   }
 
-  attachViewPort(viewport: NegCdkVirtualScrollViewportComponentCdkVirtualScrollViewportComponent): void {
+  attachViewPort(viewport: NegCdkVirtualScrollViewportComponent): void {
     this.detachViewPort();
     this.forOf = new NegVirtualScrollForOf<T>(this.table, this as any, viewport, this.injector.get(NgZone));
   }

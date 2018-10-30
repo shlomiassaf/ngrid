@@ -1,5 +1,6 @@
 export { TableExamplesPageComponent } from './table-examples-page/table-examples-page.component';
 export { AllInOneTableExampleComponent } from './all-in-one';
+export { GeneralDemoTableExampleComponent } from './general-demo/general-demo.component';
 export { HideColumnsTableExampleComponent } from './hide-columns/hide-columns.component';
 export { ColumnWidthTableExampleComponent } from './column-width/column-width.component';
 export { RowHeightTableExampleComponent } from './row-height/row-height.component';

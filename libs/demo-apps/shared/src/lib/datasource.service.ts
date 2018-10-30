@@ -20,13 +20,58 @@ export interface Person {
   lastLoginIp: string;
 }
 
+export interface Customer {
+  name: string;
+  country: string;
+  jobTitle: string;
+  accountId: string;
+  accountType: string;
+  currencyCode: string;
+  primeAccount: boolean;
+  balance: number;
+  creditScore: number;
+  monthlyBalance: number[];
+  
+}
+
 @Injectable({ providedIn: 'root' })
 export class DemoDataSource {
 
-  private cache: Person[] = [];
+  private customers: Customer[] = [];
+  private persons: Person[] = [];
+
+  getCustomersSync(limit = 500): Customer[] {
+    return this.customers.slice(0, limit);
+  }
+
+  getCustomers(delay = 1000, limit = 500): Promise<Customer[]> {
+    return this.getCountries()
+      .then( () => this.wait(delay) )
+      .then( () => import('faker'))
+      .then( faker => {
+        if (this.customers.length < limit - 1) {
+          for (let i = this.customers.length; i < limit; i++) {
+            const customer: Customer = {
+              name: faker.name.findName(),
+              country: faker.address.countryCode(),
+              jobTitle: faker.name.jobTitle(),
+              accountId: faker.finance.account(),
+              accountType: faker.finance.accountName(),
+              currencyCode: faker.finance.currencyCode(),
+              primeAccount: faker.random.boolean(),
+              balance: faker.random.number({ min: -50000, max: 50000, precision: 2 }),
+              creditScore: faker.random.number(4) + 1,
+              monthlyBalance: Array.from(new Array(12)).map( () => faker.random.number({ min: -15000, max: 15000, precision: 2 }) )
+            }
+            this.customers.push(customer);
+          }
+        }
+        return this.customers.slice(0, limit);
+      });
+  }
 
   getPeopleSync(limit = 500): Person[] {
-    return this.cache.slice(0, limit);
+    return this.persons.slice(0, limit);
   }
 
   getPeople(delay = 1000, limit = 500): Promise<Person[]> {
@@ -34,8 +79,8 @@ export class DemoDataSource {
       .then( () => this.wait(delay) )
       .then( () => import('faker'))
       .then( faker => {
-        if (this.cache.length < limit - 1) {
-          for (let i = this.cache.length; i < limit; i++) {
+        if (this.persons.length < limit - 1) {
+          for (let i = this.persons.length; i < limit; i++) {
             const p: Person = {
               id: i,
               name: faker.name.findName(),
@@ -55,10 +100,10 @@ export class DemoDataSource {
               },
               lastLoginIp: faker.internet.ip()
             }
-            this.cache.push(p);
+            this.persons.push(p);
           }
         }
-        return this.cache.slice(0, limit);
+        return this.persons.slice(0, limit);
       });
   }
 

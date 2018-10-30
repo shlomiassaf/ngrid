@@ -57,8 +57,8 @@
 
   <!-- SPECIFIC CELL TEMPLATE DEFINITION-->
   <div *negTableCellDef="'name'; value as value;"><b>{{value}}</b></div>
-  <div *negTableCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data(row):'symbol':'1.0-2'}}</div>
-  <div *negTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data(row) }}</div>
+  <div *negTableCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data.currency(row):'symbol':'1.0-2'}}</div>
+  <div *negTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
   <div *negTableCellDef="'balance'; value as value;" [parentNgClass]="{ 'balance-negative': value < 0, 'balance-positive': value > 0 }">{{ value | number:'1.0-0'}}</div>
   <div *negTableCellDef="'settings.background'; value as value;" [parentNgStyle]="{ backgroundColor: value }"><b>{{value}}</b></div>
   <div *negTableCellDef="'settings.avatar'; value as value;"><img [src]="value" height="40px" /></div>
