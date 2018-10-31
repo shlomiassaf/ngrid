@@ -8,6 +8,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AriaDescriber, FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay } from '@angular/cdk/overlay';
@@ -49,7 +50,7 @@ const DEFAULT_OPTIONS: CellTooltipOptions = {
 };
 
 export interface CellTooltipOptions {
-  canShow?: (event: NegTableCellEvent<any>) => boolean;
+  canShow?: boolean | ( (event: NegTableCellEvent<any>) => boolean );
   message?: (event: NegTableCellEvent<any>) => string;
 }
 
@@ -60,7 +61,14 @@ export class NegTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
   static readonly PLUGIN_KEY: 'cellTooltip' = PLUGIN_KEY;
 
   // tslint:disable-next-line:no-input-rename
-  @Input('cellTooltip') canShow: (event: NegTableCellEvent<T>) => boolean;
+  @Input('cellTooltip') set canShow(value: boolean | ( (event: NegTableCellEvent<T>) => boolean )) {
+    if (typeof value === 'function') {
+      this._canShow = value;
+    } else {
+      this._canShow = coerceBooleanProperty(value) ? e => true : e => false;
+    }
+  }
+
   @Input() message: (event: NegTableCellEvent<T>) => string;
 
   /** See Material docs for MatTooltip */
@@ -77,6 +85,7 @@ export class NegTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
   private toolTip: MatTooltip;
   private lastConfig: CellTooltipOptions;
   private _removePlugin: (table: NegTableComponent<any>) => void;
+  private _canShow: (event: NegTableCellEvent<T>) => boolean;
 
   constructor(private table: NegTableComponent<any>, private injector: Injector, pluginCtrl: NegTablePluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
@@ -140,8 +149,13 @@ export class NegTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
   private cellEnter(event: NegTableCellEvent<T>): void {
     this.killTooltip();
 
-    const canShow = this.canShow || (this.lastConfig && this.lastConfig.canShow) || DEFAULT_OPTIONS.canShow;
-    if (canShow(event)) {
+    if (!this._canShow) {
+      // TODO: this will set lastConfig / default option once
+      // but if user changes lastConfig it will never update again...
+      this.canShow = (this.lastConfig && this.lastConfig.canShow) || DEFAULT_OPTIONS.canShow;
+    }
+
+    if (this._canShow(event)) {
       const params = this.initArgs.slice() as NegTableCellTooltipDirective<any>['initArgs'];
       params[1] = new ElementRef<any>(event.cellTarget);
 
