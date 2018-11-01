@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 
 import { NegTableComponent } from '../../table.component';
+import { NegColumnSizeInfo } from '../../types';
 import { NegColumn } from '../../columns';
 
 const NEG_TABLE_MAP = new Map<NegTableComponent<any>, NegTableGroupHeaderSizeController>();
@@ -20,6 +21,15 @@ class NegTableGroupHeaderSizeController {
   constructor(private table: NegTableComponent<any>) {
     this.entries = new WeakMap<any, NegColumnSizeObserver>();
     this.ro = new ResizeObserver( entries => this.onResize(entries) );
+  }
+
+  static get(table: NegTableComponent<any>): NegTableGroupHeaderSizeController {
+    let controller = NEG_TABLE_MAP.get(table);
+    if (!controller) {
+      controller = new NegTableGroupHeaderSizeController(table);
+      NEG_TABLE_MAP.set(table, controller);
+    }
+    return controller;
   }
 
   add(col: NegColumnSizeObserver): void {
@@ -42,19 +52,19 @@ class NegTableGroupHeaderSizeController {
   }
 
   private onResize(entries: ResizeObserverEntry[]): void {
-    const hasMatch = entries.some( entry => this.entries.has(entry.target) );
-    if (hasMatch) {
+    const resized: NegColumnSizeObserver[] = [];
+    for (const entry of entries) {
+      const o = this.entries.get(entry.target);
+      if (o) {
+        resized.push(o);
+      }
+    }
+    if (resized.length > 0) {
+      for (const c of resized) {
+        c.resized();
+      }
       this.table.resizeRows(this.columns);
     }
-  }
-
-  static get(table: NegTableComponent<any>): NegTableGroupHeaderSizeController {
-    let controller = NEG_TABLE_MAP.get(table);
-    if (!controller) {
-      controller = new NegTableGroupHeaderSizeController(table);
-      NEG_TABLE_MAP.set(table, controller);
-    }
-    return controller;
   }
 }
 
@@ -68,7 +78,7 @@ class NegTableGroupHeaderSizeController {
  * an entire row should emit once, with all columns.
  */
 @Directive({ selector: 'neg-table-cell[observeSize], neg-table-header-cell[observeSize]' })
-export class NegColumnSizeObserver implements OnDestroy {
+export class NegColumnSizeObserver implements NegColumnSizeInfo, OnDestroy {
   @Input('observeSize') get column(): NegColumn { return this._column; };
   set column(value: NegColumn) {
     if (this._column) {
@@ -81,13 +91,14 @@ export class NegColumnSizeObserver implements OnDestroy {
   };
   target: HTMLElement;
 
-  get width(): number { return this.target.offsetWidth; }
-  get height(): number { return this.target.offsetHeight; }
+  width: number;
+  height: number;
+
   /**
    * The computed style for this cell.
    * Note that this is a getter that call `getComputedStyle`, store before use.
    */
-  get style(): CSSStyleDeclaration { return getComputedStyle(this.target); }
+  style: CSSStyleDeclaration;
 
   private _column: NegColumn;
   private controller: NegTableGroupHeaderSizeController;
@@ -96,6 +107,16 @@ export class NegColumnSizeObserver implements OnDestroy {
     this.controller = NegTableGroupHeaderSizeController.get(table);
     this.target = el.nativeElement;
     this.controller.add(this);
+  }
+
+  resized(): void {
+    const el = this.target;
+    this.width = el.offsetWidth;
+    this.height = el.offsetHeight;
+    this.style = getComputedStyle(el);
+    if ( this._column) {
+      this._column.columnDef.onResize();
+    }
   }
 
   ngOnDestroy() {

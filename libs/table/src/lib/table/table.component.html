@@ -22,7 +22,7 @@
 </ng-container>
 
 <div class="neg-table-container">
-  <neg-cdk-virtual-scroll-viewport class="neg-table-scroll-container">
+  <neg-cdk-virtual-scroll-viewport class="neg-table-scroll-container" [minWidth]="_cdkTable?.minWidth">
     <neg-cdk-table>
       <!-- Row templates. The columns used are set at the row template level -->
 
@@ -65,7 +65,7 @@
 
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
     </neg-cdk-table>
-    <div [style.minWidth]="_cdkTable?.minWidth" class="neg-table-space-fill"></div>
+    <!-- <div [style.minWidth]="_cdkTable?.minWidth" class="neg-table-space-fill"></div> -->
   </neg-cdk-virtual-scroll-viewport>
 
   <ng-container #beforeContent></ng-container>

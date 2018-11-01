@@ -104,7 +104,7 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
 
 
   dataSource = createDS<Person>()
-    .onTrigger( () => this.datasource.getPeople(500, 500) )
+    .onTrigger( () => this.datasource.getPeople(500, 100000) )
     .create();
 
   detailRowPredicate: ( (index: number, rowData: Person) => boolean ) | true | undefined;

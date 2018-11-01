@@ -16,7 +16,7 @@ import {
   NegTableHeaderCellDefDirective,
   NegTableFooterCellDefDirective,
   NegTableCellDefDirective,
-  NegTableHeaderCellDirective,
+  NegTableHeaderCellComponent,
   NegTableCellDirective,
   NegTableFooterCellDirective,
 
@@ -47,7 +47,7 @@ import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
     NegTableHeaderCellDefDirective,
     NegTableFooterCellDefDirective,
     NegTableCellDefDirective,
-    NegTableHeaderCellDirective,
+    NegTableHeaderCellComponent,
     NegTableCellDirective,
     NegTableFooterCellDirective,
 
@@ -67,7 +67,7 @@ import { TableCellContextPipe } from './table/pipes/table-cell-context.pipe';
     NegTableHeaderCellDefDirective,
     NegTableFooterCellDefDirective,
     NegTableCellDefDirective,
-    NegTableHeaderCellDirective,
+    NegTableHeaderCellComponent,
     NegTableCellDirective,
     NegTableFooterCellDirective,
 

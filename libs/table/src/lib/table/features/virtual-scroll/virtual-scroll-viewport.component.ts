@@ -5,6 +5,7 @@ import {
   ChangeDetectionStrategy,
   ElementRef,
   Inject,
+  Input,
   ChangeDetectorRef,
   ViewEncapsulation,
   NgZone,
@@ -69,6 +70,8 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
    */
   readonly offsetChange: Observable<number>;
 
+  @Input() minWidth: string;
+
   totalContentSize = 0;
 
   private offsetChange$ = new Subject<number>();
@@ -93,19 +96,15 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     this.offsetChange = this.offsetChange$.asObservable();
   }
 
-  /**
-   * Sets the total size of all content (in pixels), including content that is not currently
-   * rendered.
-   */
-  setTotalContentSize(size: number) {
-    super.setTotalContentSize(this.totalContentSize = size);
-  }
-
   attach(forOf: CdkVirtualForOf<any> & NgeVirtualTableRowInfo) {
     super.attach(forOf);
     if (this.negScrollStrategy instanceof TableAutoSizeVirtualScrollStrategy) {
       this.negScrollStrategy.averager.setRowInfo(forOf);
     }
+  }
+
+  setTotalContentSize(size: number) {
+    super.setTotalContentSize(this.totalContentSize = size);
   }
 
   ngOnInit(): void {
@@ -132,5 +131,4 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
       }
     }
   }
-
 }

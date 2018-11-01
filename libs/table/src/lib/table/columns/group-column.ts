@@ -1,3 +1,4 @@
+import { NegTableColumnDef } from '../directives';
 import { NegColumnGroupDefinition } from './types';
 import { NegMetaColumn } from './meta-column';
 import { NegColumn } from './column';
@@ -22,9 +23,11 @@ export class NegColumnGroup extends NegMetaColumn implements NegColumnGroupDefin
   get isVisible(): boolean {
     return this.columns.some( c => !c.hidden );
   }
+    /**
+   * The column def for this column.
+   */
+  columnDef: NegTableColumnDef<NegColumnGroup>;
 
-  /** @internal */
-  orgWidth?: string;
   /** @internal */
   readonly columns: NegColumn[];
 
@@ -35,13 +38,6 @@ export class NegColumnGroup extends NegMetaColumn implements NegColumnGroupDefin
     );
 
     this[NEG_COLUMN_GROUP_MARK] = true;
-    if (isNegColumnGroup(def)) {
-      this.orgWidth = def.orgWidth;
-    } else {
-      if (this.width) {
-        this.orgWidth = this.width;
-      }
-    }
     this.prop = def.prop;
     this.span = def.span;
     this.columns = columns;

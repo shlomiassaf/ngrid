@@ -41,24 +41,15 @@ export function deepPathSet(item: any, col: NegColumnDefinition, value: any): vo
 
 export function updateColumnWidths(rowWidth: StaticColumnWidthLogic, tableColumns: NegColumn[], metaColumns: NegMetaColumnStore[]): void {
   const { pct, px } = rowWidth.defaultColumnWidth;
+  const defaultWidth = `calc(${pct}% - ${px}px)`;
   for (const c of tableColumns) {
-    let width;
-    if (c.width) {
-      width = c.width;
-    } else {
-      width =`calc(${pct}% - ${px}px)`
-    }
-    c.cWidth = width;
-    c.cMinWidth = c.minWidth ? `${c.minWidth}px` : '';
-    c.cMaxWidth = c.maxWidth ? `${c.maxWidth}px` : c.cWidth;
+    c.updateWidth(defaultWidth);
   }
 
   for (const m of metaColumns) {
     for (const c of [m.header, m.footer]) {
       if (c) {
-        c.cWidth = c.width || '';
-        c.cMinWidth = c.minWidth ? `${c.minWidth}px` : '';
-        c.cMaxWidth = c.maxWidth ? `${c.maxWidth}px` : c.cWidth;
+        c.updateWidth('');
       }
     }
 

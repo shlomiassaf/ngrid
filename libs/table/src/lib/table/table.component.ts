@@ -415,9 +415,9 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
         if (g.isVisible) {
           const cols = data.filter( d => !d.column.hidden && d.column.isInGroup(g) );
           const groupWidth = rowWidth.addGroup(cols);
-          g.cMaxWidth = g.cWidth = `${groupWidth}px`;
+          g.updateWidth(`${groupWidth}px`);
         } else {
-          g.cMaxWidth = g.cWidth = `0px`;
+          g.updateWidth(`0px`);
         }
         g.columnDef.markForCheck();
       }

@@ -15,7 +15,7 @@ import { NegColumnGroup } from './group-column';
 
 const NEG_COLUMN_MARK = Symbol('NegColumn');
 
-function isNegColumn(def: NegColumnDefinition): def is NegColumn {
+export function isNegColumn(def: any): def is NegColumn {
   return def instanceof NegColumn || def[NEG_COLUMN_MARK] === true;
 }
 
@@ -97,26 +97,6 @@ export class NegColumn implements NegColumnDefinition {
   orgProp: string;
 
   /**
-   * The calculated width, used by neg-table to set the width used by the template
-   * This value is not copied when creating a new instance
-   * @internal
-   */
-  cWidth: string;
-  /**
-   * The calculated minimum width, used by neg-table to set the min-width used by the template
-   * This value is not copied when creating a new instance
-   * @internal
-   */
-  cMinWidth: string;
-
-  /**
-   * The calculated maximum width, used by neg-table to set the max-width used by the template
-   * This value is not copied when creating a new instance
-   * @internal
-   */
-  cMaxWidth: string;
-
-  /**
    * Used by neg-table to apply custom cell template, or the default when not set.
    * @internal
    */
@@ -140,17 +120,21 @@ export class NegColumn implements NegColumnDefinition {
   hidden: boolean;
 
   /**
-   * The column def for this column.
-   */
-  columnDef: NegTableColumnDef;
-
-  /**
    * An on-demand size info object, populated by `NegColumnSizeObserver`
+   * @internal
    */
   sizeInfo?: NegColumnSizeInfo;
 
   /** @internal */
   maxWidthLock: boolean;
+
+  /**
+   * The column def for this column.
+   */
+  get columnDef(): NegTableColumnDef<NegColumn> { return this._columnDef; }
+
+  private _columnDef: NegTableColumnDef<NegColumn>;
+  private defaultWidth: string = '';
 
   /**
    * Groups that this column belongs to.
@@ -197,6 +181,25 @@ export class NegColumn implements NegColumnDefinition {
 
     const copyKeys: Array<keyof NegColumn> = ['sort', 'headerType', 'footerType'];
     copyKeys.forEach(k => k in def && (this[k as any] = def[k]));
+  }
+
+  attach(columnDef: NegTableColumnDef<NegColumn>): void {
+    this.detach();
+    this._columnDef = columnDef;
+    if (this.defaultWidth) {
+      this.columnDef.updateWidth(this.width || this.defaultWidth);
+    }
+  }
+
+  detach(): void {
+    this._columnDef = undefined;
+  }
+
+  updateWidth(fallbackDefault: string): void {
+    this.defaultWidth = fallbackDefault || '';
+    if (this.columnDef) {
+      this.columnDef.updateWidth(this.width || fallbackDefault);
+    }
   }
 
   /**

@@ -1,10 +1,9 @@
+// tslint:disable:use-host-property-decorator
 import {
+  AfterViewInit,
   Component,
   Directive,
   ElementRef,
-  Input,
-  KeyValueDiffers, KeyValueDiffer,
-  OnDestroy,
   DoCheck,
   ChangeDetectionStrategy,
   ViewEncapsulation,
@@ -12,107 +11,26 @@ import {
   ViewChild,
   ComponentFactoryResolver
 } from '@angular/core';
-import { CdkColumnDef, CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
+import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
 
 import { NegTableComponent } from '../table.component';
 import { COLUMN, NegColumn, NegColumnGroup } from '../columns';
 import { _NegTableMetaCellTemplateContext } from '../pipes/table-cell-context.pipe';
-
-/* TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
-  NegTableColumnDef use's the default object KeyValueDiffer provides with angular.
-  This differ will perform the diff on the entire object which IS NOT REQUIRED!
-  We need to create a custom differ that does the diff on selected properties only.
-*/
-/**
- * Column definition for the mat-table.
- * Defines a set of cells available for a table column.
- */
-@Directive({
-  selector: '[negTableColumnDef]',
-  providers: [
-    { provide: CdkColumnDef, useExisting: NegTableColumnDef }
-  ],
-})
-export class NegTableColumnDef extends CdkColumnDef implements DoCheck, OnDestroy {
-  @Input('negTableColumnDef') get column(): COLUMN { return this._column; };
-  set column(value: COLUMN) {
-    if (this._column !== value) {
-      this._column = value;
-      if (value) {
-        this.name = value.id;
-        value.columnDef = this;
-        this.sticky = value.stickyStart;
-        this.stickyEnd = value.stickyEnd;
-      }
-      if (this._colDiffer) {
-        this.markForCheck();
-      }
-    }
-  }
-
-  get isDirty(): boolean {
-    if (this._markedForCheck && !this._isDirty) {
-      this._markedForCheck = false;
-      this._isDirty = !!this._colDiffer.diff(this._column);
-    }
-    return this._isDirty;
-  }
-
-  protected _colDiffer: KeyValueDiffer<any, any>;
-  private _column: COLUMN;
-  private _isDirty: boolean = false;
-  private _markedForCheck: boolean = false;
-
-  constructor(protected readonly _differs: KeyValueDiffers) {
-    super();
-  }
-
-  /**
-   * Marks this column for a lazy change detection check.
-   * Lazy means it will run the check only when the diff is requested (i.e. querying the `hasChanged` property).
-   * This allow aggregation of changes between CD cycles, i.e. calling `markForCheck()` multiple times within the same CD cycle does not hit performance.
-   *
-   * Once marked for check, `negTableColumnDef` handles it's dirty (`isDirty`) state automatically, when `isDirty` is true it will remain true until the
-   * CD cycle ends, i.e. until `ngDoCheck()` hits. This means that only children of `negTableColumnDef` can relay on `isDirty`, all children will run their
-   * `ngDoCheck()` before `ngDoCheck()` of `negTableColumnDef`.
-   *
-   * This is a how we notify all cell directives about changes in a column. It is done through angular's CD logic and does not require manual
-   * CD kicks and special channels between negTableColumnDef and it's children.
-   */
-  markForCheck(): void {
-    if (!this._colDiffer) {
-      this._colDiffer = this._differs.find({}).create();
-      this._colDiffer.diff({});
-    }
-    this._markedForCheck = true;
-  }
-
-  /** @internal */
-  ngDoCheck(): void {
-    if (this._isDirty) {
-      this._isDirty = false;
-    }
-  }
-
-  /** @internal */
-  ngOnDestroy(): void {
-    if (this.column) {
-      this.column.columnDef = undefined;
-    }
-  }
-}
-
+import { NegTableColumnDef } from './column-def';
 
 const HEADER_GROUP_CSS = `neg-header-group-cell`;
 const HEADER_GROUP_PLACE_HOLDER_CSS = `neg-header-group-cell-placeholder`;
 
-function setWidth(el: HTMLElement, column: COLUMN) {
-  el.style.cssText = `min-width: ${column.cMinWidth}; width: ${column.cWidth}; max-width: ${column.cMaxWidth}; `;
+/**
+ * Set the widths of an HTMLElement
+ * @param el The element to set widths to
+ * @param widths The widths, a tuple of 3 strings [ MIN-WIDTH, WIDTH, MAX-WIDTH ]
+ */
+function setWidth(el: HTMLElement, widths: [string, string, string]) {
+  el.style.cssText = `min-width: ${widths[0]}; width: ${widths[1]}; max-width: ${widths[2]}; `;
 }
 
 function initCellElement(el: HTMLElement, column: COLUMN): void {
-  setWidth(el, column);
   if (column.css) {
     const css = column.css.split(' ');
     for (const c of css) {
@@ -128,7 +46,7 @@ function initCellElement(el: HTMLElement, column: COLUMN): void {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class NegTableHeaderCellDirective extends CdkHeaderCell implements DoCheck {
+export class NegTableHeaderCellComponent extends CdkHeaderCell implements DoCheck, AfterViewInit {
   @ViewChild('vcRef', { read: ViewContainerRef }) vcRef: ViewContainerRef;
 
   private el: HTMLElement;
@@ -165,13 +83,14 @@ export class NegTableHeaderCellDirective extends CdkHeaderCell implements DoChec
       }
     }
     this.vcRef.get(0).detectChanges();
+    setWidth(this.el, this.columnDef.widths);
     initCellElement(this.el, col);
   }
 
   // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
   ngDoCheck(): void {
     if (this.columnDef.isDirty) {
-      setWidth(this.el, this.columnDef.column);
+      setWidth(this.el, this.columnDef.widths);
     }
   }
 }
@@ -190,13 +109,14 @@ export class NegTableCellDirective extends CdkCell implements DoCheck {
   constructor(private columnDef: NegTableColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
     this.el = elementRef.nativeElement;
+    setWidth(this.el, columnDef.widths);
     initCellElement(this.el, columnDef.column);
   }
 
   // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
   ngDoCheck(): void {
     if (this.columnDef.isDirty) {
-      setWidth(this.el, this.columnDef.column);
+      setWidth(this.el, this.columnDef.widths);
     }
   }
 }
@@ -212,13 +132,14 @@ export class NegTableFooterCellDirective extends CdkFooterCell implements DoChec
     const name = this.el.tagName.toLowerCase();
     this.el.classList.add(name);
     this.el.setAttribute('role', 'gridcell');
+    setWidth(this.el, columnDef.widths);
     initCellElement(this.el, column);
   }
 
   // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
   ngDoCheck(): void {
     if (this.columnDef.isDirty) {
-      setWidth(this.el, this.columnDef.column);
+      setWidth(this.el, this.columnDef.widths);
     }
   }
 }

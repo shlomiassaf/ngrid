@@ -84,29 +84,13 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
    */
   template: TemplateRef<NegTableMetaCellTemplateContext<any>>;
 
-    /**
-   * The calculated width, used by neg-table to set the width used by the template
-   * This value is not copied when creating a new instance
-   * @internal
-   */
-  cWidth: string;
   /**
-   * The calculated minimum width, used by neg-table to set the min-width used by the template
-   * This value is not copied when creating a new instance
-   * @internal
-   */
-  cMinWidth: string;
-
-  /**
-   * The calculated maximum width, used by neg-table to set the max-width used by the template
-   * This value is not copied when creating a new instance
-   * @internal
-   */
-  cMaxWidth: string;
-    /**
    * The column def for this column.
    */
-  columnDef: NegTableColumnDef;
+  get columnDef(): NegTableColumnDef<NegMetaColumn> { return this._columnDef; }
+
+  private _columnDef: NegTableColumnDef<NegMetaColumn>;
+  private defaultWidth: string = '';
 
   constructor(def: NegMetaColumnDefinition) {
     this[NEG_META_COLUMN_MARK] = true;
@@ -118,6 +102,23 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
       if (typeof def.type === 'string') {
         this.type = { name: def.type } as any;
       }
+    }
+  }
+
+  attach(columnDef: NegTableColumnDef<NegMetaColumn>): void {
+    this.detach();
+    this._columnDef = columnDef;
+    this.columnDef.updateWidth(this.width || this.defaultWidth);
+  }
+
+  detach(): void {
+    this._columnDef = undefined;
+  }
+
+  updateWidth(fallbackDefault: string): void {
+    this.defaultWidth = fallbackDefault || '';
+    if (this.columnDef) {
+      this.columnDef.updateWidth(this.width || fallbackDefault);
     }
   }
 }

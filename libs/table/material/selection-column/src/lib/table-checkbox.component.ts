@@ -85,7 +85,7 @@ export class NegTableCheckboxComponent implements AfterViewInit {
     if (this.allSelected) {
       this.selection.clear();
     } else {
-      this.getCollection().forEach(data => this.selection.select(data));
+      this.selection.select(...this.getCollection());
     }
   }
 

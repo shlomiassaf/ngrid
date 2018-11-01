@@ -138,7 +138,8 @@ export class NegVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
 
           // Because removed any layout effect of header/footer rows we can use the
           // range of the data rows only
-          this.ngZone.run(() => this.cdkTable.viewChange.next(data) );
+          this.cdkTable.viewChange.next(data);
+          // this.ngZone.run(() => this.cdkTable.viewChange.next(data) );
         });
 
       // add meta rows to the total row count.

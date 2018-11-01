@@ -64,6 +64,8 @@ export class NegTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
   @Input('cellTooltip') set canShow(value: boolean | ( (event: NegTableCellEvent<T>) => boolean )) {
     if (typeof value === 'function') {
       this._canShow = value;
+    } else if ( (value as any) === '') {
+      this._canShow = undefined;
     } else {
       this._canShow = coerceBooleanProperty(value) ? e => true : e => false;
     }
