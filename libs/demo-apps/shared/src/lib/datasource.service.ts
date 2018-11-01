@@ -21,6 +21,7 @@ export interface Person {
 }
 
 export interface Customer {
+  id: number;
   name: string;
   country: string;
   jobTitle: string;
@@ -31,7 +32,7 @@ export interface Customer {
   balance: number;
   creditScore: number;
   monthlyBalance: number[];
-  
+
 }
 
 @Injectable({ providedIn: 'root' })
@@ -49,9 +50,10 @@ export class DemoDataSource {
       .then( () => this.wait(delay) )
       .then( () => import('faker'))
       .then( faker => {
-        if (this.customers.length < limit - 1) {
+        if (this.customers.length < limit) {
           for (let i = this.customers.length; i < limit; i++) {
             const customer: Customer = {
+              id: i + 1,
               name: faker.name.findName(),
               country: faker.address.countryCode(),
               jobTitle: faker.name.jobTitle(),
@@ -79,7 +81,7 @@ export class DemoDataSource {
       .then( () => this.wait(delay) )
       .then( () => import('faker'))
       .then( faker => {
-        if (this.persons.length < limit - 1) {
+        if (this.persons.length < limit) {
           for (let i = this.persons.length; i < limit; i++) {
             const p: Person = {
               id: i,

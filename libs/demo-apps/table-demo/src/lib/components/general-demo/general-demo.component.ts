@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, OnDestroy, ChangeDetectorRef } from '@angular/core';
 
 import { createDS, columnFactory } from '@neg/table';
 import { ExampleGroupComponent, Customer, DemoDataSource } from '@neg/demo-apps/shared';
@@ -13,37 +13,42 @@ const COUNTRY_GETTER = {
 
 const ACCOUNT_BALANCE_TYPE = { name: 'accountBalance', data: { neg: 'balance-negative', pos: 'balance-positive', format: '1.0-2', meta: COUNTRY_GETTER } };
 
-const COLUMNS = columnFactory()
-  .default({minWidth: 100})
-  .table(
-    { prop: 'selection', width: '48px' },
-    { prop: 'name', sort: true },
-    { prop: 'country', headerType: 'country', type: { name: 'flagAndCountry', data: COUNTRY_GETTER }, width: '150px' },
-    { prop: 'jobTitle'  },
-    { prop: 'accountId'  },
-    { prop: 'accountType' },
-    { prop: 'primeAccount', type: 'visualBool', width: '24px' },
-    { prop: 'creditScore', type: 'ratings', width: '50px' },
-    { prop: 'balance', type: ACCOUNT_BALANCE_TYPE, sort: true },
-    ...Array.from(new Array(12)).map( (item, idx) => ({prop: `monthlyBalance.${idx}`, type: ACCOUNT_BALANCE_TYPE, sort: true }) )
-  )
-  .headerGroup(
-    {
-      prop: 'name',
-      span: 2,
-      label: 'Customer Info',
-    },
-    {
-      prop: 'accountId',
-      span: 4,
-      label: 'Account Info',
-    },
-    {
-      prop: 'monthlyBalance.0',
-      label: 'Monthly Balance',
-    }
-  )
-  .build();
+function createColumns(noType = false) {
+  const getType = <T>(type: T): T | undefined => noType ? undefined : type;
+
+  return columnFactory()
+    .default({minWidth: 100})
+    .table(
+      { prop: 'selection', width: '48px' },
+      { prop: 'id', width: '40px' },
+      { prop: 'name', sort: true },
+      { prop: 'country', headerType: getType('country'), type: getType({ name: 'flagAndCountry', data: COUNTRY_GETTER }), width: '150px' },
+      { prop: 'jobTitle'  },
+      { prop: 'accountId'  },
+      { prop: 'accountType' },
+      { prop: 'primeAccount', type: getType('visualBool'), width: '24px' },
+      { prop: 'creditScore', type: getType('ratings'), width: '50px' },
+      { prop: 'balance', type: getType(ACCOUNT_BALANCE_TYPE), sort: true },
+      ...Array.from(new Array(12)).map( (item, idx) => ({prop: `monthlyBalance.${idx}`, type: getType(ACCOUNT_BALANCE_TYPE), sort: true }) )
+    )
+    .headerGroup(
+      {
+        prop: 'name',
+        span: 2,
+        label: 'Customer Info',
+      },
+      {
+        prop: 'accountId',
+        span: 4,
+        label: 'Account Info',
+      },
+      {
+        prop: 'monthlyBalance.0',
+        label: 'Monthly Balance',
+      }
+    )
+    .build();
+}
 
 @Component({
   selector: 'neg-general-demo',
@@ -52,18 +57,31 @@ const COLUMNS = columnFactory()
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GeneralDemoTableExampleComponent {
+export class GeneralDemoTableExampleComponent implements OnDestroy {
 
-  columns = COLUMNS;
-  dataSource = createDS<Customer>()
-    .onTrigger( () => this.datasource.getCustomers(500, this.collectionSize) )
-    .create();
+  columns = createColumns();
+  dataSource = this.getDatasource();
 
-  collectionSize = 100;
+  collectionSize = 10000;
 
-  constructor(private datasource: DemoDataSource, private exampleGroup: ExampleGroupComponent) {
+  noGpu = false;
+  plainColumns = false;
+  showTable = true;
+
+  constructor(private datasource: DemoDataSource, private exampleGroup: ExampleGroupComponent, private cdr: ChangeDetectorRef) {
     exampleGroup.hideToc = true;
     datasource.getCountries().then( c => COUNTRY_GETTER.data = c );
+  }
+
+  togglePlainColumns() {
+    this.plainColumns = !this.plainColumns;
+    this.showTable = false;
+    setTimeout(() => {
+      this.showTable = true;
+      this.columns = createColumns(this.plainColumns);
+      this.dataSource = this.getDatasource();
+      this.cdr.detectChanges();
+    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -73,5 +91,11 @@ export class GeneralDemoTableExampleComponent {
   collectionSizeChange(value: number): void {
     this.collectionSize = value;
     this.dataSource.refresh();
+  }
+
+  private getDatasource() {
+    return createDS<Customer>()
+      .onTrigger( () => this.datasource.getCustomers(500, this.collectionSize) )
+      .create();
   }
 }

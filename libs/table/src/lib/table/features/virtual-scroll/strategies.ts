@@ -1,6 +1,6 @@
 import { Directive, forwardRef, Input, OnChanges, ElementRef } from '@angular/core';
 
-import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, FixedSizeVirtualScrollStrategy, VirtualScrollStrategy, VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
 import { AutoSizeVirtualScrollStrategy, ItemSizeAverager } from '@angular/cdk-experimental/scrolling';
@@ -38,7 +38,7 @@ export class TableItemSizeAverager extends ItemSizeAverager {
    * however, the actual rendered rows might be different. This is a problem especially in init, when the rendered rows are actually 0
    * but `CdkVirtualScrollViewport.getRenderedRange()` return the initial range of rows that should be rendered. This results in a wrong
    * calculation of the average item size in `ItemSizeAverager`
-   * 
+   *
    * SEE: https://github.com/angular/material2/blob/a9e550e5bf93cd68c342d1a50d8576d8f3812ebe/src/cdk/scrolling/virtual-scroll-viewport.ts#L212-L220
    */
   setRowInfo(rowInfo: NgeVirtualTableRowInfo): void {
@@ -61,6 +61,9 @@ export function _vScrollStrategyFactory(directive: { _scrollStrategy: VirtualScr
 /** A virtual scroll strategy that supports unknown or dynamic size items. */
 @Directive({
   selector: 'neg-table[vScrollAuto], neg-table[vScrollFixed], neg-table[vScrollNone]',
+  host: { // tslint:disable-line:use-host-property-decorator
+    '[class.neg-table-no-gpu]': 'noGpu'
+  },
   providers: [{
     provide: VIRTUAL_SCROLL_STRATEGY,
     useFactory: _vScrollStrategyFactory,
@@ -74,8 +77,8 @@ export class NegCdkVirtualScrollDirective implements OnChanges {
    *
    * Default: 20
    */
-  get vScrollFixed(): number { return this._vScrollFixed; }
-  @Input() set vScrollFixed(value: number) { this._vScrollFixed = value; }
+  @Input() get vScrollFixed(): number { return this._vScrollFixed; }
+  set vScrollFixed(value: number) { this._vScrollFixed = value; }
   _vScrollFixed = 20;
 
   /**
@@ -85,8 +88,7 @@ export class NegCdkVirtualScrollDirective implements OnChanges {
    * Valid for `vScrollAuto` and `vScrollFixed` only!
    * Default: 100
    */
-  @Input()
-  get minBufferPx(): number { return this._minBufferPx; }
+  @Input() get minBufferPx(): number { return this._minBufferPx; }
   set minBufferPx(value: number) { this._minBufferPx = coerceNumberProperty(value); }
   _minBufferPx = 100;
 
@@ -96,10 +98,30 @@ export class NegCdkVirtualScrollDirective implements OnChanges {
    * Valid for `vScrollAuto` and `vScrollFixed` only!
    * Default: 100
    */
-  @Input()
-  get maxBufferPx(): number { return this._maxBufferPx; }
+  @Input() get maxBufferPx(): number { return this._maxBufferPx; }
   set maxBufferPx(value: number) { this._maxBufferPx = coerceNumberProperty(value); }
   _maxBufferPx = 200;
+
+  /**
+   * When enabled, GPU acceleration is disabled.
+   *
+   * This is useful in `vScrollFixed` or `vScrollAuto` when the table can not update the rows in the same pace as the GPU (60fps).
+   *
+   * Common cases are:
+   *
+   * - Table is very high (a lot of rows in viewport)
+   * - A lot of custom cells with complex rendering (time to render is slow)
+   * - A lot of columns
+   * - Combination of the above.
+   *
+   * If you notice a blank table while scrolling fast try turning of the GPU.
+   *
+   * > Note that turning of the GPU will result in a constant scrolling but at the price of a lower frame rate (scroll stickiness)
+   * Default: false
+   */
+  @Input() get noGpu(): boolean { return this._noGpu; }
+  set noGpu(value: boolean) { this._noGpu = coerceBooleanProperty(value); }
+  _noGpu = false;
 
   /** The scroll strategy used by this directive. */
   _scrollStrategy: VirtualScrollStrategy;

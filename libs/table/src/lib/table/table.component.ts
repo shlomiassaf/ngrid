@@ -384,7 +384,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   }
 
   trackBy(index: number, item: T): any {
-    return item;
+    return index;
   }
 
   /**

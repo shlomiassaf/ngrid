@@ -16,7 +16,7 @@ I> The Empty Collection Template is part of the registry, i.e. - Registry cascad
   <!--@neg-example:ex-1-->
   <neg-table blockUi
             [dataSource]="syncDataSource"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
   </neg-table>
   <!--@neg-example:ex-1-->
 </docsi-mat-example-with-source>
@@ -25,7 +25,7 @@ I> The Empty Collection Template is part of the registry, i.e. - Registry cascad
   <!--@neg-example:ex-2-->
   <neg-table blockUi
             [dataSource]="aSyncDataSource"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
   </neg-table>
   <!--@neg-example:ex-2-->
 </docsi-mat-example-with-source>
@@ -37,7 +37,7 @@ I> The Empty Collection Template is part of the registry, i.e. - Registry cascad
   </mat-radio-group>
   <neg-table blockUi
             [dataSource]="dynamicDataSource"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
   </neg-table>
   <!--@neg-example:ex-3-->
 </docsi-mat-example-with-source>

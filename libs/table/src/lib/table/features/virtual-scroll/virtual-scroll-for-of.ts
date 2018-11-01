@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { filter, first, startWith, pairwise, takeUntil, map } from 'rxjs/operators';
 
 import { NgZone, ViewContainerRef } from '@angular/core';
 import { CollectionViewer, ListRange } from '@angular/cdk/collections';
@@ -143,10 +143,27 @@ export class NegVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
         });
 
       // add meta rows to the total row count.
-      this.dataStream = ds.onViewDataChanging.pipe(map( collection => {
-        const metaRows = this.metaRows = [ this.vcRefs.header.length, this.vcRefs.footer.length ];
-        return new Array( collection.length + metaRows[0] + metaRows[1] );
-      }));
+      this.dataStream = ds.onViewDataChanging
+      .pipe(
+        takeUntil(this.destroyed),
+        map( collection => {
+          const metaRows = this.metaRows = [ this.vcRefs.header.length, this.vcRefs.footer.length ];
+          return new Array( collection.length + metaRows[0] + metaRows[1] );
+        }),
+      );
+
+      ds.onRenderedDataChanged
+        .pipe(
+          takeUntil(this.destroyed),
+          map( () => ds.length ),
+          startWith(0),
+          pairwise(),
+          filter( ([prev, curr]) => prev !== curr ),
+        )
+        .subscribe( ([prev, curr]) => {
+          this.ngZone.onStable.pipe(first()).subscribe( () => this.viewport.onSourceLengthChange(prev, curr) );
+        });
+
       this.viewport.attach(this as any);
     }
   }

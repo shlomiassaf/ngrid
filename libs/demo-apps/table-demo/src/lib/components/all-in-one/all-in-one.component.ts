@@ -100,11 +100,11 @@ const COLUMNS = columnFactory()
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AllInOneTableExampleComponent implements AfterViewInit {
+export class AllInOneTableExampleComponent {
 
 
   dataSource = createDS<Person>()
-    .onTrigger( () => this.datasource.getPeople(500, 100000) )
+    .onTrigger( () => this.datasource.getPeople(500, 1000) )
     .create();
 
   detailRowPredicate: ( (index: number, rowData: Person) => boolean ) | true | undefined;
@@ -132,10 +132,6 @@ export class AllInOneTableExampleComponent implements AfterViewInit {
 
   constructor(private datasource: DemoDataSource) {
     datasource.getCountries().then( c => COUNTRY_GETTER.data = c );
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.refresh();
   }
 
   toggleColumn(id: string): void {

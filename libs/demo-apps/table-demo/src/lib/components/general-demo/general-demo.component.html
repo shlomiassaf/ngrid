@@ -1,6 +1,10 @@
 <div fxLayout="column" style="height: 100%">
+  <mat-checkbox [value]="noGpu" (change)="noGpu = !noGpu">Disable GPU Scrolling</mat-checkbox>
+  <mat-checkbox [value]="plainColumns" (change)="togglePlainColumns()">Use plain columns</mat-checkbox>
+
   <mat-form-field fxFlex="nogrow" style="width:200px">
     <mat-select [value]="collectionSize" (selectionChange)="collectionSizeChange($event.value)">
+      <mat-option [value]="10">10</mat-option>
       <mat-option [value]="100">100</mat-option>
       <mat-option [value]="500">500</mat-option>
       <mat-option [value]="1000">1000</mat-option>
@@ -10,12 +14,13 @@
     </mat-select>
   </mat-form-field>
   <div style="flex: 1 1 100%; display: flex; min-height: 0px">
-    <neg-table class="neg-table-cell-ellipsis neg-table-header-cell-ellipsis" style="height: 100%; width: 100%;"
-                [dataSource]="dataSource" [columns]="columns"
-                blockUi
-                matSort
-                cellTooltip
-                matCheckboxSelection="selection">
+    <neg-table *ngIf="showTable" class="neg-table-cell-ellipsis neg-table-header-cell-ellipsis" style="height: 100%; width: 100%;"
+               [dataSource]="dataSource" [columns]="columns"
+               vScrollAuto [noGpu]="noGpu"
+               blockUi
+               matSort
+               cellTooltip
+               matCheckboxSelection="selection">
 
       <div *negTableCellTypeDef="'accountBalance'; value as value; col as col; row as row"
           [parentNgClass]="value < 0 ? col.type.data.neg : col.type.data.pos">{{ value | currency:col.type.data.meta.currency(row):'symbol':col.type.data.format }}</div>

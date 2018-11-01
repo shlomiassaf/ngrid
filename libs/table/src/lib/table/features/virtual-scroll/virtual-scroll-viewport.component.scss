@@ -39,6 +39,10 @@ neg-cdk-virtual-scroll-viewport {
   -webkit-overflow-scrolling: touch;
 }
 
+.neg-table-no-gpu neg-cdk-virtual-scroll-viewport {
+  transform: none;
+}
+
 // Wrapper element for the rendered content. This element will be transformed to push the rendered
 // content to its correct offset in the data set as a whole.
 .cdk-virtual-scroll-content-wrapper {
@@ -85,4 +89,10 @@ neg-cdk-virtual-scroll-viewport {
     left: auto;
     transform-origin: 100% 0;
   }
+}
+
+.neg-table-space-fill {
+  position: absolute;
+  left: 0;
+  width: 100%
 }
