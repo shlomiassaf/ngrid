@@ -8,15 +8,34 @@
 .example-container {
   box-sizing: border-box;
   width: 100%;
-  &.example-container-toc {
-    width: 80%;
+  height: 100%;
+  padding-top: 32px;
+  &.example-container-has-toc {
+    max-width: 950px;
+    flex: 0 1 950px;
   }
 }
 
-.example-list-container {
+.example-sticky-container {
   box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
   position: sticky;
-  width: 20%;
+  top: 32px;
+
+  mat-list-item {
+    padding-left: 16px;
+  }
+  h3 {
+    font-size: 14px;
+    &:not(:first-child) {
+      margin-top: 16px;
+    }
+  }
+}
+
+.example-toc-container {
+  height: calc(100% - 32px);
   top: 32px;
 }
 

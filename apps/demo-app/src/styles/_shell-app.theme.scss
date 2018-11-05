@@ -50,10 +50,16 @@ $neg-shell-accent:  mat-palette($mat-light-green);
 
 @function neg-typography-config() {
   @return mat-typography-config(
-    $display-3: mat-typography-level(56px, 56px, 300),
-    $display-2: mat-typography-level(45px, 48px, 300),
-    $display-1: mat-typography-level(34px, 40px, 300),
-    $headline:  mat-typography-level(24px, 32px, 300)
+    $display-3:     mat-typography-level(56px, 56px, 300),
+    $display-2:     mat-typography-level(45px, 48px, 300),
+    $display-1:     mat-typography-level(34px, 40px, 300),
+    $headline:      mat-typography-level(40px, 32px, 300),
+    $title:         mat-typography-level(20px, 32px, 500),
+    $subheading-2:  mat-typography-level(16px, 28px, 400),
+    $subheading-1:  mat-typography-level(15px, 24px, 400),
+    $body-2:        mat-typography-level(16px, 24px, 500),
+    $body-1:        mat-typography-level(16px, 20px, 400),
+    $caption:       mat-typography-level(14px, 20px, 400),
   );
 }
 
@@ -64,6 +70,7 @@ $neg-shell-accent:  mat-palette($mat-light-green);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
+
   .mat-display-4, #{$typography-selector} .mat-display-4,
   .mat-display-3, #{$typography-selector} .mat-display-3,
   .mat-display-2, #{$typography-selector} .mat-display-2,
@@ -71,5 +78,23 @@ $neg-shell-accent:  mat-palette($mat-light-green);
   .mat-h1, .mat-headline, #{$typography-selector} h1,
   .mat-h2, .mat-title, #{$typography-selector} h2  {
     color: mat-color($foreground, text-header);
+  }
+
+  .mat-body p, .mat-body-1 p, .mat-typography p {
+    margin: 24px 0;
+    line-height: 32px;
+  }
+
+  // TOOLTIP
+  .neg-large-tooltip {
+    font-size: 16px;
+    background: transparentize(mat-color($primary, default), .1);
+  }
+
+  .mat-icon-button, .mat-menu-item {
+    .mat-icon.neg-unicode {
+      line-height: 150%;
+      height: 100%;
+    }
   }
 }

@@ -7,28 +7,24 @@ import {
   OnDestroy,
   TemplateRef,
 } from '@angular/core';
-import { CdkRowDef, RowContext } from '@angular/cdk/table';
+import { CdkRowDef } from '@angular/cdk/table';
 
-import { NegTableComponent, NegTableRegistryService, NegTableSingleTemplateRegistryDirective } from '@neg/table';
+import { NegTableRegistryService, NegTableSingleTemplateRegistry, NegTableRowContext } from '@neg/table';
 
-declare module '@neg/table/lib/table/table-registry.service' {
+declare module '@neg/table/lib/table/services/table-registry.service' {
   interface NegTableSingleRegistryMap {
     detailRowParent?: NegTableDetailRowParentRefDirective<any>;
     detailRow?: NegTableDetailRowDefDirective;
   }
 }
 
-export interface NegTableDetailRowContext<T> extends RowContext<T> {
-  table: NegTableComponent<T>;
-}
-
 /**
  * Marks the element as the display element for the detail row itself.
  */
 @Directive({ selector: '[negTableDetailRowDef]' })
-export class NegTableDetailRowDefDirective extends NegTableSingleTemplateRegistryDirective<{ $implicit: any }, 'detailRow'> {
+export class NegTableDetailRowDefDirective extends NegTableSingleTemplateRegistry<NegTableRowContext<any>, 'detailRow'> {
   readonly kind: 'detailRow' = 'detailRow';
-  constructor(tRef: TemplateRef<{ $implicit: any }>, registry: NegTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<NegTableRowContext<any>>, registry: NegTableRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
@@ -37,7 +33,7 @@ export class NegTableDetailRowDefDirective extends NegTableSingleTemplateRegistr
 })
 export class NegTableDetailRowParentRefDirective<T> extends CdkRowDef<T> implements OnInit, OnDestroy {
 
-  constructor(template: TemplateRef<NegTableDetailRowContext<T>>, _differs: IterableDiffers, protected registry: NegTableRegistryService) {
+  constructor(template: TemplateRef<NegTableRowContext<T>>, _differs: IterableDiffers, protected registry: NegTableRegistryService) {
     super(template, _differs);
   }
 
@@ -62,6 +58,6 @@ export class NegTableDetailRowParentRefDirective<T> extends CdkRowDef<T> impleme
  */
 @Component({
   selector: 'neg-table-default-detail-row-parent',
-  template: `<neg-table-row *negTableDetailRowParentRef="let row; table as table" [detailRow]="row" [table]="table"></neg-table-row>`,
+  template: `<neg-table-row *negTableDetailRowParentRef="let row; table as table" [detailRow]="row"></neg-table-row>`,
 })
 export class NegTableDefaultDetailRowParentComponent { }

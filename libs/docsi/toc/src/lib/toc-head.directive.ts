@@ -1,7 +1,8 @@
-import { AfterViewInit, Directive, ElementRef, HostBinding, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostBinding, Input, Inject, OnDestroy, Optional } from '@angular/core';
 
 import { TocAreaDirective } from './toc-area.directive';
 import { TocLink, createLink } from './toc-link';
+import { TOC_AREA_DIRECTIVE_TOKEN } from './toc-area.token';
 
 /**
  * A directive that represents a header that has a TOC record (link).
@@ -63,13 +64,22 @@ export class TocHeadDirective implements AfterViewInit, OnDestroy {
 
   private el: HTMLElement;
 
-  constructor(elementRef: ElementRef, private tocArea: TocAreaDirective) {
-    this.el = elementRef.nativeElement;
-    this.tocArea.add(this);
+  readonly enabled: boolean;
+  private tocArea: TocAreaDirective;
+
+  constructor(elementRef: ElementRef, @Inject(TOC_AREA_DIRECTIVE_TOKEN) @Optional() tocArea: any) {
+    this.enabled = !!tocArea;
+    if (this.enabled) {
+      this.tocArea = tocArea;
+      this.el = elementRef.nativeElement;
+      this.tocArea.add(this);
+    }
   }
 
   ngAfterViewInit(): void {
-    this.addToService();
+    if (this.enabled) {
+      this.addToService();
+    }
   }
 
   scrollIntoView(): void {
@@ -77,7 +87,9 @@ export class TocHeadDirective implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.tocArea.remove(this);
+    if (this.enabled) {
+      this.tocArea.remove(this);
+    }
   }
 
   reCalcPosition(scrollTop: number): void {

@@ -7,13 +7,6 @@ import { NegMetaColumnStore } from '../columns/column-store';
 import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 
 /**
- * Normalize an NegColumnDefinition id
- */
-export function normalizeId(value: string): string {
-  return value.replace(/ /g, '_');
-}
-
-/**
  * Given an object (item) and a path, returns the value at the path
  */
 export function deepPathGet(item: any, col: NegColumnDefinition): any {
@@ -39,17 +32,31 @@ export function deepPathSet(item: any, col: NegColumnDefinition, value: any): vo
   item[ col.prop ] = value;
 }
 
-export function updateColumnWidths(rowWidth: StaticColumnWidthLogic, tableColumns: NegColumn[], metaColumns: NegMetaColumnStore[]): void {
+/**
+ * Updates the column sizes of the columns provided based on the column definition metadata for each column.
+ * The final width represent a static width, it is the value as set in the definition (except column without width, where the calculated global width is set).
+ */
+export function resetColumnWidths(rowWidth: StaticColumnWidthLogic,
+                                  tableColumns: NegColumn[],
+                                  metaColumns: NegMetaColumnStore[],
+                                  options: { tableMarkForCheck?: boolean; metaMarkForCheck?: boolean; } = {}): void {
   const { pct, px } = rowWidth.defaultColumnWidth;
   const defaultWidth = `calc(${pct}% - ${px}px)`;
+
+  let mark = !!options.tableMarkForCheck;
   for (const c of tableColumns) {
-    c.updateWidth(defaultWidth);
+    c.setDefaultWidth(defaultWidth);
+    c.updateWidth(mark);
   }
 
+  mark = !!options.metaMarkForCheck;
   for (const m of metaColumns) {
     for (const c of [m.header, m.footer]) {
       if (c) {
         c.updateWidth('');
+        if (mark) {
+          c.columnDef.markForCheck();
+        }
       }
     }
 

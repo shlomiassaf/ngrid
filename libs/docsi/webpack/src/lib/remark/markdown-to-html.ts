@@ -11,6 +11,7 @@ import * as plugins from './plugins';
 plugins.registerMultilineBlockHtmlTokenizer();
 
 export interface MarkdownToHtmlOptions {
+  highlight?: 'highlightjs' | 'prismjs';
   extraPlugins?: any[];
 }
 
@@ -29,20 +30,30 @@ const customBlockquotesOptions = { mapping: {
 export class MarkdownToHtml {
   private readonly compiler: any;
 
-  constructor(options: MarkdownToHtmlOptions) {
+  constructor(public readonly options: MarkdownToHtmlOptions) {
     this.compiler = unified()
       .use(markdown, { gfm: true })
       .use(remarkSlug)
       .use(remarkAutolinkHeadings)
       .use(plugins.docsiToc)
       .use(remarkAttr, { scope: 'permissive' })
-      .use(plugins.mdSourceCodeRef)
-      .use(remarkHighlightJs)
-      .use(plugins.noCurelyBrackets)
-      .use(plugins.customBlockquotes, customBlockquotesOptions)
-      .use(options.extraPlugins || [])
-      .use(html)
-      .freeze();
+      .use(plugins.mdSourceCodeRef);
+
+      switch(options.highlight) {
+        case 'highlightjs':
+          this.compiler = this.compiler.use(remarkHighlightJs);
+          break;
+        case 'prismjs':
+          this.compiler = this.compiler.use(plugins.gatsbyRemarkPrismJs);
+          break;
+      }
+
+      this.compiler = this.compiler
+        .use(plugins.noCurelyBrackets)
+        .use(plugins.customBlockquotes, customBlockquotesOptions)
+        .use(options.extraPlugins || [])
+        .use(html)
+        .freeze();
   }
 
   transform(markdownSource: string, runtimeOptions: MarkdownToHtmlRuntimeOptions): string {

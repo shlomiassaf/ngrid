@@ -24,10 +24,13 @@ export {
 
   NegColumn, NegMetaColumn, NegColumnGroup, NegColumnFactory, COLUMN, columnFactory,
 
+  NEG_TABLE_ROW_TEMPLATE, NegTableRowComponent,
+
   NegTableComponent,
   NegTableRegistryService,
+  AutoSizeToFitOptions, ColumnApi,
 
-  NegTableSingleTemplateRegistryDirective,
+  NegTableSingleTemplateRegistry, NegTableMultiTemplateRegistry, NegTableDataHeaderExtensionRef,
   NegTableCellDefDirective,
   NegTableHeaderCellDefDirective,
   NegTableFooterCellDefDirective,
@@ -36,14 +39,13 @@ export {
   NegColumnTypeDefinition, NegColumnTypeDefinitionDataMap,
   NegColumnDefinition,
   NegColumnGroupDefinition,
-  NegColumnSet,
+  NegColumnSet, NegMetaRowDefinitions,
   NegTableColumnSet, NegTableColumnDefinitionSet,
 
   NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy,
 
   NegTableCellClickEvent,
-  NegTableCellTemplateContext,
-  NegTableMetaCellTemplateContext,
+  NegTableMetaCellContext, NegTableCellContext, NegTableRowContext,
   KillOnDestroy
 } from './lib/table/index';
 
@@ -57,8 +59,8 @@ export {
   NegTableEvents,
  } from './lib/ext/types';
 
- export { TablePlugin, TablePluginMetadata } from './lib/ext/table-plugin';
-
+export { EXT_API_TOKEN, NegTableExtensionApi } from './lib/ext/table-ext-api';
+export { TablePlugin, TablePluginMetadata } from './lib/ext/table-plugin';
 export { NegTablePluginController } from './lib/ext/plugin-control';
 
-export { NegTableModule } from './lib/table.module';
+export { NegTableModule, provideCommon } from './lib/table.module';

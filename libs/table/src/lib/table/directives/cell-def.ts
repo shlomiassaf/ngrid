@@ -1,3 +1,4 @@
+// tslint:disable:use-input-property-decorator
 import {
   Directive,
   TemplateRef,
@@ -5,9 +6,9 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { COLUMN, NegColumnTypeDefinitionDataMap, NegColumn, NegMetaColumn, NegTableCellTemplateContext, NegTableMetaCellTemplateContext } from '../columns';
-import { NegTableRegistryService } from '../table-registry.service';
-import { normalizeId } from '../utils';
+import { COLUMN, NegColumnTypeDefinitionDataMap, NegColumn, NegMetaColumn } from '../columns';
+import { NegTableCellContext, NegTableMetaCellContext } from '../context';
+import { NegTableRegistryService } from '../services/table-registry.service';
 
 export interface NegTableCellDefDirectiveBase {
   name: string;
@@ -27,6 +28,8 @@ export abstract class NegTableBaseCellDef<Z> implements OnInit, OnDestroy, NegTa
       this.registry.addMulti('headerCell', this);
     } else if (this instanceof NegTableCellDefDirective) {
       this.registry.addMulti('tableCell', this);
+    } else if (this instanceof NegTableEditorCellDefDirective) {
+      this.registry.addMulti('editorCell', this);
     } else if (this instanceof NegTableFooterCellDefDirective) {
       this.registry.addMulti('footerCell', this);
     }
@@ -37,6 +40,8 @@ export abstract class NegTableBaseCellDef<Z> implements OnInit, OnDestroy, NegTa
       this.registry.removeMulti('headerCell', this);
     } else if (this instanceof NegTableCellDefDirective) {
       this.registry.removeMulti('tableCell', this);
+    } else if (this instanceof NegTableEditorCellDefDirective) {
+      this.registry.removeMulti('editorCell', this);
     } else if (this instanceof NegTableFooterCellDefDirective) {
       this.registry.removeMulti('footerCell', this);
     }
@@ -62,8 +67,8 @@ export abstract class NegTableBaseCellDef<Z> implements OnInit, OnDestroy, NegTa
   selector: '[negTableHeaderCellDef], [negTableHeaderCellTypeDef]',
   inputs: [ 'name:negTableHeaderCellDef', 'type:negTableHeaderCellTypeDef' ]
 })
-export class NegTableHeaderCellDefDirective<T> extends NegTableBaseCellDef<NegTableMetaCellTemplateContext<T>> {
-  constructor(tRef: TemplateRef<NegTableMetaCellTemplateContext<T>>, registry: NegTableRegistryService) { super(tRef, registry); }
+export class NegTableHeaderCellDefDirective<T> extends NegTableBaseCellDef<NegTableMetaCellContext<T>> {
+  constructor(tRef: TemplateRef<NegTableMetaCellContext<T>>, registry: NegTableRegistryService) { super(tRef, registry); }
 }
 
 /**
@@ -84,17 +89,26 @@ export class NegTableHeaderCellDefDirective<T> extends NegTableBaseCellDef<NegTa
   selector: '[negTableCellDef], [negTableCellTypeDef]',
   inputs: [ 'name:negTableCellDef', 'type:negTableCellTypeDef' ]
 })
-export class NegTableCellDefDirective<T, P extends keyof NegColumnTypeDefinitionDataMap = any> extends NegTableBaseCellDef<NegTableCellTemplateContext<T, P>> {
+export class NegTableCellDefDirective<T, P extends keyof NegColumnTypeDefinitionDataMap = any> extends NegTableBaseCellDef<NegTableCellContext<T, P>> {
   type: P;
-  constructor(tRef: TemplateRef<NegTableCellTemplateContext<any, P>>, registry: NegTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<NegTableCellContext<any, P>>, registry: NegTableRegistryService) { super(tRef, registry); }
+}
+
+@Directive({
+  selector: '[negTableCellEditorDef], [negTableCellEditorTypeDef]',
+  inputs: [ 'name:negTableCellEditorDef', 'type:negTableCellEditorTypeDef' ]
+})
+export class NegTableEditorCellDefDirective<T, P extends keyof NegColumnTypeDefinitionDataMap = any> extends NegTableBaseCellDef<NegTableCellContext<T, P>> {
+  type: P;
+  constructor(tRef: TemplateRef<NegTableCellContext<any, P>>, registry: NegTableRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
   selector: '[negTableFooterCellDef], [negTableFooterCellTypeDef]',
   inputs: [ 'name:negTableFooterCellDef', 'type:negTableFooterCellTypeDef' ]
 })
-export class NegTableFooterCellDefDirective<T> extends NegTableBaseCellDef<NegTableMetaCellTemplateContext<T>> {
-  constructor(tRef: TemplateRef<NegTableMetaCellTemplateContext<T>>, registry: NegTableRegistryService) { super(tRef, registry); }
+export class NegTableFooterCellDefDirective<T> extends NegTableBaseCellDef<NegTableMetaCellContext<T>> {
+  constructor(tRef: TemplateRef<NegTableMetaCellContext<T>>, registry: NegTableRegistryService) { super(tRef, registry); }
 }
 
 function findCellDefById<T extends NegTableCellDefDirectiveBase>(cellDefs: Array<T>, colDef: Pick<NegMetaColumn, 'id' | 'type'>, searchParent?: boolean): T {
@@ -104,7 +118,7 @@ function findCellDefById<T extends NegTableCellDefDirectiveBase>(cellDefs: Array
         return cellDef;
       }
     } else {
-      const id = normalizeId(cellDef.name);
+      const id = cellDef.name;
       if (id === colDef.id) {
         return cellDef;
       }
@@ -112,10 +126,10 @@ function findCellDefById<T extends NegTableCellDefDirectiveBase>(cellDefs: Array
   }
 }
 
-export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: NegColumn, kind: 'tableCell',  searchParent?: boolean): NegTableCellDefDirective<T>;
+export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: NegColumn, kind: 'tableCell' | 'editorCell',  searchParent?: boolean): NegTableCellDefDirective<T>;
 export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: NegMetaColumn | NegColumn, kind: 'headerCell', searchParent?: boolean): NegTableHeaderCellDefDirective<T>;
 export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: NegMetaColumn | NegColumn, kind: 'footerCell', searchParent?: boolean): NegTableFooterCellDefDirective<T>;
-export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: COLUMN, kind: 'headerCell' | 'footerCell' | 'tableCell', searchParent?: boolean): NegTableCellDefDirective<T> | NegTableHeaderCellDefDirective<T> | NegTableFooterCellDefDirective <T> {
+export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: COLUMN, kind: 'headerCell' | 'footerCell' | 'tableCell' | 'editorCell', searchParent?: boolean): NegTableCellDefDirective<T> | NegTableHeaderCellDefDirective<T> | NegTableFooterCellDefDirective <T> {
   const cellDefs: NegTableCellDefDirectiveBase[] = registry.getMulti(kind);
 
   if (cellDefs) {

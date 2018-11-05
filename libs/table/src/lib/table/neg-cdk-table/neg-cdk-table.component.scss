@@ -10,6 +10,17 @@
   }
 }
 
+.neg-table-header-cell {
+  position: relative; // We need this for column-resize feature
+}
+
+.neg-table-cell {
+  cursor: default;
+}
+.neg-table-editable-cell {
+  cursor: text;
+}
+
 .neg-cdk-table:not(.neg-table-margin-cell-box-model) .neg-table-header-cell.neg-header-group-cell {
   position: relative;
 

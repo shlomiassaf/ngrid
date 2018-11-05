@@ -235,10 +235,10 @@ export class NegPagingPaginator implements NegPaginator<number> {
   readonly onChange: Observable<NegPaginatorChangeEvent<number>>;
   protected onChange$: BehaviorSubject<NegPaginatorChangeEvent<number>>;
 
-  private _total: number = 0;
-  private _perPage: number = 10;
-  private _page: number = 1;
-  private _totalPages: number = 0;
+  private _total = 0;
+  private _perPage = 10;
+  private _page = 1;
+  private _totalPages = 0;
   private _range: [number, number];
 
   private queuedChanges: NegPaginatorChangeEvent<number> | undefined;

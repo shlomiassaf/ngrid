@@ -1,6 +1,7 @@
-import { Observable, Subject, combineLatest, of, from, isObservable } from 'rxjs';
-import { filter, map, switchMap, skip, tap, debounceTime, delay } from 'rxjs/operators';
+import { Observable, Subject, combineLatest, of, from, isObservable, asapScheduler } from 'rxjs';
+import { filter, map, switchMap, tap, debounceTime, observeOn } from 'rxjs/operators';
 
+import { Omit } from '../table/utils/type-helpers';
 import { DataSourceOf } from './data-source';
 import { NegPaginator, NegPaginatorChangeEvent } from '../paginator';
 import { NegTableDataSourceSortChange, DataSourceFilter } from './types';
@@ -22,6 +23,8 @@ const CUSTOM_BEHAVIOR_TRIGGER_KEYS: Array<keyof NegDataSourceConfigurableTrigger
 const TRIGGER_KEYS: Array<keyof NegDataSourceTriggers> = [...CUSTOM_BEHAVIOR_TRIGGER_KEYS, 'data'];
 const SOURCE_CHANGING_TOKEN = {};
 
+const DEFAULT_INITIAL_CACHE_STATE: NegDataSourceTriggerCache<any> = { filter: EMPTY, sort: EMPTY, pagination: {}, data: EMPTY };
+
 /**
  * An adapter that handles changes
  */
@@ -31,7 +34,7 @@ export class NegDataSourceAdapter<T = any, TData = any> {
 
   protected paginator?: NegPaginator<any>;
   private readonly config: Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>>;
-  private cache: NegDataSourceTriggerCache<TData> = { filter: EMPTY, sort: EMPTY, pagination: {}, data: EMPTY };
+  private cache: NegDataSourceTriggerCache<TData>;
   private _onSourceChange$: Subject<any | T[]>;
   private _refresh$: Subject<RefreshDataWrapper<TData>>;
   private _lastSource: T[];
@@ -100,9 +103,13 @@ export class NegDataSourceAdapter<T = any, TData = any> {
 
   updateProcessingLogic(filter$: Observable<DataSourceFilter>,
                         sort$: Observable<NegTableDataSourceSortChange>,
-                        pagination$: Observable<NegPaginatorChangeEvent>): Observable<T[]> {
+                        pagination$: Observable<NegPaginatorChangeEvent>,
+                        initialState: Partial<NegDataSourceTriggerCache<TData>> = {}): Observable<{ event: NegDataSourceTriggerChangedEvent<TData>, data: T[] }> {
+    let updates = -1;
+    const changedFilter = e => updates === -1 || e.changed;
     this._lastSource = undefined;
-    const changedFilter = e => !this._lastSource || e.changed;
+
+    this.cache = { ...DEFAULT_INITIAL_CACHE_STATE, ...initialState };
 
     const combine: [
       Observable<TriggerChangedEventFor<'filter'>>,
@@ -120,13 +127,18 @@ export class NegDataSourceAdapter<T = any, TData = any> {
 
     return combineLatest(combine[0], combine[1], combine[2], combine[3])
       .pipe(
-        debounceTime(0), // defer to next loop cycle, until no more incoming
+        // Defer to next loop cycle, until no more incoming.
+        // We use an async schedular here (instead of asapSchedular) because we want to have the largest debounce window without compromising integrity
+        // With an async schedular we know we will run after all microtasks but before "real" async operations.
+        debounceTime(0),
         switchMap( ([filter, sort, pagination, data ]) => {
+          updates++; // if first, will be 0 now (starts from -1).
           const event: NegDataSourceTriggerChangedEvent<TData> = {
             filter,
             sort,
             pagination,
             data,
+            isInitial: updates === 0,
             updateTotalLength: (totalLength) => {
               if (this.paginator) {
                 this.paginator.total = totalLength;
@@ -147,7 +159,6 @@ export class NegDataSourceAdapter<T = any, TData = any> {
           }
         }),
         map( response => {
-          const isFirst = !this._lastSource;
           const config = this.config;
           const event = response.event;
 
@@ -155,7 +166,7 @@ export class NegDataSourceAdapter<T = any, TData = any> {
           // The logic is based on the user's configuration and the incoming event
           const withChanges: Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>> = {};
           for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
-            if (!config[key] && (isFirst || event[key].changed)) {
+            if (!config[key] && (event.isInitial || event[key].changed)) {
               withChanges[key] = true;
             }
           }
@@ -196,14 +207,24 @@ export class NegDataSourceAdapter<T = any, TData = any> {
             data = this.applyPagination(data);
           }
 
-          // mark everything as NOT CHANGED, for next events because we cache the last event!
+          const clonedEvent: NegDataSourceTriggerChangedEvent<TData> = { ...event };
+
+          // We use `combineLatest` which caches pervious events, only new events are replaced.
+          // We need to mark everything as NOT CHANGED, so subsequent calls will not have their changed flag set to true.
+          //
+          // We also clone the object so we can pass on the proper values.
+          // We create shallow clones so complex objects (column in sort, user data in data) will not throw on circular.
+          // For pagination we deep clone because it contains primitives and we need to also clone the internal change objects.
           for (const k of TRIGGER_KEYS) {
+            clonedEvent[k] = k === 'pagination'
+              ? JSON.parse(JSON.stringify(event[k]))
+              : { ...event[k] }
+            ;
             event[k].changed = false;
           }
           event.pagination.page.changed = event.pagination.perPage.changed = false;
-          // const viewChange = this.cache.viewChange;
-          // return data.slice(viewChange.start, viewChange.end);
-          return data;
+
+          return { event: clonedEvent, data };
         })
       );
   }
@@ -279,7 +300,8 @@ export class NegDataSourceAdapter<T = any, TData = any> {
     ;
 
     return obs.pipe(
-      delay(0),
+      // run as a microtask
+      observeOn(asapScheduler, 0),
       map( data => Array.isArray(data) ? data : [] ),
       tap( data => this._onSourceChange$.next(data) )
     );

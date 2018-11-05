@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 
+import { ExampleGroupRegistryService } from './example-group-registry.service';
+
 @Component({
   selector: 'neg-example-group',
   templateUrl: './example-group.component.html',
@@ -7,4 +9,11 @@ import { Component, Input } from '@angular/core';
 })
 export class ExampleGroupComponent {
   @Input() hideToc: boolean;
+
+  /**
+   * When set, will insert a link to the root URL for this example group
+   */
+  @Input() rootLink: string;
+
+  constructor(public registry: ExampleGroupRegistryService) { }
 }

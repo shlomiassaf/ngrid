@@ -39,6 +39,17 @@ export class DynamicColumnWidthLogic {
   constructor(private strategy: BoxModelSpaceStrategy) { }
 
   /**
+   * Returns a breakout of the width of the column, breaking it into the width of the content and the rest of the width
+   */
+  widthBreakout(columnInfo: NegColumnSizeInfo): { content: number, nonContent: number } {
+    const nonContent = this.strategy.cell(columnInfo);
+    return {
+      content: columnInfo.width - nonContent,
+      nonContent,
+    };
+  }
+
+  /**
    * Add a column to the calculation.
    *
    * The operation will update the minimum required width and trigger a `checkMaxWidthLock` on the column.
@@ -51,12 +62,17 @@ export class DynamicColumnWidthLogic {
   addColumn(columnInfo: NegColumnSizeInfo): void {
     if (!this.cols.has(columnInfo)) {
       const { column } = columnInfo;
-      const width = (column.minWidth || 0) + this.strategy.cell(columnInfo);
+      let minWidth = column.minWidth || 0;
+      if (column.isFixedWidth) {
+        minWidth = Math.max(column.parsedWidth.value, minWidth);
+      }
+      const nonContent = this.strategy.cell(columnInfo);
+      const width = minWidth + nonContent;
       this.cols.set(columnInfo, width);
       this._minimumRowWidth += width;
 
       if (column.maxWidth) {
-        const actualWidth = columnInfo.width - (width - (column.minWidth || 0));
+        const actualWidth = columnInfo.width - nonContent;
         if (column.checkMaxWidthLock(actualWidth)) {
           this.maxWidthLockChanged = true;
         }
@@ -77,9 +93,10 @@ export class DynamicColumnWidthLogic {
     let sum = 0;
     for (const c of columnInfos) {
       this.addColumn(c);
-      sum += c.width + this.strategy.groupCell(c);
+      sum += c.width;
     }
-    return sum - this.strategy.group(columnInfos);
+   sum -= this.strategy.group(columnInfos);
+   return sum;
   }
 
 }

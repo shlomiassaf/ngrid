@@ -5,13 +5,14 @@ import * as visit from 'unist-util-visit';
  * This will avoid angular errors when the template includes curly brackets that are not part of the template.
  */
 export function noCurelyBrackets() {
+
   function textVisitor (node) {
     if (node.value) {
       node.value = node.value.replace(/\{/g, `{{ '{' }}`);
     }
   }
 
-  function visitor (node) {
+  function visitorForHighlightJs (node) {
     const { data } = node;
     if (data && data.hChildren) {
       for (const child of data.hChildren) {
@@ -22,7 +23,6 @@ export function noCurelyBrackets() {
         }
       }
     }
-
   }
-  return ast => visit(ast, 'code', visitor);
+  return ast => visit(ast, 'code', visitorForHighlightJs);
 }

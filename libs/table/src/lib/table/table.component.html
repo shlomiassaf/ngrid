@@ -1,78 +1,98 @@
 <!-- TABLE HEADER ROW DEF -->
-<cdk-header-row *cdkHeaderRowDef="_store.tableRow"
+<cdk-header-row *cdkHeaderRowDef="columnApi.visibleColumnIds; sticky: columnRowDef.header?.type === 'sticky'"
+                [negMetaRow]="columnRowDef.header"
                 data-rowtype="header"
                 class="neg-table-header-row neg-table-header-row-main"
-                [ngStyle]="_mainHeaderRowStyle"></cdk-header-row>
+                [class.neg-table-row-visually-hidden]="!showHeader"></cdk-header-row>
 
 <!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
-<ng-container *ngFor="let row of _store.metaRows.header;">
-  <ng-container *ngIf="row.isGroup">
-      <cdk-header-row *cdkHeaderRowDef="row.keys" data-rowtype="meta-header" class="neg-table-header-row neg-header-group-row {{ row.name }}"></cdk-header-row>
-  </ng-container>
-  <ng-container *ngIf="!row.isGroup">
-      <cdk-header-row *cdkHeaderRowDef="row.keys" data-rowtype="meta-header" class="neg-table-header-row {{ row.name }}"></cdk-header-row>
-  </ng-container>
+<ng-container *ngFor="let row of metaColumnIds.header;">
+  <cdk-header-row *cdkHeaderRowDef="row.keys; sticky: row.rowDef.type === 'sticky'" [negMetaRow]="row.rowDef" data-rowtype="meta-header" class="neg-table-header-row"></cdk-header-row>
 </ng-container>
 
 <!-- TABLE FOOTER ROW DEF -->
-<cdk-footer-row *cdkFooterRowDef="_store.tableRow" data-rowtype="footer" class="neg-table-footer-row"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
+<cdk-footer-row *cdkFooterRowDef="columnApi.visibleColumnIds; sticky: columnRowDef.footer?.type === 'sticky'"
+                [negMetaRow]="columnRowDef.footer"
+                data-rowtype="footer"
+                class="neg-table-footer-row"
+                [class.neg-table-row-hidden]="!showFooter"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
 <!-- MULTI-FOOTER ROW DEF -->
-<ng-container *ngFor="let row of _store.metaRows.footer">   <!-- MULTI-FOOTER ROW DEF -->
-  <cdk-footer-row *cdkFooterRowDef="row.keys" data-rowtype="meta-footer" class="neg-table-footer-row {{ row.name }}"></cdk-footer-row>
+<ng-container *ngFor="let row of metaColumnIds.footer">   <!-- MULTI-FOOTER ROW DEF -->
+  <cdk-footer-row *cdkFooterRowDef="row.keys; sticky: row.rowDef.type === 'sticky'" [negMetaRow]="row.rowDef" data-rowtype="meta-footer" class="neg-table-footer-row"></cdk-footer-row>
 </ng-container>
 
 <div class="neg-table-container">
-  <neg-cdk-virtual-scroll-viewport class="neg-table-scroll-container" [minWidth]="_cdkTable?.minWidth">
+  <ng-container #beforeTable></ng-container>
+  <div neg-table-fixed-meta-row-container="header"></div>
+  <neg-cdk-virtual-scroll-viewport class="neg-table-scroll-container" [minWidth]="_cdkTable?.minWidth"
+                                   [stickyRowHeaderContainer]="stickyRowHeaderContainer" [stickyRowFooterContainer]="stickyRowFooterContainer">
     <neg-cdk-table>
       <!-- Row templates. The columns used are set at the row template level -->
 
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
-      <ng-container *ngFor="let meta of _store.meta">
+      <ng-container *ngFor="let meta of metaColumns">
         <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [negTableColumnDef]="c">
           <neg-table-header-cell *cdkHeaderCellDef>
-            <ng-container *ngTemplateOutlet="c.template; context: (c | tableCellContext:self)"></ng-container>
+            <ng-container *ngTemplateOutlet="c.template; context: (c | tableMetaCellContext:self)"></ng-container>
           </neg-table-header-cell>
         </ng-container>
         <ng-container *ngIf="meta.footer as c" [negTableColumnDef]="c">
           <neg-table-footer-cell *cdkFooterCellDef>
-            <ng-container *ngTemplateOutlet="c.template; context: (c | tableCellContext:self)"></ng-container>
+            <ng-container *ngTemplateOutlet="c.template; context: (c | tableMetaCellContext:self)"></ng-container>
           </neg-table-footer-cell>
         </ng-container>
       </ng-container>
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
 
        <!-- HEADER-RECORD-FOOTER CELL DEF -->
-      <ng-container *ngFor="let c of _store.allTable" [negTableColumnDef]="c">
+      <ng-container *ngFor="let c of columnApi.columns; index as index" [negTableColumnDef]="c">
         <!-- TABLE HEADER CELL DEF -->
-        <neg-table-header-cell *cdkHeaderCellDef
-                              [observeSize]="c"></neg-table-header-cell>
-
+        <neg-table-header-cell *cdkHeaderCellDef [observeSize]="c"></neg-table-header-cell>
         <!-- RECORD CELL DEF -->
-        <neg-table-cell *cdkCellDef="let row"
-                       [attr.tabindex]="cellFocus">
-          <ng-container *ngTemplateOutlet="c.cellTpl; context: (row | tableCellContext:c:self)"></ng-container>
+        <neg-table-cell *cdkCellDef="let row; negRowContext as negRowContext" [attr.tabindex]="cellFocus">
+          <ng-container *ngIf="negRowContext.cell(index) as ctx">
+            <ng-container *ngTemplateOutlet="ctx.editing ? ctx.col.editorTpl : ctx.col.cellTpl; context: ctx"></ng-container>
+          </ng-container>
         </neg-table-cell>
 
         <!-- TABLE FOOTER CELL DEF -->
         <neg-table-footer-cell *cdkFooterCellDef>
-          <ng-container *ngTemplateOutlet="c.footerCellTpl; context: (c | tableCellContext:self)"></ng-container>
+          <ng-container *ngTemplateOutlet="c.footerCellTpl; context: (c | tableMetaCellContext:self)"></ng-container>
         </neg-table-footer-cell>
       </ng-container>
       <!-- HEADER-RECORD-FOOTER CELL DEF -->
 
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
-      <neg-table-row *cdkRowDef="let row; columns: _store.tableRow;"></neg-table-row>
-
+      <neg-table-row *cdkRowDef="let row; columns: columnApi.visibleColumnIds;" [row]="row"></neg-table-row>
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
     </neg-cdk-table>
   </neg-cdk-virtual-scroll-viewport>
-
-  <ng-container #beforeContent></ng-container>
+  <div neg-table-fixed-meta-row-container="footer"></div>
+  <ng-container #beforeContent>
+    <!-- This dummy row is used to extract an initial row height -->
+    <neg-table-row style="display: none"></neg-table-row>
+  </ng-container>
   <ng-content></ng-content>
   <ng-container #afterContent></ng-container>
 
+  <!-- Placeholder for header/footer scroll containers that will get populated with header/meta roles when the following conditions are met:
+       - Virtual scrolling is enabled
+       - Rows are rendered in the viewport
+       - Container is scrolling
+
+       The placeholder is fixed so the browsers does not use sticky positioning while scrolling, which takes the rows out of view while scrolling.
+       While scrolling the rows are moved into this placeholder and when scrolling ends they return to their original positioning.
+
+       The actual rows are added into the internal div, within the placeholder.
+       The top container get the proper width and the internal header gets the scroll offset (horizontal) that matches the current offset.
+       This has an effect only when scrolling with the wheel within a long scrolling session.
+
+       Implementation is in the virtual scroll viewport (more precisely in `NegVirtualScrollForOf`)
+  -->
+  <div #stickyRowHeaderContainer class="neg-table-sticky-row-scroll-container"><div [style.min-width]="_cdkTable?.minWidth"></div></div> <!-- HEADERS -->
+  <div #stickyRowFooterContainer class="neg-table-sticky-row-scroll-container"><div [style.min-width]="_cdkTable?.minWidth"></div></div> <!-- FOOTERS -->
 </div>
 
-<ng-template #fbTableCell let-value="value">{{value}}</ng-template>
-<ng-template #fbHeaderCell let-column="col">{{column.label}}</ng-template>
-<ng-template #fbFooterCell let-column="col">{{column.label}}</ng-template>
+<ng-template #fbTableCell let-value="value"><div>{{value}}</div></ng-template>
+<ng-template #fbHeaderCell let-column="col"><div>{{column.label}}</div></ng-template>
+<ng-template #fbFooterCell let-column="col"><div>{{column.label}}</div></ng-template>

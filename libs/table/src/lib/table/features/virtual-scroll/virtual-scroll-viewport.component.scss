@@ -33,31 +33,37 @@ neg-cdk-virtual-scroll-viewport {
   display: block;
   position: relative;
   overflow: auto;
-  contain: strict;
-  transform: translateZ(0);
-  will-change: scroll-position;
-  -webkit-overflow-scrolling: touch;
+
+  // &:not(.cdk-virtual-scroll-disabled) {
+    contain: strict;
+    transform: translateZ(0);
+    will-change: scroll-position;
+    -webkit-overflow-scrolling: touch;
+
+    // Wrapper element for the rendered content. This element will be transformed to push the rendered
+    // content to its correct offset in the data set as a whole.
+    .cdk-virtual-scroll-content-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      contain: content;
+
+      // Note: We can't put `will-change: transform;` here because it causes Safari to not update the
+      // viewport's `scrollHeight` when the spacer's transform changes.
+
+      [dir='rtl'] & {
+        right: 0;
+        left: auto;
+      }
+    }
+  // }
 }
 
-.neg-table-no-gpu neg-cdk-virtual-scroll-viewport {
-  transform: none;
-}
-
-// Wrapper element for the rendered content. This element will be transformed to push the rendered
-// content to its correct offset in the data set as a whole.
-.cdk-virtual-scroll-content-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  contain: content;
-
-  // Note: We can't put `will-change: transform;` here because it causes Safari to not update the
-  // viewport's `scrollHeight` when the spacer's transform changes.
-
-  [dir='rtl'] & {
-    right: 0;
-    left: auto;
-  }
+.cdk-virtual-scroll-inner-width {
+  width: 100%;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .cdk-virtual-scroll-orientation-horizontal .cdk-virtual-scroll-content-wrapper {

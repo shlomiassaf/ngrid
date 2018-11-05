@@ -4,20 +4,22 @@ A Plugin for `neg-table` with a `Paginator` impelementation using components fro
 
 ## Impotred `@angular/material` modules
 
-  - MatPaginatorModule ('@angular/material/paginator')  
-    * `MatPaginator`
-  - MatSelectModule ('@angular/material/select')  
-    * `MatSelect`
-  - MatTooltipModule ('@angular/material/tooltip')  
-    * `MatToolTip`
-  - MatButtonModule ('@angular/material/button')  
-    * `MatButton`
+- MatPaginatorModule ('@angular/material/paginator')  
+  * `MatPaginator`
+- MatSelectModule ('@angular/material/select')  
+  * `MatSelect`
+- MatTooltipModule ('@angular/material/tooltip')  
+  * `MatToolTip`
+- MatButtonModule ('@angular/material/button')  
+  * `MatButton`
 
 ## Usage
+
 **Using a component & the paginator ref instruction**
+
 ```html
 <neg-table>
-  <neg-table-paginator *negTablePaginatorRef="let table" [table]="table" [paginator]="table.dataSource.paginator"></neg-table-paginator>
+  <neg-table-paginator *negTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></neg-table-paginator>
 </neg-table>
 ```
 

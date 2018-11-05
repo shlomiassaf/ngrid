@@ -58,21 +58,18 @@ export function setStickyColumns(table: NegTableComponent<any>, type: 'start' | 
   let changed: boolean;
   for (let [columnId, state] of bulk) {
     if (typeof columnId === 'string') {
-      columnId = table._store.table.findIndex( c => c.orgProp === columnId );
+      columnId = table.columnApi.visibleColumns.findIndex( c => c.orgProp === columnId );
     }
-    const c = table._store.table[columnId];
+    const c = table.columnApi.visibleColumns[columnId];
     if (c) {
       changed = true;
+      c.pin = state ? type : undefined;
       if (type === 'end') {
-        c.columnDef.stickyEnd = c.stickyEnd = state;
-        if (state) {
-          c.columnDef.sticky = c.stickyStart = false;
-        }
+        c.columnDef.stickyEnd = state;
+        c.columnDef.sticky = false;
       } else {
-        c.columnDef.sticky = c.stickyStart = state;
-        if (state) {
-          c.columnDef.stickyEnd = c.stickyEnd = false;
-        }
+        c.columnDef.sticky = state;
+        c.columnDef.stickyEnd = false;
       }
     }
   }
@@ -204,7 +201,6 @@ export class NegTableStickyPluginDirective implements OnDestroy {
     const changes = differ.diff(value || []);
     const bulk: Array<[string | number, boolean]> = [];
     changes.forEachOperation((record: IterableChangeRecord<string | number>, prevIndex: number, currentIndex: number) => {
-      let state: boolean;
       if (record.previousIndex == null) {
         bulk.push([record.item, true]);
       } else if (currentIndex == null) {

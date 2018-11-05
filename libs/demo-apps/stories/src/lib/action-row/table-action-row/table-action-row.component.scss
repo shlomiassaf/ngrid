@@ -1,0 +1,24 @@
+.neg-table-header-row.neg-table-action-row {
+  margin-bottom: 8px;
+}
+
+.neg-table-header-row.neg-table-action-label-row {
+  border: none;
+
+  h1 {
+    margin: 0;
+  }
+
+  .search-form-field.mat-form-field-appearance-outline {
+    // RESIZING THE INPUT TO FIT 36px height:
+
+    // TRANSFORMING VALUE IS 44.31/36 (44.31 is the fixed output height)
+    transform: scale(0.8124576844955992, 0.8124576844955992);
+    // WE REVERT THE MARGIN (-1.34375em) but because the inner "mat-form-field-wrapper" has a 0.25em margin already we compensate
+    margin-bottom: -(1.34375em - 0.25em);
+
+     .mat-form-field-infix {
+       padding: 0.75em 0 0.75em 0;
+     }
+  }
+}

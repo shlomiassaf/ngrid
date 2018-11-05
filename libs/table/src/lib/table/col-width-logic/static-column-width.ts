@@ -79,6 +79,8 @@ export class StaticColumnWidthLogic {
     const agg = this._agg;
     const width = column.parsedWidth;
 
+    let minWidth = column.minWidth || 0;
+
     if (width) {
       switch (width.type) {
         case '%':
@@ -88,7 +90,7 @@ export class StaticColumnWidthLogic {
         case 'px':
           agg.pxCount += 1;
           agg.px += width.value;
-          column.minWidth = width.value;
+          minWidth = width.value;
           break;
         default:
           throw new Error(`Invalid width "${column.width}" in column ${column.prop}. Valid values are ##% or ##px (50% / 50px)`);
@@ -99,7 +101,7 @@ export class StaticColumnWidthLogic {
     } else {
       agg.count += 1;
     }
-    agg.minRowWidth += column.minWidth || 0;
+    agg.minRowWidth += minWidth;
   }
 
 }

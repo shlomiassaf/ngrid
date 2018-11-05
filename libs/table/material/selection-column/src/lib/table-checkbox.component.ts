@@ -72,7 +72,7 @@ export class NegTableCheckboxComponent implements AfterViewInit {
   ngAfterViewInit(): void {
 
     if (!this.selection) {
-      this.selection = this.table.dataSource.selection;
+      this.selection = this.table.ds.selection;
     }
 
     const registry = this.table.registry;
@@ -94,8 +94,8 @@ export class NegTableCheckboxComponent implements AfterViewInit {
   }
 
   private getCollection() {
-    const { dataSource } = this.table;
-    return this.bulkSelectMode === 'view' ? dataSource.renderedData : dataSource.source;
+    const { ds } = this.table;
+    return this.bulkSelectMode === 'view' ? ds.renderedData : ds.source;
   }
 
   private setupSelection(): void {

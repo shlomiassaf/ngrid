@@ -1,10 +1,12 @@
 import { TemplateRef } from '@angular/core';
 
 import { NegTableColumnDef } from '../directives';
-import { NegMetaColumnDefinition, NegTableMetaCellTemplateContext, NegColumnTypeDefinition } from './types';
+import { NegTableMetaCellContext } from '../context/types';
+import { NegMetaColumnDefinition, NegColumnTypeDefinition } from './types';
 import { parseStyleWidth, initDefinitions } from './utils';
 
 const NEG_META_COLUMN_MARK = Symbol('NegMetaColumn');
+const CLONE_PROPERTIES: Array<keyof NegMetaColumn> = ['kind', 'rowIndex'];
 
 function isNegMetaColumn(def: NegMetaColumnDefinition): def is NegMetaColumn {
   return def instanceof NegMetaColumn || def[NEG_META_COLUMN_MARK] === true;
@@ -40,7 +42,14 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
    * The width in px or % in the following format: ##% or ##px
    * Examples: '50%', '50px'
    */
-  width?: string;
+  get width(): string { return this._width; }
+  set width(value: string) {
+    if (value !== this._width) {
+      this._parsedWidth = parseStyleWidth(this._width = value);
+      const isFixedWidth = this._parsedWidth && this._parsedWidth.type === 'px';
+      Object.defineProperty(this, 'isFixedWidth', { value: isFixedWidth });
+    }
+  }
   /**
    * This minimum width in pixels
    * This is an absolute value, thus a number.
@@ -73,7 +82,7 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
   rowIndex: number;
 //#endregion NegMetaColumnDefinition
 
-  get parsedWidth(): { value: number, type: 'px' | '%'} | undefined { return parseStyleWidth(this.width) } // TODO: cache
+  get parsedWidth(): { value: number; type: 'px' | '%' } | undefined { return this._parsedWidth; }
 
   stickyStart: boolean;
   stickyEnd: boolean;
@@ -82,26 +91,44 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
    * Used by neg-table to apply a custom header/footer cell template, or the default when not set.
    * @internal
    */
-  template: TemplateRef<NegTableMetaCellTemplateContext<any>>;
+  template: TemplateRef<NegTableMetaCellContext<any>>;
+
+  /**
+   * When true indicates that the width is set with type pixels.
+   * @internal
+   */
+  readonly isFixedWidth?: boolean;
 
   /**
    * The column def for this column.
    */
   get columnDef(): NegTableColumnDef<NegMetaColumn> { return this._columnDef; }
 
+  private _width?: string;
+  private _parsedWidth: ReturnType<typeof parseStyleWidth>;
   private _columnDef: NegTableColumnDef<NegMetaColumn>;
-  private defaultWidth: string = '';
+  private defaultWidth = '';
 
   constructor(def: NegMetaColumnDefinition) {
     this[NEG_META_COLUMN_MARK] = true;
     initDefinitions(def, this);
-    const copyKeys: Array<keyof NegMetaColumnDefinition> = ['kind', 'rowIndex'];
-    copyKeys.forEach( k => k in def && (this[k] = def[k]) );
+
+    for (const prop of CLONE_PROPERTIES) {
+      if (prop in def) {
+        this[prop as any] = def[prop]
+      }
+    }
 
     if (!isNegMetaColumn(def)) {
       if (typeof def.type === 'string') {
         this.type = { name: def.type } as any;
       }
+    }
+  }
+
+  static extendProperty(name: keyof NegMetaColumn): void {
+    if (CLONE_PROPERTIES.indexOf(name) === -1) {
+      CLONE_PROPERTIES.push(name);
     }
   }
 

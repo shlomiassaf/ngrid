@@ -1,0 +1,17 @@
+/* @neg-example:ex-2 */
+neg-table + h1 {
+  .virtual-scroll-css-scrolling-demo-on {
+    display: none;
+  }
+}
+
+neg-table.neg-table-scrolling + h1 {
+  .virtual-scroll-css-scrolling-demo-on {
+    display: inline;
+  }
+  .virtual-scroll-css-scrolling-demo-off {
+    display: none;
+  }
+
+}
+/* @neg-example:ex-2 */

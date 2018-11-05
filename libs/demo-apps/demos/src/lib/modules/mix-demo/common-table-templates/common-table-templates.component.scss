@@ -1,0 +1,86 @@
+.neg-table-ui-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neg-table-no-data {
+  display: flex;
+  place-content: center center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+
+  & > * {
+    margin: auto;
+  }
+}
+
+.neg-row-detail-parent {
+  &:focus {
+    outline: none;
+  }
+  &.neg-row-detail-opened {
+    background: #f5f5f5;
+  }
+}
+
+.neg-detail-row {
+  padding: 10px 40px;
+  overflow: hidden;
+}
+
+.neg-table-row-drag-handle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.neg-table-row-drag-placeholder {
+  background: #ccc;
+  border: dotted 3px #999;
+  min-height: 60px;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.neg-table-column-resizer-handle {
+  position: absolute;
+  right: 0%;
+  height: 70%;
+  width: 1px;
+  transform: translateY(30%);
+}
+
+.neg-table-column-type-progressBar.neg-table-cell {
+  position: relative;
+  > div {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    left: 0;
+
+    & > div {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      place-content: center;
+      align-items: center;
+    }
+  }
+}
+
+neg-table:not(.neg-table-scrolling) .neg-table-column-type-progressBar.neg-table-cell {
+  > div {
+    width: 0;
+    transition: width 350ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+}

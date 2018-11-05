@@ -1,16 +1,16 @@
 export * from './services/index';
 export * from './directives/index';
+export * from './meta-rows/index';
+
 export { NegTableHeaderCellSortContainer } from './types';
 
 export {
-  NegTableMetaCellTemplateContext,
-  NegTableCellTemplateContext,
   NegColumnTypeDefinition, NegColumnTypeDefinitionDataMap,
-  NegCdkVirtualScrollViewportComponentBaseColumnDefinition,
+  NegBaseColumnDefinition,
   NegMetaColumnDefinition,
   NegColumnDefinition,
   NegColumnGroupDefinition,
-  NegColumnSet,
+  NegColumnSet, NegMetaRowDefinitions,
   NegTableColumnSet, NegTableColumnDefinitionSet,
 
   META_COLUMN_TYPES,
@@ -24,12 +24,16 @@ export {
   columnFactory
 } from './columns/index';
 
+export { NegTableMetaCellContext, NegTableCellContext, NegTableRowContext } from './context/index';
+
 export { NegCdkTableComponent } from './neg-cdk-table/neg-cdk-table.component';
 
 export * from './events';
 export { NegTableComponent } from './table.component';
-export { NegTableRegistryService } from './table-registry.service';
+export { NegTableRegistryService } from './services/table-registry.service';
+export { AutoSizeToFitOptions, ColumnApi } from './column-api';
 
 export { NegColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';
 export * from './features/virtual-scroll/index';
+
 export * from './utils/index';

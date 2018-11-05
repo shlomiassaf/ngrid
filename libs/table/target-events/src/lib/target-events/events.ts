@@ -1,4 +1,4 @@
-import { NegColumn, NegMetaColumn, NegColumnGroup } from '@neg/table';
+import { NegColumn, NegMetaColumn, NegColumnGroup, NegTableCellContext, NegTableRowContext } from '@neg/table';
 
 export type ROW_TYPE = 'header' | 'data' | 'footer';
 export interface ROW_META_TYPE {
@@ -19,6 +19,7 @@ export interface NegTableMatrixPoint<RType extends ROW_TYPE, RMetaType extends k
 
 export interface NegTableDataMatrixRow<T = any> extends NegTableMatrixRow<'data'> {
   row: T;
+  context: NegTableRowContext<T>;
 }
 
 export interface NegTableColumnMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends NegTableMatrixPoint<RType, RMetaType> {
@@ -27,6 +28,7 @@ export interface NegTableColumnMatrixPoint<RType extends ROW_TYPE, RMetaType ext
 
 export interface NegTableDataMatrixPoint<T = any> extends NegTableColumnMatrixPoint<'data'> {
   row: T;
+  context: NegTableCellContext;
 }
 
 export type NegTableCellEvent<T = any> = { source: MouseEvent; cellTarget: HTMLElement; rowTarget: HTMLElement; }

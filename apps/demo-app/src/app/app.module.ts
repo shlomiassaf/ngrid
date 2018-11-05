@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { GestureConfig } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule, PreloadAllModules} from '@angular/router';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
+import { RouterModule, PreloadAllModules } from '@angular/router';
+
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 import { NxModule } from '@nrwl/nx';
 
@@ -22,19 +24,23 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
     NxModule.forRoot(),
     SharedModule,
-    MatSidenavModule,
-    MatListModule,
-    // `path` of ExampleGroup must match the group id!
+    MatIconModule,
+    MatButtonModule,
     RouterModule.forRoot(
       [
-        { path: 'table-demo', loadChildren: '@neg/demo-apps/table-demo#TableDemoModule' },
+        { path: '', loadChildren: '@neg/demo-apps/demos#DemosModule' },
+        { path: 'concepts', loadChildren: '@neg/demo-apps/concepts#ConceptsModule' },
+        { path: 'features', loadChildren: '@neg/demo-apps/features#FeaturesModule' },
+        { path: 'stories', loadChildren: '@neg/demo-apps/stories#StoriesModule' },
       ],
       {
-        useHash: false,
+        useHash: true,
         preloadingStrategy: PreloadAllModules,
-        initialNavigation: 'enabled',
       }
     )
+  ],
+  providers: [
+    { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig },
   ],
   bootstrap: [AppComponent]
 })

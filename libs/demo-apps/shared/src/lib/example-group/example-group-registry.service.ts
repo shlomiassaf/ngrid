@@ -11,8 +11,26 @@ export interface ExampleMetadata {
 export interface ExampleGroupMap { } // tslint:disable-line
 export interface ExampleGroupMetadata {
   id: keyof ExampleGroupMap;
+  title?: string;
+  examples: ExampleDemoItem[];
+}
+
+export class ExampleDemoItem implements ExampleMetadata {
+  id: string;
   title: string;
-  examples: ExampleMetadata[];
+  component: Type<any>;
+  readonly routerLink: string[];
+
+  constructor(groupId: string, route: Route, data: { title: string }, pathPrefix?: string) {
+    this.id = route.path;
+    this.component = route.component;
+    this.title = data.title;
+    this.routerLink = [
+      './',
+      ...(pathPrefix ? [pathPrefix] : []),
+      this.id,
+    ];
+  }
 }
 
 @Injectable({ providedIn: 'root' })
@@ -34,16 +52,23 @@ export class ExampleGroupRegistryService {
     return Array.from(this._store.values());
   }
 
-  registerGroup(metadata: ExampleGroupMetadata): void {
-    this._store.set(metadata.id, metadata);
+  registerGroup(metadata: Pick<ExampleGroupMetadata, 'id' | 'title'>): void {
+    this._store.set(metadata.id, { ...metadata, examples: [] });
     this.groups$.next(this.getGroups());
   }
 
-  registerGroupFromRoutes(group: { id: keyof ExampleGroupMap; title: string; }, routes: Array<Route & { data: { title: string } }>): void {
-    this.registerGroup({
-      id: group.id,
-      title: group.title,
-      examples: routes.map( r => ({ id: r.path, component: r.component, title: r.data.title })),
-    });
+  addToGroup(groupId: keyof ExampleGroupMap, ...examples: ExampleDemoItem[]): void {
+    const m = this._store.get(groupId);
+    m.examples = [...m.examples, ...examples];
+    this.groups$.next(this.getGroups());
+  }
+
+  registerSubGroupRoutes(groupId: keyof ExampleGroupMap,
+                         routes: Array<Route & { data?: { title: string } }>,
+                         pathPrefix?: string): void {
+    this.addToGroup(
+      groupId,
+      ...routes.filter( r => !!r.data ).map( r => new ExampleDemoItem(groupId, r, r.data, pathPrefix) ),
+    );
   }
 }

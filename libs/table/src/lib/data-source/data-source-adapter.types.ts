@@ -35,15 +35,15 @@ export interface NegDataSourceTriggerCache<T = any> {
   data?: RefreshDataWrapper<T>;
 }
 
-export type NegDataSourceTriggerChange<T> = {
+export interface NegDataSourceTriggerChange<T> {
   changed: boolean;
   prev: T;
   curr?: T;
 }
 
 export interface NegDataSourceTriggerChangedEvent<T = any> {
-  filter?: NegDataSourceTriggerChange<DataSourceFilter>;
-  sort?: NegDataSourceTriggerChange<NegTableDataSourceSortChange>;
+  filter: NegDataSourceTriggerChange<DataSourceFilter>;
+  sort: NegDataSourceTriggerChange<NegTableDataSourceSortChange>;
   pagination: {
     changed: boolean;
     page: NegDataSourceTriggerChange<any>;
@@ -51,8 +51,17 @@ export interface NegDataSourceTriggerChangedEvent<T = any> {
   }
   data: NegDataSourceTriggerChange<T>;
 
+
   /**
-   * Set the total length of the paginator (for server-side rendering, client-side pagination is automatically set)
+   * When true this is the first emission of data since the last connection.
+   */
+  isInitial: boolean;
+
+  /**
+   * Set the total amount of data items.
+   * For use with the paginator, update the total length of data items that the current returned source is part of.
+   *
+   * Use when custom trigger for pagination is enabled (server side mode, in client side mode the length is automatically set)
    */
   updateTotalLength(totalLength: number): void;
 }

@@ -1,0 +1,26 @@
+.col-quickthrough-table1 {
+  border: 1px solid rgba(0, 0, 0, .24);
+  padding: 16px;
+}
+
+.col-quickthrough-bg-data {
+  background: green;
+  &:not(.neg-table-cell) {
+    color: white;
+  }
+}
+
+.col-quickthrough-bg-header {
+  background: deepskyblue;
+  box-shadow: inset 0px 0px 0px 10px red;
+}
+
+.col-quickthrough-bg-footer {
+  background: deepskyblue;
+  box-shadow: inset 0px 0px 0px 10px yellow;
+}
+
+.col-quickthrough-bg-group {
+  background: deepskyblue;
+  box-shadow: inset 0px 0px 0px 10px purple;
+}

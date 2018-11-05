@@ -7,13 +7,13 @@
             <span>{{c.title || c.file}} [{{c.lang.toUpperCase()}}]</span>
           </div>
         </ng-template>
-        <div class="docsi-code-example">
-          <pre class="hljs"><code [innerHtml]="c.code"></code></pre>
+        <div code-viewer class="docsi-code-example">
+          <div [innerHtml]="c.code"></div>
         </div>
       </mat-tab>
     </ng-container>
   </mat-tab-group>
-  <div class="docsi-code-example" *ngIf="code && !multi">
-    <pre class="hljs"><code [innerHtml]="code.code"></code></pre>
+  <div code-viewer class="docsi-code-example" *ngIf="code && !multi">
+    <div [innerHtml]="code.code"></div>
   </div>
 </div>

@@ -8,10 +8,15 @@ import { ExtractedCodeGroup } from '../../models';
   selector: 'docsi-example-code-container',
   templateUrl: './example-code-container.component.html',
   styleUrls: ['./example-code-container.component.scss'],
+  host: { // tslint:disable-line:use-host-property-decorator
+    '[class]': 'markdownBodyClass'
+  },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleCodeContainerComponent {
+
+  @Input() markdownBodyClass = 'markdown-body';
 
   @Input() set extractId(value: string) {
     if (value) {

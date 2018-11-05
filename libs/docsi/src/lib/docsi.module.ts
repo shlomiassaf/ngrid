@@ -5,6 +5,7 @@ import {
   ExampleCodeContainerComponent,
   BtCompileMarkdownComponent,
   BtSourceCodeRefComponent,
+  CodeViewer,
 } from './components';
 
 export const ENTRY_COMPONENTS = [
@@ -15,12 +16,13 @@ export const ENTRY_COMPONENTS = [
 
 export const DECLARATION_EXPORTS = [
   ENTRY_COMPONENTS,
+  CodeViewer,
 ];
 
 @NgModule({
   declarations: [ DECLARATION_EXPORTS ],
   imports: [
-    CommonModule
+    CommonModule,
   ],
   exports: [ DECLARATION_EXPORTS ],
   entryComponents: ENTRY_COMPONENTS,

@@ -12,13 +12,19 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { DocsiModule } from '@neg/docsi';
 import { DocsiTocModule } from '@neg/docsi/toc';
 import { DocsiMaterialSuiteModule } from '@neg/docsi/material-suite';
 
 import { ExampleGroupComponent } from './example-group';
-
+import { NgCustomLogoComponent } from './ng-custom-logo/ng-custom-logo.component';
+import { NgEventsDirective } from './directives/ng-hooks';
+import { DemoActionRowComponent } from './demo-action-row/demo-action-row.component';
 
 export const IMPORTS_EXPORTS = [
   CommonModule,
@@ -28,7 +34,7 @@ export const IMPORTS_EXPORTS = [
   RouterModule,
   DocsiModule,
   DocsiTocModule,
-  DocsiMaterialSuiteModule
+  DocsiMaterialSuiteModule,
 ];
 
 export const ENTRY_COMPONENTS = [
@@ -37,11 +43,14 @@ export const ENTRY_COMPONENTS = [
 
 export const DECLARATION_EXPORTS = [
   ENTRY_COMPONENTS,
+  NgCustomLogoComponent,
+  NgEventsDirective,
+  DemoActionRowComponent,
 ];
 
 /*
     DO NOT EXPORT MATERIAL MODULES.
-    LET EACH EXAMPLE MODULE IMPORT IT'S OWN TO MAKE SURE LIBRARIES ONLY NEED WHAT THEY NEED
+    LET EACH EXAMPLE MODULE IMPORT IT'S OWN TO MAKE SURE LIBRARIES ONLY GET WHAT THEY NEED
     AND NOTHING GETS IN
 */
 
@@ -56,7 +65,11 @@ export const DECLARATION_EXPORTS = [
     MatTabsModule,
     MatListModule,
     MatTooltipModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatMenuModule,
+    MatCheckboxModule,
+    MatInputModule,
   ],
   exports: [IMPORTS_EXPORTS, DECLARATION_EXPORTS],
   entryComponents: ENTRY_COMPONENTS

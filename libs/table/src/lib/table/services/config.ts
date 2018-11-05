@@ -3,7 +3,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 
 export interface NegTableConfig {
-  table: {
+  table?: {
     showHeader?: boolean;
     showFooter?: boolean;
     boxSpaceModel?: 'padding' | 'margin';

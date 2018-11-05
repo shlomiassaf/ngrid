@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./datasource-factory.component.md" ],
+  "codeRef": [
+    {
+      "file": "./datasource-factory.component.ts",
+      "section": ["ex-1", "ex-2"]
+    },
+    {
+      "file": "./datasource-factory.component.md",
+      "lang": "html",
+      "section": ["ex-1", "ex-2"]
+    }
+  ]
+}

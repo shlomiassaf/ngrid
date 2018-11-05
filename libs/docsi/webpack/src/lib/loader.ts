@@ -9,6 +9,7 @@ import { DocsiAngularTemplateTransformer } from './angular-html-template-transfo
 let markdownToHtml: MarkdownToHtml;
 
 export interface DocsiLoaderOptions {
+  highlight?: 'highlightjs' | 'prismjs';
   remarkPlugins?: any[];
 }
 
@@ -16,6 +17,7 @@ export function loader (this: loader.LoaderContext, source: string, sourceMap?: 
   const options: DocsiLoaderOptions = loaderUtils.getOptions(this);
   if (!markdownToHtml) {
     markdownToHtml = new MarkdownToHtml({
+      highlight: options.highlight,
       extraPlugins: options.remarkPlugins || [],
     })
   }

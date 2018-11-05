@@ -2,15 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>DemoApp</title>
+  <title>Angrid</title>
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Roboto+Mono:300" rel="stylesheet">
+  <script>
+    // FOR GH PAGES:
+    (function() {
+      const href = document.querySelector('base[href]').getAttribute('href');
+      const segments = location.pathname.split('/');
+      const len = segments.length;
+      const firstIndex = segments.indexOf(href);
+      if (href.length > 1 && firstIndex > -1) {
+        while (true) {
+          if (segments[firstIndex + 1] === href) {
+            segments.splice(firstIndex + 1, 1);
+          } else {
+            break;
+          }
+        }
+        if (segments.length !== len) {
+          const newPathname = segments.join('/');
+          location.replace(newPathname + location.hash);
+        }
+      }
+    })();
+  </script>
 </head>
-<body>
+<body class="mat-typography">
   <neg-root></neg-root>
 </body>
 </html>

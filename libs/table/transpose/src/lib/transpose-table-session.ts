@@ -29,10 +29,10 @@ export class TransposeTableSession {
               private updateColumns: () => void,
               private sourceFactoryWrapper: (results: any[]) => any[]) {
     this.init();
-    if (table.columns && table._store.table.length > 0) {
+    if (table.columns && table.columnApi.visibleColumns.length > 0) {
       this.onInvalidateHeaders();
     }
-    this.onDataSource(this.table.dataSource);
+    this.onDataSource(this.table.ds);
   }
 
   destroy(updateTable: boolean): void {
@@ -43,8 +43,8 @@ export class TransposeTableSession {
       this.table.showHeader = this.headerRow;
       this.table.columns = this.columnsInput;
       if (updateTable) {
-        this.table.invalidateHeader();
-        this.table.dataSource.refresh(VIRTUAL_REFRESH);
+        this.table.invalidateColumns();
+        this.table.ds.refresh(VIRTUAL_REFRESH);
       }
     }
   }
@@ -64,7 +64,7 @@ export class TransposeTableSession {
   private onInvalidateHeaders(): void {
     if (!this.table.columns[LOCAL_COLUMN_DEF]) {
       this.columnsInput = this.table.columns;
-      this.storeColumns = this.table._store.table;
+      this.storeColumns = this.table.columnApi.visibleColumns;
       this.updateColumns();
     }
   }

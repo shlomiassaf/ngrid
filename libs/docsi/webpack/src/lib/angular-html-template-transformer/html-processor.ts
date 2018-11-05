@@ -10,11 +10,15 @@ interface DocsiAngularHtmlProcessorVisitorDef<T = any> {
 }
 
 export class DocsiAngularHtmlProcessor<T = any> extends RecursiveVisitor {
-  private parseResult: ParseTreeResult;
 
-  constructor(private source: string, visitorDef: DocsiAngularHtmlProcessorVisitorDef<T>, context?: T) {
-    super();
-    this.parseResult = new HtmlParser().parse(source, '');
+  constructor(private source: string) { super(); }
+
+  static isElement(obj: Node): obj is Element {
+    return obj instanceof Element;
+  }
+
+  visitAll(visitorDef: DocsiAngularHtmlProcessorVisitorDef<T>, context?: T): void {
+    const parseResult: ParseTreeResult = new HtmlParser().parse(this.source, '');
 
     const { visit, byNameElementVisitors } = visitorDef;
     const hasElementVisitor: (ast: Node) => boolean = byNameElementVisitors
@@ -31,11 +35,7 @@ export class DocsiAngularHtmlProcessor<T = any> extends RecursiveVisitor {
       }
     }
 
-    visitAll(this, this.parseResult.rootNodes, context);
-  }
-
-  static isElement(obj: Node): obj is Element {
-    return obj instanceof Element;
+    visitAll(this, parseResult.rootNodes, context);
   }
 
   outerHtml(ast: Node): string;

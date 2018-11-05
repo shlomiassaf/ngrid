@@ -1,4 +1,6 @@
 // tslint:disable:use-host-property-decorator
+// tslint:disable:directive-selector
+import { first } from 'rxjs/operators';
 import {
   AfterViewInit,
   Component,
@@ -6,31 +8,30 @@ import {
   ElementRef,
   DoCheck,
   ChangeDetectionStrategy,
+  Input,
   ViewEncapsulation,
   ViewContainerRef,
   ViewChild,
-  ComponentFactoryResolver
+  ComponentFactoryResolver,
+  NgZone,
 } from '@angular/core';
 import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
 
 import { NegTableComponent } from '../table.component';
+import { uniqueColumnCss, uniqueColumnTypeCss, COLUMN_EDITABLE_CELL_CLASS } from '../circular-dep-bridge';
 import { COLUMN, NegColumn, NegColumnGroup } from '../columns';
-import { _NegTableMetaCellTemplateContext } from '../pipes/table-cell-context.pipe';
+import { MetaCellContext } from '../context';
+import { NegTableMultiRegistryMap } from '../services/table-registry.service';
 import { NegTableColumnDef } from './column-def';
 
 const HEADER_GROUP_CSS = `neg-header-group-cell`;
 const HEADER_GROUP_PLACE_HOLDER_CSS = `neg-header-group-cell-placeholder`;
 
-/**
- * Set the widths of an HTMLElement
- * @param el The element to set widths to
- * @param widths The widths, a tuple of 3 strings [ MIN-WIDTH, WIDTH, MAX-WIDTH ]
- */
-function setWidth(el: HTMLElement, widths: [string, string, string]) {
-  el.style.cssText = `min-width: ${widths[0]}; width: ${widths[1]}; max-width: ${widths[2]}; `;
-}
-
 function initCellElement(el: HTMLElement, column: COLUMN): void {
+  el.classList.add(uniqueColumnCss(column.columnDef));
+  if (column.type) {
+    el.classList.add(uniqueColumnTypeCss(column.type));
+  }
   if (column.css) {
     const css = column.css.split(' ');
     for (const c of css) {
@@ -39,9 +40,21 @@ function initCellElement(el: HTMLElement, column: COLUMN): void {
   }
 }
 
+function initDataCellElement(el: HTMLElement, column: NegColumn): void {
+  if (column.editable && column.editorTpl) {
+    el.classList.add(COLUMN_EDITABLE_CELL_CLASS);
+  }
+}
+
+const lastDataHeaderExtensions = new Map<NegTableComponent<any>, NegTableMultiRegistryMap['dataHeaderExtensions'][]>();
+
 /** Header cell template container that adds the right classes and role. */
 @Component({
   selector: 'neg-table-header-cell',
+  host: {
+    class: 'neg-table-header-cell',
+    role: 'columnheader',
+  },
   template: `<ng-container #vcRef></ng-container>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -52,15 +65,12 @@ export class NegTableHeaderCellComponent extends CdkHeaderCell implements DoChec
   private el: HTMLElement;
 
   constructor(private columnDef: NegTableColumnDef,
-              private table: NegTableComponent<any>,
-              private cfr: ComponentFactoryResolver,
+              public table: NegTableComponent<any>,
+              private cfr: ComponentFactoryResolver, private zone: NgZone,
               elementRef: ElementRef) {
     super(columnDef, elementRef);
     const column = columnDef.column;
     const el = this.el = elementRef.nativeElement;
-    const name = el.tagName.toLowerCase();
-    el.classList.add(name);
-    el.setAttribute('role', 'columnheader');
 
     if (column instanceof NegColumnGroup) {
       el.classList.add(HEADER_GROUP_CSS);
@@ -73,24 +83,63 @@ export class NegTableHeaderCellComponent extends CdkHeaderCell implements DoChec
   ngAfterViewInit(): void {
     const col = this.columnDef.column;
     const tpl = col instanceof NegColumn ? col.headerCellTpl : col.template;
-    const view = this.vcRef.createEmbeddedView(tpl, new _NegTableMetaCellTemplateContext(col as any, this.table));
-    if (col instanceof NegColumn && col.sort) {
-      const SortComponent = this.table.registry.getSingle('sortContainer');
-      if (SortComponent) {
-        const factory = this.cfr.resolveComponentFactory(SortComponent);
-        const sortView = this.vcRef.createComponent(factory, 0, null, [ view.rootNodes ]);
-        sortView.instance.column = col;
-      }
-    }
+    const context = new MetaCellContext(col as any, this.table);
+    const view = this.vcRef.createEmbeddedView(tpl, context);
+
     this.vcRef.get(0).detectChanges();
-    setWidth(this.el, this.columnDef.widths);
+    this.columnDef.applyWidth(this.el);
     initCellElement(this.el, col);
+
+    if (col instanceof NegColumn) {
+      this.zone.onStable.pipe(first()).subscribe( () => {
+
+        // we collect the first header extension for each unique name only once per table instance
+        let extensions = lastDataHeaderExtensions.get(this.table);
+        if (!extensions) {
+          const dataHeaderExtensions = new Map<string, any>();
+          let registry = this.table.registry;
+          while (registry) {
+            const values = registry.getMulti('dataHeaderExtensions');
+            if (values) {
+              for (const value of values) {
+                if (!dataHeaderExtensions.has(value.name)) {
+                  dataHeaderExtensions.set(value.name, value);
+                }
+              }
+            }
+            registry = registry.parent;
+          }
+          extensions = Array.from(dataHeaderExtensions.values());
+          lastDataHeaderExtensions.set(this.table, extensions);
+          // destroy it on the next turn, we know all cells will render on the same turn.
+          this.zone.onStable.pipe(first()).subscribe( () => lastDataHeaderExtensions.delete(this.table) );
+        }
+
+        for (const ext of extensions) {
+          if (!ext.shouldRender || ext.shouldRender(context)) {
+            const extView = this.vcRef.createEmbeddedView(ext.tRef, context);
+            extView.markForCheck();
+          }
+        }
+
+        if (col.sort) {
+          const SortComponent = this.table.registry.getSingle('sortContainer');
+          if (SortComponent) {
+            const factory = this.cfr.resolveComponentFactory(SortComponent);
+            const sortView = this.vcRef.createComponent(factory, 0, null, [ view.rootNodes ]);
+            sortView.instance.column = col;
+            sortView.changeDetectorRef.markForCheck();
+          }
+        }
+        this.vcRef.get(0).detectChanges();
+      });
+    }
   }
 
   // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
   ngDoCheck(): void {
     if (this.columnDef.isDirty) {
-      setWidth(this.el, this.columnDef.widths);
+      this.columnDef.applyWidth(this.el);
     }
   }
 }
@@ -102,26 +151,35 @@ export class NegTableHeaderCellComponent extends CdkHeaderCell implements DoChec
     'class': 'neg-table-cell',
     'role': 'gridcell',
   },
+  exportAs: 'negTableCell',
 })
 export class NegTableCellDirective extends CdkCell implements DoCheck {
+
   private el: HTMLElement;
 
   constructor(private columnDef: NegTableColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
     this.el = elementRef.nativeElement;
-    setWidth(this.el, columnDef.widths);
+    columnDef.applyWidth(this.el);
     initCellElement(this.el, columnDef.column);
+    initDataCellElement(this.el, columnDef.column as NegColumn);
   }
 
   // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
   ngDoCheck(): void {
     if (this.columnDef.isDirty) {
-      setWidth(this.el, this.columnDef.widths);
+      this.columnDef.applyWidth(this.el);
     }
   }
 }
 
-@Directive({ selector: 'neg-table-footer-cell' })
+@Directive({
+  selector: 'neg-table-footer-cell',
+  host: {
+    'class': 'neg-table-footer-cell',
+    'role': 'gridcell',
+  },
+ })
 export class NegTableFooterCellDirective extends CdkFooterCell implements DoCheck {
   private el: HTMLElement;
 
@@ -129,17 +187,14 @@ export class NegTableFooterCellDirective extends CdkFooterCell implements DoChec
     super(columnDef, elementRef);
     this.el = elementRef.nativeElement;
     const column = columnDef.column;
-    const name = this.el.tagName.toLowerCase();
-    this.el.classList.add(name);
-    this.el.setAttribute('role', 'gridcell');
-    setWidth(this.el, columnDef.widths);
+    columnDef.applyWidth(this.el);
     initCellElement(this.el, column);
   }
 
   // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
   ngDoCheck(): void {
     if (this.columnDef.isDirty) {
-      setWidth(this.el, this.columnDef.widths);
+      this.columnDef.applyWidth(this.el);
     }
   }
 }

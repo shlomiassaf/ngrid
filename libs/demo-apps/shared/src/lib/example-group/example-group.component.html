@@ -1,13 +1,27 @@
-<div class="example-group-container" fxLayout="row" #el>
-  <div class="example-container" [class.example-container-toc]="!hideToc" docsiTocArea #tocArea="docsiTocArea" [scrollContainer]="el">
-    <router-outlet></router-outlet>
+<div class="example-group-container" fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px" #el>
+  <div fxFlex="15%" class="example-sticky-container">
+    <mat-nav-list>
+      <mat-list-item *ngIf="rootLink" [routerLink]="['./']">
+        <a matLine>{{ rootLink }}</a>
+      </mat-list-item>
+      <ng-container *ngFor="let g of registry.groups | async">
+        <h3 mat-subheader *ngIf="g.title">{{ g.title }}</h3>
+        <mat-list-item *ngFor="let ex of g.examples" [routerLink]="ex.routerLink">
+          <a matLine>{{ ex.title }}</a>
+        </mat-list-item>
+      </ng-container>
+    </mat-nav-list>
   </div>
-  <div *ngIf="!hideToc" class="example-list-container">
+  <div class="example-container" [class.example-container-has-toc]="!hideToc" docsiTocArea #tocArea="docsiTocArea" [scrollContainer]="el">
+    <router-outlet #outlet="outlet"></router-outlet>
+    <ng-content *ngIf="!outlet.isActivated"></ng-content>
+  </div>
+  <div *ngIf="!hideToc" fxFlex="15%" class="example-sticky-container example-toc-container">
     <docsi-toc [tocArea]="tocArea">
       <a *docsiTocLinkTemplate="let ctx;"
-          [routerLink]="[ctx.rootUrl]"
-          queryParamsHandling="preserve"
-          [fragment]="ctx.link.id">{{ ctx.link.name }}</a>
+         [routerLink]="[ctx.rootUrl]"
+         queryParamsHandling="preserve"
+         [fragment]="ctx.link.id">{{ ctx.link.name }}</a>
     </docsi-toc>
   </div>
 </div>

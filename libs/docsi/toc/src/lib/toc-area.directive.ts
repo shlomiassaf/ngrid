@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { TocHeadDirective } from './toc-head.directive';
 import { tocLinkfromStaticElement } from './toc-link';
+import { TOC_AREA_DIRECTIVE_TOKEN } from './toc-area.token';
 
 const DEFAULT_OFFSET_CACHE: [number, number] = [0, 0];
 
@@ -54,7 +55,10 @@ function isPromise<T>(value: any | Promise<T>): value is Promise<T> {
  */
 @Directive({
   selector: '[docsiTocArea]',
-  exportAs: 'docsiTocArea'
+  exportAs: 'docsiTocArea',
+  providers: [
+    { provide: TOC_AREA_DIRECTIVE_TOKEN, useExisting: TocAreaDirective }, // We use a token to prevent circular dep warning cause TocAreaDirective is runtime-used here
+  ]
 })
 export class TocAreaDirective implements AfterContentInit, OnDestroy {
   @Input()

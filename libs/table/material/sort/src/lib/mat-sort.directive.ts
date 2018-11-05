@@ -21,7 +21,7 @@ const PLUGIN_KEY: 'matSort' = 'matSort';
 export class NegTableMatSortDirective implements OnDestroy {
   private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor(public table: NegTableComponent<any>, pluginCtrl: NegTablePluginController, public sort: MatSort) {
+  constructor(public table: NegTableComponent<any>, private pluginCtrl: NegTablePluginController, public sort: MatSort) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     table.registry.setSingle('sortContainer', MatSortHeader as any)
 
@@ -31,7 +31,7 @@ export class NegTableMatSortDirective implements OnDestroy {
       .subscribe( e => {
         if (e.kind === 'onInvalidateHeaders') {
           const table = this.table;
-          if (table.dataSource && !table.dataSource.sort.column) {
+          if (table.ds && !table.ds.sort.column) {
             if (this.sort && this.sort.active) {
               this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' });
             }
@@ -44,7 +44,7 @@ export class NegTableMatSortDirective implements OnDestroy {
             this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' });
           }
 
-          table.dataSource.sortChange
+          table.ds.sortChange
             .pipe(KillOnDestroy(this, e.curr))
             .subscribe( event => {
               if (this.sort && event.column) {
@@ -66,7 +66,7 @@ export class NegTableMatSortDirective implements OnDestroy {
 
   private onSort(sort: Sort): void {
     const table = this.table;
-    const column = table._store.table.find(c => c.id === sort.active);
+    const column = table.columnApi.visibleColumns.find(c => c.id === sort.active);
 
     if ( !column || !column.sort ) {
       return;
@@ -79,14 +79,14 @@ export class NegTableMatSortDirective implements OnDestroy {
       if (sortFn) {
         newSort.sortFn = sortFn;
       }
-      const currentSort = table.dataSource.sort;
+      const currentSort = table.ds.sort;
       if (column === currentSort.column) {
         const sort = currentSort.sort || {};
         if (newSort.order === sort.order) {
           return;
         }
       }
-      table.dataSource.setSort(column, newSort);
+      table.ds.setSort(column, newSort);
     }
   }
 

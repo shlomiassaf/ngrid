@@ -19,6 +19,31 @@
         "demo-app"
       ]
     },
+    "demo-apps-concepts": {
+      "tags": [
+        "demo-app"
+      ]
+    },
+    "demo-apps-features": {
+      "tags": [
+        "demo-app"
+      ]
+    },
+    "demo-apps-stories": {
+      "tags": [
+        "demo-app"
+      ]
+    },
+    "demo-apps-demos": {
+      "tags": [
+        "demo-app"
+      ]
+    },
+    "demo-apps-shared": {
+      "tags": [
+        "demo-app"
+      ]
+    },
     "table": {
       "tags": [
         "publish",
@@ -44,16 +69,6 @@
         "publish-plugin",
         "table",
         "table-block-ui"
-      ]
-    },
-    "demo-apps-table-demo": {
-      "tags": [
-        "demo-app"
-      ]
-    },
-    "demo-apps-shared": {
-      "tags": [
-        "demo-app"
       ]
     },
     "docsi": {
@@ -121,6 +136,11 @@
     "table-material": {
       "tags": [
         "publish-plugin table table-material"
+      ]
+    },
+    "table-drag": {
+      "tags": [
+        "publish-plugin table table-drag"
       ]
     }
   }

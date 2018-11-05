@@ -1,6 +1,6 @@
-import { Component, Input, ChangeDetectionStrategy, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Optional, Inject, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core';
 
-import { ExtractedCodeGroup, ExtractedCodeQuery } from '@neg/docsi';
+import { ExampleCodeContainerComponent, ExtractedCodeGroup, ExtractedCodeQuery } from '@neg/docsi';
 
 export interface CodeViewItem {
   file?: string;
@@ -17,7 +17,14 @@ export interface CodeViewItem {
 })
 export class SourceCodeComponent implements OnChanges {
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(@Optional() @Inject(ExampleCodeContainerComponent) container: ExampleCodeContainerComponent, private cdr: ChangeDetectorRef) {
+    if (container) {
+      container.compiledCode.subscribe( cc => {
+        this.extractedCodeGroup = cc;
+        this.update();
+      });
+    }
+  }
 
   @Input() set query(value: ExtractedCodeQuery[] | string) {
    this._query = typeof value === 'string'
@@ -35,18 +42,22 @@ export class SourceCodeComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.compiledCode || changes.query) {
-      if (this.extractedCodeGroup && this.extractedCodeGroup.code.length > 0) {
-        this.code = this._query && this._query.length > 0
-          ? this.extractedCodeGroup.filter(this._query).code
-          : this.extractedCodeGroup.code
-        ;
-      } else {
-        this.code = [];
-      }
-
-      this.multi = this.code.length > 0;
-      this.cdr.markForCheck();
-      this.cdr.detectChanges();
+      this.update();
     }
+  }
+
+  private update(): void {
+    if (this.extractedCodeGroup && this.extractedCodeGroup.code.length > 0) {
+      this.code = this._query && this._query.length > 0
+        ? this.extractedCodeGroup.filter(this._query).code
+        : this.extractedCodeGroup.code
+      ;
+    } else {
+      this.code = [];
+    }
+
+    this.multi = this.code.length > 0;
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 }

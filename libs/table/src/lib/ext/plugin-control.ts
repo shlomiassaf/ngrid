@@ -8,7 +8,7 @@ import {
   NegTablePluginExtensionFactories,
   NegTableEvents,
 } from './types';
-
+import { NegTableExtensionApi } from './table-ext-api';
 import { PLUGIN_STORE } from './table-plugin';
 
 const TABLE_PLUGIN_CONTEXT = new WeakMap<NegTableComponent<any>, NegTablePluginContext>();
@@ -19,7 +19,7 @@ export class NegTablePluginContext<T = any> {
   readonly events: Observable<NegTableEvents>;
   private _events = new Subject<NegTableEvents>();
 
-  constructor(public table: NegTableComponent<any>, public injector: Injector) {
+  constructor(public table: NegTableComponent<any>, public injector: Injector, public extApi: NegTableExtensionApi) {
     if (TABLE_PLUGIN_CONTEXT.has(table)) {
       throw new Error(`Table is already registered for extensions.`);
     }
@@ -46,12 +46,14 @@ export class NegTablePluginController<T = any> {
   private static readonly created$ = new Subject<{ table: NegTableComponent<any>, controller: NegTablePluginController<any> }>();
   static readonly created = NegTablePluginController.created$.asObservable();
 
+  readonly extApi: NegTableExtensionApi
   readonly events: Observable<NegTableEvents>;
   private readonly table: NegTableComponent<T>
   private readonly plugins = new Map<keyof NegTablePluginExtension, NegTablePlugin>();
 
   constructor(private context: NegTablePluginContext) {
     this.table = context.table;
+    this.extApi = context.extApi;
     this.events = context.events;
     NegTablePluginController.created$.next({ table: this.table, controller: this });
   }

@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./column-factory.component.md" ],
+  "codeRef": [
+    {
+      "file": "./column-factory.component.ts",
+      "section": ["ex-1"]
+    },
+    {
+      "file": "./column-factory.component.md",
+      "lang": "html",
+      "section": ["ex-1"]
+    }
+  ]
+}

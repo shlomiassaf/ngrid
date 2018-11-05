@@ -1,3 +1,37 @@
+neg-table {
+  display: block;
+}
+
+// same idea as in .cdk-visually-hidden with adjustments:
+// - Added precedence (!important)
+// - Removed explicit width trimming
+// - More specific border elimination (keep left/right remove top/bottom)
+//
+// The adjustments address the need to be able to keep the row aligned with the table so it can update
+// the header cell size (width...) and publish events so other cells can follow (e.g. group rows)
+// The header row is the key to all cell width's...
+.neg-table-row-visually-hidden {
+  border-top: 0;
+  border-bottom: 0;
+  clip: rect(0 0 0 0);
+  height: 0px;
+  min-height: 0px;
+  max-height: 0px;
+  overflow: hidden !important;
+  visibility: collapse !important;
+
+  // Avoid browsers rendering the focus ring in some cases.
+  outline: 0;
+
+  // Avoid some cases where the browser will still render the native controls (see #9049).
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.neg-table-row-hidden {
+  display: none !important;
+}
+
 .neg-table-container {
   position: relative;
   height: 100%;
@@ -5,30 +39,50 @@
   flex-direction: column;
   box-sizing: border-box;
   display: flex;
-  justify-content: flex-end;
+  overflow: auto;
+  // justify-content: flex-end;
 }
 
 .neg-table-scroll-container {
   flex: 1 1 auto;
   box-sizing: border-box;
   min-height: auto;
+  &.cdk-virtual-scroll-disabled {
+    flex: 1 0 auto;
+  }
 }
 
-neg-table {
-  display: block;
+.neg-table-sticky-row-scroll-container {
+  position: fixed;
+  overflow: hidden;
 }
 
-.neg-row-detail-parent {
-  position: relative;
-  cursor: pointer;
-  &:not(.neg-row-detail-opened) {
-    &:hover {
-      background: #f5f5f5;
+.neg-table-empty-spacer {
+  display: none;
+}
+.neg-table-empty {
+  .cdk-virtual-scroll-content-wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .neg-cdk-table {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 100%;
+
+      & > * {
+        flex: 0 0 auto;
+      }
+
+      & > .neg-table-empty-spacer {
+        display: block;
+        flex: 1 1 auto;
+      }
     }
   }
 }
 
-// WORKAROUND : https://github.com/angular/material2/issues/13231
-cdk-virtual-scroll-viewport .cdk-virtual-scroll-content-wrapper {
-  contain: none;
+.neg-table-scrolling neg-cdk-table {
+  pointer-events: none;
 }

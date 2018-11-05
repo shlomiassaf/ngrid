@@ -7,6 +7,10 @@ interface TokenParseResult {
   result: null | RegExpExecArray;
 }
 
+function rawTokenToString(token: string): string[] {
+  return token.trim().split(' ').map( s => s.trim() ).filter( s => !!s );
+}
+
 function parseLine(p: lexer.LexerGroup, line: string): TokenParseResult {
   let result: RegExpExecArray = p.section.exec(line);
   if (result) {
@@ -78,38 +82,43 @@ export function parse(content: string, lang: string): ParserResult {
           if (!token.result[1]) {
             throw new Error(`Invalid section defined in line ${i + 1}: ${token.result[0]} `);
           }
-          const foundSection = token.result[1].trim();
-          if (foundSection === 'default') {
-            throw new Error(`"default" sections is reserved and can not be used templates.`);
-          }
-          if (sections.current) {
-            if (foundSection === sections.current) {
-              sections.current = sections.queue.pop();
-              sections.cold.push(sections.hot.shift());
+
+          const foundSections = rawTokenToString(token.result[1]);
+          for (const foundSection of foundSections) {
+            if (foundSection === 'default') {
+              throw new Error(`"default" sections is reserved and can not be used templates.`);
+            }
+            if (sections.current) {
+              if (foundSection === sections.current) {
+                sections.current = sections.queue.pop();
+                sections.cold.push(sections.hot.shift());
+              } else {
+                sections.hot.unshift({ name: foundSection, lines: [] });
+                sections.queue.push(sections.current);
+                sections.current = foundSection;
+              }
             } else {
               sections.hot.unshift({ name: foundSection, lines: [] });
-              sections.queue.push(sections.current);
               sections.current = foundSection;
             }
-          } else {
-            sections.hot.unshift({ name: foundSection, lines: [] });
-            sections.current = foundSection;
           }
           break;
         case 'ignore':
           if (!token.result[1]) {
             throw new Error(`Invalid section defined in line ${i + 1}: ${token.result[0]} `);
           }
-          const foundIgnoredSection = token.result[1].trim();
 
-          const foundIgnoredIdx = ignoreQueue.indexOf(foundIgnoredSection);
-          if (foundIgnoredIdx === -1) {
-            if (foundIgnoredSection !== '*' && !sections.hot.find( s => s.name === foundIgnoredSection )) {
-              console.warn(`Ignoring "${foundIgnoredSection}" while not in that section.`);
+          const foundIgnoredSections = rawTokenToString(token.result[1]);
+          for (const foundIgnoredSection of foundIgnoredSections) {
+            const foundIgnoredIdx = ignoreQueue.indexOf(foundIgnoredSection);
+            if (foundIgnoredIdx === -1) {
+              if (foundIgnoredSection !== '*' && !sections.hot.find( s => s.name === foundIgnoredSection )) {
+                console.warn(`Ignoring "${foundIgnoredSection}" while not in that section.`);
+              }
+              ignoreQueue.push(foundIgnoredSection);
+            } else {
+              ignoreQueue.splice(foundIgnoredIdx, 1);
             }
-            ignoreQueue.push(foundIgnoredSection);
-          } else {
-            ignoreQueue.splice(foundIgnoredIdx, 1);
           }
           break;
         case 'ignoreLine':

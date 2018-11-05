@@ -1,4 +1,5 @@
-import { fromEvent } from 'rxjs';
+import { fromEvent, timer, Observer } from 'rxjs';
+import { bufferWhen, debounce, map, filter } from 'rxjs/operators';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
 import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy } from '@neg/table';
@@ -17,20 +18,35 @@ declare module '@neg/table/lib/ext/types' {
 
 const PLUGIN_KEY: 'targetEvents' = 'targetEvents';
 
+function hasListeners(source: { observers: Observer<any>[] }): boolean {
+  return source.observers.length > 0;
+}
+
+function findEventSource(source: MouseEvent): { type: 'row' | 'cell', target: HTMLElement } | undefined {
+  const cellTarget = findParentCell(source.target as any);
+  if (cellTarget) {
+    return { type: 'cell', target: cellTarget };
+  } else if (isRowContainer(source.target as any)) {
+    return { type: 'cell', target: source.target as any };
+  }
+}
+
 @TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
 export class NegTableTargetEventsPlugin<T = any> {
   rowClick = new EventEmitter<Events.NegTableRowEvent<T>>();
+  rowDblClick = new EventEmitter<Events.NegTableRowEvent<T>>();
   rowEnter = new EventEmitter<Events.NegTableRowEvent<T>>();
   rowLeave = new EventEmitter<Events.NegTableRowEvent<T>>();
 
   cellClick = new EventEmitter<Events.NegTableCellEvent<T>>();
+  cellDblClick = new EventEmitter<Events.NegTableCellEvent<T>>();
   cellEnter = new EventEmitter<Events.NegTableCellEvent<T>>();
   cellLeave = new EventEmitter<Events.NegTableCellEvent<T>>();
 
   private cdr: ChangeDetectorRef;
   private _removePlugin: (table: NegTableComponent<any>) => void;
 
-  constructor(protected table: NegTableComponent<any>, protected injector: Injector, pluginCtrl: NegTablePluginController) {
+  constructor(protected table: NegTableComponent<any>, protected injector: Injector, protected pluginCtrl: NegTablePluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     this.cdr = injector.get(ChangeDetectorRef);
     if (table.isInit) {
@@ -67,7 +83,20 @@ export class NegTableTargetEventsPlugin<T = any> {
       if (matrixPoint) {
         const event: Events.NegTableCellEvent<T> = { ...matrixPoint, source, cellTarget, rowTarget } as any;
         if (matrixPoint.type === 'data') {
-          (event as Events.NegTableDataMatrixPoint<T>).row = table.dataSource.renderedData[matrixPoint.rowIndex];
+          (event as Events.NegTableDataMatrixPoint<T>).row = table.ds.renderedData[matrixPoint.rowIndex];
+        } else if (event.subType === 'meta') {
+          // When multiple containers exists (fixed/sticky/row) the rowIndex we get is the one relative to the container..
+          // We need to find the rowIndex relative to the definitions:
+          const { metaRowService } = this.pluginCtrl.extApi;
+          const db = event.type === 'header' ? metaRowService.header : metaRowService.footer;
+
+          for (const coll of [db.fixed, db.row, db.sticky]) {
+            const result = coll.find( item => item.el === event.rowTarget );
+            if (result) {
+              event.rowIndex = result.index;
+              break;
+            }
+          }
         }
 
         /* `metadataFromElement()` does not provide column information nor the column itself. This will extend functionality to add the columnIndex and column.
@@ -78,10 +107,12 @@ export class NegTableTargetEventsPlugin<T = any> {
         */
         event.colIndex = findCellIndex(cellTarget);
         if (matrixPoint.subType === 'data') {
-          event.column = table._store.find(table._store.tableRow[event.colIndex]).data;
+          (event as Events.NegTableDataMatrixPoint<T>).context = this.pluginCtrl.extApi.contextApi.getCell(event.rowIndex, event.colIndex);
+          event.column = (event as Events.NegTableDataMatrixPoint<T>).context.col;
         } else {
-          const rowInfo = table._store.metaRows[matrixPoint.type][event.rowIndex];
-          const record = table._store.find(rowInfo.keys[event.colIndex]);
+          const store = this.pluginCtrl.extApi.columnStore;
+          const rowInfo = store.metaColumnIds[matrixPoint.type][event.rowIndex];
+          const record = store.find(rowInfo.keys[event.colIndex]);
           if (rowInfo.isGroup) {
             event.subType = 'meta-group';
             event.column = matrixPoint.type === 'header' ? record.headerGroup : record.footerGroup;
@@ -105,6 +136,7 @@ export class NegTableTargetEventsPlugin<T = any> {
         } as any;
         if (root.type === 'data') {
           (event as Events.NegTableDataMatrixRow<T>).row = root.row;
+          (event as Events.NegTableDataMatrixRow<T>).context = root.context.rowContext;
         }
         return event;
       } else {
@@ -112,7 +144,8 @@ export class NegTableTargetEventsPlugin<T = any> {
         if (matrixPoint) {
           const event: Events.NegTableRowEvent<T> = { ...matrixPoint, source, rowTarget } as any;
           if (matrixPoint.type === 'data') {
-            (event as Events.NegTableDataMatrixRow<T>).row = table.dataSource.renderedData[matrixPoint.rowIndex];
+            (event as Events.NegTableDataMatrixRow<T>).context = this.pluginCtrl.extApi.contextApi.getRow(matrixPoint.rowIndex);
+            (event as Events.NegTableDataMatrixRow<T>).row = (event as Events.NegTableDataMatrixRow<T>).context.$implicit;
           }
 
           /*  If `subType !== 'data'` it can only be `meta` because `metadataFromElement()` does not handle `meta-group` subType.
@@ -125,7 +158,7 @@ export class NegTableTargetEventsPlugin<T = any> {
               NOTE: When subType is not 'data' the ype can only be `header` or `footer`.
           */
           if (matrixPoint.subType !== 'data') {
-            const rowInfo = table._store.metaRows[matrixPoint.type][event.rowIndex];
+            const rowInfo = this.pluginCtrl.extApi.columnStore.metaColumnIds[matrixPoint.type][event.rowIndex];
             if (rowInfo.isGroup) {
               event.subType = 'meta-group';
             }
@@ -154,22 +187,65 @@ export class NegTableTargetEventsPlugin<T = any> {
       }
     }
 
-
-    fromEvent(cdkTableElement, 'click')
-      .subscribe( (source: MouseEvent) => {
-        const cellTarget = findParentCell(source.target as any);
-        if (cellTarget) {
-          const event = createCellEvent(cellTarget, source);
-          if (event) {
-            this.cellClick.emit(event);
-            this.rowClick.emit(createRowEvent(event.rowTarget, source, event));
-            this.syncRow(event);
+    /*
+      Handling click stream for both click and double click events.
+      We want to detect double clicks and clicks with minimal delays
+      We check if a double click has listeners, if not we won't delay the click...
+      TODO: on double click, don't wait the whole 250 ms if 2 clicks happen.
+    */
+    const clickStream = fromEvent(cdkTableElement, 'click').pipe(
+      filter( source => hasListeners(this.cellClick) || hasListeners(this.cellDblClick) || hasListeners(this.rowClick) || hasListeners(this.rowDblClick) ),
+      map( (source: MouseEvent) => {
+        const result = findEventSource(source);
+        if (result) {
+          if (result.type === 'cell') {
+            const event = createCellEvent(result.target, source);
+            if (event) {
+              return {
+                type: result.type,
+                event,
+                waitTime: hasListeners(this.cellDblClick) ? 250 : 1,
+              };
+            }
+          } else if (result.type === 'row') {
+            const event = createRowEvent(result.target, source);
+            if (event) {
+              return {
+                type: result.type,
+                event,
+                waitTime: hasListeners(this.rowDblClick) ? 250 : 1,
+              };
+            }
           }
-        } else if (isRowContainer(source.target as any)) {
-          const event = createRowEvent(source.target as any, source);
-          this.rowClick.emit(event);
-          this.syncRow(event);
         }
+      }),
+      filter( result => !!result ),
+    );
+
+    clickStream
+      .pipe( bufferWhen( () => clickStream.pipe( debounce( e => timer(e.waitTime) ) ) ) )
+      .subscribe( events => {
+        const event = events.shift();
+        const isDoubleClick = events.length === 1; // if we have 2 events its double click, otherwise single.
+
+        const cellEvent = event.type === 'cell' ? event.event : undefined;
+        const rowEvent = cellEvent
+          ? createRowEvent(cellEvent.rowTarget, cellEvent.source, cellEvent)
+          : event.event as Events.NegTableRowEvent<T>
+        ;
+
+        if (isDoubleClick) {
+          if (cellEvent) {
+            this.cellDblClick.emit(cellEvent);
+          }
+          this.rowDblClick.emit(rowEvent);
+        } else {
+          if (cellEvent) {
+            this.cellClick.emit(cellEvent);
+          }
+          this.rowClick.emit(rowEvent);
+        }
+        this.syncRow(cellEvent || rowEvent);
       });
 
 
@@ -177,7 +253,9 @@ export class NegTableTargetEventsPlugin<T = any> {
       .subscribe( (source: MouseEvent) => {
         let lastEvent: Events.NegTableRowEvent<T> | Events.NegTableCellEvent<T> = emitCellLeave(source);
         lastEvent = emitRowLeave(source) || lastEvent;
-        lastEvent && this.syncRow(lastEvent);
+        if (lastEvent) {
+          this.syncRow(lastEvent);
+        }
       });
 
     fromEvent(cdkTableElement, 'mousemove')
@@ -219,7 +297,9 @@ export class NegTableTargetEventsPlugin<T = any> {
           }
         }
 
-        lastEvent && this.syncRow(lastEvent);
+        if (lastEvent) {
+          this.syncRow(lastEvent);
+        }
       });
   }
 
@@ -233,8 +313,10 @@ export class NegTableTargetEventsPlugin<T = any> {
 }
 
 @Directive({
-  selector: 'neg-table[rowClick], neg-table[rowEnter], neg-table[rowLeave], neg-table[cellClick], neg-table[cellEnter], neg-table[cellLeave]',
-  outputs: [ 'rowClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellEnter', 'cellLeave' ]
+  // tslint:disable-next-line:directive-selector
+  selector: 'neg-table[rowClick], neg-table[rowDblClick], neg-table[rowEnter], neg-table[rowLeave], neg-table[cellClick], neg-table[cellDblClick], neg-table[cellEnter], neg-table[cellLeave]',
+  // tslint:disable-next-line:use-output-property-decorator
+  outputs: [ 'rowClick', 'rowClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellDblClick', 'cellEnter', 'cellLeave' ]
 })
 @KillOnDestroy()
 export class NegTableTargetEventsPluginDirective<T> extends NegTableTargetEventsPlugin<T> implements OnDestroy {

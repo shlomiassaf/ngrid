@@ -1,0 +1,50 @@
+$data-cell-color: red;
+$header-cell-color: yellow;
+$header-cell-group-color: blue;
+$footer-cell-color: pink;
+
+.cell-hovered {
+  border: 2px solid $data-cell-color;
+
+  &.neg-table-header-cell {
+    border: 2px solid $header-cell-color;
+  }
+
+  &.neg-header-group-cell {
+    border: 2px solid $header-cell-group-color;
+  }
+
+  &.neg-table-footer-cell {
+    border: 2px solid $footer-cell-color;
+  }
+}
+
+.row-hovered {
+  transition: all 250ms ease;
+  background: $data-cell-color;
+
+  &.row-cell-hovered {
+    background: transparentize($data-cell-color, 0.75);
+  }
+
+  &.neg-table-header-row {
+    background: $header-cell-color;
+    &.row-cell-hovered {
+      background: transparentize($header-cell-color, 0.75);
+    }
+  }
+
+  &.neg-meta-group-row {
+    background: $header-cell-group-color;
+    &.row-cell-hovered {
+      background: transparentize($header-cell-group-color, 0.75);
+    }
+  }
+
+  &.neg-table-footer-row {
+    background: $footer-cell-color;
+    &.row-cell-hovered {
+      background: transparentize($footer-cell-color, 0.75);
+    }
+  }
+}

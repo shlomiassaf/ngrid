@@ -52,6 +52,9 @@ export function findCellIndex(cell: Element): number {
  *
  * NOTE that this function DOES NOT identify subType of `meta-group` (`NegTableMatrixRow<'header' | 'footer', 'meta-group'>`), it will return it as
  * 'meta`, you need to handle this case specifically.
+ *
+ * Because detection is based on DOM element position finding the original row index when multiple row containers are set (fixed/style/row) will not work.
+ * The rowIndex will be relative to the container, and not the entire table.
  */
 export function matrixRowFromRow(row: Element,
                                  vcRef: ViewContainerRef): NegTableMatrixRow<'data'> | NegTableMatrixRow<'header' | 'footer'> | NegTableMatrixRow<'header' | 'footer', 'meta'> | undefined  {

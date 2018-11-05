@@ -36,8 +36,8 @@ export class NegTableMatPaginatorDirective implements OnDestroy, DoCheck {
           this.instance.table = this.table;
         }
         const ngDoCheck = () => {
-          if (this.instance.paginator !== (this.table.dataSource && this.table.dataSource.paginator)) {
-            this.instance.paginator = this.table.dataSource.paginator;
+          if (this.instance.paginator !== (this.table.ds && this.table.ds.paginator)) {
+            this.instance.paginator = this.table.ds.paginator;
           }
         };
         this.ngDoCheck = ngDoCheck;
@@ -68,8 +68,8 @@ export class NegTableMatPaginatorDirective implements OnDestroy, DoCheck {
   }
 
   private setPaginator(): void {
-    if (this.table.dataSource) {
-      this.instance.paginator = this.table.dataSource.paginator;
+    if (this.table.ds) {
+      this.instance.paginator = this.table.ds.paginator;
     }
   }
 }

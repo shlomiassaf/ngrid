@@ -16,8 +16,17 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@neg/demo-apps/table-demo": [
-        "libs/demo-apps/table-demo/src/index.ts"
+      "@neg/demo-apps/concepts": [
+        "libs/demo-apps/concepts/src/index.ts"
+      ],
+      "@neg/demo-apps/features": [
+        "libs/demo-apps/features/src/index.ts"
+      ],
+      "@neg/demo-apps/stories": [
+        "libs/demo-apps/stories/src/index.ts"
+      ],
+      "@neg/demo-apps/demos": [
+        "libs/demo-apps/demos/src/index.ts"
       ],
       "@neg/demo-apps/shared": [
         "libs/demo-apps/shared/src/index.ts"
@@ -67,6 +76,9 @@
       ],
       "@neg/table/material": [
         "libs/table/material/src/index.ts"
+      ],
+      "@neg/table/drag": [
+        "libs/table/drag/src/index.ts"
       ],
       "@neg/*": [
         "libs/*"

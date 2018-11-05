@@ -1,8 +1,10 @@
 @import './_neg-cdk-table.component-theme';
+@import './plugins/drag.plugin';
 
 @mixin neg-table-theme($tableTheme) {
   @include neg-cdk-table-theme($tableTheme);
 
+  $border-color: map-get($tableTheme, border-color);
   $space-fill-background: map-get($tableTheme, space-fill-background);
 
   .neg-table-scroll-container {
@@ -11,7 +13,7 @@
     }
   }
 
-  neg-table.neg-table-cell-ellipsis .neg-cdk-table {
+  .neg-table-cell-ellipsis {
     .neg-table-cell, .neg-table-cell > *:first-child {
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -19,7 +21,7 @@
     }
   }
 
-  neg-table.neg-table-header-cell-ellipsis .neg-cdk-table {
+  .neg-table-header-cell-ellipsis {
     .neg-table-header-cell, .neg-table-header-cell > *:first-child {
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -27,7 +29,7 @@
     }
   }
 
-  neg-table.neg-table-footer-cell-ellipsis .neg-cdk-table {
+  .neg-table-footer-cell-ellipsis {
     .neg-table-footer-cell, .neg-table-footer-cell > *:first-child {
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -35,6 +37,11 @@
     }
   }
 
+  .neg-table-column-resizer-handle {
+    background: $border-color;
+  }
+
+  @include neg-table-drag-plugin-theme($tableTheme);
 }
 
 @mixin neg-table-spacing($spacingTheme) {
@@ -48,7 +55,7 @@
   .neg-table-header-row {
     min-height: $header-row-height;
   }
-  
+
   .neg-table-row {
     min-height: $row-height;
   }
@@ -57,18 +64,18 @@
     min-height: $footer-row-height;
   }
 
-  .neg-table-cell:first-child, .neg-table-header-cell:first-child, .neg-table-footer-cell:first-child {
+  .neg-table-cell:first-of-type, .neg-table-header-cell:first-of-type, .neg-table-footer-cell:first-of-type {
     padding-left: $row-spacing;
-  
+
     [dir='rtl'] & {
       padding-left: 0;
       padding-right: $row-spacing;
     }
   }
-  
-  .neg-table-cell:last-child, .neg-table-header-cell:last-child, .neg-table-footer-cell:last-child {
+
+  .neg-table-cell:last-of-type, .neg-table-header-cell:last-of-type, .neg-table-footer-cell:last-of-type {
     padding-right: $row-spacing;
-  
+
     [dir='rtl'] & {
       padding-right: 0;
       padding-left: $row-spacing;
@@ -77,7 +84,7 @@
 
   .neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
     padding-left: $cell-spacing;
-  
+
     &.cdk-table-sticky {
       background: inherit;
     }
@@ -86,16 +93,16 @@
   .neg-table-margin-cell-box-model {
     .neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
       box-sizing: border-box;
-  
+
       margin-left: $cell-spacing;
       padding-left: 0;
       padding-right: 0;
-  
-      &:first-child {
+
+      &:first-of-type {
         margin-left: $row-spacing;
         padding-left: 0;
         padding-right: 0;
-  
+
         [dir='rtl'] & {
           margin-left: 0;
           margin-right: $row-spacing;
@@ -103,12 +110,12 @@
           padding-right: 0;
         }
       }
-  
-      &:last-child {
+
+      &:last-of-type {
         margin-right: $row-spacing;
         padding-left: 0;
         padding-right: 0;
-  
+
         [dir='rtl'] & {
           margin-right: 0;
           margin-left: $row-spacing;
@@ -118,6 +125,20 @@
       }
     }
   }
+
+  // row-reorder (drag & drop)
+  .neg-table-row-prefix {
+    display: none;
+    position: absolute;
+    cursor: move;
+    width: $row-spacing;
+    height: 100%;
+  }
+
+  .neg-row-reorder .neg-table-row-prefix {
+    display: block;
+  }
+
 }
 
 @mixin neg-table-typography($config) {

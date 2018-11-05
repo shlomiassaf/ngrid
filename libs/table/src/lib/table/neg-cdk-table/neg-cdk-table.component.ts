@@ -23,7 +23,7 @@ import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooter
 import { Directionality } from '@angular/cdk/bidi';
 
 import { NegTableComponent } from '../table.component';
-
+import { NegTableExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
 import { NegVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
 import { NegCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/virtual-scroll-viewport.component';
 
@@ -48,7 +48,7 @@ import { NegCdkVirtualScrollViewportComponent } from '../features/virtual-scroll
 })
 export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
 
-  protected get _element(): HTMLElement { return this._elementRef.nativeElement; }
+  get _element(): HTMLElement { return this._elementRef.nativeElement; }
 
   get onRenderRows(): Observable<DataRowOutlet> {
     if (!this.onRenderRows$) {
@@ -70,11 +70,12 @@ export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
 
   constructor(_differs: IterableDiffers,
               _changeDetectorRef: ChangeDetectorRef,
-              _elementRef: ElementRef,
+              _elementRef: ElementRef<HTMLElement>,
               @Attribute('role') role: string,
               @Optional() _dir: Directionality,
               protected injector: Injector,
               protected table: NegTableComponent<T>,
+              @Inject(EXT_API_TOKEN) protected extApi: NegTableExtensionApi<T>,
               @Inject(DOCUMENT) _document?: any,
               platform?: Platform) {
     super(_differs, _changeDetectorRef, _elementRef, role, _dir, document, platform);
@@ -89,6 +90,16 @@ export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     }
     this.virtualScrollDestroy();
   }
+
+  //#region CSS-CLASS-CONTROL
+  addClass(cssClassName: string): void {
+    this._element.classList.add(cssClassName);
+  }
+
+  removeClass(cssClassName: string): void {
+    this._element.classList.remove(cssClassName);
+  }
+  //#endregion CSS-CLASS-CONTROL
 
   //#region CLEAR-ROW-DEFS
 
@@ -129,35 +140,9 @@ export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
   //#region VIRTUAL-SCROLL
   private forOf: NegVirtualScrollForOf<T>; //tslint:disable-line
 
-  updateStickyHeaderRowStyles(): void {
-    super.updateStickyHeaderRowStyles();
-    // if attached
-    if (this.forOf) {
-      // TODO: suggest exposing `_headerRowDefs` in material repp or try to get it's value (hint: clear-row-defs mixin)
-      this.forOf.setMetaRows(
-        this._getRenderedRows(this._headerRowOutlet),
-        (this as any)._headerRowDefs.map(def => def.sticky),
-        'top',
-      );
-    }
-  }
-
-  updateStickyFooterRowStyles(): void {
-    super.updateStickyFooterRowStyles();
-    // if attached
-    if (this.forOf) {
-      // TODO: suggest exposing `_footerRowDefs` in material repp or try to get it's value (hint: clear-row-defs mixin)
-      this.forOf.setMetaRows(
-        this._getRenderedRows(this._footerRowOutlet),
-        (this as any)._footerRowDefs.map(def => def.sticky),
-        'bottom',
-      );
-    }
-  }
-
-  attachViewPort(viewport: NegCdkVirtualScrollViewportComponent): void {
+  attachViewPort(): void {
     this.detachViewPort();
-    this.forOf = new NegVirtualScrollForOf<T>(this.table, this as any, viewport, this.injector.get(NgZone));
+    this.forOf = new NegVirtualScrollForOf<T>(this.extApi, this.injector.get(NgZone));
   }
 
   detachViewPort(): void {
@@ -191,11 +176,16 @@ export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
    * Force run change detection for rows.
    * You can run it for specific groups or for all rows.
    */
-  syncRows(rowType?: 'all', detectChanges?: boolean): void;
+  syncRows(rowType?: 'all' | boolean, detectChanges?: boolean): void;
   syncRows(rowType: 'header' | 'data' | 'footer', detectChanges: boolean, ...rows: number[]): void;
   syncRows(rowType: 'header' | 'data' | 'footer', ...rows: number[]): void;
-  syncRows(rowType: 'header' | 'data' | 'footer' | 'all' = 'all', ...rows: any[]): void {
-    const detectChanges: boolean = typeof rows[0] === 'boolean' ? rows.shift() : false;
+  syncRows(rowType: 'header' | 'data' | 'footer' | 'all' | boolean = false, ...rows: any[]): void {
+    const detectChanges: boolean = typeof rowType === 'boolean'
+      ? rowType
+      : typeof rows[0] === 'boolean'
+        ? rows.shift()
+        : false
+    ;
 
     let vcRef: ViewContainerRef;
     switch(rowType) {
@@ -208,7 +198,7 @@ export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
       case 'footer':
         vcRef = this._footerRowOutlet.viewContainer;
         break;
-      default:
+      default: // boolean or 'all'
         this._changeDetectorRef.markForCheck();
         if (detectChanges) {
           this._changeDetectorRef.detectChanges();
@@ -227,6 +217,14 @@ export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
           viewRef.detectChanges();
         }
       }
+    }
+  }
+
+  negForceRenderDataRows(): void {
+    try{
+      (this as any)._forceRenderDataRows();
+    } catch (ex) {
+      this.multiTemplateDataRows = this.multiTemplateDataRows;
     }
   }
 }

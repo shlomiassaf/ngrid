@@ -1,7 +1,10 @@
 // tslint:disable:use-host-property-decorator
+// tslint:disable:directive-class-suffix
+
 import {
   Directive,
   Input,
+  Inject,
   KeyValueDiffers, KeyValueDiffer,
   OnDestroy,
   DoCheck,
@@ -10,6 +13,11 @@ import { CdkColumnDef } from '@angular/cdk/table';
 
 import { COLUMN } from '../columns';
 import { isNegColumn } from '../columns/column';
+import { CellContext } from '../context';
+import { NegTableComponent } from '../table.component';
+import { EXT_API_TOKEN, NegTableExtensionApi } from '../../ext/table-ext-api';
+import { parseStyleWidth } from '../columns/utils';
+import { uniqueColumnCss } from '../circular-dep-bridge';
 
 /* TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
@@ -17,6 +25,7 @@ import { isNegColumn } from '../columns/column';
   This differ will perform the diff on the entire object which IS NOT REQUIRED!
   We need to create a custom differ that does the diff on selected properties only.
 */
+
 /**
  * Column definition for the mat-table.
  * Defines a set of cells available for a table column.
@@ -24,7 +33,8 @@ import { isNegColumn } from '../columns/column';
 @Directive({
   selector: '[negTableColumnDef]',
   providers: [
-    { provide: CdkColumnDef, useExisting: NegTableColumnDef }
+    { provide: CdkColumnDef, useExisting: NegTableColumnDef },
+    { provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: NegTableColumnDef }
   ],
 })
 export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef implements DoCheck, OnDestroy {
@@ -47,7 +57,17 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
    */
   get widths(): [string, string, string] { return this._widths; }
 
+  /**
+   * The last net width of the column.
+   * The net width is the absolute width of the column, without padding, border etc...
+   */
+  get netWidth(): number { return this._netWidth; }
+
+  isDragging = false;
+
   protected _colDiffer: KeyValueDiffer<any, any>;
+  protected table: NegTableComponent<any>;
+
   private _column: T;
   private _isDirty = false;
   private _markedForCheck = false;
@@ -77,10 +97,20 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
    * The last net width of the column.
    * The net width is the absolute width of the column, without padding, border etc...
    */
-  private netWidth?: string;
+  private _netWidth: number;
 
-  constructor(protected readonly _differs: KeyValueDiffers) {
+  constructor(protected readonly _differs: KeyValueDiffers, @Inject(EXT_API_TOKEN) protected extApi: NegTableExtensionApi<any> ) {
     super();
+    this.table = extApi.table;
+  }
+
+  /**
+   * Create a cell context for the current column at the provided row index, relative to the rendered rows (not the entire datasource).
+   */
+  createContext<Z = any>(renderRowIndex: number): CellContext<Z> {
+    if (isNegColumn(this.column)) {
+      return this.extApi.contextApi.createCellContext(renderRowIndex, this.column)
+    }
   }
 
   /**
@@ -103,9 +133,86 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
     this._markedForCheck = true;
   }
 
-  updateWidth(width: string): void {
-    const { minWidth, maxWidth } = this._column;
-    this._widths = this._sWidths = [minWidth ? `${minWidth}px` : '',  width, maxWidth ? `${maxWidth}px` : width];
+  /**
+   * Update the width definitions for this column. [minWidth, width, maxWidth]
+   * If an element is provided it will also apply the widths to the element.
+   * @param width The new width
+   * @param element Optional, an element to apply the width to, if not set will only update the width definitions.
+   */
+  updateWidth(width: string, element?: HTMLElement): void {
+    const { isFixedWidth } = this._column;
+
+    /*  Setting the minimum width is based on the input.
+        If the original width is pixel fixed we will take the maximum between it and the min width.
+        If not, we will the take minWidth.
+        If none of the above worked we will try to see if the current width is set with %, if so it will be our min width.
+    */
+    const minWidthPx = isFixedWidth
+      ? Math.max(this._column.parsedWidth.value, this._column.minWidth || 0)
+      : this._column.minWidth
+    ;
+
+    let minWidth = minWidthPx && `${minWidthPx}px`;
+    if (!minWidth) {
+      const parsed = parseStyleWidth(width);
+      if (parsed && parsed.type === '%') {
+        minWidth = width;
+      }
+    }
+
+    const maxWidth = isFixedWidth
+      ? Math.min(this._column.parsedWidth.value, this._column.maxWidth || this._column.parsedWidth.value)
+      : this._column.maxWidth
+    ;
+
+    this._widths = this._sWidths = [minWidth || '',  width, maxWidth ? `${maxWidth}px` : width];
+    if (element) {
+      this.applyWidth(element);
+    }
+  }
+
+  /**
+   * Apply the current width definitions (minWidth, width, maxWidth) onto the element.
+   */
+  applyWidth(element: HTMLElement): void {
+    setWidth(element, this.widths);
+  }
+
+  /**
+   * Query for cell elements related to this column definition.
+   *
+   * This query is not cached - cache in implementation.
+   */
+  queryCellElements(...filter: Array<'table' | 'header' | 'headerGroup' | 'footer' | 'footerGroup'>): HTMLElement[] {
+    const cssId = `.${uniqueColumnCss(this)}`;
+
+    const query: string[] = [];
+
+    if (filter.length === 0) {
+      query.push(cssId);
+    } else {
+      for (const f of filter) {
+        switch (f) {
+          case 'table':
+           query.push(`.neg-table-cell${cssId}`);
+           break;
+          case 'header':
+           query.push(`.neg-table-header-cell${cssId}:not(.neg-header-group-cell)`);
+           break;
+          case 'headerGroup':
+           query.push(`.neg-header-group-cell${cssId}`);
+           break;
+          case 'footer':
+           query.push(`.neg-table-footer-cell${cssId}:not(.neg-footer-group-cell)`);
+           break;
+          case 'footerGroup':
+           query.push(`.neg-footer-group-cell${cssId}`);
+           break;
+        }
+      }
+    }
+    // we query from the master table container and not CDKTable because of fixed meta rows
+    return query.length === 0 ? [] : Array.from(this.extApi.element.querySelectorAll(query.join(', '))) as any;
   }
 
   /** @internal */
@@ -120,10 +227,11 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
 
   onResize(): void {
     if (isNegColumn(this.column)) {
-      const prevNetWidth = this.netWidth;
-      const width = this.netWidth = this.column.sizeInfo.style.width;
+      const prevNetWidth = this._netWidth;
+      this._netWidth = this.extApi.dynamicColumnWidthFactory().widthBreakout(this.column.sizeInfo).content;
 
-      if (prevNetWidth && prevNetWidth !== width) {
+      if (prevNetWidth && prevNetWidth !== this._netWidth) {
+        const width = `${this._netWidth}px`;
         this._widths = [
           this.widths[0] || width,  // min
           width,                    // width
@@ -139,10 +247,20 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
       if (column) {
         this._column = column;
         (column as any).attach(this);
-        this.name = column.id;
-        this.sticky = column.stickyStart;
-        this.stickyEnd = column.stickyEnd;
+        this.name = column.id.replace(/ /g, '_');
+
+        if (isNegColumn(column)) {
+          this.sticky = this.stickyEnd = false;
+          switch(column.pin) {
+            case 'start':
+              this.sticky = true;
+              break;
+            case 'end':
+              this.stickyEnd = true;
+          }
+        }
       }
+
       if (this._colDiffer) {
         this.markForCheck();
       }
@@ -155,4 +273,15 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
       this._column = undefined;
     }
   }
+}
+
+/**
+ * Set the widths of an HTMLElement
+ * @param el The element to set widths to
+ * @param widths The widths, a tuple of 3 strings [ MIN-WIDTH, WIDTH, MAX-WIDTH ]
+ */
+function setWidth(el: HTMLElement, widths: [string, string, string]) {
+  el.style.minWidth = widths[0];
+  el.style.width = widths[1];
+  el.style.maxWidth = widths[2];
 }

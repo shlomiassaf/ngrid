@@ -1,122 +1,163 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import * as countryData from 'country-data';
+import {
+  postError,
+  sendMessageRequest,
+  ServerProtocol,
+  ServerRequest,
+  ClientResponse,
+  ClientProtocol,
+  ClientRequest,
+  ClientPostMessageEvent
+} from './datastore/shared';
 
-export interface Person {
-  id: number;
-  name: string;
-  email: string;
-  gender: 'Male' | 'Female';
-  country: string;
-  birthdate: string;
-  bio: string;
-  language: string;
-  lead: boolean;
-  balance: number;
-  settings: {
-    background: string;
-    timezone: string;
-    emailFrequency: 'Daily' | 'Weekly' | 'Yearly' | 'Often' | 'Seldom' | 'Never';
-    avatar: string;
+import { Customer, Person, Seller } from './datastore/models';
+import { DATA_TYPES } from './datastore/protocols';
+
+interface IncomingServerMessageEvent<T extends keyof ServerProtocol = keyof ServerProtocol> extends MessageEvent {
+  data: {
+    action: T;
+    data: ServerRequest<T>
   };
-  lastLoginIp: string;
-}
-
-export interface Customer {
-  id: number;
-  name: string;
-  country: string;
-  jobTitle: string;
-  accountId: string;
-  accountType: string;
-  currencyCode: string;
-  primeAccount: boolean;
-  balance: number;
-  creditScore: number;
-  monthlyBalance: number[];
-
 }
 
 @Injectable({ providedIn: 'root' })
 export class DemoDataSource {
+  ready: Promise<void>;
 
   private customers: Customer[] = [];
   private persons: Person[] = [];
+  private sellers: Seller[] = [];
+  private countries: any = countryData;
+  private controller: ServiceWorker;
+  private messageEventListener = (event: IncomingServerMessageEvent) => this.onMessage(event);
 
-  getCustomersSync(limit = 500): Customer[] {
-    return this.customers.slice(0, limit);
+  constructor(@Inject(DOCUMENT) document: Document) {
+    const skipUpdate = false;
+    if ('serviceWorker' in navigator &&  (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+      const src = document.currentScript ? document.currentScript.getAttribute('src') : '';
+      const srcParts = src.split('/');
+      srcParts.pop();
+      srcParts.push('sw.js');
+      this.ready = navigator.serviceWorker.register((srcParts.length > 1 ? '/' : '') + srcParts.join('/'))
+        .then( () => {
+           // controller may be set when sw is ready
+          const hasController = !!navigator.serviceWorker.controller;
+          return navigator.serviceWorker.ready
+            .then( () => navigator.serviceWorker.getRegistration() )
+            .then ( registration => {
+              if (!registration) {
+                throw new Error('no active service worker registration is found');
+              }
+              if (!skipUpdate && hasController) {
+                return registration.update()
+                  .then( () => {
+                    const newWorker = registration.installing || registration.waiting;
+
+                    if (newWorker) {
+                      // wait until worker is activated
+                      return eventWaitUntil(newWorker, 'statechange', () => newWorker.state === 'activated')
+                        .then( () => registration );
+                    }
+                    return registration;
+                  });
+              } else {
+                return registration;
+              }
+            })
+            .then ( registration => {
+              const controller = registration.active;
+
+              if (!controller) {
+                throw new Error('no active service worker registration is found');
+              }
+
+              // uncontrolled
+              // possibly a newly install
+              // if (!navigator.serviceWorker.controller) {
+              //   await sendMessageRequest(controller, {
+              //     action: ACTION.REQUEST_CLAIM,
+              //   });
+              // }
+
+              // await sendMessageRequest(controller, {
+              //   action: ACTION.PING,
+              // });
+
+
+              this.controller = registration.active;
+              this.controller.addEventListener('message', this.messageEventListener );
+            })
+        });
+    }
+  }
+
+  reset(...collections: Array<DATA_TYPES>): void {
+    this.sendAction('reset', { type: collections }, NaN);
   }
 
   getCustomers(delay = 1000, limit = 500): Promise<Customer[]> {
-    return this.getCountries()
-      .then( () => this.wait(delay) )
-      .then( () => import('faker'))
-      .then( faker => {
-        if (this.customers.length < limit) {
-          for (let i = this.customers.length; i < limit; i++) {
-            const customer: Customer = {
-              id: i + 1,
-              name: faker.name.findName(),
-              country: faker.address.countryCode(),
-              jobTitle: faker.name.jobTitle(),
-              accountId: faker.finance.account(),
-              accountType: faker.finance.accountName(),
-              currencyCode: faker.finance.currencyCode(),
-              primeAccount: faker.random.boolean(),
-              balance: faker.random.number({ min: -50000, max: 50000, precision: 2 }),
-              creditScore: faker.random.number(4) + 1,
-              monthlyBalance: Array.from(new Array(12)).map( () => faker.random.number({ min: -15000, max: 15000, precision: 2 }) )
-            }
-            this.customers.push(customer);
-          }
-        }
-        return this.customers.slice(0, limit);
-      });
-  }
-
-  getPeopleSync(limit = 500): Person[] {
-    return this.persons.slice(0, limit);
+    return this.sendAction('getCustomers', { delay, limit }).then( response => response.data );
   }
 
   getPeople(delay = 1000, limit = 500): Promise<Person[]> {
-    return this.getCountries()
-      .then( () => this.wait(delay) )
-      .then( () => import('faker'))
-      .then( faker => {
-        if (this.persons.length < limit) {
-          for (let i = this.persons.length; i < limit; i++) {
-            const p: Person = {
-              id: i,
-              name: faker.name.findName(),
-              email: faker.internet.email(),
-              gender: faker.random.arrayElement(['Male', 'Female'] as  ['Male', 'Female']),
-              country: faker.address.countryCode(),
-              birthdate: faker.date.past().toISOString(),
-              bio: faker.lorem.paragraph(),
-              language: 'EN',
-              lead: faker.random.boolean(),
-              balance: faker.random.number({ min: -20000, max: 20000, precision: 2 }),
-              settings: {
-                background: faker.internet.color(),
-                timezone: 'UTC',
-                emailFrequency: faker.random.arrayElement(['Daily', 'Weekly', 'Yearly', 'Often', 'Seldom', 'Never'] as  ['Daily', 'Weekly', 'Yearly', 'Often', 'Seldom', 'Never']),
-                avatar: faker.image.avatar(),
-              },
-              lastLoginIp: faker.internet.ip()
-            }
-            this.persons.push(p);
-          }
-        }
-        return this.persons.slice(0, limit);
-      });
+    return this.sendAction('getPeople', { delay, limit }).then( response => response.data );
   }
 
-  getCountries(delay = 0) {
-    return this.wait(delay)
-    .then( () => import('country-data') );
+  getSellers(delay = 1000, limit = 500): Promise<Seller[]> {
+    return this.sendAction('getSellers', { delay, limit }).then( response => response.data );
   }
 
-  private wait(time: number): Promise<void> {
-    return new Promise( resolve => {
-      setTimeout(resolve, time);
+
+  getCountries() {
+    return Promise.resolve(this.countries);
+  }
+
+  dispose(): void {
+    this.controller.removeEventListener('message', this.messageEventListener);
+  }
+
+  private onMessage(event: IncomingServerMessageEvent): void {
+    const {
+      data,
+      ports,
+    } = event;
+
+    if (!data || !ports || !ports.length) {
+      return;
+    }
+
+    const port = ports[0];
+
+    const p = Promise.resolve();
+    if (p) {
+      p.then(response => port.postMessage(response))
+          .catch(err => port.postMessage(postError(err)));
+    }
+  }
+
+  private sendAction<T extends keyof ClientProtocol = keyof ClientProtocol>(
+    action: T,
+    data: ClientRequest<T>,
+    timeout?: number): Promise<ClientPostMessageEvent<T>> {
+    const message = { action, data };
+    return this.controller
+      ? sendMessageRequest<T>(this.controller, message, timeout)
+      : this.ready.then( () => this.sendAction(action, data, timeout) );
+  }
+}
+
+/**
+ * Wait until an event matches given conditions
+ */
+export function eventWaitUntil(target: any, event: string, comparer: any): Promise<Event> {
+  return new Promise((resolve) => {
+    target.addEventListener(event, function handler(evt) {
+      if (comparer(evt)) {
+        target.removeEventListener(event, handler);
+        resolve(evt);
+      }
     });
-  }
+  });
 }

@@ -1,10 +1,10 @@
 import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy } from '@neg/table';
+import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy, NegTableRowContext } from '@neg/table';
 
 import { NegTableDetailRowComponent } from './row';
-import { NegTableDetailRowParentRefDirective, NegTableDetailRowContext, NegTableDefaultDetailRowParentComponent } from './directives';
+import { NegTableDetailRowParentRefDirective, NegTableDefaultDetailRowParentComponent } from './directives';
 
 declare module '@neg/table/lib/ext/types' {
   interface NegTablePluginExtension {
@@ -127,18 +127,6 @@ export class NegTableDetailRowPluginDirective<T> implements OnDestroy {
             }
           });
 
-        table._cdkTable.onRenderRows
-          .subscribe( rowOutlet => {
-            if (this.detailRow) {
-              const viewContainer = rowOutlet.viewContainer;
-              for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
-                const viewRef = viewContainer.get(renderIndex) as EmbeddedViewRef<NegTableDetailRowContext<T>>;
-                const context = viewRef.context;
-                context.table = this.table;
-              }
-            }
-          });
-
         // if we start with an initial value, then update the table cause we didn't do that
         // when it was set (we cant cause we're not init)
         // otherwise just setup the parent.
@@ -200,7 +188,7 @@ export class NegTableDetailRowPluginDirective<T> implements OnDestroy {
       let detailRow = table.registry.getSingle('detailRowParent');
       if (detailRow) {
         this._detailRowDef = detailRow = detailRow.clone();
-        Object.defineProperty(detailRow, 'columns', { enumerable: true,  get: () => table._store.tableRow });
+        Object.defineProperty(detailRow, 'columns', { enumerable: true,  get: () => table.columnApi.visibleColumnIds });
         Object.defineProperty(detailRow, 'when', { enumerable: true,  get: () => this._isDetailRow });
         detailRow.ngOnChanges({ columns: { isFirstChange: () => true, firstChange: true, currentValue: detailRow.columns, previousValue: null }});
       } else if (!this._defaultParentRef) {

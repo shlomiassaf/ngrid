@@ -1,0 +1,106 @@
+import { animationFrameScheduler, Observable, Subject, asapScheduler } from 'rxjs';
+import { auditTime, filter, take, debounceTime } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
+
+import { NegTableExtensionApi } from '../../ext/table-ext-api';
+import { NegMetaRowDefinitions } from '../columns/types';
+import { NegMetaRowDirective } from './meta-row.directive';
+
+function metaRowSectionFactory(): MetaRowSection {
+  return { fixed: [], row: [], sticky: [], all: [] };
+}
+
+export interface MetaRowSection {
+  fixed: Array<{ index: number, rowDef: NegMetaRowDefinitions; el?: HTMLElement; }>;
+  row: Array<{ index: number, rowDef: NegMetaRowDefinitions; el?: HTMLElement; }>;
+  sticky: Array<{ index: number, rowDef: NegMetaRowDefinitions; el?: HTMLElement; }>;
+  all: NegMetaRowDefinitions[];
+}
+
+@Injectable()
+export class NegTableMetaRowService<T = any> {
+  header: MetaRowSection = metaRowSectionFactory();
+  footer: MetaRowSection = metaRowSectionFactory();
+
+  readonly sync: Observable<void>;
+  readonly hzScroll: Observable<number>;
+  private sync$ = new Subject<void>();
+  private hzScroll$ = new Subject<number>();
+
+  constructor(public readonly extApi: NegTableExtensionApi<T>) {
+    this.sync = this.sync$ // TODO: complete
+      .pipe(
+        debounceTime(0, asapScheduler),
+      );
+
+    this.hzScroll = this.hzScroll$.asObservable();
+
+    extApi.onInit(() => {
+      const { table } = extApi;
+      let hzOffset = table.viewport.measureScrollOffset('start');
+      let trackScroll = true;
+      table.viewport.elementScrolled()
+        .pipe(
+          filter( () => trackScroll ),
+          auditTime(0, animationFrameScheduler),
+        )
+        .subscribe(() => {
+          const newOffset = table.viewport.measureScrollOffset('start');
+          if (hzOffset !== newOffset) {
+            this.hzScroll$.next(hzOffset = newOffset);
+          } else if (table.viewport.isScrolling) {
+            trackScroll = false;
+            table.viewport.scrolling
+              .pipe(take(1))
+              .subscribe( () => trackScroll = true );
+          }
+        }, null, () => this.hzScroll$.complete() );
+    });
+  }
+
+  addMetaRow(metaRow: NegMetaRowDirective): void {
+    const { columnStore } = this.extApi;
+    const { header, footer } = columnStore.metaColumnIds;
+
+    const rowDef = metaRow.meta;
+    if (rowDef === columnStore.footerColumnDef) {
+      this.addToSection(this.footer, metaRow, 0);
+    } else if (rowDef === columnStore.headerColumnDef) {
+      this.addToSection(this.header, metaRow, columnStore.metaColumnIds.header.length);
+    } else {
+      let index = header.findIndex( h => h.rowDef === rowDef );
+      if (index > -1) {
+        this.addToSection(this.header, metaRow, index);
+      } else {
+        index = footer.findIndex( h => h.rowDef === rowDef );
+        if (index > -1) {
+          this.addToSection(this.footer, metaRow, index);
+        } else {
+          throw new Error('Invalid operation');
+        }
+      }
+    }
+    this.sync$.next();
+  }
+
+  removeMetaRow(metaRow: NegMetaRowDirective): void {
+    const rowDef = metaRow.meta;
+    let index = this.header.all.indexOf(metaRow.meta);
+    if (index > -1) {
+      this.header.all.splice(index, 1);
+      index = this.header[rowDef.type].findIndex( h => h.rowDef === rowDef );
+      this.header[rowDef.type].splice(index, 1);
+    } else if ( (index = this.footer.all.indexOf(metaRow.meta)) > -1) {
+      this.footer.all.splice(index, 1);
+      index = this.footer[rowDef.type].findIndex( h => h.rowDef === rowDef );
+      this.footer[rowDef.type].splice(index, 1);
+    }
+  }
+
+  private addToSection(section: MetaRowSection, metaRow: NegMetaRowDirective, index: number): void {
+    const rowDef = metaRow.meta;
+    section[rowDef.type].push( { index, rowDef, el: metaRow.elRef.nativeElement } );
+    section.all.push(rowDef);
+  }
+}

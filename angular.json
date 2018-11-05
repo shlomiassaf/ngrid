@@ -150,7 +150,7 @@
           },
           "configurations": {
             "production": {
-              "project": "libs/table/ng-package.prod.json"    
+              "project": "libs/table/ng-package.prod.json"
             }
           }
         },
@@ -296,26 +296,110 @@
         }
       }
     },
-    "demo-apps-table-demo": {
-      "root": "libs/demo-apps/table-demo",
-      "sourceRoot": "libs/demo-apps/table-demo/src",
+    "demo-apps-concepts": {
+      "root": "libs/demo-apps/concepts",
+      "sourceRoot": "libs/demo-apps/concepts/src",
       "projectType": "library",
       "prefix": "neg",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/demo-apps/table-demo/src/test.ts",
-            "tsConfig": "libs/demo-apps/table-demo/tsconfig.spec.json",
-            "karmaConfig": "libs/demo-apps/table-demo/karma.conf.js"
+            "main": "libs/demo-apps/concepts/src/test.ts",
+            "tsConfig": "libs/demo-apps/concepts/tsconfig.spec.json",
+            "karmaConfig": "libs/demo-apps/concepts/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/demo-apps/table-demo/tsconfig.lib.json",
-              "libs/demo-apps/table-demo/tsconfig.spec.json"
+              "libs/demo-apps/concepts/tsconfig.app.json",
+              "libs/demo-apps/concepts/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "demo-apps-features": {
+      "root": "libs/demo-apps/features",
+      "sourceRoot": "libs/demo-apps/features/src",
+      "projectType": "library",
+      "prefix": "neg",
+      "architect": {
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/demo-apps/features/src/test.ts",
+            "tsConfig": "libs/demo-apps/features/tsconfig.spec.json",
+            "karmaConfig": "libs/demo-apps/features/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/demo-apps/features/tsconfig.app.json",
+              "libs/demo-apps/features/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "demo-apps-stories": {
+      "root": "libs/demo-apps/stories",
+      "sourceRoot": "libs/demo-apps/stories/src",
+      "projectType": "library",
+      "prefix": "neg",
+      "architect": {
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/demo-apps/stories/src/test.ts",
+            "tsConfig": "libs/demo-apps/stories/tsconfig.spec.json",
+            "karmaConfig": "libs/demo-apps/stories/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/demo-apps/stories/tsconfig.app.json",
+              "libs/demo-apps/stories/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "demo-apps-demos": {
+      "root": "libs/demo-apps/demos",
+      "sourceRoot": "libs/demo-apps/demos/src",
+      "projectType": "library",
+      "prefix": "neg",
+      "architect": {
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/demo-apps/demos/src/test.ts",
+            "tsConfig": "libs/demo-apps/demos/tsconfig.spec.json",
+            "karmaConfig": "libs/demo-apps/demos/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/demo-apps/demos/tsconfig.app.json",
+              "libs/demo-apps/demos/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -731,6 +815,41 @@
             "tsConfig": [
               "libs/table/material/tsconfig.lib.json",
               "libs/table/material/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "table-drag": {
+      "root": "libs/table/drag",
+      "sourceRoot": "libs/table/drag/src",
+      "projectType": "library",
+      "prefix": "neg",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/table/drag/tsconfig.lib.json",
+            "project": "libs/table/drag/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/table/drag/src/test.ts",
+            "tsConfig": "libs/table/drag/tsconfig.spec.json",
+            "karmaConfig": "libs/table/drag/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/table/drag/tsconfig.lib.json",
+              "libs/table/drag/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

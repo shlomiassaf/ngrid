@@ -20,14 +20,14 @@ export class NegDataSourceFactory<T, TData = any> {
    * The trigger handler is the core of the datasource, responsible for returning the data collection.
    *
    * By default the handler is triggered only when the datasource is required.
-   * This can happend when:
+   * This can happened when:
    *   - The table connected to the datasource.
    *   - A manual call to `NegDataSource.refresh()` was invoked.
    *
-   * There are additional triggers (filter/sort/pagiantion) which occur when their values change, e.g. when
+   * There are additional triggers (filter/sort/pagination) which occur when their values change, e.g. when
    * a filter has change or when a page in the paginator was changed.
    *
-   * By default, these triggeres are handled automatically, resulting in a client-side behaviour for each of them.
+   * By default, these triggers are handled automatically, resulting in a client-side behavior for each of them.
    * For example, a client side paginator will move to the next page based on an already existing data collection (no need to fetch from the server).
    *
    * To handle additional trigger you need to explicitly set them using `setCustomTriggers`.

@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./cell-edit.component.md" ],
+  "codeRef": [
+    {
+      "file": "./cell-edit.component.ts",
+      "section": ["ex-1", "ex-2", "ex-3"]
+    },
+    {
+      "file": "./cell-edit.component.md",
+      "lang": "html",
+      "section": ["ex-1", "ex-2", "ex-3"]
+    }
+  ]
+}

@@ -20,7 +20,7 @@ const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'neg-table-header-ce
 
 declare module '@neg/table/lib/table/services/config' {
   interface NegTableConfig {
-    transposePlugin: {
+    transposePlugin?: {
       header?: Partial<NegColumnDefinition>;
       defaultCol?: Partial<NegColumnDefinition>;
       matchTemplates?: boolean;
@@ -163,12 +163,12 @@ export class NegTableTransposePluginDirective implements OnChanges, OnDestroy {
         local.footer = prev.footer;
         local[LOCAL_COLUMN_DEF] = true;
 
-        this.table.invalidateHeader();
+        this.table.invalidateColumns();
 
         const matchTemplates = coerceBooleanProperty(this.matchTemplates);
         const { prop } = this._header;
         let currentColumn: NegColumn;
-        for (const c of this.table._store.table) {
+        for (const c of this.table.columnApi.visibleColumns) {
           if (c.orgProp === prop) {
             c.getValue = (row: NegColumn) => {
               currentColumn = row;
@@ -189,14 +189,14 @@ export class NegTableTransposePluginDirective implements OnChanges, OnDestroy {
     this.tableState = new TransposeTableSession(
       this.table,
       this.pluginCtrl,
-      () => this.updateColumns(this.table._store.table),
+      () => this.updateColumns(this.table.columnApi.visibleColumns),
       sourceFactoryWrapper,
     );
 
     if (refreshDataSource) {
-      this.table.dataSource.refresh();
-    } else if (this.table.dataSource.length > 0) {
-      this.table.dataSource.refresh(VIRTUAL_REFRESH);
+      this.table.ds.refresh();
+    } else if (this.table.ds.length > 0) {
+      this.table.ds.refresh(VIRTUAL_REFRESH);
     }
   }
 
@@ -211,7 +211,8 @@ export class NegTableTransposePluginDirective implements OnChanges, OnDestroy {
       }
     }
     if (!this.selfColumn) {
-      this.selfColumn = new NegColumn(this._header);
+      // TODO: don't assume columns[0]
+      this.selfColumn = new NegColumn(this._header, this.pluginCtrl.extApi.columnStore.groupStore);
     }
   }
 }

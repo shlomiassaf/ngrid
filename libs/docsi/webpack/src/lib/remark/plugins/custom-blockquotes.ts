@@ -18,6 +18,10 @@ export function customBlockquotes({ mapping }) {
 
       if (className) {
         node.type = 'blockquote';
+        node.children.unshift({
+          type: 'html',
+          value: '<div class="icon-location"></div>'
+        })
         node.data = {
           hName: 'blockquote',
           hProperties: {

@@ -1,8 +1,9 @@
-import { Observable, BehaviorSubject, Subject, of } from 'rxjs';
-import { mapTo, skip } from 'rxjs/operators';
+import { Observable, BehaviorSubject, Subject, of, asapScheduler } from 'rxjs';
+import { mapTo, skip, observeOn, tap } from 'rxjs/operators';
 
 import { SelectionModel, CollectionViewer, ListRange } from '@angular/cdk/collections';
 import { DataSource } from '@angular/cdk/table';
+import { moveItemInArray } from '@angular/cdk/drag-drop';
 
 import { KillOnDestroy } from '../table/utils';
 import { NegColumn } from '../table/columns';
@@ -10,8 +11,10 @@ import { NegTablePaginatorKind, NegPaginator, NegPagingPaginator, NegTokenPagina
 import { DataSourceFilter, DataSourceFilterToken, NegTableSortDefinition, NegTableDataSourceSortChange } from './types';
 import { createFilter } from './filtering';
 import { NegDataSourceAdapter } from './data-source-adapter';
+import { NegDataSourceTriggerCache, NegDataSourceTriggerChangedEvent } from './data-source-adapter.types';
 
 export type DataSourceOf<T> = T[] | Promise<T[]> | Observable<T[]>;
+
 const PROCESSING_SUBSCRIPTION_GROUP = {};
 
 export interface NegDataSourceOptions {
@@ -56,7 +59,7 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
    */
   readonly onSourceChanged: Observable<void>;
   get onSourceChanging(): Observable<void> { return this._adapter.onSourceChanging; }
-  readonly onViewDataChanging: Observable<T[]>;
+  readonly onRenderDataChanging: Observable<{ event: NegDataSourceTriggerChangedEvent<TData>, data: T[] }>;
   readonly onRenderedDataChanged: Observable<void>;
   readonly onError: Observable<Error>;
   /**
@@ -90,6 +93,9 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
 
   get sort(): NegTableDataSourceSortChange { return this._sort$.value; }
 
+  /** Returns the starting index of the rendered data */
+  get renderStart(): number { return this._lastRange ? this._lastRange.start : 0; }
+
   get renderedData(): T[] { return this._renderData$.value; }
 
   get filter(): DataSourceFilter { return this._filter$.value; }
@@ -111,7 +117,7 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
 
   protected readonly _selection = new SelectionModel<T>(true, []);
   protected readonly _tableConnectionChange$ = new Subject<boolean>();
-  protected readonly _onViewDataChanging$ = new Subject<T[]>();
+  protected readonly _onRenderDataChanging = new Subject<{ event: NegDataSourceTriggerChangedEvent<TData>, data: T[] }>();
   protected readonly _renderData$ = new BehaviorSubject<T[]>([]);
   protected readonly _filter$: BehaviorSubject<DataSourceFilter> = new BehaviorSubject<DataSourceFilter>(undefined);
   protected readonly _sort$ = new BehaviorSubject<NegTableDataSourceSortChange>({ column: null, sort: null });
@@ -125,6 +131,7 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
   private _disposed: boolean;
   private _tableConnected: boolean;
   private _lastRefresh: TData;
+  private _lastRange: ListRange;
 
   constructor(adapter: NegDataSourceAdapter<T, TData>, options?: NegDataSourceOptions) {
     super();
@@ -133,8 +140,12 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
     this.adapter = adapter;
 
     // emit source changed event every time adapter gets new data
-    this.onSourceChanged = this.adapter.onSourceChanged.pipe(mapTo(undefined));
-    this.onViewDataChanging = this._onViewDataChanging$.asObservable();
+    this.onSourceChanged = this.adapter.onSourceChanged
+    .pipe(
+      observeOn(asapScheduler, 0), // emit on the end of the current turn (microtask) to ensure `onSourceChanged` emission in `_updateProcessingLogic` run's first.
+      mapTo(undefined)
+    );
+    this.onRenderDataChanging = this._onRenderDataChanging.asObservable();
     this.onRenderedDataChanged = this._renderData$.pipe(skip(1), mapTo(undefined));
     this.onError = this._onError$.asObservable();
     this.tableConnectionChange = this._tableConnectionChange$.asObservable();
@@ -171,7 +182,7 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
     if (!this._disposed) {
       KillOnDestroy.kill(this);
       this._adapter.dispose();
-      this._onViewDataChanging$.complete();
+      this._onRenderDataChanging.complete();
       this._renderData$.complete();
       this._filter$.complete();
       this._sort$.complete();
@@ -198,40 +209,76 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
     return this._renderData$;
   }
 
+  /**
+   * Move's an item (in the entire source) from one index to the other, pushing the item in the destination one item backwards.
+   * Note that if the rendered data is a subset of the entire source (i.e virtual scroll & range) the indices are considered
+   * local to the rendered view and are translated to fir the entire source.
+   * @param fromIndex
+   * @param toIndex
+   */
+  moveItem(fromIndex: number, toIndex: number): void {
+    if (this._lastRange) {
+      fromIndex = this._lastRange.start + fromIndex;
+      toIndex = this._lastRange.start + toIndex;
+    }
+
+    if (this.length > 0) {
+      moveItemInArray(this._source, fromIndex, toIndex)
+      const data = this._lastRange
+        ? this._source.slice(this._lastRange.start, this._lastRange.end)
+        : this._source
+      ;
+      this._renderData$.next(data);
+    }
+  }
+
   private _updateProcessingLogic(cv: CollectionViewer): void {
-    const pagination = this._paginator ? this._paginator.onChange : of(undefined);
-    const stream = this._adapter.updateProcessingLogic(this._filter$, this._sort$, pagination);
+    const initialState: Partial<NegDataSourceTriggerCache<TData>> = { filter: this.filter,  sort: this.sort };
+    const paginator = this._paginator;
+    if (paginator) {
+      initialState.pagination = { page: paginator.page, perPage: paginator.perPage };
+    }
+    const stream = this._adapter.updateProcessingLogic(
+      this._filter$,
+      this._sort$,
+      paginator ? paginator.onChange : of(undefined),
+      initialState,
+    );
 
     KillOnDestroy.kill(this, PROCESSING_SUBSCRIPTION_GROUP)
 
     const trimToRange = (range: ListRange, data: any[]) => data.slice(range.start, range.end) ;
 
-    let lastRange: ListRange;
     let skipViewChange: boolean;
+    let lastEmittedSource: T[];
 
     cv.viewChange
       .pipe(KillOnDestroy(this, PROCESSING_SUBSCRIPTION_GROUP))
       .subscribe( range => {
-        if (lastRange && lastRange.start === range.start && lastRange.end === range.end) {
+        if (this._lastRange && this._lastRange.start === range.start && this._lastRange.end === range.end) {
           return;
         }
-        lastRange = range;
+        this._lastRange = range;
         if (!skipViewChange) {
-          const data = this.source;
-          if (range && data && data.length) {
-            this._renderData$.next(trimToRange(lastRange, data));
+          if (range && lastEmittedSource && lastEmittedSource.length) {
+            this._renderData$.next(trimToRange(this._lastRange, lastEmittedSource));
           }
         }
       });
 
     stream
-      .pipe(KillOnDestroy(this, PROCESSING_SUBSCRIPTION_GROUP))
-      .subscribe(
-        data => {
+      .pipe(
+        KillOnDestroy(this, PROCESSING_SUBSCRIPTION_GROUP),
+        tap( result => {
+          lastEmittedSource = result.data;
           skipViewChange = true;
-          this._onViewDataChanging$.next(data);
-          if (lastRange && data && data.length) {
-            data = trimToRange(lastRange, data);
+          this._onRenderDataChanging.next(result);
+        })
+      )
+      .subscribe(
+        ({data}) => {
+          if (this._lastRange && data && data.length) {
+            data = trimToRange(this._lastRange, data);
           }
           this._renderData$.next(data);
           skipViewChange = false;

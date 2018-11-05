@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es6",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "types": [
+      "node"
+    ]
+  },
+  "files": [
+    "libs/shared/src/lib/datastore/datasource.store-service-worker.ts",
+    "libs/shared/src/lib/datastore/service-worker.d.ts"
+  ]
+}

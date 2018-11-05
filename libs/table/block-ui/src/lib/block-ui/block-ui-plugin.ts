@@ -124,12 +124,12 @@ export class NegTableBlockUiPluginDirective<T> implements OnDestroy {
       if (!this._blockerEmbeddedVRef) {
         const blockerTemplate = this.table.registry.getSingle('blocker');
         if (blockerTemplate) {
-          this._blockerEmbeddedVRef = this.table.createView('after', blockerTemplate.tRef, { $implicit: this.table });
+          this._blockerEmbeddedVRef = this.table.createView('afterContent', blockerTemplate.tRef, { $implicit: this.table });
           this._blockerEmbeddedVRef.detectChanges();
         }
       }
     } else if (this._blockerEmbeddedVRef) {
-      this.table.removeView(this._blockerEmbeddedVRef, 'after');
+      this.table.removeView(this._blockerEmbeddedVRef, 'afterContent');
       this._blockerEmbeddedVRef = undefined;
     }
   }

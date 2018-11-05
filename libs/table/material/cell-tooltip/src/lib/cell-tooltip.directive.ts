@@ -143,7 +143,7 @@ export class NegTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
       .pipe(KillOnDestroy(this))
       .subscribe( event => this.cellEnter(event) );
 
-      targetEventsPlugin.cellLeave
+    targetEventsPlugin.cellLeave
       .pipe(KillOnDestroy(this))
       .subscribe( event => this.cellLeave(event) );
   }

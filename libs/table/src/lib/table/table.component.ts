@@ -1,4 +1,5 @@
-import { first } from 'rxjs/operators';
+import { asapScheduler, animationFrameScheduler } from 'rxjs';
+import { filter, take, tap, observeOn, switchMap, map, mapTo, startWith, pairwise } from 'rxjs/operators';
 import {
   AfterViewInit,
   Component,
@@ -22,24 +23,19 @@ import {
   isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck
 } from '@angular/core';
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
+import { EXT_API_TOKEN, NegTableExtensionApi } from '../ext/table-ext-api';
 import { NegTablePluginController, NegTablePluginContext } from '../ext/plugin-control';
 import { NegTablePaginatorKind } from '../paginator';
-import { NegCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { NegDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { NegCdkTableComponent } from './neg-cdk-table/neg-cdk-table.component';
-import { updateColumnWidths, KillOnDestroy } from './utils';
+import { resetColumnWidths, KillOnDestroy } from './utils';
 import { findCellDef } from './directives/cell-def';
-import { NegColumnSizeInfo } from './types';
-import {
-  NegTableCellTemplateContext,
-  NegTableMetaCellTemplateContext,
-  NegColumn,
-  NegColumnStore, NegMetaColumnStore, NegTableColumnSet, NegTableColumnDefinitionSet,
-} from './columns';
-import { NegTableRegistryService } from './table-registry.service';
+import { NegColumn, NegColumnStore, NegMetaColumnStore, NegTableColumnSet, NegTableColumnDefinitionSet } from './columns';
+import { NegTableCellContext, NegTableMetaCellContext, ContextApi } from './context/index';
+import { NegTableRegistryService } from './services/table-registry.service';
 import { NegTableConfigService } from './services/config';
 import {
   DynamicColumnWidthLogic,
@@ -47,30 +43,41 @@ import {
   DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY,
   DYNAMIC_MARGIN_BOX_MODEL_SPACE_STRATEGY
 } from './col-width-logic/dynamic-column-width';
+import { ColumnApi, AutoSizeToFitOptions } from './column-api';
+import { NegCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
+import { NegTableMetaRowService } from './meta-rows';
 
-const HIDE_MAIN_HEADER_ROW_STYLE = { height: 0, minHeight: 0, margin: 0, border: 'none', visibility: 'collapse' };
-
-export function pluginControllerFactory(table: { _plugin: NegTablePluginContext; }) {
-  return table._plugin.controller;
-}
+export function internalApiFactory(table: { _extApi: NegTableExtensionApi; }) { return table._extApi; }
+export function pluginControllerFactory(table: { _plugin: NegTablePluginContext; }) { return table._plugin.controller; }
+export function metaRowServiceFactory(table: { _extApi: NegTableExtensionApi; }) { return table._extApi.metaRowService; }
 
 @Component({
   selector: 'neg-table',
+  host: { // tslint:disable-line:use-host-property-decorator
+    '[class.neg-table-empty]': '!ds || ds.renderLength === 0',
+  },
   templateUrl: './table.component.html',
   styleUrls: [ './table.component.scss' ],
-  host: { // tslint:disable-line:use-host-property-decorator
-    '[class.neg-table-empty]': '!dataSource || dataSource.renderLength === 0',
-  },
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   providers: [
     NegTableRegistryService,
     {
       provide: NegTablePluginController,
       useFactory: pluginControllerFactory,
       deps: [forwardRef(() => NegTableComponent)],
+    },
+    {
+      provide: EXT_API_TOKEN,
+      useFactory: internalApiFactory,
+      deps: [forwardRef(() => NegTableComponent)],
+    },
+    {
+      provide: NegTableMetaRowService,
+      useFactory: metaRowServiceFactory,
+      deps: [forwardRef(() => NegTableComponent)],
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 @KillOnDestroy()
 export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
@@ -96,7 +103,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
         // This is managed through binding in `NegCdkTableComponent`.
         // After this change we need to measure the cell's width again so we trigger a resizeRows call.
         // We must run it deferred to allow binding to commit.
-        this.ngZone.onStable.pipe(first()).subscribe( () => this.resizeRows(this._store.table.map( c => c.sizeInfo ))  );
+        this.ngZone.onStable.pipe(take(1)).subscribe( () => this.resizeColumns() );
       }
     }
   }
@@ -107,15 +114,11 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
    * Show/Hide the header row.
    * Default: true
    */
-  @Input() get showHeader(): boolean { return !this._mainHeaderRowStyle; };
+  @Input() get showHeader(): boolean { return this._showHeader; };
   set showHeader(value: boolean) {
-    /* The header row is always rendered, show/hide is implemented through CSS.
-       This is required because width alignment is based on the cell's of the header row. */
-    value = coerceBooleanProperty(value);
-    // we want _mainHeaderRowStyle to exist when value is false and vice versa.
-    this._mainHeaderRowStyle = value ? undefined : HIDE_MAIN_HEADER_ROW_STYLE;
+    this._showHeader = coerceBooleanProperty(value);
   }
-  _mainHeaderRowStyle: any;
+  _showHeader = true;
 
   /**
    * Show/Hide the footer row.
@@ -123,12 +126,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
    */
   @Input() get showFooter(): boolean { return this._showFooter; };
   set showFooter(value: boolean) {
-    // When false, the footer row is not rendered, unlike the header row which is always rendered.
-    value = coerceBooleanProperty(value);
-    if (this._showFooter !== value) {
-      this._showFooter = value;
-      this.resetFooterRowDefs();
-    }
+    this._showFooter = coerceBooleanProperty(value);
   }
   _showFooter: boolean;
 
@@ -141,45 +139,52 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
    */
   @Input() focusMode: 'row' | 'cell' | 'none' | '' | false | undefined;
 
-  @Input() get dataSourceOf(): DataSourceOf<T> { return this._dataSourceOf }
-  set dataSourceOf(value: DataSourceOf<T>) {
-    this._dataSourceOf = value
-    if (value && !this.dataSource) {
-      this.dataSource = createDS<T>().onTrigger( () => this._dataSourceOf || [] ).create();
+  /**
+   * The name of the property that points to a UID on the object.
+   * If not the, the table will use it's own identifier.
+   *
+   * Note that when not set some features might not work, especially around context state.
+   */
+  @Input() identityProp: string;
+
+  /**
+   * The table's source of data, which can be provided in 2 ways:
+   *
+   * - DataSourceOf<T>
+   * - NegDataSource<T>
+   *
+   * The table only works with `NegDataSource<T>`, `DataSourceOf<T>` is a shortcut for providing
+   * the data array directly.
+   *
+   * `DataSourceOf<T>` can be:
+   *
+   * - Simple data array (each object represents one table row)
+   * - Promise for a data array
+   * - Stream that emits a data array each time the array changes
+   *
+   * When a `DataSourceOf<T>` is provided it is converted into an instance of `NegDataSource<T>`.
+   *
+   * To access the `NegDataSource<T>` instance use the `ds` property (readonly).
+   *
+   * It is highly recommended to use `NegDataSource<T>` directly, the datasource factory makes it easy.
+   * For example, when an array is provided the factory is used to convert it to a datasource:
+   *
+   * ```typescript
+   * const collection: T[] = [];
+   * const negDataSource = createDS<T>().onTrigger( () => collection ).create();
+   * ```
+   *
+   * > This is a write-only (setter) property that triggers the `setDataSource` method.
+   */
+  @Input() set dataSource(value: NegDataSource<T> | DataSourceOf<T>) {
+    if (value instanceof NegDataSource) {
+      this.setDataSource(value);
+    } else {
+      this.setDataSource(createDS<T>().onTrigger( () => value || [] ).create());
     }
   }
 
-  @Input() get dataSource(): NegDataSource<T> { return this._dataSource };
-  set dataSource(value: NegDataSource<T>) {
-    if (this._dataSource !== value) {
-      this.setupPaginator();
-
-      // KILL ALL subscriptions for the previous datasource.
-      if (this._dataSource) {
-        KillOnDestroy.kill(this, this._dataSource);
-      }
-
-      const prev = this._dataSource;
-      this._dataSource = this._cdkTable.dataSource = value;
-      this._plugin.emitEvent({
-        kind: 'onDataSource',
-        prev,
-        curr: value
-      });
-
-      if ( value ) {
-        if (isDevMode()) {
-          value.onError
-            .pipe(KillOnDestroy(this, value))
-            .subscribe(console.error.bind(console));
-        }
-        value.onRenderedDataChanged
-          .pipe(KillOnDestroy(this, value))
-          .subscribe( () => this.setupNoData() )
-        // value.pagination = !!this._pagination;
-      }
-    }
-  }
+  get ds(): NegDataSource<T> { return this._dataSource; };
 
   @Input() get usePagination(): NegTablePaginatorKind | false { return this._pagination; }
   set usePagination(value: NegTablePaginatorKind | false) {
@@ -188,10 +193,10 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     }
     if ( value !== this._pagination ) {
       this._pagination = value;
-      if (this.dataSource) {
-        this.dataSource.pagination = value;
-        if (this.dataSource.paginator) {
-          this.dataSource.paginator.noCacheMode = this._noCachePaginator;
+      if (this.ds) {
+        this.ds.pagination = value;
+        if (this.ds.paginator) {
+          this.ds.paginator.noCacheMode = this._noCachePaginator;
         }
       }
       this.setupPaginator();
@@ -202,8 +207,8 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     value = coerceBooleanProperty(value);
     if (this._noCachePaginator !== value) {
       this._noCachePaginator = value;
-      if (this.dataSource && this.dataSource.paginator) {
-        this.dataSource.paginator.noCacheMode = value;
+      if (this.ds && this.ds.paginator) {
+        this.ds.paginator.noCacheMode = value;
       }
     }
   }
@@ -218,29 +223,63 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     this._hideColumnsDirty = true;
   }
 
+  /**
+   * A fallback height for "the inner scroll container".
+   * The fallback is used only when it LOWER than the rendered height, so no empty gaps are created when setting the fallback.
+   *
+   * The "inner scroll container" is the area in which all data rows are rendered and all meta (header/footer) rows that are of type "row" or "sticky".
+   * The "inner scroll container" is defined to consume all the height left after all external objects are rendered.
+   * External objects can be fixed meta rows (header/footer), pagination row, action row etc...
+   *
+   * If the table does not have a height (% or px) the "inner scroll container" will always have no height (0).
+   * If the table has a height, the "inner scroll container" will get the height left, which can also be 0 if there are a lot of external objects.
+   *
+   * To solve the no-height problem we use the fallbackMinHeight property.
+   *
+   * When virtual scroll is disabled and fallbackMinHeight is not set the table will set the "inner scroll container" height to show all rows.
+   *
+   * Note that when using a fixed (px) height for the table, if the height of all external objects + the height of the "inner scroll container" is greater then
+   * the table's height a vertical scroll bar will show.
+   * If the "inner scroll container"s height will be lower then it's rendered content height and additional vertical scroll bar will appear, which is, usually, not good.
+   *
+   * To avoid this, don't use fallbackMinHeight together with a fixed height for the table. Instead use fallbackMinHeight together with a min height for the table.
+   */
+  @Input() get fallbackMinHeight(): number { return this._fallbackMinHeight; }
+  set fallbackMinHeight(value: number) {
+    value = coerceNumberProperty(value);
+    if (this._fallbackMinHeight !== value) {
+      this._fallbackMinHeight = value;
+    }
+  }
+
   rowFocus: 0 | '' = '';
   cellFocus: 0 | '' = '';
 
+  private _fallbackMinHeight = 0;
   private _dataSource: NegDataSource<T>;
-  private _dataSourceOf: DataSourceOf<T>;
 
-  @ViewChild(NegCdkVirtualScrollViewportComponent) viewport: NegCdkVirtualScrollViewportComponent;
-  @ViewChild('beforeContent', { read: ViewContainerRef}) _vcRefBefore: ViewContainerRef;
-  @ViewChild('afterContent', { read: ViewContainerRef}) _vcRefAfter: ViewContainerRef;
-  @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<NegTableCellTemplateContext<T>>;
-  @ViewChild('fbHeaderCell', { read: TemplateRef}) _fbHeaderCell: TemplateRef<NegTableMetaCellTemplateContext<T>>;
-  @ViewChild('fbFooterCell', { read: TemplateRef}) _fbFooterCell: TemplateRef<NegTableMetaCellTemplateContext<T>>;
+  @ViewChild('beforeTable', { read: ViewContainerRef}) _vcRefBeforeTable: ViewContainerRef;
+  @ViewChild('beforeContent', { read: ViewContainerRef}) _vcRefBeforeContent: ViewContainerRef;
+  @ViewChild('afterContent', { read: ViewContainerRef}) _vcRefAfterContent: ViewContainerRef;
+  @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<NegTableCellContext<T>>;
+  @ViewChild('fbHeaderCell', { read: TemplateRef}) _fbHeaderCell: TemplateRef<NegTableMetaCellContext<T>>;
+  @ViewChild('fbFooterCell', { read: TemplateRef}) _fbFooterCell: TemplateRef<NegTableMetaCellContext<T>>;
   @ViewChild(CdkRowDef) _tableRowDef: CdkRowDef<T>;
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
 
+  get metaColumnIds(): NegColumnStore['metaColumnIds'] { return this._store.metaColumnIds; }
+  get metaColumns(): NegColumnStore['metaColumns'] { return this._store.metaColumns; }
+  get columnRowDef() { return { header: this._store.headerColumnDef, footer: this._store.footerColumnDef }; }
   /**
    * True when the component is initialized (after AfterViewInit)
    */
   readonly isInit: boolean;
+  readonly columnApi: ColumnApi<T>;
+  get viewport(): NegCdkVirtualScrollViewportComponent | undefined { return this._viewport; }
 
   _cdkTable: NegCdkTableComponent<T>;
-  _store: NegColumnStore = new NegColumnStore();
+  private _store: NegColumnStore = new NegColumnStore();
   private _hideColumnsDirty: boolean;
   private _hideColumns: string[];
   private _colHideDiffer: IterableDiffer<string>;
@@ -249,12 +288,12 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   private _pagination: NegTablePaginatorKind | false;
   private _noCachePaginator = false;
   private _minimumRowWidth: string;
-
+  private _viewport?: NegCdkVirtualScrollViewportComponent;
   private _plugin: NegTablePluginContext;
+  private _extApi: NegTableExtensionApi<T>;
 
-  constructor(injector: Injector,
-              vcRef: ViewContainerRef,
-              elRef: ElementRef<any>,
+  constructor(injector: Injector, vcRef: ViewContainerRef,
+              private elRef: ElementRef<HTMLElement>,
               private differs: IterableDiffers,
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
@@ -265,20 +304,9 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     this.showHeader = tableConfig.showHeader;
     this.showFooter = tableConfig.showFooter;
 
-    // Create an injector for the extensions/plugins
-    // This injector allow plugins (that choose so) to provide a factory function for runtime use.
-    // I.E: as if they we're created by angular via template...
-    // This allows seamless plugin-to-plugin dependencies without requiring specific template syntax.
-    // And also allows auto plugin binding (app wide) without the need for template syntax.
-    const pluginInjector = Injector.create({
-      providers: [
-        { provide: ViewContainerRef, useValue: vcRef },
-        { provide: ElementRef, useValue: cdr },
-        { provide: ChangeDetectorRef, useValue: elRef },
-      ],
-      parent: injector,
-    });
-    this._plugin = new NegTablePluginContext(this, pluginInjector);
+    this.initExtApi();
+    this.columnApi = new ColumnApi<T>(this, this._store, this._extApi);
+    this.initPlugins(injector, elRef, vcRef);
   }
 
   ngDoCheck(): void {
@@ -342,20 +370,17 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   }
 
   ngAfterViewInit(): void {
-    this.invalidateHeader();
-
-    // after invalidating the headers we now have optional header/headerGroups/footer rows added
-    // we need to update the template with this data which will create new rows (header/footer)
-    this.resetHeaderRowDefs();
-    this.resetFooterRowDefs();
+    this.invalidateColumns();
 
     Object.defineProperty(this, 'isInit', { value: true });
     this._plugin.emitEvent({ kind: 'onInit' });
 
     this.setupPaginator();
-    if (this.viewport.enabled) {
-      this._cdkTable.attachViewPort(this.viewport);
-    }
+
+    // Adding a div before the footer row view reference, this div will be used to fill up the space between header & footer rows
+    const div = document.createElement('div');
+    div.classList.add('neg-table-empty-spacer')
+    this._cdkTable._element.insertBefore(div, this._cdkTable._footerRowOutlet.elementRef.nativeElement);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -371,14 +396,13 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     }
 
     if ( processColumns === true ) {
-      this.invalidateHeader();
-      this._cdkTable.syncRows();
+      this.invalidateColumns();
     }
   }
 
   ngOnDestroy(): void {
     this._plugin.destroy();
-    if (this.viewport) {
+    if (this._viewport) {
       this._cdkTable.detachViewPort();
     }
   }
@@ -387,53 +411,201 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     return index;
   }
 
+  setDataSource(value: NegDataSource<T>): void {
+    if (this._dataSource !== value) {
+      this.setupPaginator();
+      this.setupNoData(false);
+
+      // KILL ALL subscriptions for the previous datasource.
+      if (this._dataSource) {
+        KillOnDestroy.kill(this, this._dataSource);
+      }
+
+      const prev = this._dataSource;
+      this._dataSource = value;
+      this._cdkTable.dataSource = value as any;
+
+      this._plugin.emitEvent({
+        kind: 'onDataSource',
+        prev,
+        curr: value
+      });
+
+      if ( value ) {
+        if (isDevMode()) {
+          value.onError.pipe(KillOnDestroy(this, value)).subscribe(console.error.bind(console));
+        }
+
+        // Run CD, scheduled as a micro-task, after each rendering
+        value.onRenderDataChanging
+          .pipe(
+            filter( ({event}) => !event.isInitial && (event.pagination.changed || event.sort.changed || event.filter.changed)),
+            // Context between the operations are not supported at the moment
+            // Event for client side operations...
+            tap( () => !this.identityProp && this._extApi.contextApi.clear() ),
+            switchMap( () => value.onRenderedDataChanged.pipe(take(1), mapTo(this.ds.renderLength)) ),
+            observeOn(asapScheduler),
+            KillOnDestroy(this, value)
+          )
+          .subscribe( previousRenderLength => {
+            // If the number of rendered items has changed the table will update the data and run CD on it.
+            // so we only update the rows.
+            const { cdkTable } = this._extApi;
+            if (previousRenderLength === this.ds.renderLength) {
+              cdkTable.syncRows(true);
+            } else {
+              cdkTable.syncRows('header', true);
+              cdkTable.syncRows('footer', true);
+            }
+          });
+
+        // Handling no data overlay
+        // Handling fallback minimum height.
+        value.onRenderedDataChanged
+          .pipe(
+            map( () => this.ds.renderLength ),
+            startWith(null),
+            pairwise(),
+            tap( ([prev, curr]) => {
+              if (prev !== curr && (prev === 0 || curr === 0)) {
+                this.setupNoData();
+              }
+            }),
+            observeOn(animationFrameScheduler), // ww want to give the browser time to remove/add rows
+            KillOnDestroy(this, value)
+          )
+          .subscribe(() => {
+            const el = this.viewport.elementRef.nativeElement;
+            if (this.ds.renderLength > 0 && this._fallbackMinHeight > 0) {
+              const h = Math.min(this._fallbackMinHeight, this.viewport.measureRenderedContentSize());
+              el.style.minHeight = h + 'px';
+            } else {
+              // TODO: When viewport is disabled, we can skip the call to measureRenderedContentSize() and let the browser
+              // do the job by setting `contain: unset` in `neg-cdk-virtual-scroll-viewport`
+              el.style.minHeight = this.viewport.enabled ? null : this.viewport.measureRenderedContentSize() + 'px';
+            }
+          });
+      }
+    }
+  }
+
   /**
    * Invalidates the header, including a full rebuild of column headers
    */
-  invalidateHeader(): void {
+  invalidateColumns(): void {
+    const rebuildRows = this._store.allColumns.length > 0;
     this._store.invalidate(this.columns);
     this.attachCustomCellTemplates();
     this.attachCustomHeaderCellTemplates();
     this.cdr.markForCheck();
     this.cdr.detectChanges();
+
+    // after invalidating the headers we now have optional header/headerGroups/footer rows added
+    // we need to update the template with this data which will create new rows (header/footer)
     this.resetHeaderRowDefs();
     this.resetFooterRowDefs();
+
+    this.cdr.markForCheck();
+
+    /*  Now we will force clearing all data rows and creating them back again if this is not the first time we invalidate the columns...
+
+        Why? first, some background:
+
+        Invalidating the store will result in new `NegColumn` instances (cloned or completely new) held inside a new array (all arrays in the store are re-created on invalidate)
+        New array and new instances will also result in new directive instances of `NegTableColumnDef` for every column.
+
+        Each data row has data cells with the `NegTableCellDirective` directive (`neg-table-cell`).
+        `NegTableCellDirective` has a reference to `NegTableColumnDef` through dependency injection, i.e. it will not update through change detection!
+
+        Now, the problem:
+        The `CdkTable` will cache rows and their cells, reusing them for performance.
+        This means that the `NegTableColumnDef` instance inside each cell will not change.
+        So, creating new columns and columnDefs will result in stale cells with reference to dead instances of `NegColumn` and `NegTableColumnDef`.
+
+        One solution is to refactor `NegTableCellDirective` to get the `NegTableColumnDef` through data binding.
+        While this will work it will put more work on each cell while doing CD and will require complex logic to handle each change because `NegTableCellDirective`
+        also create a context which has reference to a column thus a new context is required.
+        Keeping track for all references will be difficult and bugs are likely to occur, which are hard to track.
+
+        The simplest solution is to force the table to render all data rows from scratch which will destroy the cache and all cell's with it, creating new one's with proper reference.
+
+        The simple solution is currently preferred because:
+
+        - It is easier to implement.
+        - It is easier to assess the impact.
+        - It effects a single operation (changing to resetting columns) that rarely happen
+
+        The only issue is with the `CdkTable` encapsulating the method `_forceRenderDataRows()` which is what we need.
+        The workaround is to assign `multiTemplateDataRows` with the same value it already has, which will cause `_forceRenderDataRows` to fire.
+        `multiTemplateDataRows` is a getter that triggers `_forceRenderDataRows` without checking the value changed, perfect fit.
+        There is a risk with `multiTemplateDataRows` being changed...
+     */
+    if (rebuildRows) {
+      this._cdkTable.multiTemplateDataRows = this._cdkTable.multiTemplateDataRows;
+    }
     this._plugin.emitEvent({ kind: 'onInvalidateHeaders' });
   }
 
-  resizeRows(data: NegColumnSizeInfo[]): void {
-    // stores and calculates width for columns added to it. Aggregate's the total width of all added columns.
-    const rowWidth = new DynamicColumnWidthLogic(this._cellWidthLogic);
+  /**
+   * Updates the column sizes for all columns in the table based on the column definition metadata for each column.
+   * The final width represent a static width, it is the value as set in the definition (except column without width, where the calculated global width is set).
+   */
+  resetColumnsWidth(options?: { tableMarkForCheck?: boolean; metaMarkForCheck?: boolean; }): void {
+    resetColumnWidths(this._store.getStaticWidth(), this._store.columns, this._store.metaColumns, options);
+  }
+
+  /**
+   * Update the size of all group columns in the table based on the size of their visible children (not hidden).
+   * @param dynamicWidthLogic Optional logic container, if not set a new one is created.
+   */
+  syncColumnGroupsSize(dynamicWidthLogic?: DynamicColumnWidthLogic): void {
+    if (!dynamicWidthLogic) {
+      dynamicWidthLogic = this._extApi.dynamicColumnWidthFactory();
+    }
 
     // From all meta columns (header/footer/headerGroup) we filter only `headerGroup` columns.
     // For each we calculate it's width from all of the columns that the headerGroup "groups".
     // We use the same strategy and the same RowWidthDynamicAggregator instance which will prevent duplicate calculations.
     // Note that we might have multiple header groups, i.e. same columns on multiple groups with different row index.
-    for (const m of this._store.meta) {
-      const g = m.headerGroup;
-      if (g) {
-        if (g.isVisible) {
-          const cols = data.filter( d => !d.column.hidden && d.column.isInGroup(g) );
-          const groupWidth = rowWidth.addGroup(cols);
-          g.updateWidth(`${groupWidth}px`);
-        } else {
-          g.updateWidth(`0px`);
-        }
+    for (const g of this._store.getAllHeaderGroup()) {
+      // We go over all columns because g.columns does not represent the current owned columns of the group
+      // it is static, representing the initial state.
+      // Only columns hold their group owners.
+      // TODO: find way to improve iteration
+      const colSizeInfos = this._store.columns.filter( c => !c.hidden && c.isInGroup(g)).map( c => c.sizeInfo );
+      if (colSizeInfos.length > 0) {
+        const groupWidth = dynamicWidthLogic.addGroup(colSizeInfos);
+        g.minWidth = groupWidth;
+        g.updateWidth(`${groupWidth}px`);
+      } else {
+        g.minWidth = undefined;
+        g.updateWidth(`0px`);
+      }
+      if (g.columnDef) {
         g.columnDef.markForCheck();
       }
     }
+  }
+
+  resizeColumns(columns?: NegColumn[]): void {
+    if (!columns) {
+      columns = this._store.columns;
+    }
+
+    // stores and calculates width for columns added to it. Aggregate's the total width of all added columns.
+    const rowWidth = this._extApi.dynamicColumnWidthFactory();
+    this.syncColumnGroupsSize(rowWidth);
 
     // if this is a table without groups
     if (rowWidth.minimumRowWidth === 0) {
-      rowWidth.addGroup(data);
+      rowWidth.addGroup(columns.map( c => c.sizeInfo ));
     }
 
     // if the max lock state has changed we need to update re-calculate the static width's again.
     if (rowWidth.maxWidthLockChanged) {
-       updateColumnWidths(this._store.getStaticWidth(), this._store.table, this._store.meta);
-       data.forEach( d => d.column.columnDef.markForCheck() );
-       this.resizeRows(data);
-       return;
+      resetColumnWidths(this._store.getStaticWidth(), this._store.columns, this._store.metaColumns, { tableMarkForCheck: true });
+      this.resizeColumns(columns);
+      return;
     }
 
     if (!this._minimumRowWidth ) {
@@ -452,8 +624,8 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   /**
    * Create an embedded view before or after the user projected content.
    */
-  createView<C>(location: 'before' | 'after', templateRef: TemplateRef<C>, context?: C, index?: number): EmbeddedViewRef<C> {
-    const vcRef = location === 'before' ? this._vcRefBefore : this._vcRefAfter;
+  createView<C>(location: 'beforeTable' | 'beforeContent' | 'afterContent', templateRef: TemplateRef<C>, context?: C, index?: number): EmbeddedViewRef<C> {
+    const vcRef = this.getInternalVcRef(location);
     const view = vcRef.createEmbeddedView(templateRef, context, index);
     view.detectChanges();
     return view;
@@ -465,8 +637,8 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
    * @param location The location, if not set defaults to `before`
    * @returns true when a view was removed, false when not. (did not exist in the view container for the provided location)
    */
-  removeView(view: EmbeddedViewRef<any>, location?: 'before' | 'after'): boolean {
-    const vcRef = location === 'after' ? this._vcRefAfter : this._vcRefBefore;
+  removeView(view: EmbeddedViewRef<any>, location: 'beforeTable' | 'beforeContent' | 'afterContent'): boolean {
+    const vcRef = this.getInternalVcRef(location);
     const idx = vcRef.indexOf(view);
     if (idx === -1) {
       return false;
@@ -476,51 +648,171 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     }
   }
 
-  private setupNoData(): void {
+  /**
+   * Resize all visible columns to fit content of the table.
+   * @param forceFixedWidth When true will resize all columns with absolute pixel values, otherwise will keep the same format as originally set (% or none)
+   */
+  autoSizeColumnToFit(options?: AutoSizeToFitOptions): void {
+    const { innerWidth, outerWidth } = this.viewport;
+
+    // calculate auto-size on the width without scroll bar and take box model gaps into account
+    // TODO: if no scroll bar exists the calc will not include it, next if more rows are added a scroll bar will appear...
+    this.columnApi.autoSizeToFit(outerWidth - (outerWidth - innerWidth), options);
+  }
+
+  findInitialRowHeight(): number {
+    let rowElement: HTMLElement;
+    if (this._cdkTable._rowOutlet.viewContainer.length) {
+      const viewRef = this._cdkTable._rowOutlet.viewContainer.get(0) as EmbeddedViewRef<any>;
+      rowElement = viewRef.rootNodes[0];
+      const height = getComputedStyle(rowElement).height;
+      return parseInt(height, 10);
+    } else if (this._vcRefBeforeContent) {
+      rowElement = this._vcRefBeforeContent.length > 0
+        ? (this._vcRefBeforeContent.get(this._vcRefBeforeContent.length - 1) as EmbeddedViewRef<any>).rootNodes[0]
+        : this._vcRefBeforeContent.element.nativeElement
+      ;
+      rowElement = rowElement.nextElementSibling as HTMLElement;
+      rowElement.style.display = '';
+      const height = getComputedStyle(rowElement).height;
+      rowElement.style.display = 'none';
+      return parseInt(height, 10);
+    }
+  }
+
+  addClass(...cls: string[]): void {
+    for (const c of cls) {
+      this.elRef.nativeElement.classList.add(c);
+    }
+  }
+
+  removeClass(...cls: string[]): void {
+    for (const c of cls) {
+      this.elRef.nativeElement.classList.remove(c);
+    }
+  }
+
+  private initPlugins(injector: Injector, elRef: ElementRef<any>, vcRef: ViewContainerRef): void {
+    // Create an injector for the extensions/plugins
+    // This injector allow plugins (that choose so) to provide a factory function for runtime use.
+    // I.E: as if they we're created by angular via template...
+    // This allows seamless plugin-to-plugin dependencies without requiring specific template syntax.
+    // And also allows auto plugin binding (app wide) without the need for template syntax.
+    const pluginInjector = Injector.create({
+      providers: [
+        { provide: ViewContainerRef, useValue: vcRef },
+        { provide: ElementRef, useValue: elRef },
+        { provide: ChangeDetectorRef, useValue: this.cdr },
+      ],
+      parent: injector,
+    });
+    this._plugin = new NegTablePluginContext(this, pluginInjector, this._extApi);
+  }
+
+  private initExtApi(): void {
+    let onInit: Array<() => void> = [];
+    const extApi = {
+      table: this,
+      element: this.elRef.nativeElement,
+      get cdkTable() { return extApi.table._cdkTable; },
+      get events() { return extApi.table._plugin.events },
+      get contextApi() {
+        Object.defineProperty(this, 'contextApi', { value: new ContextApi<T>(extApi) });
+        return extApi.contextApi;
+      },
+      get metaRowService() {
+        Object.defineProperty(this, 'metaRowService', { value: new NegTableMetaRowService<T>(extApi) });
+        return extApi.metaRowService;
+      },
+      onInit: (fn: () => void) => {
+        if (extApi.table.isInit) {
+          fn();
+        } else {
+          if (onInit.length === 0) {
+            let u = extApi.events.subscribe( e => {
+              if (e.kind === 'onInit') {
+                for (const onInitFn of onInit) {
+                  onInitFn();
+                }
+                u.unsubscribe();
+                onInit = u = undefined;
+              }
+            });
+          }
+          onInit.push(fn);
+        }
+      },
+      columnStore: this._store,
+      setViewport: (viewport) => this._viewport = viewport,
+      dynamicColumnWidthFactory: (): DynamicColumnWidthLogic => {
+        return new DynamicColumnWidthLogic(this._cellWidthLogic);
+      }
+    };
+    this._extApi = extApi;
+  }
+
+  private setupNoData(force?: boolean): void {
     if (this._noDateEmbeddedVRef) {
-      this.removeView(this._noDateEmbeddedVRef);
+      this.removeView(this._noDateEmbeddedVRef, 'beforeContent');
       this._noDateEmbeddedVRef = undefined;
     }
-    if (this._dataSource && this._dataSource.renderLength === 0) {
+    if (force === false) {
+      return;
+    }
+    if (this._dataSource && (this._dataSource.renderLength === 0 || force === true)) {
       const noDataTemplate = this.registry.getSingle('noData');
       if (noDataTemplate) {
-        this._noDateEmbeddedVRef = this.createView('before', noDataTemplate.tRef, { $implicit: this }, 0);
+        this._noDateEmbeddedVRef = this.createView('beforeContent', noDataTemplate.tRef, { $implicit: this }, 0);
       }
     }
   }
 
+  private getInternalVcRef(location: 'beforeTable' | 'beforeContent' | 'afterContent'): ViewContainerRef {
+    return location === 'beforeTable'
+      ? this._vcRefBeforeTable
+      : location === 'beforeContent' ? this._vcRefBeforeContent : this._vcRefAfterContent
+    ;
+  }
+
   private setupPaginator(): void {
+    const paginationKillKey = 'negPaginationKillKey';
     if (this.isInit) {
+      KillOnDestroy.kill(this, paginationKillKey);
       if (this._paginatorEmbeddedVRef) {
-        this.removeView(this._paginatorEmbeddedVRef);
+        this.removeView(this._paginatorEmbeddedVRef, 'beforeContent');
         this._paginatorEmbeddedVRef = undefined;
       }
-      if ( this.dataSource && this.usePagination ) {
+      if ( this.ds && this.usePagination ) {
         const paginatorTemplate = this.registry.getSingle('paginator');
         if (paginatorTemplate) {
-          this._paginatorEmbeddedVRef = this.createView('before', paginatorTemplate.tRef, { $implicit: this });
+          this._paginatorEmbeddedVRef = this.createView('beforeContent', paginatorTemplate.tRef, { $implicit: this });
         }
       }
     }
   }
 
   private attachCustomCellTemplates(): void {
-    for (const col of this._store.table) {
+    for (const col of this._store.columns) {
       const cell = findCellDef(this.registry, col, 'tableCell', true);
       if ( cell ) {
         col.cellTpl = cell.tRef;
       } else {
         const defaultCellTemplate = this.registry.getMultiDefault('tableCell');
-        col.cellTpl = defaultCellTemplate
-         ? defaultCellTemplate.tRef
-          : this._fbTableCell
-        ;
+        col.cellTpl = defaultCellTemplate ? defaultCellTemplate.tRef : this._fbTableCell;
+      }
+
+      const editorCell = findCellDef(this.registry, col, 'editorCell', true);
+      if ( editorCell ) {
+        col.editorTpl = editorCell.tRef;
+      } else {
+        const defaultCellTemplate = this.registry.getMultiDefault('editorCell');
+        col.editorTpl = defaultCellTemplate ? defaultCellTemplate.tRef : undefined;
       }
     }
   }
 
   private attachCustomHeaderCellTemplates(): void {
-    const columns: Array<NegColumn | NegMetaColumnStore> = [].concat(this._store.table, this._store.meta);
+    const columns: Array<NegColumn | NegMetaColumnStore> = [].concat(this._store.columns, this._store.metaColumns);
     const defaultHeaderCellTemplate = this.registry.getMultiDefault('headerCell') || { tRef: this._fbHeaderCell };
     const defaultFooterCellTemplate = this.registry.getMultiDefault('footerCell') || { tRef: this._fbFooterCell };
     for (const col of columns) {
@@ -564,11 +856,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   private resetFooterRowDefs(): void {
     if (this._footerRowDefs) {
       this._cdkTable.clearFooterRowDefs();
-      const arr = this._footerRowDefs.toArray();
-      if (!this.showFooter) {
-        arr.shift();
-      }
-      for (const rowDef of arr) {
+      for (const rowDef of this._footerRowDefs.toArray()) {
         this._cdkTable.addFooterRowDef(rowDef);
       }
     }

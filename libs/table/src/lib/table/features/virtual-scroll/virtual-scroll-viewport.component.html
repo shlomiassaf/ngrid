@@ -1,8 +1,10 @@
+<p class="cdk-virtual-scroll-inner-width"></p>
+<ng-content select=".cdk-virtual-scroll-before-content-wrapper"></ng-content>
 <!--
   Wrap the rendered content in an element that will be used to offset it based on the scroll
   position.
 -->
-<div #contentWrapper class="cdk-virtual-scroll-content-wrapper" style="width: 100%" [style.minWidth]="minWidth">
+<div #contentWrapper [class.cdk-virtual-scroll-content-wrapper]="enabled" style="width: 100%" [style.minWidth]="minWidth">
   <ng-content></ng-content>
 </div>
 
@@ -11,8 +13,8 @@
   so that the scrollbar captures the size of the entire data set.
 -->
 <div class="cdk-virtual-scroll-spacer" [style.transform]="_totalContentSizeTransform"></div>
-<div *ngIf="ngeFillerHeight"
-     class="neg-table-space-fill"
-     [style.minWidth]="minWidth"
-     [style.top.px]="ngeRenderedContentSize"
-     [style.height]="ngeFillerHeight"></div>
+<div *ngIf="negFillerHeight"
+    class="neg-table-space-fill"
+    [style.minWidth]="minWidth"
+    [style.top.px]="ngeRenderedContentSize"
+    [style.height]="negFillerHeight"></div>

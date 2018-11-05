@@ -1,15 +1,17 @@
 import { Observable, Subject } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 import {
+  AfterViewInit,
   Component,
   ChangeDetectionStrategy,
   ElementRef,
+  EventEmitter,
   Inject,
   Input,
   ChangeDetectorRef,
   ViewEncapsulation,
   NgZone,
+  Output,
   Optional,
   OnInit,
   OnDestroy,
@@ -22,15 +24,20 @@ import {
   VirtualScrollStrategy,
   ScrollDispatcher,
   CdkVirtualForOf,
+  CdkScrollable,
 } from '@angular/cdk/scrolling';
 
+import { NegTablePluginController } from '../../../ext/plugin-control';
 import { NegTableConfigService } from '../../services/config';
-import { NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies';
+import { NegTableComponent } from '../../table.component';
+import { KillOnDestroy } from '../../utils';
+import { NegCdkVirtualScrollDirective, NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies';
 import { NgeVirtualTableRowInfo } from './virtual-scroll-for-of';
 
 declare module '../../services/config' {
   interface NegTableConfig {
     virtualScroll?: {
+      wheelMode?: NegCdkVirtualScrollDirective['wheelMode'];
       defaultStrategy?(): VirtualScrollStrategy;
     }
   }
@@ -53,14 +60,17 @@ function resolveScrollStrategy(config: NegTableConfigService, scrollStrategy?: V
   styleUrls: [ './virtual-scroll-viewport.component.scss' ],
   host: { // tslint:disable-line:use-host-property-decorator
     class: 'cdk-virtual-scroll-viewport',
+    '[class.cdk-virtual-scroll-disabled]': '!enabled',
     '[class.cdk-virtual-scroll-orientation-horizontal]': 'orientation === "horizontal"',
     '[class.cdk-virtual-scroll-orientation-vertical]': 'orientation === "vertical"'
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewport implements OnInit, OnDestroy {
+@KillOnDestroy()
+export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewport implements OnInit, AfterViewInit, OnDestroy {
 
+  get isScrolling(): boolean { return this._isScrolling; }
   readonly enabled: boolean;
 
   /**
@@ -73,12 +83,77 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   @Input() minWidth: string;
 
+  @Input() stickyRowHeaderContainer: HTMLElement;
+  @Input() stickyRowFooterContainer: HTMLElement;
+
+  /**
+   * Event emitted when the scrolling state of rows in the table changes.
+   * When scrolling starts `true` is emitted and when the scrolling ends `false` is emitted.
+   *
+   * The table is in "scrolling" state from the first scroll event and until 2 animation frames
+   * have passed without a scroll event.
+   *
+   * When scrolling, the emitted value is the direction: -1 or 1
+   * When not scrolling, the emitted value is 0.
+   *
+   * NOTE: This event runs outside the angular zone.
+   */
+  @Output() scrolling = new EventEmitter< -1 | 0 | 1 >();
+
+  /**
+   * Emits an estimation of the current frame rate while scrolling, in a 500ms interval.
+   *
+   * The frame rate value is the average frame rate from all measurements since the scrolling began.
+   * To estimate the frame rate, a significant number of measurements is required so value is emitted every 500 ms.
+   * This means that a single scroll or short scroll bursts will not result in a `scrollFrameRate` emissions.
+   *
+   * Valid on when virtual scrolling is enabled.
+   *
+   * NOTE: This event runs outside the angular zone.
+   *
+   * In the future the measurement logic might be replaced with the Frame Timing API
+   * See:
+   * - https://developers.google.com/web/updates/2014/11/frame-timing-api
+   * - https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver
+   * - https://github.com/googlearchive/frame-timing-polyfill/wiki/Explainer
+   */
+  @Output() scrollFrameRate = new EventEmitter<number>();
+
+  /**
+   * The `scrollHeight` of the virtual scroll viewport.
+   * The `scrollHeight` is updated by the virtual scroll (update logic and frequency depends on the strategy implementation) through
+   * the `setTotalContentSize(size)` method. The input size is used to position a dummy spacer element at a position that mimics the `scrollHeight`.
+   *
+   * In theory, the size sent to `setTotalContentSize` should equal the `scrollHeight` value, once the browser update's the layout.
+   * In reality it does not happen, sometimes they are not equal. Setting a size will result in a different `scrollHeight`.
+   * This might be due to changes in measurements when handling sticky meta rows (moving back and forth)
+   *
+   * Because the position of the dummy spacer element is set through DI the layout will run in the next micro-task after the call to `setTotalContentSize`.
+   */
+  scrollHeight = 0;
+
   ngeRenderedContentSize = 0;
-  ngeFillerHeight: string;
+  negFillerHeight: string;
+
+  get wheelMode(): NegCdkVirtualScrollDirective['wheelMode'] {
+    return (this.negScrollStrategy as NegCdkVirtualScrollDirective).wheelMode || this.wheelModeDefault || 'passive';
+  }
+
+  get innerWidth(): number {
+    const innerWidthHelper = this.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-inner-width') as HTMLElement;
+    return innerWidthHelper.getBoundingClientRect().width;
+  }
+
+  get outerWidth(): number {
+    return this.elementRef.nativeElement.getBoundingClientRect().width;
+  }
 
   private offsetChange$ = new Subject<number>();
   private offset: number;
   private isCDPending: boolean;
+  private _isScrolling = false;
+
+  private wheelModeDefault:  NegCdkVirtualScrollDirective['wheelMode'];
 
   constructor(elementRef: ElementRef<HTMLElement>,
               cdr: ChangeDetectorRef,
@@ -86,16 +161,72 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
               config: NegTableConfigService,
               @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) public negScrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
-              scrollDispatcher: ScrollDispatcher) {
+              scrollDispatcher: ScrollDispatcher,
+              pluginCtrl: NegTablePluginController,
+              private table: NegTableComponent<any>) {
     super(elementRef,
           cdr,
           ngZone,
           negScrollStrategy = resolveScrollStrategy(config, negScrollStrategy),
           dir,
-          scrollDispatcher
-      );
-    this.enabled = !(negScrollStrategy instanceof NoVirtualScrollStrategy);
+          scrollDispatcher);
+
+    if (config.has('virtualScroll')) {
+      this.wheelModeDefault = config.get('virtualScroll').wheelMode;
+    }
+    config.onUpdate('virtualScroll').pipe(KillOnDestroy(this)).subscribe( change => this.wheelModeDefault = change.curr.wheelMode);
+
+    if (negScrollStrategy instanceof NegCdkVirtualScrollDirective) {
+      this.enabled = negScrollStrategy.type !== 'vScrollNone';
+    } else {
+      this.enabled = !(negScrollStrategy instanceof NoVirtualScrollStrategy);
+    }
+    pluginCtrl.extApi.setViewport(this);
     this.offsetChange = this.offsetChange$.asObservable();
+  }
+
+  ngOnInit(): void {
+    if (this.enabled) {
+      super.ngOnInit();
+    } else {
+      CdkScrollable.prototype.ngOnInit.call(this);
+    }
+    this.ngZone.runOutsideAngular( () => this.initScrollWatcher() );
+  }
+
+  ngAfterViewInit(): void {
+    // If virtual scroll is disabled (`NoVirtualScrollStrategy`) we need to disable any effect applied
+    // by the viewport, wrapping the content injected to it.
+    // The main effect is the table having height 0 at all times, unless the height is explicitly set.
+    // This happens because the content taking out of the layout, wrapped in absolute positioning.
+    // Additionally, the host itself (viewport) is set to contain: strict.
+    const { table } = this;
+    if (this.enabled) {
+      table._cdkTable.attachViewPort();
+    }
+
+    this.scrolling
+      .pipe(KillOnDestroy(this))
+      .subscribe( isScrolling => {
+        this._isScrolling = !!isScrolling;
+        if (isScrolling) {
+          table.addClass('neg-table-scrolling');
+        } else {
+          table.removeClass('neg-table-scrolling');
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this.offsetChange$.complete();
+  }
+
+  setTotalContentSize(size: number) {
+    super.setTotalContentSize(size);
+    Promise.resolve().then(() => {
+      this.scrollHeight = this.elementRef.nativeElement.scrollHeight; //size;
+    });
   }
 
   checkViewportSize() {
@@ -110,12 +241,19 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   /** Measure the combined size of all of the rendered items. */
   measureRenderedContentSize(): number {
-    return this.ngeRenderedContentSize = super.measureRenderedContentSize();
+    let size = super.measureRenderedContentSize();
+    if (this.orientation === 'vertical') {
+      size -= this.stickyRowHeaderContainer.offsetHeight + this.stickyRowFooterContainer.offsetHeight;
+    }
+    return this.ngeRenderedContentSize = size;
   }
 
   private updateFiller(): void {
     this.measureRenderedContentSize();
-    this.ngeFillerHeight = this.getViewportSize() >= this.ngeRenderedContentSize ? `calc(100% - ${this.ngeRenderedContentSize}px)` : undefined;
+    this.negFillerHeight = this.getViewportSize() >= this.ngeRenderedContentSize ?
+      `calc(100% - ${this.ngeRenderedContentSize}px)`
+      : undefined
+    ;
   }
 
   onSourceLengthChange(prev: number, curr: number): void {
@@ -125,33 +263,99 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   attach(forOf: CdkVirtualForOf<any> & NgeVirtualTableRowInfo) {
     super.attach(forOf);
-    if (this.negScrollStrategy instanceof TableAutoSizeVirtualScrollStrategy) {
-      this.negScrollStrategy.averager.setRowInfo(forOf);
+    const scrollStrategy = this.negScrollStrategy instanceof NegCdkVirtualScrollDirective
+      ? this.negScrollStrategy._scrollStrategy
+      : this.negScrollStrategy
+    ;
+    if (scrollStrategy instanceof TableAutoSizeVirtualScrollStrategy) {
+      scrollStrategy.averager.setRowInfo(forOf);
     }
-  }
-
-  ngOnInit(): void {
-    if (this.enabled) {
-      super.ngOnInit();
-    }
-  }
-
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
-    this.offsetChange$.complete();
   }
 
   setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
     super.setRenderedContentOffset(offset, to);
-    if (this.enabled && this.offset !== offset) {
-      this.offset = offset;
-      if (!this.isCDPending) {
-        this.isCDPending = true;
-        this.ngZone.runOutsideAngular(() => Promise.resolve().then(() => {
-          this.isCDPending = false;
-          this.offsetChange$.next(this.offset);
-        }));
+    if (this.enabled) {
+      if (this.offset !== offset) {
+        this.offset = offset;
+        if (!this.isCDPending) {
+          this.isCDPending = true;
+
+          const syncTransform = () => { };
+
+          this.ngZone.runOutsideAngular(() => Promise.resolve()
+            .then( () => syncTransform() )
+            .then( () => {
+              this.isCDPending = false;
+              this.offsetChange$.next(this.offset);
+            })
+          );
+        }
       }
     }
+  }
+
+  /**
+   * Init the scrolling watcher which track scroll events an emits `scrolling` and `scrollFrameRate` events.
+   */
+  private initScrollWatcher(): void {
+    let scrolling = 0;
+    let lastOffset = this.measureScrollOffset();
+    this.elementScrolled()
+      .subscribe(() => {
+        /*  `scrolling` is a boolean flag that turns on with the first `scroll` events and ends after 2 browser animation frames have passed without a `scroll` event.
+            This is an attempt to detect a scroll end event, which does not exist.
+
+            `scrollFrameRate` is a number that represent a rough estimation of the frame rate by measuring the time passed between each request animation frame
+            while the `scrolling` state is true. The frame rate value is the average frame rate from all measurements since the scrolling began.
+            To estimate the frame rate, a significant number of measurements is required so value is emitted every 500 ms.
+            This means that a single scroll or short scroll bursts will not result in a `scrollFrameRate` emissions.
+
+        */
+        if (scrolling === 0) {
+          /*  The measure array holds values required for frame rate measurements.
+              [0] Storage for last timestamp taken
+              [1] The sum of all measurements taken (a measurement is the time between 2 snapshots)
+              [2] The count of all measurements
+              [3] The sum of all measurements taken WITHIN the current buffer window. This buffer is flushed into [1] every X ms (see buggerWindow const).
+          */
+          const bufferWindow = 499;
+          const measure = [ performance.now(), 0, 0, 0 ];
+          const offset = this.measureScrollOffset();
+          if (lastOffset === offset) { return; }
+          const delta = lastOffset < offset ? 1 : -1;
+
+          this.scrolling.next(delta);
+
+          const raf = () => {
+            const time = -measure[0] + (measure[0] = performance.now());
+            if (time > 5) {
+              measure[1] += time;
+              measure[2] += 1;
+            }
+            if (scrolling === -1) {
+              scrolling = 0;
+              lastOffset = this.measureScrollOffset();
+              this.scrolling.next(0);
+            }
+            else {
+              if (measure[1] > bufferWindow) {
+                measure[3] += measure[1];
+                measure[1] = 0;
+                this.scrollFrameRate.emit(1000 / (measure[3]/measure[2]));
+              }
+              scrolling = scrolling === 1 ? -1 : 1;
+              requestAnimationFrame(raf);
+            }
+          };
+          requestAnimationFrame(raf);
+        }
+        scrolling++;
+      });
+  }
+}
+
+declare global {
+  interface CSSStyleDeclaration {
+    contain: 'none' | 'strict' | 'content' | 'size' | 'layout' | 'style' | 'paint' | 'inherit' | 'initial' | 'unset';
   }
 }

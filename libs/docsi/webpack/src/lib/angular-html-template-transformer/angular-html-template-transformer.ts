@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { loader } from 'webpack';
 import { highlightAuto } from 'highlight.js';
+const remarkPrismJs = require('gatsby-remark-prismjs');
 
 import { NS } from '../unique-symbol';
 import { Instruction, SourceCodeRef, ParsedInstructionCache, SourceCodeRefMetadata } from '../source-code-ref';
@@ -9,6 +10,18 @@ import { MarkdownToHtml } from '../remark';
 
 import { DocsiAngularHtmlProcessor } from './html-processor';
 import { DocsiAngularHtmlProcessorElementVisitor } from './html-processor-element-visitor';
+
+export interface JsonCompileMarkdownMatch {
+  type: 'markdown';
+  src: string;
+}
+
+export interface JsonSourceCodeRefMatch {
+  type: 'codeRef';
+  instructionMeta: SourceCodeRefMetadata;
+}
+
+const readFile = (fullPath: string) => fs.readFileSync(fullPath, { encoding: 'utf-8' });
 
 export class DocsiAngularTemplateTransformer {
   private dirname: string;
@@ -26,24 +39,36 @@ export class DocsiAngularTemplateTransformer {
 
   run(): string {
     let source: string = this.source;
+    let hasMarkdown = false;
 
     this.pushResourcePath(this.rootResourcePath);
+    const docsiJsonInstructionsFile = path.join(path.dirname(this.currentResourcePath), './docsi.json');
+
     if (this.currentResourcePath.endsWith('.html')) {
+      const compiledMarkdown = this.processJsonInstructions(docsiJsonInstructionsFile) || '';
+
       const byNameElementVisitors = new DocsiAngularHtmlProcessorElementVisitor();
-      const htmlProcessor = new DocsiAngularHtmlProcessor(source, { byNameElementVisitors });
+      const htmlProcessor = new DocsiAngularHtmlProcessor(source);
+      htmlProcessor.visitAll({ byNameElementVisitors });
+
       if (byNameElementVisitors.results.length > 0) {
-        source = this.processHtml(htmlProcessor, byNameElementVisitors.results);
+        source = compiledMarkdown + this.processAngularHtmlTemplate(htmlProcessor, byNameElementVisitors.results);
+      } else if (compiledMarkdown) {
+        source = compiledMarkdown;
       }
-    } else {
+      hasMarkdown = !!compiledMarkdown;
+    } else if (this.currentResourcePath.endsWith('.md')) {
+      this.processJsonInstructions(docsiJsonInstructionsFile);
       source = this.processMarkdown(source);
+      hasMarkdown = true;
     }
     this.popResourcePath();
 
     if (this.codeParts.length > 0) {
       const partsFilename = this.loaderContext[NS]([ { content: JSON.stringify(this.codeParts) } ] );
-      return renderCode(partsFilename, source);
+      return renderCode(source, partsFilename);
     } else {
-      return source;
+      return hasMarkdown ? renderCode(source) : source;
     }
   }
 
@@ -64,8 +89,52 @@ export class DocsiAngularTemplateTransformer {
     return this.markdownToHtml.transform(source, data);
   }
 
-  private processHtml(htmlProcessor: DocsiAngularHtmlProcessor,
-                      results: DocsiAngularHtmlProcessorElementVisitor['results']): string | undefined {
+  private processJsonInstructions(possibleJsonFilePath: string): string | undefined {
+    if (!fs.existsSync(possibleJsonFilePath)) { return; }
+
+    const results: Array<JsonCompileMarkdownMatch | JsonSourceCodeRefMatch> = [];
+    const instructions: { mdTemplate?: string[], codeRef?: SourceCodeRefMetadata[] } = require(possibleJsonFilePath);
+    if (instructions.codeRef) {
+      for (const codeRef of instructions.codeRef) {
+        results.push({ type: 'codeRef', instructionMeta: codeRef });
+      }
+    }
+    if (instructions.mdTemplate) {
+      for (const tpl of instructions.mdTemplate) {
+        results.push({ type: 'markdown', src: tpl });
+      }
+    }
+
+    this.loaderContext.addDependency(possibleJsonFilePath);
+
+    const compiledMarkdown: string[] = [];
+    for (const match of results) {
+      if (match.type === 'markdown') {
+        if (match.src) {
+          const src = match.src;
+          const fullPath = path.join(path.dirname(this.currentResourcePath), src);
+          if (!fs.existsSync(fullPath)) {
+            throw new Error(`[docsi/webpack]: Can't resolve '${src}' in '${this.currentResourcePath}' `);
+          }
+          this.pushResourcePath(fullPath);
+
+          compiledMarkdown.push( this.processMarkdown(readFile(fullPath)) );
+
+          // the call to `processMarkdown` will add this file to the dep's list only when it has source code ref's.
+          // when not it will not be added, this is done through the subscription in run().
+          // this will make sure it's added.
+          this.addDependency(fullPath);
+          this.popResourcePath();
+        }
+      } else if (match.type === 'codeRef') {
+        this.createHighlightCode( this.compileInstructions([ match.instructionMeta ]) );
+      }
+    }
+    return compiledMarkdown.join('\n');
+  }
+
+  private processAngularHtmlTemplate(htmlProcessor: DocsiAngularHtmlProcessor,
+                                     results: DocsiAngularHtmlProcessorElementVisitor['results']): string | undefined {
     for (const match of results) {
       if (match.type === 'markdown') {
         const newHtml: string[] = [];
@@ -76,9 +145,7 @@ export class DocsiAngularTemplateTransformer {
             throw new Error(`[docsi/webpack]: Can't resolve '${src}' in '${this.currentResourcePath}' `);
           }
           this.pushResourcePath(fullPath);
-          newHtml.push(
-            this.processMarkdown(fs.readFileSync(fullPath, { encoding: 'utf-8' }))
-          );
+          newHtml.push( this.processMarkdown(readFile(fullPath)) );
           // the call to `processMarkdown` will add this file to the dep's list only when it has source code ref's.
           // when not it will not be added, this is done through the subscription in run().
           // this will make sure it's added.
@@ -122,7 +189,24 @@ export class DocsiAngularTemplateTransformer {
     for (const instruction of instructions) {
       this.addDependency(instruction.fullPath);
       const extracted = instruction.toExtractedCode();
-      extracted.code = highlightAuto(extracted.code, [extracted.lang]).value;
+
+      const { highlight } = this.markdownToHtml.options;
+      switch (highlight) {
+        case 'prismjs':
+          const markdownAST = {
+            lang: extracted.lang,
+            value: extracted.code,
+            type: 'code',
+          }
+          remarkPrismJs({ markdownAST });
+          extracted.code = markdownAST.value;
+          break;
+        case 'highlightjs':
+          extracted.code = highlightAuto(extracted.code, [extracted.lang]).value;
+          break;
+        default:
+         extracted.code = `<pre><code>${extracted.code}</code></pre>`;
+      }
       this.codeParts.push(extracted);
     }
   }
@@ -144,6 +228,7 @@ export class DocsiAngularTemplateTransformer {
   }
 }
 
-function renderCode(id: string, htmlCode: string): string {
-  return `<docsi-example-code-container extractId="${id}">${htmlCode}</docsi-example-code-container>`;
+function renderCode(htmlCode: string, id?: string): string {
+  const extractIdAttribute = id ? ` extractId="${id}"` : '';
+  return `<docsi-example-code-container ${extractIdAttribute}>${htmlCode}</docsi-example-code-container>`;
 }

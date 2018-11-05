@@ -1,4 +1,4 @@
-import { NegCdkVirtualScrollViewportComponentBaseColumnDefinition, NegColumnDefinition, NegColumnGroupDefinition } from './types';
+import { NegBaseColumnDefinition, NegColumnDefinition, NegColumnGroupDefinition } from './types';
 
 const RE_PARSE_STYLE_LENGTH_UNIT = /((?:\d*\.)?\d+)(%|px)$/;
 
@@ -9,8 +9,8 @@ export function parseStyleWidth(exp: string): { value: number, type: 'px' | '%'}
   }
 }
 
-export function initDefinitions<T extends NegCdkVirtualScrollViewportComponentBaseColumnDefinition>(def: NegCdkVirtualScrollViewportComponentBaseColumnDefinition, target: T): void {
-  const copyKeys: Array<keyof NegCdkVirtualScrollViewportComponentBaseColumnDefinition> = ['id', 'label', 'css', 'minWidth', 'width', 'maxWidth', 'type'];
+export function initDefinitions<T extends NegBaseColumnDefinition>(def: NegBaseColumnDefinition, target: T): void {
+  const copyKeys: Array<keyof NegBaseColumnDefinition> = ['id', 'label', 'css', 'minWidth', 'width', 'maxWidth', 'type'];
   copyKeys.forEach( k => k in def && (target[k] = def[k]) );
   if (def.data) {
     target.data = Object.assign(target.data || {}, def.data);

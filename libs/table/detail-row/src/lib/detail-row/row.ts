@@ -2,62 +2,64 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  Inject,
   ElementRef,
   OnInit,
-  OnDestroy,
+  OnDestroy, Optional,
   ViewEncapsulation,
   ViewContainerRef,
 } from '@angular/core';
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
-import { NegTableComponent, NegTablePluginController, KillOnDestroy } from '@neg/table';
+import { NegTableComponent, NegTablePluginController, NegTableRowComponent, NegTableExtensionApi, EXT_API_TOKEN, KillOnDestroy } from '@neg/table';
 
 import { NegTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
 
 @Component({
   selector: 'neg-table-row[detailRow]',
-  template: CDK_ROW_TEMPLATE,
-  host: {
-    'class': 'neg-table-row neg-row-detail-parent',
-    'role': 'row',
+  exportAs: 'negTableDetailRow',
+  host: { // tslint:disable-line:use-host-property-decorator
+    class: 'neg-table-row neg-row-detail-parent',
+    role: 'row',
     '[attr.tabindex]': 'table?.rowFocus',
     '(keydown)': 'handleKeydown($event)'
   },
+  template: CDK_ROW_TEMPLATE,
+  styles: [ `.neg-row-detail-parent { position: relative; cursor: pointer; }` ],
   providers: [
     { provide: CdkRow, useExisting: NegTableDetailRowComponent }
   ],
-  exportAs: 'negTableDetailRow',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 @KillOnDestroy()
-export class NegTableDetailRowComponent extends CdkRow implements OnInit, OnDestroy {
+export class NegTableDetailRowComponent extends NegTableRowComponent implements OnInit, OnDestroy {
 
   get expended(): boolean {
     return this.opened;
   }
 
-  @Input('detailRow') row: any;
-  @Input() table: NegTableComponent<any>;
+  @Input('detailRow') get detailRow(): any { return this.context.$implicit; };
+  set detailRow(value: any) { this.row = value; };
 
-  private get _element(): HTMLElement { return this.elRef.nativeElement; }
-  private opened: boolean = false;
+  private get _element(): HTMLElement { return this.el.nativeElement; }
+  private opened = false;
   private plugin: NegTableDetailRowPluginDirective<any>;
 
-  constructor(private vcRef: ViewContainerRef, private elRef: ElementRef) {
-    super();
+  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: NegTableExtensionApi<any>, el: ElementRef<HTMLElement>, private vcRef: ViewContainerRef) {
+    super(extApi, el);
   }
 
   ngOnInit(): void {
-    const controller = NegTablePluginController.find(this.table);
+    const controller = NegTablePluginController.find(this.context.table);
     this.plugin = controller.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
     const tradeEvents = controller.getPlugin('targetEvents');
     tradeEvents.cellClick
       .pipe(KillOnDestroy(this))
       .subscribe( event => {
-        if (event.type === 'data' && event.row === this.row) {
+        if (event.type === 'data' && event.row === this.detailRow) {
           const { excludeToggleFrom } = this.plugin;
           if (!excludeToggleFrom || !excludeToggleFrom.some( c => event.column.id === c )) {
             this.toggle();
@@ -68,7 +70,7 @@ export class NegTableDetailRowComponent extends CdkRow implements OnInit, OnDest
     tradeEvents.rowClick
       .pipe(KillOnDestroy(this))
       .subscribe( event => {
-        if (!event.root && event.type === 'data' && event.row === this.row) {
+        if (!event.root && event.type === 'data' && event.row === this.detailRow) {
           this.toggle();
         }
       });
@@ -111,10 +113,10 @@ export class NegTableDetailRowComponent extends CdkRow implements OnInit, OnDest
 
   private render(): void {
     this.vcRef.clear();
-    if (this.row) {
-      const detailRowDef = this.table.registry.getSingle('detailRow');
+    if (this.detailRow) {
+      const detailRowDef = this.context.table.registry.getSingle('detailRow');
       if ( detailRowDef ) {
-        this.vcRef.createEmbeddedView(detailRowDef.tRef, { $implicit: this.row });
+        this.vcRef.createEmbeddedView(detailRowDef.tRef, this.context);
       }
     }
   }

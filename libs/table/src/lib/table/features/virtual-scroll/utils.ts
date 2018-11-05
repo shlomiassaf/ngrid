@@ -27,7 +27,7 @@ export function splitRange(range: ListRange, headerLen: number, dataLen: number)
 
 /**
  * Update sticky positioning values to the rows to match virtual scroll content offset.
- * This function should run after `CdkTable` has updates the sticky rows.
+ * This function should run after `CdkTable` updated the sticky rows.
  *
  * ## Why
  * `CdkTable` applies sticky positioning to rows by setting top/bottom value to `0px`.
@@ -47,7 +47,7 @@ export function updateStickyRows(offset: number, rows: HTMLElement[], stickyStat
     if (stickyState[i]) {
       const row = rows[i];
       row.style[type] = `${coeff * (offset + (coeff * agg))}px`;
-      agg += row.getBoundingClientRect().height;
+      agg += row.getBoundingClientRect().height; // TODO: cache this and update cache actively (size change)
       row.style.display = null;
     }
   }
@@ -63,7 +63,8 @@ export function updateStickyRows(offset: number, rows: HTMLElement[], stickyStat
 export function measureRangeSize(viewContainer: ViewContainerRef,
                                  range: ListRange,
                                  renderedRange: ListRange,
-                                 orientation: 'horizontal' | 'vertical'): number {
+                                 orientation: 'horizontal' | 'vertical',
+                                 stickyState: boolean[] = []): number {
   if (range.start >= range.end) {
     return 0;
   }
@@ -81,10 +82,13 @@ export function measureRangeSize(viewContainer: ViewContainerRef,
   let totalSize = 0;
   let i = rangeLen;
   while (i--) {
-    const view = viewContainer.get(i + renderedStartIndex) as EmbeddedViewRef<any> | null;
-    let j = view ? view.rootNodes.length : 0;
-    while (j--) {
-      totalSize += getSize(orientation, view.rootNodes[j]);
+    const index = i + renderedStartIndex;
+    if (!stickyState[index]) {
+      const view = viewContainer.get(index) as EmbeddedViewRef<any> | null;
+      let j = view ? view.rootNodes.length : 0;
+      while (j--) {
+        totalSize += getSize(orientation, view.rootNodes[j]);
+      }
     }
   }
 

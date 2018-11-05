@@ -3,13 +3,13 @@ import { SourceCodeRefMetadata } from '../source-code-ref';
 
 export interface BtCompileMarkdownMatch {
   type: 'markdown';
-  ast: Element;
+  ast?: Element;
   src: Attribute;
 }
 
 export interface BtSourceCodeRefMatch {
   type: 'codeRef';
-  ast: Element;
+  ast?: Element;
   instructionMeta: SourceCodeRefMetadata;
 }
 

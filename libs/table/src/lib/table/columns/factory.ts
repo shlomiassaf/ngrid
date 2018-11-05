@@ -1,19 +1,20 @@
 import {
-  NegCdkVirtualScrollViewportComponentBaseColumnDefinition,
+  NegBaseColumnDefinition,
   NegColumnDefinition,
   NegColumnGroupDefinition,
   NegMetaColumnDefinition,
   NegTableColumnDefinitionSet,
   NegTableColumnSet,
+  NegMetaRowDefinitions
 } from './types';
 import { NegMetaColumn } from './meta-column';
 import { NegColumn } from './column';
-import { NegColumnGroup } from './group-column';
+import { NegColumnGroup, NegColumnGroupStore } from './group-column';
 
 export type COLUMN = NegMetaColumn | NegColumn | NegColumnGroup;
 
 export class NegColumnFactory {
-  private _raw: NegTableColumnDefinitionSet = { table: [], header: [], footer: [], headerGroup: [] };
+  private _raw: NegTableColumnDefinitionSet = { table: { cols: [] }, header: [], footer: [], headerGroup: [] };
   private _defaults = {
     table: {} as Partial<NegColumnDefinition>,
     header: {} as Partial<NegMetaColumnDefinition>,
@@ -26,28 +27,47 @@ export class NegColumnFactory {
   get currentHeaderRow(): number { return this._currentHeaderRow; }
   get currentFooterRow(): number { return this._currentFooterRow; }
 
+  static fromDefinitionSet(defs: NegTableColumnDefinitionSet): NegColumnFactory {
+    const f = new NegColumnFactory();
+    Object.assign(f._raw, defs);
+    return f;
+  }
+
   build(): NegTableColumnSet {
     const { _defaults, _raw } = this;
     this._raw = this._defaults = undefined;
 
-    const table = _raw.table.map( d => new NegColumn({ ..._defaults.table, ...d }));
+    const groupStore = new NegColumnGroupStore();
+
+    const table: NegTableColumnSet['table'] = {
+      header: _raw.table.header,
+      footer: _raw.table.footer,
+      cols: _raw.table.cols.map( d => new NegColumn({ ..._defaults.table, ...d }, groupStore)),
+    };
     const header = _raw.header.map( h => ({
       rowIndex: h.rowIndex,
       rowClassName: h.rowClassName,
+      type: h.type || 'fixed',
       cols: h.cols.map( c => new NegMetaColumn( { ..._defaults.header, ...c } )),
     }));
     const footer = _raw.footer.map( f => ({
       rowIndex: f.rowIndex,
       rowClassName: f.rowClassName,
+      type: f.type || 'fixed',
       cols: f.cols.map( c => new NegMetaColumn({ ..._defaults.footer, ...c }) )
     }));
     const headerGroup = _raw.headerGroup.map( hg => ({
       rowIndex: hg.rowIndex,
       rowClassName: hg.rowClassName,
-      cols: this.buildHeaderGroups(hg.rowIndex, hg.cols, table)
+      type: hg.type || 'fixed',
+      cols: this.buildHeaderGroups(hg.rowIndex, hg.cols, table.cols).map( g => {
+        groupStore.add(g);
+        return g;
+      }),
     }));
 
     return {
+      groupStore,
       table,
       header,
       footer,
@@ -82,8 +102,13 @@ export class NegColumnFactory {
    * The header and footer are automatically created, If you wish not to show them set headerRow/footerRow to false in NegTable.
    *
    */
-  table(...defs: Array<NegColumnDefinition>): this {
-    this._raw.table.push(...defs);
+  table(rowOptions: { header?: NegMetaRowDefinitions; footer?: NegMetaRowDefinitions }, ...defs: NegColumnDefinition[]): this;
+  table(...defs: NegColumnDefinition[]): this;
+  table(...defs: Array<{ header?: NegMetaRowDefinitions; footer?: NegMetaRowDefinitions } | NegColumnDefinition>): this {
+    const rowOptions: { header?: NegMetaRowDefinitions; footer?: NegMetaRowDefinitions } = (defs[0] as any).prop ? {} : defs.shift() as any;
+    const { header, footer } = rowOptions;
+    Object.assign(this._raw.table, { header, footer });
+    this._raw.table.cols.push(...defs as NegColumnDefinition[]);
     return this;
   }
 
@@ -107,12 +132,14 @@ export class NegColumnFactory {
    *   header2 ->  d e f
    *   table   ->  1 2 3
    */
-  header(rowClassName: string, ...defs: Array<Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this;
-  header(...defs: Array<Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this;
-  header(...defs: Array<string | Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this {
+  header(rowOptions: NegMetaRowDefinitions, ...defs: Array<Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition>): this;
+  header(...defs: Array<Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition>): this;
+  header(...defs: Array<NegMetaRowDefinitions | Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition>): this {
     const rowIndex = this._currentHeaderRow++;
-    const rowClassName = this.getRowClass(defs, rowIndex);
-    const headers = defs.map( (d: Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition) => {
+    const rowOptions = this.processRowOptions(defs);
+    const rowClassName = this.genRowClass(rowOptions, rowIndex);
+
+    const headers = defs.map( (d: Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition) => {
       const def: NegMetaColumnDefinition = {
         id: d.id,
         kind: 'header',
@@ -125,6 +152,7 @@ export class NegColumnFactory {
       rowIndex,
       rowClassName,
       cols: headers,
+      type: (rowOptions && rowOptions.type) || 'fixed',
     });
     return this;
   }
@@ -149,12 +177,14 @@ export class NegColumnFactory {
    *   footer1 ->  a b c
    *   footer2 ->  d e f
    */
-  footer(rowClassName: string, ...defs: Array<Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this;
-  footer(...defs: Array<Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this;
-  footer(...defs: Array<string | Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition>): this {
+  footer(rowOptions: NegMetaRowDefinitions, ...defs: Array<Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition>): this;
+  footer(...defs: Array<Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition>): this;
+  footer(...defs: Array<NegMetaRowDefinitions | Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition>): this {
     const rowIndex = this._currentFooterRow++;
-    const rowClassName = this.getRowClass(defs, rowIndex);
-    const footers = defs.map( (d: Partial<NegMetaColumnDefinition> & NegCdkVirtualScrollViewportComponentBaseColumnDefinition) => {
+    const rowOptions = this.processRowOptions(defs);
+    const rowClassName = this.genRowClass(rowOptions, rowIndex);
+
+    const footers = defs.map( (d: Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition) => {
       const def: NegMetaColumnDefinition = {
         id: d.id,
         kind: 'footer',
@@ -167,6 +197,7 @@ export class NegColumnFactory {
       rowIndex,
       rowClassName,
       cols: footers,
+      type: (rowOptions && rowOptions.type) || 'fixed',
     });
     return this;
   }
@@ -193,26 +224,31 @@ export class NegColumnFactory {
    *   header2 ->  d e f
    *   table   ->  1 2 3
    */
-  headerGroup(rowClassName: string, ...defs: Array<Partial<NegColumnGroupDefinition>>): this;
-  headerGroup(...defs: Array<Partial<NegColumnGroupDefinition>>): this;
-  headerGroup(...defs: Array<string | Partial<NegColumnGroupDefinition>>): this {
-    // TODO: rowIndex in NegColumnGroupDefinition is mandatory but here we don't want it
-    // but Partial is not good cause we allow not sending span and prop... need to fix.
+  headerGroup(rowOptions: NegMetaRowDefinitions, ...defs: Array<Pick<NegColumnGroupDefinition, 'prop'> & Partial<NegColumnGroupDefinition>>): this;
+  headerGroup(...defs: Array<Pick<NegColumnGroupDefinition, 'prop'> & Partial<NegColumnGroupDefinition>>): this;
+  headerGroup(...defs: Array<NegMetaRowDefinitions | ( Pick<NegColumnGroupDefinition, 'prop'> & Partial<NegColumnGroupDefinition>) >): this {
     const rowIndex = this._currentHeaderRow++;
-    const rowClassName = this.getRowClass(defs, rowIndex);
+    const rowOptions = this.processRowOptions(defs, 'prop');
+    const rowClassName = this.genRowClass(rowOptions, rowIndex);
+
     const headerGroups: any = defs.map( d => Object.assign({ rowIndex }, d) );
 
     this._raw.headerGroup.push({
       rowIndex,
       rowClassName,
       cols: headerGroups,
+      type: (rowOptions && rowOptions.type) || 'fixed',
     });
 
     return this;
   }
 
-  private getRowClass(defs: any[], fallbackRowIndex: number): string {
-    return typeof defs[0] === 'string' ? defs.shift() : `neg-table-row-index-${fallbackRowIndex.toString()}`;
+  private processRowOptions(defs: any[], mustHaveProperty: string = 'id'): NegMetaRowDefinitions {
+    return defs[0][mustHaveProperty] ? undefined : defs.shift();
+  }
+
+  private genRowClass(rowOptions: { rowClassName?: string }, fallbackRowIndex: number): string {
+    return (rowOptions && rowOptions.rowClassName) || `neg-table-row-index-${fallbackRowIndex.toString()}`;
   }
 
   private buildHeaderGroups(rowIndex: number, headerGroupDefs: NegColumnGroupDefinition[], table: NegColumn[]): NegColumnGroup[] {
@@ -241,10 +277,12 @@ export class NegColumnFactory {
     for (let i = 0, len = tableDefs.length; i < len; i++) {
       const orgProp = tableDefs[i].orgProp;
       const idx = defs.findIndex( d => d.prop === orgProp);
-      const columnGroupDef: NegColumnGroupDefinition = idx > -1
+      const columnGroupDef: NegColumnGroupDefinition = idx !== -1
         ? defs.splice(idx, 1)[0]
         : defs.find( d => !d.prop ) || { prop: orgProp, rowIndex, span: undefined }
       ;
+
+      const placeholder = idx === -1 && !!columnGroupDef.prop;
 
       columnGroupDef.prop = orgProp;
       columnGroupDef.rowIndex = rowIndex;
@@ -262,7 +300,7 @@ export class NegColumnFactory {
         }
       }
       columnGroupDef.span = take;
-      const group = new NegColumnGroup(columnGroupDef, tableDefs.slice(i, i + take + 1));
+      const group = new NegColumnGroup(columnGroupDef, tableDefs.slice(i, i + take + 1), placeholder);
       headerGroup.push(group);
       i += take;
     }
