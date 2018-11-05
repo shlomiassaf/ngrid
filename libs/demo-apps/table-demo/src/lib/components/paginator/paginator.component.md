@@ -27,7 +27,7 @@ In this scenario the entire process is handled automatically by the table, based
   <neg-table usePagination
             blockUi
             [dataSource]="clientSideDS"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
     <neg-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.dataSource.paginator"></neg-table-paginator>
@@ -60,7 +60,7 @@ Regardless, it is the same information, transforming from one method to the othe
             [columns]="columns">
     <neg-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.dataSource.paginator"></neg-table-paginator>
+                        [paginator]="table.dataSource.paginator" style="height: 300px"></neg-table-paginator>
   </neg-table>
   <!--@neg-example:ex-2-->
 </docsi-mat-example-with-source>
@@ -77,7 +77,7 @@ With this method might be missing the total amount of rows/pages depending on th
   <neg-table usePagination="token"
             blockUi
             [dataSource]="tokenDS"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
     <neg-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.dataSource.paginator"></neg-table-paginator>
@@ -99,7 +99,7 @@ With this method might be missing the total amount of rows/pages depending on th
             [dataSource]="footerRowDS"
             [columns]="columnsPaginatorAsFooter"
             [stickyFooter]="[0]"
-            style="background: transparent">
+            style="background: transparent" style="height: 300px">
     <div *negTableFooterCellTypeDef="'PAGINATOR'; table as table"
         style="display: flex; justify-content: flex-end; width: 100%;">
       <neg-table-paginator [table]="table"

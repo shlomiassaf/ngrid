@@ -14,7 +14,7 @@ Because it's CSS, the maximum row height might be controlled by CSS (`max-height
 
 <docsi-mat-example-with-source title="Limit row height with cell overflow" contentClass="mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@neg-example:ex-2-->
-  <neg-table class="max-row-height-72" blockUi [dataSource]="ds1" [columns]="columns" style="height: 300px"></neg-table>
+  <neg-table class="max-row-height-72" blockUi [dataSource]="ds2" [columns]="columns" style="height: 300px"></neg-table>
   <!--@neg-example:ex-2-->
 </docsi-mat-example-with-source>
 
@@ -33,7 +33,7 @@ But now the maximum height has no effect, the height can be controlled only thro
 
 <docsi-mat-example-with-source title="Limit row height with cell overflow" contentClass="mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@neg-example:ex-3-->
-  <neg-table class="neg-table-cell-ellipsis max-row-height-72 min-row-height-64" blockUi [dataSource]="ds1" [columns]="columns" style="height: 300px"></neg-table>
+  <neg-table class="neg-table-cell-ellipsis max-row-height-72 min-row-height-64" blockUi [dataSource]="ds3" [columns]="columns" vScrollAuto="72" style="height: 300px"></neg-table>
   <!--@neg-example:ex-3-->
 </docsi-mat-example-with-source>
 

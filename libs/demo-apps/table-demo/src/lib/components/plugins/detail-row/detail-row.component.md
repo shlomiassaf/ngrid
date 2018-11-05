@@ -4,7 +4,7 @@ I> Requires `@neg/table/target-event` plugin
 
 <docsi-mat-example-with-source title="Detail Row" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@neg-example:ex-1-->
-  <neg-table blockUi [dataSource]="ds1" [columns]="columns" detailRow>
+  <neg-table blockUi [dataSource]="ds1" [columns]="columns" detailRow style="height: 300px">
     <div *negTableDetailRowDef="let row" class="neg-detail-row">
       <div>
         <h1>Detail Row</h1>
@@ -17,7 +17,7 @@ I> Requires `@neg/table/target-event` plugin
 
 <docsi-mat-example-with-source title="Detail Row custom parent" contentClass="mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@neg-example:ex-2-->
-  <neg-table blockUi [dataSource]="ds1" [columns]="columns" detailRow>
+  <neg-table blockUi [dataSource]="ds1" [columns]="columns" detailRow style="height: 300px">
     <div *negTableDetailRowDef="let row" class="neg-detail-row">
       <div>
         <h1>Detail Row</h1>
@@ -35,7 +35,7 @@ I> Requires `@neg/table/target-event` plugin
 <docsi-mat-example-with-source title="Detail Row Single mode & exclude toggle mode" contentClass="mat-elevation-z7" [query]="[{section: 'ex-3'}]">
   <!--@neg-example:ex-3-->
   <neg-table blockUi [dataSource]="ds1" [columns]="columns"
-            detailRow [singleDetailRow]="forceSingle" [excludeToggleFrom]="disableName">
+            detailRow [singleDetailRow]="forceSingle" [excludeToggleFrom]="disableName" style="height: 300px">
     <div *negTableDetailRowDef="let row" class="neg-detail-row">
       <div>
         <h1>Detail Row</h1>
@@ -51,7 +51,7 @@ I> Requires `@neg/table/target-event` plugin
 <docsi-mat-example-with-source title="Detail Row predicate" contentClass="mat-elevation-z7" [query]="[{section: 'ex-4'}]">
   <!--@neg-example:ex-4-->
   <neg-table blockUi [dataSource]="ds1" [columns]="columns"
-            [detailRow]="detailRowPredicate">
+            [detailRow]="detailRowPredicate" style="height: 300px">
     <div *negTableDetailRowDef="let row" class="neg-detail-row">
       <div>
         <h1>Detail Row</h1>

@@ -18,7 +18,7 @@
             usePagination
             blockUi
             [dataSource]="simpleSortDS"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
     <neg-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.dataSource.paginator"></neg-table-paginator>
@@ -44,7 +44,7 @@
             usePagination
             blockUi
             [dataSource]="defaultSortDS"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
     <neg-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.dataSource.paginator"></neg-table-paginator>
@@ -72,7 +72,7 @@
              usePagination
              blockUi
              [dataSource]="progSortDS"
-             [columns]="columns">
+             [columns]="columns" style="height: 300px">
     <neg-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.dataSource.paginator"></neg-table-paginator>

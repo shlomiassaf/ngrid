@@ -28,7 +28,7 @@ E> Block
   <!--@neg-example:ex-1-->
   <neg-table blockUi
             [dataSource]="autoDataSource"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
   </neg-table>
   <button mat-button (click)="refresh()">Refresh</button>
   <!--@neg-example:ex-1-->
@@ -52,7 +52,7 @@ E> Block
             #blockUi="blockUi"
             blockUi="false"
             [dataSource]="manualDataSource"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
   </neg-table>
   <button mat-button (click)="tbl.plugin('blockUi').blockUi = !tbl.plugin('blockUi').blockUi">Toggle Block UI (plugin interface)</button>
   <button mat-button (click)="blockUi.blockUi = !blockUi.blockUi">Toggle Block UI (plugin instance)</button>

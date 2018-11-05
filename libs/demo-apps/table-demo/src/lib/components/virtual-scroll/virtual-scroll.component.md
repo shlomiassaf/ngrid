@@ -2,21 +2,21 @@
 
 <docsi-mat-example-with-source title="Auto-size Virtual Scroll" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@neg-example:ex-1-->
-  <neg-table #tbl1 blockUi [dataSource]="ds1" [columns]="columns" vScrollAuto></neg-table>
+  <neg-table #tbl1 blockUi [dataSource]="ds1" [columns]="columns" vScrollAuto style="height: 300px"></neg-table>
   <button mat-button (click)="loadData(tbl1)">Load Data</button>
   <!--@neg-example:ex-1-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Fixed-size Virtual Scroll" contentClass="mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@neg-example:ex-2-->
-<neg-table #tbl2 blockUi [dataSource]="ds2" [columns]="columns" vScrollFixed="48"></neg-table>
+<neg-table #tbl2 blockUi [dataSource]="ds2" [columns]="columns" vScrollFixed="48" style="height: 300px"></neg-table>
 <button mat-button (click)="loadData(tbl2)">Load Data</button>
   <!--@neg-example:ex-2-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="No Virtual Scroll" contentClass="mat-elevation-z7" [query]="[{section: 'ex-3'}]">
   <!--@neg-example:ex-3-->
-  <neg-table #tbl3 blockUi [dataSource]="ds3" [columns]="columns" vScrollNone></neg-table>
+  <neg-table #tbl3 blockUi [dataSource]="ds3" [columns]="columns" vScrollNone style="height: 300px"></neg-table>
   <button mat-button (click)="loadData(tbl3)">Load Data</button>
   <!--@neg-example:ex-3-->
 </docsi-mat-example-with-source>
@@ -37,8 +37,8 @@
     <mat-radio-button value="fixed">Fixed Size</mat-radio-button>
     <mat-radio-button value="none">No Virtual Scroll</mat-radio-button>
   </mat-radio-group>
-  <div class="table-placeholder">
-    <neg-table #tbl4 *ngIf="ds4" blockUi [dataSource]="ds4" [columns]="columns"></neg-table>
+  <div class="table-placeholder" style="height: 300px">
+    <neg-table #tbl4 *ngIf="ds4" blockUi [dataSource]="ds4" [columns]="columns" style="height: 300px"></neg-table>
   </div>
   <button mat-button (click)="ds4 = undefined" [disabled]="!ds4">Reset</button>
   <!--@neg-example:ex-4-->

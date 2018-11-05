@@ -11,7 +11,7 @@ W> and because the table does not support vertical virtual scroll, transpose wil
   <neg-table blockUi
             [transpose]="transposeToggle"
             [dataSource]="ds1"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
   </neg-table>
   <mat-checkbox [checked]="transposeToggle" (change)="transposeToggle = $event.checked">Transpose Enabled</mat-checkbox>
   <!--@neg-example:ex-1-->
@@ -22,7 +22,7 @@ W> and because the table does not support vertical virtual scroll, transpose wil
   <neg-table blockUi
             transpose matchTemplates
             [dataSource]="ds2"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
   </neg-table>
   <!--@neg-example:ex-2-->
 </docsi-mat-example-with-source>
@@ -32,7 +32,7 @@ W> and because the table does not support vertical virtual scroll, transpose wil
   <neg-table blockUi
             transpose matchTemplates [transposeDefaultCol]="{ minWidth: 100 }"
             [dataSource]="ds3"
-            [columns]="columns">
+            [columns]="columns" style="height: 300px">
   </neg-table>
   <!--@neg-example:ex-3-->
 </docsi-mat-example-with-source>

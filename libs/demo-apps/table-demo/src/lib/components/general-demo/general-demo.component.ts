@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, ViewEncapsulation, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 
-import { createDS, columnFactory } from '@neg/table';
+import { createDS, columnFactory, NegTableComponent } from '@neg/table';
 import { ExampleGroupComponent, Customer, DemoDataSource } from '@neg/demo-apps/shared';
 
 const COUNTRY_GETTER = {
@@ -55,7 +55,6 @@ function createColumns(noType = false) {
   templateUrl: './general-demo.component.html',
   styleUrls: ['./general-demo.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GeneralDemoTableExampleComponent implements OnDestroy {
 
@@ -67,10 +66,22 @@ export class GeneralDemoTableExampleComponent implements OnDestroy {
   noGpu = false;
   plainColumns = false;
   showTable = true;
+  hideColumns: string[] = [];
+
+  @ViewChild(NegTableComponent) negTable: NegTableComponent<any>;
 
   constructor(private datasource: DemoDataSource, private exampleGroup: ExampleGroupComponent, private cdr: ChangeDetectorRef) {
     exampleGroup.hideToc = true;
     datasource.getCountries().then( c => COUNTRY_GETTER.data = c );
+  }
+
+  toggleColumn(coll: string[], id: string): void {
+    const idx = coll.indexOf(id);
+    if (idx === -1) {
+      coll.push(id);
+    } else {
+      coll.splice(idx, 1);
+    }
   }
 
   togglePlainColumns() {

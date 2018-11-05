@@ -31,6 +31,8 @@ export class RowHeightTableExampleComponent {
 
   columns = COLUMNS;
   ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
+  ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
+  ds3 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
 
   constructor(private datasource: DemoDataSource) { }
 }

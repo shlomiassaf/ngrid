@@ -1,7 +1,13 @@
 <div fxLayout="column" style="height: 100%">
   <mat-checkbox [value]="noGpu" (change)="noGpu = !noGpu">Disable GPU Scrolling</mat-checkbox>
   <mat-checkbox [value]="plainColumns" (change)="togglePlainColumns()">Use plain columns</mat-checkbox>
-
+  <!-- <h3>Hide: </h3>
+  <mat-button-toggle-group *ngIf="negTable" multiple>
+    <mat-button-toggle *ngFor="let c of negTable._store.allTable"
+                      color="primary"
+                      [value]="c" [checked]="hideColumns.indexOf(c.id) > -1"
+                      (change)="toggleColumn(hideColumns, c.id)">{{c.label}}</mat-button-toggle>
+  </mat-button-toggle-group> -->
   <mat-form-field fxFlex="nogrow" style="width:200px">
     <mat-select [value]="collectionSize" (selectionChange)="collectionSizeChange($event.value)">
       <mat-option [value]="10">10</mat-option>
@@ -14,9 +20,10 @@
     </mat-select>
   </mat-form-field>
   <div style="flex: 1 1 100%; display: flex; min-height: 0px">
-    <neg-table *ngIf="showTable" class="neg-table-cell-ellipsis neg-table-header-cell-ellipsis" style="height: 100%; width: 100%;"
+    <neg-table #negTbl *ngIf="showTable" class="neg-table-cell-ellipsis neg-table-header-cell-ellipsis" style="height: 100%; width: 100%;"
                [dataSource]="dataSource" [columns]="columns"
                vScrollAuto [noGpu]="noGpu"
+               [hideColumns]="hideColumns"
                blockUi
                matSort
                cellTooltip
