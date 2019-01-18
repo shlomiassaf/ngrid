@@ -87,7 +87,7 @@ function patchRemoveReflection() {
   }
 }
 
-declare module 'typedoc/dist/lib/converter/context' {
+declare module 'typedoc/dist/lib/converter/context.d' {
   interface Context {
     removeReflection(reflection: Reflection, removeStaleParent?: boolean);
   }

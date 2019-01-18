@@ -1,4 +1,4 @@
-import * as ts from 'typedoc/node_modules/typescript';
+import * as ts from 'typescript';
 
 import { Reflection, ReflectionKind} from "typedoc/dist/lib/models/reflections/abstract";
 import { ConverterComponent} from "typedoc/dist/lib/converter/components";

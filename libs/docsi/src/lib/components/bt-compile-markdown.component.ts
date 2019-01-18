@@ -6,6 +6,6 @@ import { Component, Attribute } from '@angular/core';
 })
 export class BtCompileMarkdownComponent {
   constructor(@Attribute('src') src: string) {
-    throw new Error(`Invalid BtCompileMarkdownComponent`);
+    throw new Error(`Invalid BtCompileMarkdownComponent: ` + src);
   }
 }

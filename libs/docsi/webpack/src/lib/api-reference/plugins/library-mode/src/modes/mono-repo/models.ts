@@ -1,6 +1,6 @@
 import * as Path from 'path';
 import * as FS from 'fs';
-import * as ts from 'typedoc/node_modules/typescript';
+import * as ts from 'typescript';
 
 import { Reflection, ContainerReflection, DeclarationReflection } from 'typedoc';
 

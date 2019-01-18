@@ -1,4 +1,4 @@
-import * as ts from 'typedoc/node_modules/typescript';
+import * as ts from 'typescript';
 import { Reflection, ReflectionKind, TraverseProperty } from 'typedoc';
 import { Context } from "typedoc/dist/lib/converter";
 

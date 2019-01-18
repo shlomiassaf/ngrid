@@ -11,21 +11,22 @@ import {
   Output,
   OnDestroy,
   Optional,
+  OnInit,
 } from '@angular/core';
 
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-  CdkDropList,
+  CdkDropListContainer,
   DragDropRegistry,
   CdkDrag,
   CdkDragDrop,
-  CDK_DROP_LIST_CONTAINER,
+  CDK_DROP_LIST,
+  DragRef, DropListRef, __$Overwrite
 } from '@angular/cdk/drag-drop';
 
-import { NegTableComponent, TablePlugin, NegColumn, NegColumnGroup, NegTablePluginController, NegTableCellContext } from '@neg/table';
+import { NegTableComponent, TablePlugin, NegColumn, NegTablePluginController, NegTableCellContext } from '@neg/table';
 import { CdkLazyDropList, CdkLazyDrag } from '../lazy-drag-drop';
-
 
 import './extend-table';
 declare module '@neg/table/lib/ext/types' {
@@ -45,12 +46,14 @@ let _uniqueIdCounter = 0;
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
     '[id]': 'id',
+    '[class.cdk-drop-list-dragging]': '_dropListRef.isDragging()',
+    '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
   },
   providers: [
-    { provide: CDK_DROP_LIST_CONTAINER, useExisting: NegTableColumnReorderPluginDirective },
+    { provide: CDK_DROP_LIST, useExisting: NegTableColumnReorderPluginDirective },
   ],
 })
-export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropList<T> implements OnDestroy {
+export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropList<T, NegTableColumnReorderPluginDirective<T>> implements OnInit, OnDestroy {
   id = `neg-table-column-reorder-list-${_uniqueIdCounter++}`;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
@@ -72,20 +75,26 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
   private _columnReorder = false;
   private _manualOverride = false;
   private _removePlugin: (table: NegTableComponent<any>) => void;
-  private lastSwap: NegTableColumnDragDirective;
-  private lastExit: { position: number, item: { drag: NegTableColumnDragDirective; offset: number; clientRect: ClientRect; } };
+  private lastSwap: DragRef<NegTableColumnDragDirective<T>>;
+  private lastExit: { position: number, item: { drag: DragRef<NegTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; } };
 
   // Stuff to workaround encapsulation in CdkDropList
-  private negGetItemIndexFromPointerPosition: (item: CdkDrag, pointerX: number, pointerY: number, delta?: {x: number, y: number}) => number = (this as any)._getItemIndexFromPointerPosition;
-  private get negGetPositionCacheItems(): { drag: NegTableColumnDragDirective; offset: number; clientRect: ClientRect; }[] { return (this as any)._positionCache.items; }
+  private get negGetItemIndexFromPointerPosition(): (item: DragRef<NegTableColumnDragDirective<T>>, pointerX: number, pointerY: number, delta?: {x: number, y: number}) => number {
+    return (this._dropListRef as any)._getItemIndexFromPointerPosition.bind(this._dropListRef);
+  }
+  private get negGetPositionCacheItems(): { drag: DragRef<NegTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; }[] {
+    // TODO: Remove on next minor update >=7.2.1
+    return (this._dropListRef as any)._positionCache.items;
+    // return (this._dropListRef as any)._itemPositions;
+  }
 
   constructor(public table: NegTableComponent<T>,
               pluginCtrl: NegTablePluginController,
               element: ElementRef<HTMLElement>,
-              dragDropRegistry: DragDropRegistry<CdkDrag, CdkDropList<T>>,
+              dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
               changeDetectorRef: ChangeDetectorRef,
               @Optional() private dir?: Directionality) {
-    super(element, dragDropRegistry, changeDetectorRef, dir);
+    super(element, dragDropRegistry as any, changeDetectorRef, dir);
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     this.directContainerElement = '.neg-table-header-row-main';
@@ -96,96 +105,30 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
     });
 
     this.dragging.subscribe( isDragging => {
-      if (!table._cdkTable) { return; }
-
+      const el = element.nativeElement;
       if (isDragging) {
-        table._cdkTable.addClass('neg-table-column-list-dragging');
+        el.classList.add('neg-table-column-list-dragging');
       } else {
-        table._cdkTable.removeClass('neg-table-column-list-dragging');
+        el.classList.remove('neg-table-column-list-dragging');
       }
       this.lastSwap = undefined;
     });
+
+    this.monkeyPatchDropListRef();
   }
 
-  start(): void {
-    this.lastExit = undefined;
-    this.dragging.next(true);
-    super.start();
-  }
+  ngOnInit(): void {
+    super.ngOnInit();
 
-  drop(item: NegTableColumnDragDirective, currentIndex: number, previousContainer: CdkDropList): void {
-    this._negReset();
-    super.drop(item, currentIndex, previousContainer);
-  }
+    this.dropped.subscribe( e => {
+      this._negReset();
+    });
 
-  enter(item: NegTableColumnDragDirective, pointerX: number, pointerY: number): void {
-    if (this.lastExit) {
-      const lastExit = this.lastExit;
-      this.lastExit = undefined;
-      if (lastExit.item.drag === item) {
-        const isHorizontal = this.orientation === 'horizontal';
-        pointerX = lastExit.item.clientRect.left + 1 - (isHorizontal ? lastExit.item.offset : 0);
-        pointerY = lastExit.item.clientRect.top + 1 - (!isHorizontal ? lastExit.item.offset : 0);
-      }
-    }
-    super.enter(item, pointerX, pointerY);
-  }
-
-  exit(item: NegTableColumnDragDirective): void {
-    const position = this.negGetPositionCacheItems.findIndex( currentItem => currentItem.drag === item );
-    this.lastExit = { position, item: this.negGetPositionCacheItems[position] };
-    this._negReset()
-    super.exit(item);
-  }
-
-  _sortItem(item: NegTableColumnDragDirective, pointerX: number, pointerY: number, pointerDelta: {x: number, y: number}): void {
-    const siblings = this.negGetPositionCacheItems;
-    const oldOrder = siblings.slice();
-
-    const newIndex = this.negGetItemIndexFromPointerPosition(item, pointerX, pointerY, pointerDelta);
-    if (newIndex === -1 && siblings.length > 0) {
-      return;
-    }
-
-    const isHorizontal = this.orientation === 'horizontal';
-    const siblingAtNewPosition = siblings[newIndex];
-
-    if (siblingAtNewPosition.drag.column.wontBudge) {
-      return;
-    }
-
-    // we now need to find if between current and new position there are items with `wontBudge`
-    const itemAtOriginalPosition = this.lastSwap ? this.lastSwap : item;
-    const currentIndex = siblings.findIndex( currentItem => currentItem.drag === itemAtOriginalPosition );
-    const start = Math.min(newIndex, currentIndex)
-    const itemsDraggedOver = siblings.slice(start, Math.abs(newIndex - currentIndex) + start);
-    for (const dragItem of itemsDraggedOver) {
-      if (dragItem.drag.column.wontBudge && dragItem.drag !== item) {
-        return;
-      }
-    }
-
-    // check if we move the item outside of locked group OR into a locked group... both are invalid.
-    if (!item.column.checkGroupLockConstraint(siblingAtNewPosition.drag.column)) {
-      return;
-    }
-
-    super._sortItem(item, pointerX, pointerY, pointerDelta);
-
-    this.lastSwap = siblingAtNewPosition.drag;
-
-    if (isHorizontal) {
-      siblings.forEach((sibling, index) => {
-        // Don't do anything if the position hasn't changed.
-        if (oldOrder[index] === sibling) {
-          return;
-        }
-
-        for (const c of sibling.drag.getCells()) {
-          c.style.transform = `translate3d(${sibling.offset}px, 0, 0)`;
-        }
-      });
-    }
+    this.exited.subscribe( e => {
+      const position = this.negGetPositionCacheItems.findIndex( currentItem => currentItem.drag === e.item.negDragRef );
+      this.lastExit = { position, item: this.negGetPositionCacheItems[position] };
+      this._negReset();
+    });
   }
 
   ngOnDestroy(): void {
@@ -193,14 +136,86 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
     this._removePlugin(this.table);
   }
 
+  protected beforeStarted(): void {
+    super.beforeStarted();
+    this.lastExit = undefined;
+    this.dragging.next(true);
+  }
+
   private _negReset(): void {
     this.dragging.next(false);
     const siblings = this.negGetPositionCacheItems;
     siblings.forEach((sibling, index) => {
-      for (const c of sibling.drag.getCells()) {
+      for (const c of sibling.drag.data.getCells()) {
         c.style.transform = ``;
       }
     });
+  }
+
+  private monkeyPatchDropListRef(): void {
+    const { _sortItem, enter } = this._dropListRef;
+
+    this.negDropListRef.enter = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number): void => {
+      if (this.lastExit) {
+        const lastExit = this.lastExit;
+        this.lastExit = undefined;
+        if (lastExit.item.drag === item) {
+          const isHorizontal = this.orientation === 'horizontal';
+          pointerX = lastExit.item.clientRect.left + 1 - (isHorizontal ? lastExit.item.offset : 0);
+          pointerY = lastExit.item.clientRect.top + 1 - (!isHorizontal ? lastExit.item.offset : 0);
+        }
+      }
+      enter.call(item, item, pointerX, pointerY);
+    };
+
+    this.negDropListRef._sortItem = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number, pointerDelta: {x: number, y: number}): void => {
+      const siblings = this.negGetPositionCacheItems;
+      const newIndex = this.negGetItemIndexFromPointerPosition(item as DragRef<NegTableColumnDragDirective<T>>, pointerX, pointerY, pointerDelta);
+      if (newIndex === -1 && siblings.length > 0) {
+        return;
+      }
+
+      const oldOrder = siblings.slice();
+      const isHorizontal = this.orientation === 'horizontal';
+      const siblingAtNewPosition = siblings[newIndex];
+
+      if (siblingAtNewPosition.drag.data.column.wontBudge) {
+        return;
+      }
+
+      // we now need to find if between current and new position there are items with `wontBudge`
+      const itemAtOriginalPosition = this.lastSwap ? this.lastSwap : item;
+      const currentIndex = siblings.findIndex( currentItem => currentItem.drag === itemAtOriginalPosition );
+      const start = Math.min(newIndex, currentIndex)
+      const itemsDraggedOver = siblings.slice(start, Math.abs(newIndex - currentIndex) + start);
+      for (const dragItem of itemsDraggedOver) {
+        if (dragItem.drag.data.column.wontBudge && dragItem.drag !== item) {
+          return;
+        }
+      }
+
+      // check if we move the item outside of locked group OR into a locked group... both are invalid.
+      if (!item.data.column.checkGroupLockConstraint(siblingAtNewPosition.drag.data.column)) {
+        return;
+      }
+
+      _sortItem.call(this._dropListRef, item, pointerX, pointerY, pointerDelta);
+
+      this.lastSwap = siblingAtNewPosition.drag;
+
+      if (isHorizontal) {
+        siblings.forEach((sibling, index) => {
+          // Don't do anything if the position hasn't changed.
+          if (oldOrder[index] === sibling) {
+            return;
+          }
+
+          for (const c of sibling.drag.data.getCells()) {
+            c.style.transform = `translate3d(${sibling.offset}px, 0, 0)`;
+          }
+        });
+      }
+    };
   }
 }
 
@@ -209,13 +224,13 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
   exportAs: 'negTableColumnDrag',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drag',
-    '[class.cdk-drag-dragging]': '_hasStartedDragging && _isDragging()',
+    '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
   providers: [
     { provide: CdkDrag, useExisting: NegTableColumnDragDirective }
   ]
 })
-export class NegTableColumnDragDirective<T = any> extends CdkLazyDrag<T, NegTableColumnReorderPluginDirective<T>> implements AfterViewInit {
+export class NegTableColumnDragDirective<T = any> extends CdkLazyDrag<T, NegTableColumnReorderPluginDirective<T>, NegTableColumnDragDirective<T>> implements AfterViewInit {
   rootElementSelector = 'neg-table-header-cell';
 
   column: NegColumn;
@@ -233,20 +248,11 @@ export class NegTableColumnDragDirective<T = any> extends CdkLazyDrag<T, NegTabl
   private cache: HTMLElement[];
 
   ngAfterViewInit(): void {
-    const _pointerDown = this._pointerDown;
-    this._pointerDown = (event: MouseEvent | TouchEvent) => {
-      const { cdkDropList } = this;
-      if (cdkDropList && cdkDropList.columnReorder && this._context.col.reorder) {
-        // we don't allow a new dragging session before the previous ends.
-        // this sound impossible, but due to animation transitions its actually is.
-        // if the `transitionend` is long enough, a new drag can start...
-        if (!cdkDropList._dragging) {
-          _pointerDown(event);
-        }
-      }
-    }
+    // super.ngAfterViewInit will register the _pointerDown so we can change now, it safe.
+    this.monkeyPatchDragRef();
 
     super.ngAfterViewInit();
+
     this.started.subscribe( () => this._context.col.columnDef.isDragging = true );
     this.ended.subscribe( () => this._context.col.columnDef.isDragging = false );
   }
@@ -265,6 +271,22 @@ export class NegTableColumnDragDirective<T = any> extends CdkLazyDrag<T, NegTabl
         el.style.transform = ``;
       }
       this.cache = undefined;
+    }
+  }
+
+  private monkeyPatchDragRef(): void {
+    const dragRef: any = this._dragRef;
+    const _pointerDown = dragRef._pointerDown;
+    dragRef._pointerDown = (event: MouseEvent | TouchEvent) => {
+      const { cdkDropList } = this;
+      if (cdkDropList && cdkDropList.columnReorder && this._context.col.reorder) {
+        // we don't allow a new dragging session before the previous ends.
+        // this sound impossible, but due to animation transitions its actually is.
+        // if the `transitionend` is long enough, a new drag can start...
+        if (!cdkDropList._dropListRef.isDragging()) {
+          _pointerDown.call(this._dragRef, event);
+        }
+      }
     }
   }
 }

@@ -8,7 +8,7 @@ function Plugin(pluginHost: PluginHost) {
   const app: Application = pluginHost.owner;
 
   if (!app.converter.hasComponent('library-mode-plugin')) {
-    app.converter.addComponent('library-mode-plugin', LM);
+    app.converter.addComponent('library-mode-plugin', LM as any);
   }
 }
 
@@ -18,4 +18,4 @@ module Plugin {
 
 }
 
-export = Plugin;
+export default Plugin;

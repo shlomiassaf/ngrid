@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "importHelpers": true,
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -83,7 +84,8 @@
       "@neg/*": [
         "libs/*"
       ]
-    }
+    },
+    "module": "es2015"
   },
   "exclude": [
     "node_modules",

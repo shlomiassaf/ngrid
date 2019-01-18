@@ -26,6 +26,6 @@
         {{ agg.pending.label }}
       </mat-chip>
     </mat-chip-list>
-     <div *cdkDragPlaceholder></div>
+    <div *cdkDragPlaceholder></div>
   </div>
 </neg-table>

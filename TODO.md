@@ -41,3 +41,7 @@ The registry is used internally and the user uses a structural directive that ab
 - Some plugin specific directives are defined in the package - need to move them out to the plugin.
 - Some plugin specific registry definition are defined in the table - need to move them out to the plugin.
 - Some plugins are passive, having the table looking for their specific registry template and inject it - need to move this to the plugin. SEE: cellDragger, cellResizer
+
+
+aggregation
+inf scroll

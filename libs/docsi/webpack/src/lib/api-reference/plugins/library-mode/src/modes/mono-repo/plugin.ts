@@ -1,7 +1,7 @@
 import '../../../../typedoc-patchs/src/patching';
 import * as Path from 'path';
 import * as FS from 'fs';
-import * as ts from 'typedoc/node_modules/typescript';
+import * as ts from 'typescript';
 
 import { Reflection, ReflectionKind } from 'typedoc';
 import { ConverterComponent } from 'typedoc/dist/lib/converter/components';

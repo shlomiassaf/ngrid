@@ -1,5 +1,5 @@
 {
-  "extends": "../../../../tsconfig.lib.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../../dist/out-tsc/libs/table/material/paginator",
     "target": "es2015",

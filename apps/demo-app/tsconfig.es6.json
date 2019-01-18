@@ -2,6 +2,7 @@
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
     "target": "es6",
+    "module": "commonjs",
     "outDir": "../../dist/out-tsc/apps/demo-app",
     "lib": [
       "es2017",

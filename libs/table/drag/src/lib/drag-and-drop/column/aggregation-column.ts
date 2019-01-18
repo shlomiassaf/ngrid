@@ -1,25 +1,19 @@
 // tslint:disable:no-output-rename
-import { BehaviorSubject } from 'rxjs';
 
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Directive,
   ElementRef,
-  Input,
-  Output,
   OnDestroy,
   Optional,
 } from '@angular/core';
 
 import { Directionality } from '@angular/cdk/bidi';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-  CdkDropList,
+  CdkDropListContainer,
   DragDropRegistry,
-  CdkDrag,
-  CdkDragDrop,
-  CDK_DROP_LIST_CONTAINER,
+  CDK_DROP_LIST,
+  DragRef, DropListRef
 } from '@angular/cdk/drag-drop';
 
 import { NegTableComponent, NegTablePluginController, NegColumn } from '@neg/table';
@@ -36,7 +30,7 @@ let _uniqueIdCounter = 0;
     '[id]': 'id',
   },
   providers: [
-    { provide: CDK_DROP_LIST_CONTAINER, useExisting: NegTableAggregationContainerDirective },
+    { provide: CDK_DROP_LIST, useExisting: NegTableAggregationContainerDirective },
   ],
 })
 export class NegTableAggregationContainerDirective<T = any> extends CdkLazyDropList<T> implements OnDestroy {
@@ -48,18 +42,18 @@ export class NegTableAggregationContainerDirective<T = any> extends CdkLazyDropL
   constructor(public table: NegTableComponent<T>,
               pluginCtrl: NegTablePluginController,
               element: ElementRef<HTMLElement>,
-              dragDropRegistry: DragDropRegistry<CdkDrag, CdkDropList<T>>,
+              dragDropRegistry: DragDropRegistry<DragRef, DropListRef<T>>,
               changeDetectorRef: ChangeDetectorRef,
               @Optional() private dir?: Directionality) {
-    super(element, dragDropRegistry, changeDetectorRef, dir);
+    super(element, dragDropRegistry as any, changeDetectorRef, dir);
     const reorder = pluginCtrl.getPlugin('columnReorder');
     reorder.connectedTo = this.id;
   }
 
-  drop(item: NegTableColumnDragDirective<T>, currentIndex: number, previousContainer: CdkDropList): void {
+  drop(item: NegTableColumnDragDirective<T>, currentIndex: number, previousContainer: Partial<CdkDropListContainer>, isPointerOverContainer: boolean): void {
     this.pending = undefined;
     this.table.columnApi.addGroupBy(item.column);
-    super.drop(item, currentIndex, previousContainer);
+    super.drop(item, currentIndex, previousContainer, isPointerOverContainer);
   }
 
   /**

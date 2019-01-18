@@ -1,5 +1,5 @@
 const toposort = require('toposort');
-import * as ts from 'typedoc/node_modules/typescript';
+import * as ts from 'typescript';
 import { ContainerReflection, Reflection, ReflectionKind } from 'typedoc';
 import { findAncestorOfKind, kindOfFamily } from '../../../utils';
 

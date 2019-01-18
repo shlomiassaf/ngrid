@@ -3,7 +3,7 @@
 
 import * as Path from 'path';
 import * as FS from 'fs';
-import * as ts from 'typedoc/node_modules/typescript';
+import * as ts from 'typescript';
 import { ReflectionKind } from 'typedoc';
 import { ChildableComponent, Component } from 'typedoc/dist/lib/utils';
 import { ComponentEvent, ComponentHost } from 'typedoc/dist/lib/utils/component';

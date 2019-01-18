@@ -1,7 +1,7 @@
 import { Application } from 'typedoc';
 
-import * as jsonDataSource from './plugins/json-datasource/src/index';
-import * as libraryMode from './plugins/library-mode/src/index';
+import jsonDataSource from './plugins/json-datasource/src/index';
+import libraryMode from './plugins/library-mode/src/index';
 
 export class DocsiTypedocApplication extends Application {
   private inputFiles: string[];
