@@ -1,9 +1,9 @@
 import { animationFrameScheduler, Observable, Subject, asapScheduler } from 'rxjs';
 import { auditTime, filter, take, debounceTime } from 'rxjs/operators';
 
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 
-import { NegTableExtensionApi } from '../../ext/table-ext-api';
+import { NegTableExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
 import { NegMetaRowDefinitions } from '../columns/types';
 import { NegMetaRowDirective } from './meta-row.directive';
 
@@ -28,7 +28,7 @@ export class NegTableMetaRowService<T = any> {
   private sync$ = new Subject<void>();
   private hzScroll$ = new Subject<number>();
 
-  constructor(public readonly extApi: NegTableExtensionApi<T>) {
+  constructor(@Inject(EXT_API_TOKEN) public readonly extApi: NegTableExtensionApi<T>) {
     this.sync = this.sync$ // TODO: complete
       .pipe(
         debounceTime(0, asapScheduler),

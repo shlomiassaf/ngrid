@@ -84,6 +84,8 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   const idx = webpackConfig.plugins.findIndex( p => p instanceof AngularCompilerPlugin );
   webpackConfig.plugins.splice(idx + 1, 0, ...plugins);
 
+  (webpackConfig.plugins[idx] as any)._options.directTemplateLoading = false;
+
   webpackConfig.plugins.push(new DocsiMetadataFileEmitterWebpackPlugin());
   webpackConfig.plugins.push(new DocsiSourceCodeRefWebpackPlugin());
   // webpackConfig.plugins.push(new DocsiApiReferenceWebpackPlugin({

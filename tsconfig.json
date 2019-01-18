@@ -8,6 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
+    "module": "es2015",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -84,8 +85,7 @@
       "@neg/*": [
         "libs/*"
       ]
-    },
-    "module": "es2015"
+    }
   },
   "exclude": [
     "node_modules",
