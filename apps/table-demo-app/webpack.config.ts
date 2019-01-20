@@ -5,7 +5,7 @@ import { ServiceWorkerTsPlugin } from '../../tools/service-worker-ts-plugin';
 
 const SERVICE_WORKER_HTTP_SERVER_REGEXP = /.+service-worker\.ts$/;
 
-const LIB_APPS_FOLDER = 'demo-apps';
+const LIB_APPS_FOLDER = 'apps/table';
 const APP_FOLDER = 'table-demo-app';
 
 function excludeFromTsLoader(loaders, ...regexp) {

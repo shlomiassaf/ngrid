@@ -10,6 +10,6 @@
   ],
   "include": [
     "**/*.ts",
-    "../../libs/demo-apps/**/ng-lazy-module-index.ts"
+    "../../libs/apps/table/**/ng-lazy-module-index.ts"
   ]
 }

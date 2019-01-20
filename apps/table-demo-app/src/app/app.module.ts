@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { NxModule } from '@nrwl/nx';
 
-import { SharedModule } from '@neg/demo-apps/shared';
+import { SharedModule } from '@neg/apps/table/shared';
 
 import { DemoHomePageComponent } from './demo-home-page/demo-home-page.component';
 import { AppComponent } from './app.component';
@@ -28,10 +28,10 @@ import { AppComponent } from './app.component';
     MatButtonModule,
     RouterModule.forRoot(
       [
-        { path: '', loadChildren: '@neg/demo-apps/demos#DemosModule' },
-        { path: 'concepts', loadChildren: '@neg/demo-apps/concepts#ConceptsModule' },
-        { path: 'features', loadChildren: '@neg/demo-apps/features#FeaturesModule' },
-        { path: 'stories', loadChildren: '@neg/demo-apps/stories#StoriesModule' },
+        { path: '', loadChildren: '@neg/apps/table/demos#DemosModule' },
+        { path: 'concepts', loadChildren: '@neg/apps/table/concepts#ConceptsModule' },
+        { path: 'features', loadChildren: '@neg/apps/table/features#FeaturesModule' },
+        { path: 'stories', loadChildren: '@neg/apps/table/stories#StoriesModule' },
       ],
       {
         useHash: true,

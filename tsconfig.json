@@ -18,20 +18,20 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@neg/demo-apps/concepts": [
-        "libs/demo-apps/concepts/src/index.ts"
+      "@neg/apps/table/concepts": [
+        "libs/apps/table/concepts/src/index.ts"
       ],
-      "@neg/demo-apps/features": [
-        "libs/demo-apps/features/src/index.ts"
+      "@neg/apps/table/features": [
+        "libs/apps/table/features/src/index.ts"
       ],
-      "@neg/demo-apps/stories": [
-        "libs/demo-apps/stories/src/index.ts"
+      "@neg/apps/table/stories": [
+        "libs/apps/table/stories/src/index.ts"
       ],
-      "@neg/demo-apps/demos": [
-        "libs/demo-apps/demos/src/index.ts"
+      "@neg/apps/table/demos": [
+        "libs/apps/table/demos/src/index.ts"
       ],
-      "@neg/demo-apps/shared": [
-        "libs/demo-apps/shared/src/index.ts"
+      "@neg/apps/table/shared": [
+        "libs/apps/table/shared/src/index.ts"
       ],
       "@neg/docsi": [
         "libs/docsi/src/index.ts"
