@@ -8,146 +8,176 @@
     "nx.json": "*"
   },
   "projects": {
-    "demo-app": {
+    "table-demo-app": {
       "tags": [
-        "demo-app"
+        "type:app",
+        "table-demo-app"
       ]
     },
-    "demo-app-e2e": {
+    "table-demo-app-e2e": {
       "tags": [
-        "e2e",
-        "demo-app"
+        "type:e2e-app",
+        "parent:table-demo-app"
       ]
     },
-    "demo-apps-concepts": {
+    "apps-table-shared": {
       "tags": [
-        "demo-app"
+        "type:child-app",
+        "parent:table-demo-app"
       ]
     },
-    "demo-apps-features": {
+    "apps-table-concepts": {
       "tags": [
-        "demo-app"
+        "type:child-app",
+        "parent:table-demo-app"
       ]
     },
-    "demo-apps-stories": {
+    "apps-table-features": {
       "tags": [
-        "demo-app"
+        "type:child-app",
+        "parent:table-demo-app"
       ]
     },
-    "demo-apps-demos": {
+    "apps-table-stories": {
       "tags": [
-        "demo-app"
+        "type:child-app",
+        "parent:table-demo-app"
       ]
     },
-    "demo-apps-shared": {
+    "apps-table-demos": {
       "tags": [
-        "demo-app"
+        "type:child-app",
+        "parent:table-demo-app"
       ]
     },
     "table": {
       "tags": [
-        "publish",
-        "table"
+        "name:table",
+        "type:lib"
       ]
     },
     "table-sticky": {
       "tags": [
-        "publish-plugin",
-        "table",
-        "table-sticky"
+        "name:sticky",
+        "type:child-lib",
+        "parent:table"
       ]
     },
     "table-detail-row": {
       "tags": [
-        "publish-plugin",
-        "table",
-        "table-detail-row"
+        "name:detail-row",
+        "type:child-lib",
+        "parent:table"
       ]
     },
     "table-block-ui": {
       "tags": [
-        "publish-plugin",
-        "table",
-        "table-block-ui"
-      ]
-    },
-    "docsi": {
-      "tags": [
-        "publish-plugin docsi"
-      ]
-    },
-    "docsi-webpack": {
-      "tags": [
-        "publish-plugin docsi"
-      ]
-    },
-    "docsi-toc": {
-      "tags": [
-        "publish-plugin docsi"
-      ]
-    },
-    "docsi-material-suite": {
-      "tags": [
-        "publish-plugin docsi"
-      ]
-    },
-    "table-transpose": {
-      "tags": [
-        "publish-plugin table table-transpose"
-      ]
-    },
-    "table-target-events": {
-      "tags": [
-        "publish-plugin table table-target-events"
-      ]
-    },
-    "table-material-selection-column": {
-      "tags": [
-        "publish-plugin",
-        "table",
-        "material",
-        "selection-column"
-      ]
-    },
-    "table-material-paginator": {
-      "tags": [
-        "publish-plugin",
-        "table",
-        "material",
-        "paginator"
-      ]
-    },
-    "table-material-sort": {
-      "tags": [
-        "publish-plugin",
-        "table",
-        "material",
-        "sort"
-      ]
-    },
-    "table-material-cell-tooltip": {
-      "tags": [
-        "publish-plugin",
-        "table",
-        "material",
-        "cell-tooltip"
-      ]
-    },
-    "table-material": {
-      "tags": [
-        "publish-plugin table table-material"
+        "name:block-ui",
+        "type:child-lib",
+        "parent:table"
       ]
     },
     "table-drag": {
       "tags": [
-        "publish-plugin table table-drag"
+        "name:drag",
+        "type:child-lib",
+        "parent:table"
       ]
     },
-    "table-demo-app": {
-      "tags": []
+    "table-transpose": {
+      "tags": [
+        "name:transpose",
+        "type:child-lib",
+        "parent:table"
+      ]
     },
-    "table-demo-app-e2e": {
-      "tags": []
+    "table-target-events": {
+      "tags": [
+        "name:target-events",
+        "type:child-lib",
+        "parent:table"
+      ]
+    },
+    "table-material": {
+      "tags": [
+        "name:material",
+        "type:child-lib",
+        "parent:table"
+      ]
+    },
+    "table-material-selection-column": {
+      "tags": [
+        "name:selection-column",
+        "type:child-lib",
+        "parent:material"
+      ]
+    },
+    "table-material-paginator": {
+      "tags": [
+        "name:paginator",
+        "type:child-lib",
+        "parent:material"
+      ]
+    },
+    "table-material-sort": {
+      "tags": [
+        "name:sort",
+        "type:child-lib",
+        "parent:material"
+      ]
+    },
+    "table-material-cell-tooltip": {
+      "tags": [
+        "name:cell-tooltip",
+        "type:child-lib",
+        "parent:material"
+      ]
+    },
+    "docsi": {
+      "tags": [
+        "name:docsi",
+        "type:lib"
+      ]
+    },
+    "docsi-webpack": {
+      "tags": [
+        "name:webpack",
+        "type:lib-node"
+      ]
+    },
+    "docsi-toc": {
+      "tags": [
+        "name:toc",
+        "type:child-lib",
+        "parent:docsi"
+      ]
+    },
+    "docsi-material-suite": {
+      "tags": [
+        "name:material-suite",
+        "type:child-lib",
+        "parent:docsi"
+      ]
     }
-  }
+  },
+  "nx-enforce-module-boundaries": [
+    true,
+    {
+      "allow": [],
+      "depConstraints": [
+         {
+            "sourceTag": "name:table",
+            "onlyDependOnLibsWithTags": []
+         },
+         {
+            "sourceTag": "parent:table",
+            "onlyDependOnLibsWithTags": ["name:table", "parent:table", "parent:material"]
+         },
+         {
+            "sourceTag": "*",
+            "onlyDependOnLibsWithTags": ["*"]
+         }
+       ]
+    }
+  ]
 }
