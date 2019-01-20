@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 
 import { COLUMN, NegColumnTypeDefinitionDataMap, NegColumn, NegMetaColumn } from '../columns';
-import { NegTableCellContext, NegTableMetaCellContext } from '../context';
+import { NegTableCellContext, NegTableMetaCellContext } from '../context/index';
 import { NegTableRegistryService } from '../services/table-registry.service';
 
 export interface NegTableCellDefDirectiveBase {

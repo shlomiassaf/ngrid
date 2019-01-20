@@ -1,7 +1,7 @@
 import { take } from 'rxjs/operators';
 
 import { Directive, AfterViewInit, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
-import { NegTableCellContext } from '../context/types';
+import { NegTableCellContext } from '../context/index';
 
 @Directive({ selector: '[negCellEditAutoFocus]' })
 export class NegTableCellEditAutoFocusDirective implements AfterViewInit, OnDestroy {

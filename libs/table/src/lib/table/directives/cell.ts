@@ -20,7 +20,7 @@ import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
 import { NegTableComponent } from '../table.component';
 import { uniqueColumnCss, uniqueColumnTypeCss, COLUMN_EDITABLE_CELL_CLASS } from '../circular-dep-bridge';
 import { COLUMN, NegColumn, NegColumnGroup } from '../columns';
-import { MetaCellContext } from '../context';
+import { MetaCellContext } from '../context/index';
 import { NegTableMultiRegistryMap } from '../services/table-registry.service';
 import { NegTableColumnDef } from './column-def';
 

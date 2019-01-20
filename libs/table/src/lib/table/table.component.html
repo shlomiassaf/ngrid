@@ -7,7 +7,10 @@
 
 <!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
 <ng-container *ngFor="let row of metaColumnIds.header;">
-  <cdk-header-row *cdkHeaderRowDef="row.keys; sticky: row.rowDef.type === 'sticky'" [negMetaRow]="row.rowDef" data-rowtype="meta-header" class="neg-table-header-row"></cdk-header-row>
+  <cdk-header-row *cdkHeaderRowDef="row.keys; sticky: row.rowDef.type === 'sticky'"
+                  [negMetaRow]="row.rowDef"
+                  data-rowtype="meta-header" class="neg-table-header-row"
+                  [class.neg-meta-group-row]="row.isGroup"></cdk-header-row>
 </ng-container>
 
 <!-- TABLE FOOTER ROW DEF -->
@@ -18,7 +21,10 @@
                 [class.neg-table-row-hidden]="!showFooter"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
 <!-- MULTI-FOOTER ROW DEF -->
 <ng-container *ngFor="let row of metaColumnIds.footer">   <!-- MULTI-FOOTER ROW DEF -->
-  <cdk-footer-row *cdkFooterRowDef="row.keys; sticky: row.rowDef.type === 'sticky'" [negMetaRow]="row.rowDef" data-rowtype="meta-footer" class="neg-table-footer-row"></cdk-footer-row>
+  <cdk-footer-row *cdkFooterRowDef="row.keys; sticky: row.rowDef.type === 'sticky'"
+                  [negMetaRow]="row.rowDef"
+                  data-rowtype="meta-footer" class="neg-table-footer-row"
+                  [class.neg-meta-group-row]="row.isGroup"></cdk-footer-row>
 </ng-container>
 
 <div class="neg-table-container">

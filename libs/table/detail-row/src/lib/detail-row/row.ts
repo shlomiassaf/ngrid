@@ -43,6 +43,8 @@ export class NegTableDetailRowComponent extends NegTableRowComponent implements 
   @Input('detailRow') get detailRow(): any { return this.context.$implicit; };
   set detailRow(value: any) { this.row = value; };
 
+  table: NegTableComponent<any>;
+
   private get _element(): HTMLElement { return this.el.nativeElement; }
   private opened = false;
   private plugin: NegTableDetailRowPluginDirective<any>;
@@ -52,7 +54,8 @@ export class NegTableDetailRowComponent extends NegTableRowComponent implements 
   }
 
   ngOnInit(): void {
-    const controller = NegTablePluginController.find(this.context.table);
+    this.table = this.context.table;
+    const controller = NegTablePluginController.find(this.table);
     this.plugin = controller.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
     const tradeEvents = controller.getPlugin('targetEvents');

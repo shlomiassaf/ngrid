@@ -3,7 +3,7 @@
 import { Directive, TemplateRef, Input, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 
 import { NegTableComponent } from '../table.component';
-import { NegTableMetaCellContext } from '../context/types';
+import { NegTableMetaCellContext } from '../context/index';
 import { NegTableSingleRegistryMap, NegTableMultiRegistryMap, NegTableRegistryService } from '../services/table-registry.service';
 
 

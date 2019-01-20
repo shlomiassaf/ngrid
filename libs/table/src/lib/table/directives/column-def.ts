@@ -13,7 +13,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
 
 import { COLUMN } from '../columns';
 import { isNegColumn } from '../columns/column';
-import { CellContext } from '../context';
+import { CellContext } from '../context/index';
 import { NegTableComponent } from '../table.component';
 import { EXT_API_TOKEN, NegTableExtensionApi } from '../../ext/table-ext-api';
 import { parseStyleWidth } from '../columns/utils';

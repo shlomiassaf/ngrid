@@ -45,7 +45,7 @@ import {
 } from './col-width-logic/dynamic-column-width';
 import { ColumnApi, AutoSizeToFitOptions } from './column-api';
 import { NegCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
-import { NegTableMetaRowService } from './meta-rows';
+import { NegTableMetaRowService } from './meta-rows/index';
 
 export function internalApiFactory(table: { _extApi: NegTableExtensionApi; }) { return table._extApi; }
 export function pluginControllerFactory(table: { _plugin: NegTablePluginContext; }) { return table._plugin.controller; }

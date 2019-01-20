@@ -1,7 +1,7 @@
 import { CdkRow, CDK_ROW_TEMPLATE, RowContext as CdkRowContext } from '@angular/cdk/table';
 import { ChangeDetectionStrategy, Component, ElementRef, EmbeddedViewRef, Inject, Input, ViewEncapsulation } from '@angular/core';
 import { EXT_API_TOKEN, NegTableExtensionApi } from '../../ext/table-ext-api';
-import { RowContext } from '../context/context';
+import { RowContext } from '../context/index';
 
 
 export const NEG_TABLE_ROW_TEMPLATE  = `<ng-content select=".neg-table-row-prefix"></ng-content>${CDK_ROW_TEMPLATE}<ng-content select=".neg-table-row-suffix"></ng-content>`;

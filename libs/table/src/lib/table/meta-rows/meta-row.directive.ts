@@ -9,10 +9,6 @@ import { NegTableMetaRowService } from './meta-row.service';
 
 @Directive({
   selector: '[negMetaRow]',
-  // tslint:disable-next-line:use-host-property-decorator
-  host: {
-    '[class.neg-meta-group-row]': 'meta?.isGroup'
-  }
 })
 @KillOnDestroy()
 export class NegMetaRowDirective implements OnDestroy {

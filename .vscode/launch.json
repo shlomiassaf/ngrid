@@ -17,7 +17,7 @@
       "program": "${workspaceFolder}/node_modules/.bin/ng",
       "args": [
         "build",
-        "demo-app",
+        "table",
         "--prod"
       ]
     },

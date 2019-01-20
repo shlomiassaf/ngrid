@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 import { NegTableComponent } from '../table.component';
-import { MetaCellContext, NegTableMetaCellContext } from '../context';
+import { MetaCellContext, NegTableMetaCellContext } from '../context/index';
 import { NegMetaColumn } from '../columns';
 
 @Pipe({ name: 'tableMetaCellContext' })

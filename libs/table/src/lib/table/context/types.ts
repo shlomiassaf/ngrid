@@ -1,4 +1,3 @@
-import { TemplateRef } from '@angular/core';
 import { RowContext } from '@angular/cdk/table';
 
 import { NegTableComponent } from '../table.component';
