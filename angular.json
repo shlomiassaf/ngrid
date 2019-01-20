@@ -857,6 +857,142 @@
           }
         }
       }
+    },
+    "table-demo-app": {
+      "root": "apps/table-demo-app/",
+      "sourceRoot": "apps/table-demo-app/src",
+      "projectType": "application",
+      "prefix": "neg",
+      "schematics": {
+        "@nrwl/schematics:component": {
+          "styleext": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "ng-cli-ext:build",
+          "options": {
+            "extraWebpackConfig": "webpack.config.ts",
+            "tsConfigForExtraWebpackConfig": "tsconfig.es6.json",
+            "outputPath": "dist/apps/table-demo-app",
+            "index": "apps/table-demo-app/src/index.html",
+            "main": "apps/table-demo-app/src/main.ts",
+            "polyfills": "apps/table-demo-app/src/polyfills.ts",
+            "tsConfig": "apps/table-demo-app/tsconfig.app.json",
+            "assets": [
+              "apps/table-demo-app/src/favicon.ico",
+              "apps/table-demo-app/src/assets"
+            ],
+            "styles": [
+              "apps/table-demo-app/src/styles/main.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/table-demo-app/src/environments/environment.ts",
+                  "with": "apps/table-demo-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "ng-cli-ext:dev-server",
+          "options": {
+            "browserTarget": "table-demo-app:build",
+            "extraWebpackConfig": "webpack.config.ts",
+            "tsConfigForExtraWebpackConfig": "apps/demo-app/tsconfig.es6.json",
+            "port": 4201
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "table-demo-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "table-demo-app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/table-demo-app/src/test.ts",
+            "polyfills": "apps/table-demo-app/src/polyfills.ts",
+            "tsConfig": "apps/table-demo-app/tsconfig.spec.json",
+            "karmaConfig": "apps/table-demo-app/karma.conf.js",
+            "styles": [
+              "apps/table-demo-app/src/styles.scss"
+            ],
+            "scripts": [],
+            "assets": [
+              "apps/table-demo-app/src/favicon.ico",
+              "apps/table-demo-app/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/table-demo-app/tsconfig.app.json",
+              "apps/table-demo-app/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "table-demo-app-e2e": {
+      "root": "apps/table-demo-app-e2e",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "apps/table-demo-app-e2e/protractor.conf.js",
+            "devServerTarget": "table-demo-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "table-demo-app:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/table-demo-app-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {
@@ -866,5 +1002,5 @@
     },
     "defaultCollection": "@nrwl/schematics"
   },
-  "defaultProject": "table"
+  "defaultProject": "table-demo-app"
 }

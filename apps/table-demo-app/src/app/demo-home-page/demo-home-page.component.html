@@ -1,0 +1,18 @@
+<div class="mat-elevation-z6 demo-top-nav">
+  <nav fxLayoutAlign="start center" fxLayoutGap="8px">
+    <a [routerLink]="['/']" class="angrid-top-nav-logo-link">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div ng-custom-logo color="white" flat class="ng-custom-logo"><mat-icon>table_chart</mat-icon></div>
+        <div>Angrid</div>
+      </div>
+    </a>
+    <a mat-button [routerLink]="['/', 'demos', 'virtual-scroll-performance']">Demo</a>
+    <a mat-button [routerLink]="['/', 'demos', 'all-in-one']">Demo 2</a>
+    <a mat-button [routerLink]="['/', 'concepts']">Concepts</a>
+    <a mat-button [routerLink]="['/', 'features']">Features</a>
+    <a mat-button [routerLink]="['/', 'stories']">Stories</a>
+  </nav>
+</div>
+<div class="main-view">
+  <router-outlet class="main-router-outlet"></router-outlet>
+</div>

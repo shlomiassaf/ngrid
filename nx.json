@@ -142,6 +142,12 @@
       "tags": [
         "publish-plugin table table-drag"
       ]
+    },
+    "table-demo-app": {
+      "tags": []
+    },
+    "table-demo-app-e2e": {
+      "tags": []
     }
   }
 }
