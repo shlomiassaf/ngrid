@@ -67,6 +67,15 @@
       "sourceMaps": true,
       "cwd": "${workspaceRoot}",
       "protocol": "inspector"
+    },
+    {
+      "name": "[Node] Current JS File",
+      "type": "node",
+      "request": "launch",
+      "args": [ "${relativeFile}" ],
+      "sourceMaps": true,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
     }
   ]
 }

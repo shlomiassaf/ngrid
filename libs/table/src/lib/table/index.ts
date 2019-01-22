@@ -24,7 +24,7 @@ export {
   columnFactory
 } from './columns/index';
 
-export { NegTableMetaCellContext, NegTableCellContext, NegTableRowContext } from './context/index';
+export { NegTableMetaCellContext, NegTableCellContext, NegTableRowContext, NegRowContext } from './context/index';
 
 export { NegCdkTableComponent } from './neg-cdk-table/neg-cdk-table.component';
 

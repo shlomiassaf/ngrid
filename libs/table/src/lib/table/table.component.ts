@@ -148,6 +148,9 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   @Input() identityProp: string;
 
   /**
+   * The table's source of data
+   *
+   * @remarks
    * The table's source of data, which can be provided in 2 ways:
    *
    * - DataSourceOf<T>
@@ -556,7 +559,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
 
   /**
    * Update the size of all group columns in the table based on the size of their visible children (not hidden).
-   * @param dynamicWidthLogic Optional logic container, if not set a new one is created.
+   * @param dynamicWidthLogic - Optional logic container, if not set a new one is created.
    */
   syncColumnGroupsSize(dynamicWidthLogic?: DynamicColumnWidthLogic): void {
     if (!dynamicWidthLogic) {
@@ -633,8 +636,8 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
 
   /**
    * Remove an already created embedded view.
-   * @param view The view to remove
-   * @param location The location, if not set defaults to `before`
+   * @param view - The view to remove
+   * @param location - The location, if not set defaults to `before`
    * @returns true when a view was removed, false when not. (did not exist in the view container for the provided location)
    */
   removeView(view: EmbeddedViewRef<any>, location: 'beforeTable' | 'beforeContent' | 'afterContent'): boolean {
@@ -650,7 +653,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
 
   /**
    * Resize all visible columns to fit content of the table.
-   * @param forceFixedWidth When true will resize all columns with absolute pixel values, otherwise will keep the same format as originally set (% or none)
+   * @param forceFixedWidth - When true will resize all columns with absolute pixel values, otherwise will keep the same format as originally set (% or none)
    */
   autoSizeColumnToFit(options?: AutoSizeToFitOptions): void {
     const { innerWidth, outerWidth } = this.viewport;

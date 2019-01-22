@@ -45,7 +45,7 @@ export {
   NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy,
 
   NegTableCellClickEvent,
-  NegTableMetaCellContext, NegTableCellContext, NegTableRowContext,
+  NegTableMetaCellContext, NegTableCellContext, NegTableRowContext, NegRowContext,
   KillOnDestroy
 } from './lib/table/index';
 

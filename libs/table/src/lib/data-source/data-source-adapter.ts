@@ -63,7 +63,7 @@ export class NegDataSourceAdapter<T = any, TData = any> {
    * an event object that contains metadata about each trigger, whether it triggered the change or not as well as old and new values.
    *
    * The returned value from `sourceFactory` is then used as the datasource, applying all triggers that are not overridden by the user.
-   * The returned value of `sourceFactory` can be a `DataSourceOf` or `false.
+   * The returned value of `sourceFactory` can be a `DataSourceOf` or `false`.
    *   - `DataSourceOf` means a valid datasource, either observable/promise of array or an array.
    *   - `false` means skip, returning false will instruct the adapter to skip execution for this trigger cycle.
    *
@@ -77,10 +77,10 @@ export class NegDataSourceAdapter<T = any, TData = any> {
    * For Pagination, client side pagination.
    *
    * You can opt in to one or more triggers and implement your own behavior inside the `sourceFactory`
-   * @param sourceFactory A function that returns the datasource based on flow instructions.
+   * @param sourceFactory - A function that returns the datasource based on flow instructions.
    * The instructions are optional, they might or might not exist depending on the configuration of the adapter.
    * When `sourceFactory` returns false the entire trigger cycle is skipped.
-   * @param config A configuration object describing how this adapter should behave.
+   * @param config - A configuration object describing how this adapter should behave.
    */
   constructor(public sourceFactory: (event: NegDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>),
               config?: false | Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>>) {

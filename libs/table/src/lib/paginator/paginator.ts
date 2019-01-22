@@ -266,7 +266,7 @@ export class NegPagingPaginator implements NegPaginator<number> {
 
   /**
    * Calculate the number of pages.
-   * returns true if the current page has changed due to calculation. (current page > new pages value)
+   * returns true if the current page has changed due to calculation. (current page \> new pages value)
    */
   protected calcPages(): void {
     this._totalPages = Math.ceil(this._total / this.perPage);

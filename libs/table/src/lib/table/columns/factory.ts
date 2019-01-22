@@ -77,8 +77,6 @@ export class NegColumnFactory {
 
   /**
    * Set the default column definition for header/footer columns.
-   * @param def
-   * @param type
    */
   default(def: Partial<NegMetaColumnDefinition>, type: 'header' | 'footer'): this;
   /**
@@ -121,6 +119,7 @@ export class NegColumnFactory {
    * Header columns are optional.
    * Each call to `header()` will create a new row, incrementing the `currentHeaderRow`.
    *
+   * @remarks
    * Example:
    * ```js
    *   factory.table(1, 2, 3)
@@ -128,9 +127,9 @@ export class NegColumnFactory {
    * ```
    *
    * will result in:
-   *   header1 ->  a b c
-   *   header2 ->  d e f
-   *   table   ->  1 2 3
+   *   header1 -\>  a b c
+   *   header2 -\>  d e f
+   *   table   -\>  1 2 3
    */
   header(rowOptions: NegMetaRowDefinitions, ...defs: Array<Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition>): this;
   header(...defs: Array<Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition>): this;
@@ -166,6 +165,7 @@ export class NegColumnFactory {
    * Footer columns are optional.
    * Each call to `footer()` will create a new row, incrementing the `currentFooterRow`.
    *
+   * @remarks
    * Example:
    * ```js
    *   factory.table(1, 2, 3)
@@ -173,9 +173,9 @@ export class NegColumnFactory {
    * ```
    *
    * will result in:
-   *   table   ->  1 2 3
-   *   footer1 ->  a b c
-   *   footer2 ->  d e f
+   *   table   -\>  1 2 3
+   *   footer1 -\>  a b c
+   *   footer2 -\>  d e f
    */
   footer(rowOptions: NegMetaRowDefinitions, ...defs: Array<Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition>): this;
   footer(...defs: Array<Pick<NegMetaColumnDefinition, 'id'> & Partial<NegMetaColumnDefinition> & NegBaseColumnDefinition>): this;
@@ -213,6 +213,7 @@ export class NegColumnFactory {
    * Header columns are optional.
    * Each call to `header()` will create a new row, incrementing the `currentHeaderRow`.
    *
+   * @remarks
    * Example:
    * ```js
    *   factory.table(1, 2, 3)
@@ -220,9 +221,9 @@ export class NegColumnFactory {
    * ```
    *
    * will result in:
-   *   header1 ->  a b c
-   *   header2 ->  d e f
-   *   table   ->  1 2 3
+   *   header1 -\>  a b c
+   *   header2 -\>  d e f
+   *   table   -\>  1 2 3
    */
   headerGroup(rowOptions: NegMetaRowDefinitions, ...defs: Array<Pick<NegColumnGroupDefinition, 'prop'> & Partial<NegColumnGroupDefinition>>): this;
   headerGroup(...defs: Array<Pick<NegColumnGroupDefinition, 'prop'> & Partial<NegColumnGroupDefinition>>): this;

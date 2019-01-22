@@ -1,5 +1,5 @@
 npm run build-demo-gh
-cd dist/apps/demo-app
+cd dist/apps/table-demo-app
 git init
 git remote add origin git@github.com:shlomiassaf/table-demo.git
 git add .

@@ -291,10 +291,14 @@
       },
       "architect": {
         "build": {
-          "builder": "./tools/builders/ng-packagr:build",
+          "builder": "ng-cli-packagr-tasks:build",
           "options": {
             "tsConfig": "libs/table/tsconfig.lib.json",
-            "project": "libs/table/ng-package.json"
+            "project": "libs/table/ng-package.json",
+            "transformConfig": "tools/ng-packagr.transformers/ng-packagr.transformers.ts",
+            "transformData": {
+              "copy": "A to B"
+            }
           },
           "configurations": {
             "production": {

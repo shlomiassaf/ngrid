@@ -1,7 +1,7 @@
-import { CdkRow, CDK_ROW_TEMPLATE, RowContext as CdkRowContext } from '@angular/cdk/table';
+import { CdkRow, CDK_ROW_TEMPLATE, RowContext } from '@angular/cdk/table';
 import { ChangeDetectionStrategy, Component, ElementRef, EmbeddedViewRef, Inject, Input, ViewEncapsulation } from '@angular/core';
 import { EXT_API_TOKEN, NegTableExtensionApi } from '../../ext/table-ext-api';
-import { RowContext } from '../context/index';
+import { NegRowContext } from '../context/index';
 
 
 export const NEG_TABLE_ROW_TEMPLATE  = `<ng-content select=".neg-table-row-prefix"></ng-content>${CDK_ROW_TEMPLATE}<ng-content select=".neg-table-row-suffix"></ng-content>`;
@@ -30,7 +30,7 @@ export class NegTableRowComponent<T = any> extends CdkRow {
   }
 
   rowRenderIndex: number;
-  context: RowContext<T>;
+  context: NegRowContext<T>;
 
   constructor(@Inject(EXT_API_TOKEN) protected extApi: NegTableExtensionApi<T>, protected el: ElementRef<HTMLElement>) {
     super();
@@ -40,7 +40,7 @@ export class NegTableRowComponent<T = any> extends CdkRow {
     const vcRef = this.extApi.cdkTable._rowOutlet.viewContainer;
     const len = vcRef.length - 1;
     for (let i = len; i > -1; i--) {
-      const viewRef = vcRef.get(i) as EmbeddedViewRef<CdkRowContext<T>>;
+      const viewRef = vcRef.get(i) as EmbeddedViewRef<RowContext<T>>;
       if (viewRef.rootNodes[0] === this.el.nativeElement) {
         this.rowRenderIndex = i;
         break;

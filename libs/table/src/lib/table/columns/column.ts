@@ -275,7 +275,7 @@ export class NegColumn implements NegColumnDefinition {
 
   /**
    * Mark's that this column belong to the provided group.
-   * > Note that this internal to the column and does not effect the group in any way.
+   * \> Note that this internal to the column and does not effect the group in any way.
    */
   markInGroup(g: NegColumnGroup): void {
     this.groupStore.attach(g, this);
@@ -284,7 +284,7 @@ export class NegColumn implements NegColumnDefinition {
 
   /**
    * Mark's that this column does not belong to the provided group.
-   * > Note that this internal to the column and does not effect the group in any way.
+   * \> Note that this internal to the column and does not effect the group in any way.
    */
   markNotInGroup(g: NegColumnGroup): boolean {
     this.groupStore.detach(g, this);

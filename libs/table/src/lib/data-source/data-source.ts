@@ -157,7 +157,6 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
 
   /**
    * A custom trigger that invokes a manual data source change with the provided data value in the `data` property at tht event.
-   * @param data
    */
   refresh(data?: TData): void {
     if (this._tableConnected) {
@@ -213,8 +212,6 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
    * Move's an item (in the entire source) from one index to the other, pushing the item in the destination one item backwards.
    * Note that if the rendered data is a subset of the entire source (i.e virtual scroll & range) the indices are considered
    * local to the rendered view and are translated to fir the entire source.
-   * @param fromIndex
-   * @param toIndex
    */
   moveItem(fromIndex: number, toIndex: number): void {
     if (this._lastRange) {

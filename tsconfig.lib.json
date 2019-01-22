@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "rootDir": ".",
     "paths": {
       "@neg/table": [
         "dist/@neg/table"

@@ -303,46 +303,46 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@microsoft/api-extractor@^6.3.0":
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor/-/api-extractor-6.3.0.tgz#73ee9aa15ab976d171e9b0eaeb6748969be847e2"
+"@microsoft/api-extractor@^7.0.11":
+  version "7.0.11"
+  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor/-/api-extractor-7.0.11.tgz#164c9f0e1b8028987752e8486172b6ca7d8e6665"
   dependencies:
-    "@microsoft/node-core-library" "3.7.0"
-    "@microsoft/ts-command-line" "4.2.2"
-    "@microsoft/tsdoc" "0.12.2"
+    "@microsoft/node-core-library" "3.9.0"
+    "@microsoft/ts-command-line" "4.2.3"
+    "@microsoft/tsdoc" "0.12.4"
     "@types/node" "8.5.8"
     "@types/z-schema" "3.16.31"
     colors "~1.2.1"
-    jju "~1.3.0"
     lodash "~4.17.5"
     resolve "1.8.1"
     typescript "~3.1.6"
     z-schema "~3.18.3"
 
-"@microsoft/node-core-library@3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@microsoft/node-core-library/-/node-core-library-3.7.0.tgz#b234311f208ad04e614330669f448249bafa3ec8"
+"@microsoft/node-core-library@3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/node-core-library/-/node-core-library-3.9.0.tgz#a999c15c45707bfd5e2329518e00cb2c8d33b55c"
   dependencies:
     "@types/fs-extra" "5.0.4"
+    "@types/jju" "~1.4.0"
     "@types/node" "8.5.8"
     "@types/z-schema" "3.16.31"
     colors "~1.2.1"
     fs-extra "~7.0.1"
-    jju "~1.3.0"
+    jju "~1.4.0"
     z-schema "~3.18.3"
 
-"@microsoft/ts-command-line@4.2.2":
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@microsoft/ts-command-line/-/ts-command-line-4.2.2.tgz#106dcc18acdf8420da2b5b924e135c060cb7c0ab"
+"@microsoft/ts-command-line@4.2.3":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/@microsoft/ts-command-line/-/ts-command-line-4.2.3.tgz#20d6a1684148b9fc0df25ee7335c3bb227d47d4f"
   dependencies:
     "@types/argparse" "1.0.33"
     "@types/node" "8.5.8"
     argparse "~1.0.9"
     colors "~1.2.1"
 
-"@microsoft/tsdoc@0.12.2":
-  version "0.12.2"
-  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.2.tgz#e3540be2e021ee0427a64ad10468ead90a758867"
+"@microsoft/tsdoc@0.12.4":
+  version "0.12.4"
+  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.4.tgz#42159590f2b12e23f6028c70aed41dd5b11275c3"
 
 "@ngrx/effects@6.1.2":
   version "6.1.2"
@@ -489,6 +489,10 @@
   resolved "https://registry.yarnpkg.com/@types/jasminewd2/-/jasminewd2-2.0.6.tgz#2f57a8d9875a6c9ef328a14bd070ba14a055ac39"
   dependencies:
     "@types/jasmine" "*"
+
+"@types/jju@~1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@types/jju/-/jju-1.4.0.tgz#ee074af79540c0e187426f46f12acbe8f6c31232"
 
 "@types/json5@^0.0.29":
   version "0.0.29"
@@ -4354,9 +4358,9 @@ jasminewd2@^2.1.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/jasminewd2/-/jasminewd2-2.2.0.tgz#e37cf0b17f199cce23bea71b2039395246b4ec4e"
 
-jju@~1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/jju/-/jju-1.3.0.tgz#dadd9ef01924bc728b03f2f7979bdbd62f7a2aaa"
+jju@~1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/jju/-/jju-1.4.0.tgz#a3abe2718af241a2b2904f84a625970f389ae32a"
 
 js-base64@^2.1.8:
   version "2.4.9"
@@ -5242,6 +5246,10 @@ ng-cli-ext@^1.0.4:
   resolved "https://registry.yarnpkg.com/ng-cli-ext/-/ng-cli-ext-1.0.4.tgz#ded3e3b990b56d6a9ec0129ca3efad4592cb6edb"
   dependencies:
     webpack-merge "^4.1.2"
+
+ng-cli-packagr-tasks@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ng-cli-packagr-tasks/-/ng-cli-packagr-tasks-1.0.0.tgz#f04ae2eab6e1830309d26f60a3cb4e88f77e35c9"
 
 ng-packagr@^4.6.0:
   version "4.6.0"
