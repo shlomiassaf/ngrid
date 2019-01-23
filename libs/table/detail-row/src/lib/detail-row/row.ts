@@ -12,7 +12,8 @@ import {
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
-import { NegTableComponent, NegTablePluginController, NegTableRowComponent, NegTableExtensionApi, EXT_API_TOKEN, KillOnDestroy } from '@neg/table';
+import { UnRx } from '@neg/utils';
+import { NegTableComponent, NegTablePluginController, NegTableRowComponent, NegTableExtensionApi, EXT_API_TOKEN } from '@neg/table';
 
 import { NegTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
 
@@ -33,7 +34,7 @@ import { NegTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugi
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-@KillOnDestroy()
+@UnRx()
 export class NegTableDetailRowComponent extends NegTableRowComponent implements OnInit, OnDestroy {
 
   get expended(): boolean {
@@ -60,7 +61,7 @@ export class NegTableDetailRowComponent extends NegTableRowComponent implements 
     this.plugin.addDetailRow(this);
     const tradeEvents = controller.getPlugin('targetEvents');
     tradeEvents.cellClick
-      .pipe(KillOnDestroy(this))
+      .pipe(UnRx(this))
       .subscribe( event => {
         if (event.type === 'data' && event.row === this.detailRow) {
           const { excludeToggleFrom } = this.plugin;
@@ -71,7 +72,7 @@ export class NegTableDetailRowComponent extends NegTableRowComponent implements 
       });
 
     tradeEvents.rowClick
-      .pipe(KillOnDestroy(this))
+      .pipe(UnRx(this))
       .subscribe( event => {
         if (!event.root && event.type === 'data' && event.row === this.detailRow) {
           this.toggle();

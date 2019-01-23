@@ -1,8 +1,8 @@
-import { Component, EmbeddedViewRef, Input, ElementRef } from '@angular/core';
-import { HeaderRowOutlet, FooterRowOutlet } from '@angular/cdk/table';
+import { Component, Input, ElementRef } from '@angular/core';
+
+import { UnRx } from '@neg/utils';
 
 import { NegMetaRowDefinitions } from '../columns/types';
-import { KillOnDestroy } from '../utils';
 import { NegTableMetaRowService } from './meta-row.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { NegTableMetaRowService } from './meta-row.service';
     '[style.width]': '_innerWidth'
   }
 })
-@KillOnDestroy()
+@UnRx()
 export class NegTableMetaRowContainerComponent {
 
   @Input('neg-table-fixed-meta-row-container') set type(value: 'header' | 'footer') {
@@ -35,9 +35,9 @@ export class NegTableMetaRowContainerComponent {
 
   constructor(public readonly metaRows: NegTableMetaRowService, elRef: ElementRef<HTMLElement>) {
     this.element = elRef.nativeElement;
-    metaRows.sync.pipe(KillOnDestroy(this)).subscribe( () => this.syncRowDefinitions() );
+    metaRows.sync.pipe(UnRx(this)).subscribe( () => this.syncRowDefinitions() );
     this.metaRows.extApi.events
-      .pipe(KillOnDestroy(this))
+      .pipe(UnRx(this))
       .subscribe( event => {
         if (event.kind === 'onResizeRow') {
           this._innerWidth = `${this.metaRows.extApi.table.viewport.innerWidth}px`;
@@ -58,11 +58,11 @@ export class NegTableMetaRowContainerComponent {
     scrollContainerElement.scrollLeft = this.metaRows.extApi.table.viewport.measureScrollOffset('start');
 
     this.metaRows.hzScroll
-      .pipe(KillOnDestroy(this))
+      .pipe(UnRx(this))
       .subscribe( offset => scrollContainerElement.scrollLeft = offset );
 
     this.metaRows.extApi.cdkTable.onRenderRows
-      .pipe(KillOnDestroy(this))
+      .pipe(UnRx(this))
       .subscribe( () => {
         this._innerWidth = `${this.metaRows.extApi.table.viewport.innerWidth}px`;
       });

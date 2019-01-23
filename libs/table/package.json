@@ -6,6 +6,7 @@
     "@angular/core": "^7.0.0",
     "@angular/cdk": "^7.0.0",
     "@angular/material": "^7.0.0",
-    "resize-observer-polyfill": "^1.5.0"
+    "resize-observer-polyfill": "^1.5.0",
+    "@neg/utils": "*"
   }
 }

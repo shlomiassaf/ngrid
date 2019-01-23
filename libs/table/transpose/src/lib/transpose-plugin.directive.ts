@@ -1,6 +1,7 @@
 import { Directive, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
+import { UnRx } from '@neg/utils';
 import {
   columnFactory,
   NegTableConfigService,
@@ -10,7 +11,6 @@ import {
   NegTablePluginController,
   NegColumn,
   TablePlugin,
-  KillOnDestroy,
 } from '@neg/table';
 
 import { TransposeTableSession, LOCAL_COLUMN_DEF, VIRTUAL_REFRESH } from './transpose-table-session';
@@ -56,7 +56,7 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
 
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'neg-table[transpose]' })
-@KillOnDestroy()
+@UnRx()
 export class NegTableTransposePluginDirective implements OnChanges, OnDestroy {
 
   @Input() transpose: boolean;

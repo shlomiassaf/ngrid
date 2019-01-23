@@ -2,7 +2,8 @@ import { fromEvent, timer, Observer } from 'rxjs';
 import { bufferWhen, debounce, map, filter } from 'rxjs/operators';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
-import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy } from '@neg/table';
+import { UnRx } from '@neg/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin } from '@neg/table';
 
 import * as Events from './events';
 import { matrixRowFromRow, isRowContainer, findCellIndex, findParentCell } from './utils';
@@ -318,7 +319,7 @@ export class NegTableTargetEventsPlugin<T = any> {
   // tslint:disable-next-line:use-output-property-decorator
   outputs: [ 'rowClick', 'rowClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellDblClick', 'cellEnter', 'cellLeave' ]
 })
-@KillOnDestroy()
+@UnRx()
 export class NegTableTargetEventsPluginDirective<T> extends NegTableTargetEventsPlugin<T> implements OnDestroy {
 
   constructor(table: NegTableComponent<any>, injector: Injector, pluginCtrl: NegTablePluginController) {

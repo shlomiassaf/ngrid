@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
-import { NegPagingPaginator, NegPaginatorChangeEvent, NegTableComponent, KillOnDestroy } from '@neg/table';
+import { UnRx } from '@neg/utils';
+import { NegPagingPaginator, NegPaginatorChangeEvent, NegTableComponent } from '@neg/table';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
 
@@ -23,7 +24,7 @@ const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-@KillOnDestroy()
+@UnRx()
 export class NegPaginatorComponent implements OnDestroy {
   pages: number[] = [];
   pageSizes: number[] = DEFAULT_PAGE_SIZE_OPTIONS.slice();
@@ -41,13 +42,13 @@ export class NegPaginatorComponent implements OnDestroy {
       return;
     }
     if (this._paginator) {
-      KillOnDestroy.kill(this, this._paginator);
+      UnRx.kill(this, this._paginator);
     }
     this._paginator = value;
     if (value) {
       // pagination.onChange is BehaviorSubject so handlePageChange will trigger
       value.onChange
-        .pipe(KillOnDestroy(this, value))
+        .pipe(UnRx(this, value))
         .subscribe( event => this.handlePageChange(event) );
       this.updatePageSizes();
     }
@@ -65,7 +66,7 @@ export class NegPaginatorComponent implements OnDestroy {
       this.table = table;
     }
     _intl.changes
-      .pipe(KillOnDestroy(this))
+      .pipe(UnRx(this))
       .subscribe(() => this.cdr.markForCheck());
   }
 

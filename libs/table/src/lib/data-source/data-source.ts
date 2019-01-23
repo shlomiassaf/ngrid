@@ -5,7 +5,8 @@ import { SelectionModel, CollectionViewer, ListRange } from '@angular/cdk/collec
 import { DataSource } from '@angular/cdk/table';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 
-import { KillOnDestroy } from '../table/utils';
+import { UnRx } from '@neg/utils';
+
 import { NegColumn } from '../table/columns';
 import { NegTablePaginatorKind, NegPaginator, NegPagingPaginator, NegTokenPaginator } from '../paginator';
 import { DataSourceFilter, DataSourceFilterToken, NegTableSortDefinition, NegTableDataSourceSortChange } from './types';
@@ -179,7 +180,7 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
 
   dispose(): void {
     if (!this._disposed) {
-      KillOnDestroy.kill(this);
+      UnRx.kill(this);
       this._adapter.dispose();
       this._onRenderDataChanging.complete();
       this._renderData$.complete();
@@ -242,7 +243,7 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
       initialState,
     );
 
-    KillOnDestroy.kill(this, PROCESSING_SUBSCRIPTION_GROUP)
+    UnRx.kill(this, PROCESSING_SUBSCRIPTION_GROUP)
 
     const trimToRange = (range: ListRange, data: any[]) => data.slice(range.start, range.end) ;
 
@@ -250,7 +251,7 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
     let lastEmittedSource: T[];
 
     cv.viewChange
-      .pipe(KillOnDestroy(this, PROCESSING_SUBSCRIPTION_GROUP))
+      .pipe(UnRx(this, PROCESSING_SUBSCRIPTION_GROUP))
       .subscribe( range => {
         if (this._lastRange && this._lastRange.start === range.start && this._lastRange.end === range.end) {
           return;
@@ -265,7 +266,7 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
 
     stream
       .pipe(
-        KillOnDestroy(this, PROCESSING_SUBSCRIPTION_GROUP),
+        UnRx(this, PROCESSING_SUBSCRIPTION_GROUP),
         tap( result => {
           lastEmittedSource = result.data;
           skipViewChange = true;
@@ -284,7 +285,7 @@ export class NegDataSource<T = any, TData = any> extends DataSource<T> {
       );
 
     this._adapter.onSourceChanged
-      .pipe(KillOnDestroy(this, PROCESSING_SUBSCRIPTION_GROUP))
+      .pipe(UnRx(this, PROCESSING_SUBSCRIPTION_GROUP))
       .subscribe( source => this._source = source || [] );
 
     if (this._lastRefresh !== undefined) {

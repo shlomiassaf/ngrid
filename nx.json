@@ -158,6 +158,12 @@
         "type:child-lib",
         "parent:docsi"
       ]
+    },
+    "utils": {
+      "tags": [
+        "name:utils",
+        "type:lib"
+      ]
     }
   },
   "nx-enforce-module-boundaries": [
@@ -165,19 +171,25 @@
     {
       "allow": [],
       "depConstraints": [
-         {
-            "sourceTag": "name:table",
-            "onlyDependOnLibsWithTags": []
-         },
-         {
-            "sourceTag": "parent:table",
-            "onlyDependOnLibsWithTags": ["name:table", "parent:table", "parent:material"]
-         },
-         {
-            "sourceTag": "*",
-            "onlyDependOnLibsWithTags": ["*"]
-         }
-       ]
+        {
+          "sourceTag": "name:table",
+          "onlyDependOnLibsWithTags": []
+        },
+        {
+          "sourceTag": "parent:table",
+          "onlyDependOnLibsWithTags": [
+            "name:table",
+            "parent:table",
+            "parent:material"
+          ]
+        },
+        {
+          "sourceTag": "*",
+          "onlyDependOnLibsWithTags": [
+            "*"
+          ]
+        }
+      ]
     }
   ]
 }

@@ -1,12 +1,12 @@
 import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, Optional, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 
+import { UnRx } from '@neg/utils';
 import {
   NegTableComponent,
   NegTableHeaderCellDefDirective,
   NegTableCellDefDirective,
   NegTableFooterCellDefDirective,
-  KillOnDestroy
 } from '@neg/table';
 
 @Component({
@@ -16,7 +16,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-@KillOnDestroy()
+@UnRx()
 export class NegTableCheckboxComponent implements AfterViewInit {
   /**
    * Unique name for the checkbox column.
@@ -99,11 +99,11 @@ export class NegTableCheckboxComponent implements AfterViewInit {
   }
 
   private setupSelection(): void {
-    KillOnDestroy.kill(this, this.table);
+    UnRx.kill(this, this.table);
     if (this._selection) {
       this.length = this.selection.selected.length;
       this.selection.changed
-        .pipe(KillOnDestroy(this, this.table))
+        .pipe(UnRx(this, this.table))
         .subscribe( () => {
           const { length } = this.getCollection();
           this.allSelected = !this.selection.isEmpty() && this.selection.selected.length === length;

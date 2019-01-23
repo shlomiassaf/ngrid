@@ -16,7 +16,8 @@ import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Platform} from '@angular/cdk/platform';
 import { TooltipPosition, MatTooltipDefaultOptions, MatTooltip, MAT_TOOLTIP_SCROLL_STRATEGY, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
-import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy, NegTableConfigService } from '@neg/table';
+import { UnRx } from '@neg/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableConfigService } from '@neg/table';
 import { NegTableCellEvent } from '@neg/table/target-events';
 
 declare module '@neg/table/lib/table/services/config' {
@@ -56,7 +57,7 @@ export interface CellTooltipOptions {
 
 @TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
 @Directive({ selector: '[cellTooltip]', exportAs: 'negOverflowTooltip' })
-@KillOnDestroy()
+@UnRx()
 export class NegTableCellTooltipDirective<T> implements CellTooltipOptions, OnDestroy {
   static readonly PLUGIN_KEY: 'cellTooltip' = PLUGIN_KEY;
 
@@ -109,7 +110,7 @@ export class NegTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     ];
 
     configService.onUpdate('cellTooltip')
-      .pipe(KillOnDestroy(this))
+      .pipe(UnRx(this))
       .subscribe( cfg => this.lastConfig = cfg.curr );
 
     if (table.isInit) {
@@ -140,11 +141,11 @@ export class NegTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     // if it's not set, create it.
     const targetEventsPlugin = pluginCtrl.getPlugin('targetEvents') || pluginCtrl.createPlugin('targetEvents');
     targetEventsPlugin.cellEnter
-      .pipe(KillOnDestroy(this))
+      .pipe(UnRx(this))
       .subscribe( event => this.cellEnter(event) );
 
     targetEventsPlugin.cellLeave
-      .pipe(KillOnDestroy(this))
+      .pipe(UnRx(this))
       .subscribe( event => this.cellLeave(event) );
   }
 

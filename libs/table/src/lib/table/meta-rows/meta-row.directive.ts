@@ -1,6 +1,7 @@
 import { Directive, Input, ElementRef, OnDestroy } from '@angular/core';
 
-import { KillOnDestroy } from '../utils';
+import { UnRx } from '@neg/utils';
+
 import { NegMetaRowDefinitions } from '../columns/types';
 
 import { NegColumnStoreMetaRow } from '../columns/column-store';
@@ -10,7 +11,7 @@ import { NegTableMetaRowService } from './meta-row.service';
 @Directive({
   selector: '[negMetaRow]',
 })
-@KillOnDestroy()
+@UnRx()
 export class NegMetaRowDirective implements OnDestroy {
 
   // tslint:disable-next-line:no-input-rename

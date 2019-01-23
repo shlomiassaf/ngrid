@@ -46,7 +46,6 @@ export {
 
   NegTableCellClickEvent,
   NegTableMetaCellContext, NegTableCellContext, NegTableRowContext, NegRowContext,
-  KillOnDestroy
 } from './lib/table/index';
 
 export {

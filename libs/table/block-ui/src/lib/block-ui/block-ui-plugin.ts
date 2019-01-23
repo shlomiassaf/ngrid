@@ -2,7 +2,8 @@ import { Observable, isObservable } from 'rxjs';
 import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { NegTableComponent, KillOnDestroy, NegTablePluginController, TablePlugin } from '@neg/table';
+import { UnRx } from '@neg/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin } from '@neg/table';
 
 declare module '@neg/table/lib/ext/types' {
   interface NegTablePluginExtension {
@@ -14,7 +15,7 @@ const PLUGIN_KEY: 'blockUi' = 'blockUi';
 
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'neg-table[blockUi]', exportAs: 'blockUi' })
-@KillOnDestroy()
+@UnRx()
 export class NegTableBlockUiPluginDirective<T> implements OnDestroy {
 
   /**
@@ -52,10 +53,10 @@ export class NegTableBlockUiPluginDirective<T> implements OnDestroy {
 
     if (isObservable(value) && this._blockUi !== value) {
       if (isObservable(this._blockUi)) {
-        KillOnDestroy.kill(this, this._blockUi);
+        UnRx.kill(this, this._blockUi);
       }
       this._blockUi = value;
-      value.pipe(KillOnDestroy(this, this._blockUi)).subscribe( state => {
+      value.pipe(UnRx(this, this._blockUi)).subscribe( state => {
         this._blockInProgress = state;
         this.setupBlocker();
       });
@@ -91,10 +92,10 @@ export class NegTableBlockUiPluginDirective<T> implements OnDestroy {
         if (event.kind === 'onDataSource') {
           const { prev, curr } = event;
           if (prev) {
-            KillOnDestroy.kill(this, prev);
+            UnRx.kill(this, prev);
           }
           curr.onSourceChanging
-            .pipe(KillOnDestroy(this, curr))
+            .pipe(UnRx(this, curr))
             .subscribe( () => {
               if (this._blockUi === 'auto') {
                 this._blockInProgress = true;
@@ -102,7 +103,7 @@ export class NegTableBlockUiPluginDirective<T> implements OnDestroy {
               }
             });
           curr.onSourceChanged
-            .pipe(KillOnDestroy(this, curr))
+            .pipe(UnRx(this, curr))
             .subscribe( () => {
               if (this._blockUi === 'auto') {
                 this._blockInProgress = false;

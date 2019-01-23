@@ -27,10 +27,11 @@ import {
   CdkScrollable,
 } from '@angular/cdk/scrolling';
 
+import { UnRx } from '@neg/utils';
+
 import { NegTablePluginController } from '../../../ext/plugin-control';
 import { NegTableConfigService } from '../../services/config';
 import { NegTableComponent } from '../../table.component';
-import { KillOnDestroy } from '../../utils';
 import { NegCdkVirtualScrollDirective, NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies';
 import { NgeVirtualTableRowInfo } from './virtual-scroll-for-of';
 
@@ -67,7 +68,7 @@ function resolveScrollStrategy(config: NegTableConfigService, scrollStrategy?: V
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-@KillOnDestroy()
+@UnRx()
 export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewport implements OnInit, AfterViewInit, OnDestroy {
 
   get isScrolling(): boolean { return this._isScrolling; }
@@ -174,7 +175,7 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     if (config.has('virtualScroll')) {
       this.wheelModeDefault = config.get('virtualScroll').wheelMode;
     }
-    config.onUpdate('virtualScroll').pipe(KillOnDestroy(this)).subscribe( change => this.wheelModeDefault = change.curr.wheelMode);
+    config.onUpdate('virtualScroll').pipe(UnRx(this)).subscribe( change => this.wheelModeDefault = change.curr.wheelMode);
 
     if (negScrollStrategy instanceof NegCdkVirtualScrollDirective) {
       this.enabled = negScrollStrategy.type !== 'vScrollNone';
@@ -206,7 +207,7 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     }
 
     this.scrolling
-      .pipe(KillOnDestroy(this))
+      .pipe(UnRx(this))
       .subscribe( isScrolling => {
         this._isScrolling = !!isScrolling;
         if (isScrolling) {

@@ -1,6 +1,7 @@
 import { Observable, isObservable, of as obsOf, from as obsFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
+import { UnRx } from '@neg/utils';
 import {
   NegTableColumnDefinitionSet,
   NegTableComponent,
@@ -8,7 +9,6 @@ import {
   NegDataSource,
   NegColumn,
   NegDataSourceTriggerChangedEvent,
-  KillOnDestroy,
 } from '@neg/table';
 
 export const LOCAL_COLUMN_DEF = Symbol('LOCAL_COLUMN_DEF');
@@ -38,7 +38,7 @@ export class TransposeTableSession {
   destroy(updateTable: boolean): void {
     if (!this.destroyed) {
       this.destroyed = true;
-      KillOnDestroy.kill(this, this.table);
+      UnRx.kill(this, this.table);
 
       this.table.showHeader = this.headerRow;
       this.table.columns = this.columnsInput;
@@ -53,11 +53,11 @@ export class TransposeTableSession {
     this.headerRow = this.table.showHeader;
     this.table.showHeader = false;
     this.pluginCtrl.events
-      .pipe(KillOnDestroy(this, this.table))
+      .pipe(UnRx(this, this.table))
       .subscribe( e => e.kind === 'onInvalidateHeaders' && this.onInvalidateHeaders() );
 
     this.pluginCtrl.events
-      .pipe(KillOnDestroy(this, this.table))
+      .pipe(UnRx(this, this.table))
       .subscribe( e => e.kind === 'onDataSource' && this.onDataSource(e.curr) );
   }
 

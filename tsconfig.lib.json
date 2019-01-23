@@ -36,6 +36,9 @@
       "@neg/table/material/cell-tooltip": [
         "dist/@neg/table/material/cell-tooltip"
       ],
+      "@neg/utils": [
+        "dist/@neg/utils"
+      ],
       "@neg/*": [
         "dist/@neg/*"
       ]

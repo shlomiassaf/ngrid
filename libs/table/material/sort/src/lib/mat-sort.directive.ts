@@ -1,7 +1,8 @@
 import { Directive, OnDestroy } from '@angular/core';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 
-import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy, NegTableSortDefinition } from '@neg/table';
+import { UnRx } from '@neg/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableSortDefinition } from '@neg/table';
 
 Object.defineProperty(MatSortHeader.prototype, 'column', {
   set: function(value: any) { this.id = value.id; }
@@ -17,7 +18,7 @@ const PLUGIN_KEY: 'matSort' = 'matSort';
 
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'neg-table[matSort]', exportAs: 'negMatSort' })
-@KillOnDestroy()
+@UnRx()
 export class NegTableMatSortDirective implements OnDestroy {
   private _removePlugin: (table: NegTableComponent<any>) => void;
 
@@ -25,7 +26,7 @@ export class NegTableMatSortDirective implements OnDestroy {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     table.registry.setSingle('sortContainer', MatSortHeader as any)
 
-    this.sort.sortChange.pipe(KillOnDestroy(this)).subscribe(s => this.onSort(s));
+    this.sort.sortChange.pipe(UnRx(this)).subscribe(s => this.onSort(s));
 
     pluginCtrl.events
       .subscribe( e => {
@@ -38,14 +39,14 @@ export class NegTableMatSortDirective implements OnDestroy {
           }
         }
         if (e.kind === 'onDataSource') {
-          KillOnDestroy.kill(this, e.prev);
+          UnRx.kill(this, e.prev);
 
           if (this.sort && this.sort.active) {
             this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' });
           }
 
           table.ds.sortChange
-            .pipe(KillOnDestroy(this, e.curr))
+            .pipe(UnRx(this, e.curr))
             .subscribe( event => {
               if (this.sort && event.column) {
                 const sort = event.sort || {};

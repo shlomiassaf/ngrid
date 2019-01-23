@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, ChangeDetectorRef, ViewChild } from '@angular/core';
 
-import { createDS, columnFactory, NegTableComponent, KillOnDestroy } from '@neg/table';
+import { UnRx } from '@neg/utils';
+import { createDS, columnFactory, NegTableComponent } from '@neg/table';
 import {  Customer, DemoDataSource } from '@neg/apps/table/shared';
 import { MatRadioChange } from '@angular/material';
 
@@ -66,7 +67,7 @@ function createColumns(noType = false) {
   styleUrls: ['./virtual-scroll-performance-demo.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-@KillOnDestroy()
+@UnRx()
 export class VirtualScrollPerformanceDemoTableExampleComponent {
 
   columns = createColumns();

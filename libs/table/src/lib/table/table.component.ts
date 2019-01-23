@@ -26,12 +26,14 @@ import {
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
+import { UnRx } from '@neg/utils';
+
 import { EXT_API_TOKEN, NegTableExtensionApi } from '../ext/table-ext-api';
 import { NegTablePluginController, NegTablePluginContext } from '../ext/plugin-control';
 import { NegTablePaginatorKind } from '../paginator';
 import { NegDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { NegCdkTableComponent } from './neg-cdk-table/neg-cdk-table.component';
-import { resetColumnWidths, KillOnDestroy } from './utils';
+import { resetColumnWidths } from './utils';
 import { findCellDef } from './directives/cell-def';
 import { NegColumn, NegColumnStore, NegMetaColumnStore, NegTableColumnSet, NegTableColumnDefinitionSet } from './columns';
 import { NegTableCellContext, NegTableMetaCellContext, ContextApi } from './context/index';
@@ -79,7 +81,7 @@ export function metaRowServiceFactory(table: { _extApi: NegTableExtensionApi; })
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-@KillOnDestroy()
+@UnRx()
 export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
   readonly self = this;
 
@@ -421,7 +423,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
 
       // KILL ALL subscriptions for the previous datasource.
       if (this._dataSource) {
-        KillOnDestroy.kill(this, this._dataSource);
+        UnRx.kill(this, this._dataSource);
       }
 
       const prev = this._dataSource;
@@ -436,7 +438,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
 
       if ( value ) {
         if (isDevMode()) {
-          value.onError.pipe(KillOnDestroy(this, value)).subscribe(console.error.bind(console));
+          value.onError.pipe(UnRx(this, value)).subscribe(console.error.bind(console));
         }
 
         // Run CD, scheduled as a micro-task, after each rendering
@@ -448,7 +450,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
             tap( () => !this.identityProp && this._extApi.contextApi.clear() ),
             switchMap( () => value.onRenderedDataChanged.pipe(take(1), mapTo(this.ds.renderLength)) ),
             observeOn(asapScheduler),
-            KillOnDestroy(this, value)
+            UnRx(this, value)
           )
           .subscribe( previousRenderLength => {
             // If the number of rendered items has changed the table will update the data and run CD on it.
@@ -475,7 +477,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
               }
             }),
             observeOn(animationFrameScheduler), // ww want to give the browser time to remove/add rows
-            KillOnDestroy(this, value)
+            UnRx(this, value)
           )
           .subscribe(() => {
             const el = this.viewport.elementRef.nativeElement;
@@ -780,7 +782,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   private setupPaginator(): void {
     const paginationKillKey = 'negPaginationKillKey';
     if (this.isInit) {
-      KillOnDestroy.kill(this, paginationKillKey);
+      UnRx.kill(this, paginationKillKey);
       if (this._paginatorEmbeddedVRef) {
         this.removeView(this._paginatorEmbeddedVRef, 'beforeContent');
         this._paginatorEmbeddedVRef = undefined;

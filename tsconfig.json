@@ -82,6 +82,9 @@
       "@neg/table/drag": [
         "libs/table/drag/src/index.ts"
       ],
+      "@neg/utils": [
+        "libs/utils/src/index.ts"
+      ],
       "@neg/*": [
         "libs/*"
       ]

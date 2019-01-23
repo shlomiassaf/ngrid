@@ -1,7 +1,8 @@
 import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy, NegTableRowContext } from '@neg/table';
+import { UnRx } from '@neg/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableRowContext } from '@neg/table';
 
 import { NegTableDetailRowComponent } from './row';
 import { NegTableDetailRowParentRefDirective, NegTableDefaultDetailRowParentComponent } from './directives';
@@ -35,7 +36,7 @@ export interface NegDetailsRowToggleEvent<T = any> {
 
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'neg-table[detailRow]' })
-@KillOnDestroy()
+@UnRx()
 export class NegTableDetailRowPluginDirective<T> implements OnDestroy {
   /**
    * Detail row control (none / all rows / selective rows)

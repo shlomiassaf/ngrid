@@ -62,11 +62,12 @@
       "name": "[Node] Current TS File",
       "type": "node",
       "request": "launch",
-      "args": [ "${relativeFile}" ],
+      "args": [ "${fileBasename}" ],
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
       "sourceMaps": true,
-      "cwd": "${workspaceRoot}",
-      "protocol": "inspector"
+      "cwd": "${fileDirname}",
+      "protocol": "inspector",
+      "internalConsoleOptions": "openOnSessionStart"
     },
     {
       "name": "[Node] Current JS File",

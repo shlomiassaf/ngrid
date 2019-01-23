@@ -7,6 +7,8 @@ import {
   Type
 } from '@angular/core';
 
+import { UnRx } from '@neg/utils';
+
 import {
   NegTableCellDefDirective,
   NegTableEditorCellDefDirective,
@@ -19,7 +21,6 @@ import {
 } from '../directives';
 
 import { NegColumn } from '../columns/column';
-import { KillOnDestroy } from '../utils';
 
 export interface RegistryChangedEvent {
   op: 'add' | 'remove';
@@ -76,7 +77,7 @@ export interface NegTableMultiRegistryMap {
  * If a registry does not contain the template the search will move to the next one.
  */
 @Injectable({ providedIn: 'root' })
-@KillOnDestroy()
+@UnRx()
 export class NegTableRegistryService implements OnDestroy {
 
   readonly changes: Observable<RegistryChangedEvent[]>;
@@ -94,7 +95,7 @@ export class NegTableRegistryService implements OnDestroy {
     this.changes$ = new Subject();
     this.changes = this.changes$.asObservable();
     if (this._parent) {
-      this._parent.changes.pipe(KillOnDestroy(this)).subscribe(this.changes$);
+      this._parent.changes.pipe(UnRx(this)).subscribe(this.changes$);
       this.root = this._parent.root;
     } else {
       this.root = this;

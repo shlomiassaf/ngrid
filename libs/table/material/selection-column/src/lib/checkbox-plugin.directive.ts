@@ -1,6 +1,7 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 
-import { NegTableComponent, NegTablePluginController, TablePlugin, KillOnDestroy } from '@neg/table';
+import { UnRx } from '@neg/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin } from '@neg/table';
 
 import { NegTableCheckboxComponent } from './table-checkbox.component';
 
@@ -14,7 +15,7 @@ const PLUGIN_KEY: 'matCheckboxSelection' = 'matCheckboxSelection';
 
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'neg-table[matCheckboxSelection]' })
-@KillOnDestroy()
+@UnRx()
 export class NegTableMatCheckboxSelectionDirective implements OnDestroy {
   /**
    * Add's a selection column using material's `mat-checkbox` in the column specified.

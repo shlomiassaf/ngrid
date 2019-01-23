@@ -1,6 +1,8 @@
 import { Directive, Input, Injector } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { NegColumn, NegTableComponent, NegTablePluginController, KillOnDestroy } from '@neg/table';
+
+import { UnRx } from '@neg/utils';
+import { NegColumn, NegTableComponent, NegTablePluginController } from '@neg/table';
 import { NegTableTargetEventsPlugin } from './target-events-plugin';
 
 NegColumn.extendProperty('editable');
@@ -9,7 +11,7 @@ NegColumn.extendProperty('editable');
   // tslint:disable-next-line:directive-selector
   selector: 'neg-table[cellEditClick], neg-table[cellEditDblClick]',
 })
-@KillOnDestroy()
+@UnRx()
 export class NegTableCellEditDirective<T> {
   @Input() set cellEditClick(value: boolean) {
     value = coerceBooleanProperty(value);
@@ -47,10 +49,10 @@ export class NegTableCellEditDirective<T> {
 
   private update(): void {
     if (this.targetEventsPlugin) {
-      KillOnDestroy.kill(this, this.targetEventsPlugin);
+      UnRx.kill(this, this.targetEventsPlugin);
       if (this._click) {
         this.targetEventsPlugin.cellClick
-          .pipe(KillOnDestroy(this, this.targetEventsPlugin))
+          .pipe(UnRx(this, this.targetEventsPlugin))
           .subscribe( event => {
             if (event.type === 'data' && event.column.editable) {
               event.context.startEdit(true);
@@ -60,7 +62,7 @@ export class NegTableCellEditDirective<T> {
 
       if (this._dblClick) {
         this.targetEventsPlugin.cellDblClick
-          .pipe(KillOnDestroy(this, this.targetEventsPlugin))
+          .pipe(UnRx(this, this.targetEventsPlugin))
           .subscribe( event => {
             if (event.type === 'data' && event.column.editable) {
               event.context.startEdit(true);

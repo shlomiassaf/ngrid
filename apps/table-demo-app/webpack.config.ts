@@ -1,6 +1,6 @@
 import * as Path from 'path';
 import { Configuration } from 'webpack';
-import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin, DocsiApiReferenceWebpackPlugin } from '@neg/docsi/webpack';
+import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin } from '@neg/docsi/webpack';
 import { ServiceWorkerTsPlugin } from '../../tools/service-worker-ts-plugin';
 
 const SERVICE_WORKER_HTTP_SERVER_REGEXP = /.+service-worker\.ts$/;
@@ -91,19 +91,6 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
 
   webpackConfig.plugins.push(new DocsiMetadataFileEmitterWebpackPlugin());
   webpackConfig.plugins.push(new DocsiSourceCodeRefWebpackPlugin());
-  // webpackConfig.plugins.push(new DocsiApiReferenceWebpackPlugin({
-  //   mode: 'mono-repo',
-  //   entryPoints: [
-  //     require.resolve('@neg/table'),
-  //     require.resolve('@neg/table/block-ui'),
-  //     require.resolve('@neg/table/detail-row'),
-  //     require.resolve('@neg/table/mat-checkbox-column'),
-  //     require.resolve('@neg/table/mat-paginator'),
-  //     require.resolve('@neg/table/mat-sort'),
-  //     require.resolve('@neg/table/sticky'),
-  //   ],
-  //   tsconfig: './libs/tsconfig.docsi-api-ref.json',
-  // }));
 
   return webpackConfig;
 }
