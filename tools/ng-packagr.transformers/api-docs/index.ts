@@ -33,7 +33,7 @@ import {
 } from '@microsoft/api-extractor';
 
 import { PackageModelHost } from './model-host';
-import { ApiItemTransformer } from './transformers';
+import { createContext } from './transformation';
 
 
 export class ApiDocs {
@@ -50,14 +50,19 @@ export class ApiDocs {
 
   build() {
     for (const pkg of this.apiModel.packages) {
-      const ctx = ApiItemTransformer.create(pkg);
-      const mdast = ctx.getTransformer(pkg).mdast();
+      const ctx = createContext(pkg);
+      const result = ctx.build(pkg);
 
-      const unified = require('unified');
-      const html = require('remark-html');
+      for (const [t, mdast] of result) {
+        const unified = require('unified');
+        const remarkHighlightJs = require('remark-highlight.js');
+        const html = require('remark-html');
 
-      const raw = unified().use(html).stringify(mdast);
-      console.log(raw);
+        const revised = unified().use(remarkHighlightJs).use(html).runSync(mdast);
+        const raw = unified().use(html).stringify(revised);
+        console.log('\nPAGE: ', t.apiItem.displayName, ' - ', t.apiItem.canonicalReference, ' - ', t.filename(), ' - ', t.apiItem.getScopedNameWithinPackage());
+        console.log(`<html><body>${raw}</body></html>`);
+      }
     }
   }
 }

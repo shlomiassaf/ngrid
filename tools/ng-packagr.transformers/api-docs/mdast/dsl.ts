@@ -15,3 +15,15 @@ export function m<T extends ParentMdTypeKeys>(type: T, props: Omit<ParentMdTypeM
 export function m<T extends keyof MdTypeMap>(type: T, props: MdTypeMap[T], children?: any[]): MdTypeMap[T] {
   return { ...props, type, ...(children ? { children } : {}) };
 }
+
+export interface HASTDate {
+  hName?: string;
+  hProperties?: { [key: string]: any };
+  hChildren?: Array<MdTypeMap[keyof MdTypeMap]>;
+}
+
+export function mh<T extends NonParentMdTypeKeys>(type: T, props: Omit<NonParentMdTypeMap[T], 'type' | 'data'> & { data?: HASTDate }): NonParentMdTypeMap[T];
+export function mh<T extends ParentMdTypeKeys>(type: T, props: Omit<ParentMdTypeMap[T], 'type' | 'children' | 'data'> & { data?: HASTDate }, children?: Array<ArrayType<ParentMdTypeMap[T]['children']>>): ParentMdTypeMap[T];
+export function mh<T extends keyof MdTypeMap>(type: T, props: MdTypeMap[T], children?: any[]): MdTypeMap[T] {
+  return { ...props, type, ...(children ? { children } : {}) };
+}

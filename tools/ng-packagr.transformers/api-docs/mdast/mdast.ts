@@ -62,7 +62,7 @@ declare module 'mdast' {
   export type AlignType = 'left' | 'right' | 'center' | null;
   export type ReferenceType = 'shortcut' | 'collapsed' | 'full';
 
-  export type Content = TopLevelContent | ListContent | TableContent | RowContent | PhrasingContent;
+  export type Content = MdTypeMap[keyof MdTypeMap]; //TopLevelContent | ListContent | TableContent | RowContent | PhrasingContent;
   export type TopLevelContent = BlockContent | FrontmatterContent | DefinitionContent;
   export type BlockContent = Paragraph | Heading | ThematicBreak | Blockquote | List | Table | HTML | Code;
   export type FrontmatterContent = YAML;
@@ -91,9 +91,9 @@ declare module 'mdast' {
     alt?: string;
   }
 
-  export interface Node<TType extends string> extends UNIST.Node<TType> { }
-  export interface Parent<TType extends string, TContent extends Content = Content> extends UNIST.Parent<TType, TContent> { }
-  export interface Literal<TType extends string> extends UNIST.Literal<TType, string> { }
+  export interface Node<TType extends keyof MdTypeMap> extends UNIST.Node<TType> { }
+  export interface Parent<TType extends keyof MdTypeMap, TContent extends Content = Content> extends UNIST.Parent<TType, TContent> { }
+  export interface Literal<TType extends keyof MdTypeMap> extends UNIST.Literal<TType, string> { }
 
   export interface Root extends Parent<'root'> { }
 
