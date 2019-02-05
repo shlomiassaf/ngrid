@@ -11,7 +11,13 @@ export class NegTableCellDraggerRefDirective extends NegTableMultiTemplateRegist
   constructor(tRef: TemplateRef<NegTableMetaCellContext<any>>, registry: NegTableRegistryService) { super(tRef, registry); }
 
   shouldRender(context: NegTableMetaCellContext<any>): boolean {
-    const col = context.col as NegColumn;
-    return true;// !!col.reorder;
+    // const col = context.col as NegColumn;
+    // return !!col.reorder;
+
+    // We must return true so all drag element are created
+    // this is because, even if a column can not reorder by itself it will still move if other items around it are reordered.
+    // For this to happen properly we need the drop-list to be aware of this column (that can not reorder), if we won't render the drag item the drop-list will not know about this column.
+    return true;
+
   }
 }

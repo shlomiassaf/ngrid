@@ -1,19 +1,14 @@
 import { take } from 'rxjs/operators';
 import { Input, Directive, ElementRef, QueryList, OnDestroy, Optional, AfterViewInit, OnInit } from '@angular/core';
-import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST, DragRef, DropListRef } from '@angular/cdk/drag-drop';
-
-declare module '@angular/cdk/drag-drop' {
-  export type __$Compact<A> = { [K in keyof A]: A[K] }
-  export type __$Overwrite<A extends object, B extends object> = __$Compact<{ [K in Exclude<keyof A, keyof B>]: A[K] } & B>
-  export type DragRef<T = any> = __$Overwrite<CdkDrag['_dragRef'], { data: T }>;
-  export type DropListRef<T = any> = __$Overwrite<CdkDropList['_dropListRef'], { data: T }>;
-}
+import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST, DragRef, DropListRef, DragDrop } from '@angular/cdk/drag-drop';
+import { NegDropListRef } from './drop-list-ref';
+import { NegDragRef } from './drag-ref';
 
 @Directive({
   selector: '[cdkLazyDropList]',
   exportAs: 'cdkLazyDropList',
   providers: [
-    { provide: CDK_DROP_LIST, useExisting: CdkLazyDropList },
+    { provide: CDK_DROP_LIST, useClass: CdkLazyDropList },
   ],
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
@@ -23,7 +18,7 @@ declare module '@angular/cdk/drag-drop' {
   }
 })
 export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> implements OnInit {
-  get negDropListRef(): DropListRef<DRef> { return this._dropListRef as any; }
+  get negDropListRef(): NegDropListRef<DRef> { return this._dropListRef as any; }
 
   /**
    * Selector that will be used to determine the direct container element, starting from
@@ -40,18 +35,23 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   private _draggablesSet = new Set<CdkDrag>();
 
   ngOnInit(): void {
+    if (this.negDropListRef instanceof NegDropListRef === false) {
+      throw new Error('Invalid `DropListRef` injection, the ref is not an instance of NegDropListRef')
+    }
     this._dropListRef.beforeStarted.subscribe( () => this.beforeStarted() );
   }
 
   addDrag(drag: CdkDrag): void {
     this._draggablesSet.add(drag);
     this._draggables.reset(Array.from(this._draggablesSet.values()));
+    this._draggables.notifyOnChanges(); // TODO: notify with asap schedular and obs$
   }
 
   removeDrag(drag: CdkDrag): boolean {
     const result = this._draggablesSet.delete(drag);
     if (result) {
       this._draggables.reset(Array.from(this._draggablesSet.values()));
+      this._draggables.notifyOnChanges(); // TODO: notify with asap schedular and obs$
     }
     return result;
   }
@@ -68,7 +68,7 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
     } else {
       this.element = this.originalElement;
     }
-    this._dropListRef.element = this.element;
+    this.negDropListRef.withElement(this.element);
   }
 }
 
@@ -80,9 +80,9 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
 })
-export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList<T>, DRef = any> extends CdkDrag<T> implements AfterViewInit, OnDestroy {
+export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList<T>, DRef = any> extends CdkDrag<T> implements OnInit, AfterViewInit, OnDestroy {
 
-  get negDragRef(): DragRef<DRef> { return this._dragRef as any; }
+  get negDragRef(): NegDragRef<DRef> { return this._dragRef as any; }
 
   @Input() get cdkDropList(): Z { return this.dropContainer as Z; }
   set cdkDropList(value: Z) {
@@ -92,11 +92,16 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
     }
     this.dropContainer = value;
     if (value) {
-      this._dragRef.dropContainer = value._dropListRef;
+      this._dragRef._withDropContainer(value._dropListRef);
       value.addDrag(this);
     }
   }
 
+  ngOnInit(): void {
+    if (this.negDragRef instanceof NegDragRef === false) {
+      throw new Error('Invalid `DragRef` injection, the ref is not an instance of NegDragRef')
+    }
+  }
   // This is a workaround for https://github.com/angular/material2/pull/14158
   // Working around the issue of drop container is not the direct parent (father) of a drag item.
   // The entire ngAfterViewInit() overriding method can be removed if PR accepted.

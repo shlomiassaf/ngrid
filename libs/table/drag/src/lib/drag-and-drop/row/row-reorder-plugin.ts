@@ -14,6 +14,7 @@ import { DOCUMENT } from '@angular/common';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+  DragDrop,
   CdkDropList,
   CdkDropListGroup,
   DragDropRegistry,
@@ -23,7 +24,7 @@ import {
 } from '@angular/cdk/drag-drop';
 
 import { NegTableComponent, TablePlugin, NegTablePluginController, NegTableCellContext } from '@neg/table';
-import { CdkLazyDropList, CdkLazyDrag } from '../lazy-drag-drop';
+import { CdkLazyDropList, CdkLazyDrag } from '../core';
 
 declare module '@neg/table/lib/ext/types' {
   interface NegTablePluginExtension {
@@ -70,8 +71,9 @@ export class NegTableRowReorderPluginDirective<T = any> extends CdkLazyDropList<
               changeDetectorRef: ChangeDetectorRef,
               @Optional() dir?: Directionality,
               @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>,
-              @Optional() @Inject(DOCUMENT) _document?: any) {
-    super(element, dragDropRegistry as any, changeDetectorRef, dir, group, _document);
+              @Optional() @Inject(DOCUMENT) _document?: any,
+              dragDrop?: DragDrop) {
+    super(element, dragDropRegistry as any, changeDetectorRef, dir, group, _document, dragDrop);
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     this.dropped.subscribe( event => {
       this.table.ds.moveItem(event.previousIndex, event.currentIndex);

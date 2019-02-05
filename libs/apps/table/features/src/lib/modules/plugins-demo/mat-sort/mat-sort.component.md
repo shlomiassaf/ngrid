@@ -1,17 +1,5 @@
 # Mat Sort
 
-```json negCode
-[
-  {
-    "file": "./mat-sort.component.ts",
-    "section": "ex-1"
-  },
-  {
-    "section": "ex-1"
-  }
-]
-```
-
 <docsi-mat-example-with-source title="Sorting" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@neg-example:ex-1-->
   <neg-table matSort
@@ -28,18 +16,6 @@
   <!--@neg-example:ex-1-->
 </docsi-mat-example-with-source>
 
-```json negCode
-[
-  {
-    "file": "./mat-sort.component.ts",
-    "section": "ex-2"
-  },
-  {
-    "section": "ex-2"
-  }
-]
-```
-
 <docsi-mat-example-with-source title="Sorting with default active column and direcion" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@neg-example:ex-2-->
   <neg-table matSort matSortActive="name" matSortDirection="desc"
@@ -52,18 +28,6 @@
   </neg-table>
   <!--@neg-example:ex-2-->
 </docsi-mat-example-with-source>
-
-```json negCode
-[
-  {
-    "file": "./mat-sort.component.ts",
-    "section": "ex-3"
-  },
-  {
-    "section": "ex-3"
-  }
-]
-```
 
 <docsi-mat-example-with-source title="Programatic Sorting" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
   <!--@neg-example:ex-3-->

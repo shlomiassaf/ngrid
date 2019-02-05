@@ -2,12 +2,12 @@ import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 /**
- * Emits the values emitted by the source observable until a kill signal is sent to the group.  
+ * Emits the values emitted by the source observable until a kill signal is sent to the group.
  * You can also specify a `subKillGroup` which can be used to kill specific subscriptions within a group.
  *
  * When a `killGroup` is "killed" all `subKillGroup` are killed as well. When a `subKillGroup` is "killed" the group remains
  * as well as other "subKillGroup" registered for that group.
- * 
+ *
  * > WARNING: Do not apply operators that subscribe internally (e.g. combineLatest, switchMap) after the `killOnDestroy` operator.
  * Internal subscriptions will not unsubscribe automatically.
  * For more information see {@link https://blog.angularindepth.com/rxjs-avoiding-takeuntil-leaks-fb5182d047ef | this blog post}
@@ -87,9 +87,9 @@ export function UnRx<T>(component: any, handler?: any): (source: Observable<T>) 
  *
  * When applied on a component, `UnRx` will wrap the `ngOnDestroy` life-cycle` hook (or create if doesn't exist) and automatically
  * destroy all open subscriptions that contain the `UnRx` pipe in their emission stream.
- * 
+ *
  * @remarks
- * 
+ *
  * The following example demonstrate a component using the HTTP client to call a server.
  * We add the `UnRx` pipe to the response observable (`pipe(UnRx(this))`) so when the component is destroyed the subscription is closed as well.
  *
@@ -128,7 +128,7 @@ export function UnRx<T>(component: any, handler?: any): (source: Observable<T>) 
  * The following example is an improved version of the previous one.
  * All pending request will be cancelled when the component is destroyed but we will also cancel all pending requests
  * when a new request is fired.
- * 
+ *
  * With this we ensure state and flow integrity (no race condition between 2 requests).
  * We also make sure that resources are not wasted (multiple redundant requests.)
  * ```ts
@@ -204,28 +204,4 @@ export namespace UnRx {
     unrx.kill(component, tokens);
   }
 
-}
-
-
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-@Component({
-  selector: 'my-cmp',
-  template: ``
-})
-@UnRx() // Will un-subscribe all open subscriptions when component is destroyed
-export class MyComponent {
-  static URL = '/some-endpoint';
-
-  constructor(private http: HttpClient) { }
-
-  showConfig() {
-    UnRx.kill(this, MyComponent.URL); // Kill (cancel) pending HTTP requests
-    this.http.get(MyComponent.URL)
-      .pipe(UnRx(this, MyComponent.URL)) // Register the stream for auto-kill on destroy and add a handler for ad-hoc unsubscribe
-      .subscribe( response => {
-        console.log(response);
-      });
-  }
 }

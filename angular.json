@@ -295,9 +295,34 @@
           "options": {
             "tsConfig": "libs/table/tsconfig.lib.json",
             "project": "libs/table/ng-package.json",
-            "transformConfig": "tools/ng-packagr.transformers/ng-packagr.transformers.ts",
-            "transformData": {
-              "copy": "A to B"
+            "tasks": {
+              "config": "tools/ng-packagr.transformers/ng-packagr.transformers.ts",
+              "data": {
+                "copyFiles": {
+                  "assets": [
+                    {
+                      "glob": "_theming.scss",
+                      "input": "libs/table",
+                      "output": "dist/@neg/table"
+                    },
+                    {
+                      "glob": "**/*.scss",
+                      "input": "libs/table/theme",
+                      "output": "dist/@neg/table/theme"
+                    },
+                    {
+                      "glob": "_theming.scss",
+                      "input": "libs/table/material",
+                      "output": "dist/@neg/table/material"
+                    },
+                    {
+                      "glob": "**/*.scss",
+                      "input": "libs/table/material/theme",
+                      "output": "dist/@neg/table/material/theme"
+                    }
+                  ]
+                }
+              }
             }
           },
           "configurations": {
@@ -880,7 +905,14 @@
           "options": {
             "tsConfig": "libs/utils/tsconfig.lib.json",
             "project": "libs/utils/ng-package.json",
-            "transformConfig": "tools/ng-packagr.transformers/ng-packagr.transformers.ts"
+            "tasks": {
+              "config": "tools/ng-packagr.transformers/utils.ng-packagr.tasks.ts",
+              "data": {
+                "nodeLib": {
+                  "tsConfig": "libs/utils/tsconfig.node-lib.json"
+                }
+              }
+            }
           },
           "configurations": {
             "production": {

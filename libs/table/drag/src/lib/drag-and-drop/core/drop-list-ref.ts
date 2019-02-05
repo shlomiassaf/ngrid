@@ -1,0 +1,22 @@
+import { Subject } from 'rxjs';
+import { ElementRef } from '@angular/core';
+import { DropListRef } from '@angular/cdk/drag-drop';
+import { coerceElement } from '@angular/cdk/coercion';
+
+import { NegDragRef } from './drag-ref';
+
+export class NegDropListRef<T = any> extends DropListRef<T> {
+  /** Emits right before dragging has started. */
+  beforeExit = new Subject<{ item: NegDragRef<T> }>();
+
+  withElement(element: ElementRef<HTMLElement> | HTMLElement): this {
+    // TODO: Workaround, see if we can push this through https://github.com/angular/material2/issues/15086
+    (this as { -readonly [P in keyof NegDropListRef]: NegDropListRef[P] }).element = coerceElement(element);
+    return this;
+  }
+
+  dispose(): void {
+    this.beforeExit.complete();
+    super.dispose();
+  }
+}

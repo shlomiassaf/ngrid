@@ -51,12 +51,12 @@
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
 
        <!-- HEADER-RECORD-FOOTER CELL DEF -->
-      <ng-container *ngFor="let c of columnApi.columns; index as index" [negTableColumnDef]="c">
+      <ng-container *ngFor="let c of columnApi.visibleColumns; index as index" [negTableColumnDef]="c">
         <!-- TABLE HEADER CELL DEF -->
         <neg-table-header-cell *cdkHeaderCellDef [observeSize]="c"></neg-table-header-cell>
         <!-- RECORD CELL DEF -->
         <neg-table-cell *cdkCellDef="let row; negRowContext as negRowContext" [attr.tabindex]="cellFocus">
-          <ng-container *ngIf="negRowContext.cell(index) as ctx">
+          <ng-container *ngIf="negRowContext && negRowContext.cell(index) as ctx">
             <ng-container *ngTemplateOutlet="ctx.editing ? ctx.col.editorTpl : ctx.col.cellTpl; context: ctx"></ng-container>
           </ng-container>
         </neg-table-cell>

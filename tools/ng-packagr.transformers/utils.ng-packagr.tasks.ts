@@ -1,6 +1,5 @@
 import { NgPackagerHooksContext, EntryPointTaskContext, HookRegistry } from 'ng-cli-packagr-tasks';
-import { CopyFile } from 'ng-cli-packagr-tasks/dist/tasks/copy-file';
-import { Bump } from 'ng-cli-packagr-tasks/dist/tasks/bump';
+import { NodeLib } from 'ng-cli-packagr-tasks/dist/tasks/node-lib';
 
 const COMPILED_PATH_MAPPINGS: { [key: string]: string[] } = {};
 async function compileNgcTransformer(taskContext: EntryPointTaskContext) {
@@ -22,6 +21,5 @@ async function compileNgcTransformer(taskContext: EntryPointTaskContext) {
 module.exports = function(ctx: NgPackagerHooksContext, registry: HookRegistry) {
   registry
     .register('compileNgc', { before: compileNgcTransformer })
-    .register(CopyFile)
-    .register(Bump);
+    .register(NodeLib);
 }

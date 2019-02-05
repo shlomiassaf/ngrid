@@ -12,18 +12,6 @@ W> Block
 
 E> Block
 
-```json negCode
-[
-  {
-    "file": "./block-ui.component.ts",
-    "section": "ex-1"
-  },
-  {
-    "section": "ex-1"
-  }
-]
-```
-
 <docsi-mat-example-with-source title="Automatic UI block" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@neg-example:ex-1-->
   <neg-table blockUi
@@ -33,18 +21,6 @@ E> Block
   <button mat-button (click)="refresh()">Refresh</button>
   <!--@neg-example:ex-1-->
 </docsi-mat-example-with-source>
-
-```json negCode
-[
-  {
-    "file": "./block-ui.component.ts",
-    "section": "ex-2"
-  },
-  {
-    "section": "ex-2"
-  }
-]
-```
 
 <docsi-mat-example-with-source title="Manual UI block" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@neg-example:ex-2-->

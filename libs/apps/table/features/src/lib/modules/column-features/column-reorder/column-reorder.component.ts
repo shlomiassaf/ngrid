@@ -16,8 +16,8 @@ export class ColumnReorderTableExampleComponent {
   columns1 = columnFactory()
     .table(
       { prop: 'id', width: '40px' },
-      { prop: 'name', reorder: true },
-      { prop: 'gender', reorder: true, width: '50px' },
+      { prop: 'name' },
+      { prop: 'gender', width: '50px' },
       { prop: 'birthdate', type: 'date' }
     )
     .build();

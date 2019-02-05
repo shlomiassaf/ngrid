@@ -6,10 +6,16 @@ import {
   ElementRef,
   OnDestroy,
   Optional,
+  Inject,
+  SkipSelf,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 
 import { Directionality } from '@angular/cdk/bidi';
 import {
+  DragDrop,
+  CdkDropListGroup,
+  CdkDropList,
   CdkDropListContainer,
   DragDropRegistry,
   CDK_DROP_LIST,
@@ -17,7 +23,7 @@ import {
 } from '@angular/cdk/drag-drop';
 
 import { NegTableComponent, NegTablePluginController, NegColumn } from '@neg/table';
-import { CdkLazyDropList } from '../lazy-drag-drop';
+import { CdkLazyDropList, NegDragRef } from '../core';
 import { NegTableColumnDragDirective } from './column-reorder-plugin';
 
 let _uniqueIdCounter = 0;
@@ -44,39 +50,39 @@ export class NegTableAggregationContainerDirective<T = any> extends CdkLazyDropL
               element: ElementRef<HTMLElement>,
               dragDropRegistry: DragDropRegistry<DragRef, DropListRef<T>>,
               changeDetectorRef: ChangeDetectorRef,
-              @Optional() private dir?: Directionality) {
-    super(element, dragDropRegistry as any, changeDetectorRef, dir);
+              @Optional() dir?: Directionality,
+              @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>,
+              @Optional() @Inject(DOCUMENT) _document?: any,
+              dragDrop?: DragDrop) {
+    super(element, dragDropRegistry as any, changeDetectorRef, dir, group, _document, dragDrop);
     const reorder = pluginCtrl.getPlugin('columnReorder');
     reorder.connectedTo = this.id;
-  }
 
-  drop(item: NegTableColumnDragDirective<T>, currentIndex: number, previousContainer: Partial<CdkDropListContainer>, isPointerOverContainer: boolean): void {
-    this.pending = undefined;
-    this.table.columnApi.addGroupBy(item.column);
-    super.drop(item, currentIndex, previousContainer, isPointerOverContainer);
-  }
+    this.negDropListRef.dropped
+      .subscribe( event => {
+        const item = event.item as NegDragRef<NegTableColumnDragDirective<any>>;
+        this.pending = undefined;
+        this.table.columnApi.addGroupBy(item.data.column);
+      });
 
-  /**
-   * Emits an event to indicate that the user moved an item into the container.
-   * @param item Item that was moved into the container.
-   * @param pointerX Position of the item along the X axis.
-   * @param pointerY Position of the item along the Y axis.
-   */
-  enter(item: NegTableColumnDragDirective<T>, pointerX: number, pointerY: number): void {
-    this.pending = item.column;
-    super.enter(item, pointerX, pointerY);
-    item.getPlaceholderElement().style.display = 'none';
-    for (const c of item.getCells()) {
-      c.style.display = 'none';
-    }
-  }
+    this.negDropListRef.entered
+      .subscribe( event => {
+        const item = event.item as NegDragRef<NegTableColumnDragDirective<any>>;
+        this.pending = item.data.column;
+        item.getPlaceholderElement().style.display = 'none';
+        for (const c of item.data.getCells()) {
+          c.style.display = 'none';
+        }
+      });
 
-  exit(item: NegTableColumnDragDirective<T>): void {
-    this.pending = undefined;
-    super.exit(item);
-    item.getPlaceholderElement().style.display = '';
-    for (const c of item.getCells()) {
-      c.style.display = '';
-    }
+    this.negDropListRef.exited
+      .subscribe( event => {
+        const item = event.item as NegDragRef<NegTableColumnDragDirective<any>>;
+        this.pending = undefined;
+        item.getPlaceholderElement().style.display = '';
+        for (const c of item.data.getCells()) {
+          c.style.display = '';
+        }
+      });
   }
 }

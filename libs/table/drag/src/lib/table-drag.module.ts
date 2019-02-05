@@ -1,10 +1,11 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DragDropModule, DragDrop } from '@angular/cdk/drag-drop';
 
 import { NegTableModule, provideCommon } from '@neg/table';
 
 import {
+  NegDragDrop,
   CdkLazyDropList, CdkLazyDrag, NegDragHandle,
   NegTableRowReorderPluginDirective, NegTableRowDragDirective,
   NegTableColumnReorderPluginDirective, NegTableColumnDragDirective, NegTableCellDraggerRefDirective,
@@ -36,6 +37,10 @@ import { DragPluginDefaultTemplatesComponent } from './default-settings.componen
     NegTableColumnReorderPluginDirective, NegTableColumnDragDirective, NegTableCellDraggerRefDirective,
     NegTableAggregationContainerDirective,
     NegTableDragResizeComponent, NegTableCellResizerRefDirective,
+  ],
+  providers: [
+    NegDragDrop,
+    { provide: DragDrop, useExisting: NegDragDrop },
   ],
   entryComponents: [ DragPluginDefaultTemplatesComponent ],
 })

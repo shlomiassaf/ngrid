@@ -222,7 +222,7 @@ export class ColumnApi<T> {
   moveColumn(column: NegColumn, renderColumnIndex: number): boolean; // tslint:disable-line:unified-signatures
   moveColumn(column: NegColumn, anchor: NegColumn | number): boolean {
     if (anchor instanceof NegColumn) {
-      const result = this.store.moveColumn(column, anchor);
+      const result = column === anchor ? false : this.store.moveColumn(column, anchor);
       if (result) {
         this.afterColumnPositionChange();
       }
