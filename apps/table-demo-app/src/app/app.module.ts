@@ -6,6 +6,7 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { NxModule } from '@nrwl/nx';
 
@@ -26,6 +27,7 @@ import { AppComponent } from './app.component';
     SharedModule,
     MatIconModule,
     MatButtonModule,
+    MatMenuModule,
     RouterModule.forRoot(
       [
         { path: '', loadChildren: '@neg/apps/table/demos#DemosModule' },

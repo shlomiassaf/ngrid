@@ -3,9 +3,9 @@ import { RowContext } from '@angular/cdk/table';
 import { NegTableComponent } from '../table.component';
 import { NegColumnTypeDefinitionDataMap, NegMetaColumn, NegColumn } from '../columns';
 
-export interface NegTableMetaCellContext<T> {
+export interface NegTableMetaCellContext<T, TCol extends NegMetaColumn | NegColumn = NegMetaColumn | NegColumn> {
   $implicit: NegTableMetaCellContext<T>;
-  col: NegMetaColumn | NegColumn;
+  col: TCol;
   table: NegTableComponent<T>;
 }
 

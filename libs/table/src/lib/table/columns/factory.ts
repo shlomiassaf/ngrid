@@ -35,7 +35,6 @@ export class NegColumnFactory {
 
   build(): NegTableColumnSet {
     const { _defaults, _raw } = this;
-    this._raw = this._defaults = undefined;
 
     const groupStore = new NegColumnGroupStore();
 

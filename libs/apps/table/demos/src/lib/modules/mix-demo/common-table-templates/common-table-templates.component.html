@@ -11,7 +11,7 @@
 <neg-table-drag-resize *negTableCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
   <span class="neg-table-column-resizer-handle"></span>
 </neg-table-drag-resize>
-<span *negTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx"></span>
+<span *negTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx" class="column-reorder-handle"></span>
 
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE COLUMNS FOR NEG-TABLE -->
 <div *negTableCellDef="'*'; value as value;">{{value}}</div>
@@ -25,7 +25,7 @@
 <div *negTableFooterCellDef="'*'; col as col;">{{col.label}}</div>
 
 
-<div *negTableHeaderCellTypeDef="'drag_and_drop_handle';"></div>
+<div *negTableHeaderCellTypeDef="'drag_and_drop_handle'"></div>
 <div *negTableCellTypeDef="'drag_and_drop_handle'; let ctx" [negTableRowDrag]="ctx" style="cursor: move">
   <mat-icon negDragHandle class="neg-table-row-drag-handle">drag_handle</mat-icon>
   <div class="neg-table-row-drag-placeholder" *cdkDragPlaceholder></div>

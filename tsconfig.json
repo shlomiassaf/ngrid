@@ -91,6 +91,7 @@
     }
   },
   "exclude": [
+    "dist",
     "node_modules",
     "tmp"
   ]

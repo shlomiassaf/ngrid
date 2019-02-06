@@ -20,8 +20,6 @@ export {
 export {
   NEG_TABLE_CONFIG, NegTableConfig, NegTableConfigService,
 
-  NegTableHeaderCellSortContainer,
-
   NegColumn, NegMetaColumn, NegColumnGroup, NegColumnFactory, COLUMN, columnFactory,
 
   NEG_TABLE_ROW_TEMPLATE, NegTableRowComponent,
@@ -30,7 +28,8 @@ export {
   NegTableRegistryService,
   AutoSizeToFitOptions, ColumnApi,
 
-  NegTableSingleTemplateRegistry, NegTableMultiTemplateRegistry, NegTableDataHeaderExtensionRef,
+  NegTableSingleTemplateRegistry, NegTableMultiTemplateRegistry, NegTableMultiComponentRegistry,
+  NegTableDataHeaderExtensionRef, NegTableDataHeaderExtensionContext,
   NegTableCellDefDirective,
   NegTableHeaderCellDefDirective,
   NegTableFooterCellDefDirective,

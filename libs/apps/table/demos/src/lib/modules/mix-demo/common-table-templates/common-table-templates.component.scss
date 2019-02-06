@@ -84,3 +84,7 @@ neg-table:not(.neg-table-scrolling) .neg-table-column-type-progressBar.neg-table
     transition: width 350ms cubic-bezier(0.075, 0.82, 0.165, 1);
   }
 }
+
+.column-reorder-handle {
+  cursor: move;
+}

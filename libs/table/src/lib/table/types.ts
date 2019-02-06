@@ -7,7 +7,3 @@ export interface NegColumnSizeInfo {
   style: CSSStyleDeclaration;
   updateSize(): void;
 }
-
-export interface NegTableHeaderCellSortContainer {
-  column: NegColumn;
-}

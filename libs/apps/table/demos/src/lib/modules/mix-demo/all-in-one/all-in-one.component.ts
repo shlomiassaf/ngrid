@@ -24,7 +24,6 @@ declare module '@neg/table/lib/table/columns/types' {
 
 const COLUMNS = columnFactory()
   .default({ width: '100px', reorder: true, resize: true})
-
   .table(
     { header: { type: 'sticky' } },
     { prop: 'drag_and_drop_handle', type: 'drag_and_drop_handle', minWidth: 48, width: '', maxWidth: 48, wontBudge: true },
@@ -47,7 +46,6 @@ const COLUMNS = columnFactory()
     { prop: 'lastLoginIp' }
   )
   .header(
-    // { type: 'sticky' },
     { id: 'rere', label: 'HEADER' },
   )
   .footer(
@@ -90,8 +88,7 @@ const COLUMNS = columnFactory()
       span: 3,
       label: 'User Settings',
     }
-  )
-  .build();
+  );
 
 @Component({
   selector: 'neg-all-in-one-table-example-component',
@@ -116,7 +113,7 @@ export class AllInOneTableExampleComponent {
   detailRowPredicate: ( (index: number, rowData: Person) => boolean ) | true | undefined;
   detailRow: 'on' | 'off' | 'predicate' = 'off';
 
-  columns = COLUMNS;
+  columns = COLUMNS.build();
 
   emailFrequencyToggle: boolean;
 

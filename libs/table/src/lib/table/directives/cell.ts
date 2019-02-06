@@ -8,21 +8,22 @@ import {
   ElementRef,
   DoCheck,
   ChangeDetectionStrategy,
-  Input,
   ViewEncapsulation,
   ViewContainerRef,
   ViewChild,
   ComponentFactoryResolver,
   NgZone,
+  EmbeddedViewRef,
 } from '@angular/core';
 import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
 
 import { NegTableComponent } from '../table.component';
 import { uniqueColumnCss, uniqueColumnTypeCss, COLUMN_EDITABLE_CELL_CLASS } from '../circular-dep-bridge';
 import { COLUMN, NegColumn, NegColumnGroup } from '../columns';
-import { MetaCellContext } from '../context/index';
+import { MetaCellContext, NegTableMetaCellContext } from '../context/index';
 import { NegTableMultiRegistryMap } from '../services/table-registry.service';
 import { NegTableColumnDef } from './column-def';
+import { NegTableDataHeaderExtensionContext, NegTableMultiComponentRegistry, NegTableMultiTemplateRegistry } from './registry.directives';
 
 const HEADER_GROUP_CSS = `neg-header-group-cell`;
 const HEADER_GROUP_PLACE_HOLDER_CSS = `neg-header-group-cell-placeholder`;
@@ -48,7 +49,14 @@ function initDataCellElement(el: HTMLElement, column: NegColumn): void {
 
 const lastDataHeaderExtensions = new Map<NegTableComponent<any>, NegTableMultiRegistryMap['dataHeaderExtensions'][]>();
 
-/** Header cell template container that adds the right classes and role. */
+/**
+ * Header cell component.
+ * The header cell component will render the header cell template and add the proper classes and role.
+ *
+ * It is also responsible for creating and managing the any `dataHeaderExtensions` registered in the registry.
+ * These extensions add features to the cells either as a template instance or as a component instance.
+ * Examples: Sorting behavior, drag&drop/resize handlers, menus etc...
+ */
 @Component({
   selector: 'neg-table-header-cell',
   host: {
@@ -66,7 +74,7 @@ export class NegTableHeaderCellComponent extends CdkHeaderCell implements DoChec
 
   constructor(private columnDef: NegTableColumnDef,
               public table: NegTableComponent<any>,
-              private cfr: ComponentFactoryResolver, private zone: NgZone,
+              private zone: NgZone,
               elementRef: ElementRef) {
     super(columnDef, elementRef);
     const column = columnDef.column;
@@ -82,57 +90,24 @@ export class NegTableHeaderCellComponent extends CdkHeaderCell implements DoChec
 
   ngAfterViewInit(): void {
     const col = this.columnDef.column;
-    const tpl = col instanceof NegColumn ? col.headerCellTpl : col.template;
-    const context = new MetaCellContext(col as any, this.table);
-    const view = this.vcRef.createEmbeddedView(tpl, context);
-
-    this.vcRef.get(0).detectChanges();
-    this.columnDef.applyWidth(this.el);
-    initCellElement(this.el, col);
 
     if (col instanceof NegColumn) {
+      const context = new NegTableDataHeaderExtensionContext(col as NegColumn, this.table);
+      const view = this.vcRef.createEmbeddedView(col.headerCellTpl, context);
+
+      this.vcRef.get(0).detectChanges();
+      this.columnDef.applyWidth(this.el);
+      initCellElement(this.el, col);
+
       this.zone.onStable.pipe(first()).subscribe( () => {
-
-        // we collect the first header extension for each unique name only once per table instance
-        let extensions = lastDataHeaderExtensions.get(this.table);
-        if (!extensions) {
-          const dataHeaderExtensions = new Map<string, any>();
-          let registry = this.table.registry;
-          while (registry) {
-            const values = registry.getMulti('dataHeaderExtensions');
-            if (values) {
-              for (const value of values) {
-                if (!dataHeaderExtensions.has(value.name)) {
-                  dataHeaderExtensions.set(value.name, value);
-                }
-              }
-            }
-            registry = registry.parent;
-          }
-          extensions = Array.from(dataHeaderExtensions.values());
-          lastDataHeaderExtensions.set(this.table, extensions);
-          // destroy it on the next turn, we know all cells will render on the same turn.
-          this.zone.onStable.pipe(first()).subscribe( () => lastDataHeaderExtensions.delete(this.table) );
-        }
-
-        for (const ext of extensions) {
-          if (!ext.shouldRender || ext.shouldRender(context)) {
-            const extView = this.vcRef.createEmbeddedView(ext.tRef, context);
-            extView.markForCheck();
-          }
-        }
-
-        if (col.sort) {
-          const SortComponent = this.table.registry.getSingle('sortContainer');
-          if (SortComponent) {
-            const factory = this.cfr.resolveComponentFactory(SortComponent);
-            const sortView = this.vcRef.createComponent(factory, 0, null, [ view.rootNodes ]);
-            sortView.instance.column = col;
-            sortView.changeDetectorRef.markForCheck();
-          }
-        }
+        this.runHeaderExtensions(context, view as EmbeddedViewRef<NegTableMetaCellContext<any, NegColumn>>);
         this.vcRef.get(0).detectChanges();
       });
+    } else {
+      this.vcRef.createEmbeddedView(col.template, new MetaCellContext(col, this.table));
+      this.vcRef.get(0).detectChanges();
+      this.columnDef.applyWidth(this.el);
+      initCellElement(this.el, col);
     }
   }
 
@@ -141,6 +116,64 @@ export class NegTableHeaderCellComponent extends CdkHeaderCell implements DoChec
     if (this.columnDef.isDirty) {
       this.columnDef.applyWidth(this.el);
     }
+  }
+
+  protected runHeaderExtensions(context: NegTableDataHeaderExtensionContext, view: EmbeddedViewRef<NegTableMetaCellContext<any, NegColumn>>): void {
+    // we collect the first header extension for each unique name only once per table instance
+    let extensions = lastDataHeaderExtensions.get(this.table);
+    if (!extensions) {
+      const dataHeaderExtensions = new Map<string, any>();
+      let registry = this.table.registry;
+      while (registry) {
+        const values = registry.getMulti('dataHeaderExtensions');
+        if (values) {
+          for (const value of values) {
+            if (!dataHeaderExtensions.has(value.name)) {
+              dataHeaderExtensions.set(value.name, value);
+            }
+          }
+        }
+        registry = registry.parent;
+      }
+      extensions = Array.from(dataHeaderExtensions.values());
+      lastDataHeaderExtensions.set(this.table, extensions);
+      // destroy it on the next turn, we know all cells will render on the same turn.
+      this.zone.onStable.pipe(first()).subscribe( () => lastDataHeaderExtensions.delete(this.table) );
+    }
+
+    let { rootNodes } = view;
+
+    for (const ext of extensions) {
+      if (!ext.shouldRender || ext.shouldRender(context)) {
+        if (ext instanceof NegTableMultiTemplateRegistry) {
+          const extView = this.vcRef.createEmbeddedView(ext.tRef, context);
+          extView.markForCheck();
+        } else if (ext instanceof NegTableMultiComponentRegistry) {
+          rootNodes = this.createComponent(ext, context, rootNodes);
+        }
+      }
+    }
+  }
+
+  protected createComponent(ext: NegTableMultiComponentRegistry<any, "dataHeaderExtensions">, context: NegTableDataHeaderExtensionContext, rootNodes: any[]): any[] {
+    const factory = ext.getFactory(context);
+    const projectedContent: any[][] = [];
+
+    if (ext.projectContent) {
+      projectedContent.push(rootNodes);
+    }
+
+    const cmpRef = this.vcRef.createComponent(factory, 0, null, projectedContent);
+
+    if (ext.projectContent) {
+      rootNodes = [ cmpRef.location.nativeElement ];
+    }
+
+    if (ext.onCreated) {
+      ext.onCreated(context, cmpRef);
+    }
+
+    return rootNodes;
   }
 }
 

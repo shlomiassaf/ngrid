@@ -68,7 +68,6 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     NegTableOuterSectionDirective,
     NegTableNoDataRefDirective,
     NegTablePaginatorRefDirective,
-
     NegTableHeaderCellDefDirective,
     NegTableFooterCellDefDirective,
     NegTableCellDefDirective, NegTableEditorCellDefDirective,
@@ -90,7 +89,6 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     NegTableOuterSectionDirective,
     NegTableNoDataRefDirective,
     NegTablePaginatorRefDirective,
-
     NegTableHeaderCellDefDirective,
     NegTableFooterCellDefDirective,
     NegTableCellDefDirective, NegTableEditorCellDefDirective, NegTableScrolling,

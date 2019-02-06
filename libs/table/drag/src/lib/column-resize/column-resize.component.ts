@@ -13,14 +13,6 @@ import { toggleNativeDragInteractions } from './cdk-encapsulated-code';
 
 import './extend-table';
 
-const RE_PARSE_STYLE_LENGTH_UNIT = /((?:\d*\.)?\d+)(%|px)$/;
-function parseStyleWidth(exp: string): { value: number, type: 'px' | '%'} | undefined {
-  const match = RE_PARSE_STYLE_LENGTH_UNIT.exec(exp);
-  if (match) {
-    return { value: Number(match[1]), type: <any> match[2] };
-  }
-}
-
 /** Options that can be used to bind a passive event listener. */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: true});
 

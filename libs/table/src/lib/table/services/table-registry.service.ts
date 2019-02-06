@@ -4,7 +4,6 @@ import {
   Optional,
   SkipSelf,
   OnDestroy,
-  Type
 } from '@angular/core';
 
 import { UnRx } from '@neg/utils';
@@ -15,12 +14,14 @@ import {
   NegTableHeaderCellDefDirective,
   NegTableFooterCellDefDirective,
 
+  NegTableMultiTemplateRegistry,
+  NegTableMultiComponentRegistry,
+  NegTableDataHeaderExtensionContext,
   NegTableDataHeaderExtensionRef,
+
   NegTableNoDataRefDirective,
   NegTablePaginatorRefDirective,
 } from '../directives';
-
-import { NegColumn } from '../columns/column';
 
 export interface RegistryChangedEvent {
   op: 'add' | 'remove';
@@ -28,15 +29,10 @@ export interface RegistryChangedEvent {
   value: any;
 }
 
-export interface NegTableHeaderSortContainer {
-  column: NegColumn;
-}
-
 /**
  * A map of valid single-item value that can be registered, and their type.
  */
 export interface NegTableSingleRegistryMap {
-  sortContainer?: Type<NegTableHeaderSortContainer>;
   noData?: NegTableNoDataRefDirective;
   paginator?: NegTablePaginatorRefDirective;
 }
@@ -49,7 +45,9 @@ export interface NegTableMultiRegistryMap {
   tableCell?: NegTableCellDefDirective<any>;
   editorCell?: NegTableEditorCellDefDirective<any>;
   footerCell?: NegTableFooterCellDefDirective<any>;
-  dataHeaderExtensions?: NegTableDataHeaderExtensionRef;
+  dataHeaderExtensions?:
+    (NegTableMultiTemplateRegistry<NegTableDataHeaderExtensionContext, 'dataHeaderExtensions'> & NegTableDataHeaderExtensionRef)
+    | (NegTableMultiComponentRegistry<any, 'dataHeaderExtensions'> & NegTableDataHeaderExtensionRef);
 }
 
 /**

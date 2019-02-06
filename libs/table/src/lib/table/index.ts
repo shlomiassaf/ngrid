@@ -2,8 +2,6 @@ export * from './services/index';
 export * from './directives/index';
 export * from './meta-rows/index';
 
-export { NegTableHeaderCellSortContainer } from './types';
-
 export {
   NegColumnTypeDefinition, NegColumnTypeDefinitionDataMap,
   NegBaseColumnDefinition,

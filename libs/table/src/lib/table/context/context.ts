@@ -27,10 +27,10 @@ export interface RowContextState<T = any> {
   firstRender: boolean;
 }
 
-export class MetaCellContext<T> implements NegTableMetaCellContext<T> {
-  get $implicit(): MetaCellContext<T> { return this; }
+export class MetaCellContext<T, TCol extends NegMetaColumn | NegColumn = NegMetaColumn> implements NegTableMetaCellContext<T, TCol> {
+  get $implicit(): MetaCellContext<T, TCol> { return this; }
 
-  constructor(public col: NegMetaColumn, public table: NegTableComponent<any>) {}
+  constructor(public col: TCol, public table: NegTableComponent<any>) {}
 }
 
 export class CellContext<T = any> implements NegTableCellContext<T> {

@@ -71,3 +71,58 @@ And: All columns must be at least 40px wide.
 <!--@neg-example:ex-2-->
 All meta rows are set in the order they we're added.
 <!--@neg-example:ex-2-->
+
+## The static build pitfall
+
+The column factory has 2 steps:
+
+- **Definition**: Adding column configuration (header, table, footer)
+- **Build**: Building the `NegTableColumnSet` for the configuration set in the **definition step**
+
+```typescript
+/* Definition step */
+const factory: NegColumnFactory = columnFactory().table( { prop: 'id' }, { prop: 'name' } );
+
+/* Build step */
+const columnSet: NegTableColumnSet = factory.build();
+```
+
+In the definition step all data is stored as simple objects (POJO).  
+When we build, the factory takes these simple objects and convert them to the relevant column instances (`NegColumn`, `NegMetaColumn`, etc...).
+
+The table is extensible, plugins can add or modify behaviors including addition of new column definitions. For example, the `drag` plugin add the `reorder` property.
+to the table column definition.
+
+If we build a column set before a plugin was loaded new definitions added by the plugin might not persist.
+To prevent any issues, avoid building column set's statically.
+
+```typescript
+const STATIC_COLUMNS = columnFactory()
+  .table( { prop: 'id' }, { prop: 'name' } )
+  .build();
+
+const COLUMN_FACTORY = columnFactory()
+  .table( { prop: 'id' }, { prop: 'name' } );
+
+@Component({
+  selector: 'my-component',
+  template: '',
+})
+export class MyComponent {
+  staticColumns = STATIC_COLUMNS;                 // BAD
+
+  columns = COLUMN_FACTORY.build();               // GOOD
+
+  columns2 = columnFactory()                      // GOOD
+    .table( { prop: 'id' }, { prop: 'name' } )
+    .build();
+}
+```
+
+The `STATIC_COLUMNS` are created before angular runs, maybe even before the plugins are loaded.
+
+The `COLUMN_FACTORY` object is not a column set, it's a factory instance, only when we call `build()` it will return a column set.
+Because we call build when the component in instantiated we are sure all plugins are loaded at this point.
+
+W> Plugins are loaded once we `import` them, so in theory if we import the plugins before our components we should be fine. This is true only in theory (and dev mode), in reality (prod)
+the bundled output change the order modules are loaded so we can ensure it.

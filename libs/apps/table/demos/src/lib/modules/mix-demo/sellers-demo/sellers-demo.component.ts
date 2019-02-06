@@ -21,6 +21,7 @@ const progressBarStyle = (value: number) => {
   }
   return { color: 'white', background: 'red' };
 }
+
 const COLUMNS = columnFactory()
   .default({ width: '100px', reorder: true, resize: true})
   .table(
@@ -38,8 +39,7 @@ const COLUMNS = columnFactory()
   .header(
     { rowClassName: 'neg-groupby-row' },
     { id: 'neg-groupby-row', type: 'neg-groupby-row', label: ' ' },
-  )
-  .build();
+  );
 
 @Component({
   selector: 'neg-sellers-demo',
@@ -51,7 +51,7 @@ export class SellersDemoComponent {
     .onTrigger( () => this.ds.getSellers(0, 1000) )
     .create();
 
-  columns = COLUMNS;
+  columns = COLUMNS.build();
 
   @ViewChild(NegTableComponent) table: NegTableComponent<Seller>;
 

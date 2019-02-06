@@ -24,7 +24,6 @@ export class NegTableMatSortDirective implements OnDestroy {
 
   constructor(public table: NegTableComponent<any>, private pluginCtrl: NegTablePluginController, public sort: MatSort) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
-    table.registry.setSingle('sortContainer', MatSortHeader as any)
 
     this.sort.sortChange.pipe(UnRx(this)).subscribe(s => this.onSort(s));
 
