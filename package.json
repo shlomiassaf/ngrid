@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build-table": "ng build table --prod && cp libs/table/_theming.scss dist/@neg/table/_theming.scss && cp -R libs/table/theme dist/@neg/table/theme && cp libs/table/material/_theming.scss dist/@neg/table/material/_theming.scss && cp -R libs/table/material/theme dist/@neg/table/material/theme",
+    "build-table": "ng build utils --prod && ng build table --prod",
     "build-demo-gh": "ng build table-demo-app --prod --base-href table-demo && cp dist/apps/table-demo-app/index.html dist/apps/table-demo-app/404.html",
     "test": "ng test",
     "lint": "./node_modules/.bin/nx lint && ng lint",

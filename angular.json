@@ -298,7 +298,7 @@
             "tasks": {
               "config": "tools/ng-packagr.transformers/ng-packagr.transformers.ts",
               "data": {
-                "copyFiles": {
+                "copyFile": {
                   "assets": [
                     {
                       "glob": "_theming.scss",
