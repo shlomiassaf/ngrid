@@ -1,5 +1,7 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { NegTableRegistryService, NegTableMultiTemplateRegistry, NegTableDataHeaderExtensionRef, NegTableDataHeaderExtensionContext } from '@neg/table';
+import { NegTableRegistryService, NegTableMultiTemplateRegistry, NegTableDataHeaderExtensionRef, NegTableDataHeaderExtensionContext, NegTablePluginController } from '@neg/table';
+
+import { PLUGIN_KEY } from './column-reorder-plugin';
 
 /**
  * Marks the element as the resizer template for cells.
@@ -11,13 +13,13 @@ export class NegTableCellDraggerRefDirective extends NegTableMultiTemplateRegist
   constructor(tRef: TemplateRef<NegTableDataHeaderExtensionContext>, registry: NegTableRegistryService) { super(tRef, registry); }
 
   shouldRender(context: NegTableDataHeaderExtensionContext): boolean {
-    // const col = context.col as NegColumn;
-    // return !!col.reorder;
+    // We dont check for `context.col.reorder` because even if a specific column does not "reorder" we still need to render the cdk-drag
+    // so the cdk-drop-list will be aware of this item, so if another item does reorder it will be able to move while taking this element into consideration.
+    // I.E: It doesn't reorder but it's part of the playground.
+    //
+    // However, when the plugin does not exists for this table we don't need to render...
 
-    // We must return true so all drag element are created
-    // this is because, even if a column can not reorder by itself it will still move if other items around it are reordered.
-    // For this to happen properly we need the drop-list to be aware of this column (that can not reorder), if we won't render the drag item the drop-list will not know about this column.
-    return true;
-
+    const pluginCtrl = NegTablePluginController.find(context.table);
+    return pluginCtrl.hasPlugin(PLUGIN_KEY);
   }
 }

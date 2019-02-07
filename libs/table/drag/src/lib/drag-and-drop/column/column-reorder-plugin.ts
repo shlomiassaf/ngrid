@@ -41,7 +41,7 @@ declare module '@neg/table/lib/ext/types' {
   }
 }
 
-const PLUGIN_KEY: 'columnReorder' = 'columnReorder';
+export const PLUGIN_KEY: 'columnReorder' = 'columnReorder';
 
 let _uniqueIdCounter = 0;
 
