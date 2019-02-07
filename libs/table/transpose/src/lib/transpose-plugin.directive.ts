@@ -1,4 +1,4 @@
-import { Directive, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Directive, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { UnRx } from '@neg/utils';
@@ -57,9 +57,21 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'neg-table[transpose]' })
 @UnRx()
-export class NegTableTransposePluginDirective implements OnChanges, OnDestroy {
+export class NegTableTransposePluginDirective implements OnDestroy {
 
-  @Input() transpose: boolean;
+  @Input() get transpose(): boolean { return this.enabled; };
+  set transpose(value: boolean) {
+    value = coerceBooleanProperty(value);
+    if (value !== this.enabled) {
+      const isFirst = this.enabled === undefined;
+      this.enabled = value;
+      if (!value) {
+        this.disable(true);
+      } else {
+        this.enable(!isFirst);
+      }
+    }
+  }
 
   /**
    * Column definitions for the new header column, this is the column the first column that
@@ -99,7 +111,7 @@ export class NegTableTransposePluginDirective implements OnChanges, OnDestroy {
    */
   @Input() matchTemplates: boolean;
 
-  private enabled: boolean = false;
+  private enabled: boolean;
   private _header: NegColumnDefinition = DEFAULT_HEADER_COLUMN;
   private tableState: TransposeTableSession;
   private columns: NegColumn[];
@@ -113,19 +125,6 @@ export class NegTableTransposePluginDirective implements OnChanges, OnDestroy {
       this.header = transposePlugin.header;
       this.defaultCol = transposePlugin.defaultCol || {};
       this.matchTemplates = transposePlugin.matchTemplates || false;
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('transpose' in changes) {
-      this.enabled = coerceBooleanProperty(this.transpose);
-      const isFirst = changes.transpose.isFirstChange;
-
-      if (!this.enabled) {
-        this.disable(true);
-      } else {
-        this.enable(!isFirst);
-      }
     }
   }
 
@@ -194,6 +193,7 @@ export class NegTableTransposePluginDirective implements OnChanges, OnDestroy {
     );
 
     if (refreshDataSource) {
+      this.pluginCtrl.extApi.contextApi.clear();
       this.table.ds.refresh();
     } else if (this.table.ds.length > 0) {
       this.table.ds.refresh(VIRTUAL_REFRESH);

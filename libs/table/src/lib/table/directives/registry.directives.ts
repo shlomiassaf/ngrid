@@ -1,10 +1,11 @@
 // tslint:disable:use-host-property-decorator
 
-import { Directive, TemplateRef, OnInit, OnDestroy, ComponentFactory, ComponentRef } from '@angular/core';
+import { Directive, TemplateRef, OnInit, OnDestroy, ComponentFactory, ComponentRef, Injector } from '@angular/core';
 
 import { NegColumn } from '../columns/column';
 import { NegTableComponent } from '../table.component';
 import { MetaCellContext, NegTableMetaCellContext } from '../context/index';
+import { NegTableHeaderCellComponent } from './cell';
 import { NegTableSingleRegistryMap, NegTableMultiRegistryMap, NegTableRegistryService } from '../services/table-registry.service';
 
 export abstract class NegTableSingleTemplateRegistry<T, TKind extends keyof NegTableSingleRegistryMap> implements OnInit, OnDestroy {
@@ -53,7 +54,11 @@ export abstract class NegTableMultiComponentRegistry<T, TKind extends keyof NegT
   onCreated?(context: NegTableMetaCellContext<any, NegColumn>, cmpRef: ComponentRef<T>): void;
 }
 
-export class NegTableDataHeaderExtensionContext<T = any> extends MetaCellContext<T, NegColumn> { }
+export class NegTableDataHeaderExtensionContext<T = any> extends MetaCellContext<T, NegColumn> {
+  constructor(headerCell: NegTableHeaderCellComponent<NegColumn>, public readonly injector: Injector) {
+    super(headerCell.columnDef.column, headerCell.table);
+  }
+}
 
 export interface NegTableDataHeaderExtensionRef<T = any> {
   shouldRender?(context: NegTableDataHeaderExtensionContext<T>): boolean;

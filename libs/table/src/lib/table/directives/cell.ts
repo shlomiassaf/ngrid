@@ -11,7 +11,6 @@ import {
   ViewEncapsulation,
   ViewContainerRef,
   ViewChild,
-  ComponentFactoryResolver,
   NgZone,
   EmbeddedViewRef,
 } from '@angular/core';
@@ -19,7 +18,7 @@ import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
 
 import { NegTableComponent } from '../table.component';
 import { uniqueColumnCss, uniqueColumnTypeCss, COLUMN_EDITABLE_CELL_CLASS } from '../circular-dep-bridge';
-import { COLUMN, NegColumn, NegColumnGroup } from '../columns';
+import { COLUMN, NegMetaColumn, NegColumn, NegColumnGroup } from '../columns';
 import { MetaCellContext, NegTableMetaCellContext } from '../context/index';
 import { NegTableMultiRegistryMap } from '../services/table-registry.service';
 import { NegTableColumnDef } from './column-def';
@@ -67,15 +66,15 @@ const lastDataHeaderExtensions = new Map<NegTableComponent<any>, NegTableMultiRe
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class NegTableHeaderCellComponent extends CdkHeaderCell implements DoCheck, AfterViewInit {
+export class NegTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements DoCheck, AfterViewInit {
   @ViewChild('vcRef', { read: ViewContainerRef }) vcRef: ViewContainerRef;
 
   private el: HTMLElement;
 
-  constructor(private columnDef: NegTableColumnDef,
-              public table: NegTableComponent<any>,
-              private zone: NgZone,
-              elementRef: ElementRef) {
+  constructor(public readonly columnDef: NegTableColumnDef<T>,
+              public readonly table: NegTableComponent<any>,
+              public readonly elementRef: ElementRef,
+              private zone: NgZone) {
     super(columnDef, elementRef);
     const column = columnDef.column;
     const el = this.el = elementRef.nativeElement;
@@ -89,26 +88,30 @@ export class NegTableHeaderCellComponent extends CdkHeaderCell implements DoChec
   }
 
   ngAfterViewInit(): void {
-    const col = this.columnDef.column;
+    const col: COLUMN = this.columnDef.column;
+    const { vcRef } = this;
+    let view: EmbeddedViewRef<NegTableMetaCellContext<any, NegMetaColumn | NegColumn>>;
 
     if (col instanceof NegColumn) {
-      const context = new NegTableDataHeaderExtensionContext(col as NegColumn, this.table);
-      const view = this.vcRef.createEmbeddedView(col.headerCellTpl, context);
-
-      this.vcRef.get(0).detectChanges();
-      this.columnDef.applyWidth(this.el);
-      initCellElement(this.el, col);
-
-      this.zone.onStable.pipe(first()).subscribe( () => {
-        this.runHeaderExtensions(context, view as EmbeddedViewRef<NegTableMetaCellContext<any, NegColumn>>);
-        this.vcRef.get(0).detectChanges();
-      });
+      const context = new NegTableDataHeaderExtensionContext(this as NegTableHeaderCellComponent<NegColumn>, vcRef.injector);
+      view = vcRef.createEmbeddedView(col.headerCellTpl, context);
+      this.zone.onStable
+        .pipe(first())
+        .subscribe( () => {
+          this.runHeaderExtensions(context, view as EmbeddedViewRef<NegTableMetaCellContext<any, NegColumn>>);
+          const v = vcRef.get(0);
+          // at this point the view might get destroyed, its possible...
+          if (!v.destroyed) {
+            v.detectChanges();
+          }
+        });
     } else {
-      this.vcRef.createEmbeddedView(col.template, new MetaCellContext(col, this.table));
-      this.vcRef.get(0).detectChanges();
-      this.columnDef.applyWidth(this.el);
-      initCellElement(this.el, col);
+      view = vcRef.createEmbeddedView(col.template, new MetaCellContext(col, this.table));
     }
+
+    view.detectChanges();
+    this.columnDef.applyWidth(this.el);
+    initCellElement(this.el, col);
   }
 
   // TODO: smart diff handling... handle all diffs, not just width, and change only when required.

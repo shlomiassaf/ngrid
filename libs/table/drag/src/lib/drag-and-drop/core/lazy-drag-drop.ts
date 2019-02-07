@@ -1,6 +1,6 @@
 import { take } from 'rxjs/operators';
 import { Input, Directive, ElementRef, QueryList, OnDestroy, Optional, AfterViewInit, OnInit } from '@angular/core';
-import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST, DragRef, DropListRef, DragDrop } from '@angular/cdk/drag-drop';
+import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST } from '@angular/cdk/drag-drop';
 import { NegDropListRef } from './drop-list-ref';
 import { NegDragRef } from './drag-ref';
 
@@ -82,6 +82,21 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
 })
 export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList<T>, DRef = any> extends CdkDrag<T> implements OnInit, AfterViewInit, OnDestroy {
 
+  /**
+   * A class to set when the root element is not the host element. (i.e. when `cdkDragRootElement` is used).
+   */
+  @Input('cdkDragRootElementClass') set rootElementSelectorClass(value: string) { // tslint:disable-line:no-input-rename
+    if (value !== this._rootClass && this._hostNotRoot) {
+      if (this._rootClass) {
+        this.getRootElement().classList.remove(...this._rootClass.split(' '));
+      }
+      if (value) {
+        this.getRootElement().classList.add(...value.split(' '));
+      }
+    }
+    this._rootClass = value;
+  }
+
   get negDragRef(): NegDragRef<DRef> { return this._dragRef as any; }
 
   @Input() get cdkDropList(): Z { return this.dropContainer as Z; }
@@ -97,11 +112,29 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
     }
   }
 
+  private _rootClass: string;
+  private _hostNotRoot = false;
+
   ngOnInit(): void {
     if (this.negDragRef instanceof NegDragRef === false) {
       throw new Error('Invalid `DragRef` injection, the ref is not an instance of NegDragRef')
     }
+    this.negDragRef.rootElementChanged.subscribe( event => {
+      const rootElementSelectorClass = this._rootClass;
+      const hostNotRoot = this.element.nativeElement !== event.curr;
+
+      if (rootElementSelectorClass) {
+        if (this._hostNotRoot) {
+          event.prev.classList.remove(...rootElementSelectorClass.split(' '));
+        }
+        if (hostNotRoot) {
+          event.curr.classList.add(...rootElementSelectorClass.split(' '));
+        }
+      }
+      this._hostNotRoot = hostNotRoot;
+    });
   }
+
   // This is a workaround for https://github.com/angular/material2/pull/14158
   // Working around the issue of drop container is not the direct parent (father) of a drag item.
   // The entire ngAfterViewInit() overriding method can be removed if PR accepted.

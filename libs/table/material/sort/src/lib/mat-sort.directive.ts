@@ -4,11 +4,6 @@ import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 import { UnRx } from '@neg/utils';
 import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableSortDefinition } from '@neg/table';
 
-Object.defineProperty(MatSortHeader.prototype, 'column', {
-  set: function(value: any) { this.id = value.id; }
-});
-
-
 declare module '@neg/table/lib/ext/types' {
   interface NegTablePluginExtension {
     matSort?: NegTableMatSortDirective;
