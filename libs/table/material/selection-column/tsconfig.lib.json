@@ -1,5 +1,5 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../../tsconfig.lib.json",
   "compilerOptions": {
     "outDir": "../../../../dist/out-tsc/libs/table/material/selection-column",
     "target": "es2015",
