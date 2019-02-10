@@ -24,17 +24,17 @@
       "@pebula/ngrid/drag": [
         "dist/@pebula/ngrid/drag"
       ],
-      "@pebula/ngrid/material/selection-column": [
-        "dist/@pebula/ngrid/material/selection-column"
+      "@pebula/ngrid-material/selection-column": [
+        "dist/@pebula/ngrid-material/selection-column"
       ],
-      "@pebula/ngrid/material/mat-paginator": [
-        "dist/@pebula/ngrid/material/mat-paginator"
+      "@pebula/ngrid-material/mat-paginator": [
+        "dist/@pebula/ngrid-material/mat-paginator"
       ],
-      "@pebula/ngrid/material/mat-sort": [
-        "dist/@pebula/ngrid/material/mat-sort"
+      "@pebula/ngrid-material/mat-sort": [
+        "dist/@pebula/ngrid-material/mat-sort"
       ],
-      "@pebula/ngrid/material/cell-tooltip": [
-        "dist/@pebula/ngrid/material/cell-tooltip"
+      "@pebula/ngrid-material/cell-tooltip": [
+        "dist/@pebula/ngrid-material/cell-tooltip"
       ],
       "@pebula/utils": [
         "dist/@pebula/utils"

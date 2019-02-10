@@ -4,7 +4,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 import { columnFactory, createDS, PblColumn } from '@pebula/ngrid';
-import { PblNgridMatSortDirective } from '@pebula/ngrid/material/sort';
+import { PblNgridMatSortDirective } from '@pebula/ngrid-material/sort';
 
 import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
 

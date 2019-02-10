@@ -22,7 +22,7 @@ import { PblNgridTransposeModule } from '@pebula/ngrid/transpose';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridDetailRowModule } from '@pebula/ngrid/detail-row';
 import { PblNgridStickyModule } from '@pebula/ngrid/sticky';
-import { PblNgridMaterialModule } from '@pebula/ngrid/material';
+import { PblNgridMaterialModule } from '@pebula/ngrid-material';
 
 import { SharedModule } from '@pebula/apps/ngrid/shared';
 import { CommonTableTemplatesComponent } from './common-table-templates/common-table-templates.component';

@@ -64,23 +64,23 @@
       "@pebula/ngrid/target-events": [
         "libs/ngrid/target-events/src/index.ts"
       ],
-      "@pebula/ngrid/material/selection-column": [
-        "libs/ngrid/material/selection-column/src/index.ts"
-      ],
-      "@pebula/ngrid/material/paginator": [
-        "libs/ngrid/material/paginator/src/index.ts"
-      ],
-      "@pebula/ngrid/material/sort": [
-        "libs/ngrid/material/sort/src/index.ts"
-      ],
-      "@pebula/ngrid/material/cell-tooltip": [
-        "libs/ngrid/material/cell-tooltip/src/index.ts"
-      ],
-      "@pebula/ngrid/material": [
-        "libs/ngrid/material/src/index.ts"
-      ],
       "@pebula/ngrid/drag": [
         "libs/ngrid/drag/src/index.ts"
+      ],
+      "@pebula/ngrid-material": [
+        "libs/ngrid-material/src/index.ts"
+      ],
+      "@pebula/ngrid-material/selection-column": [
+        "libs/ngrid-material/selection-column/src/index.ts"
+      ],
+      "@pebula/ngrid-material/paginator": [
+        "libs/ngrid-material/paginator/src/index.ts"
+      ],
+      "@pebula/ngrid-material/sort": [
+        "libs/ngrid-material/sort/src/index.ts"
+      ],
+      "@pebula/ngrid-material/cell-tooltip": [
+        "libs/ngrid-material/cell-tooltip/src/index.ts"
       ],
       "@pebula/utils": [
         "libs/utils/src/index.ts"

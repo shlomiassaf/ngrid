@@ -7,7 +7,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
 
 import { PblNgridModule, PblNgridRegistryService } from '@pebula/ngrid';
-import { PblNgridPaginatorModule } from '@pebula/ngrid/material/paginator';
+import { PblNgridPaginatorModule } from '@pebula/ngrid-material/paginator';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
 import { DatasourceQuickthroughGridExampleComponent } from './datasource-quickthrough/datasource-quickthrough.component';
