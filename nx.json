@@ -8,125 +8,125 @@
     "nx.json": "*"
   },
   "projects": {
-    "table-demo-app": {
+    "ngrid-demo-app": {
       "tags": [
         "type:app",
-        "table-demo-app"
+        "ngrid-demo-app"
       ]
     },
-    "table-demo-app-e2e": {
+    "ngrid-demo-app-e2e": {
       "tags": [
         "type:e2e-app",
-        "parent:table-demo-app"
+        "parent:ngrid-demo-app"
       ]
     },
-    "apps-table-shared": {
+    "apps-ngrid-shared": {
       "tags": [
         "type:child-app",
-        "parent:table-demo-app"
+        "parent:ngrid-demo-app"
       ]
     },
-    "apps-table-concepts": {
+    "apps-ngrid-concepts": {
       "tags": [
         "type:child-app",
-        "parent:table-demo-app"
+        "parent:ngrid-demo-app"
       ]
     },
-    "apps-table-features": {
+    "apps-ngrid-features": {
       "tags": [
         "type:child-app",
-        "parent:table-demo-app"
+        "parent:ngrid-demo-app"
       ]
     },
-    "apps-table-stories": {
+    "apps-ngrid-stories": {
       "tags": [
         "type:child-app",
-        "parent:table-demo-app"
+        "parent:ngrid-demo-app"
       ]
     },
-    "apps-table-demos": {
+    "apps-ngrid-demos": {
       "tags": [
         "type:child-app",
-        "parent:table-demo-app"
+        "parent:ngrid-demo-app"
       ]
     },
-    "table": {
+    "ngrid": {
       "tags": [
-        "name:table",
+        "name:ngrid",
         "type:lib"
       ]
     },
-    "table-sticky": {
+    "ngrid-sticky": {
       "tags": [
         "name:sticky",
         "type:child-lib",
-        "parent:table"
+        "parent:ngrid"
       ]
     },
-    "table-detail-row": {
+    "ngrid-detail-row": {
       "tags": [
         "name:detail-row",
         "type:child-lib",
-        "parent:table"
+        "parent:ngrid"
       ]
     },
-    "table-block-ui": {
+    "ngrid-block-ui": {
       "tags": [
         "name:block-ui",
         "type:child-lib",
-        "parent:table"
+        "parent:ngrid"
       ]
     },
-    "table-drag": {
+    "ngrid-drag": {
       "tags": [
         "name:drag",
         "type:child-lib",
-        "parent:table"
+        "parent:ngrid"
       ]
     },
-    "table-transpose": {
+    "ngrid-transpose": {
       "tags": [
         "name:transpose",
         "type:child-lib",
-        "parent:table"
+        "parent:ngrid"
       ]
     },
-    "table-target-events": {
+    "ngrid-target-events": {
       "tags": [
         "name:target-events",
         "type:child-lib",
-        "parent:table"
+        "parent:ngrid"
       ]
     },
-    "table-material": {
+    "ngrid-material": {
       "tags": [
         "name:material",
         "type:child-lib",
-        "parent:table"
+        "parent:ngrid"
       ]
     },
-    "table-material-selection-column": {
+    "ngrid-material-selection-column": {
       "tags": [
         "name:selection-column",
         "type:child-lib",
         "parent:material"
       ]
     },
-    "table-material-paginator": {
+    "ngrid-material-paginator": {
       "tags": [
         "name:paginator",
         "type:child-lib",
         "parent:material"
       ]
     },
-    "table-material-sort": {
+    "ngrid-material-sort": {
       "tags": [
         "name:sort",
         "type:child-lib",
         "parent:material"
       ]
     },
-    "table-material-cell-tooltip": {
+    "ngrid-material-cell-tooltip": {
       "tags": [
         "name:cell-tooltip",
         "type:child-lib",
@@ -172,14 +172,14 @@
       "allow": [],
       "depConstraints": [
         {
-          "sourceTag": "name:table",
+          "sourceTag": "name:ngrid",
           "onlyDependOnLibsWithTags": []
         },
         {
-          "sourceTag": "parent:table",
+          "sourceTag": "parent:ngrid",
           "onlyDependOnLibsWithTags": [
-            "name:table",
-            "parent:table",
+            "name:ngrid",
+            "parent:ngrid",
             "parent:material"
           ]
         },

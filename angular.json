@@ -3,9 +3,9 @@
   "version": 1,
   "newProjectRoot": "",
   "projects": {
-    "table-demo-app": {
-      "root": "apps/table-demo-app/",
-      "sourceRoot": "apps/table-demo-app/src",
+    "ngrid-demo-app": {
+      "root": "apps/ngrid-demo-app/",
+      "sourceRoot": "apps/ngrid-demo-app/src",
       "projectType": "application",
       "prefix": "pbl",
       "schematics": {
@@ -19,17 +19,17 @@
           "options": {
             "extraWebpackConfig": "webpack.config.ts",
             "tsConfigForExtraWebpackConfig": "tsconfig.es6.json",
-            "outputPath": "dist/apps/table-demo-app",
-            "index": "apps/table-demo-app/src/index.html",
-            "main": "apps/table-demo-app/src/main.ts",
-            "polyfills": "apps/table-demo-app/src/polyfills.ts",
-            "tsConfig": "apps/table-demo-app/tsconfig.app.json",
+            "outputPath": "dist/apps/ngrid-demo-app",
+            "index": "apps/ngrid-demo-app/src/index.html",
+            "main": "apps/ngrid-demo-app/src/main.ts",
+            "polyfills": "apps/ngrid-demo-app/src/polyfills.ts",
+            "tsConfig": "apps/ngrid-demo-app/tsconfig.app.json",
             "assets": [
-              "apps/table-demo-app/src/favicon.ico",
-              "apps/table-demo-app/src/assets"
+              "apps/ngrid-demo-app/src/favicon.ico",
+              "apps/ngrid-demo-app/src/assets"
             ],
             "styles": [
-              "apps/table-demo-app/src/styles/main.scss"
+              "apps/ngrid-demo-app/src/styles/main.scss"
             ],
             "scripts": []
           },
@@ -37,8 +37,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/table-demo-app/src/environments/environment.ts",
-                  "with": "apps/table-demo-app/src/environments/environment.prod.ts"
+                  "replace": "apps/ngrid-demo-app/src/environments/environment.ts",
+                  "with": "apps/ngrid-demo-app/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -63,37 +63,37 @@
         "serve": {
           "builder": "ng-cli-ext:dev-server",
           "options": {
-            "browserTarget": "table-demo-app:build",
+            "browserTarget": "ngrid-demo-app:build",
             "extraWebpackConfig": "webpack.config.ts",
             "tsConfigForExtraWebpackConfig": "apps/demo-app/tsconfig.es6.json",
             "port": 4201
           },
           "configurations": {
             "production": {
-              "browserTarget": "table-demo-app:build:production"
+              "browserTarget": "ngrid-demo-app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "table-demo-app:build"
+            "browserTarget": "ngrid-demo-app:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "apps/table-demo-app/src/test.ts",
-            "polyfills": "apps/table-demo-app/src/polyfills.ts",
-            "tsConfig": "apps/table-demo-app/tsconfig.spec.json",
-            "karmaConfig": "apps/table-demo-app/karma.conf.js",
+            "main": "apps/ngrid-demo-app/src/test.ts",
+            "polyfills": "apps/ngrid-demo-app/src/polyfills.ts",
+            "tsConfig": "apps/ngrid-demo-app/tsconfig.spec.json",
+            "karmaConfig": "apps/ngrid-demo-app/karma.conf.js",
             "styles": [
-              "apps/table-demo-app/src/styles.scss"
+              "apps/ngrid-demo-app/src/styles.scss"
             ],
             "scripts": [],
             "assets": [
-              "apps/table-demo-app/src/favicon.ico",
-              "apps/table-demo-app/src/assets"
+              "apps/ngrid-demo-app/src/favicon.ico",
+              "apps/ngrid-demo-app/src/assets"
             ]
           }
         },
@@ -101,8 +101,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "apps/table-demo-app/tsconfig.app.json",
-              "apps/table-demo-app/tsconfig.spec.json"
+              "apps/ngrid-demo-app/tsconfig.app.json",
+              "apps/ngrid-demo-app/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -111,27 +111,27 @@
         }
       }
     },
-    "table-demo-app-e2e": {
-      "root": "apps/table-demo-app-e2e",
+    "ngrid-demo-app-e2e": {
+      "root": "apps/ngrid-demo-app-e2e",
       "projectType": "application",
       "prefix": "",
       "architect": {
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "apps/table-demo-app-e2e/protractor.conf.js",
-            "devServerTarget": "table-demo-app:serve"
+            "protractorConfig": "apps/ngrid-demo-app-e2e/protractor.conf.js",
+            "devServerTarget": "ngrid-demo-app:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "table-demo-app:serve:production"
+              "devServerTarget": "ngrid-demo-app:serve:production"
             }
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": "apps/table-demo-app-e2e/tsconfig.e2e.json",
+            "tsConfig": "apps/ngrid-demo-app-e2e/tsconfig.e2e.json",
             "exclude": [
               "**/node_modules/**"
             ]
@@ -139,7 +139,7 @@
         }
       }
     },
-    "apps-table-shared": {
+    "apps-ngrid-shared": {
       "root": "libs/demo-apps/shared",
       "sourceRoot": "libs/demo-apps/shared/src",
       "projectType": "library",
@@ -167,7 +167,7 @@
         }
       }
     },
-    "apps-table-concepts": {
+    "apps-ngrid-concepts": {
       "root": "libs/demo-apps/concepts",
       "sourceRoot": "libs/demo-apps/concepts/src",
       "projectType": "library",
@@ -195,7 +195,7 @@
         }
       }
     },
-    "apps-table-features": {
+    "apps-ngrid-features": {
       "root": "libs/demo-apps/features",
       "sourceRoot": "libs/demo-apps/features/src",
       "projectType": "library",
@@ -223,7 +223,7 @@
         }
       }
     },
-    "apps-table-stories": {
+    "apps-ngrid-stories": {
       "root": "libs/demo-apps/stories",
       "sourceRoot": "libs/demo-apps/stories/src",
       "projectType": "library",
@@ -251,7 +251,7 @@
         }
       }
     },
-    "apps-table-demos": {
+    "apps-ngrid-demos": {
       "root": "libs/demo-apps/demos",
       "sourceRoot": "libs/demo-apps/demos/src",
       "projectType": "library",
@@ -279,9 +279,9 @@
         }
       }
     },
-    "table": {
-      "root": "libs/table",
-      "sourceRoot": "libs/table/src",
+    "ngrid": {
+      "root": "libs/ngrid",
+      "sourceRoot": "libs/ngrid/src",
       "projectType": "library",
       "prefix": "pbl",
       "schematics": {
@@ -293,8 +293,8 @@
         "build": {
           "builder": "ng-cli-packagr-tasks:build",
           "options": {
-            "tsConfig": "libs/table/tsconfig.lib.json",
-            "project": "libs/table/ng-package.json",
+            "tsConfig": "libs/ngrid/tsconfig.lib.json",
+            "project": "libs/ngrid/ng-package.json",
             "tasks": {
               "config": "tools/ng-packagr.transformers/ng-packagr.transformers.ts",
               "data": {
@@ -302,23 +302,23 @@
                   "assets": [
                     {
                       "glob": "_theming.scss",
-                      "input": "libs/table",
-                      "output": "dist/@pebula/table"
+                      "input": "libs/ngrid",
+                      "output": "dist/@pebula/ngrid"
                     },
                     {
                       "glob": "**/*.scss",
-                      "input": "libs/table/theme",
-                      "output": "dist/@pebula/table/theme"
+                      "input": "libs/ngrid/theme",
+                      "output": "dist/@pebula/ngrid/theme"
                     },
                     {
                       "glob": "_theming.scss",
-                      "input": "libs/table/material",
-                      "output": "dist/@pebula/table/material"
+                      "input": "libs/ngrid/material",
+                      "output": "dist/@pebula/ngrid/material"
                     },
                     {
                       "glob": "**/*.scss",
-                      "input": "libs/table/material/theme",
-                      "output": "dist/@pebula/table/material/theme"
+                      "input": "libs/ngrid/material/theme",
+                      "output": "dist/@pebula/ngrid/material/theme"
                     }
                   ]
                 }
@@ -327,24 +327,24 @@
           },
           "configurations": {
             "production": {
-              "project": "libs/table/ng-package.prod.json"
+              "project": "libs/ngrid/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/src/test.ts",
-            "tsConfig": "libs/table/tsconfig.spec.json",
-            "karmaConfig": "libs/table/karma.conf.js"
+            "main": "libs/ngrid/src/test.ts",
+            "tsConfig": "libs/ngrid/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/tsconfig.lib.json",
-              "libs/table/tsconfig.spec.json"
+              "libs/ngrid/tsconfig.lib.json",
+              "libs/ngrid/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -353,38 +353,38 @@
         }
       }
     },
-    "table-sticky": {
-      "root": "libs/table/sticky",
-      "sourceRoot": "libs/table/sticky/src",
+    "ngrid-sticky": {
+      "root": "libs/ngrid/sticky",
+      "sourceRoot": "libs/ngrid/sticky/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/table/sticky/tsconfig.lib.json",
-            "project": "libs/table/sticky/ng-package.json"
+            "tsConfig": "libs/ngrid/sticky/tsconfig.lib.json",
+            "project": "libs/ngrid/sticky/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "libs/table/sticky/ng-package.prod.json"
+              "project": "libs/ngrid/sticky/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/sticky/src/test.ts",
-            "tsConfig": "libs/table/sticky/tsconfig.spec.json",
-            "karmaConfig": "libs/table/sticky/karma.conf.js"
+            "main": "libs/ngrid/sticky/src/test.ts",
+            "tsConfig": "libs/ngrid/sticky/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/sticky/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/sticky/tsconfig.lib.json",
-              "libs/table/sticky/tsconfig.spec.json"
+              "libs/ngrid/sticky/tsconfig.lib.json",
+              "libs/ngrid/sticky/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -393,38 +393,38 @@
         }
       }
     },
-    "table-detail-row": {
-      "root": "libs/table/detail-row",
-      "sourceRoot": "libs/table/detail-row/src",
+    "ngrid-detail-row": {
+      "root": "libs/ngrid/detail-row",
+      "sourceRoot": "libs/ngrid/detail-row/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/table/detail-row/tsconfig.lib.json",
-            "project": "libs/table/detail-row/ng-package.json"
+            "tsConfig": "libs/ngrid/detail-row/tsconfig.lib.json",
+            "project": "libs/ngrid/detail-row/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "libs/table/detail-row/ng-package.prod.json"
+              "project": "libs/ngrid/detail-row/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/detail-row/src/test.ts",
-            "tsConfig": "libs/table/detail-row/tsconfig.spec.json",
-            "karmaConfig": "libs/table/detail-row/karma.conf.js"
+            "main": "libs/ngrid/detail-row/src/test.ts",
+            "tsConfig": "libs/ngrid/detail-row/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/detail-row/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/detail-row/tsconfig.lib.json",
-              "libs/table/detail-row/tsconfig.spec.json"
+              "libs/ngrid/detail-row/tsconfig.lib.json",
+              "libs/ngrid/detail-row/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -433,38 +433,38 @@
         }
       }
     },
-    "table-block-ui": {
-      "root": "libs/table/block-ui",
-      "sourceRoot": "libs/table/block-ui/src",
+    "ngrid-block-ui": {
+      "root": "libs/ngrid/block-ui",
+      "sourceRoot": "libs/ngrid/block-ui/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/table/block-ui/tsconfig.lib.json",
-            "project": "libs/table/block-ui/ng-package.json"
+            "tsConfig": "libs/ngrid/block-ui/tsconfig.lib.json",
+            "project": "libs/ngrid/block-ui/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "libs/table/block-ui/ng-package.prod.json"
+              "project": "libs/ngrid/block-ui/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/block-ui/src/test.ts",
-            "tsConfig": "libs/table/block-ui/tsconfig.spec.json",
-            "karmaConfig": "libs/table/block-ui/karma.conf.js"
+            "main": "libs/ngrid/block-ui/src/test.ts",
+            "tsConfig": "libs/ngrid/block-ui/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/block-ui/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/block-ui/tsconfig.lib.json",
-              "libs/table/block-ui/tsconfig.spec.json"
+              "libs/ngrid/block-ui/tsconfig.lib.json",
+              "libs/ngrid/block-ui/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -473,38 +473,38 @@
         }
       }
     },
-    "table-transpose": {
-      "root": "libs/table/transpose",
-      "sourceRoot": "libs/table/transpose/src",
+    "ngrid-transpose": {
+      "root": "libs/ngrid/transpose",
+      "sourceRoot": "libs/ngrid/transpose/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/table/transpose/tsconfig.lib.json",
-            "project": "libs/table/transpose/ng-package.json"
+            "tsConfig": "libs/ngrid/transpose/tsconfig.lib.json",
+            "project": "libs/ngrid/transpose/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "libs/table/transpose/ng-package.prod.json"
+              "project": "libs/ngrid/transpose/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/transpose/src/test.ts",
-            "tsConfig": "libs/table/transpose/tsconfig.spec.json",
-            "karmaConfig": "libs/table/transpose/karma.conf.js"
+            "main": "libs/ngrid/transpose/src/test.ts",
+            "tsConfig": "libs/ngrid/transpose/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/transpose/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/transpose/tsconfig.lib.json",
-              "libs/table/transpose/tsconfig.spec.json"
+              "libs/ngrid/transpose/tsconfig.lib.json",
+              "libs/ngrid/transpose/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -513,26 +513,26 @@
         }
       }
     },
-    "table-target-events": {
-      "root": "libs/table/target-events",
-      "sourceRoot": "libs/table/target-events/src",
+    "ngrid-target-events": {
+      "root": "libs/ngrid/target-events",
+      "sourceRoot": "libs/ngrid/target-events/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/target-events/src/test.ts",
-            "tsConfig": "libs/table/target-events/tsconfig.spec.json",
-            "karmaConfig": "libs/table/target-events/karma.conf.js"
+            "main": "libs/ngrid/target-events/src/test.ts",
+            "tsConfig": "libs/ngrid/target-events/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/target-events/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/target-events/tsconfig.lib.json",
-              "libs/table/target-events/tsconfig.spec.json"
+              "libs/ngrid/target-events/tsconfig.lib.json",
+              "libs/ngrid/target-events/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -541,38 +541,38 @@
         }
       }
     },
-    "table-material-selection-column": {
-      "root": "libs/table/material/selection-column",
-      "sourceRoot": "libs/table/material/selection-column/src",
+    "ngrid-material-selection-column": {
+      "root": "libs/ngrid/material/selection-column",
+      "sourceRoot": "libs/ngrid/material/selection-column/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/table/material/selection-column/tsconfig.lib.json",
-            "project": "libs/table/material/selection-column/ng-package.json"
+            "tsConfig": "libs/ngrid/material/selection-column/tsconfig.lib.json",
+            "project": "libs/ngrid/material/selection-column/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "libs/table/material/selection-column/ng-package.prod.json"
+              "project": "libs/ngrid/material/selection-column/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/material/selection-column/src/test.ts",
-            "tsConfig": "libs/table/material/selection-column/tsconfig.spec.json",
-            "karmaConfig": "libs/table/material/selection-column/karma.conf.js"
+            "main": "libs/ngrid/material/selection-column/src/test.ts",
+            "tsConfig": "libs/ngrid/material/selection-column/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/material/selection-column/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/material/selection-column/tsconfig.lib.json",
-              "libs/table/material/selection-column/tsconfig.spec.json"
+              "libs/ngrid/material/selection-column/tsconfig.lib.json",
+              "libs/ngrid/material/selection-column/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -581,38 +581,38 @@
         }
       }
     },
-    "table-material-paginator": {
-      "root": "libs/table/material/paginator",
-      "sourceRoot": "libs/table/material/paginator/src",
+    "ngrid-material-paginator": {
+      "root": "libs/ngrid/material/paginator",
+      "sourceRoot": "libs/ngrid/material/paginator/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/table/material/paginator/tsconfig.lib.json",
-            "project": "libs/table/material/paginator/ng-package.json"
+            "tsConfig": "libs/ngrid/material/paginator/tsconfig.lib.json",
+            "project": "libs/ngrid/material/paginator/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "libs/table/material/paginator/ng-package.prod.json"
+              "project": "libs/ngrid/material/paginator/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/material/paginator/src/test.ts",
-            "tsConfig": "libs/table/material/paginator/tsconfig.spec.json",
-            "karmaConfig": "libs/table/material/paginator/karma.conf.js"
+            "main": "libs/ngrid/material/paginator/src/test.ts",
+            "tsConfig": "libs/ngrid/material/paginator/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/material/paginator/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/material/paginator/tsconfig.lib.json",
-              "libs/table/material/paginator/tsconfig.spec.json"
+              "libs/ngrid/material/paginator/tsconfig.lib.json",
+              "libs/ngrid/material/paginator/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -621,38 +621,38 @@
         }
       }
     },
-    "table-material-sort": {
-      "root": "libs/table/material/sort",
-      "sourceRoot": "libs/table/material/sort/src",
+    "ngrid-material-sort": {
+      "root": "libs/ngrid/material/sort",
+      "sourceRoot": "libs/ngrid/material/sort/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/table/material/sort/tsconfig.lib.json",
-            "project": "libs/table/material/sort/ng-package.json"
+            "tsConfig": "libs/ngrid/material/sort/tsconfig.lib.json",
+            "project": "libs/ngrid/material/sort/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "libs/table/material/sort/ng-package.prod.json"
+              "project": "libs/ngrid/material/sort/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/material/sort/src/test.ts",
-            "tsConfig": "libs/table/material/sort/tsconfig.spec.json",
-            "karmaConfig": "libs/table/material/sort/karma.conf.js"
+            "main": "libs/ngrid/material/sort/src/test.ts",
+            "tsConfig": "libs/ngrid/material/sort/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/material/sort/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/material/sort/tsconfig.lib.json",
-              "libs/table/material/sort/tsconfig.spec.json"
+              "libs/ngrid/material/sort/tsconfig.lib.json",
+              "libs/ngrid/material/sort/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -661,38 +661,38 @@
         }
       }
     },
-    "table-material-cell-tooltip": {
-      "root": "libs/table/material/cell-tooltip",
-      "sourceRoot": "libs/table/material/cell-tooltip/src",
+    "ngrid-material-cell-tooltip": {
+      "root": "libs/ngrid/material/cell-tooltip",
+      "sourceRoot": "libs/ngrid/material/cell-tooltip/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/table/material/cell-tooltip/tsconfig.lib.json",
-            "project": "libs/table/material/cell-tooltip/ng-package.json"
+            "tsConfig": "libs/ngrid/material/cell-tooltip/tsconfig.lib.json",
+            "project": "libs/ngrid/material/cell-tooltip/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "libs/table/material/cell-tooltip/ng-package.prod.json"
+              "project": "libs/ngrid/material/cell-tooltip/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/material/cell-tooltip/src/test.ts",
-            "tsConfig": "libs/table/material/cell-tooltip/tsconfig.spec.json",
-            "karmaConfig": "libs/table/material/cell-tooltip/karma.conf.js"
+            "main": "libs/ngrid/material/cell-tooltip/src/test.ts",
+            "tsConfig": "libs/ngrid/material/cell-tooltip/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/material/cell-tooltip/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/material/cell-tooltip/tsconfig.lib.json",
-              "libs/table/material/cell-tooltip/tsconfig.spec.json"
+              "libs/ngrid/material/cell-tooltip/tsconfig.lib.json",
+              "libs/ngrid/material/cell-tooltip/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -701,33 +701,33 @@
         }
       }
     },
-    "table-material": {
-      "root": "libs/table/material",
-      "sourceRoot": "libs/table/material/src",
+    "ngrid-material": {
+      "root": "libs/ngrid/material",
+      "sourceRoot": "libs/ngrid/material/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/table/material/tsconfig.lib.json",
-            "project": "libs/table/material/ng-package.json"
+            "tsConfig": "libs/ngrid/material/tsconfig.lib.json",
+            "project": "libs/ngrid/material/ng-package.json"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/material/src/test.ts",
-            "tsConfig": "libs/table/material/tsconfig.spec.json",
-            "karmaConfig": "libs/table/material/karma.conf.js"
+            "main": "libs/ngrid/material/src/test.ts",
+            "tsConfig": "libs/ngrid/material/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/material/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/material/tsconfig.lib.json",
-              "libs/table/material/tsconfig.spec.json"
+              "libs/ngrid/material/tsconfig.lib.json",
+              "libs/ngrid/material/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -736,33 +736,33 @@
         }
       }
     },
-    "table-drag": {
-      "root": "libs/table/drag",
-      "sourceRoot": "libs/table/drag/src",
+    "ngrid-drag": {
+      "root": "libs/ngrid/drag",
+      "sourceRoot": "libs/ngrid/drag/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/table/drag/tsconfig.lib.json",
-            "project": "libs/table/drag/ng-package.json"
+            "tsConfig": "libs/ngrid/drag/tsconfig.lib.json",
+            "project": "libs/ngrid/drag/ng-package.json"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/table/drag/src/test.ts",
-            "tsConfig": "libs/table/drag/tsconfig.spec.json",
-            "karmaConfig": "libs/table/drag/karma.conf.js"
+            "main": "libs/ngrid/drag/src/test.ts",
+            "tsConfig": "libs/ngrid/drag/tsconfig.spec.json",
+            "karmaConfig": "libs/ngrid/drag/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/table/drag/tsconfig.lib.json",
-              "libs/table/drag/tsconfig.spec.json"
+              "libs/ngrid/drag/tsconfig.lib.json",
+              "libs/ngrid/drag/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -951,5 +951,5 @@
     },
     "defaultCollection": "@nrwl/schematics"
   },
-  "defaultProject": "table-demo-app"
+  "defaultProject": "ngrid-demo-app"
 }

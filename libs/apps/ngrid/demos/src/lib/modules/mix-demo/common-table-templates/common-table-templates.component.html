@@ -1,0 +1,46 @@
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR PBL-NGRID -->
+<div *pblNgridBlockUiDef class="pbl-ngrid-ui-block">
+  <mat-spinner></mat-spinner>
+</div>
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR PBL-NGRID -->
+
+<!-- DEFINING DEFAULT NO DATA TEMPLATE -->
+<div *pblNgridNoDataRef class="pbl-ngrid-no-data"><span>No Results</span></div>
+<!-- DEFINING DEFAULT NO DATA TEMPLATE -->
+
+<pbl-ngrid-drag-resize *pblNgridCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
+  <span class="pbl-ngrid-column-resizer-handle"></span>
+</pbl-ngrid-drag-resize>
+<span *pblNgridCellDraggerRef="let ctx" [pblNgridColumnDrag]="ctx" cdkDragRootElementClass="cdk-drag column-reorder-handle" ></span>
+
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE COLUMNS FOR PBL-NGRID -->
+<div *pblNgridCellDef="'*'; value as value;">{{value}}</div>
+<div *pblNgridCellTypeDef="'visualBool'; value as value;">{{ value ? '✅' : '🚫' }}</div>
+<div *pblNgridCellTypeDef="'date'; value as value;">{{value | date: 'MMM dd, yyyy'}}</div>
+<div *pblNgridCellTypeDef="'number'; value as value;">{{value | number: '1.0-2'}}</div>
+<!-- Set's the currency based on a predefined currency in ISO format, provided in the `type.data` property of the column -->
+<div *pblNgridCellTypeDef="'currency'; value as value; col as col;">{{value | currency:col.type.data:'symbol':'1.0-2'}}</div>
+<div *pblNgridCellTypeDef="'datetime'; value as value;">{{value | date: 'MMM dd, yyyy  HH:mm'}}</div>
+<div *pblNgridHeaderCellDef="'*'; col as col;">{{col.label}}</div>
+<div *pblNgridFooterCellDef="'*'; col as col;">{{col.label}}</div>
+
+
+<div *pblNgridHeaderCellTypeDef="'drag_and_drop_handle'"></div>
+<div *pblNgridCellTypeDef="'drag_and_drop_handle'; let ctx" [pblNgridRowDrag]="ctx" style="cursor: move">
+  <mat-icon pblDragHandle class="pbl-ngrid-row-drag-handle">drag_handle</mat-icon>
+  <div class="pbl-ngrid-row-drag-placeholder" *cdkDragPlaceholder></div>
+</div>
+
+<!-- START RATINGS -->
+<div *pblNgridCellTypeDef="'starRatings'; value as value">
+  {{ value >= 1 ? '★' : '☆' }}
+  {{ value >= 2 ? '★' : '☆' }}
+  {{ value >= 3 ? '★' : '☆' }}
+  {{ value >= 4 ? '★' : '☆' }}
+  {{ value === 5 ? '★' : '☆' }}
+</div>
+
+<div *pblNgridCellTypeDef="'progressBar'; value as value; col as col"
+     [ngStyle]="col.type.data.style(value)" [style.width]="value + '%'">
+  <div>{{ value }}%</div>
+</div>

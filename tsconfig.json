@@ -18,20 +18,20 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@pebula/apps/table/concepts": [
-        "libs/apps/table/concepts/src/index.ts"
+      "@pebula/apps/ngrid/concepts": [
+        "libs/apps/ngrid/concepts/src/index.ts"
       ],
-      "@pebula/apps/table/features": [
-        "libs/apps/table/features/src/index.ts"
+      "@pebula/apps/ngrid/features": [
+        "libs/apps/ngrid/features/src/index.ts"
       ],
-      "@pebula/apps/table/stories": [
-        "libs/apps/table/stories/src/index.ts"
+      "@pebula/apps/ngrid/stories": [
+        "libs/apps/ngrid/stories/src/index.ts"
       ],
-      "@pebula/apps/table/demos": [
-        "libs/apps/table/demos/src/index.ts"
+      "@pebula/apps/ngrid/demos": [
+        "libs/apps/ngrid/demos/src/index.ts"
       ],
-      "@pebula/apps/table/shared": [
-        "libs/apps/table/shared/src/index.ts"
+      "@pebula/apps/ngrid/shared": [
+        "libs/apps/ngrid/shared/src/index.ts"
       ],
       "@pebula/docsi": [
         "libs/docsi/src/index.ts"
@@ -45,42 +45,42 @@
       "@pebula/docsi/material-suite": [
         "libs/docsi/material-suite/src/index.ts"
       ],
-      "@pebula/table*": [
-        "libs/table/src*",
-        "libs/table/src/index.ts"
+      "@pebula/ngrid*": [
+        "libs/ngrid/src*",
+        "libs/ngrid/src/index.ts"
       ],
-      "@pebula/table/sticky": [
-        "libs/table/sticky/src/index.ts"
+      "@pebula/ngrid/sticky": [
+        "libs/ngrid/sticky/src/index.ts"
       ],
-      "@pebula/table/detail-row": [
-        "libs/table/detail-row/src/index.ts"
+      "@pebula/ngrid/detail-row": [
+        "libs/ngrid/detail-row/src/index.ts"
       ],
-      "@pebula/table/block-ui": [
-        "libs/table/block-ui/src/index.ts"
+      "@pebula/ngrid/block-ui": [
+        "libs/ngrid/block-ui/src/index.ts"
       ],
-      "@pebula/table/transpose": [
-        "libs/table/transpose/src/index.ts"
+      "@pebula/ngrid/transpose": [
+        "libs/ngrid/transpose/src/index.ts"
       ],
-      "@pebula/table/target-events": [
-        "libs/table/target-events/src/index.ts"
+      "@pebula/ngrid/target-events": [
+        "libs/ngrid/target-events/src/index.ts"
       ],
-      "@pebula/table/material/selection-column": [
-        "libs/table/material/selection-column/src/index.ts"
+      "@pebula/ngrid/material/selection-column": [
+        "libs/ngrid/material/selection-column/src/index.ts"
       ],
-      "@pebula/table/material/paginator": [
-        "libs/table/material/paginator/src/index.ts"
+      "@pebula/ngrid/material/paginator": [
+        "libs/ngrid/material/paginator/src/index.ts"
       ],
-      "@pebula/table/material/sort": [
-        "libs/table/material/sort/src/index.ts"
+      "@pebula/ngrid/material/sort": [
+        "libs/ngrid/material/sort/src/index.ts"
       ],
-      "@pebula/table/material/cell-tooltip": [
-        "libs/table/material/cell-tooltip/src/index.ts"
+      "@pebula/ngrid/material/cell-tooltip": [
+        "libs/ngrid/material/cell-tooltip/src/index.ts"
       ],
-      "@pebula/table/material": [
-        "libs/table/material/src/index.ts"
+      "@pebula/ngrid/material": [
+        "libs/ngrid/material/src/index.ts"
       ],
-      "@pebula/table/drag": [
-        "libs/table/drag/src/index.ts"
+      "@pebula/ngrid/drag": [
+        "libs/ngrid/drag/src/index.ts"
       ],
       "@pebula/utils": [
         "libs/utils/src/index.ts"

@@ -1,5 +1,5 @@
 npm run build-demo-gh
-cd dist/apps/table-demo-app
+cd dist/apps/ngrid-demo-app
 git init
 git remote add origin git@github.com:shlomiassaf/ngrid.git
 git remote add public_origin git@github.com:shlomiassaf/table-demo.git
