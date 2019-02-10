@@ -5,8 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build-table": "ng build utils --prod && ng build table --prod",
-    "build-demo-gh": "ng build table-demo-app --prod --base-href table-demo && cp dist/apps/ngrid-demo-app/index.html dist/apps/ngrid-demo-app/404.html",
+    "build-grid": "ng build utils --prod && ng build ngrid --prod",
+    "build-demo-gh": "ng build ngrid-demo-app --prod --base-href table-demo && cp dist/apps/ngrid-demo-app/index.html dist/apps/ngrid-demo-app/404.html",
     "test": "ng test",
     "lint": "./node_modules/.bin/nx lint && ng lint",
     "e2e": "ng e2e",

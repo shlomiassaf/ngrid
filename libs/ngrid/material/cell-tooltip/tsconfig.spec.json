@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../../dist/out-tsc/libs/table/material/cell-tooltip",
+    "outDir": "../../../../dist/out-tsc/libs/ngrid/material/cell-tooltip",
     "types": [
       "jasmine",
       "node"

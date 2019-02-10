@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/table/detail-row",
+    "outDir": "../../../dist/out-tsc/libs/ngrid/detail-row",
     "types": [
       "jasmine",
       "node"

@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.lib.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/table/block-ui",
+    "outDir": "../../../dist/out-tsc/libs/ngrid/block-ui",
     "target": "es2015",
     "module": "es2015",
     "moduleResolution": "node",

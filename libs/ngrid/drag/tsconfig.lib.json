@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.lib.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/table/drag",
+    "outDir": "../../../dist/out-tsc/libs/ngrid/drag",
     "target": "es2015",
     "module": "es2015",
     "moduleResolution": "node",

@@ -140,25 +140,25 @@
       }
     },
     "apps-ngrid-shared": {
-      "root": "libs/demo-apps/shared",
-      "sourceRoot": "libs/demo-apps/shared/src",
+      "root": "libs/apps/ngrid/shared",
+      "sourceRoot": "libs/apps/ngrid/shared/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/demo-apps/shared/src/test.ts",
-            "tsConfig": "libs/demo-apps/shared/tsconfig.spec.json",
-            "karmaConfig": "libs/demo-apps/shared/karma.conf.js"
+            "main": "libs/apps/ngrid/shared/src/test.ts",
+            "tsConfig": "libs/apps/ngrid/shared/tsconfig.spec.json",
+            "karmaConfig": "libs/apps/ngrid/shared/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/demo-apps/shared/tsconfig.lib.json",
-              "libs/demo-apps/shared/tsconfig.spec.json"
+              "libs/apps/ngrid/shared/tsconfig.lib.json",
+              "libs/apps/ngrid/shared/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -168,25 +168,25 @@
       }
     },
     "apps-ngrid-concepts": {
-      "root": "libs/demo-apps/concepts",
-      "sourceRoot": "libs/demo-apps/concepts/src",
+      "root": "libs/apps/ngrid/concepts",
+      "sourceRoot": "libs/apps/ngrid/concepts/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/demo-apps/concepts/src/test.ts",
-            "tsConfig": "libs/demo-apps/concepts/tsconfig.spec.json",
-            "karmaConfig": "libs/demo-apps/concepts/karma.conf.js"
+            "main": "libs/apps/ngrid/concepts/src/test.ts",
+            "tsConfig": "libs/apps/ngrid/concepts/tsconfig.spec.json",
+            "karmaConfig": "libs/apps/ngrid/concepts/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/demo-apps/concepts/tsconfig.app.json",
-              "libs/demo-apps/concepts/tsconfig.spec.json"
+              "libs/apps/ngrid/concepts/tsconfig.app.json",
+              "libs/apps/ngrid/concepts/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -196,25 +196,25 @@
       }
     },
     "apps-ngrid-features": {
-      "root": "libs/demo-apps/features",
-      "sourceRoot": "libs/demo-apps/features/src",
+      "root": "libs/apps/ngrid/features",
+      "sourceRoot": "libs/apps/ngrid/features/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/demo-apps/features/src/test.ts",
-            "tsConfig": "libs/demo-apps/features/tsconfig.spec.json",
-            "karmaConfig": "libs/demo-apps/features/karma.conf.js"
+            "main": "libs/apps/ngrid/features/src/test.ts",
+            "tsConfig": "libs/apps/ngrid/features/tsconfig.spec.json",
+            "karmaConfig": "libs/apps/ngrid/features/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/demo-apps/features/tsconfig.app.json",
-              "libs/demo-apps/features/tsconfig.spec.json"
+              "libs/apps/ngrid/features/tsconfig.app.json",
+              "libs/apps/ngrid/features/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -224,25 +224,25 @@
       }
     },
     "apps-ngrid-stories": {
-      "root": "libs/demo-apps/stories",
-      "sourceRoot": "libs/demo-apps/stories/src",
+      "root": "libs/apps/ngrid/stories",
+      "sourceRoot": "libs/apps/ngrid/stories/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/demo-apps/stories/src/test.ts",
-            "tsConfig": "libs/demo-apps/stories/tsconfig.spec.json",
-            "karmaConfig": "libs/demo-apps/stories/karma.conf.js"
+            "main": "libs/apps/ngrid/stories/src/test.ts",
+            "tsConfig": "libs/apps/ngrid/stories/tsconfig.spec.json",
+            "karmaConfig": "libs/apps/ngrid/stories/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/demo-apps/stories/tsconfig.app.json",
-              "libs/demo-apps/stories/tsconfig.spec.json"
+              "libs/apps/ngrid/stories/tsconfig.app.json",
+              "libs/apps/ngrid/stories/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -252,25 +252,25 @@
       }
     },
     "apps-ngrid-demos": {
-      "root": "libs/demo-apps/demos",
-      "sourceRoot": "libs/demo-apps/demos/src",
+      "root": "libs/apps/ngrid/demos",
+      "sourceRoot": "libs/apps/ngrid/demos/src",
       "projectType": "library",
       "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "libs/demo-apps/demos/src/test.ts",
-            "tsConfig": "libs/demo-apps/demos/tsconfig.spec.json",
-            "karmaConfig": "libs/demo-apps/demos/karma.conf.js"
+            "main": "libs/apps/ngrid/demos/src/test.ts",
+            "tsConfig": "libs/apps/ngrid/demos/tsconfig.spec.json",
+            "karmaConfig": "libs/apps/ngrid/demos/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/demo-apps/demos/tsconfig.app.json",
-              "libs/demo-apps/demos/tsconfig.spec.json"
+              "libs/apps/ngrid/demos/tsconfig.app.json",
+              "libs/apps/ngrid/demos/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

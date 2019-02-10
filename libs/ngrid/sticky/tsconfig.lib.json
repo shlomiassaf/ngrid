@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.lib.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/table/sticky",
+    "outDir": "../../../dist/out-tsc/libs/ngrid/sticky",
     "target": "es2015",
     "module": "es2015",
     "moduleResolution": "node",

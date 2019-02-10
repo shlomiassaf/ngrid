@@ -1,7 +1,7 @@
 {
   "extends": "../../../../tsconfig.lib.json",
   "compilerOptions": {
-    "outDir": "../../../../dist/out-tsc/libs/table/material/sort",
+    "outDir": "../../../../dist/out-tsc/libs/ngrid/material/sort",
     "target": "es2015",
     "module": "es2015",
     "moduleResolution": "node",

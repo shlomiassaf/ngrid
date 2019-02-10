@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/table/target-events",
+    "outDir": "../../../dist/out-tsc/libs/ngrid/target-events",
     "types": [
       "jasmine",
       "node"

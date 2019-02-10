@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/table/mat-checkbox-column",
+    "outDir": "../../../dist/out-tsc/libs/ngrid/mat-checkbox-column",
     "types": [
       "jasmine",
       "node"
