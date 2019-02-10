@@ -5,18 +5,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 
-import { PblTableModule } from '@pebula/table';
+import { PblNgridModule } from '@pebula/table';
 import { PblPaginatorComponent } from './table-paginator.component';
 // TODO: Remove MatPaginatorModule and the initial code in the constructor
 // set the styles in the SCSS.
 
 @NgModule({
-  imports: [ CommonModule, MatPaginatorModule, MatSelectModule, MatTooltipModule, MatButtonModule, PblTableModule ],
+  imports: [ CommonModule, MatPaginatorModule, MatSelectModule, MatTooltipModule, MatButtonModule, PblNgridModule ],
   declarations: [ PblPaginatorComponent ],
   exports: [ PblPaginatorComponent ],
   entryComponents: [ PblPaginatorComponent, MatPaginator ]
 })
-export class PblTablePaginatorModule {
+export class PblNgridPaginatorModule {
   constructor(cf: ComponentFactoryResolver, injector: Injector) {
     // this is a workaround to ensure CSS from mat slider is loaded, otherwise it is omitted.
     cf.resolveComponentFactory(MatPaginator).create(injector);

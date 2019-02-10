@@ -2,8 +2,8 @@ import { Directive, Input, Injector } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { UnRx } from '@pebula/utils';
-import { PblColumn, PblTableComponent, PblTablePluginController } from '@pebula/table';
-import { PblTableTargetEventsPlugin } from './target-events-plugin';
+import { PblColumn, PblNgridComponent, PblNgridPluginController } from '@pebula/table';
+import { PblNgridTargetEventsPlugin } from './target-events-plugin';
 
 PblColumn.extendProperty('editable');
 
@@ -12,7 +12,7 @@ PblColumn.extendProperty('editable');
   selector: 'pbl-ngrid[cellEditClick], pbl-ngrid[cellEditDblClick]',
 })
 @UnRx()
-export class PblTableCellEditDirective<T> {
+export class PblNgridCellEditDirective<T> {
   @Input() set cellEditClick(value: boolean) {
     value = coerceBooleanProperty(value);
     if (this._click !== value) {
@@ -30,9 +30,9 @@ export class PblTableCellEditDirective<T> {
 
   private _click = false;
   private _dblClick = false;
-  private targetEventsPlugin: PblTableTargetEventsPlugin<T>;
+  private targetEventsPlugin: PblNgridTargetEventsPlugin<T>;
 
-  constructor(table: PblTableComponent<any>, injector: Injector, pluginCtrl: PblTablePluginController) {
+  constructor(table: PblNgridComponent<any>, injector: Injector, pluginCtrl: PblNgridPluginController) {
 
     let subscription = pluginCtrl.events.subscribe( event => {
       if (event.kind === 'onInit') {

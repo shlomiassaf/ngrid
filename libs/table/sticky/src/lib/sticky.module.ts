@@ -3,11 +3,11 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
-import { PblTableModule, PblTablePluginController, PblTableConfigService } from '@pebula/table';
-import { PblTableStickyPluginDirective, setStickyRow, setStickyColumns } from './sticky/sticky-plugin';
+import { PblNgridModule, PblNgridPluginController, PblNgridConfigService } from '@pebula/table';
+import { PblNgridStickyPluginDirective, setStickyRow, setStickyColumns } from './sticky/sticky-plugin';
 
 declare module '@pebula/table/lib/table/services/config' {
-  interface PblTableConfig {
+  interface PblNgridConfig {
     stickyPlugin?: {
       headers?: Array<'table' | number>;
       footers?: Array<'table' | number>;
@@ -20,18 +20,18 @@ declare module '@pebula/table/lib/table/services/config' {
 const MAPPER = <T>(v: T): [T, boolean] => [v, true];
 
 @NgModule({
-  imports: [ CommonModule, CdkTableModule, PblTableModule ],
-  declarations: [ PblTableStickyPluginDirective ],
-  exports: [ PblTableStickyPluginDirective ],
+  imports: [ CommonModule, CdkTableModule, PblNgridModule ],
+  declarations: [ PblNgridStickyPluginDirective ],
+  exports: [ PblNgridStickyPluginDirective ],
 })
-export class PblTableStickyModule {
-  constructor(@Optional() @SkipSelf() parentModule: PblTableStickyModule,
-              configService: PblTableConfigService) {
+export class PblNgridStickyModule {
+  constructor(@Optional() @SkipSelf() parentModule: PblNgridStickyModule,
+              configService: PblNgridConfigService) {
     if (parentModule) {
       return;
     }
 
-    PblTablePluginController.created
+    PblNgridPluginController.created
       .subscribe( event => {
         const { table, controller } = event;
         if (controller && !controller.hasPlugin('sticky')) {

@@ -9,45 +9,45 @@ import {
 import { UnRx } from '@pebula/utils';
 
 import {
-  PblTableCellDefDirective,
-  PblTableEditorCellDefDirective,
-  PblTableHeaderCellDefDirective,
-  PblTableFooterCellDefDirective,
+  PblNgridCellDefDirective,
+  PblNgridEditorCellDefDirective,
+  PblNgridHeaderCellDefDirective,
+  PblNgridFooterCellDefDirective,
 
-  PblTableMultiTemplateRegistry,
-  PblTableMultiComponentRegistry,
-  PblTableDataHeaderExtensionContext,
-  PblTableDataHeaderExtensionRef,
+  PblNgridMultiTemplateRegistry,
+  PblNgridMultiComponentRegistry,
+  PblNgridDataHeaderExtensionContext,
+  PblNgridDataHeaderExtensionRef,
 
-  PblTableNoDataRefDirective,
-  PblTablePaginatorRefDirective,
+  PblNgridNoDataRefDirective,
+  PblNgridPaginatorRefDirective,
 } from '../directives';
 
 export interface RegistryChangedEvent {
   op: 'add' | 'remove';
-  type: keyof PblTableMultiRegistryMap | keyof PblTableSingleRegistryMap;
+  type: keyof PblNgridMultiRegistryMap | keyof PblNgridSingleRegistryMap;
   value: any;
 }
 
 /**
  * A map of valid single-item value that can be registered, and their type.
  */
-export interface PblTableSingleRegistryMap {
-  noData?: PblTableNoDataRefDirective;
-  paginator?: PblTablePaginatorRefDirective;
+export interface PblNgridSingleRegistryMap {
+  noData?: PblNgridNoDataRefDirective;
+  paginator?: PblNgridPaginatorRefDirective;
 }
 
 /**
  * A map of valid multi-item value that can be registered, and their type (the single type, i.e. T in Array<T>)
  */
-export interface PblTableMultiRegistryMap {
-  headerCell?: PblTableHeaderCellDefDirective<any>;
-  tableCell?: PblTableCellDefDirective<any>;
-  editorCell?: PblTableEditorCellDefDirective<any>;
-  footerCell?: PblTableFooterCellDefDirective<any>;
+export interface PblNgridMultiRegistryMap {
+  headerCell?: PblNgridHeaderCellDefDirective<any>;
+  tableCell?: PblNgridCellDefDirective<any>;
+  editorCell?: PblNgridEditorCellDefDirective<any>;
+  footerCell?: PblNgridFooterCellDefDirective<any>;
   dataHeaderExtensions?:
-    (PblTableMultiTemplateRegistry<PblTableDataHeaderExtensionContext, 'dataHeaderExtensions'> & PblTableDataHeaderExtensionRef)
-    | (PblTableMultiComponentRegistry<any, 'dataHeaderExtensions'> & PblTableDataHeaderExtensionRef);
+    (PblNgridMultiTemplateRegistry<PblNgridDataHeaderExtensionContext, 'dataHeaderExtensions'> & PblNgridDataHeaderExtensionRef)
+    | (PblNgridMultiComponentRegistry<any, 'dataHeaderExtensions'> & PblNgridDataHeaderExtensionRef);
 }
 
 /**
@@ -76,20 +76,20 @@ export interface PblTableMultiRegistryMap {
  */
 @Injectable({ providedIn: 'root' })
 @UnRx()
-export class PblTableRegistryService implements OnDestroy {
+export class PblNgridRegistryService implements OnDestroy {
 
   readonly changes: Observable<RegistryChangedEvent[]>;
-  get parent(): PblTableRegistryService | undefined { return this._parent; }
+  get parent(): PblNgridRegistryService | undefined { return this._parent; }
 
-  protected root: PblTableRegistryService & { bufferedData?: RegistryChangedEvent[] };
+  protected root: PblNgridRegistryService & { bufferedData?: RegistryChangedEvent[] };
 
-  protected _multi: { [K in keyof PblTableMultiRegistryMap]: Array<PblTableMultiRegistryMap[K]> } = {};
-  protected _multiDefaults: PblTableMultiRegistryMap = {};
-  protected _singles: PblTableSingleRegistryMap = {};
+  protected _multi: { [K in keyof PblNgridMultiRegistryMap]: Array<PblNgridMultiRegistryMap[K]> } = {};
+  protected _multiDefaults: PblNgridMultiRegistryMap = {};
+  protected _singles: PblNgridSingleRegistryMap = {};
 
   protected readonly changes$: Subject<RegistryChangedEvent[]>;
 
-  constructor(@Optional() @SkipSelf() private _parent?: PblTableRegistryService) {
+  constructor(@Optional() @SkipSelf() private _parent?: PblNgridRegistryService) {
     this.changes$ = new Subject();
     this.changes = this.changes$.asObservable();
     if (this._parent) {
@@ -100,17 +100,17 @@ export class PblTableRegistryService implements OnDestroy {
     }
   }
 
-  getRoot(): PblTableRegistryService { return this.root; }
+  getRoot(): PblNgridRegistryService { return this.root; }
 
   /**
    * Returns the registered value for the single `kind`.
    * If not found will try to search the parent.
    */
-  getSingle<P extends keyof PblTableSingleRegistryMap>(kind: P): PblTableSingleRegistryMap[P] | undefined {
+  getSingle<P extends keyof PblNgridSingleRegistryMap>(kind: P): PblNgridSingleRegistryMap[P] | undefined {
     return this._singles[kind] || (this._parent && this._parent.getSingle(kind));
   }
 
-  setSingle<P extends keyof PblTableSingleRegistryMap>(kind: P, value: PblTableSingleRegistryMap[P] | undefined): void {
+  setSingle<P extends keyof PblNgridSingleRegistryMap>(kind: P, value: PblNgridSingleRegistryMap[P] | undefined): void {
     const previous = this.getSingle(kind);
     if (value !== previous) {
       this._singles[kind] = value;
@@ -122,11 +122,11 @@ export class PblTableRegistryService implements OnDestroy {
    * Returns the registered default value for the multi `kind`.
    * If not found will try to search the parent.
    */
-  getMultiDefault<P extends keyof PblTableMultiRegistryMap>(kind: P): PblTableMultiRegistryMap[P] | undefined {
+  getMultiDefault<P extends keyof PblNgridMultiRegistryMap>(kind: P): PblNgridMultiRegistryMap[P] | undefined {
     return this._multiDefaults[kind] || (this._parent && this._parent.getMultiDefault(kind));
   }
 
-  setMultiDefault<P extends keyof PblTableMultiRegistryMap>(kind: P, value: PblTableMultiRegistryMap[P] | undefined): void {
+  setMultiDefault<P extends keyof PblNgridMultiRegistryMap>(kind: P, value: PblNgridMultiRegistryMap[P] | undefined): void {
     const previous = this.getMultiDefault(kind);
     if (value !== previous) {
       this._multiDefaults[kind] = value;
@@ -138,11 +138,11 @@ export class PblTableRegistryService implements OnDestroy {
    * Returns the registered values for the multi `kind`.
    * If not found WILL NOT search the parent.
    */
-  getMulti<T extends keyof PblTableMultiRegistryMap>(kind: T): Array<PblTableMultiRegistryMap[T]> | undefined {
+  getMulti<T extends keyof PblNgridMultiRegistryMap>(kind: T): Array<PblNgridMultiRegistryMap[T]> | undefined {
     return this._multi[kind]
   }
 
-  addMulti<T extends keyof PblTableMultiRegistryMap>(kind: T, cellDef: PblTableMultiRegistryMap[T]): void {
+  addMulti<T extends keyof PblNgridMultiRegistryMap>(kind: T, cellDef: PblNgridMultiRegistryMap[T]): void {
     const multi = this.getMulti(kind) || (this._multi[kind] = []);
     multi.push(cellDef);
     if (cellDef.name === '*') {
@@ -151,7 +151,7 @@ export class PblTableRegistryService implements OnDestroy {
     this.emitChanges({ op: 'add', type: kind, value: cellDef })
   }
 
-  removeMulti<T extends keyof PblTableMultiRegistryMap>(kind: T, cellDef: PblTableMultiRegistryMap[T]): void {
+  removeMulti<T extends keyof PblNgridMultiRegistryMap>(kind: T, cellDef: PblNgridMultiRegistryMap[T]): void {
     const multi = this.getMulti(kind);
     if (multi) {
       const idx = multi.indexOf(cellDef);

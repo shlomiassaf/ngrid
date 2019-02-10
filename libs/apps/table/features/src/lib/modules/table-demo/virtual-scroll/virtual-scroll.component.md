@@ -56,18 +56,18 @@ Each strategy is also a directive that we can use to apply a strategy on a table
 
 The global strategy for all tables is `vScrollAuto`. If a virtual scroll strategy is not set the global strategy is used.
 
-You can configure the global strategy with `PblTableModule.forRoot`:
+You can configure the global strategy with `PblNgridModule.forRoot`:
 
 ```typescript {10,21}
 import { NgModule } from '@angular/core';
 import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
-import { PblTableModule, NoVirtualScrollStrategy } from '@pebula/table';
+import { PblNgridModule, NoVirtualScrollStrategy } from '@pebula/table';
 
 // DISABLING VIRTUAL SCROLL
 
 @NgModule({
   imports: [
-    PblTableModule.forRoot({
+    PblNgridModule.forRoot({
       defaultStrategy: () => new NoVirtualScrollStrategy()
     })
   ]
@@ -78,7 +78,7 @@ export class TablesWithoutVirtualScrollModule { }
 
 @NgModule({
   imports: [
-    PblTableModule.forRoot({
+    PblNgridModule.forRoot({
       wheelMode: 18, // default wheel mode
       defaultStrategy: () => new FixedSizeVirtualScrollStrategy(48, 100, 200);
     })
@@ -111,7 +111,7 @@ When scrolling **starts** `true` is emitted and when the scrolling **ends** `fal
 
 ### CSS Class
 
-When scrolling starts the CSS class `pbl-table-scrolling` is added to the table (`pbl-table`) and when scrolling ends the CSS class is removed.
+When scrolling starts the CSS class `pbl-ngrid-scrolling` is added to the table (`pbl-ngrid`) and when scrolling ends the CSS class is removed.
 
 I> The CSS flag is mostly used for plugins, cell template packs, etc. It requires disabling of component `encapsulation`, less suitable
 for application components.
@@ -173,3 +173,7 @@ I> Measuring performance is tricky as it depends on the CPU power of the host, t
 Try to avoid complex cells, **Blocking** behavior and low **threshold** values.
 
 <p>For a live example see the <a [routerLink]="['../../', 'demos', 'virtual-scroll-performance']">virtual scroll performance</a> demo.</p>
+
+## Horizontal scrolling
+
+Virtual scroll currently support vertical scrolling, horizontal scrolling is not supported at the moment.

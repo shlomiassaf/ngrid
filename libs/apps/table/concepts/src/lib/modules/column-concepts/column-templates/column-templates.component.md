@@ -49,32 +49,32 @@ Registering cell templates for all columns with the **id** `avatar`:
 
 ```html
   <!-- Header cell template  -->
-  <div *pblTableHeaderCellDef="'avatar'; col as col">{{ col.label | uppercase }}</div>
+  <div *pblNgridHeaderCellDef="'avatar'; col as col">{{ col.label | uppercase }}</div>
 
   <!-- Data cell template -->
-  <div *pblTableCellDef="'avatar'; value as value"><img [src]="avatar" /></div>
+  <div *pblNgridCellDef="'avatar'; value as value"><img [src]="avatar" /></div>
 
   <!-- Data Editor cell template -->
-  <div *pblTableCellEditorDef="'avatar'; value as value"> <input /> </div>
+  <div *pblNgridCellEditorDef="'avatar'; value as value"> <input /> </div>
 
   <!-- Footer cell template -->
-  <div *pblTableFooterCellDef="'avatar'; col as col">{{ col.label }}</div>
+  <div *pblNgridFooterCellDef="'avatar'; col as col">{{ col.label }}</div>
 ```
 
 Registering cell templates for all columns with the **type** `image`:
 
 ```html
   <!-- Header cell template  -->
-  <div *pblTableHeaderCellTypeDef="'image'; col as col">{{ col.label | uppercase }}</div>
+  <div *pblNgridHeaderCellTypeDef="'image'; col as col">{{ col.label | uppercase }}</div>
 
   <!-- Data cell template -->
-  <div *pblTableCellTypeDef="'image'; value as value"><img [src]="avatar" /></div>
+  <div *pblNgridCellTypeDef="'image'; value as value"><img [src]="avatar" /></div>
 
   <!-- Data Editor cell template -->
-  <div *pblTableCellEditorTypeDef="'image'; value as value"> <input /> </div>
+  <div *pblNgridCellEditorTypeDef="'image'; value as value"> <input /> </div>
 
   <!-- Footer cell template -->
-  <div *pblTableFooterCellTypeDef="'image'; col as col">{{ col.label }}</div>
+  <div *pblNgridFooterCellTypeDef="'image'; col as col">{{ col.label }}</div>
 ```
 
 The location of the template will determine the registry used to store it.
@@ -84,7 +84,7 @@ set as a child of the table component it will be available only to that table in
 
 ```html
 <pbl-ngrid>
-  <div *pblTableCellTypeDef="'image'; value as value"><img [src]="avatar" /></div>
+  <div *pblNgridCellTypeDef="'image'; value as value"><img [src]="avatar" /></div>
 </pbl-ngrid>
 ```
 
@@ -93,10 +93,10 @@ One more time:
 ```html
 <pbl-ngrid></pbl-ngrid>
 <pbl-ngrid>
-  <div *pblTableCellTypeDef="'image'; value as value"> IMAGE 0 </div>
+  <div *pblNgridCellTypeDef="'image'; value as value"> IMAGE 0 </div>
 </pbl-ngrid>
 
-<div *pblTableCellTypeDef="'image'; value as value"> IMAGE 1 </div>
+<div *pblNgridCellTypeDef="'image'; value as value"> IMAGE 1 </div>
 ```
 
 In this example the first table (top) will get the template showing **IMAGE 1** and the 2nd table will get the template shoing **IMAGE 0**
@@ -108,16 +108,16 @@ by using an **id** cell template definition with the value `'*'`.
 
 ```html
   <!-- Header cell template  -->
-  <div *pblTableHeaderCellDef="'*'; col as col">{{ col.label | uppercase }}</div>
+  <div *pblNgridHeaderCellDef="'*'; col as col">{{ col.label | uppercase }}</div>
 
   <!-- Data cell template -->
-  <div *pblTableCellDef="'*'; value as value"><img [src]="avatar" /></div>
+  <div *pblNgridCellDef="'*'; value as value"><img [src]="avatar" /></div>
 
   <!-- Data Editor cell template -->
-  <div *pblTableCellEditorDef="'*'; value as value"> <input /> </div>
+  <div *pblNgridCellEditorDef="'*'; value as value"> <input /> </div>
 
   <!-- Footer cell template -->
-  <div *pblTableFooterCellDef="'*'; col as col">{{ col.label }}</div>
+  <div *pblNgridFooterCellDef="'*'; col as col">{{ col.label }}</div>
 ```
 
 W> When exists, the default template is used instead of passing the query to the parent registry. Registry default templates in the root registry or close.
@@ -126,20 +126,20 @@ W> When exists, the default template is used instead of passing the query to the
 
 A context is attached to every rendered cell, based on the type of the column.
 
-- Data cells - `PblTableCellContext`
-- Meta cells - `PblTableMetaCellContext`
+- Data cells - `PblNgridCellContext`
+- Meta cells - `PblNgridMetaCellContext`
 
-### PblTableCellContext
+### PblNgridCellContext
 
 ```typescript
-export interface PblTableCellContext<T = any> {
+export interface PblNgridCellContext<T = any> {
   col: PblColumn;
-  table: PblTableComponent<T>;
+  table: PblNgridComponent<T>;
 
   /**
    * The context for the row
    */
-  rowContext: PblTableRowContext<T>,
+  rowContext: PblNgridRowContext<T>,
 
   /**
    * The data item

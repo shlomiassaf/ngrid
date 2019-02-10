@@ -1,2 +1,2 @@
-export { PblTableDragResizeComponent } from './column-resize.component';
-export { PblTableCellResizerRefDirective } from './cell-resizer-ref';
+export { PblNgridDragResizeComponent } from './column-resize.component';
+export { PblNgridCellResizerRefDirective } from './cell-resizer-ref';

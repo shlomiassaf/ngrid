@@ -8,7 +8,7 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { CdkDragConfig, DragDropRegistry, CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
 
-import { PblTableComponent, PblColumn, PblTableMetaCellContext } from '@pebula/table';
+import { PblNgridComponent, PblColumn, PblNgridMetaCellContext } from '@pebula/table';
 import { toggleNativeDragInteractions } from './cdk-encapsulated-code';
 
 import './extend-table';
@@ -20,9 +20,9 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: tr
 const activeEventListenerOptions = normalizePassiveListenerOptions({passive: false});
 
 @Component({
-  selector: 'pbl-table-drag-resize', // tslint:disable-line:component-selector
+  selector: 'pbl-ngrid-drag-resize', // tslint:disable-line:component-selector
   host: { // tslint:disable-line:use-host-property-decorator
-    'class': 'pbl-table-column-resizer',
+    'class': 'pbl-ngrid-column-resizer',
     '[style.width.px]': 'grabAreaWidth',
   },
   templateUrl: './column-resize.component.html',
@@ -30,10 +30,10 @@ const activeEventListenerOptions = normalizePassiveListenerOptions({passive: fal
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblTableDragResizeComponent implements AfterViewInit, OnDestroy {
+export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
 
   // tslint:disable-next-line:no-input-rename
-  @Input() set context(value: PblTableMetaCellContext<any>) {
+  @Input() set context(value: PblNgridMetaCellContext<any>) {
     if (value) {
       const { col, table } = value;
       if (col && col instanceof PblColumn) {
@@ -52,7 +52,7 @@ export class PblTableDragResizeComponent implements AfterViewInit, OnDestroy {
   @Input() grabAreaWidth = 6;
 
   column: PblColumn;
-  table: PblTableComponent<any>;
+  table: PblNgridComponent<any>;
 
   _hasStartedDragging: boolean;
   private _hasMoved: boolean;
@@ -71,7 +71,7 @@ export class PblTableDragResizeComponent implements AfterViewInit, OnDestroy {
   constructor(public element: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
               private _viewportRuler: ViewportRuler,
-              private _dragDropRegistry: DragDropRegistry<PblTableDragResizeComponent, any>,
+              private _dragDropRegistry: DragDropRegistry<PblNgridDragResizeComponent, any>,
               @Inject(CDK_DRAG_CONFIG) private _config: CdkDragConfig,
               @Optional() private _dir: Directionality) {
     _dragDropRegistry.registerDragItem(this);

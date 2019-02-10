@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { PblTableModule } from '@pebula/table';
-import { PblTableDragModule } from '@pebula/table/drag';
+import { PblNgridModule } from '@pebula/table';
+import { PblNgridDragModule } from '@pebula/table/drag';
 import { SharedModule } from '@pebula/apps/table/shared';
 import { TableMixDemoModule, GeneralDemoTableExampleComponent, AllInOneTableExampleComponent } from './modules/mix-demo';
 
@@ -25,12 +25,12 @@ const ROUTES: Routes = [
   declarations: [ DemoContainerPageComponent, AppHomePageComponent ],
   imports: [
     RouterModule.forChild(ROUTES),
-    PblTableModule.forRoot({
+    PblNgridModule.forRoot({
       virtualScroll: {
         wheelMode: 17,
       },
     }, []),
-    PblTableDragModule,
+    PblNgridDragModule,
     TableMixDemoModule,
     SharedModule,
   ],

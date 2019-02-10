@@ -3,21 +3,21 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 import { UnRx } from '@pebula/utils';
 import {
-  PblTableComponent,
-  PblTableHeaderCellDefDirective,
-  PblTableCellDefDirective,
-  PblTableFooterCellDefDirective,
+  PblNgridComponent,
+  PblNgridHeaderCellDefDirective,
+  PblNgridCellDefDirective,
+  PblNgridFooterCellDefDirective,
 } from '@pebula/table';
 
 @Component({
-  selector: 'pbl-table-checkbox',
+  selector: 'pbl-ngrid-checkbox',
   templateUrl: './table-checkbox.component.html',
   styleUrls: ['./table-checkbox.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 @UnRx()
-export class PblTableCheckboxComponent implements AfterViewInit {
+export class PblNgridCheckboxComponent implements AfterViewInit {
   /**
    * Unique name for the checkbox column.
    * When not set, the name 'checkbox' is used.
@@ -57,9 +57,9 @@ export class PblTableCheckboxComponent implements AfterViewInit {
     }
   }
 
-  @ViewChild(PblTableHeaderCellDefDirective) headerDef: PblTableHeaderCellDefDirective<any>;
-  @ViewChild(PblTableCellDefDirective) cellDef: PblTableCellDefDirective<any>;
-  @ViewChild(PblTableFooterCellDefDirective) footerDef: PblTableFooterCellDefDirective<any>;
+  @ViewChild(PblNgridHeaderCellDefDirective) headerDef: PblNgridHeaderCellDefDirective<any>;
+  @ViewChild(PblNgridCellDefDirective) cellDef: PblNgridCellDefDirective<any>;
+  @ViewChild(PblNgridFooterCellDefDirective) footerDef: PblNgridFooterCellDefDirective<any>;
 
   allSelected = false;
   length: number;
@@ -67,7 +67,7 @@ export class PblTableCheckboxComponent implements AfterViewInit {
   private _selection: SelectionModel<any>;
   private _bulkSelectMode: 'all' | 'view' | 'none';
 
-  constructor(@Optional() public table: PblTableComponent<any>, private cdr: ChangeDetectorRef) {}
+  constructor(@Optional() public table: PblNgridComponent<any>, private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
 

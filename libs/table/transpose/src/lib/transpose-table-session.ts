@@ -3,9 +3,9 @@ import { map, tap } from 'rxjs/operators';
 
 import { UnRx } from '@pebula/utils';
 import {
-  PblTableColumnDefinitionSet,
-  PblTableComponent,
-  PblTablePluginController,
+  PblNgridColumnDefinitionSet,
+  PblNgridComponent,
+  PblNgridPluginController,
   PblDataSource,
   PblColumn,
   PblDataSourceTriggerChangedEvent,
@@ -17,15 +17,15 @@ export const VIRTUAL_REFRESH = {};
 export class TransposeTableSession {
   dsSourceFactory: any;
   ds: PblDataSource<any>;
-  columnsInput: PblTableColumnDefinitionSet;
+  columnsInput: PblNgridColumnDefinitionSet;
   storeColumns: PblColumn[];
   headerRow: boolean;
 
   private destroyed: boolean;
   private rawSource: any[];
 
-  constructor(private table: PblTableComponent<any>,
-              private pluginCtrl: PblTablePluginController,
+  constructor(private table: PblNgridComponent<any>,
+              private pluginCtrl: PblNgridPluginController,
               private updateColumns: () => void,
               private sourceFactoryWrapper: (results: any[]) => any[]) {
     this.init();

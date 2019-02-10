@@ -3,15 +3,15 @@
 import { Directive, TemplateRef, OnInit, OnDestroy, ComponentFactory, ComponentRef, Injector } from '@angular/core';
 
 import { PblColumn } from '../columns/column';
-import { PblTableComponent } from '../table.component';
-import { MetaCellContext, PblTableMetaCellContext } from '../context/index';
-import { PblTableHeaderCellComponent } from './cell';
-import { PblTableSingleRegistryMap, PblTableMultiRegistryMap, PblTableRegistryService } from '../services/table-registry.service';
+import { PblNgridComponent } from '../table.component';
+import { MetaCellContext, PblNgridMetaCellContext } from '../context/index';
+import { PblNgridHeaderCellComponent } from './cell';
+import { PblNgridSingleRegistryMap, PblNgridMultiRegistryMap, PblNgridRegistryService } from '../services/table-registry.service';
 
-export abstract class PblTableSingleTemplateRegistry<T, TKind extends keyof PblTableSingleRegistryMap> implements OnInit, OnDestroy {
+export abstract class PblNgridSingleTemplateRegistry<T, TKind extends keyof PblNgridSingleRegistryMap> implements OnInit, OnDestroy {
   abstract readonly kind: TKind;
 
-  constructor(public tRef: TemplateRef<T>, protected registry: PblTableRegistryService) { }
+  constructor(public tRef: TemplateRef<T>, protected registry: PblNgridRegistryService) { }
 
   ngOnInit(): void {
     this.registry.setSingle(this.kind, this as any);
@@ -22,11 +22,11 @@ export abstract class PblTableSingleTemplateRegistry<T, TKind extends keyof PblT
   }
 }
 
-export abstract class PblTableMultiTemplateRegistry<T, TKind extends keyof PblTableMultiRegistryMap> implements OnInit, OnDestroy {
+export abstract class PblNgridMultiTemplateRegistry<T, TKind extends keyof PblNgridMultiRegistryMap> implements OnInit, OnDestroy {
   abstract readonly name: string;
   abstract readonly kind: TKind;
 
-  constructor(public tRef: TemplateRef<T>, protected registry: PblTableRegistryService) { }
+  constructor(public tRef: TemplateRef<T>, protected registry: PblNgridRegistryService) { }
 
   ngOnInit(): void {
     this.registry.addMulti(this.kind, this as any);
@@ -37,7 +37,7 @@ export abstract class PblTableMultiTemplateRegistry<T, TKind extends keyof PblTa
   }
 }
 
-export abstract class PblTableMultiComponentRegistry<T, TKind extends keyof PblTableMultiRegistryMap> {
+export abstract class PblNgridMultiComponentRegistry<T, TKind extends keyof PblNgridMultiRegistryMap> {
   abstract readonly name: string;
   abstract readonly kind: TKind;
 
@@ -50,27 +50,27 @@ export abstract class PblTableMultiComponentRegistry<T, TKind extends keyof PblT
    */
   readonly projectContent?: boolean;
 
-  abstract getFactory(context: PblTableMetaCellContext<any, PblColumn>): ComponentFactory<T>;
-  onCreated?(context: PblTableMetaCellContext<any, PblColumn>, cmpRef: ComponentRef<T>): void;
+  abstract getFactory(context: PblNgridMetaCellContext<any, PblColumn>): ComponentFactory<T>;
+  onCreated?(context: PblNgridMetaCellContext<any, PblColumn>, cmpRef: ComponentRef<T>): void;
 }
 
-export class PblTableDataHeaderExtensionContext<T = any> extends MetaCellContext<T, PblColumn> {
-  constructor(headerCell: PblTableHeaderCellComponent<PblColumn>, public readonly injector: Injector) {
+export class PblNgridDataHeaderExtensionContext<T = any> extends MetaCellContext<T, PblColumn> {
+  constructor(headerCell: PblNgridHeaderCellComponent<PblColumn>, public readonly injector: Injector) {
     super(headerCell.columnDef.column, headerCell.table);
   }
 }
 
-export interface PblTableDataHeaderExtensionRef<T = any> {
-  shouldRender?(context: PblTableDataHeaderExtensionContext<T>): boolean;
+export interface PblNgridDataHeaderExtensionRef<T = any> {
+  shouldRender?(context: PblNgridDataHeaderExtensionContext<T>): boolean;
 }
 
 /**
  * Marks the element as the display element for pagination
  */
-@Directive({ selector: '[pblTablePaginatorRef]' })
-export class PblTablePaginatorRefDirective extends PblTableSingleTemplateRegistry<{ $implicit: PblTableComponent<any> }, 'paginator'> {
+@Directive({ selector: '[pblNgridPaginatorRef]' })
+export class PblNgridPaginatorRefDirective extends PblNgridSingleTemplateRegistry<{ $implicit: PblNgridComponent<any> }, 'paginator'> {
   readonly kind: 'paginator' = 'paginator';
-  constructor(tRef: TemplateRef<{ $implicit: PblTableComponent<any> }>, registry: PblTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<{ $implicit: PblNgridComponent<any> }>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
 
 /**
@@ -79,14 +79,14 @@ export class PblTablePaginatorRefDirective extends PblTableSingleTemplateRegistr
  * @example
  * ```html
  *   <pbl-ngrid>
- *     <div *pblTableNoDataRef style="height: 100%; display: flex; align-items: center; justify-content: center">
+ *     <div *pblNgridNoDataRef style="height: 100%; display: flex; align-items: center; justify-content: center">
  *       <span>No Data</span>
  *     </div>
  *   </pbl-ngrid>
  * ```
  */
-@Directive({ selector: '[pblTableNoDataRef]' })
-export class PblTableNoDataRefDirective extends PblTableSingleTemplateRegistry<{ $implicit: PblTableComponent<any> }, 'noData'> {
+@Directive({ selector: '[pblNgridNoDataRef]' })
+export class PblNgridNoDataRefDirective extends PblNgridSingleTemplateRegistry<{ $implicit: PblNgridComponent<any> }, 'noData'> {
   readonly kind: 'noData' = 'noData';
-  constructor(tRef: TemplateRef<{ $implicit: PblTableComponent<any> }>, registry: PblTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<{ $implicit: PblNgridComponent<any> }>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }

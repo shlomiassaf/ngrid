@@ -10,12 +10,12 @@ import {
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
 import { UnRx } from '@pebula/utils';
-import { PblPagingPaginator, PblPaginatorChangeEvent, PblTableComponent } from '@pebula/table';
+import { PblPagingPaginator, PblPaginatorChangeEvent, PblNgridComponent } from '@pebula/table';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
 
 @Component({
-  selector: 'pbl-table-paginator',
+  selector: 'pbl-ngrid-paginator',
   templateUrl: './table-paginator.component.html',
   styleUrls: ['./table-paginator.component.scss'],
   host: {
@@ -54,12 +54,12 @@ export class PblPaginatorComponent implements OnDestroy {
     }
   }
 
-  @Input() table: PblTableComponent<any>;
+  @Input() table: PblNgridComponent<any>;
 
   private _pageSizeOptions: number[];
   private _paginator: PblPagingPaginator;
 
-  constructor(@Optional() table: PblTableComponent<any>,
+  constructor(@Optional() table: PblNgridComponent<any>,
               public _intl: MatPaginatorIntl,
               private cdr: ChangeDetectorRef) {
     if (table) {

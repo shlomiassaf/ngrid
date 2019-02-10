@@ -2,10 +2,12 @@
 
 I> Requires `@pebula/table/target-event` plugin
 
+W> Currently not compatible with virtual scroll, make sure virtual scroll is not enabling on the table when detail rows are used
+
 <docsi-mat-example-with-source title="Detail Row" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
   <pbl-ngrid blockUi [dataSource]="ds1" [columns]="columns1" detailRow vScrollNone>
-    <div *pblTableDetailRowDef="let row" class="pbl-detail-row">
+    <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
       <div>
         <h1>Detail Row</h1>
         <pre>{{row | json}}</pre>
@@ -18,14 +20,14 @@ I> Requires `@pebula/table/target-event` plugin
 <docsi-mat-example-with-source title="Detail Row custom parent" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
   <pbl-ngrid blockUi [dataSource]="ds2" [columns]="columns2" detailRow vScrollNone>
-    <div *pblTableDetailRowDef="let row" class="pbl-detail-row">
+    <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
       <div>
         <h1>Detail Row</h1>
         <pre>{{row | json}}</pre>
       </div>
     </div>
-    <pbl-table-row *pblTableDetailRowParentRef="let row; table as table" [detailRow]="row" matRipple></pbl-table-row>
-    <div *pblTableCellTypeDef="'detailRowHandle'" class="detail-row-handle">⊞</div>
+    <pbl-ngrid-row *pblNgridDetailRowParentRef="let row; table as table" [detailRow]="row" matRipple></pbl-ngrid-row>
+    <div *pblNgridCellTypeDef="'detailRowHandle'" class="detail-row-handle">⊞</div>
   </pbl-ngrid>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
@@ -34,7 +36,7 @@ I> Requires `@pebula/table/target-event` plugin
   <!--@pebula-example:ex-3-->
   <pbl-ngrid blockUi [dataSource]="ds3" [columns]="columns3"
             detailRow [singleDetailRow]="forceSingle" [excludeToggleFrom]="disableName" vScrollNone>
-    <div *pblTableDetailRowDef="let row" class="pbl-detail-row">
+    <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
       <div>
         <h1>Detail Row</h1>
         <pre>{{row | json}}</pre>
@@ -50,7 +52,7 @@ I> Requires `@pebula/table/target-event` plugin
   <!--@pebula-example:ex-4-->
   <pbl-ngrid blockUi [dataSource]="ds4" [columns]="columns4"
             [detailRow]="detailRowPredicate" vScrollNone>
-    <div *pblTableDetailRowDef="let row" class="pbl-detail-row">
+    <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
       <div>
         <h1>Detail Row</h1>
         <pre>{{row | json}}</pre>

@@ -38,7 +38,7 @@ export interface PblDataSourceTriggerChange<T> {
 
 export interface PblDataSourceTriggerChangedEvent<T = any> {
   filter?: PblDataSourceTriggerChange<DataSourceFilter>;
-  sort?: PblDataSourceTriggerChange<PblTableDataSourceSortChange>;
+  sort?: PblDataSourceTriggerChange<PblNgridDataSourceSortChange>;
   pagination: {
     changed: boolean;
     page: PblDataSourceTriggerChange<any>;
@@ -104,9 +104,9 @@ For demonstration we enabled **pagination** and **sorting**, but NOT **filtering
 <docsi-mat-example-with-source title="Enabling custom triggers" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
   <pbl-ngrid [dataSource]="dsCustomTrigger" [columns]="columns" usePagination>
-    <pbl-table-paginator *pblTablePaginatorRef="let table"
+    <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
                          [table]="table"
-                         [paginator]="table.ds.paginator"></pbl-table-paginator>
+                         [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
   </pbl-ngrid>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>

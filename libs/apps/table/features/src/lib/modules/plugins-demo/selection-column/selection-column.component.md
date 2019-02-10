@@ -15,7 +15,7 @@ Bulk mode defines the behavior of bulk select, there are 3 modes:
 <docsi-mat-example-with-source title="Bulk Mode & Virtual Scroll" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
   <pbl-ngrid matCheckboxSelection="selection" [bulkSelectMode]="bulkSelectMode"
-            class="pbl-table-cell-ellipsis" showFooter [stickyHeader]="['table']" [stickyFooter]="['table']" [dataSource]="ds2" [columns]="columns2"></pbl-ngrid>
+            class="pbl-ngrid-cell-ellipsis" showFooter [stickyHeader]="['table']" [stickyFooter]="['table']" [dataSource]="ds2" [columns]="columns2"></pbl-ngrid>
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" style="margin: 8px 16px">
     <h3>Bulk Mode: </h3>
     <mat-button-toggle-group>

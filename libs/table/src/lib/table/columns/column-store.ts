@@ -1,4 +1,4 @@
-import { PblTableColumnDefinitionSet, PblTableColumnSet } from './types';
+import { PblNgridColumnDefinitionSet, PblNgridColumnSet } from './types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';
 import { PblColumnSet, PblMetaRowDefinitions } from './types';
@@ -45,7 +45,7 @@ export class PblColumnStore {
   private _groupBy: PblColumn[] = [];
   private byId = new Map<string, PblMetaColumnStore & { data?: PblColumn }>();
   private _groupStore: PblColumnGroupStore;
-  private lastSet: PblTableColumnSet;
+  private lastSet: PblNgridColumnSet;
 
   constructor() {
     this.resetIds();
@@ -125,8 +125,8 @@ export class PblColumnStore {
     return rowWidth;
   }
 
-  invalidate(columnOrDefinitionSet: PblTableColumnDefinitionSet | PblTableColumnSet): void {
-    const columnSet: PblTableColumnSet = this.lastSet = 'groupStore' in columnOrDefinitionSet
+  invalidate(columnOrDefinitionSet: PblNgridColumnDefinitionSet | PblNgridColumnSet): void {
+    const columnSet: PblNgridColumnSet = this.lastSet = 'groupStore' in columnOrDefinitionSet
       ? columnOrDefinitionSet
       : PblColumnFactory.fromDefinitionSet(columnOrDefinitionSet).build()
     ;

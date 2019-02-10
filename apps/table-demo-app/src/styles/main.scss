@@ -3,17 +3,17 @@
 $typography-config: pbl-typography-config();
 @include mat-core($typography-config);
 
-@include mat-pbl-table-typography($typography-config);
+@include mat-pbl-ngrid-typography($typography-config);
 
 // Include the default theme styles.
 @include angular-material-theme($pbl-shell-theme);
 @include pbl-shell-app-theme($pbl-shell-theme, $typography-config);
 
-@include mat-pbl-table-theme($pbl-shell-theme);
+@include mat-pbl-ngrid-theme($pbl-shell-theme);
 
-@include mat-pbl-table-spacing();
-.pbl-table.slim {
-  @include mat-pbl-table-spacing('narrow');
+@include mat-pbl-ngrid-spacing();
+.pbl-ngrid.slim {
+  @include mat-pbl-ngrid-spacing('narrow');
 }
 
 @import './markdown'; // load markdown styles
@@ -29,7 +29,7 @@ html, body {
 }
 
 .table-height-300 {
-  .pbl-table {
+  .pbl-ngrid {
     height: 300px;
   }
 }

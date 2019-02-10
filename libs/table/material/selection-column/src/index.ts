@@ -1,1 +1,1 @@
-export { PblTableCheckboxModule } from './lib/table-checkbox.module';
+export { PblNgridCheckboxModule } from './lib/table-checkbox.module';

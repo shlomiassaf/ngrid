@@ -16,13 +16,13 @@ import {
 } from '@angular/core';
 import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
 
-import { PblTableComponent } from '../table.component';
+import { PblNgridComponent } from '../table.component';
 import { uniqueColumnCss, uniqueColumnTypeCss, COLUMN_EDITABLE_CELL_CLASS } from '../circular-dep-bridge';
 import { COLUMN, PblMetaColumn, PblColumn, PblColumnGroup } from '../columns';
-import { MetaCellContext, PblTableMetaCellContext } from '../context/index';
-import { PblTableMultiRegistryMap } from '../services/table-registry.service';
-import { PblTableColumnDef } from './column-def';
-import { PblTableDataHeaderExtensionContext, PblTableMultiComponentRegistry, PblTableMultiTemplateRegistry } from './registry.directives';
+import { MetaCellContext, PblNgridMetaCellContext } from '../context/index';
+import { PblNgridMultiRegistryMap } from '../services/table-registry.service';
+import { PblNgridColumnDef } from './column-def';
+import { PblNgridDataHeaderExtensionContext, PblNgridMultiComponentRegistry, PblNgridMultiTemplateRegistry } from './registry.directives';
 
 const HEADER_GROUP_CSS = `pbl-header-group-cell`;
 const HEADER_GROUP_PLACE_HOLDER_CSS = `pbl-header-group-cell-placeholder`;
@@ -46,7 +46,7 @@ function initDataCellElement(el: HTMLElement, column: PblColumn): void {
   }
 }
 
-const lastDataHeaderExtensions = new Map<PblTableComponent<any>, PblTableMultiRegistryMap['dataHeaderExtensions'][]>();
+const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRegistryMap['dataHeaderExtensions'][]>();
 
 /**
  * Header cell component.
@@ -57,22 +57,22 @@ const lastDataHeaderExtensions = new Map<PblTableComponent<any>, PblTableMultiRe
  * Examples: Sorting behavior, drag&drop/resize handlers, menus etc...
  */
 @Component({
-  selector: 'pbl-table-header-cell',
+  selector: 'pbl-ngrid-header-cell',
   host: {
-    class: 'pbl-table-header-cell',
+    class: 'pbl-ngrid-header-cell',
     role: 'columnheader',
   },
   template: `<ng-container #vcRef></ng-container>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements DoCheck, AfterViewInit {
+export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements DoCheck, AfterViewInit {
   @ViewChild('vcRef', { read: ViewContainerRef }) vcRef: ViewContainerRef;
 
   private el: HTMLElement;
 
-  constructor(public readonly columnDef: PblTableColumnDef<T>,
-              public readonly table: PblTableComponent<any>,
+  constructor(public readonly columnDef: PblNgridColumnDef<T>,
+              public readonly table: PblNgridComponent<any>,
               public readonly elementRef: ElementRef,
               private zone: NgZone) {
     super(columnDef, elementRef);
@@ -90,15 +90,15 @@ export class PblTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
   ngAfterViewInit(): void {
     const col: COLUMN = this.columnDef.column;
     const { vcRef } = this;
-    let view: EmbeddedViewRef<PblTableMetaCellContext<any, PblMetaColumn | PblColumn>>;
+    let view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblMetaColumn | PblColumn>>;
 
     if (col instanceof PblColumn) {
-      const context = new PblTableDataHeaderExtensionContext(this as PblTableHeaderCellComponent<PblColumn>, vcRef.injector);
+      const context = new PblNgridDataHeaderExtensionContext(this as PblNgridHeaderCellComponent<PblColumn>, vcRef.injector);
       view = vcRef.createEmbeddedView(col.headerCellTpl, context);
       this.zone.onStable
         .pipe(first())
         .subscribe( () => {
-          this.runHeaderExtensions(context, view as EmbeddedViewRef<PblTableMetaCellContext<any, PblColumn>>);
+          this.runHeaderExtensions(context, view as EmbeddedViewRef<PblNgridMetaCellContext<any, PblColumn>>);
           const v = vcRef.get(0);
           // at this point the view might get destroyed, its possible...
           if (!v.destroyed) {
@@ -121,7 +121,7 @@ export class PblTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
     }
   }
 
-  protected runHeaderExtensions(context: PblTableDataHeaderExtensionContext, view: EmbeddedViewRef<PblTableMetaCellContext<any, PblColumn>>): void {
+  protected runHeaderExtensions(context: PblNgridDataHeaderExtensionContext, view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblColumn>>): void {
     // we collect the first header extension for each unique name only once per table instance
     let extensions = lastDataHeaderExtensions.get(this.table);
     if (!extensions) {
@@ -148,17 +148,17 @@ export class PblTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
 
     for (const ext of extensions) {
       if (!ext.shouldRender || ext.shouldRender(context)) {
-        if (ext instanceof PblTableMultiTemplateRegistry) {
+        if (ext instanceof PblNgridMultiTemplateRegistry) {
           const extView = this.vcRef.createEmbeddedView(ext.tRef, context);
           extView.markForCheck();
-        } else if (ext instanceof PblTableMultiComponentRegistry) {
+        } else if (ext instanceof PblNgridMultiComponentRegistry) {
           rootNodes = this.createComponent(ext, context, rootNodes);
         }
       }
     }
   }
 
-  protected createComponent(ext: PblTableMultiComponentRegistry<any, "dataHeaderExtensions">, context: PblTableDataHeaderExtensionContext, rootNodes: any[]): any[] {
+  protected createComponent(ext: PblNgridMultiComponentRegistry<any, "dataHeaderExtensions">, context: PblNgridDataHeaderExtensionContext, rootNodes: any[]): any[] {
     const factory = ext.getFactory(context);
     const projectedContent: any[][] = [];
 
@@ -182,18 +182,18 @@ export class PblTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
 
 /** Cell template container that adds the right classes and role. */
 @Directive({
-  selector: 'pbl-table-cell',
+  selector: 'pbl-ngrid-cell',
   host: {
-    'class': 'pbl-table-cell',
+    'class': 'pbl-ngrid-cell',
     'role': 'gridcell',
   },
-  exportAs: 'pblTableCell',
+  exportAs: 'pblNgridCell',
 })
-export class PblTableCellDirective extends CdkCell implements DoCheck {
+export class PblNgridCellDirective extends CdkCell implements DoCheck {
 
   private el: HTMLElement;
 
-  constructor(private columnDef: PblTableColumnDef, elementRef: ElementRef) {
+  constructor(private columnDef: PblNgridColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
     this.el = elementRef.nativeElement;
     columnDef.applyWidth(this.el);
@@ -210,16 +210,16 @@ export class PblTableCellDirective extends CdkCell implements DoCheck {
 }
 
 @Directive({
-  selector: 'pbl-table-footer-cell',
+  selector: 'pbl-ngrid-footer-cell',
   host: {
-    'class': 'pbl-table-footer-cell',
+    'class': 'pbl-ngrid-footer-cell',
     'role': 'gridcell',
   },
  })
-export class PblTableFooterCellDirective extends CdkFooterCell implements DoCheck {
+export class PblNgridFooterCellDirective extends CdkFooterCell implements DoCheck {
   private el: HTMLElement;
 
-  constructor(private columnDef: PblTableColumnDef, elementRef: ElementRef) {
+  constructor(private columnDef: PblNgridColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
     this.el = elementRef.nativeElement;
     const column = columnDef.column;

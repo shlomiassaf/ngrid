@@ -1,2 +1,2 @@
-export { PblTableMatSortDirective }  from './lib/mat-sort.directive';
-export { PblTableMatSortModule } from './lib/mat-sort.module';
+export { PblNgridMatSortDirective }  from './lib/mat-sort.directive';
+export { PblNgridMatSortModule } from './lib/mat-sort.module';

@@ -7,25 +7,25 @@ import {
   OnDestroy
 } from '@angular/core';
 
-import { PblTableComponent } from '../../table.component';
+import { PblNgridComponent } from '../../table.component';
 import { PblColumn, ColumnSizeInfo } from '../../columns/index';
 
-const PGB_ANGRID_MAP = new Map<PblTableComponent<any>, PblTableGroupHeaderSizeController>();
+const PGB_ANGRID_MAP = new Map<PblNgridComponent<any>, PblNgridGroupHeaderSizeController>();
 
-class PblTableGroupHeaderSizeController {
+class PblNgridGroupHeaderSizeController {
   private entries: WeakMap<any, PblColumnSizeObserver>;
   private ro: ResizeObserver;
   private columns: PblColumnSizeObserver[] = [];
 
-  constructor(private table: PblTableComponent<any>) {
+  constructor(private table: PblNgridComponent<any>) {
     this.entries = new WeakMap<any, PblColumnSizeObserver>();
     this.ro = new ResizeObserver( entries => this.onResize(entries) );
   }
 
-  static get(table: PblTableComponent<any>): PblTableGroupHeaderSizeController {
+  static get(table: PblNgridComponent<any>): PblNgridGroupHeaderSizeController {
     let controller = PGB_ANGRID_MAP.get(table);
     if (!controller) {
-      controller = new PblTableGroupHeaderSizeController(table);
+      controller = new PblNgridGroupHeaderSizeController(table);
       PGB_ANGRID_MAP.set(table, controller);
     }
     return controller;
@@ -80,16 +80,16 @@ class PblTableGroupHeaderSizeController {
  * Because most of the size changes concern all columns of a row and because ResizeObserver will emit them all in the same event
  * an entire row should emit once, with all columns.
  */
-@Directive({ selector: 'pbl-table-cell[observeSize], pbl-table-header-cell[observeSize]' })
+@Directive({ selector: 'pbl-ngrid-cell[observeSize], pbl-ngrid-header-cell[observeSize]' })
 export class PblColumnSizeObserver extends ColumnSizeInfo implements OnDestroy {
   @Input('observeSize') get column(): PblColumn { return this._column; }
   set column(value: PblColumn) { this.attachColumn(value); }
 
-  private controller: PblTableGroupHeaderSizeController;
+  private controller: PblNgridGroupHeaderSizeController;
 
-  constructor(el: ElementRef, table: PblTableComponent<any>) {
+  constructor(el: ElementRef, table: PblNgridComponent<any>) {
     super(el.nativeElement);
-    this.controller = PblTableGroupHeaderSizeController.get(table);
+    this.controller = PblNgridGroupHeaderSizeController.get(table);
     this.controller.add(this);
   }
 

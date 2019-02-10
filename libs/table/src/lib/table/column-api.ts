@@ -1,5 +1,5 @@
-import { PblTableExtensionApi } from '../ext/table-ext-api';
-import { PblTableComponent } from './table.component';
+import { PblNgridExtensionApi } from '../ext/table-ext-api';
+import { PblNgridComponent } from './table.component';
 import { PblColumn } from './columns/column';
 import { PblColumnStore } from './columns/column-store';
 
@@ -50,7 +50,7 @@ export class ColumnApi<T> {
   get visibleColumns(): PblColumn[] { return this.store.columns; }
   get columns(): PblColumn[] { return this.store.allColumns; }
 
-  constructor(private table: PblTableComponent<T>, private store: PblColumnStore, private extApi: PblTableExtensionApi) { }
+  constructor(private table: PblNgridComponent<T>, private store: PblColumnStore, private extApi: PblNgridExtensionApi) { }
 
   /**
    * Returns the `PblColumn` at the specified index from the list of rendered columns (i.e. not hidden).

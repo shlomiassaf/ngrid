@@ -3,17 +3,17 @@ import { bufferWhen, debounce, map, filter } from 'rxjs/operators';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
-import { PblTableComponent, PblTablePluginController, TablePlugin } from '@pebula/table';
+import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/table';
 
 import * as Events from './events';
 import { matrixRowFromRow, isRowContainer, findCellIndex, findParentCell } from './utils';
 
 declare module '@pebula/table/lib/ext/types' {
-  interface PblTablePluginExtension {
-    targetEvents?: PblTableTargetEventsPlugin;
+  interface PblNgridPluginExtension {
+    targetEvents?: PblNgridTargetEventsPlugin;
   }
-  interface PblTablePluginExtensionFactories {
-    targetEvents: keyof typeof PblTableTargetEventsPlugin;
+  interface PblNgridPluginExtensionFactories {
+    targetEvents: keyof typeof PblNgridTargetEventsPlugin;
   }
 }
 
@@ -33,21 +33,21 @@ function findEventSource(source: MouseEvent): { type: 'row' | 'cell', target: HT
 }
 
 @TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
-export class PblTableTargetEventsPlugin<T = any> {
-  rowClick = new EventEmitter<Events.PblTableRowEvent<T>>();
-  rowDblClick = new EventEmitter<Events.PblTableRowEvent<T>>();
-  rowEnter = new EventEmitter<Events.PblTableRowEvent<T>>();
-  rowLeave = new EventEmitter<Events.PblTableRowEvent<T>>();
+export class PblNgridTargetEventsPlugin<T = any> {
+  rowClick = new EventEmitter<Events.PblNgridRowEvent<T>>();
+  rowDblClick = new EventEmitter<Events.PblNgridRowEvent<T>>();
+  rowEnter = new EventEmitter<Events.PblNgridRowEvent<T>>();
+  rowLeave = new EventEmitter<Events.PblNgridRowEvent<T>>();
 
-  cellClick = new EventEmitter<Events.PblTableCellEvent<T>>();
-  cellDblClick = new EventEmitter<Events.PblTableCellEvent<T>>();
-  cellEnter = new EventEmitter<Events.PblTableCellEvent<T>>();
-  cellLeave = new EventEmitter<Events.PblTableCellEvent<T>>();
+  cellClick = new EventEmitter<Events.PblNgridCellEvent<T>>();
+  cellDblClick = new EventEmitter<Events.PblNgridCellEvent<T>>();
+  cellEnter = new EventEmitter<Events.PblNgridCellEvent<T>>();
+  cellLeave = new EventEmitter<Events.PblNgridCellEvent<T>>();
 
   private cdr: ChangeDetectorRef;
-  private _removePlugin: (table: PblTableComponent<any>) => void;
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
 
-  constructor(protected table: PblTableComponent<any>, protected injector: Injector, protected pluginCtrl: PblTablePluginController) {
+  constructor(protected table: PblNgridComponent<any>, protected injector: Injector, protected pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     this.cdr = injector.get(ChangeDetectorRef);
     if (table.isInit) {
@@ -64,9 +64,9 @@ export class PblTableTargetEventsPlugin<T = any> {
     }
   }
 
-  static create<T = any>(table: PblTableComponent<any>, injector: Injector): PblTableTargetEventsPlugin<T> {
-    const pluginCtrl = PblTablePluginController.find(table);
-    return new PblTableTargetEventsPlugin<T>(table, injector, pluginCtrl);
+  static create<T = any>(table: PblNgridComponent<any>, injector: Injector): PblNgridTargetEventsPlugin<T> {
+    const pluginCtrl = PblNgridPluginController.find(table);
+    return new PblNgridTargetEventsPlugin<T>(table, injector, pluginCtrl);
   }
 
   private init(): void {
@@ -78,13 +78,13 @@ export class PblTableTargetEventsPlugin<T = any> {
     const cdkTable = table._cdkTable;
     const cdkTableElement: HTMLElement = cdkTable['_element'];
 
-    const createCellEvent = (cellTarget: HTMLElement, source: MouseEvent): Events.PblTableCellEvent<T> | undefined => {
+    const createCellEvent = (cellTarget: HTMLElement, source: MouseEvent): Events.PblNgridCellEvent<T> | undefined => {
       const rowTarget = cellTarget.parentElement;
       const matrixPoint = matrixRowFromRow(rowTarget, cdkTable._rowOutlet.viewContainer);
       if (matrixPoint) {
-        const event: Events.PblTableCellEvent<T> = { ...matrixPoint, source, cellTarget, rowTarget } as any;
+        const event: Events.PblNgridCellEvent<T> = { ...matrixPoint, source, cellTarget, rowTarget } as any;
         if (matrixPoint.type === 'data') {
-          (event as Events.PblTableDataMatrixPoint<T>).row = table.ds.renderedData[matrixPoint.rowIndex];
+          (event as Events.PblNgridDataMatrixPoint<T>).row = table.ds.renderedData[matrixPoint.rowIndex];
         } else if (event.subType === 'meta') {
           // When multiple containers exists (fixed/sticky/row) the rowIndex we get is the one relative to the container..
           // We need to find the rowIndex relative to the definitions:
@@ -108,8 +108,8 @@ export class PblTableTargetEventsPlugin<T = any> {
         */
         event.colIndex = findCellIndex(cellTarget);
         if (matrixPoint.subType === 'data') {
-          (event as Events.PblTableDataMatrixPoint<T>).context = this.pluginCtrl.extApi.contextApi.getCell(event.rowIndex, event.colIndex);
-          event.column = (event as Events.PblTableDataMatrixPoint<T>).context.col;
+          (event as Events.PblNgridDataMatrixPoint<T>).context = this.pluginCtrl.extApi.contextApi.getCell(event.rowIndex, event.colIndex);
+          event.column = (event as Events.PblNgridDataMatrixPoint<T>).context.col;
         } else {
           const store = this.pluginCtrl.extApi.columnStore;
           const rowInfo = store.metaColumnIds[matrixPoint.type][event.rowIndex];
@@ -125,9 +125,9 @@ export class PblTableTargetEventsPlugin<T = any> {
       }
     }
 
-    const createRowEvent = (rowTarget: HTMLElement, source: MouseEvent, root?: Events.PblTableCellEvent<T>): Events.PblTableRowEvent<T> | undefined => {
+    const createRowEvent = (rowTarget: HTMLElement, source: MouseEvent, root?: Events.PblNgridCellEvent<T>): Events.PblNgridRowEvent<T> | undefined => {
       if (root) {
-        const event: Events.PblTableRowEvent<T> = {
+        const event: Events.PblNgridRowEvent<T> = {
           source,
           rowTarget,
           type: root.type,
@@ -136,17 +136,17 @@ export class PblTableTargetEventsPlugin<T = any> {
           root
         } as any;
         if (root.type === 'data') {
-          (event as Events.PblTableDataMatrixRow<T>).row = root.row;
-          (event as Events.PblTableDataMatrixRow<T>).context = root.context.rowContext;
+          (event as Events.PblNgridDataMatrixRow<T>).row = root.row;
+          (event as Events.PblNgridDataMatrixRow<T>).context = root.context.rowContext;
         }
         return event;
       } else {
         const matrixPoint = matrixRowFromRow(rowTarget, cdkTable._rowOutlet.viewContainer);
         if (matrixPoint) {
-          const event: Events.PblTableRowEvent<T> = { ...matrixPoint, source, rowTarget } as any;
+          const event: Events.PblNgridRowEvent<T> = { ...matrixPoint, source, rowTarget } as any;
           if (matrixPoint.type === 'data') {
-            (event as Events.PblTableDataMatrixRow<T>).context = this.pluginCtrl.extApi.contextApi.getRow(matrixPoint.rowIndex);
-            (event as Events.PblTableDataMatrixRow<T>).row = (event as Events.PblTableDataMatrixRow<T>).context.$implicit;
+            (event as Events.PblNgridDataMatrixRow<T>).context = this.pluginCtrl.extApi.contextApi.getRow(matrixPoint.rowIndex);
+            (event as Events.PblNgridDataMatrixRow<T>).row = (event as Events.PblNgridDataMatrixRow<T>).context.$implicit;
           }
 
           /*  If `subType !== 'data'` it can only be `meta` because `metadataFromElement()` does not handle `meta-group` subType.
@@ -169,9 +169,9 @@ export class PblTableTargetEventsPlugin<T = any> {
       }
     }
 
-    let lastCellEnterEvent: Events.PblTableCellEvent<T>;
-    let lastRowEnterEvent: Events.PblTableRowEvent<T>;
-    const emitCellLeave = (source: MouseEvent): Events.PblTableCellEvent<T> | undefined => {
+    let lastCellEnterEvent: Events.PblNgridCellEvent<T>;
+    let lastRowEnterEvent: Events.PblNgridRowEvent<T>;
+    const emitCellLeave = (source: MouseEvent): Events.PblNgridCellEvent<T> | undefined => {
       if (lastCellEnterEvent) {
         const lastCellEnterEventTemp = lastCellEnterEvent;
         this.cellLeave.emit(Object.assign({}, lastCellEnterEventTemp, { source }));
@@ -179,7 +179,7 @@ export class PblTableTargetEventsPlugin<T = any> {
         return lastCellEnterEventTemp;
       }
     }
-    const emitRowLeave = (source: MouseEvent): Events.PblTableRowEvent<T> | undefined => {
+    const emitRowLeave = (source: MouseEvent): Events.PblNgridRowEvent<T> | undefined => {
       if (lastRowEnterEvent) {
         const lastRowEnterEventTemp = lastRowEnterEvent;
         this.rowLeave.emit(Object.assign({}, lastRowEnterEventTemp, { source }));
@@ -232,7 +232,7 @@ export class PblTableTargetEventsPlugin<T = any> {
         const cellEvent = event.type === 'cell' ? event.event : undefined;
         const rowEvent = cellEvent
           ? createRowEvent(cellEvent.rowTarget, cellEvent.source, cellEvent)
-          : event.event as Events.PblTableRowEvent<T>
+          : event.event as Events.PblNgridRowEvent<T>
         ;
 
         if (isDoubleClick) {
@@ -252,7 +252,7 @@ export class PblTableTargetEventsPlugin<T = any> {
 
     fromEvent(cdkTableElement, 'mouseleave')
       .subscribe( (source: MouseEvent) => {
-        let lastEvent: Events.PblTableRowEvent<T> | Events.PblTableCellEvent<T> = emitCellLeave(source);
+        let lastEvent: Events.PblNgridRowEvent<T> | Events.PblNgridCellEvent<T> = emitCellLeave(source);
         lastEvent = emitRowLeave(source) || lastEvent;
         if (lastEvent) {
           this.syncRow(lastEvent);
@@ -265,8 +265,8 @@ export class PblTableTargetEventsPlugin<T = any> {
         const lastCellTarget = lastCellEnterEvent && lastCellEnterEvent.cellTarget;
         const lastRowTarget = lastRowEnterEvent && lastRowEnterEvent.rowTarget;
 
-        let cellEvent: Events.PblTableCellEvent<T>;
-        let lastEvent: Events.PblTableRowEvent<T> | Events.PblTableCellEvent<T>;
+        let cellEvent: Events.PblNgridCellEvent<T>;
+        let lastEvent: Events.PblNgridRowEvent<T> | Events.PblNgridCellEvent<T>;
 
         if (lastCellTarget !== cellTarget) {
           lastEvent = emitCellLeave(source) || lastEvent;
@@ -308,7 +308,7 @@ export class PblTableTargetEventsPlugin<T = any> {
     this._removePlugin(this.table);
   }
 
-  private syncRow(event: Events.PblTableRowEvent<T> | Events.PblTableCellEvent<T>): void {
+  private syncRow(event: Events.PblNgridRowEvent<T> | Events.PblNgridCellEvent<T>): void {
     this.table._cdkTable.syncRows(event.type, event.rowIndex);
   }
 }
@@ -320,9 +320,9 @@ export class PblTableTargetEventsPlugin<T = any> {
   outputs: [ 'rowClick', 'rowClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellDblClick', 'cellEnter', 'cellLeave' ]
 })
 @UnRx()
-export class PblTableTargetEventsPluginDirective<T> extends PblTableTargetEventsPlugin<T> implements OnDestroy {
+export class PblNgridTargetEventsPluginDirective<T> extends PblNgridTargetEventsPlugin<T> implements OnDestroy {
 
-  constructor(table: PblTableComponent<any>, injector: Injector, pluginCtrl: PblTablePluginController) {
+  constructor(table: PblNgridComponent<any>, injector: Injector, pluginCtrl: PblNgridPluginController) {
     super(table, injector, pluginCtrl);
   }
 

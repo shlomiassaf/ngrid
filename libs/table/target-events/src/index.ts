@@ -1,12 +1,12 @@
 export {
-  PblTableMatrixRow,
-  PblTableDataMatrixRow,
-  PblTableMatrixPoint,
-  PblTableDataMatrixPoint,
-  PblTableCellEvent,
-  PblTableRowEvent,
+  PblNgridMatrixRow,
+  PblNgridDataMatrixRow,
+  PblNgridMatrixPoint,
+  PblNgridDataMatrixPoint,
+  PblNgridCellEvent,
+  PblNgridRowEvent,
 } from './lib/target-events/events';
 
-export { PblTableTargetEventsPlugin } from './lib/target-events/target-events-plugin';
+export { PblNgridTargetEventsPlugin } from './lib/target-events/target-events-plugin';
 
-export { PblTableTargetEventsModule } from './lib/target-events.module';
+export { PblNgridTargetEventsModule } from './lib/target-events.module';

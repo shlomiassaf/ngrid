@@ -1,26 +1,26 @@
 import { CdkRow, CDK_ROW_TEMPLATE, RowContext } from '@angular/cdk/table';
 import { ChangeDetectionStrategy, Component, ElementRef, EmbeddedViewRef, Inject, Input, ViewEncapsulation } from '@angular/core';
-import { EXT_API_TOKEN, PblTableExtensionApi } from '../../ext/table-ext-api';
+import { EXT_API_TOKEN, PblNgridExtensionApi } from '../../ext/table-ext-api';
 import { PblRowContext } from '../context/index';
 
 
-export const PBL_ANGRID_ROW_TEMPLATE  = `<ng-content select=".pbl-table-row-prefix"></ng-content>${CDK_ROW_TEMPLATE}<ng-content select=".pbl-table-row-suffix"></ng-content>`;
+export const PBL_ANGRID_ROW_TEMPLATE  = `<ng-content select=".pbl-ngrid-row-prefix"></ng-content>${CDK_ROW_TEMPLATE}<ng-content select=".pbl-ngrid-row-suffix"></ng-content>`;
 
 @Component({
-  selector: 'pbl-table-row:not([detailRow])',
+  selector: 'pbl-ngrid-row:not([detailRow])',
   template: PBL_ANGRID_ROW_TEMPLATE,
   host: { // tslint:disable-line:use-host-property-decorator
-    'class': 'pbl-table-row',
+    'class': 'pbl-ngrid-row',
     'role': 'row',
   },
   providers: [
-    { provide: CdkRow, useExisting: PblTableRowComponent }
+    { provide: CdkRow, useExisting: PblNgridRowComponent }
   ],
-  exportAs: 'pblTableRow',
+  exportAs: 'pblNgridRow',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblTableRowComponent<T = any> extends CdkRow {
+export class PblNgridRowComponent<T = any> extends CdkRow {
 
   @Input() set row(value: T) {
     if (! (this.rowRenderIndex >= 0) ) {
@@ -32,7 +32,7 @@ export class PblTableRowComponent<T = any> extends CdkRow {
   rowRenderIndex: number;
   context: PblRowContext<T>;
 
-  constructor(@Inject(EXT_API_TOKEN) protected extApi: PblTableExtensionApi<T>, protected el: ElementRef<HTMLElement>) {
+  constructor(@Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<T>, protected el: ElementRef<HTMLElement>) {
     super();
   }
 

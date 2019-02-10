@@ -1,7 +1,7 @@
 import { TemplateRef } from '@angular/core';
 
-import { PblTableColumnDef } from '../directives';
-import { PblTableMetaCellContext } from '../context/types';
+import { PblNgridColumnDef } from '../directives';
+import { PblNgridMetaCellContext } from '../context/types';
 import { PblMetaColumnDefinition, PblColumnTypeDefinition } from './types';
 import { parseStyleWidth, initDefinitions } from './utils';
 
@@ -88,10 +88,10 @@ export class PblMetaColumn implements PblMetaColumnDefinition {
   stickyEnd: boolean;
 
   /**
-   * Used by pbl-table to apply a custom header/footer cell template, or the default when not set.
+   * Used by pbl-ngrid to apply a custom header/footer cell template, or the default when not set.
    * @internal
    */
-  template: TemplateRef<PblTableMetaCellContext<any>>;
+  template: TemplateRef<PblNgridMetaCellContext<any>>;
 
   /**
    * When true indicates that the width is set with type pixels.
@@ -102,11 +102,11 @@ export class PblMetaColumn implements PblMetaColumnDefinition {
   /**
    * The column def for this column.
    */
-  get columnDef(): PblTableColumnDef<PblMetaColumn> { return this._columnDef; }
+  get columnDef(): PblNgridColumnDef<PblMetaColumn> { return this._columnDef; }
 
   private _width?: string;
   private _parsedWidth: ReturnType<typeof parseStyleWidth>;
-  private _columnDef: PblTableColumnDef<PblMetaColumn>;
+  private _columnDef: PblNgridColumnDef<PblMetaColumn>;
   private defaultWidth = '';
 
   constructor(def: PblMetaColumnDefinition) {
@@ -132,7 +132,7 @@ export class PblMetaColumn implements PblMetaColumnDefinition {
     }
   }
 
-  attach(columnDef: PblTableColumnDef<PblMetaColumn>): void {
+  attach(columnDef: PblNgridColumnDef<PblMetaColumn>): void {
     this.detach();
     this._columnDef = columnDef;
     this.columnDef.updateWidth(this.width || this.defaultWidth);

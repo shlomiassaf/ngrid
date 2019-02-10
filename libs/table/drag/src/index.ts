@@ -1,8 +1,8 @@
 export {
   CdkLazyDropList, CdkLazyDrag, PblDragHandle,
-  PblTableRowReorderPluginDirective, PblTableRowDragDirective,
-  PblTableColumnReorderPluginDirective, PblTableColumnDragDirective,
+  PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
+  PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective,
 } from './lib/drag-and-drop/index';
 
-export { PblTableDragResizeComponent } from './lib/column-resize/index';
-export { PblTableDragModule } from './lib/table-drag.module';
+export { PblNgridDragResizeComponent } from './lib/column-resize/index';
+export { PblNgridDragModule } from './lib/table-drag.module';

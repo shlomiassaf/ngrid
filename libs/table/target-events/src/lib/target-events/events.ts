@@ -1,4 +1,4 @@
-import { PblColumn, PblMetaColumn, PblColumnGroup, PblTableCellContext, PblTableRowContext } from '@pebula/table';
+import { PblColumn, PblMetaColumn, PblColumnGroup, PblNgridCellContext, PblNgridRowContext } from '@pebula/table';
 
 export type ROW_TYPE = 'header' | 'data' | 'footer';
 export interface ROW_META_TYPE {
@@ -7,33 +7,33 @@ export interface ROW_META_TYPE {
   'meta-group': PblColumnGroup;
 }
 
-export interface PblTableMatrixRow<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> {
+export interface PblNgridMatrixRow<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> {
   type: RType;
   subType: RMetaType;
   rowIndex: number;
 }
 
-export interface PblTableMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends PblTableMatrixRow<RType, RMetaType> {
+export interface PblNgridMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends PblNgridMatrixRow<RType, RMetaType> {
   colIndex: number;
 }
 
-export interface PblTableDataMatrixRow<T = any> extends PblTableMatrixRow<'data'> {
+export interface PblNgridDataMatrixRow<T = any> extends PblNgridMatrixRow<'data'> {
   row: T;
-  context: PblTableRowContext<T>;
+  context: PblNgridRowContext<T>;
 }
 
-export interface PblTableColumnMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends PblTableMatrixPoint<RType, RMetaType> {
+export interface PblNgridColumnMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends PblNgridMatrixPoint<RType, RMetaType> {
   column: ROW_META_TYPE[RMetaType];
 }
 
-export interface PblTableDataMatrixPoint<T = any> extends PblTableColumnMatrixPoint<'data'> {
+export interface PblNgridDataMatrixPoint<T = any> extends PblNgridColumnMatrixPoint<'data'> {
   row: T;
-  context: PblTableCellContext;
+  context: PblNgridCellContext;
 }
 
-export type PblTableCellEvent<T = any> = { source: MouseEvent; cellTarget: HTMLElement; rowTarget: HTMLElement; }
-  & (PblTableDataMatrixPoint<T> | PblTableColumnMatrixPoint<'header' | 'footer'> | PblTableColumnMatrixPoint<'header' | 'footer', 'meta'>  | PblTableColumnMatrixPoint<'header' | 'footer', 'meta-group'>);
+export type PblNgridCellEvent<T = any> = { source: MouseEvent; cellTarget: HTMLElement; rowTarget: HTMLElement; }
+  & (PblNgridDataMatrixPoint<T> | PblNgridColumnMatrixPoint<'header' | 'footer'> | PblNgridColumnMatrixPoint<'header' | 'footer', 'meta'>  | PblNgridColumnMatrixPoint<'header' | 'footer', 'meta-group'>);
 
-export type PblTableRowEvent<T = any> = { source: MouseEvent; rowTarget: HTMLElement; root?: PblTableCellEvent<T>; }
-  & (PblTableDataMatrixRow<T> | PblTableMatrixRow<'header' | 'footer'> | PblTableMatrixRow<'header' | 'footer', 'meta'>  | PblTableMatrixRow<'header' | 'footer', 'meta-group'>);
+export type PblNgridRowEvent<T = any> = { source: MouseEvent; rowTarget: HTMLElement; root?: PblNgridCellEvent<T>; }
+  & (PblNgridDataMatrixRow<T> | PblNgridMatrixRow<'header' | 'footer'> | PblNgridMatrixRow<'header' | 'footer', 'meta'>  | PblNgridMatrixRow<'header' | 'footer', 'meta-group'>);
 

@@ -1,6 +1,6 @@
 # Material Paginator implementation
 
-A Plugin for `pbl-table` with a `Paginator` impelementation using components from `@angular/material`.
+A Plugin for `pbl-ngrid` with a `Paginator` impelementation using components from `@angular/material`.
 
 ## Impotred `@angular/material` modules
 
@@ -19,8 +19,8 @@ A Plugin for `pbl-table` with a `Paginator` impelementation using components fro
 
 ```html
 <pbl-ngrid>
-  <pbl-table-paginator *pblTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-table-paginator>
+  <pbl-ngrid-paginator *pblNgridPaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
 </pbl-ngrid>
 ```
 
-> TIP: You can use `pblTablePaginatorRef` outside of the table, (root component), to define a gloal paginator.
+> TIP: You can use `pblNgridPaginatorRef` outside of the table, (root component), to define a gloal paginator.

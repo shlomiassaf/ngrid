@@ -8,11 +8,11 @@
            [columns]="columns"
            (cellClick)="$event.context && $event.context.startEdit()"
            style="height: 500px"
-           class=" pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
+           class=" pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
   <pbl-demo-action-row filter label="Sellers" (refresh)="refresh()" ></pbl-demo-action-row>
-  <div *pblTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
+  <div *pblNgridCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
 
-  <div *pblTableHeaderCellTypeDef="'pbl-groupby-row'; col as col; table as table" pblAggregationContainer #agg="pblAggregationContainer"
+  <div *pblNgridHeaderCellTypeDef="'pbl-groupby-row'; col as col; table as table" pblAggregationContainer #agg="pblAggregationContainer"
        fxLayoutAlign="start center"
        style="position: absolute; height: 100%; width: 100%;">
     <mat-icon>format_list_bulleted</mat-icon>

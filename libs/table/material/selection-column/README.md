@@ -1,6 +1,6 @@
 # Selection implementation using Material checkbox
 
-A Plugin for `pbl-table` with a `Selection` impelementation using components from `@angular/material/checkbox`.
+A Plugin for `pbl-ngrid` with a `Selection` impelementation using components from `@angular/material/checkbox`.
 
 ## Usage
 There are 2 ways, both require an existing column definition:
@@ -20,7 +20,7 @@ There are 2 ways, both require an existing column definition:
 **Using a component**
 ```html
 <pbl-ngrid>
-  <pbl-table-checkbox name="selection"></pbl-table-checkbox>
+  <pbl-ngrid-checkbox name="selection"></pbl-ngrid-checkbox>
 </pbl-ngrid>
 ```
 

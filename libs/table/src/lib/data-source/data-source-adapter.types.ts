@@ -1,5 +1,5 @@
 import { PblPaginatorChangeEvent } from '../paginator';
-import { PblTableDataSourceSortChange, DataSourceFilter } from './types';
+import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
 
 /** @internal */
 export type RefreshDataWrapper<T> = { data: T };
@@ -10,7 +10,7 @@ export type RefreshDataWrapper<T> = { data: T };
  */
 export interface PblDataSourceConfigurableTriggers {
   filter?: DataSourceFilter;
-  sort?: PblTableDataSourceSortChange;
+  sort?: PblNgridDataSourceSortChange;
   pagination?: PblPaginatorChangeEvent;
 }
 
@@ -27,7 +27,7 @@ export interface PblDataSourceTriggers<T = any> extends PblDataSourceConfigurabl
 
 export interface PblDataSourceTriggerCache<T = any> {
   filter?: DataSourceFilter;
-  sort?: PblTableDataSourceSortChange;
+  sort?: PblNgridDataSourceSortChange;
   pagination?: {
     page?: any;
     perPage?: number;
@@ -43,7 +43,7 @@ export interface PblDataSourceTriggerChange<T> {
 
 export interface PblDataSourceTriggerChangedEvent<T = any> {
   filter: PblDataSourceTriggerChange<DataSourceFilter>;
-  sort: PblDataSourceTriggerChange<PblTableDataSourceSortChange>;
+  sort: PblDataSourceTriggerChange<PblNgridDataSourceSortChange>;
   pagination: {
     changed: boolean;
     page: PblDataSourceTriggerChange<any>;

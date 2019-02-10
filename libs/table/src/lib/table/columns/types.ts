@@ -1,8 +1,8 @@
 import { TemplateRef } from '@angular/core';
 import { RowContext } from '@angular/cdk/table';
 
-import { PblTableComponent } from '../table.component';
-import { PblTableSorter } from '../../data-source/types';
+import { PblNgridComponent } from '../table.component';
+import { PblNgridSorter } from '../../data-source/types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
@@ -152,7 +152,7 @@ export interface PblColumnDefinition extends PblBaseColumnDefinition {
    */
   path?: string[];
 
-  sort?: boolean | PblTableSorter;
+  sort?: boolean | PblNgridSorter;
 
   /**
    * Indicates if the table is editable or not.
@@ -182,12 +182,12 @@ export interface PblColumnSet<T extends PblMetaColumnDefinition | PblColumnGroup
 /**
  * Represent a complete column definition set for a table. (table, header, footer and headerGroup columns).
  *
- * `PblTableColumnDefinitionSet` contains POJO objects (simple JSON like objects) for each column type (`PblColumnDefinition`, `PblMetaColumnDefinition` and `PblColumnGroupDefinition`)
+ * `PblNgridColumnDefinitionSet` contains POJO objects (simple JSON like objects) for each column type (`PblColumnDefinition`, `PblMetaColumnDefinition` and `PblColumnGroupDefinition`)
  * which are later used to create runtime instance for each column type (`PblColumn`, `PblMetaColumn` and `PblColumnGroup`)
  *
- * Because `PblTableColumnDefinitionSet` contains POJO objects it can be serialized easily.
+ * Because `PblNgridColumnDefinitionSet` contains POJO objects it can be serialized easily.
  */
-export interface PblTableColumnDefinitionSet {
+export interface PblNgridColumnDefinitionSet {
   table: {
     header?: PblMetaRowDefinitions;
     footer?: PblMetaRowDefinitions;
@@ -201,10 +201,10 @@ export interface PblTableColumnDefinitionSet {
 /**
  * Represent a complete column set for a table. (table, header, footer and headerGroup columns).
  *
- * `PblTableColumnSet` contains runtime instances of for each column type (`PblColumn`, `PblMetaColumn` and `PblColumnGroup`)
+ * `PblNgridColumnSet` contains runtime instances of for each column type (`PblColumn`, `PblMetaColumn` and `PblColumnGroup`)
  * which
  */
-export interface PblTableColumnSet {
+export interface PblNgridColumnSet {
   table: {
     header?: PblMetaRowDefinitions;
     footer?: PblMetaRowDefinitions;

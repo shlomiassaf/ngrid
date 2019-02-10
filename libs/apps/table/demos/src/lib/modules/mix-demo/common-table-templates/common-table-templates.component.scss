@@ -1,4 +1,4 @@
-.pbl-table-ui-block {
+.pbl-ngrid-ui-block {
   position: absolute;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
   justify-content: center;
 }
 
-.pbl-table-no-data {
+.pbl-ngrid-no-data {
   display: flex;
   place-content: center center;
   position: absolute;
@@ -40,19 +40,19 @@
   overflow: hidden;
 }
 
-.pbl-table-row-drag-handle {
+.pbl-ngrid-row-drag-handle {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
 }
-.pbl-table-row-drag-placeholder {
+.pbl-ngrid-row-drag-placeholder {
   background: #ccc;
   border: dotted 3px #999;
   min-height: 60px;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.pbl-table-column-resizer-handle {
+.pbl-ngrid-column-resizer-handle {
   position: absolute;
   right: 0%;
   height: 70%;
@@ -60,7 +60,7 @@
   transform: translateY(30%);
 }
 
-.pbl-table-column-type-progressBar.pbl-table-cell {
+.pbl-ngrid-column-type-progressBar.pbl-ngrid-cell {
   position: relative;
   > div {
     position: absolute;
@@ -78,7 +78,7 @@
   }
 }
 
-.pbl-table:not(.pbl-table-scrolling) .pbl-table-column-type-progressBar.pbl-table-cell {
+.pbl-ngrid:not(.pbl-ngrid-scrolling) .pbl-ngrid-column-type-progressBar.pbl-ngrid-cell {
   > div {
     width: 0;
     transition: width 350ms cubic-bezier(0.075, 0.82, 0.165, 1);

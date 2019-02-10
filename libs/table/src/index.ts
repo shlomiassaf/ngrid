@@ -1,5 +1,5 @@
 export {
-  PblTablePaginatorKind,
+  PblNgridPaginatorKind,
   PblPaginator,
   PblPagingPaginator,
   PblTokenPaginator,
@@ -13,52 +13,52 @@ export {
   PblDataSourceTriggerChangedEvent,
   PblDataSourceAdapter,
   PblDataSource, PblDataSourceOptions,
-  PblTableSortInstructions, PblTableSortDefinition, PblTableSorter, applySort,
+  PblNgridSortInstructions, PblNgridSortDefinition, PblNgridSorter, applySort,
   PblDataSourceFactory, createDS, DataSourceOf,
 } from './lib/data-source/index';
 
 export {
-  PEB_ANGRID_CONFIG, PblTableConfig, PblTableConfigService,
+  PEB_ANGRID_CONFIG, PblNgridConfig, PblNgridConfigService,
 
   PblColumn, PblMetaColumn, PblColumnGroup, PblColumnFactory, COLUMN, columnFactory,
 
-  PBL_ANGRID_ROW_TEMPLATE, PblTableRowComponent,
+  PBL_ANGRID_ROW_TEMPLATE, PblNgridRowComponent,
 
-  PblTableComponent,
-  PblTableRegistryService,
+  PblNgridComponent,
+  PblNgridRegistryService,
   AutoSizeToFitOptions, ColumnApi,
 
-  PblTableSingleTemplateRegistry, PblTableMultiTemplateRegistry, PblTableMultiComponentRegistry,
-  PblTableDataHeaderExtensionRef, PblTableDataHeaderExtensionContext,
-  PblTableCellDefDirective,
-  PblTableHeaderCellDefDirective,
-  PblTableFooterCellDefDirective,
+  PblNgridSingleTemplateRegistry, PblNgridMultiTemplateRegistry, PblNgridMultiComponentRegistry,
+  PblNgridDataHeaderExtensionRef, PblNgridDataHeaderExtensionContext,
+  PblNgridCellDefDirective,
+  PblNgridHeaderCellDefDirective,
+  PblNgridFooterCellDefDirective,
   ParentNgStyleDirective, ParentNgClassDirective,
-  PblTableNoDataRefDirective,
+  PblNgridNoDataRefDirective,
   PblColumnTypeDefinition, PblColumnTypeDefinitionDataMap,
   PblColumnDefinition,
   PblColumnGroupDefinition,
   PblColumnSet, PblMetaRowDefinitions,
-  PblTableColumnSet, PblTableColumnDefinitionSet,
+  PblNgridColumnSet, PblNgridColumnDefinitionSet,
 
   NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy,
 
-  PblTableCellClickEvent,
-  PblTableMetaCellContext, PblTableCellContext, PblTableRowContext, PblRowContext,
+  PblNgridCellClickEvent,
+  PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext,
 } from './lib/table/index';
 
 export {
-  PblTablePlugin,
-  PblTablePluginExtension,
-  PblTableOnInitEvent,
-  PblTableOnResizeRowtEvent,
-  PblTableOnInvalidateHeadersEvent,
-  PblTableOnDataSourcetEvent,
-  PblTableEvents,
+  PblNgridPlugin,
+  PblNgridPluginExtension,
+  PblNgridOnInitEvent,
+  PblNgridOnResizeRowtEvent,
+  PblNgridOnInvalidateHeadersEvent,
+  PblNgridOnDataSourcetEvent,
+  PblNgridEvents,
  } from './lib/ext/types';
 
-export { EXT_API_TOKEN, PblTableExtensionApi } from './lib/ext/table-ext-api';
+export { EXT_API_TOKEN, PblNgridExtensionApi } from './lib/ext/table-ext-api';
 export { TablePlugin, TablePluginMetadata } from './lib/ext/table-plugin';
-export { PblTablePluginController } from './lib/ext/plugin-control';
+export { PblNgridPluginController } from './lib/ext/plugin-control';
 
-export { PblTableModule, provideCommon } from './lib/table.module';
+export { PblNgridModule, provideCommon } from './lib/table.module';

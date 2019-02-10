@@ -5,7 +5,7 @@ import { UnRx } from '@pebula/utils';
 import { PblMetaRowDefinitions } from '../columns/types';
 
 import { PblColumnStoreMetaRow } from '../columns/column-store';
-import { PblTableMetaRowService } from './meta-row.service';
+import { PblNgridMetaRowService } from './meta-row.service';
 
 
 @Directive({
@@ -24,7 +24,7 @@ export class PblMetaRowDirective implements OnDestroy {
 
   private _meta: PblMetaRowDefinitions;
 
-  constructor(public readonly metaRows: PblTableMetaRowService, public elRef: ElementRef<HTMLElement>) {
+  constructor(public readonly metaRows: PblNgridMetaRowService, public elRef: ElementRef<HTMLElement>) {
 
   }
 

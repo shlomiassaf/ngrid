@@ -3,8 +3,8 @@ import {
   PblColumnDefinition,
   PblColumnGroupDefinition,
   PblMetaColumnDefinition,
-  PblTableColumnDefinitionSet,
-  PblTableColumnSet,
+  PblNgridColumnDefinitionSet,
+  PblNgridColumnSet,
   PblMetaRowDefinitions
 } from './types';
 import { PblMetaColumn } from './meta-column';
@@ -14,7 +14,7 @@ import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 export type COLUMN = PblMetaColumn | PblColumn | PblColumnGroup;
 
 export class PblColumnFactory {
-  private _raw: PblTableColumnDefinitionSet = { table: { cols: [] }, header: [], footer: [], headerGroup: [] };
+  private _raw: PblNgridColumnDefinitionSet = { table: { cols: [] }, header: [], footer: [], headerGroup: [] };
   private _defaults = {
     table: {} as Partial<PblColumnDefinition>,
     header: {} as Partial<PblMetaColumnDefinition>,
@@ -27,18 +27,18 @@ export class PblColumnFactory {
   get currentHeaderRow(): number { return this._currentHeaderRow; }
   get currentFooterRow(): number { return this._currentFooterRow; }
 
-  static fromDefinitionSet(defs: PblTableColumnDefinitionSet): PblColumnFactory {
+  static fromDefinitionSet(defs: PblNgridColumnDefinitionSet): PblColumnFactory {
     const f = new PblColumnFactory();
     Object.assign(f._raw, defs);
     return f;
   }
 
-  build(): PblTableColumnSet {
+  build(): PblNgridColumnSet {
     const { _defaults, _raw } = this;
 
     const groupStore = new PblColumnGroupStore();
 
-    const table: PblTableColumnSet['table'] = {
+    const table: PblNgridColumnSet['table'] = {
       header: _raw.table.header,
       footer: _raw.table.footer,
       cols: _raw.table.cols.map( d => new PblColumn({ ..._defaults.table, ...d }, groupStore)),
@@ -248,7 +248,7 @@ export class PblColumnFactory {
   }
 
   private genRowClass(rowOptions: { rowClassName?: string }, fallbackRowIndex: number): string {
-    return (rowOptions && rowOptions.rowClassName) || `pbl-table-row-index-${fallbackRowIndex.toString()}`;
+    return (rowOptions && rowOptions.rowClassName) || `pbl-ngrid-row-index-${fallbackRowIndex.toString()}`;
   }
 
   private buildHeaderGroups(rowIndex: number, headerGroupDefs: PblColumnGroupDefinition[], table: PblColumn[]): PblColumnGroup[] {

@@ -2,11 +2,11 @@ import { Directive, OnDestroy } from '@angular/core';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 
 import { UnRx } from '@pebula/utils';
-import { PblTableComponent, PblTablePluginController, TablePlugin, PblTableSortDefinition } from '@pebula/table';
+import { PblNgridComponent, PblNgridPluginController, TablePlugin, PblNgridSortDefinition } from '@pebula/table';
 
 declare module '@pebula/table/lib/ext/types' {
-  interface PblTablePluginExtension {
-    matSort?: PblTableMatSortDirective;
+  interface PblNgridPluginExtension {
+    matSort?: PblNgridMatSortDirective;
   }
 }
 const PLUGIN_KEY: 'matSort' = 'matSort';
@@ -14,10 +14,10 @@ const PLUGIN_KEY: 'matSort' = 'matSort';
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[matSort]', exportAs: 'pblMatSort' })
 @UnRx()
-export class PblTableMatSortDirective implements OnDestroy {
-  private _removePlugin: (table: PblTableComponent<any>) => void;
+export class PblNgridMatSortDirective implements OnDestroy {
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
 
-  constructor(public table: PblTableComponent<any>, private pluginCtrl: PblTablePluginController, public sort: MatSort) {
+  constructor(public table: PblNgridComponent<any>, private pluginCtrl: PblNgridPluginController, public sort: MatSort) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     this.sort.sortChange.pipe(UnRx(this)).subscribe(s => this.onSort(s));
@@ -66,7 +66,7 @@ export class PblTableMatSortDirective implements OnDestroy {
     if ( !column || !column.sort ) {
       return;
     } else {
-      const newSort: PblTableSortDefinition = { };
+      const newSort: PblNgridSortDefinition = { };
       const sortFn = typeof column.sort === 'function' && column.sort;
       if (sort.direction) {
         newSort.order = sort.direction;

@@ -8,7 +8,7 @@
   display: block;
 }
 
-.pbl-table-row, .pbl-table-header-row, .pbl-table-footer-row {
+.pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
   display: flex;
   // Define a border style, but then widths default to 3px. Reset them to 0px except the bottom
   // which should be 1px;
@@ -28,7 +28,7 @@
   }
 }
 
-.pbl-table-cell, .pbl-table-header-cell, .pbl-table-footer-cell {
+.pbl-ngrid-cell, .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
   flex: 1;
   display: flex;
   align-items: center;

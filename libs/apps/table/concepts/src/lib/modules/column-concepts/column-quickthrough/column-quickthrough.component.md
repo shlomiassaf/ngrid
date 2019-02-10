@@ -35,13 +35,13 @@ The split is fixed, it will always be 1/N/1.
 Each **sub-role** will have its unique
 
 - Rendering template (more on this later...)
-- **Role** CSS class name (`pbl-table-header-cell`, `pbl-table-cell`, `pbl-table-footer-cell`)
+- **Role** CSS class name (`pbl-ngrid-header-cell`, `pbl-ngrid-cell`, `pbl-ngrid-footer-cell`)
 - Column data type (optional)
 
 > The CSS classes shared by all **sub-roles**:
 >
 > - CSS set in the column definitions definitions (`css`) 
-> - **Identity** CSS (pbl-table-column-**[Identity]**)
+> - **Identity** CSS (pbl-ngrid-column-**[Identity]**)
 
 They all share a logical connection, they work as one unit:
 

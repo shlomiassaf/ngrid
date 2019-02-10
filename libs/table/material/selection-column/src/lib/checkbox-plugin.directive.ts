@@ -1,13 +1,13 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
-import { PblTableComponent, PblTablePluginController, TablePlugin } from '@pebula/table';
+import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/table';
 
-import { PblTableCheckboxComponent } from './table-checkbox.component';
+import { PblNgridCheckboxComponent } from './table-checkbox.component';
 
 declare module '@pebula/table/lib/ext/types' {
-  interface PblTablePluginExtension {
-    matCheckboxSelection?: PblTableMatCheckboxSelectionDirective;
+  interface PblNgridPluginExtension {
+    matCheckboxSelection?: PblNgridMatCheckboxSelectionDirective;
   }
 }
 
@@ -16,7 +16,7 @@ const PLUGIN_KEY: 'matCheckboxSelection' = 'matCheckboxSelection';
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[matCheckboxSelection]' })
 @UnRx()
-export class PblTableMatCheckboxSelectionDirective implements OnDestroy {
+export class PblNgridMatCheckboxSelectionDirective implements OnDestroy {
   /**
    * Add's a selection column using material's `mat-checkbox` in the column specified.
    */
@@ -31,7 +31,7 @@ export class PblTableMatCheckboxSelectionDirective implements OnDestroy {
         }
       } else {
         if (!this.cmpRef) {
-          this.cmpRef = this.cfr.resolveComponentFactory(PblTableCheckboxComponent).create(this.injector);
+          this.cmpRef = this.cfr.resolveComponentFactory(PblNgridCheckboxComponent).create(this.injector);
           this.cmpRef.instance.table = this.table;
           if (this._bulkSelectMode) {
             this.cmpRef.instance.bulkSelectMode = this._bulkSelectMode;
@@ -64,13 +64,13 @@ export class PblTableMatCheckboxSelectionDirective implements OnDestroy {
 
   private _name: string;
   private _bulkSelectMode: 'all' | 'view' | 'none';
-  private cmpRef: ComponentRef<PblTableCheckboxComponent>;
-  private _removePlugin: (table: PblTableComponent<any>) => void;
+  private cmpRef: ComponentRef<PblNgridCheckboxComponent>;
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
 
-  constructor(private table: PblTableComponent<any>,
+  constructor(private table: PblNgridComponent<any>,
               private cfr: ComponentFactoryResolver,
               private injector: Injector,
-              pluginCtrl: PblTablePluginController) {
+              pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
   }
 

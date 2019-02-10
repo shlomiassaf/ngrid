@@ -2,7 +2,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 
-export interface PblTableConfig {
+export interface PblNgridConfig {
   table?: {
     showHeader?: boolean;
     showFooter?: boolean;
@@ -10,23 +10,23 @@ export interface PblTableConfig {
   }
 }
 
-const DEFAULT_TABLE_CONFIG: PblTableConfig['table'] = {
+const DEFAULT_TABLE_CONFIG: PblNgridConfig['table'] = {
   showHeader: true,
   showFooter: false,
   boxSpaceModel: 'padding',
 };
 
-export const PEB_ANGRID_CONFIG = new InjectionToken<PblTableConfig>('PEB_ANGRID_CONFIG');
+export const PEB_ANGRID_CONFIG = new InjectionToken<PblNgridConfig>('PEB_ANGRID_CONFIG');
 
 @Injectable({
   providedIn: 'root',
 })
-export class PblTableConfigService {
+export class PblNgridConfigService {
 
-  private config = new Map<keyof PblTableConfig, any>();
-  private configNotify = new Map<keyof PblTableConfig, ReplaySubject<any>>();
+  private config = new Map<keyof PblNgridConfig, any>();
+  private configNotify = new Map<keyof PblNgridConfig, ReplaySubject<any>>();
 
-  constructor(@Optional() @Inject(PEB_ANGRID_CONFIG) _config: PblTableConfig) {
+  constructor(@Optional() @Inject(PEB_ANGRID_CONFIG) _config: PblNgridConfig) {
     if (_config) {
       for (const key of Object.keys(_config)) {
         (this.config as any).set(key, _config[key]);
@@ -40,15 +40,15 @@ export class PblTableConfigService {
     });
   }
 
-  has(section: keyof PblTableConfig): boolean {
+  has(section: keyof PblNgridConfig): boolean {
     return this.config.has(section);
   }
 
-  get<T extends keyof PblTableConfig>(section: T): PblTableConfig[T] | undefined {
+  get<T extends keyof PblNgridConfig>(section: T): PblNgridConfig[T] | undefined {
     return this.config.get(section);
   }
 
-  set<T extends keyof PblTableConfig>(section: T, value: PblTableConfig[T]): void {
+  set<T extends keyof PblNgridConfig>(section: T, value: PblNgridConfig[T]): void {
     const prev = this.get(section);
     value = Object.assign({}, value);
     Object.freeze(value);
@@ -56,11 +56,11 @@ export class PblTableConfigService {
     this.notify(section, value, prev);
   }
 
-  onUpdate<T extends keyof PblTableConfig>(section: T): Observable<{ curr: PblTableConfig[T]; prev: PblTableConfig[T] | undefined; }> {
+  onUpdate<T extends keyof PblNgridConfig>(section: T): Observable<{ curr: PblNgridConfig[T]; prev: PblNgridConfig[T] | undefined; }> {
     return this.getGetNotifier(section);
   }
 
-  private getGetNotifier<T extends keyof PblTableConfig>(section: T): ReplaySubject<any> {
+  private getGetNotifier<T extends keyof PblNgridConfig>(section: T): ReplaySubject<any> {
     let notifier = this.configNotify.get(section);
     if (!notifier) {
       this.configNotify.set(section, notifier = new ReplaySubject<any>(1));
@@ -68,7 +68,7 @@ export class PblTableConfigService {
     return notifier;
   }
 
-  private notify<T extends keyof PblTableConfig>(section: T, curr: PblTableConfig[T], prev: PblTableConfig[T]): void {
+  private notify<T extends keyof PblNgridConfig>(section: T, curr: PblNgridConfig[T], prev: PblNgridConfig[T]): void {
     this.getGetNotifier(section).next({ curr, prev });
   }
 }

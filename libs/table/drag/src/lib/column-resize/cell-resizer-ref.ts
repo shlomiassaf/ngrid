@@ -1,17 +1,17 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { PblTableRegistryService, PblTableMultiTemplateRegistry, PblTableDataHeaderExtensionRef, PblTableDataHeaderExtensionContext } from '@pebula/table';
+import { PblNgridRegistryService, PblNgridMultiTemplateRegistry, PblNgridDataHeaderExtensionRef, PblNgridDataHeaderExtensionContext } from '@pebula/table';
 
 /**
  * Marks the element as the resizer template for cells.
  */
-@Directive({ selector: '[pblTableCellResizerRef]' })
-export class PblTableCellResizerRefDirective extends PblTableMultiTemplateRegistry<PblTableDataHeaderExtensionContext, 'dataHeaderExtensions'> implements PblTableDataHeaderExtensionRef {
+@Directive({ selector: '[pblNgridCellResizerRef]' })
+export class PblNgridCellResizerRefDirective extends PblNgridMultiTemplateRegistry<PblNgridDataHeaderExtensionContext, 'dataHeaderExtensions'> implements PblNgridDataHeaderExtensionRef {
   readonly name: 'cellResizer' = 'cellResizer';
   readonly kind: 'dataHeaderExtensions' = 'dataHeaderExtensions';
 
-  constructor(tRef: TemplateRef<PblTableDataHeaderExtensionContext>, registry: PblTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<PblNgridDataHeaderExtensionContext>, registry: PblNgridRegistryService) { super(tRef, registry); }
 
-  shouldRender(context: PblTableDataHeaderExtensionContext): boolean {
+  shouldRender(context: PblNgridDataHeaderExtensionContext): boolean {
     return !!context.col.resize;
   }
 }

@@ -3,8 +3,8 @@ import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/
 @Component({
   selector: 'pbl-drag-plugin-default-templates',
   template:
-`<pbl-table-drag-resize *pblTableCellResizerRef="let ctx" [context]="ctx"></pbl-table-drag-resize>
-<span *pblTableCellDraggerRef="let ctx" [pblTableColumnDrag]="ctx" cdkDragRootElementClass="cdk-drag"></span>`,
+`<pbl-ngrid-drag-resize *pblNgridCellResizerRef="let ctx" [context]="ctx"></pbl-ngrid-drag-resize>
+<span *pblNgridCellDraggerRef="let ctx" [pblNgridColumnDrag]="ctx" cdkDragRootElementClass="cdk-drag"></span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

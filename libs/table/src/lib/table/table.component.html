@@ -2,14 +2,14 @@
 <cdk-header-row *cdkHeaderRowDef="columnApi.visibleColumnIds; sticky: columnRowDef.header?.type === 'sticky'"
                 [pblMetaRow]="columnRowDef.header"
                 data-rowtype="header"
-                class="pbl-table-header-row pbl-table-header-row-main"
-                [class.pbl-table-row-visually-hidden]="!showHeader"></cdk-header-row>
+                class="pbl-ngrid-header-row pbl-ngrid-header-row-main"
+                [class.pbl-ngrid-row-visually-hidden]="!showHeader"></cdk-header-row>
 
 <!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
 <ng-container *ngFor="let row of metaColumnIds.header;">
   <cdk-header-row *cdkHeaderRowDef="row.keys; sticky: row.rowDef.type === 'sticky'"
                   [pblMetaRow]="row.rowDef"
-                  data-rowtype="meta-header" class="pbl-table-header-row"
+                  data-rowtype="meta-header" class="pbl-ngrid-header-row"
                   [class.pbl-meta-group-row]="row.isGroup"></cdk-header-row>
 </ng-container>
 
@@ -17,66 +17,66 @@
 <cdk-footer-row *cdkFooterRowDef="columnApi.visibleColumnIds; sticky: columnRowDef.footer?.type === 'sticky'"
                 [pblMetaRow]="columnRowDef.footer"
                 data-rowtype="footer"
-                class="pbl-table-footer-row"
-                [class.pbl-table-row-hidden]="!showFooter"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
+                class="pbl-ngrid-footer-row"
+                [class.pbl-ngrid-row-hidden]="!showFooter"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
 <!-- MULTI-FOOTER ROW DEF -->
 <ng-container *ngFor="let row of metaColumnIds.footer">   <!-- MULTI-FOOTER ROW DEF -->
   <cdk-footer-row *cdkFooterRowDef="row.keys; sticky: row.rowDef.type === 'sticky'"
                   [pblMetaRow]="row.rowDef"
-                  data-rowtype="meta-footer" class="pbl-table-footer-row"
+                  data-rowtype="meta-footer" class="pbl-ngrid-footer-row"
                   [class.pbl-meta-group-row]="row.isGroup"></cdk-footer-row>
 </ng-container>
 
-<div class="pbl-table-container">
+<div class="pbl-ngrid-container">
   <ng-container #beforeTable></ng-container>
   <div pbl-ngrid-fixed-meta-row-container="header"></div>
-  <pbl-cdk-virtual-scroll-viewport class="pbl-table-scroll-container" [minWidth]="_cdkTable?.minWidth"
+  <pbl-cdk-virtual-scroll-viewport class="pbl-ngrid-scroll-container" [minWidth]="_cdkTable?.minWidth"
                                    [stickyRowHeaderContainer]="stickyRowHeaderContainer" [stickyRowFooterContainer]="stickyRowFooterContainer">
     <pbl-cdk-table>
       <!-- Row templates. The columns used are set at the row template level -->
 
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
       <ng-container *ngFor="let meta of metaColumns">
-        <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [pblTableColumnDef]="c">
-          <pbl-table-header-cell *cdkHeaderCellDef>
+        <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [pblNgridColumnDef]="c">
+          <pbl-ngrid-header-cell *cdkHeaderCellDef>
             <ng-container *ngTemplateOutlet="c.template; context: (c | tableMetaCellContext:self)"></ng-container>
-          </pbl-table-header-cell>
+          </pbl-ngrid-header-cell>
         </ng-container>
-        <ng-container *ngIf="meta.footer as c" [pblTableColumnDef]="c">
-          <pbl-table-footer-cell *cdkFooterCellDef>
+        <ng-container *ngIf="meta.footer as c" [pblNgridColumnDef]="c">
+          <pbl-ngrid-footer-cell *cdkFooterCellDef>
             <ng-container *ngTemplateOutlet="c.template; context: (c | tableMetaCellContext:self)"></ng-container>
-          </pbl-table-footer-cell>
+          </pbl-ngrid-footer-cell>
         </ng-container>
       </ng-container>
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
 
        <!-- HEADER-RECORD-FOOTER CELL DEF -->
-      <ng-container *ngFor="let c of columnApi.visibleColumns; index as index" [pblTableColumnDef]="c">
+      <ng-container *ngFor="let c of columnApi.visibleColumns; index as index" [pblNgridColumnDef]="c">
         <!-- TABLE HEADER CELL DEF -->
-        <pbl-table-header-cell *cdkHeaderCellDef [observeSize]="c"></pbl-table-header-cell>
+        <pbl-ngrid-header-cell *cdkHeaderCellDef [observeSize]="c"></pbl-ngrid-header-cell>
         <!-- RECORD CELL DEF -->
-        <pbl-table-cell *cdkCellDef="let row; pblRowContext as pblRowContext" [attr.tabindex]="cellFocus">
+        <pbl-ngrid-cell *cdkCellDef="let row; pblRowContext as pblRowContext" [attr.tabindex]="cellFocus">
           <ng-container *ngIf="pblRowContext && pblRowContext.cell(index) as ctx">
             <ng-container *ngTemplateOutlet="ctx.editing ? ctx.col.editorTpl : ctx.col.cellTpl; context: ctx"></ng-container>
           </ng-container>
-        </pbl-table-cell>
+        </pbl-ngrid-cell>
 
         <!-- TABLE FOOTER CELL DEF -->
-        <pbl-table-footer-cell *cdkFooterCellDef>
+        <pbl-ngrid-footer-cell *cdkFooterCellDef>
           <ng-container *ngTemplateOutlet="c.footerCellTpl; context: (c | tableMetaCellContext:self)"></ng-container>
-        </pbl-table-footer-cell>
+        </pbl-ngrid-footer-cell>
       </ng-container>
       <!-- HEADER-RECORD-FOOTER CELL DEF -->
 
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
-      <pbl-table-row *cdkRowDef="let row; columns: columnApi.visibleColumnIds;" [row]="row"></pbl-table-row>
+      <pbl-ngrid-row *cdkRowDef="let row; columns: columnApi.visibleColumnIds;" [row]="row"></pbl-ngrid-row>
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
     </pbl-cdk-table>
   </pbl-cdk-virtual-scroll-viewport>
   <div pbl-ngrid-fixed-meta-row-container="footer"></div>
   <ng-container #beforeContent>
     <!-- This dummy row is used to extract an initial row height -->
-    <pbl-table-row style="display: none"></pbl-table-row>
+    <pbl-ngrid-row style="display: none"></pbl-ngrid-row>
   </ng-container>
   <ng-content></ng-content>
   <ng-container #afterContent></ng-container>
@@ -95,8 +95,8 @@
 
        Implementation is in the virtual scroll viewport (more precisely in `PblVirtualScrollForOf`)
   -->
-  <div #stickyRowHeaderContainer class="pbl-table-sticky-row-scroll-container"><div [style.min-width]="_cdkTable?.minWidth"></div></div> <!-- HEADERS -->
-  <div #stickyRowFooterContainer class="pbl-table-sticky-row-scroll-container"><div [style.min-width]="_cdkTable?.minWidth"></div></div> <!-- FOOTERS -->
+  <div #stickyRowHeaderContainer class="pbl-ngrid-sticky-row-scroll-container"><div [style.min-width]="_cdkTable?.minWidth"></div></div> <!-- HEADERS -->
+  <div #stickyRowFooterContainer class="pbl-ngrid-sticky-row-scroll-container"><div [style.min-width]="_cdkTable?.minWidth"></div></div> <!-- FOOTERS -->
 </div>
 
 <ng-template #fbTableCell let-value="value"><div>{{value}}</div></ng-template>

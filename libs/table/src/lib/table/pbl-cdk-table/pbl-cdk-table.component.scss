@@ -1,7 +1,7 @@
 @import './pbl-cdk-table.component.from-material';
 
 /* MULTI COLUMN AND COLUMN SPAN */
-.pbl-table-header-cell.pbl-header-group-cell {
+.pbl-ngrid-header-cell.pbl-header-group-cell {
   display: flex;
   align-items: center;
 
@@ -10,18 +10,18 @@
   }
 }
 
-.pbl-table-header-cell {
+.pbl-ngrid-header-cell {
   position: relative; // We need this for column-resize feature
 }
 
-.pbl-table-cell {
+.pbl-ngrid-cell {
   cursor: default;
 }
-.pbl-table-editable-cell {
+.pbl-ngrid-editable-cell {
   cursor: text;
 }
 
-.pbl-cdk-table:not(.pbl-table-margin-cell-box-model) .pbl-table-header-cell.pbl-header-group-cell {
+.pbl-cdk-table:not(.pbl-ngrid-margin-cell-box-model) .pbl-ngrid-header-cell.pbl-header-group-cell {
   position: relative;
 
   &:not(:first-child):before {
@@ -36,7 +36,7 @@
   }
 }
 
-.pbl-cdk-table.pbl-table-margin-cell-box-model .pbl-table-header-cell.pbl-header-group-cell {
+.pbl-cdk-table.pbl-ngrid-margin-cell-box-model .pbl-ngrid-header-cell.pbl-header-group-cell {
   &:not(:last-child) {
     border-right-width: 1px;
     border-right-style: solid;

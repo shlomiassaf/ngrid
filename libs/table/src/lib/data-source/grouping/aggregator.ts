@@ -1,4 +1,4 @@
-export interface PblTableAggregators {
+export interface PblNgridAggregators {
   sum: SumAggregator;
   min: MinAggregator;
   max: MaxAggregator;
@@ -8,7 +8,7 @@ export interface PblTableAggregators {
 }
 
 export interface Aggregator<T = any, TAgg = any> {
-  id: keyof PblTableAggregators;
+  id: keyof PblNgridAggregators;
   label?: string;
   add(value: T): boolean;
   set(value: T[]): void;

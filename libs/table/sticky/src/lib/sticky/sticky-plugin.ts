@@ -1,20 +1,20 @@
 import { filter } from 'rxjs/operators';
 import { Directive, Input, IterableDiffers, IterableDiffer, IterableChangeRecord, OnDestroy } from '@angular/core';
 
-import { PblTableComponent, PblTablePluginController, TablePlugin } from '@pebula/table';
+import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/table';
 
 
 declare module '@pebula/table/lib/ext/types' {
-  interface PblTablePluginExtension {
-    sticky?: PblTableStickyPluginDirective;
+  interface PblNgridPluginExtension {
+    sticky?: PblNgridStickyPluginDirective;
   }
 }
 
 export const PLUGIN_KEY: 'sticky' = 'sticky';
 
-export function setStickyRow(table: PblTableComponent<any>, type: 'header' | 'footer', bulk: Array<['table' | number, boolean]>): void;
-export function setStickyRow(table: PblTableComponent<any>, type: 'header' | 'footer', value: 'table' | number, state: boolean): void;
-export function setStickyRow(table: PblTableComponent<any>, type: 'header' | 'footer', valueOrBulk: Array<['table' | number, boolean]> | 'table' | number, state?: boolean): void {
+export function setStickyRow(table: PblNgridComponent<any>, type: 'header' | 'footer', bulk: Array<['table' | number, boolean]>): void;
+export function setStickyRow(table: PblNgridComponent<any>, type: 'header' | 'footer', value: 'table' | number, state: boolean): void;
+export function setStickyRow(table: PblNgridComponent<any>, type: 'header' | 'footer', valueOrBulk: Array<['table' | number, boolean]> | 'table' | number, state?: boolean): void {
   const isHeader = type === 'header';
   const queryList = isHeader ? table._headerRowDefs : table._footerRowDefs;
   const bulk: Array<['table' | number, boolean]> = Array.isArray(valueOrBulk) ? valueOrBulk : [ [valueOrBulk, state] ];
@@ -51,9 +51,9 @@ export function setStickyRow(table: PblTableComponent<any>, type: 'header' | 'fo
   }
 }
 
-export function setStickyColumns(table: PblTableComponent<any>, type: 'start' | 'end', bulk: Array<[string | number, boolean]>): void;
-export function setStickyColumns(table: PblTableComponent<any>, type: 'start' | 'end', value: string  | number, state: boolean): void;
-export function setStickyColumns(table: PblTableComponent<any>, type: 'start' | 'end', valueOrBulk: Array<[string  | number, boolean]> | string  | number, state?: boolean): void {
+export function setStickyColumns(table: PblNgridComponent<any>, type: 'start' | 'end', bulk: Array<[string | number, boolean]>): void;
+export function setStickyColumns(table: PblNgridComponent<any>, type: 'start' | 'end', value: string  | number, state: boolean): void;
+export function setStickyColumns(table: PblNgridComponent<any>, type: 'start' | 'end', valueOrBulk: Array<[string  | number, boolean]> | string  | number, state?: boolean): void {
   const bulk: Array<[string | number, boolean]> = Array.isArray(valueOrBulk) ? valueOrBulk : [ [valueOrBulk, state] ];
   let changed: boolean;
   for (let [columnId, state] of bulk) {
@@ -80,7 +80,7 @@ export function setStickyColumns(table: PblTableComponent<any>, type: 'start' | 
 
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[stickyColumnStart], pbl-ngrid[stickyColumnEnd], pbl-ngrid[stickyHeader], pbl-ngrid[stickyFooter]' })
-export class PblTableStickyPluginDirective implements OnDestroy {
+export class PblNgridStickyPluginDirective implements OnDestroy {
   /**
    * Set the header rows you want to apply sticky positioning to.
    * Valid values are:
@@ -151,11 +151,11 @@ export class PblTableStickyPluginDirective implements OnDestroy {
   private _footerDiffer: IterableDiffer<'table' | number>;
 
   private _columnCache: { start: Array<string | number>; end: Array<string | number>; } = { start: [], end: [] };
-  private _removePlugin: (table: PblTableComponent<any>) => void;
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
 
-  constructor (protected readonly table: PblTableComponent<any>,
+  constructor (protected readonly table: PblNgridComponent<any>,
                protected readonly _differs: IterableDiffers,
-               protected readonly pluginCtrl: PblTablePluginController) {
+               protected readonly pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     pluginCtrl.events

@@ -4,7 +4,7 @@ W> Transpose DOES NOT support virtual scroll, if your datasource is large perfor
 W> Because transposing is rendering of the datasource vertically, i.e. - each column is a row,
 W> and because the table does not support vertical virtual scroll, transpose will not apply virtual scroll.
 
-<div *pblTableCellDef="'name'; value as value;" style="background: green">{{value}}</div>
+<div *pblNgridCellDef="'name'; value as value;" style="background: green">{{value}}</div>
 
 <docsi-mat-example-with-source title="Transpose" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->

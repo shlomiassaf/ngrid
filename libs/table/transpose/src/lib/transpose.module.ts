@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { PblTableModule } from '@pebula/table';
-import { PblTableTransposePluginDirective } from './transpose-plugin.directive';
+import { PblNgridModule } from '@pebula/table';
+import { PblNgridTransposePluginDirective } from './transpose-plugin.directive';
 
 @NgModule({
-  imports: [ CommonModule, MatCheckboxModule, PblTableModule ],
-  declarations: [ PblTableTransposePluginDirective ],
-  exports: [ PblTableTransposePluginDirective ],
+  imports: [ CommonModule, MatCheckboxModule, PblNgridModule ],
+  declarations: [ PblNgridTransposePluginDirective ],
+  exports: [ PblNgridTransposePluginDirective ],
 })
-export class PblTableTransposeModule { }
+export class PblNgridTransposeModule { }

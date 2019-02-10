@@ -1,1 +1,1 @@
-export { PblTableBlockUiModule } from './lib/table-block-ui.module';
+export { PblNgridBlockUiModule } from './lib/table-block-ui.module';

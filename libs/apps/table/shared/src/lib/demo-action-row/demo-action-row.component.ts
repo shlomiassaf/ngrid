@@ -2,7 +2,7 @@ import { Component, EventEmitter, ViewEncapsulation, Input, ViewChild, TemplateR
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatMenuTrigger } from '@angular/material/menu';
 
-import { PblTableComponent, AutoSizeToFitOptions } from '@pebula/table';
+import { PblNgridComponent, AutoSizeToFitOptions } from '@pebula/table';
 
 
 @Component({
@@ -40,7 +40,7 @@ export class DemoActionRowComponent implements AfterViewInit {
   private _filter = false;
   private _showFps = false;
 
-  constructor(public table: PblTableComponent<any>) { }
+  constructor(public table: PblNgridComponent<any>) { }
 
   _refresh(): void {
     if (this.refresh.observers.length > 0) {

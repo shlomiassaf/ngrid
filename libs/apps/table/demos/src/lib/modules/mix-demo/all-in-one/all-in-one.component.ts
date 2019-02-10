@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
-import { PblTableComponent, createDS, columnFactory, PblTablePaginatorKind, AutoSizeToFitOptions } from '@pebula/table';
+import { PblNgridComponent, createDS, columnFactory, PblNgridPaginatorKind, AutoSizeToFitOptions } from '@pebula/table';
 import { toggleDetailRow } from '@pebula/table/detail-row';
 import { setStickyRow, setStickyColumns } from '@pebula/table/sticky';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
@@ -117,7 +117,7 @@ export class AllInOneTableExampleComponent {
 
   emailFrequencyToggle: boolean;
 
-  usePagination: false | PblTablePaginatorKind = false// 'pageNumber';
+  usePagination: false | PblNgridPaginatorKind = false// 'pageNumber';
   showFooter = false;
   showHeader = true;
   hideColumns: string[] = [];
@@ -126,7 +126,7 @@ export class AllInOneTableExampleComponent {
   enableRowSelection = true;
   singleDetailRow = false;
 
-  @ViewChild(PblTableComponent) pblTable: PblTableComponent<any>;
+  @ViewChild(PblNgridComponent) pblTable: PblNgridComponent<any>;
 
   setStickyRow = setStickyRow;
   setStickyColumns = setStickyColumns;
@@ -160,7 +160,7 @@ export class AllInOneTableExampleComponent {
     }
   }
 
-  toggleDetailRow(pblTbl: PblTableComponent<any>, item: Person): void {
+  toggleDetailRow(pblTbl: PblNgridComponent<any>, item: Person): void {
     toggleDetailRow(pblTbl, item)
   }
 

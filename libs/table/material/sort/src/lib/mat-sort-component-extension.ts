@@ -1,9 +1,9 @@
 import { ComponentFactory, ComponentRef, ComponentFactoryResolver } from '@angular/core';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 
-import { PblTableMultiComponentRegistry, PblTableDataHeaderExtensionContext } from '@pebula/table';
+import { PblNgridMultiComponentRegistry, PblNgridDataHeaderExtensionContext } from '@pebula/table';
 
-export class MatSortExtension extends PblTableMultiComponentRegistry<MatSortHeader, 'dataHeaderExtensions'> {
+export class MatSortExtension extends PblNgridMultiComponentRegistry<MatSortHeader, 'dataHeaderExtensions'> {
   readonly name: 'sortContainer' = 'sortContainer';
   readonly kind: 'dataHeaderExtensions' = 'dataHeaderExtensions';
   readonly projectContent = true;
@@ -12,15 +12,15 @@ export class MatSortExtension extends PblTableMultiComponentRegistry<MatSortHead
     super();
   }
 
-  shouldRender(context: PblTableDataHeaderExtensionContext): boolean {
+  shouldRender(context: PblNgridDataHeaderExtensionContext): boolean {
     return !!context.col.sort && !!context.injector.get(MatSort, false);
   }
 
-  getFactory(context: PblTableDataHeaderExtensionContext): ComponentFactory<MatSortHeader> {
+  getFactory(context: PblNgridDataHeaderExtensionContext): ComponentFactory<MatSortHeader> {
     return this.cfr.resolveComponentFactory(MatSortHeader);
   }
 
-  onCreated(context: PblTableDataHeaderExtensionContext, cmpRef: ComponentRef<MatSortHeader>): void {
+  onCreated(context: PblNgridDataHeaderExtensionContext, cmpRef: ComponentRef<MatSortHeader>): void {
     // We assign the ID and also verify that it does not exist on the `MatSort` container
     // It might exists on specific scenarios when a header is removed and added instantly but the "add" part happens before the teardown so the `MatSort` will throw.
     this.deregisterId(context, cmpRef.instance.id = context.col.id);
@@ -30,7 +30,7 @@ export class MatSortExtension extends PblTableMultiComponentRegistry<MatSortHead
   /**
    * Check that the current `MatSort` does not already have a sortable header with the provided id.
    */
-  private deregisterId(context: PblTableDataHeaderExtensionContext, id: any) {
+  private deregisterId(context: PblNgridDataHeaderExtensionContext, id: any) {
     const matSort = context.injector.get<MatSort>(MatSort);
     const matSortHeader = matSort.sortables.get(id)
     if (matSortHeader) {

@@ -1,4 +1,4 @@
-import { PblTableColumnDef } from '../directives';
+import { PblNgridColumnDef } from '../directives';
 import { PblBaseColumnDefinition, PblColumnGroupDefinition } from './types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';
@@ -117,7 +117,7 @@ export class PblColumnGroup extends PblMetaColumn implements PblColumnGroupDefin
     /**
    * The column def for this column.
    */
-  columnDef: PblTableColumnDef<PblColumnGroup>;
+  columnDef: PblNgridColumnDef<PblColumnGroup>;
 
   /**
    * When set, this column is a cloned column of an existing column caused by a split.

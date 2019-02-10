@@ -4,7 +4,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 import { columnFactory, createDS, PblColumn } from '@pebula/table';
-import { PblTableMatSortDirective } from '@pebula/table/material/sort';
+import { PblNgridMatSortDirective } from '@pebula/table/material/sort';
 
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
@@ -43,11 +43,11 @@ export class MatSortTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 
-  toggleActive(matSort: PblTableMatSortDirective, column: PblColumn, state: boolean): void {
+  toggleActive(matSort: PblNgridMatSortDirective, column: PblColumn, state: boolean): void {
     matSort.table.ds.setSort(column, { order: state ? 'asc' : undefined });
   }
 
-  isActive(matSort: PblTableMatSortDirective, column: PblColumn): boolean {
+  isActive(matSort: PblNgridMatSortDirective, column: PblColumn): boolean {
     return matSort.sort.active === column.id && !!matSort.sort.direction;
   }
 }

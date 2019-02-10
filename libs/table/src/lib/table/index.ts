@@ -9,7 +9,7 @@ export {
   PblColumnDefinition,
   PblColumnGroupDefinition,
   PblColumnSet, PblMetaRowDefinitions,
-  PblTableColumnSet, PblTableColumnDefinitionSet,
+  PblNgridColumnSet, PblNgridColumnDefinitionSet,
 
   META_COLUMN_TYPES,
   COLUMN_TYPES,
@@ -22,13 +22,13 @@ export {
   columnFactory
 } from './columns/index';
 
-export { PblTableMetaCellContext, PblTableCellContext, PblTableRowContext, PblRowContext } from './context/index';
+export { PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext } from './context/index';
 
 export { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 
 export * from './events';
-export { PblTableComponent } from './table.component';
-export { PblTableRegistryService } from './services/table-registry.service';
+export { PblNgridComponent } from './table.component';
+export { PblNgridRegistryService } from './services/table-registry.service';
 export { AutoSizeToFitOptions, ColumnApi } from './column-api';
 
 export { PblColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';

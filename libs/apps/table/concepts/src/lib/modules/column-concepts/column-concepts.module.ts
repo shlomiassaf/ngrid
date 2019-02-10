@@ -6,9 +6,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
 
-import { PblTableModule, PblTableRegistryService } from '@pebula/table';
-import { PblTableTargetEventsModule } from '@pebula/table/target-events';
-import { PblTableDragModule } from '@pebula/table/drag';
+import { PblNgridModule, PblNgridRegistryService } from '@pebula/table';
+import { PblNgridTargetEventsModule } from '@pebula/table/target-events';
+import { PblNgridDragModule } from '@pebula/table/drag';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { ColumnQuickthroughTableExampleComponent } from './column-quickthrough/column-quickthrough.component';
@@ -42,11 +42,11 @@ const ROUTES = [
     RouterModule.forChild(ROUTES),
     MATERIAL,
     SharedModule,
-    PblTableModule,
-    PblTableTargetEventsModule,
-    PblTableDragModule.withDefaultTemplates(),
+    PblNgridModule,
+    PblNgridTargetEventsModule,
+    PblNgridDragModule.withDefaultTemplates(),
   ],
-  providers: [ PblTableRegistryService ],
+  providers: [ PblNgridRegistryService ],
 })
 export class ColumnConceptsModule {
   constructor(registry: ExampleGroupRegistryService) {

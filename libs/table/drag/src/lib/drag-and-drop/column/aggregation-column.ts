@@ -22,9 +22,9 @@ import {
   DragRef, DropListRef
 } from '@angular/cdk/drag-drop';
 
-import { PblTableComponent, PblTablePluginController, PblColumn } from '@pebula/table';
+import { PblNgridComponent, PblNgridPluginController, PblColumn } from '@pebula/table';
 import { CdkLazyDropList, PblDragRef } from '../core';
-import { PblTableColumnDragDirective } from './column-reorder-plugin';
+import { PblNgridColumnDragDirective } from './column-reorder-plugin';
 
 let _uniqueIdCounter = 0;
 
@@ -36,17 +36,17 @@ let _uniqueIdCounter = 0;
     '[id]': 'id',
   },
   providers: [
-    { provide: CDK_DROP_LIST, useExisting: PblTableAggregationContainerDirective },
+    { provide: CDK_DROP_LIST, useExisting: PblNgridAggregationContainerDirective },
   ],
 })
-export class PblTableAggregationContainerDirective<T = any> extends CdkLazyDropList<T> implements OnDestroy {
-  id = `pbl-table-column-aggregation-container-${_uniqueIdCounter++}`;
+export class PblNgridAggregationContainerDirective<T = any> extends CdkLazyDropList<T> implements OnDestroy {
+  id = `pbl-ngrid-column-aggregation-container-${_uniqueIdCounter++}`;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   pending: PblColumn;
 
-  constructor(public table: PblTableComponent<T>,
-              pluginCtrl: PblTablePluginController,
+  constructor(public table: PblNgridComponent<T>,
+              pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
               dragDropRegistry: DragDropRegistry<DragRef, DropListRef<T>>,
               changeDetectorRef: ChangeDetectorRef,
@@ -60,14 +60,14 @@ export class PblTableAggregationContainerDirective<T = any> extends CdkLazyDropL
 
     this.pblDropListRef.dropped
       .subscribe( event => {
-        const item = event.item as PblDragRef<PblTableColumnDragDirective<any>>;
+        const item = event.item as PblDragRef<PblNgridColumnDragDirective<any>>;
         this.pending = undefined;
         this.table.columnApi.addGroupBy(item.data.column);
       });
 
     this.pblDropListRef.entered
       .subscribe( event => {
-        const item = event.item as PblDragRef<PblTableColumnDragDirective<any>>;
+        const item = event.item as PblDragRef<PblNgridColumnDragDirective<any>>;
         this.pending = item.data.column;
         item.getPlaceholderElement().style.display = 'none';
         for (const c of item.data.getCells()) {
@@ -77,7 +77,7 @@ export class PblTableAggregationContainerDirective<T = any> extends CdkLazyDropL
 
     this.pblDropListRef.exited
       .subscribe( event => {
-        const item = event.item as PblDragRef<PblTableColumnDragDirective<any>>;
+        const item = event.item as PblDragRef<PblNgridColumnDragDirective<any>>;
         this.pending = undefined;
         item.getPlaceholderElement().style.display = '';
         for (const c of item.data.getCells()) {

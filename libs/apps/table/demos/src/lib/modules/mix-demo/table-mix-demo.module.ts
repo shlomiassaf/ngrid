@@ -15,14 +15,14 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 
-import { PblTableModule } from '@pebula/table';
-import { PblTableDragModule } from '@pebula/table/drag';
-import { PblTableTargetEventsModule } from '@pebula/table/target-events';
-import { PblTableTransposeModule } from '@pebula/table/transpose';
-import { PblTableBlockUiModule } from '@pebula/table/block-ui';
-import { PblTableDetailRowModule } from '@pebula/table/detail-row';
-import { PblTableStickyModule } from '@pebula/table/sticky';
-import { PblTableMaterialModule } from '@pebula/table/material';
+import { PblNgridModule } from '@pebula/table';
+import { PblNgridDragModule } from '@pebula/table/drag';
+import { PblNgridTargetEventsModule } from '@pebula/table/target-events';
+import { PblNgridTransposeModule } from '@pebula/table/transpose';
+import { PblNgridBlockUiModule } from '@pebula/table/block-ui';
+import { PblNgridDetailRowModule } from '@pebula/table/detail-row';
+import { PblNgridStickyModule } from '@pebula/table/sticky';
+import { PblNgridMaterialModule } from '@pebula/table/material';
 
 import { SharedModule } from '@pebula/apps/table/shared';
 import { CommonTableTemplatesComponent } from './common-table-templates/common-table-templates.component';
@@ -59,14 +59,14 @@ const DECLARATION = [
     RouterModule.forChild([]),
     SharedModule,
     MATERIAL, MatRippleModule,
-    PblTableModule.withCommon([ { component: CommonTableTemplatesComponent } ]),
-    PblTableDragModule.withDefaultTemplates(),
-    PblTableTargetEventsModule,
-    PblTableBlockUiModule,
-    PblTableTransposeModule,
-    PblTableDetailRowModule,
-    PblTableStickyModule,
-    PblTableMaterialModule,
+    PblNgridModule.withCommon([ { component: CommonTableTemplatesComponent } ]),
+    PblNgridDragModule.withDefaultTemplates(),
+    PblNgridTargetEventsModule,
+    PblNgridBlockUiModule,
+    PblNgridTransposeModule,
+    PblNgridDetailRowModule,
+    PblNgridStickyModule,
+    PblNgridMaterialModule,
   ],
   exports: [ SellersDemoComponent, AllInOneTableExampleComponent, VirtualScrollPerformanceDemoTableExampleComponent ], // we need this for detail-row
 })

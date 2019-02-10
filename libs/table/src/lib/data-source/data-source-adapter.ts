@@ -4,7 +4,7 @@ import { filter, map, switchMap, tap, debounceTime, observeOn } from 'rxjs/opera
 import { Omit } from '../table/utils/type-helpers';
 import { DataSourceOf } from './data-source';
 import { PblPaginator, PblPaginatorChangeEvent } from '../paginator';
-import { PblTableDataSourceSortChange, DataSourceFilter } from './types';
+import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
 import { filter as filteringFn } from './filtering';
 import { applySort } from './sorting';
 
@@ -102,7 +102,7 @@ export class PblDataSourceAdapter<T = any, TData = any> {
   }
 
   updateProcessingLogic(filter$: Observable<DataSourceFilter>,
-                        sort$: Observable<PblTableDataSourceSortChange>,
+                        sort$: Observable<PblNgridDataSourceSortChange>,
                         pagination$: Observable<PblPaginatorChangeEvent>,
                         initialState: Partial<PblDataSourceTriggerCache<TData>> = {}): Observable<{ event: PblDataSourceTriggerChangedEvent<TData>, data: T[] }> {
     let updates = -1;
@@ -237,7 +237,7 @@ export class PblDataSourceAdapter<T = any, TData = any> {
     return data;
   }
 
-  protected applySort(data: T[], event: PblTableDataSourceSortChange): T[] {
+  protected applySort(data: T[], event: PblNgridDataSourceSortChange): T[] {
     return applySort(event.column, event.sort, data);
   }
 

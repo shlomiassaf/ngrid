@@ -3,23 +3,23 @@ import { InjectionToken } from '@angular/core';
 
 import { PblCdkTableComponent } from '../table';
 import { ContextApi } from '../table/context/context';
-import { PblTableComponent } from '../table/table.component';
+import { PblNgridComponent } from '../table/table.component';
 import { PblColumnStore } from '../table/columns/column-store';
 import { DynamicColumnWidthLogic } from '../table/col-width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from '../table/features/virtual-scroll/virtual-scroll-viewport.component'
-import { PblTableEvents } from './types';
-import { PblTableMetaRowService } from '../table/meta-rows/index';
+import { PblNgridEvents } from './types';
+import { PblNgridMetaRowService } from '../table/meta-rows/index';
 
 export const EXT_API_TOKEN = new InjectionToken('PBL_ANGRID_EXTERNAL_API');
 
-export interface PblTableExtensionApi<T = any> {
-  table: PblTableComponent<T>;
+export interface PblNgridExtensionApi<T = any> {
+  table: PblNgridComponent<T>;
   element: HTMLElement;
   cdkTable: PblCdkTableComponent<T>;
   columnStore: PblColumnStore;
   contextApi: ContextApi<T>;
-  events: Observable<PblTableEvents>;
-  metaRowService: PblTableMetaRowService;
+  events: Observable<PblNgridEvents>;
+  metaRowService: PblNgridMetaRowService;
   onInit(fn: () => void): void;
   setViewport(viewport: PblCdkVirtualScrollViewportComponent): void;
   dynamicColumnWidthFactory(): DynamicColumnWidthLogic;

@@ -28,17 +28,17 @@ import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table'
 
 import { UnRx } from '@pebula/utils';
 
-import { EXT_API_TOKEN, PblTableExtensionApi } from '../ext/table-ext-api';
-import { PblTablePluginController, PblTablePluginContext } from '../ext/plugin-control';
-import { PblTablePaginatorKind } from '../paginator';
+import { EXT_API_TOKEN, PblNgridExtensionApi } from '../ext/table-ext-api';
+import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
+import { PblNgridPaginatorKind } from '../paginator';
 import { PblDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
 import { findCellDef } from './directives/cell-def';
-import { PblColumn, PblColumnStore, PblMetaColumnStore, PblTableColumnSet, PblTableColumnDefinitionSet } from './columns';
-import { PblTableCellContext, PblTableMetaCellContext, ContextApi } from './context/index';
-import { PblTableRegistryService } from './services/table-registry.service';
-import { PblTableConfigService } from './services/config';
+import { PblColumn, PblColumnStore, PblMetaColumnStore, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './columns';
+import { PblNgridCellContext, PblNgridMetaCellContext, ContextApi } from './context/index';
+import { PblNgridRegistryService } from './services/table-registry.service';
+import { PblNgridConfigService } from './services/config';
 import {
   DynamicColumnWidthLogic,
   BoxModelSpaceStrategy,
@@ -47,43 +47,43 @@ import {
 } from './col-width-logic/dynamic-column-width';
 import { ColumnApi, AutoSizeToFitOptions } from './column-api';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
-import { PblTableMetaRowService } from './meta-rows/index';
+import { PblNgridMetaRowService } from './meta-rows/index';
 
-export function internalApiFactory(table: { _extApi: PblTableExtensionApi; }) { return table._extApi; }
-export function pluginControllerFactory(table: { _plugin: PblTablePluginContext; }) { return table._plugin.controller; }
-export function metaRowServiceFactory(table: { _extApi: PblTableExtensionApi; }) { return table._extApi.metaRowService; }
+export function internalApiFactory(table: { _extApi: PblNgridExtensionApi; }) { return table._extApi; }
+export function pluginControllerFactory(table: { _plugin: PblNgridPluginContext; }) { return table._plugin.controller; }
+export function metaRowServiceFactory(table: { _extApi: PblNgridExtensionApi; }) { return table._extApi.metaRowService; }
 
 @Component({
   selector: 'pbl-ngrid',
   host: { // tslint:disable-line:use-host-property-decorator
-    '[class.pbl-table]': 'true',
-    '[class.pbl-table-empty]': '!ds || ds.renderLength === 0',
+    '[class.pbl-ngrid]': 'true',
+    '[class.pbl-ngrid-empty]': '!ds || ds.renderLength === 0',
   },
   templateUrl: './table.component.html',
   styleUrls: [ './table.component.scss' ],
   providers: [
-    PblTableRegistryService,
+    PblNgridRegistryService,
     {
-      provide: PblTablePluginController,
+      provide: PblNgridPluginController,
       useFactory: pluginControllerFactory,
-      deps: [forwardRef(() => PblTableComponent)],
+      deps: [forwardRef(() => PblNgridComponent)],
     },
     {
       provide: EXT_API_TOKEN,
       useFactory: internalApiFactory,
-      deps: [forwardRef(() => PblTableComponent)],
+      deps: [forwardRef(() => PblNgridComponent)],
     },
     {
-      provide: PblTableMetaRowService,
+      provide: PblNgridMetaRowService,
       useFactory: metaRowServiceFactory,
-      deps: [forwardRef(() => PblTableComponent)],
+      deps: [forwardRef(() => PblNgridComponent)],
     }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 @UnRx()
-export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
+export class PblNgridComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
   readonly self = this;
 
   /**
@@ -102,7 +102,7 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
         : DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY
       ;
       if (this.isInit) {
-        // The UI changes are applied by toggle the `pbl-table-margin-cell-box-model` CSS class.
+        // The UI changes are applied by toggle the `pbl-ngrid-margin-cell-box-model` CSS class.
         // This is managed through binding in `PblCdkTableComponent`.
         // After this change we need to measure the cell's width again so we trigger a resizeRows call.
         // We must run it deferred to allow binding to commit.
@@ -192,8 +192,8 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
 
   get ds(): PblDataSource<T> { return this._dataSource; };
 
-  @Input() get usePagination(): PblTablePaginatorKind | false { return this._pagination; }
-  set usePagination(value: PblTablePaginatorKind | false) {
+  @Input() get usePagination(): PblNgridPaginatorKind | false { return this._pagination; }
+  set usePagination(value: PblNgridPaginatorKind | false) {
     if ((value as any) === '') {
       value = 'pageNumber';
     }
@@ -222,7 +222,7 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   /**
    * The column definitions for this table.
    */
-  @Input() columns: PblTableColumnSet | PblTableColumnDefinitionSet;
+  @Input() columns: PblNgridColumnSet | PblNgridColumnDefinitionSet;
 
   @Input() set hideColumns(value: string[]) {
     this._hideColumns = value;
@@ -267,9 +267,9 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   @ViewChild('beforeTable', { read: ViewContainerRef}) _vcRefBeforeTable: ViewContainerRef;
   @ViewChild('beforeContent', { read: ViewContainerRef}) _vcRefBeforeContent: ViewContainerRef;
   @ViewChild('afterContent', { read: ViewContainerRef}) _vcRefAfterContent: ViewContainerRef;
-  @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<PblTableCellContext<T>>;
-  @ViewChild('fbHeaderCell', { read: TemplateRef}) _fbHeaderCell: TemplateRef<PblTableMetaCellContext<T>>;
-  @ViewChild('fbFooterCell', { read: TemplateRef}) _fbFooterCell: TemplateRef<PblTableMetaCellContext<T>>;
+  @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<PblNgridCellContext<T>>;
+  @ViewChild('fbHeaderCell', { read: TemplateRef}) _fbHeaderCell: TemplateRef<PblNgridMetaCellContext<T>>;
+  @ViewChild('fbFooterCell', { read: TemplateRef}) _fbFooterCell: TemplateRef<PblNgridMetaCellContext<T>>;
   @ViewChild(CdkRowDef) _tableRowDef: CdkRowDef<T>;
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
@@ -291,20 +291,20 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   private _colHideDiffer: IterableDiffer<string>;
   private _noDateEmbeddedVRef: EmbeddedViewRef<any>;
   private _paginatorEmbeddedVRef: EmbeddedViewRef<any>;
-  private _pagination: PblTablePaginatorKind | false;
+  private _pagination: PblNgridPaginatorKind | false;
   private _noCachePaginator = false;
   private _minimumRowWidth: string;
   private _viewport?: PblCdkVirtualScrollViewportComponent;
-  private _plugin: PblTablePluginContext;
-  private _extApi: PblTableExtensionApi<T>;
+  private _plugin: PblNgridPluginContext;
+  private _extApi: PblNgridExtensionApi<T>;
 
   constructor(injector: Injector, vcRef: ViewContainerRef,
               private elRef: ElementRef<HTMLElement>,
               private differs: IterableDiffers,
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
-              private config: PblTableConfigService,
-              public registry: PblTableRegistryService) {
+              private config: PblNgridConfigService,
+              public registry: PblNgridRegistryService) {
     const tableConfig = config.get('table');
     this.boxSpaceModel = tableConfig.boxSpaceModel;
     this.showHeader = tableConfig.showHeader;
@@ -385,7 +385,7 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
 
     // Adding a div before the footer row view reference, this div will be used to fill up the space between header & footer rows
     const div = document.createElement('div');
-    div.classList.add('pbl-table-empty-spacer')
+    div.classList.add('pbl-ngrid-empty-spacer')
     this._cdkTable._element.insertBefore(div, this._cdkTable._footerRowOutlet.elementRef.nativeElement);
   }
 
@@ -518,18 +518,18 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
         Why? first, some background:
 
         Invalidating the store will result in new `PblColumn` instances (cloned or completely new) held inside a new array (all arrays in the store are re-created on invalidate)
-        New array and new instances will also result in new directive instances of `PblTableColumnDef` for every column.
+        New array and new instances will also result in new directive instances of `PblNgridColumnDef` for every column.
 
-        Each data row has data cells with the `PblTableCellDirective` directive (`pbl-table-cell`).
-        `PblTableCellDirective` has a reference to `PblTableColumnDef` through dependency injection, i.e. it will not update through change detection!
+        Each data row has data cells with the `PblNgridCellDirective` directive (`pbl-ngrid-cell`).
+        `PblNgridCellDirective` has a reference to `PblNgridColumnDef` through dependency injection, i.e. it will not update through change detection!
 
         Now, the problem:
         The `CdkTable` will cache rows and their cells, reusing them for performance.
-        This means that the `PblTableColumnDef` instance inside each cell will not change.
-        So, creating new columns and columnDefs will result in stale cells with reference to dead instances of `PblColumn` and `PblTableColumnDef`.
+        This means that the `PblNgridColumnDef` instance inside each cell will not change.
+        So, creating new columns and columnDefs will result in stale cells with reference to dead instances of `PblColumn` and `PblNgridColumnDef`.
 
-        One solution is to refactor `PblTableCellDirective` to get the `PblTableColumnDef` through data binding.
-        While this will work it will put more work on each cell while doing CD and will require complex logic to handle each change because `PblTableCellDirective`
+        One solution is to refactor `PblNgridCellDirective` to get the `PblNgridColumnDef` through data binding.
+        While this will work it will put more work on each cell while doing CD and will require complex logic to handle each change because `PblNgridCellDirective`
         also create a context which has reference to a column thus a new context is required.
         Keeping track for all references will be difficult and bugs are likely to occur, which are hard to track.
 
@@ -712,7 +712,7 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
       ],
       parent: injector,
     });
-    this._plugin = new PblTablePluginContext(this, pluginInjector, this._extApi);
+    this._plugin = new PblNgridPluginContext(this, pluginInjector, this._extApi);
   }
 
   private initExtApi(): void {
@@ -727,7 +727,7 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
         return extApi.contextApi;
       },
       get metaRowService() {
-        Object.defineProperty(this, 'metaRowService', { value: new PblTableMetaRowService<T>(extApi) });
+        Object.defineProperty(this, 'metaRowService', { value: new PblNgridMetaRowService<T>(extApi) });
         return extApi.metaRowService;
       },
       onInit: (fn: () => void) => {

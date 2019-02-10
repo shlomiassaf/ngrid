@@ -9,35 +9,35 @@ import {
 } from '@angular/core';
 import { CdkRowDef } from '@angular/cdk/table';
 
-import { PblTableRegistryService, PblTableSingleTemplateRegistry, PblTableRowContext } from '@pebula/table';
+import { PblNgridRegistryService, PblNgridSingleTemplateRegistry, PblNgridRowContext } from '@pebula/table';
 
 declare module '@pebula/table/lib/table/services/table-registry.service' {
-  interface PblTableSingleRegistryMap {
-    detailRowParent?: PblTableDetailRowParentRefDirective<any>;
-    detailRow?: PblTableDetailRowDefDirective;
+  interface PblNgridSingleRegistryMap {
+    detailRowParent?: PblNgridDetailRowParentRefDirective<any>;
+    detailRow?: PblNgridDetailRowDefDirective;
   }
 }
 
 /**
  * Marks the element as the display element for the detail row itself.
  */
-@Directive({ selector: '[pblTableDetailRowDef]' })
-export class PblTableDetailRowDefDirective extends PblTableSingleTemplateRegistry<PblTableRowContext<any>, 'detailRow'> {
+@Directive({ selector: '[pblNgridDetailRowDef]' })
+export class PblNgridDetailRowDefDirective extends PblNgridSingleTemplateRegistry<PblNgridRowContext<any>, 'detailRow'> {
   readonly kind: 'detailRow' = 'detailRow';
-  constructor(tRef: TemplateRef<PblTableRowContext<any>>, registry: PblTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<PblNgridRowContext<any>>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
-  selector: '[pblTableDetailRowParentRef]',
-  inputs: ['columns: pblTableDetailRowParentRef', 'when: pblTableDetailRowParentRefWhen'],
+  selector: '[pblNgridDetailRowParentRef]',
+  inputs: ['columns: pblNgridDetailRowParentRef', 'when: pblNgridDetailRowParentRefWhen'],
 })
-export class PblTableDetailRowParentRefDirective<T> extends CdkRowDef<T> implements OnInit, OnDestroy {
+export class PblNgridDetailRowParentRefDirective<T> extends CdkRowDef<T> implements OnInit, OnDestroy {
 
-  constructor(template: TemplateRef<PblTableRowContext<T>>, _differs: IterableDiffers, protected registry: PblTableRegistryService) {
+  constructor(template: TemplateRef<PblNgridRowContext<T>>, _differs: IterableDiffers, protected registry: PblNgridRegistryService) {
     super(template, _differs);
   }
 
-  clone(): PblTableDetailRowParentRefDirective<T> {
+  clone(): PblNgridDetailRowParentRefDirective<T> {
     const clone = Object.create(this);
     this._columnsDiffer = this.columns = undefined;
     return clone;
@@ -53,11 +53,11 @@ export class PblTableDetailRowParentRefDirective<T> extends CdkRowDef<T> impleme
 }
 
 /**
- * Use to set the a default `pblTableDetailRowParentRef` if the user did not set one.
+ * Use to set the a default `pblNgridDetailRowParentRef` if the user did not set one.
  * @internal
  */
 @Component({
-  selector: 'pbl-table-default-detail-row-parent',
-  template: `<pbl-table-row *pblTableDetailRowParentRef="let row; table as table" [detailRow]="row"></pbl-table-row>`,
+  selector: 'pbl-ngrid-default-detail-row-parent',
+  template: `<pbl-ngrid-row *pblNgridDetailRowParentRef="let row; table as table" [detailRow]="row"></pbl-ngrid-row>`,
 })
-export class PblTableDefaultDetailRowParentComponent { }
+export class PblNgridDefaultDetailRowParentComponent { }

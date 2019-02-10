@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'pbl-table-demo-root',
+  selector: 'pbl-ngrid-demo-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

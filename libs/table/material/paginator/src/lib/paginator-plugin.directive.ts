@@ -1,12 +1,12 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef, DoCheck } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { PblTableComponent, PblTablePluginController, TablePlugin } from '@pebula/table';
+import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/table';
 
 import { PblPaginatorComponent } from './table-paginator.component';
 
 declare module '@pebula/table/lib/ext/types' {
-  interface PblTablePluginExtension {
-    matPaginator?: PblTableMatPaginatorDirective;
+  interface PblNgridPluginExtension {
+    matPaginator?: PblNgridMatPaginatorDirective;
   }
 }
 
@@ -14,7 +14,7 @@ const PLUGIN_KEY: 'matPaginator' = 'matPaginator';
 
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[matPaginator]' })
-export class PblTableMatPaginatorDirective implements OnDestroy, DoCheck {
+export class PblNgridMatPaginatorDirective implements OnDestroy, DoCheck {
   /**
    * Add's a selection column using material's `mat-checkbox` in the column specified.
    */
@@ -28,7 +28,7 @@ export class PblTableMatPaginatorDirective implements OnDestroy, DoCheck {
           this.cmpRef.destroy();
           this.cmpRef = undefined;
         }
-        this.ngDoCheck = PblTableMatPaginatorDirective.prototype.ngDoCheck;
+        this.ngDoCheck = PblNgridMatPaginatorDirective.prototype.ngDoCheck;
       } else {
         if (!this.cmpRef) {
           this.cmpRef = this.cfr.resolveComponentFactory(PblPaginatorComponent).create(this.injector);
@@ -49,12 +49,12 @@ export class PblTableMatPaginatorDirective implements OnDestroy, DoCheck {
   private _enabled: boolean;
   private cmpRef: ComponentRef<PblPaginatorComponent>;
   private instance: PblPaginatorComponent;
-  private _removePlugin: (table: PblTableComponent<any>) => void;
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
 
-  constructor(private table: PblTableComponent<any>,
+  constructor(private table: PblNgridComponent<any>,
               private cfr: ComponentFactoryResolver,
               private injector: Injector,
-              pluginCtrl: PblTablePluginController) {
+              pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
   }
 

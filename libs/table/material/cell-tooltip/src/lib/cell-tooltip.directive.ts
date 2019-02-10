@@ -17,11 +17,11 @@ import { Platform} from '@angular/cdk/platform';
 import { TooltipPosition, MatTooltipDefaultOptions, MatTooltip, MAT_TOOLTIP_SCROLL_STRATEGY, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
 import { UnRx } from '@pebula/utils';
-import { PblTableComponent, PblTablePluginController, TablePlugin, PblTableConfigService } from '@pebula/table';
-import { PblTableCellEvent } from '@pebula/table/target-events';
+import { PblNgridComponent, PblNgridPluginController, TablePlugin, PblNgridConfigService } from '@pebula/table';
+import { PblNgridCellEvent } from '@pebula/table/target-events';
 
 declare module '@pebula/table/lib/table/services/config' {
-  interface PblTableConfig {
+  interface PblNgridConfig {
     cellTooltip?: CellTooltipOptions & {
       /** When set to true will apply the default cell tooltip to ALL tables */
       autoSetAll?: boolean;
@@ -30,39 +30,39 @@ declare module '@pebula/table/lib/table/services/config' {
 }
 
 declare module '@pebula/table/lib/ext/types' {
-  interface PblTablePluginExtension {
-    cellTooltip?: PblTableCellTooltipDirective<any>;
+  interface PblNgridPluginExtension {
+    cellTooltip?: PblNgridCellTooltipDirective<any>;
   }
-  interface PblTablePluginExtensionFactories {
-    cellTooltip: keyof typeof PblTableCellTooltipDirective;
+  interface PblNgridPluginExtensionFactories {
+    cellTooltip: keyof typeof PblNgridCellTooltipDirective;
   }
 }
 
 const PLUGIN_KEY: 'cellTooltip' = 'cellTooltip';
 
 const DEFAULT_OPTIONS: CellTooltipOptions = {
-  canShow: (event: PblTableCellEvent<any>): boolean => {
+  canShow: (event: PblNgridCellEvent<any>): boolean => {
     const element = (event.cellTarget.firstElementChild || event.cellTarget) as HTMLElement;
     return element.scrollWidth > element.offsetWidth;
   },
-  message: (event: PblTableCellEvent<any>): string => {
+  message: (event: PblNgridCellEvent<any>): string => {
     return event.cellTarget.innerText;
   }
 };
 
 export interface CellTooltipOptions {
-  canShow?: boolean | ( (event: PblTableCellEvent<any>) => boolean );
-  message?: (event: PblTableCellEvent<any>) => string;
+  canShow?: boolean | ( (event: PblNgridCellEvent<any>) => boolean );
+  message?: (event: PblNgridCellEvent<any>) => string;
 }
 
 @TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
 @Directive({ selector: '[cellTooltip]', exportAs: 'pblOverflowTooltip' })
 @UnRx()
-export class PblTableCellTooltipDirective<T> implements CellTooltipOptions, OnDestroy {
+export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDestroy {
   static readonly PLUGIN_KEY: 'cellTooltip' = PLUGIN_KEY;
 
   // tslint:disable-next-line:no-input-rename
-  @Input('cellTooltip') set canShow(value: boolean | ( (event: PblTableCellEvent<T>) => boolean )) {
+  @Input('cellTooltip') set canShow(value: boolean | ( (event: PblNgridCellEvent<T>) => boolean )) {
     if (typeof value === 'function') {
       this._canShow = value;
     } else if ( (value as any) === '') {
@@ -72,7 +72,7 @@ export class PblTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     }
   }
 
-  @Input() message: (event: PblTableCellEvent<T>) => string;
+  @Input() message: (event: PblNgridCellEvent<T>) => string;
 
   /** See Material docs for MatTooltip */
   @Input() position: TooltipPosition;
@@ -87,13 +87,13 @@ export class PblTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
 
   private toolTip: MatTooltip;
   private lastConfig: CellTooltipOptions;
-  private _removePlugin: (table: PblTableComponent<any>) => void;
-  private _canShow: (event: PblTableCellEvent<T>) => boolean;
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
+  private _canShow: (event: PblNgridCellEvent<T>) => boolean;
 
-  constructor(private table: PblTableComponent<any>, private injector: Injector, pluginCtrl: PblTablePluginController) {
+  constructor(private table: PblNgridComponent<any>, private injector: Injector, pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    const configService = injector.get(PblTableConfigService);
+    const configService = injector.get(PblNgridConfigService);
 
     this.initArgs = [
       injector.get(Overlay),
@@ -127,8 +127,8 @@ export class PblTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     }
   }
 
-  static create<T = any>(table: PblTableComponent<any>, injector: Injector): PblTableCellTooltipDirective<T> {
-    return new PblTableCellTooltipDirective<T>(table, injector, PblTablePluginController.find(table));
+  static create<T = any>(table: PblNgridComponent<any>, injector: Injector): PblNgridCellTooltipDirective<T> {
+    return new PblNgridCellTooltipDirective<T>(table, injector, PblNgridPluginController.find(table));
   }
 
   ngOnDestroy(): void {
@@ -136,7 +136,7 @@ export class PblTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     this.killTooltip();
   }
 
-  private init(pluginCtrl: PblTablePluginController): void {
+  private init(pluginCtrl: PblNgridPluginController): void {
     // Depends on target-events plugin
     // if it's not set, create it.
     const targetEventsPlugin = pluginCtrl.getPlugin('targetEvents') || pluginCtrl.createPlugin('targetEvents');
@@ -149,7 +149,7 @@ export class PblTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
       .subscribe( event => this.cellLeave(event) );
   }
 
-  private cellEnter(event: PblTableCellEvent<T>): void {
+  private cellEnter(event: PblNgridCellEvent<T>): void {
     this.killTooltip();
 
     if (!this._canShow) {
@@ -159,7 +159,7 @@ export class PblTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     }
 
     if (this._canShow(event)) {
-      const params = this.initArgs.slice() as PblTableCellTooltipDirective<any>['initArgs'];
+      const params = this.initArgs.slice() as PblNgridCellTooltipDirective<any>['initArgs'];
       params[1] = new ElementRef<any>(event.cellTarget);
 
       this.toolTip = new MatTooltip(...params);
@@ -183,7 +183,7 @@ export class PblTableCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     }
   }
 
-  private cellLeave(event: PblTableCellEvent<T>): void {
+  private cellLeave(event: PblNgridCellEvent<T>): void {
     this.killTooltip();
   }
 

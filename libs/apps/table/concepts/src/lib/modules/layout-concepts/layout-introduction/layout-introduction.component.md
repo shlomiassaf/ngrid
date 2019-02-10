@@ -23,8 +23,8 @@ The layout is built from 3 sections:
   <div fxFlex="50%">
     <pbl-ngrid showFooter vScrollNone
               [columns]="columns" [dataSource]="ds">
-      <div *pblTableOuterSection="'top'"></div>
-      <div *pblTableOuterSection="'bottom'"></div>
+      <div *pblNgridOuterSection="'top'"></div>
+      <div *pblNgridOuterSection="'bottom'"></div>
     </pbl-ngrid>
   </div>
 </div>
@@ -52,7 +52,7 @@ Outer elements will come right next to the fixed meta rows.
 An outlet for custom element driven by templates (`TemplateRef`).  
 Examples: Pagination elements, Action rows, etc...
 
-Templates can be added programmatically (`PblTableComponent.createView()` API) or declaratively (`pblTableOuterSection` structural directive).
+Templates can be added programmatically (`PblNgridComponent.createView()` API) or declaratively (`pblNgridOuterSection` structural directive).
 
 <div fxLayout>
   <div fxFlex="50%">
@@ -77,20 +77,20 @@ Templates can be added programmatically (`PblTableComponent.createView()` API) o
   <div fxFlex="50%">
     <pbl-ngrid showFooter vScrollNone
               [columns]="{ table: { cols: [ { prop: '__virtual__', label: ' ' } ] } }" [dataSource]="[ {} ]">
-      <div *pblTableOuterSection="'top'">
+      <div *pblNgridOuterSection="'top'">
         <h1>Outer Top Section</h1>
       </div>
-      <div *pblTableCellDef="'__virtual__'">
+      <div *pblNgridCellDef="'__virtual__'">
         <h1>Inner Section</h1>
       </div>
-      <div *pblTableOuterSection="'bottom'">
+      <div *pblNgridOuterSection="'bottom'">
         <h1>Outer Bottom Section</h1>
       </div>
     </pbl-ngrid>
   </div>
 </div>
 
-I> The `pblTableOuterSection` directive is a helper that uses the `PblTableComponent.createView()` API internally to provide a declarative interface using templates.
+I> The `pblNgridOuterSection` directive is a helper that uses the `PblNgridComponent.createView()` API internally to provide a declarative interface using templates.
 
 ### Fine detailed **Outer Bottom** section
 
@@ -98,14 +98,14 @@ The **Outer Bottom** section is a bit more complex. The **Custom Element** sub s
 
 There are 3 sub-section under the **Custom Element** outlet:
 
-- Before Content (API or `pblTableOuterSection`)
+- Before Content (API or `pblNgridOuterSection`)
 - Content (Projected content)
 - After Content (API)
 
-To simplify the layout, when `pblTableOuterSection` is set to `bottom` it will use the **Before content** section.
+To simplify the layout, when `pblNgridOuterSection` is set to `bottom` it will use the **Before content** section.
 
 To use the **Content** section, is taken from the content inside the host component.
-To use the **AfterContent** section you need to use `PblTableComponent.createView()` API.
+To use the **AfterContent** section you need to use `PblNgridComponent.createView()` API.
 
 ```html
 <pbl-ngrid>
@@ -128,8 +128,8 @@ To use the **AfterContent** section you need to use `PblTableComponent.createVie
 <docsi-mat-example-with-source title="Simple Model" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
   <pbl-ngrid style="height: 110px" [dataSource]="ds" [columns]="columns">
-    <div *pblTableOuterSection="'top'"></div>
-    <div *pblTableOuterSection="'bottom'"></div>
+    <div *pblNgridOuterSection="'top'"></div>
+    <div *pblNgridOuterSection="'bottom'"></div>
   </pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>

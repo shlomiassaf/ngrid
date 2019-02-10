@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { PblTableModule } from '@pebula/table';
-import { PblTableMatCheckboxSelectionDirective } from './checkbox-plugin.directive';
-import { PblTableCheckboxComponent } from './table-checkbox.component';
+import { PblNgridModule } from '@pebula/table';
+import { PblNgridMatCheckboxSelectionDirective } from './checkbox-plugin.directive';
+import { PblNgridCheckboxComponent } from './table-checkbox.component';
 
 @NgModule({
-  imports: [ CommonModule, MatCheckboxModule, PblTableModule ],
-  declarations: [ PblTableMatCheckboxSelectionDirective, PblTableCheckboxComponent ],
-  exports: [ PblTableMatCheckboxSelectionDirective, PblTableCheckboxComponent ],
-  entryComponents: [ PblTableCheckboxComponent ]
+  imports: [ CommonModule, MatCheckboxModule, PblNgridModule ],
+  declarations: [ PblNgridMatCheckboxSelectionDirective, PblNgridCheckboxComponent ],
+  exports: [ PblNgridMatCheckboxSelectionDirective, PblNgridCheckboxComponent ],
+  entryComponents: [ PblNgridCheckboxComponent ]
 })
-export class PblTableCheckboxModule { }
+export class PblNgridCheckboxModule { }

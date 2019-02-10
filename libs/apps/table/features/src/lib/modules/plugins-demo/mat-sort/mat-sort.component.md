@@ -9,9 +9,9 @@
              fallbackMinHeight="300"
              [dataSource]="simpleSortDS"
              [columns]="columns1">
-    <pbl-table-paginator *pblTablePaginatorRef="let table"
+    <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.ds.paginator"></pbl-table-paginator>
+                        [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
   </pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
@@ -22,9 +22,9 @@
             blockUi
             [dataSource]="defaultSortDS"
             [columns]="columns">
-    <pbl-table-paginator *pblTablePaginatorRef="let table"
+    <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.ds.paginator"></pbl-table-paginator>
+                        [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
   </pbl-ngrid>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
@@ -37,9 +37,9 @@
              blockUi
              [dataSource]="progSortDS"
              [columns]="columns">
-    <pbl-table-paginator *pblTablePaginatorRef="let table"
+    <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.ds.paginator"></pbl-table-paginator>
+                        [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
   </pbl-ngrid>
 
   <mat-form-field>

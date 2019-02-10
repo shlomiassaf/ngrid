@@ -1,10 +1,10 @@
 import { TemplateRef } from '@angular/core';
 
-import { PblTableSorter } from '../../data-source/types';
-import { PblTableColumnDef } from '../directives';
+import { PblNgridSorter } from '../../data-source/types';
+import { PblNgridColumnDef } from '../directives';
 import { deepPathGet, deepPathSet } from '../utils';
 import { PblColumnSizeInfo } from '../types';
-import { PblTableMetaCellContext, PblTableCellContext } from '../context/types';
+import { PblNgridMetaCellContext, PblNgridCellContext } from '../context/types';
 import { PblColumnDefinition, PblColumnTypeDefinition } from './types';
 import { initDefinitions, parseStyleWidth } from './utils';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
@@ -87,7 +87,7 @@ export class PblColumn implements PblColumnDefinition {
   headerType?: PblColumnTypeDefinition;
   footerType?: PblColumnTypeDefinition;
 
-  sort?: boolean | PblTableSorter;
+  sort?: boolean | PblNgridSorter;
 
   /**
    * Marks the table as editable. An editable column also requires an edit template to qualify as editable, this flag alone is not enough.
@@ -105,25 +105,25 @@ export class PblColumn implements PblColumnDefinition {
   orgProp: string;
 
   /**
-   * Used by pbl-table to apply custom cell template, or the default when not set.
+   * Used by pbl-ngrid to apply custom cell template, or the default when not set.
    * @internal
    */
-  cellTpl: TemplateRef<PblTableCellContext<any>>;
+  cellTpl: TemplateRef<PblNgridCellContext<any>>;
     /**
-   * Used by pbl-table to apply custom cell template, or the default when not set.
+   * Used by pbl-ngrid to apply custom cell template, or the default when not set.
    * @internal
    */
-  editorTpl: TemplateRef<PblTableCellContext<any>>;
+  editorTpl: TemplateRef<PblNgridCellContext<any>>;
   /**
-   * Used by pbl-table to apply a custom header cell template, or the default when not set.
+   * Used by pbl-ngrid to apply a custom header cell template, or the default when not set.
    * @internal
    */
-  headerCellTpl: TemplateRef<PblTableMetaCellContext<any>>;
+  headerCellTpl: TemplateRef<PblNgridMetaCellContext<any>>;
   /**
-   * Used by pbl-table to apply a custom footer cell template, or the default when not set.
+   * Used by pbl-ngrid to apply a custom footer cell template, or the default when not set.
    * @internal
    */
-  footerCellTpl: TemplateRef<PblTableMetaCellContext<any>>;
+  footerCellTpl: TemplateRef<PblNgridMetaCellContext<any>>;
 
   /**
    * Used by the library as a logical flag representing the column hidden state.
@@ -151,7 +151,7 @@ export class PblColumn implements PblColumnDefinition {
   /**
    * The column def for this column.
    */
-  get columnDef(): PblTableColumnDef<PblColumn> { return this._columnDef; }
+  get columnDef(): PblNgridColumnDef<PblColumn> { return this._columnDef; }
 
   get groups(): string[] { return Array.from(this._groups.values()); }
 
@@ -161,7 +161,7 @@ export class PblColumn implements PblColumnDefinition {
   private _width?: string;
   private _parsedWidth: ReturnType<typeof parseStyleWidth>;
 
-  private _columnDef: PblTableColumnDef<PblColumn>;
+  private _columnDef: PblNgridColumnDef<PblColumn>;
   private defaultWidth = '';
 
   /**
@@ -230,7 +230,7 @@ export class PblColumn implements PblColumnDefinition {
     }
   }
 
-  attach(columnDef: PblTableColumnDef<PblColumn>): void {
+  attach(columnDef: PblNgridColumnDef<PblColumn>): void {
     this.detach();
     this._columnDef = columnDef;
     if (this.defaultWidth) {

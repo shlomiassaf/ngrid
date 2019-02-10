@@ -77,14 +77,14 @@ All meta rows are set in the order they we're added.
 The column factory has 2 steps:
 
 - **Definition**: Adding column configuration (header, table, footer)
-- **Build**: Building the `PblTableColumnSet` for the configuration set in the **definition step**
+- **Build**: Building the `PblNgridColumnSet` for the configuration set in the **definition step**
 
 ```typescript
 /* Definition step */
 const factory: PblColumnFactory = columnFactory().table( { prop: 'id' }, { prop: 'name' } );
 
 /* Build step */
-const columnSet: PblTableColumnSet = factory.build();
+const columnSet: PblNgridColumnSet = factory.build();
 ```
 
 In the definition step all data is stored as simple objects (POJO).  

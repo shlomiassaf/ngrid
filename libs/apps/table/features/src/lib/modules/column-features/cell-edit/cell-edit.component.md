@@ -7,13 +7,13 @@ Let's start with a simple example:
 <docsi-mat-example-with-source title="Simple cell edit" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
   <pbl-ngrid [dataSource]="ds1" [columns]="columns1">
-    <div *pblTableCellDef="'ttt'; let ctx">
+    <div *pblNgridCellDef="'ttt'; let ctx">
       {{!!ctx.rowContext.firstRender}}
     </div>
-    <div *pblTableCellDef="'name'; let ctx">
+    <div *pblNgridCellDef="'name'; let ctx">
       <a (click)="ctx.startEdit(true)">{{ ctx.value }}</a>
     </div>
-    <div *pblTableCellEditorDef="'name'; let ctx">
+    <div *pblNgridCellEditorDef="'name'; let ctx">
       <input #input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
     </div>
   </pbl-ngrid>
@@ -36,16 +36,16 @@ I> There is no default edit template, you can use `*` to define one but the tabl
 
 In the example above there are 2 cell definitions inside the table that handle the `name` column:
 
-- `pblTableCellDef` defining the read-only view of the cell
-- `pblTableCellEditorDef` defining the write view of the cell.
+- `pblNgridCellDef` defining the read-only view of the cell
+- `pblNgridCellEditorDef` defining the write view of the cell.
 
 These are the specific property directives definitions, there are also type based definitions:
 
-- `pblTableCellTypeDef` defining the read-only view of the cell
-- `pblTableCellEditorTypeDef` defining the write view of the cell.
+- `pblNgridCellTypeDef` defining the read-only view of the cell
+- `pblNgridCellEditorTypeDef` defining the write view of the cell.
 
 ```html
-<div *pblTableCellDef="'name'; let ctx">
+<div *pblNgridCellDef="'name'; let ctx">
   <a (click)="ctx.startEdit()">{{ ctx.value }}</a>
 </div>
 ```
@@ -53,28 +53,28 @@ These are the specific property directives definitions, there are also type base
 The read-only definition is straight-forward, the main change is that we use the cell context to invoke a `startEdit()` command.
 
 ```html
-<div *pblTableCellEditorDef="'name'; let ctx">
+<div *pblNgridCellEditorDef="'name'; let ctx">
   <input #input [value]="ctx.value" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" (ngAfterViewInit)="input.focus()"/>
 </div>
 ```
 
-The write only view also make use if the cell context (`PblTableCellContext) to assign the new value and to exit editing when the input is out of focus.
+The write only view also make use if the cell context (`PblNgridCellContext) to assign the new value and to exit editing when the input is out of focus.
 
 ### Cell context
 
 The cell context is used to toggle between write and read view's, i.e. toggle between the edit and main templates.
 
-We start editing by invoking `PblTableCellContext.startEdit()` and stop editing with `PblTableCellContext.stopEdit()`.
+We start editing by invoking `PblNgridCellContext.startEdit()` and stop editing with `PblNgridCellContext.stopEdit()`.
 
-W> An edit template is mandatory. Calling `PblTableCellContext.startEdit()` when the column does not have an edit template will be ignored.
+W> An edit template is mandatory. Calling `PblNgridCellContext.startEdit()` when the column does not have an edit template will be ignored.
 Note that this is the only restriction.
 
 ## The `editable` definition
 
 The column definitions include the `editable` property, indicating if a column is editable or not.
-When set to `true` (and an edit template exists) the cell will include the CSS class **pbl-table-editable-cell**.
+When set to `true` (and an edit template exists) the cell will include the CSS class **pbl-ngrid-editable-cell**.
 
-The `editable` flag has no impact in `PblTableCellContext.startEdit()` but it might be used by plugins or by the developer to
+The `editable` flag has no impact in `PblNgridCellContext.startEdit()` but it might be used by plugins or by the developer to
 create *editing logic*
 
 For example, the directives `cellEditClick` / `cellEditDblClick` (**target-events** plugin) allow simple editing integration that
@@ -91,13 +91,13 @@ For this we make use of the `target-events` plugin that allow us to handle speci
   <!--@pebula-example:ex-2-->
   <pbl-ngrid (cellClick)="$event.context.startEdit()"
              [dataSource]="ds2" [columns]="columns2">
-    <div *pblTableCellDef="'name'; let ctx">
+    <div *pblNgridCellDef="'name'; let ctx">
       <a (click)="ctx.startEdit(true)">{{ ctx.value }}</a>
     </div>
-    <div *pblTableCellEditorDef="'name'; let ctx">
+    <div *pblNgridCellEditorDef="'name'; let ctx">
       <input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
     </div>
-    <div *pblTableCellEditorDef="'lead'; let ctx">
+    <div *pblNgridCellEditorDef="'lead'; let ctx">
       <input type="checkbox" [checked]="ctx.value"
              [pblCellEditAutoFocus]="ctx"
              (change)="changeCheckbox(cb, ctx)"
@@ -112,7 +112,7 @@ This time, clicking on a cell in the **lead** column will start edit mode.
 ```html
 <pbl-ngrid (cellClick)="$event.context.startEdit()"
             [dataSource]="ds2" [columns]="columns2">
-  <div *pblTableCellEditorDef="'lead'; let ctx">
+  <div *pblNgridCellEditorDef="'lead'; let ctx">
     <input #cb type="checkbox" [checked]="ctx.value"
             (change)="changeCheckbox(cb, ctx)"
             (blur)="ctx.stopEdit()"
@@ -127,7 +127,7 @@ This time we used `(cellClick)` but we can also use `(cellDblClick)`
 When the checked value changes we use a method to assign the new value and stop cell editing:
 
 ```typescript
-changeCheckbox(input: HTMLInputElement, ctx: PblTableCellContext): void {
+changeCheckbox(input: HTMLInputElement, ctx: PblNgridCellContext): void {
   ctx.value = input.checked;
   setTimeout( () => ctx.stopEdit(true) );
 }
@@ -152,7 +152,7 @@ the `editable` property set to true.
   <!--@pebula-example:ex-3-->
   <pbl-ngrid cellEditClick
              [dataSource]="ds3" [columns]="columns3">
-    <div *pblTableCellEditorTypeDef="'date'; let ctx">
+    <div *pblNgridCellEditorTypeDef="'date'; let ctx">
       <mat-form-field>
         <input matInput [matDatepicker]="picker" [value]="ctx.value"
                (dateChange)="ctx.value = $event.value">

@@ -9,7 +9,7 @@ The default behavior is to show a tooltip when the content of the cell overflows
 
 <docsi-mat-example-with-source title="Cell ToolTip (DEFAULT)" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-ngrid cellTooltip class="pbl-table-cell-ellipsis"
+  <pbl-ngrid cellTooltip class="pbl-ngrid-cell-ellipsis"
             blockUi [dataSource]="ds1" [columns]="columns"></pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
@@ -23,7 +23,7 @@ This is handy when you have a custom setup with a lot of options.
 
 <docsi-mat-example-with-source title="Cell/Row -> Enter/Leave Events" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <pbl-ngrid class="pbl-table-cell-ellipsis" blockUi [dataSource]="ds2" [columns]="columns">
+  <pbl-ngrid class="pbl-ngrid-cell-ellipsis" blockUi [dataSource]="ds2" [columns]="columns">
     <ng-container cellTooltip
                   [message]="getTooltipMessage"
                   tooltipClass="my-cell-tooltip"

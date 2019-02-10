@@ -1,16 +1,16 @@
 
     import { async, TestBed } from '@angular/core/testing';
-    import { PblTableTargetEventsModule } from './target-events.module';
+    import { PblNgridTargetEventsModule } from './target-events.module';
 
-    describe('PblTableTargetEventsModule', () => {
+    describe('PblNgridTargetEventsModule', () => {
       beforeEach(async(() => {
         TestBed.configureTestingModule({
-          imports: [ PblTableTargetEventsModule ]
+          imports: [ PblNgridTargetEventsModule ]
         })
         .compileComponents();
       }));
 
       it('should create', () => {
-        expect(PblTableTargetEventsModule).toBeDefined();
+        expect(PblNgridTargetEventsModule).toBeDefined();
       });
     });

@@ -5,7 +5,7 @@
 
 .col-quickthrough-bg-data {
   background: green;
-  &:not(.pbl-table-cell) {
+  &:not(.pbl-ngrid-cell) {
     color: white;
   }
 }

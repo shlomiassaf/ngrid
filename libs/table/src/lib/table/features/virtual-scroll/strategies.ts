@@ -6,7 +6,7 @@ import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, FixedSizeVirtualScrollStrategy, VirtualScrollStrategy, VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
 import { AutoSizeVirtualScrollStrategy, ItemSizeAverager } from '@angular/cdk-experimental/scrolling';
 
-import { PblTableComponent } from '../../table.component';
+import { PblNgridComponent } from '../../table.component';
 import { NgeVirtualTableRowInfo } from './virtual-scroll-for-of';
 
 const noop = function(nv?: any, nv1?: any) { };
@@ -132,7 +132,7 @@ export class PblCdkVirtualScrollDirective implements OnInit, OnChanges, VirtualS
 
   readonly type: 'vScrollFixed' | 'vScrollAuto' | 'vScrollNone';
 
-  constructor(el: ElementRef<HTMLElement>, private table: PblTableComponent<any>) {
+  constructor(el: ElementRef<HTMLElement>, private table: PblNgridComponent<any>) {
     const types = TYPES.filter( t => el.nativeElement.hasAttribute(t));
     if (types.length > 1) {
       throw new Error(`Invalid vScroll instruction, only one value is allow: ${JSON.stringify(types)}`);

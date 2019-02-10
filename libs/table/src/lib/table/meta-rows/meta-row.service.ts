@@ -3,7 +3,7 @@ import { auditTime, filter, take, debounceTime } from 'rxjs/operators';
 
 import { Injectable, Inject } from '@angular/core';
 
-import { PblTableExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
+import { PblNgridExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
 import { PblMetaRowDefinitions } from '../columns/types';
 import { PblMetaRowDirective } from './meta-row.directive';
 
@@ -19,7 +19,7 @@ export interface MetaRowSection {
 }
 
 @Injectable()
-export class PblTableMetaRowService<T = any> {
+export class PblNgridMetaRowService<T = any> {
   header: MetaRowSection = metaRowSectionFactory();
   footer: MetaRowSection = metaRowSectionFactory();
 
@@ -28,7 +28,7 @@ export class PblTableMetaRowService<T = any> {
   private sync$ = new Subject<void>();
   private hzScroll$ = new Subject<number>();
 
-  constructor(@Inject(EXT_API_TOKEN) public readonly extApi: PblTableExtensionApi<T>) {
+  constructor(@Inject(EXT_API_TOKEN) public readonly extApi: PblNgridExtensionApi<T>) {
     this.sync = this.sync$ // TODO: complete
       .pipe(
         debounceTime(0, asapScheduler),

@@ -2,14 +2,14 @@ import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, O
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { UnRx } from '@pebula/utils';
-import { PblTableComponent, PblTablePluginController, TablePlugin, PblTableRowContext } from '@pebula/table';
+import { PblNgridComponent, PblNgridPluginController, TablePlugin, PblNgridRowContext } from '@pebula/table';
 
-import { PblTableDetailRowComponent } from './row';
-import { PblTableDetailRowParentRefDirective, PblTableDefaultDetailRowParentComponent } from './directives';
+import { PblNgridDetailRowComponent } from './row';
+import { PblNgridDetailRowParentRefDirective, PblNgridDefaultDetailRowParentComponent } from './directives';
 
 declare module '@pebula/table/lib/ext/types' {
-  interface PblTablePluginExtension {
-    detailRow?: PblTableDetailRowPluginDirective<any>;
+  interface PblNgridPluginExtension {
+    detailRow?: PblNgridDetailRowPluginDirective<any>;
   }
 }
 
@@ -18,8 +18,8 @@ export const PLUGIN_KEY: 'detailRow' = 'detailRow';
 export const ROW_WHEN_TRUE = () => true;
 export const ROW_WHEN_FALSE = () => false;
 
-export function toggleDetailRow<T = any>(table: PblTableComponent<T>, row: T, forceState?: boolean): boolean | void {
-  const controller = PblTablePluginController.find(table);
+export function toggleDetailRow<T = any>(table: PblNgridComponent<T>, row: T, forceState?: boolean): boolean | void {
+  const controller = PblNgridPluginController.find(table);
   if (controller) {
     const plugin = controller.getPlugin(PLUGIN_KEY);
     if (plugin) {
@@ -37,7 +37,7 @@ export interface PblDetailsRowToggleEvent<T = any> {
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[detailRow]' })
 @UnRx()
-export class PblTableDetailRowPluginDirective<T> implements OnDestroy {
+export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   /**
    * Detail row control (none / all rows / selective rows)
    *
@@ -92,13 +92,13 @@ export class PblTableDetailRowPluginDirective<T> implements OnDestroy {
   private _forceSingle: boolean;
   private _isSimpleRow: (index: number, rowData: T) => boolean = ROW_WHEN_TRUE;
   private _isDetailRow: (index: number, rowData: T) => boolean = ROW_WHEN_FALSE;
-  private _detailRowRows = new Map<any, PblTableDetailRowComponent>();
+  private _detailRowRows = new Map<any, PblNgridDetailRowComponent>();
   private _detailRow: ( (index: number, rowData: T) => boolean ) | boolean;
-  private _detailRowDef: PblTableDetailRowParentRefDirective<T>;
-  private _defaultParentRef: ComponentRef<PblTableDefaultDetailRowParentComponent>;
-  private _removePlugin: (table: PblTableComponent<any>) => void;
+  private _detailRowDef: PblNgridDetailRowParentRefDirective<T>;
+  private _defaultParentRef: ComponentRef<PblNgridDefaultDetailRowParentComponent>;
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
 
-  constructor(private table: PblTableComponent<any>, pluginCtrl: PblTablePluginController<T>, private injector: Injector) {
+  constructor(private table: PblNgridComponent<any>, pluginCtrl: PblNgridPluginController<T>, private injector: Injector) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     let subscription = pluginCtrl.events.subscribe( event => {
@@ -140,11 +140,11 @@ export class PblTableDetailRowPluginDirective<T> implements OnDestroy {
     });
   }
 
-  addDetailRow(detailRow: PblTableDetailRowComponent): void {
+  addDetailRow(detailRow: PblNgridDetailRowComponent): void {
     this._detailRowRows.set(detailRow.row, detailRow);
   }
 
-  removeDetailRow(detailRow: PblTableDetailRowComponent): void {
+  removeDetailRow(detailRow: PblNgridDetailRowComponent): void {
     this._detailRowRows.delete(detailRow.row);
   }
 
@@ -195,7 +195,7 @@ export class PblTableDetailRowPluginDirective<T> implements OnDestroy {
       } else if (!this._defaultParentRef) {
         // TODO: move to module? set in root registry? put elsewhere to avoid table sync (see event of registry change)...
         this._defaultParentRef = this.injector.get(ComponentFactoryResolver)
-          .resolveComponentFactory(PblTableDefaultDetailRowParentComponent)
+          .resolveComponentFactory(PblNgridDefaultDetailRowParentComponent)
           .create(this.injector);
         this._defaultParentRef.changeDetectorRef.detectChanges();
         return;

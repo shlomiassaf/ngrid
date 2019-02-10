@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
 
-import { PblTableRegistryService } from '@pebula/table';
+import { PblNgridRegistryService } from '@pebula/table';
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { FeaturesHomePageComponent } from './components';
 
@@ -26,7 +26,7 @@ const ROUTES = [
     ]),
     SharedModule,
   ],
-  providers: [ PblTableRegistryService, ExampleGroupRegistryService ],
+  providers: [ PblNgridRegistryService, ExampleGroupRegistryService ],
 })
 export class FeaturesModule {
   constructor(registry: ExampleGroupRegistryService) {

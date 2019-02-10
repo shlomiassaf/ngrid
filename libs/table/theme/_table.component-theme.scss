@@ -1,50 +1,50 @@
 @import './_pbl-cdk-table.component-theme';
 @import './plugins/drag.plugin';
 
-@mixin pbl-table-theme($tableTheme) {
+@mixin pbl-ngrid-theme($tableTheme) {
   @include pbl-cdk-table-theme($tableTheme);
 
   $border-color: map-get($tableTheme, border-color);
   $space-fill-background: map-get($tableTheme, space-fill-background);
 
-  .pbl-table-scroll-container {
-    .pbl-table-space-fill {
+  .pbl-ngrid-scroll-container {
+    .pbl-ngrid-space-fill {
       background: $space-fill-background;
     }
   }
 
-  .pbl-table-cell-ellipsis {
-    .pbl-table-cell, .pbl-table-cell > *:first-child {
+  .pbl-ngrid-cell-ellipsis {
+    .pbl-ngrid-cell, .pbl-ngrid-cell > *:first-child {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
   }
 
-  .pbl-table-header-cell-ellipsis {
-    .pbl-table-header-cell, .pbl-table-header-cell > *:first-child {
+  .pbl-ngrid-header-cell-ellipsis {
+    .pbl-ngrid-header-cell, .pbl-ngrid-header-cell > *:first-child {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
   }
 
-  .pbl-table-footer-cell-ellipsis {
-    .pbl-table-footer-cell, .pbl-table-footer-cell > *:first-child {
+  .pbl-ngrid-footer-cell-ellipsis {
+    .pbl-ngrid-footer-cell, .pbl-ngrid-footer-cell > *:first-child {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
   }
 
-  .pbl-table-column-resizer-handle {
+  .pbl-ngrid-column-resizer-handle {
     background: $border-color;
   }
 
-  @include pbl-table-drag-plugin-theme($tableTheme);
+  @include pbl-ngrid-drag-plugin-theme($tableTheme);
 }
 
-@mixin pbl-table-spacing($spacingTheme) {
+@mixin pbl-ngrid-spacing($spacingTheme) {
 
   $header-row-height: map-get($spacingTheme, header-row-height);
   $row-height: map-get($spacingTheme, row-height);
@@ -52,19 +52,19 @@
   $row-spacing: map-get($spacingTheme, row-spacing);
   $cell-spacing: map-get($spacingTheme, cell-spacing);
 
-  .pbl-table-header-row {
+  .pbl-ngrid-header-row {
     min-height: $header-row-height;
   }
 
-  .pbl-table-row {
+  .pbl-ngrid-row {
     min-height: $row-height;
   }
 
-  .pbl-table-footer-row {
+  .pbl-ngrid-footer-row {
     min-height: $footer-row-height;
   }
 
-  .pbl-table-cell:first-of-type, .pbl-table-header-cell:first-of-type, .pbl-table-footer-cell:first-of-type {
+  .pbl-ngrid-cell:first-of-type, .pbl-ngrid-header-cell:first-of-type, .pbl-ngrid-footer-cell:first-of-type {
     padding-left: $row-spacing;
 
     [dir='rtl'] & {
@@ -73,7 +73,7 @@
     }
   }
 
-  .pbl-table-cell:last-of-type, .pbl-table-header-cell:last-of-type, .pbl-table-footer-cell:last-of-type {
+  .pbl-ngrid-cell:last-of-type, .pbl-ngrid-header-cell:last-of-type, .pbl-ngrid-footer-cell:last-of-type {
     padding-right: $row-spacing;
 
     [dir='rtl'] & {
@@ -82,7 +82,7 @@
     }
   }
 
-  .pbl-table-cell, .pbl-table-header-cell, .pbl-table-footer-cell {
+  .pbl-ngrid-cell, .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
     padding-left: $cell-spacing;
 
     &.cdk-table-sticky {
@@ -90,8 +90,8 @@
     }
   }
 
-  .pbl-table-margin-cell-box-model {
-    .pbl-table-cell, .pbl-table-header-cell, .pbl-table-footer-cell {
+  .pbl-ngrid-margin-cell-box-model {
+    .pbl-ngrid-cell, .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
       box-sizing: border-box;
 
       margin-left: $cell-spacing;
@@ -127,7 +127,7 @@
   }
 
   // row-reorder (drag & drop)
-  .pbl-table-row-prefix {
+  .pbl-ngrid-row-prefix {
     display: none;
     position: absolute;
     cursor: move;
@@ -135,12 +135,12 @@
     height: 100%;
   }
 
-  .pbl-row-reorder .pbl-table-row-prefix {
+  .pbl-row-reorder .pbl-ngrid-row-prefix {
     display: block;
   }
 
 }
 
-@mixin pbl-table-typography($config) {
+@mixin pbl-ngrid-typography($config) {
   @include pbl-cdk-table-typography($config);
 }

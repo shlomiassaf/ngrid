@@ -57,7 +57,7 @@ export function resetColumnWidths(rowWidth: StaticColumnWidthLogic,
       }
     }
 
-    // We don't handle groups because they are handled by `PblTableComponent.resizeRows()`
+    // We don't handle groups because they are handled by `PblNgridComponent.resizeRows()`
     // which set the width for each.
   }
 }

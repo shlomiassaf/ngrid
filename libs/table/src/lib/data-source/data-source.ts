@@ -8,8 +8,8 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { UnRx } from '@pebula/utils';
 
 import { PblColumn } from '../table/columns';
-import { PblTablePaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPaginator } from '../paginator';
-import { DataSourceFilter, DataSourceFilterToken, PblTableSortDefinition, PblTableDataSourceSortChange } from './types';
+import { PblNgridPaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPaginator } from '../paginator';
+import { DataSourceFilter, DataSourceFilterToken, PblNgridSortDefinition, PblNgridDataSourceSortChange } from './types';
 import { createFilter } from './filtering';
 import { PblDataSourceAdapter } from './data-source-adapter';
 import { PblDataSourceTriggerCache, PblDataSourceTriggerChangedEvent } from './data-source-adapter.types';
@@ -34,8 +34,8 @@ export interface PblDataSourceOptions {
 
 export class PblDataSource<T = any, TData = any> extends DataSource<T> {
 
-  get pagination(): PblTablePaginatorKind | false { return this._pagination; }
-  set pagination(value: PblTablePaginatorKind | false) {
+  get pagination(): PblNgridPaginatorKind | false { return this._pagination; }
+  set pagination(value: PblNgridPaginatorKind | false) {
     if (this._pagination !== value) {
       this._pagination = value;
       switch (value) {
@@ -67,7 +67,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
    * An event that fires when the connection state to a table has changed.
    */
   readonly tableConnectionChange: Observable<boolean>;
-  readonly sortChange: Observable<PblTableDataSourceSortChange>;
+  readonly sortChange: Observable<PblNgridDataSourceSortChange>;
 
   /**
    * When set to True will not disconnect upon table disconnection, otherwise unsubscribe from the
@@ -92,7 +92,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
     }
   }
 
-  get sort(): PblTableDataSourceSortChange { return this._sort$.value; }
+  get sort(): PblNgridDataSourceSortChange { return this._sort$.value; }
 
   /** Returns the starting index of the rendered data */
   get renderStart(): number { return this._lastRange ? this._lastRange.start : 0; }
@@ -121,12 +121,12 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
   protected readonly _onRenderDataChanging = new Subject<{ event: PblDataSourceTriggerChangedEvent<TData>, data: T[] }>();
   protected readonly _renderData$ = new BehaviorSubject<T[]>([]);
   protected readonly _filter$: BehaviorSubject<DataSourceFilter> = new BehaviorSubject<DataSourceFilter>(undefined);
-  protected readonly _sort$ = new BehaviorSubject<PblTableDataSourceSortChange>({ column: null, sort: null });
+  protected readonly _sort$ = new BehaviorSubject<PblNgridDataSourceSortChange>({ column: null, sort: null });
   protected _onError$ = new Subject<Error>();
 
   protected _paginator: PblPaginator<any>;
 
-  private _pagination: PblTablePaginatorKind | false;
+  private _pagination: PblNgridPaginatorKind | false;
   private _adapter: PblDataSourceAdapter;
   private _source: T[];
   private _disposed: boolean;
@@ -174,7 +174,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
     this._filter$.next(createFilter(value, columns));
   }
 
-  setSort(column: PblColumn, sort: PblTableSortDefinition): void {
+  setSort(column: PblColumn, sort: PblNgridSortDefinition): void {
     this._sort$.next({ column, sort });
   }
 

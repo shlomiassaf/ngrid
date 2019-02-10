@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PblTableCheckboxComponent } from './table-checkbox.component';
+import { PblNgridCheckboxComponent } from './table-checkbox.component';
 
-describe('PblTableCheckboxComponent', () => {
-  let component: PblTableCheckboxComponent;
-  let fixture: ComponentFixture<PblTableCheckboxComponent>;
+describe('PblNgridCheckboxComponent', () => {
+  let component: PblNgridCheckboxComponent;
+  let fixture: ComponentFixture<PblNgridCheckboxComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PblTableCheckboxComponent ]
+      declarations: [ PblNgridCheckboxComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PblTableCheckboxComponent);
+    fixture = TestBed.createComponent(PblNgridCheckboxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

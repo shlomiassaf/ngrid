@@ -1,33 +1,33 @@
 import { PblDataSource } from '../data-source';
 
-export interface PblTablePlugin { }
+export interface PblNgridPlugin { }
 
-export interface PblTablePluginExtension { }
+export interface PblNgridPluginExtension { }
 
-export interface PblTablePluginExtensionFactories { }
+export interface PblNgridPluginExtensionFactories { }
 
-export interface PblTableOnInitEvent {
+export interface PblNgridOnInitEvent {
   kind: 'onInit';
 }
 
-export interface PblTableOnResizeRowtEvent {
+export interface PblNgridOnResizeRowtEvent {
   kind: 'onResizeRow';
 }
 
-export interface PblTableOnInvalidateHeadersEvent {
+export interface PblNgridOnInvalidateHeadersEvent {
   kind: 'onInvalidateHeaders';
 }
 
-export interface PblTableOnDataSourcetEvent {
+export interface PblNgridOnDataSourcetEvent {
   kind: 'onDataSource';
   prev: PblDataSource<any>;
   curr: PblDataSource<any>;
 }
 
-export type PblTableEvents =
-  | PblTableOnInitEvent
-  | PblTableOnResizeRowtEvent
-  | PblTableOnInvalidateHeadersEvent
-  | PblTableOnDataSourcetEvent;
+export type PblNgridEvents =
+  | PblNgridOnInitEvent
+  | PblNgridOnResizeRowtEvent
+  | PblNgridOnInvalidateHeadersEvent
+  | PblNgridOnDataSourcetEvent;
 
 

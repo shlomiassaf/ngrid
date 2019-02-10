@@ -1,35 +1,35 @@
 import { Observable, Subject } from 'rxjs';
 import { Injector } from '@angular/core';
 
-import { PblTableComponent } from '../table/table.component';
+import { PblNgridComponent } from '../table/table.component';
 import {
-  PblTablePlugin,
-  PblTablePluginExtension,
-  PblTablePluginExtensionFactories,
-  PblTableEvents,
+  PblNgridPlugin,
+  PblNgridPluginExtension,
+  PblNgridPluginExtensionFactories,
+  PblNgridEvents,
 } from './types';
-import { PblTableExtensionApi } from './table-ext-api';
+import { PblNgridExtensionApi } from './table-ext-api';
 import { PLUGIN_STORE } from './table-plugin';
 
-const TABLE_PLUGIN_CONTEXT = new WeakMap<PblTableComponent<any>, PblTablePluginContext>();
+const TABLE_PLUGIN_CONTEXT = new WeakMap<PblNgridComponent<any>, PblNgridPluginContext>();
 
 /** @internal */
-export class PblTablePluginContext<T = any> {
-  readonly controller: PblTablePluginController<T>;
-  readonly events: Observable<PblTableEvents>;
-  private _events = new Subject<PblTableEvents>();
+export class PblNgridPluginContext<T = any> {
+  readonly controller: PblNgridPluginController<T>;
+  readonly events: Observable<PblNgridEvents>;
+  private _events = new Subject<PblNgridEvents>();
 
-  constructor(public table: PblTableComponent<any>, public injector: Injector, public extApi: PblTableExtensionApi) {
+  constructor(public table: PblNgridComponent<any>, public injector: Injector, public extApi: PblNgridExtensionApi) {
     if (TABLE_PLUGIN_CONTEXT.has(table)) {
       throw new Error(`Table is already registered for extensions.`);
     }
 
     TABLE_PLUGIN_CONTEXT.set(table, this);
     this.events = this._events.asObservable();
-    this.controller = new PblTablePluginController(this);
+    this.controller = new PblNgridPluginController(this);
   }
 
-  emitEvent(event: PblTableEvents): void {
+  emitEvent(event: PblNgridEvents): void {
     this._events.next(event);
   }
 
@@ -42,41 +42,41 @@ export class PblTablePluginContext<T = any> {
   }
 }
 
-export class PblTablePluginController<T = any> {
-  private static readonly created$ = new Subject<{ table: PblTableComponent<any>, controller: PblTablePluginController<any> }>();
-  static readonly created = PblTablePluginController.created$.asObservable();
+export class PblNgridPluginController<T = any> {
+  private static readonly created$ = new Subject<{ table: PblNgridComponent<any>, controller: PblNgridPluginController<any> }>();
+  static readonly created = PblNgridPluginController.created$.asObservable();
 
-  readonly extApi: PblTableExtensionApi
-  readonly events: Observable<PblTableEvents>;
-  private readonly table: PblTableComponent<T>
-  private readonly plugins = new Map<keyof PblTablePluginExtension, PblTablePlugin>();
+  readonly extApi: PblNgridExtensionApi
+  readonly events: Observable<PblNgridEvents>;
+  private readonly table: PblNgridComponent<T>
+  private readonly plugins = new Map<keyof PblNgridPluginExtension, PblNgridPlugin>();
 
-  constructor(private context: PblTablePluginContext) {
+  constructor(private context: PblNgridPluginContext) {
     this.table = context.table;
     this.extApi = context.extApi;
     this.events = context.events;
-    PblTablePluginController.created$.next({ table: this.table, controller: this });
+    PblNgridPluginController.created$.next({ table: this.table, controller: this });
   }
 
-  static find<T = any>(table: PblTableComponent<T>): PblTablePluginController<T> | undefined {
+  static find<T = any>(table: PblNgridComponent<T>): PblNgridPluginController<T> | undefined {
     const context = TABLE_PLUGIN_CONTEXT.get(table);
     if (context) {
       return context.controller;
     }
   }
 
-  hasPlugin<P extends keyof PblTablePluginExtension>(name: P): boolean {
+  hasPlugin<P extends keyof PblNgridPluginExtension>(name: P): boolean {
     return this.plugins.has(name);
   }
 
-  getPlugin<P extends keyof PblTablePluginExtension>(name: P): PblTablePluginExtension[P] | undefined  {
+  getPlugin<P extends keyof PblNgridPluginExtension>(name: P): PblNgridPluginExtension[P] | undefined  {
     return this.plugins.get(name) as any;
   }
 
   /**
    * Registers the `plugin` with the `name` with the `table`
    */
-  setPlugin<P extends keyof PblTablePluginExtension>(name: P, plugin: PblTablePluginExtension[P]): (table: PblTableComponent<any>) => void {
+  setPlugin<P extends keyof PblNgridPluginExtension>(name: P, plugin: PblNgridPluginExtension[P]): (table: PblNgridComponent<any>) => void {
     if (!PLUGIN_STORE.has(name)) {
       throw new Error(`Unknown plugin ${name}.`);
     }
@@ -84,10 +84,10 @@ export class PblTablePluginController<T = any> {
       throw new Error(`Plugin ${name} is not registered for this table.`);
     }
     this.plugins.set(name, plugin);
-    return (tbl: PblTableComponent<any>) => this.table === tbl && this.plugins.delete(name);
+    return (tbl: PblNgridComponent<any>) => this.table === tbl && this.plugins.delete(name);
   }
 
-  createPlugin<P extends (keyof PblTablePluginExtensionFactories & keyof PblTablePluginExtension)>(name: P): PblTablePluginExtension[P] {
+  createPlugin<P extends (keyof PblNgridPluginExtensionFactories & keyof PblNgridPluginExtension)>(name: P): PblNgridPluginExtension[P] {
     if (!PLUGIN_STORE.has(name)) {
       throw new Error(`Unknown plugin ${name}.`);
     }

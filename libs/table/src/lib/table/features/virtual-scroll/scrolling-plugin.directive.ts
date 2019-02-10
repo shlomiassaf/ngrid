@@ -1,11 +1,11 @@
 import { Directive, EventEmitter, Output, NgZone } from '@angular/core';
-import { PblTablePluginController } from '../../../ext/plugin-control';
-import { PblTableComponent } from '../../table.component';
+import { PblNgridPluginController } from '../../../ext/plugin-control';
+import { PblNgridComponent } from '../../table.component';
 
 @Directive({
   selector: 'pbl-ngrid[scrolling]'
 })
-export class PblTableScrolling<T = any> {
+export class PblNgridScrolling<T = any> {
 
   /**
    * Event emitted when the scrolling state of rows in the table changes.
@@ -21,7 +21,7 @@ export class PblTableScrolling<T = any> {
    */
   @Output() scrolling = new EventEmitter< -1 | 0 | 1 >();
 
-  constructor(table: PblTableComponent<T>, pluginCtrl: PblTablePluginController, zone: NgZone) {
+  constructor(table: PblNgridComponent<T>, pluginCtrl: PblNgridPluginController, zone: NgZone) {
     let subscription = pluginCtrl.events.subscribe( event => {
       if (event.kind === 'onInit') {
         const { viewport } = table;

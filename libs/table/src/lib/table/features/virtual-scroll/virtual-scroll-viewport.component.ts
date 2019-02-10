@@ -29,14 +29,14 @@ import {
 
 import { UnRx } from '@pebula/utils';
 
-import { PblTablePluginController } from '../../../ext/plugin-control';
-import { PblTableConfigService } from '../../services/config';
-import { PblTableComponent } from '../../table.component';
+import { PblNgridPluginController } from '../../../ext/plugin-control';
+import { PblNgridConfigService } from '../../services/config';
+import { PblNgridComponent } from '../../table.component';
 import { PblCdkVirtualScrollDirective, NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies';
 import { NgeVirtualTableRowInfo } from './virtual-scroll-for-of';
 
 declare module '../../services/config' {
-  interface PblTableConfig {
+  interface PblNgridConfig {
     virtualScroll?: {
       wheelMode?: PblCdkVirtualScrollDirective['wheelMode'];
       defaultStrategy?(): VirtualScrollStrategy;
@@ -44,7 +44,7 @@ declare module '../../services/config' {
   }
 }
 
-function resolveScrollStrategy(config: PblTableConfigService, scrollStrategy?: VirtualScrollStrategy): VirtualScrollStrategy {
+function resolveScrollStrategy(config: PblNgridConfigService, scrollStrategy?: VirtualScrollStrategy): VirtualScrollStrategy {
   if (!scrollStrategy && config.has('virtualScroll')) {
     const virtualScrollConfig = config.get('virtualScroll');
     if (typeof virtualScrollConfig.defaultStrategy === 'function') {
@@ -159,12 +159,12 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   constructor(elementRef: ElementRef<HTMLElement>,
               cdr: ChangeDetectorRef,
               ngZone: NgZone,
-              config: PblTableConfigService,
+              config: PblNgridConfigService,
               @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) public pblScrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher,
-              pluginCtrl: PblTablePluginController,
-              private table: PblTableComponent<any>) {
+              pluginCtrl: PblNgridPluginController,
+              private table: PblNgridComponent<any>) {
     super(elementRef,
           cdr,
           ngZone,
@@ -211,9 +211,9 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
       .subscribe( isScrolling => {
         this._isScrolling = !!isScrolling;
         if (isScrolling) {
-          table.addClass('pbl-table-scrolling');
+          table.addClass('pbl-ngrid-scrolling');
         } else {
-          table.removeClass('pbl-table-scrolling');
+          table.removeClass('pbl-ngrid-scrolling');
         }
       });
   }

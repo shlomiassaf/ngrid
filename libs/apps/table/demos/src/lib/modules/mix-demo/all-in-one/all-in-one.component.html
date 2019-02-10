@@ -18,28 +18,28 @@
             [columns]="columns"
             (cellClick)="$event.context && $event.context.startEdit()"
             style="height: 100%; width: 100%;"
-            class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
+            class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
     <pbl-demo-action-row filter label="Demo 2"></pbl-demo-action-row>
     <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS PBL-ANGRID -->
-    <div *pblTableBlockUiDef class="pbl-table-ui-block">
+    <div *pblNgridBlockUiDef class="pbl-ngrid-ui-block">
       <mat-spinner></mat-spinner>
     </div>
     <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS PBL-ANGRID -->
 
     <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS PBL-ANGRID -->
-    <div *pblTableNoDataRef class="pbl-table-no-data"><span>No Results</span></div>
+    <div *pblNgridNoDataRef class="pbl-ngrid-no-data"><span>No Results</span></div>
     <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS PBL-ANGRID -->
 
     <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS PBL-ANGRID -->
-    <pbl-table-paginator *pblTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-table-paginator>
+    <pbl-ngrid-paginator *pblNgridPaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
     <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS PBL-ANGRID -->
 
     <!-- DETAIL ROW TEMPLATE DEFINITION-->
-    <pbl-table-row *pblTableDetailRowParentRef="let row; table as table"
+    <pbl-ngrid-row *pblNgridDetailRowParentRef="let row; table as table"
                   [detailRow]="row"
                   matRipple>
-    </pbl-table-row>
-    <div *pblTableDetailRowDef="let row"
+    </pbl-ngrid-row>
+    <div *pblNgridDetailRowDef="let row"
         class="pbl-detail-row" [@detailExpand]>
       <div>
         <h1>Detail Row</h1>
@@ -51,21 +51,21 @@
 
     <!-- DEFAULT CELL TEMPLATE DEFINITION-->
     <!-- We can omit this because the table has a default cell template similar to this. It is here for reference -->
-    <div *pblTableCellDef="'*'; value as value;"> {{value}} </div>
+    <div *pblNgridCellDef="'*'; value as value;"> {{value}} </div>
     <!-- DEFAULT CELL TEMPLATE DEFINITION-->
 
 
     <!-- SPECIFIC CELL TEMPLATE DEFINITION-->
-    <div *pblTableCellDef="'name'; value as value;"><b>{{value}}</b></div>
-    <div *pblTableCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data.currency(row):'symbol':'1.0-2'}}</div>
-    <div *pblTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
-    <div *pblTableCellDef="'balance'; value as value;" [parentNgClass]="{ 'balance-negative': value < 0, 'balance-positive': value > 0 }">{{ value | number:'1.0-0'}}</div>
-    <div *pblTableCellDef="'settings.background'; value as value;" [parentNgStyle]="{ backgroundColor: value }"><b>{{value}}</b></div>
-    <div *pblTableCellDef="'settings.avatar'; value as value;"><img [src]="value" height="40px" /></div>
+    <div *pblNgridCellDef="'name'; value as value;"><b>{{value}}</b></div>
+    <div *pblNgridCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data.currency(row):'symbol':'1.0-2'}}</div>
+    <div *pblNgridCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
+    <div *pblNgridCellDef="'balance'; value as value;" [parentNgClass]="{ 'balance-negative': value < 0, 'balance-positive': value > 0 }">{{ value | number:'1.0-0'}}</div>
+    <div *pblNgridCellDef="'settings.background'; value as value;" [parentNgStyle]="{ backgroundColor: value }"><b>{{value}}</b></div>
+    <div *pblNgridCellDef="'settings.avatar'; value as value;"><img [src]="value" height="40px" /></div>
     <!-- SPECIFIC DEFAULT CELL TEMPLATE DEFINITION-->
 
     <!-- CELL EDITOR TEMPLATES -->
-    <div *pblTableCellEditorDef="'settings.emailFrequency'; let ctx">
+    <div *pblNgridCellEditorDef="'settings.emailFrequency'; let ctx">
       <mat-form-field>
         <mat-select #matSelect [value]="ctx.value"
                     (ngAfterViewInit)="matSelect.open()"
@@ -83,22 +83,22 @@
 
     <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
     <!-- We can omit this because the table has a default header cell template similar to this. It is here for reference -->
-    <div *pblTableHeaderCellDef="'*'; col as col">
+    <div *pblNgridHeaderCellDef="'*'; col as col">
       <span style="text-decoration: underline; font-weight: bold">{{col.label}}</span>
     </div>
-    <div *pblTableHeaderCellTypeDef="'country'; col as col">
+    <div *pblNgridHeaderCellTypeDef="'country'; col as col">
       <span>🏳 {{col.label}} 🏳</span>
     </div>
-    <div *pblTableHeaderCellTypeDef="'language'; col as col">
+    <div *pblNgridHeaderCellTypeDef="'language'; col as col">
       <span>🌐 {{col.label}} 🌐</span>
       </div>
-    <div *pblTableFooterCellDef="'*'; col as col">
+    <div *pblNgridFooterCellDef="'*'; col as col">
       <span style="opacity: 0.5">{{col.label}}</span>
     </div>
     <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
 
     <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
-    <div *pblTableHeaderCellDef="'name'; col as col"><span style="font-size: 22px; font-weight: bold">{{col.label}}</span></div>
+    <div *pblNgridHeaderCellDef="'name'; col as col"><span style="font-size: 22px; font-weight: bold">{{col.label}}</span></div>
     <!-- SPECIFIC HEADER DEFAULT CELL TEMPLATE DEFINITION-->
 
   </pbl-ngrid>

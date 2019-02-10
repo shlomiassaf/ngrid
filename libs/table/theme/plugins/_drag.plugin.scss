@@ -1,5 +1,5 @@
 
-@mixin pbl-table-drag-plugin-theme($tableTheme) {
+@mixin pbl-ngrid-drag-plugin-theme($tableTheme) {
   .cdk-drag-animating {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
@@ -12,8 +12,8 @@
                 0 3px 14px 2px rgba(0, 0, 0, 0.12);
   }
 
-  .pbl-table-column-list-dragging {
-    .pbl-table-cell, .pbl-table-header-cell {
+  .pbl-ngrid-column-list-dragging {
+    .pbl-ngrid-cell, .pbl-ngrid-header-cell {
       transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
     }
     .cdk-drag-placeholder {

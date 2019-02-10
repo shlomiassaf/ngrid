@@ -23,12 +23,12 @@ import {
   DragRef, DropListRef
 } from '@angular/cdk/drag-drop';
 
-import { PblTableComponent, TablePlugin, PblTablePluginController, PblTableCellContext } from '@pebula/table';
+import { PblNgridComponent, TablePlugin, PblNgridPluginController, PblNgridCellContext } from '@pebula/table';
 import { CdkLazyDropList, CdkLazyDrag } from '../core';
 
 declare module '@pebula/table/lib/ext/types' {
-  interface PblTablePluginExtension {
-    rowReorder?: PblTableRowReorderPluginDirective;
+  interface PblNgridPluginExtension {
+    rowReorder?: PblNgridRowReorderPluginDirective;
   }
 }
 
@@ -39,7 +39,7 @@ let _uniqueIdCounter = 0;
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({
   selector: 'pbl-ngrid[rowReorder]',
-  exportAs: 'pblTableRowReorder',
+  exportAs: 'pblNgridRowReorder',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
     '[id]': 'id',
@@ -49,12 +49,12 @@ let _uniqueIdCounter = 0;
   },
   providers: [
     { provide: CdkDropListGroup, useValue: undefined },
-    { provide: CDK_DROP_LIST, useExisting: PblTableRowReorderPluginDirective },
+    { provide: CDK_DROP_LIST, useExisting: PblNgridRowReorderPluginDirective },
   ],
 })
-export class PblTableRowReorderPluginDirective<T = any> extends CdkLazyDropList<T> implements OnDestroy {
+export class PblNgridRowReorderPluginDirective<T = any> extends CdkLazyDropList<T> implements OnDestroy {
 
-  id = `pbl-table-row-reorder-list-${_uniqueIdCounter++}`;
+  id = `pbl-ngrid-row-reorder-list-${_uniqueIdCounter++}`;
 
   @Input() get rowReorder(): boolean { return this._rowReorder; };
   set rowReorder(value: boolean) {
@@ -62,10 +62,10 @@ export class PblTableRowReorderPluginDirective<T = any> extends CdkLazyDropList<
     this._rowReorder = value;
   }
   private _rowReorder = false;
-  private _removePlugin: (table: PblTableComponent<any>) => void;
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
 
-  constructor(public table: PblTableComponent<T>,
-              pluginCtrl: PblTablePluginController,
+  constructor(public table: PblNgridComponent<T>,
+              pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
               dragDropRegistry: DragDropRegistry<DragRef, DropListRef<T>>,
               changeDetectorRef: ChangeDetectorRef,
@@ -88,29 +88,29 @@ export class PblTableRowReorderPluginDirective<T = any> extends CdkLazyDropList<
 }
 
 @Directive({
-  selector: '[pblTableRowDrag]',
-  exportAs: 'pblTableRowDrag',
+  selector: '[pblNgridRowDrag]',
+  exportAs: 'pblNgridRowDrag',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drag',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
   providers: [
-    { provide: CdkDrag, useExisting: PblTableRowDragDirective }
+    { provide: CdkDrag, useExisting: PblNgridRowDragDirective }
   ]
 })
-export class PblTableRowDragDirective<T = any> extends CdkLazyDrag<T, PblTableRowReorderPluginDirective<T>> implements AfterViewInit {
-  rootElementSelector = 'pbl-table-row';
+export class PblNgridRowDragDirective<T = any> extends CdkLazyDrag<T, PblNgridRowReorderPluginDirective<T>> implements AfterViewInit {
+  rootElementSelector = 'pbl-ngrid-row';
 
-  @Input('pblTableRowDrag') set context(value: Pick<PblTableCellContext<T>, 'col' | 'table'> & Partial<Pick<PblTableCellContext<T>, 'row' | 'value'>>) {
+  @Input('pblNgridRowDrag') set context(value: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>) {
     this._context = value;
 
-    const pluginCtrl = this.pluginCtrl = value && PblTablePluginController.find(value.table);
+    const pluginCtrl = this.pluginCtrl = value && PblNgridPluginController.find(value.table);
     const plugin = pluginCtrl && pluginCtrl.getPlugin(PLUGIN_KEY);
     this.cdkDropList = plugin || undefined;
   }
 
-  private _context: Pick<PblTableCellContext<T>, 'col' | 'table'> & Partial<Pick<PblTableCellContext<T>, 'row' | 'value'>>
-  private pluginCtrl: PblTablePluginController;
+  private _context: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>
+  private pluginCtrl: PblNgridPluginController;
 
   ngAfterViewInit(): void {
     super.ngAfterViewInit();

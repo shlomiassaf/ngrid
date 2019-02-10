@@ -13,15 +13,15 @@ import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
 import { UnRx } from '@pebula/utils';
-import { PblTableComponent, PblTablePluginController, PblTableRowComponent, PblTableExtensionApi, EXT_API_TOKEN } from '@pebula/table';
+import { PblNgridComponent, PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN } from '@pebula/table';
 
-import { PblTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
+import { PblNgridDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
 
 @Component({
-  selector: 'pbl-table-row[detailRow]',
-  exportAs: 'pblTableDetailRow',
+  selector: 'pbl-ngrid-row[detailRow]',
+  exportAs: 'pblNgridDetailRow',
   host: { // tslint:disable-line:use-host-property-decorator
-    class: 'pbl-table-row pbl-row-detail-parent',
+    class: 'pbl-ngrid-row pbl-row-detail-parent',
     role: 'row',
     '[attr.tabindex]': 'table?.rowFocus',
     '(keydown)': 'handleKeydown($event)'
@@ -29,13 +29,13 @@ import { PblTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugi
   template: CDK_ROW_TEMPLATE,
   styles: [ `.pbl-row-detail-parent { position: relative; cursor: pointer; }` ],
   providers: [
-    { provide: CdkRow, useExisting: PblTableDetailRowComponent }
+    { provide: CdkRow, useExisting: PblNgridDetailRowComponent }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 @UnRx()
-export class PblTableDetailRowComponent extends PblTableRowComponent implements OnInit, OnDestroy {
+export class PblNgridDetailRowComponent extends PblNgridRowComponent implements OnInit, OnDestroy {
 
   get expended(): boolean {
     return this.opened;
@@ -44,19 +44,19 @@ export class PblTableDetailRowComponent extends PblTableRowComponent implements 
   @Input('detailRow') get detailRow(): any { return this.context.$implicit; };
   set detailRow(value: any) { this.row = value; };
 
-  table: PblTableComponent<any>;
+  table: PblNgridComponent<any>;
 
   private get _element(): HTMLElement { return this.el.nativeElement; }
   private opened = false;
-  private plugin: PblTableDetailRowPluginDirective<any>;
+  private plugin: PblNgridDetailRowPluginDirective<any>;
 
-  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: PblTableExtensionApi<any>, el: ElementRef<HTMLElement>, private vcRef: ViewContainerRef) {
+  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: PblNgridExtensionApi<any>, el: ElementRef<HTMLElement>, private vcRef: ViewContainerRef) {
     super(extApi, el);
   }
 
   ngOnInit(): void {
     this.table = this.context.table;
-    const controller = PblTablePluginController.find(this.table);
+    const controller = PblNgridPluginController.find(this.table);
     this.plugin = controller.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
     const tradeEvents = controller.getPlugin('targetEvents');

@@ -6,7 +6,7 @@ $footer-cell-color: pink;
 .cell-hovered {
   border: 2px solid $data-cell-color;
 
-  &.pbl-table-header-cell {
+  &.pbl-ngrid-header-cell {
     border: 2px solid $header-cell-color;
   }
 
@@ -14,7 +14,7 @@ $footer-cell-color: pink;
     border: 2px solid $header-cell-group-color;
   }
 
-  &.pbl-table-footer-cell {
+  &.pbl-ngrid-footer-cell {
     border: 2px solid $footer-cell-color;
   }
 }
@@ -27,7 +27,7 @@ $footer-cell-color: pink;
     background: transparentize($data-cell-color, 0.75);
   }
 
-  &.pbl-table-header-row {
+  &.pbl-ngrid-header-row {
     background: $header-cell-color;
     &.row-cell-hovered {
       background: transparentize($header-cell-color, 0.75);
@@ -41,7 +41,7 @@ $footer-cell-color: pink;
     }
   }
 
-  &.pbl-table-footer-row {
+  &.pbl-ngrid-footer-row {
     background: $footer-cell-color;
     &.row-cell-hovered {
       background: transparentize($footer-cell-color, 0.75);

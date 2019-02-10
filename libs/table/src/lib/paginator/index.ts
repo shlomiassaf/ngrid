@@ -1,1 +1,1 @@
-export { PblTablePaginatorKind, PblPaginator, PblTokenPaginator, PblPagingPaginator, PblPaginatorChangeEvent } from './paginator';
+export { PblNgridPaginatorKind, PblPaginator, PblTokenPaginator, PblPagingPaginator, PblPaginatorChangeEvent } from './paginator';

@@ -1,19 +1,19 @@
 import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
 import { RowContext } from '@angular/cdk/table';
 
-import { PblTableExtensionApi } from '../../ext/table-ext-api';
-import { PblTableComponent } from '../table.component';
-import { PblTableCellContext, PblTableMetaCellContext, PblTableRowContext  } from './types';
+import { PblNgridExtensionApi } from '../../ext/table-ext-api';
+import { PblNgridComponent } from '../table.component';
+import { PblNgridCellContext, PblNgridMetaCellContext, PblNgridRowContext  } from './types';
 import { PblColumn } from '../columns/column';
 import { PblMetaColumn } from '../columns/meta-column';
 import { ColumnApi } from '../column-api';
 
 declare module '@angular/cdk/table/typings/row.d' {
   export interface CdkCellOutletRowContext<T> {
-    pblRowContext: PblTableRowContext<T>;
+    pblRowContext: PblNgridRowContext<T>;
   }
   export interface CdkCellOutletMultiRowContext<T> {
-    pblRowContext: PblTableRowContext<T>;
+    pblRowContext: PblNgridRowContext<T>;
   }
 }
 
@@ -27,27 +27,27 @@ export interface RowContextState<T = any> {
   firstRender: boolean;
 }
 
-export class MetaCellContext<T, TCol extends PblMetaColumn | PblColumn = PblMetaColumn> implements PblTableMetaCellContext<T, TCol> {
+export class MetaCellContext<T, TCol extends PblMetaColumn | PblColumn = PblMetaColumn> implements PblNgridMetaCellContext<T, TCol> {
   get $implicit(): MetaCellContext<T, TCol> { return this; }
 
-  constructor(public col: TCol, public table: PblTableComponent<any>) {}
+  constructor(public col: TCol, public table: PblNgridComponent<any>) {}
 }
 
-export class CellContext<T = any> implements PblTableCellContext<T> {
+export class CellContext<T = any> implements PblNgridCellContext<T> {
   get $implicit(): CellContext<T> { return this; }
   get row(): T { return this.rowContext.$implicit; };
   get value(): any { return this.col.getValue(this.row); }
   set value(v: any) { this.col.setValue(this.row, v); }
 
-  get rowContext(): PblTableRowContext<T> { return this._rowContext; }
+  get rowContext(): PblNgridRowContext<T> { return this._rowContext; }
   get editing(): boolean { return this._editing; }
 
   readonly index: number;
 
-  private _rowContext: PblTableRowContext<T>;
+  private _rowContext: PblNgridRowContext<T>;
   private _editing = false;
 
-  constructor(rowContext: PblTableRowContext<T>, public col: PblColumn, public table: PblTableComponent<any>) {
+  constructor(rowContext: PblNgridRowContext<T>, public col: PblColumn, public table: PblNgridComponent<any>) {
     this.index = table.columnApi.visibleColumns.indexOf(col);
     this._rowContext = rowContext;
   }
@@ -99,7 +99,7 @@ export class CellContext<T = any> implements PblTableCellContext<T> {
   }
 }
 
-export class PblRowContext<T> implements PblTableRowContext<T> {
+export class PblRowContext<T> implements PblNgridRowContext<T> {
   /** Data for the row that this cell is located within. */
   $implicit?: T;
   /** Index of the data object in the provided data array. */
@@ -121,14 +121,14 @@ export class PblRowContext<T> implements PblTableRowContext<T> {
 
   firstRender: boolean;
   outOfView: boolean;
-  readonly table: PblTableComponent<T>;
+  readonly table: PblNgridComponent<T>;
 
-  get pblRowContext(): PblTableRowContext<T> { return this; }
-  set pblRowContext(value: PblTableRowContext<T>) { }
+  get pblRowContext(): PblNgridRowContext<T> { return this; }
+  set pblRowContext(value: PblNgridRowContext<T>) { }
 
   private cells: CellContext<T>[];
 
-  constructor(public identity: any, private extApi: PblTableExtensionApi<T>) {
+  constructor(public identity: any, private extApi: PblNgridExtensionApi<T>) {
     /*  TODO: material2#14198
         The row context come from the `cdk` and it can be of 2 types, depending if multiple row templates are used or not.
         `index` is used for single row template mode and `renderIndex` for multi row template mode.
@@ -211,7 +211,7 @@ export class ContextApi<T = any> {
   private vcRef: ViewContainerRef;
   private columnApi: ColumnApi<T>;
 
-  constructor(private extApi: PblTableExtensionApi<T>) {
+  constructor(private extApi: PblNgridExtensionApi<T>) {
     this.vcRef = extApi.cdkTable._rowOutlet.viewContainer;
     this.columnApi = extApi.table.columnApi;
 
@@ -330,7 +330,7 @@ export class ContextApi<T = any> {
     this.cache.clear();
   }
 
-  getRow(row: number): PblTableRowContext<T> | undefined {
+  getRow(row: number): PblNgridRowContext<T> | undefined {
     return this.rowContext(row);
   }
 
@@ -339,7 +339,7 @@ export class ContextApi<T = any> {
    * @param row
    * @param col
    */
-  getCell(row: number, col: number): PblTableCellContext | undefined {
+  getCell(row: number, col: number): PblNgridCellContext | undefined {
     const rowContext = this.rowContext(row);
     if (rowContext) {
       return rowContext.cell(col);

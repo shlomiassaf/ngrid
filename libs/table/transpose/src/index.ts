@@ -1,1 +1,1 @@
-export { PblTableTransposeModule } from './lib/transpose.module';
+export { PblNgridTransposeModule } from './lib/transpose.module';

@@ -4,9 +4,9 @@ import { filter, startWith, pairwise, take, tap, takeUntil, map, debounceTime } 
 import { NgZone, ViewContainerRef } from '@angular/core';
 import { CollectionViewer, ListRange } from '@angular/cdk/collections';
 
-import { PblTableExtensionApi } from '../../../ext/table-ext-api';
-import { PblTableComponent } from '../../table.component';
-import { PblTablePluginController } from '../../../ext/plugin-control';
+import { PblNgridExtensionApi } from '../../../ext/table-ext-api';
+import { PblNgridComponent } from '../../table.component';
+import { PblNgridPluginController } from '../../../ext/plugin-control';
 import { PblDataSource } from '../../../data-source/data-source';
 import { PblCdkTableComponent } from '../../pbl-cdk-table/pbl-cdk-table.component';
 import { PblCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
@@ -54,17 +54,17 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
   private header = { rows: [] as HTMLElement[], sticky: [] as boolean[], rendered: [] as boolean[] };
   private footer = { rows: [] as HTMLElement[], sticky: [] as boolean[], rendered: [] as boolean[] };
 
-  private table: PblTableComponent<T>;
+  private table: PblNgridComponent<T>;
   private cdkTable: PblCdkTableComponent<T>;
   private viewport: PblCdkVirtualScrollViewportComponent;
-  constructor(private extApi: PblTableExtensionApi<T>, private ngZone: NgZone) {
+  constructor(private extApi: PblNgridExtensionApi<T>, private ngZone: NgZone) {
     this.table = extApi.table;
     this.cdkTable = extApi.cdkTable;
     this.viewport = extApi.table.viewport;
 
     this.viewChange = this.cdkTable.viewChange;
 
-    PblTablePluginController.find(extApi.table).events
+    PblNgridPluginController.find(extApi.table).events
       .pipe( takeUntil(this.destroyed) )
       .subscribe( event => {
         if (event.kind === 'onDataSource') {
@@ -279,9 +279,9 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
 
               // Here we update the main header row, when we need to hide it we apply a class that will hide it virtually, i.e. not showing but keeping internal layout.
               if (!(renderedRows[rowIndex] = rowIndex >= header.start) && !stickyRows[rowIndex]) {
-                htmlRows[rowIndex].classList.add('pbl-table-row-visually-hidden');
+                htmlRows[rowIndex].classList.add('pbl-ngrid-row-visually-hidden');
               } else if (this.table.showHeader && htmlRows[rowIndex]) {
-                htmlRows[rowIndex].classList.remove('pbl-table-row-visually-hidden');
+                htmlRows[rowIndex].classList.remove('pbl-ngrid-row-visually-hidden');
               }
             }
 

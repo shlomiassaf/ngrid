@@ -3,7 +3,7 @@ import { Component, Input, ElementRef } from '@angular/core';
 import { UnRx } from '@pebula/utils';
 
 import { PblMetaRowDefinitions } from '../columns/types';
-import { PblTableMetaRowService } from './meta-row.service';
+import { PblNgridMetaRowService } from './meta-row.service';
 
 @Component({
   selector: 'div[pbl-ngrid-fixed-meta-row-container]',
@@ -14,7 +14,7 @@ import { PblTableMetaRowService } from './meta-row.service';
   }
 })
 @UnRx()
-export class PblTableMetaRowContainerComponent {
+export class PblNgridMetaRowContainerComponent {
 
   @Input('pbl-ngrid-fixed-meta-row-container') set type(value: 'header' | 'footer') {
     if (this._type !== value) {
@@ -33,7 +33,7 @@ export class PblTableMetaRowContainerComponent {
   private defs: Array<{ index: number; rowDef: PblMetaRowDefinitions }>;
   private element: HTMLElement;
 
-  constructor(public readonly metaRows: PblTableMetaRowService, elRef: ElementRef<HTMLElement>) {
+  constructor(public readonly metaRows: PblNgridMetaRowService, elRef: ElementRef<HTMLElement>) {
     this.element = elRef.nativeElement;
     metaRows.sync.pipe(UnRx(this)).subscribe( () => this.syncRowDefinitions() );
     this.metaRows.extApi.events

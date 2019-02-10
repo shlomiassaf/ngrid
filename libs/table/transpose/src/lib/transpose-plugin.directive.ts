@@ -4,11 +4,11 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { UnRx } from '@pebula/utils';
 import {
   columnFactory,
-  PblTableConfigService,
+  PblNgridConfigService,
   PblColumnDefinition,
-  PblTableColumnDefinitionSet,
-  PblTableComponent,
-  PblTablePluginController,
+  PblNgridColumnDefinitionSet,
+  PblNgridComponent,
+  PblNgridPluginController,
   PblColumn,
   TablePlugin,
 } from '@pebula/table';
@@ -16,10 +16,10 @@ import {
 import { TransposeTableSession, LOCAL_COLUMN_DEF, VIRTUAL_REFRESH } from './transpose-table-session';
 import { getCellValueTransformed, createTransformedColumn } from './utils';
 
-const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'pbl-table-header-cell pbl-table-transposed-header-cell' };
+const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'pbl-ngrid-header-cell pbl-ngrid-transposed-header-cell' };
 
 declare module '@pebula/table/lib/table/services/config' {
-  interface PblTableConfig {
+  interface PblNgridConfig {
     transposePlugin?: {
       header?: Partial<PblColumnDefinition>;
       defaultCol?: Partial<PblColumnDefinition>;
@@ -29,8 +29,8 @@ declare module '@pebula/table/lib/table/services/config' {
 }
 
 declare module '@pebula/table/lib/ext/types' {
-  interface PblTablePluginExtension {
-    transpose?: PblTableTransposePluginDirective;
+  interface PblNgridPluginExtension {
+    transpose?: PblNgridTransposePluginDirective;
   }
 }
 const PLUGIN_KEY: 'transpose' = 'transpose';
@@ -57,7 +57,7 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[transpose]' })
 @UnRx()
-export class PblTableTransposePluginDirective implements OnDestroy {
+export class PblNgridTransposePluginDirective implements OnDestroy {
 
   @Input() get transpose(): boolean { return this.enabled; };
   set transpose(value: boolean) {
@@ -82,7 +82,7 @@ export class PblTableTransposePluginDirective implements OnDestroy {
    * ```js
    * {
    *  prop: '__transpose__',
-   *  css: 'pbl-table-header-cell pbl-table-transposed-header-cell',
+   *  css: 'pbl-ngrid-header-cell pbl-ngrid-transposed-header-cell',
    * }
    * ```
    *
@@ -116,9 +116,9 @@ export class PblTableTransposePluginDirective implements OnDestroy {
   private tableState: TransposeTableSession;
   private columns: PblColumn[];
   private selfColumn: PblColumn;
-  private _removePlugin: (table: PblTableComponent<any>) => void;
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
 
-  constructor(private table: PblTableComponent<any>, private pluginCtrl: PblTablePluginController, config: PblTableConfigService) {
+  constructor(private table: PblNgridComponent<any>, private pluginCtrl: PblNgridPluginController, config: PblNgridConfigService) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     const transposePlugin = config.get('transposePlugin');
     if (transposePlugin) {
@@ -148,7 +148,7 @@ export class PblTableTransposePluginDirective implements OnDestroy {
 
     const sourceFactoryWrapper = (results: any[]) => {
       if (results) {
-        const local: PblTableColumnDefinitionSet = this.table.columns = columnFactory()
+        const local: PblNgridColumnDefinitionSet = this.table.columns = columnFactory()
         .default(this.defaultCol || {})
         .table(
           this.selfColumn,

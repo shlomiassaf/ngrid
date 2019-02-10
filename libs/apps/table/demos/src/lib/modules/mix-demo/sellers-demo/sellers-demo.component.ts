@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { PblTableComponent, createDS, columnFactory } from '@pebula/table';
+import { PblNgridComponent, createDS, columnFactory } from '@pebula/table';
 import { Seller, DemoDataSource } from '@pebula/apps/table/shared';
 
 // A function that returns the currency value placed in a `SecurityWithMarketDataDto` object.
@@ -53,7 +53,7 @@ export class SellersDemoComponent {
 
   columns = COLUMNS.build();
 
-  @ViewChild(PblTableComponent) table: PblTableComponent<Seller>;
+  @ViewChild(PblNgridComponent) table: PblNgridComponent<Seller>;
 
   constructor(private ds: DemoDataSource) {
     ds.getCountries().then( c => COUNTRY_GETTER.data = c );

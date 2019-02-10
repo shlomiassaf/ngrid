@@ -42,7 +42,7 @@ What's important is how it interacts with the table:
 ```typescript
   @ViewChild('actionRow', { read: TemplateRef }) actionRow: TemplateRef<any>;
 
-  constructor(public table: PblTableComponent<any>) { }
+  constructor(public table: PblNgridComponent<any>) { }
 
   ngAfterViewInit(): void {
     this.table.createView('beforeTable', this.actionRow);

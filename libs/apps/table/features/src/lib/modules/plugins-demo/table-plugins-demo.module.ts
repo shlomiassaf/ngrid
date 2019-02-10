@@ -12,14 +12,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-import { PblTableModule, PblTableRegistryService } from '@pebula/table';
-import { PblTableDragModule } from '@pebula/table/drag';
-import { PblTableTargetEventsModule } from '@pebula/table/target-events';
-import { PblTableTransposeModule } from '@pebula/table/transpose';
-import { PblTableBlockUiModule } from '@pebula/table/block-ui';
-import { PblTableDetailRowModule } from '@pebula/table/detail-row';
-import { PblTableStickyModule } from '@pebula/table/sticky';
-import { PblTableMaterialModule } from '@pebula/table/material';
+import { PblNgridModule, PblNgridRegistryService } from '@pebula/table';
+import { PblNgridDragModule } from '@pebula/table/drag';
+import { PblNgridTargetEventsModule } from '@pebula/table/target-events';
+import { PblNgridTransposeModule } from '@pebula/table/transpose';
+import { PblNgridBlockUiModule } from '@pebula/table/block-ui';
+import { PblNgridDetailRowModule } from '@pebula/table/detail-row';
+import { PblNgridStickyModule } from '@pebula/table/sticky';
+import { PblNgridMaterialModule } from '@pebula/table/material';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 
@@ -70,17 +70,17 @@ const ROUTES = [
     RouterModule.forChild(ROUTES),
     SharedModule,
     MATERIAL, MatRippleModule,
-    PblTableModule,
-    PblTableDragModule,
-    PblTableTargetEventsModule,
-    PblTableBlockUiModule,
-    PblTableTransposeModule,
-    PblTableDetailRowModule,
-    PblTableStickyModule,
-    PblTableMaterialModule,
+    PblNgridModule,
+    PblNgridDragModule,
+    PblNgridTargetEventsModule,
+    PblNgridBlockUiModule,
+    PblNgridTransposeModule,
+    PblNgridDetailRowModule,
+    PblNgridStickyModule,
+    PblNgridMaterialModule,
   ],
   exports: [ MatRippleModule ], // we need this for detail-row
-  providers: [ PblTableRegistryService ],
+  providers: [ PblNgridRegistryService ],
 })
 export class TablePluginsDemoModule {
   constructor(registry: ExampleGroupRegistryService) {

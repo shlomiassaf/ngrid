@@ -31,13 +31,13 @@ import {
   CdkDropList,
 } from '@angular/cdk/drag-drop';
 
-import { PblTableComponent, TablePlugin, PblColumn, PblTablePluginController, PblTableCellContext } from '@pebula/table';
+import { PblNgridComponent, TablePlugin, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/table';
 import { CdkLazyDropList, CdkLazyDrag } from '../core';
 
 import './extend-table';
 declare module '@pebula/table/lib/ext/types' {
-  interface PblTablePluginExtension {
-    columnReorder?: PblTableColumnReorderPluginDirective;
+  interface PblNgridPluginExtension {
+    columnReorder?: PblNgridColumnReorderPluginDirective;
   }
 }
 
@@ -48,7 +48,7 @@ let _uniqueIdCounter = 0;
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({
   selector: 'pbl-ngrid[columnReorder]',
-  exportAs: 'pblTableColumnReorder',
+  exportAs: 'pblNgridColumnReorder',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
     '[id]': 'id',
@@ -56,11 +56,11 @@ let _uniqueIdCounter = 0;
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
   },
   providers: [
-    { provide: CDK_DROP_LIST, useExisting: PblTableColumnReorderPluginDirective },
+    { provide: CDK_DROP_LIST, useExisting: PblNgridColumnReorderPluginDirective },
   ],
 })
-export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropList<T, PblTableColumnReorderPluginDirective<T>> implements OnInit, OnDestroy {
-  id = `pbl-table-column-reorder-list-${_uniqueIdCounter++}`;
+export class PblNgridColumnReorderPluginDirective<T = any> extends CdkLazyDropList<T, PblNgridColumnReorderPluginDirective<T>> implements OnInit, OnDestroy {
+  id = `pbl-ngrid-column-reorder-list-${_uniqueIdCounter++}`;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   @Input() get columnReorder(): boolean { return this._columnReorder; };
@@ -80,20 +80,20 @@ export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
 
   private _columnReorder = false;
   private _manualOverride = false;
-  private _removePlugin: (table: PblTableComponent<any>) => void;
-  private lastSwap: DragRef<PblTableColumnDragDirective<T>>;
-  private lastSorted: { drag: DragRef<PblTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; };
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
+  private lastSwap: DragRef<PblNgridColumnDragDirective<T>>;
+  private lastSorted: { drag: DragRef<PblNgridColumnDragDirective<T>>; offset: number; clientRect: ClientRect; };
 
   // Stuff to workaround encapsulation in CdkDropList
-  private get pblGetItemIndexFromPointerPosition(): (item: DragRef<PblTableColumnDragDirective<T>>, pointerX: number, pointerY: number, delta?: {x: number, y: number}) => number {
+  private get pblGetItemIndexFromPointerPosition(): (item: DragRef<PblNgridColumnDragDirective<T>>, pointerX: number, pointerY: number, delta?: {x: number, y: number}) => number {
     return (this._dropListRef as any)._getItemIndexFromPointerPosition.bind(this._dropListRef);
   }
-  private get pblGetPositionCacheItems(): { drag: DragRef<PblTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; }[] {
+  private get pblGetPositionCacheItems(): { drag: DragRef<PblNgridColumnDragDirective<T>>; offset: number; clientRect: ClientRect; }[] {
     return (this._dropListRef as any)._itemPositions;
   }
 
-  constructor(public table: PblTableComponent<T>,
-              pluginCtrl: PblTablePluginController,
+  constructor(public table: PblNgridComponent<T>,
+              pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
               dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
               changeDetectorRef: ChangeDetectorRef,
@@ -104,19 +104,19 @@ export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
     super(element, dragDropRegistry as any, changeDetectorRef, dir, group, _document, dragDrop);
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    this.directContainerElement = '.pbl-table-header-row-main';
+    this.directContainerElement = '.pbl-ngrid-header-row-main';
     this.dropped.subscribe( (event: CdkDragDrop<T, any>) => {
       if (!this.manualOverride) {
-        this.table.columnApi.moveColumn((event.item as PblTableColumnDragDirective<T>).column, event.currentIndex);
+        this.table.columnApi.moveColumn((event.item as PblNgridColumnDragDirective<T>).column, event.currentIndex);
       }
     });
 
     this.dragging.subscribe( isDragging => {
       const el = element.nativeElement;
       if (isDragging) {
-        el.classList.add('pbl-table-column-list-dragging');
+        el.classList.add('pbl-ngrid-column-list-dragging');
       } else {
-        el.classList.remove('pbl-table-column-list-dragging');
+        el.classList.remove('pbl-ngrid-column-list-dragging');
       }
       this.lastSwap = undefined;
     });
@@ -169,7 +169,7 @@ export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
     this.pblDropListRef._sortItem = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number, pointerDelta: {x: number, y: number}): void => {
       const siblings = this.pblGetPositionCacheItems;
       this.lastSorted = siblings.find( s => s.drag === item );
-      const newIndex = this.pblGetItemIndexFromPointerPosition(item as DragRef<PblTableColumnDragDirective<T>>, pointerX, pointerY, pointerDelta);
+      const newIndex = this.pblGetItemIndexFromPointerPosition(item as DragRef<PblNgridColumnDragDirective<T>>, pointerX, pointerY, pointerDelta);
       if (newIndex === -1 && siblings.length > 0) {
         return;
       }
@@ -218,32 +218,32 @@ export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
 }
 
 @Directive({
-  selector: '[pblTableColumnDrag]',
-  exportAs: 'pblTableColumnDrag',
+  selector: '[pblNgridColumnDrag]',
+  exportAs: 'pblNgridColumnDrag',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drag',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
   providers: [
-    { provide: CdkDrag, useExisting: PblTableColumnDragDirective }
+    { provide: CdkDrag, useExisting: PblNgridColumnDragDirective }
   ]
 })
-export class PblTableColumnDragDirective<T = any> extends CdkLazyDrag<T, PblTableColumnReorderPluginDirective<T>, PblTableColumnDragDirective<T>> implements AfterViewInit {
-  rootElementSelector = 'pbl-table-header-cell';
+export class PblNgridColumnDragDirective<T = any> extends CdkLazyDrag<T, PblNgridColumnReorderPluginDirective<T>, PblNgridColumnDragDirective<T>> implements AfterViewInit {
+  rootElementSelector = 'pbl-ngrid-header-cell';
 
   column: PblColumn;
 
-  @Input('pblTableColumnDrag') set context(value: Pick<PblTableCellContext<T>, 'col' | 'table'> & Partial<Pick<PblTableCellContext<T>, 'row' | 'value'>>) {
+  @Input('pblNgridColumnDrag') set context(value: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>) {
     this._context = value;
     this.column = value && value.col;
-    const pluginCtrl = this.pluginCtrl = value && PblTablePluginController.find(value.table);
+    const pluginCtrl = this.pluginCtrl = value && PblNgridPluginController.find(value.table);
     const plugin = pluginCtrl && pluginCtrl.getPlugin(PLUGIN_KEY);
     this.cdkDropList = plugin || undefined;
     this.disabled = this.column && this.column.reorder ? false : true;
   }
 
-  private _context: Pick<PblTableCellContext<T>, 'col' | 'table'> & Partial<Pick<PblTableCellContext<T>, 'row' | 'value'>>
-  private pluginCtrl: PblTablePluginController;
+  private _context: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>
+  private pluginCtrl: PblNgridPluginController;
   private cache: HTMLElement[];
 
   ngAfterViewInit(): void {

@@ -1,8 +1,8 @@
 import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
-import { PblTableMatrixRow } from './events';
+import { PblNgridMatrixRow } from './events';
 
 /**
- * Returns true if the element is a row element (`pbl-table-row`, `cdk-row`).
+ * Returns true if the element is a row element (`pbl-ngrid-row`, `cdk-row`).
  *
  * This function works under the following assumptions:
  *
@@ -50,14 +50,14 @@ export function findCellIndex(cell: Element): number {
  *   - Allowed values for "data-rowtype" are: 'header' | 'meta-header' | 'footer' | 'meta-footer' | 'data'
  *   - Row's representing data items (data-rowtype="data") can omit the type attribute and the function will infer it.
  *
- * NOTE that this function DOES NOT identify subType of `meta-group` (`PblTableMatrixRow<'header' | 'footer', 'meta-group'>`), it will return it as
+ * NOTE that this function DOES NOT identify subType of `meta-group` (`PblNgridMatrixRow<'header' | 'footer', 'meta-group'>`), it will return it as
  * 'meta`, you need to handle this case specifically.
  *
  * Because detection is based on DOM element position finding the original row index when multiple row containers are set (fixed/style/row) will not work.
  * The rowIndex will be relative to the container, and not the entire table.
  */
 export function matrixRowFromRow(row: Element,
-                                 vcRef: ViewContainerRef): PblTableMatrixRow<'data'> | PblTableMatrixRow<'header' | 'footer'> | PblTableMatrixRow<'header' | 'footer', 'meta'> | undefined  {
+                                 vcRef: ViewContainerRef): PblNgridMatrixRow<'data'> | PblNgridMatrixRow<'header' | 'footer'> | PblNgridMatrixRow<'header' | 'footer', 'meta'> | undefined  {
   const rowAttrType: 'header' | 'data' | 'footer' | 'meta-header' | 'meta-footer' = row.getAttribute('data-rowtype') as any || 'data';
 
   // TODO: Error if rowAttrType is not one of the allowed values!
@@ -77,7 +77,7 @@ export function matrixRowFromRow(row: Element,
             type: 'data',
             subType: 'data',
             rowIndex,
-          } as { rowIndex: number } & PblTableMatrixRow<'data'>;
+          } as { rowIndex: number } & PblNgridMatrixRow<'data'>;
         }
         rowIndex--;
       }
@@ -88,7 +88,7 @@ export function matrixRowFromRow(row: Element,
         type: rowAttrType,
         subType: 'data',
         rowIndex,
-      } as PblTableMatrixRow<'header' | 'footer'>;
+      } as PblNgridMatrixRow<'header' | 'footer'>;
     default:
       while (row.previousElementSibling && row.previousElementSibling.getAttribute('data-rowtype') === rowAttrType) {
         rowIndex++;
@@ -98,6 +98,6 @@ export function matrixRowFromRow(row: Element,
         type: rowAttrType === 'meta-footer' ? 'footer' : 'header',
         subType: 'meta',
         rowIndex,
-      } as PblTableMatrixRow<'header' | 'footer', 'meta'>;
+      } as PblNgridMatrixRow<'header' | 'footer', 'meta'>;
   }
 }

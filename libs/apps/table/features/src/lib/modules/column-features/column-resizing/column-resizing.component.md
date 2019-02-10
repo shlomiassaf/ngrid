@@ -15,7 +15,7 @@ in the column definitions.
   <!--@pebula-example:ex-1-->
   <button (click)="resize(pblTable1)">Resize id to 200px</button>
   <button (click)="pblTable1.autoSizeColumnToFit()">Fit Content</button>
-  <pbl-ngrid #pblTable1 [dataSource]="ds1" [columns]="columns1" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-ngrid>
+  <pbl-ngrid #pblTable1 [dataSource]="ds1" [columns]="columns1" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis"></pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -30,13 +30,13 @@ Let's start with a simple example, enabling resize for columns **name** and **ge
 
 <docsi-mat-example-with-source title="Simple Resizing" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <pbl-ngrid [dataSource]="ds2" [columns]="columns2" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-ngrid>
+  <pbl-ngrid [dataSource]="ds2" [columns]="columns2" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis"></pbl-ngrid>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 To enable column resizing each column must have the `resize` property set to true.
 
-I> When we registered `PblTableDragModule` we used `PblTableDragModule.withDefaultTemplates()` which pre-loads
+I> When we registered `PblNgridDragModule` we used `PblNgridDragModule.withDefaultTemplates()` which pre-loads
 default templates for the plugin to work out of the box, we will cover customization shortly.
 
 The default template does not include a resize handler but it is there, hover over the right
@@ -66,34 +66,34 @@ behavior and/or look of the resizing process we need override these templates.
 To override resizing we need to provide a template that the table will use to render the drag element that listen to all mouse/touch events
 and act upon them.
 
-To do that we use the structural directive `*pblTableCellResizerRef`. This directive will automatically register the template for us
+To do that we use the structural directive `*pblNgridCellResizerRef`. This directive will automatically register the template for us
 and provide us with the **column*** and **table** instances as context:
 
 ```typescript
-export interface PblTableMetaCellTemplateContext<T> {
-  $implicit: PblTableMetaCellTemplateContext<T>;
+export interface PblNgridMetaCellTemplateContext<T> {
+  $implicit: PblNgridMetaCellTemplateContext<T>;
   col: PblMetaColumn | PblColumn;
-  table: PblTableComponent<T>;
+  table: PblNgridComponent<T>;
 }
 ```
 
-The default resizing template in `PblTableDragModule.withDefaultTemplates()` is fairly simple:
+The default resizing template in `PblNgridDragModule.withDefaultTemplates()` is fairly simple:
 
 ```html
-<pbl-table-drag-resize *pblTableCellResizerRef="let ctx" [context]="ctx"></pbl-table-drag-resize>
+<pbl-ngrid-drag-resize *pblNgridCellResizerRef="let ctx" [context]="ctx"></pbl-ngrid-drag-resize>
 ```
 
-We use `*pblTableCellResizerRef` to instruct the table which template to use pass the context to `pbl-table-drag-resize` which does all the resizing business.
+We use `*pblNgridCellResizerRef` to instruct the table which template to use pass the context to `pbl-ngrid-drag-resize` which does all the resizing business.
 
-`pbl-table-drag-resize` is a component that the plugin provides. It extends `CdkDrag` adding some logic for the resizing scenario.
+`pbl-ngrid-drag-resize` is a component that the plugin provides. It extends `CdkDrag` adding some logic for the resizing scenario.
 It accepts a content which it will display, allowing you to control the handle's look and feel.
 
 <docsi-mat-example-with-source title="Custom resizing" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-4'}]">
   <!--@pebula-example:ex-4-->
   <pbl-ngrid [dataSource]="ds4" [columns]="columns4">
-    <pbl-table-drag-resize *pblTableCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
-      <span class="pbl-table-column-resizer-handle"></span>
-    </pbl-table-drag-resize>
+    <pbl-ngrid-drag-resize *pblNgridCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
+      <span class="pbl-ngrid-column-resizer-handle"></span>
+    </pbl-ngrid-drag-resize>
   </pbl-ngrid>
   <!--@pebula-example:ex-4-->
 </docsi-mat-example-with-source>
@@ -105,7 +105,7 @@ Notice how we also use groups in this example, resizing will cause the groups to
 This is just our way of doing it, for complete custom handling, one might do:
 
 ```html
-<my-custom-drag-handler *pblTableCellResizerRef="let ctx" [table]="ctx.table" [column]="ctx.col"></my-custom-drag-handler>
+<my-custom-drag-handler *pblNgridCellResizerRef="let ctx" [table]="ctx.table" [column]="ctx.col"></my-custom-drag-handler>
 ```
 
 `my-custom-drag-handler` will be rendered on each header cell and should take care of all resizing logic.

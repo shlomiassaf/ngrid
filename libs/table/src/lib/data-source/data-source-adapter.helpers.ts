@@ -1,4 +1,4 @@
-import { PblTableDataSourceSortChange, DataSourceFilter } from './types';
+import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
 
 import {
   RefreshDataWrapper,
@@ -23,7 +23,7 @@ export const DEEP_COMPARATORS: DEEP_COMPARATORS<keyof PblDataSourceTriggerCache>
       // TODO: deep compare columns
       // && (prev.columns || []).join() === (curr.columns || []).join();
   },
-  sort(prev: PblTableDataSourceSortChange, curr: PblTableDataSourceSortChange): boolean {
+  sort(prev: PblNgridDataSourceSortChange, curr: PblNgridDataSourceSortChange): boolean {
     if (prev.column === curr.column) {
       const pSort = prev.sort || {};
       const cSort = curr.sort || {};

@@ -1,28 +1,28 @@
 import { PblColumn } from '../table/columns/column';
 
-export type PblTableSortOrder = 'asc' | 'desc';
+export type PblNgridSortOrder = 'asc' | 'desc';
 
-export interface PblTableSortInstructions {
-  order?: PblTableSortOrder;
+export interface PblNgridSortInstructions {
+  order?: PblNgridSortOrder;
 }
 
 /**
  * Event fired when sort changes.
  */
-export interface PblTableSortDefinition extends PblTableSortInstructions {
-  sortFn?: PblTableSorter;
+export interface PblNgridSortDefinition extends PblNgridSortInstructions {
+  sortFn?: PblNgridSorter;
 }
 
 /**
- * A function that can sort a dataset based on `PblTableSortInstructions`
+ * A function that can sort a dataset based on `PblNgridSortInstructions`
  */
-export interface PblTableSorter<T = any> {
-  (column: PblColumn, sort: PblTableSortInstructions, data: T[]): T[];
+export interface PblNgridSorter<T = any> {
+  (column: PblColumn, sort: PblNgridSortInstructions, data: T[]): T[];
 }
 
-export interface PblTableDataSourceSortChange {
+export interface PblNgridDataSourceSortChange {
   column: PblColumn;
-  sort: PblTableSortDefinition;
+  sort: PblNgridSortDefinition;
 }
 
 

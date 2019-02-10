@@ -1,1 +1,1 @@
-export { PblTablePaginatorModule } from './lib/table-paginator.module';
+export { PblNgridPaginatorModule } from './lib/table-paginator.module';

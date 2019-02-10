@@ -20,7 +20,7 @@
     </mat-select>
   </mat-form-field>
   <div style="flex: 1 1 100%; display: flex; min-height: 0px">
-    <pbl-ngrid *ngIf="showTable" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis" style="height: 100%; width: 100%;"
+    <pbl-ngrid *ngIf="showTable" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis" style="height: 100%; width: 100%;"
                identityProp="id"
                [dataSource]="dataSource" [columns]="columns"
                vScrollAuto maxBufferPx="100" minBufferPx="50" [wheelMode]="wheelMode"
@@ -33,9 +33,9 @@
                cellTooltip
                matCheckboxSelection="selection">
       <pbl-demo-action-row filter label="Virtual Scroll Performance" showFps></pbl-demo-action-row>
-      <div *pblTableCellTypeDef="'accountBalance'; value as value; col as col; row as row"
+      <div *pblNgridCellTypeDef="'accountBalance'; value as value; col as col; row as row"
           [parentNgClass]="value < 0 ? col.type.data.pbl : col.type.data.pos">{{ value | currency:col.type.data.meta.currency(row):'symbol':col.type.data.format }}</div>
-      <div *pblTableCellTypeDef="'flagAndCountry'; col as col; row as row">{{ col.type.data.flagAndCountry(row) }}</div>
+      <div *pblNgridCellTypeDef="'flagAndCountry'; col as col; row as row">{{ col.type.data.flagAndCountry(row) }}</div>
 
     </pbl-ngrid>
   </div>

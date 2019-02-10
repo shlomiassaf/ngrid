@@ -4,12 +4,12 @@
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/table';
-import { PblTableRowEvent, PblTableCellEvent } from '@pebula/table/target-events';
+import { PblNgridRowEvent, PblNgridCellEvent } from '@pebula/table/target-events';
 
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
-function isCellEvent<T>(event: PblTableRowEvent<T> | PblTableCellEvent<T>): event is PblTableCellEvent<T> {
-  return !!(event as  PblTableCellEvent<T>).cellTarget;
+function isCellEvent<T>(event: PblNgridRowEvent<T> | PblNgridCellEvent<T>): event is PblNgridCellEvent<T> {
+  return !!(event as  PblNgridCellEvent<T>).cellTarget;
 }
 
 const COLUMNS = columnFactory()
@@ -77,7 +77,7 @@ export class TargetEventsTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 
-  onClickEvents(event: PblTableRowEvent<Person> | PblTableCellEvent<Person>) {
+  onClickEvents(event: PblNgridRowEvent<Person> | PblNgridCellEvent<Person>) {
     let cellSuffix = '';
     if (isCellEvent(event)) {
       cellSuffix = `  CELL: ${event.colIndex}`;
@@ -89,7 +89,7 @@ export class TargetEventsTableExampleComponent {
     alert(`CLICK EVENT at ROW: ${event.rowIndex}${cellSuffix}\nType: ${event.type}\nSubType: ${event.subType}`);
   }
 
-  onEnterLeaveEvents(event: PblTableRowEvent<Person> | PblTableCellEvent<Person>, isEnter = false) {
+  onEnterLeaveEvents(event: PblNgridRowEvent<Person> | PblNgridCellEvent<Person>, isEnter = false) {
     if (isCellEvent(event)) {
       if (isEnter) {
         event.cellTarget.classList.add('cell-hovered');

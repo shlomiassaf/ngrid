@@ -1,6 +1,6 @@
 /* @pebula-example:ex-1 ex-2 ex-3 ex-4 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { PblTableComponent, createDS, columnFactory } from '@pebula/table';
+import { PblNgridComponent, createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
@@ -22,7 +22,7 @@ export class ColumnResizingTableExampleComponent {
     .build();
   ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
 
-  resize(table: PblTableComponent<Person>): void {
+  resize(table: PblNgridComponent<Person>): void {
     const id = table.columnApi.findColumn('id');
     table.columnApi.resizeColumn(id, '200px');
   }

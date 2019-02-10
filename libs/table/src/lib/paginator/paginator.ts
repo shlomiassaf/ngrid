@@ -1,6 +1,6 @@
 import { Observable, BehaviorSubject } from 'rxjs';
 
-export type PblTablePaginatorKind = 'pageNumber' | 'token';
+export type PblNgridPaginatorKind = 'pageNumber' | 'token';
 
 /**
  * An object with properties representing the change in the paginator.
@@ -16,7 +16,7 @@ export interface PblPaginatorChangeEvent<T = any> {
 }
 
 export interface PblPaginator<TPage> {
-  kind: PblTablePaginatorKind;
+  kind: PblNgridPaginatorKind;
   /**
    * When true will assume that the datasource represents a single page.
    * This is common in server side pagination where pervious data is not cached and each pages is fetched and set as is, i.e. the datasource

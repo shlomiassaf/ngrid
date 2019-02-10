@@ -22,8 +22,8 @@ import { Platform } from '@angular/cdk/platform';
 import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef } from '@angular/cdk/table';
 import { Directionality } from '@angular/cdk/bidi';
 
-import { PblTableComponent } from '../table.component';
-import { PblTableExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
+import { PblNgridComponent } from '../table.component';
+import { PblNgridExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
 import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
 import { PblCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/virtual-scroll-viewport.component';
 
@@ -41,7 +41,7 @@ import { PblCdkVirtualScrollViewportComponent } from '../features/virtual-scroll
   styleUrls: ['./pbl-cdk-table.component.scss'],
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'pbl-cdk-table',
-    '[class.pbl-table-margin-cell-box-model]': `isMarginSpace`
+    '[class.pbl-ngrid-margin-cell-box-model]': `isMarginSpace`
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,8 +74,8 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
               @Attribute('role') role: string,
               @Optional() _dir: Directionality,
               protected injector: Injector,
-              protected table: PblTableComponent<T>,
-              @Inject(EXT_API_TOKEN) protected extApi: PblTableExtensionApi<T>,
+              protected table: PblNgridComponent<T>,
+              @Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<T>,
               @Inject(DOCUMENT) _document?: any,
               platform?: Platform) {
     super(_differs, _changeDetectorRef, _elementRef, role, _dir, document, platform);

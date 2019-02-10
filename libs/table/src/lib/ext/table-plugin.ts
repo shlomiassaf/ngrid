@@ -1,12 +1,12 @@
-import { PblTablePluginExtension, PblTablePluginExtensionFactories } from './types';
+import { PblNgridPluginExtension, PblNgridPluginExtensionFactories } from './types';
 
 /** @internal */
-export const PLUGIN_STORE = new Map<keyof PblTablePluginExtension, TablePluginMetadata & { target: any }>();
+export const PLUGIN_STORE = new Map<keyof PblNgridPluginExtension, TablePluginMetadata & { target: any }>();
 
-export interface TablePluginMetadata<P extends keyof PblTablePluginExtension = keyof PblTablePluginExtension> {
+export interface TablePluginMetadata<P extends keyof PblNgridPluginExtension = keyof PblNgridPluginExtension> {
   id: P;
-  factory?: P extends keyof PblTablePluginExtensionFactories
-    ? PblTablePluginExtensionFactories[P]
+  factory?: P extends keyof PblNgridPluginExtensionFactories
+    ? PblNgridPluginExtensionFactories[P]
     : never
   ;
 }

@@ -1,21 +1,21 @@
 import { RowContext } from '@angular/cdk/table';
 
-import { PblTableComponent } from '../table.component';
+import { PblNgridComponent } from '../table.component';
 import { PblColumnTypeDefinitionDataMap, PblMetaColumn, PblColumn } from '../columns';
 
-export interface PblTableMetaCellContext<T, TCol extends PblMetaColumn | PblColumn = PblMetaColumn | PblColumn> {
-  $implicit: PblTableMetaCellContext<T>;
+export interface PblNgridMetaCellContext<T, TCol extends PblMetaColumn | PblColumn = PblMetaColumn | PblColumn> {
+  $implicit: PblNgridMetaCellContext<T>;
   col: TCol;
-  table: PblTableComponent<T>;
+  table: PblNgridComponent<T>;
 }
 
-export interface PblTableCellContext<T = any, P extends keyof PblColumnTypeDefinitionDataMap = keyof PblColumnTypeDefinitionDataMap> {
-  rowContext: PblTableRowContext<T>,
-  $implicit: PblTableCellContext<T>;
+export interface PblNgridCellContext<T = any, P extends keyof PblColumnTypeDefinitionDataMap = keyof PblColumnTypeDefinitionDataMap> {
+  rowContext: PblNgridRowContext<T>,
+  $implicit: PblNgridCellContext<T>;
   row: T,
   value: any;
   col: PblColumn;
-  table: PblTableComponent<T>;
+  table: PblNgridComponent<T>;
   readonly index: number;
   readonly editing: boolean;
 
@@ -26,7 +26,7 @@ export interface PblTableCellContext<T = any, P extends keyof PblColumnTypeDefin
   // selectCell(): void;
 }
 
-export interface PblTableRowContext<T = any> extends RowContext<T> {
+export interface PblNgridRowContext<T = any> extends RowContext<T> {
   identity: number;
 
   /**
@@ -52,7 +52,7 @@ export interface PblTableRowContext<T = any> extends RowContext<T> {
    */
   outOfView: boolean;
 
-  readonly table: PblTableComponent<T>;
+  readonly table: PblNgridComponent<T>;
 
   updateOutOfViewState(): void;
 }

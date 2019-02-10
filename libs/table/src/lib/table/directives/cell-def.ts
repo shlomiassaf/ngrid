@@ -7,53 +7,53 @@ import {
 } from '@angular/core';
 
 import { COLUMN, PblColumnTypeDefinitionDataMap, PblColumn, PblMetaColumn } from '../columns';
-import { PblTableCellContext, PblTableMetaCellContext } from '../context/index';
-import { PblTableRegistryService } from '../services/table-registry.service';
+import { PblNgridCellContext, PblNgridMetaCellContext } from '../context/index';
+import { PblNgridRegistryService } from '../services/table-registry.service';
 
-export interface PblTableCellDefDirectiveBase {
+export interface PblNgridCellDefDirectiveBase {
   name: string;
   type: keyof PblColumnTypeDefinitionDataMap;
 }
 
-export abstract class PblTableBaseCellDef<Z> implements OnInit, OnDestroy, PblTableCellDefDirectiveBase {
+export abstract class PblNgridBaseCellDef<Z> implements OnInit, OnDestroy, PblNgridCellDefDirectiveBase {
   name: string;
   type: keyof PblColumnTypeDefinitionDataMap;
 
   constructor(public tRef: TemplateRef<Z>,
-              protected registry: PblTableRegistryService) { }
+              protected registry: PblNgridRegistryService) { }
 
   ngOnInit(): void {
     // TODO: listen to property changes (name) and re-register cell
-    if (this instanceof PblTableHeaderCellDefDirective) {
+    if (this instanceof PblNgridHeaderCellDefDirective) {
       this.registry.addMulti('headerCell', this);
-    } else if (this instanceof PblTableCellDefDirective) {
+    } else if (this instanceof PblNgridCellDefDirective) {
       this.registry.addMulti('tableCell', this);
-    } else if (this instanceof PblTableEditorCellDefDirective) {
+    } else if (this instanceof PblNgridEditorCellDefDirective) {
       this.registry.addMulti('editorCell', this);
-    } else if (this instanceof PblTableFooterCellDefDirective) {
+    } else if (this instanceof PblNgridFooterCellDefDirective) {
       this.registry.addMulti('footerCell', this);
     }
   }
 
   ngOnDestroy(): void {
-    if (this instanceof PblTableHeaderCellDefDirective) {
+    if (this instanceof PblNgridHeaderCellDefDirective) {
       this.registry.removeMulti('headerCell', this);
-    } else if (this instanceof PblTableCellDefDirective) {
+    } else if (this instanceof PblNgridCellDefDirective) {
       this.registry.removeMulti('tableCell', this);
-    } else if (this instanceof PblTableEditorCellDefDirective) {
+    } else if (this instanceof PblNgridEditorCellDefDirective) {
       this.registry.removeMulti('editorCell', this);
-    } else if (this instanceof PblTableFooterCellDefDirective) {
+    } else if (this instanceof PblNgridFooterCellDefDirective) {
       this.registry.removeMulti('footerCell', this);
     }
   }
 }
 
 /**
- * Header Cell definition for the pbl-table.
+ * Header Cell definition for the pbl-ngrid.
  * Captures the template of a column's data row header cell as well as header cell-specific properties.
  *
- * `pblTableHeaderCellDef` does the same thing that `matHeaderCellDef` and `cdkHeaderCellDef` do with one difference,
- * `pblTableHeaderCellDef` is independent and does not require a column definition parent, instead it accept the ID of
+ * `pblNgridHeaderCellDef` does the same thing that `matHeaderCellDef` and `cdkHeaderCellDef` do with one difference,
+ * `pblNgridHeaderCellDef` is independent and does not require a column definition parent, instead it accept the ID of
  * the header cell.
  *
  * NOTE: Defining '*' as id will declare the header cell template as default, replacing the table's default header cell template.
@@ -64,18 +64,18 @@ export abstract class PblTableBaseCellDef<Z> implements OnInit, OnDestroy, PblTa
  * the `prop` is used (full with dot notation).
  */
 @Directive({
-  selector: '[pblTableHeaderCellDef], [pblTableHeaderCellTypeDef]',
-  inputs: [ 'name:pblTableHeaderCellDef', 'type:pblTableHeaderCellTypeDef' ]
+  selector: '[pblNgridHeaderCellDef], [pblNgridHeaderCellTypeDef]',
+  inputs: [ 'name:pblNgridHeaderCellDef', 'type:pblNgridHeaderCellTypeDef' ]
 })
-export class PblTableHeaderCellDefDirective<T> extends PblTableBaseCellDef<PblTableMetaCellContext<T>> {
-  constructor(tRef: TemplateRef<PblTableMetaCellContext<T>>, registry: PblTableRegistryService) { super(tRef, registry); }
+export class PblNgridHeaderCellDefDirective<T> extends PblNgridBaseCellDef<PblNgridMetaCellContext<T>> {
+  constructor(tRef: TemplateRef<PblNgridMetaCellContext<T>>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
 
 /**
- * Cell definition for the pbl-table.
+ * Cell definition for the pbl-ngrid.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  *
- * `pblTableCellDef` does the same thing that `matCellDef` and `cdkCellDef` do with one difference, `pblTableCellDef` is
+ * `pblNgridCellDef` does the same thing that `matCellDef` and `cdkCellDef` do with one difference, `pblNgridCellDef` is
  * independent and does not require a column definition parent, instead it accept the ID of the cell.
  *
  * NOTE: Defining '*' as id will declare the cell template as default, replacing the table's default cell template.
@@ -86,32 +86,32 @@ export class PblTableHeaderCellDefDirective<T> extends PblTableBaseCellDef<PblTa
  * the `prop` is used (full with dot notation).
  */
 @Directive({
-  selector: '[pblTableCellDef], [pblTableCellTypeDef]',
-  inputs: [ 'name:pblTableCellDef', 'type:pblTableCellTypeDef' ]
+  selector: '[pblNgridCellDef], [pblNgridCellTypeDef]',
+  inputs: [ 'name:pblNgridCellDef', 'type:pblNgridCellTypeDef' ]
 })
-export class PblTableCellDefDirective<T, P extends keyof PblColumnTypeDefinitionDataMap = any> extends PblTableBaseCellDef<PblTableCellContext<T, P>> {
+export class PblNgridCellDefDirective<T, P extends keyof PblColumnTypeDefinitionDataMap = any> extends PblNgridBaseCellDef<PblNgridCellContext<T, P>> {
   type: P;
-  constructor(tRef: TemplateRef<PblTableCellContext<any, P>>, registry: PblTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<PblNgridCellContext<any, P>>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
-  selector: '[pblTableCellEditorDef], [pblTableCellEditorTypeDef]',
-  inputs: [ 'name:pblTableCellEditorDef', 'type:pblTableCellEditorTypeDef' ]
+  selector: '[pblNgridCellEditorDef], [pblNgridCellEditorTypeDef]',
+  inputs: [ 'name:pblNgridCellEditorDef', 'type:pblNgridCellEditorTypeDef' ]
 })
-export class PblTableEditorCellDefDirective<T, P extends keyof PblColumnTypeDefinitionDataMap = any> extends PblTableBaseCellDef<PblTableCellContext<T, P>> {
+export class PblNgridEditorCellDefDirective<T, P extends keyof PblColumnTypeDefinitionDataMap = any> extends PblNgridBaseCellDef<PblNgridCellContext<T, P>> {
   type: P;
-  constructor(tRef: TemplateRef<PblTableCellContext<any, P>>, registry: PblTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<PblNgridCellContext<any, P>>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
-  selector: '[pblTableFooterCellDef], [pblTableFooterCellTypeDef]',
-  inputs: [ 'name:pblTableFooterCellDef', 'type:pblTableFooterCellTypeDef' ]
+  selector: '[pblNgridFooterCellDef], [pblNgridFooterCellTypeDef]',
+  inputs: [ 'name:pblNgridFooterCellDef', 'type:pblNgridFooterCellTypeDef' ]
 })
-export class PblTableFooterCellDefDirective<T> extends PblTableBaseCellDef<PblTableMetaCellContext<T>> {
-  constructor(tRef: TemplateRef<PblTableMetaCellContext<T>>, registry: PblTableRegistryService) { super(tRef, registry); }
+export class PblNgridFooterCellDefDirective<T> extends PblNgridBaseCellDef<PblNgridMetaCellContext<T>> {
+  constructor(tRef: TemplateRef<PblNgridMetaCellContext<T>>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
 
-function findCellDefById<T extends PblTableCellDefDirectiveBase>(cellDefs: Array<T>, colDef: Pick<PblMetaColumn, 'id' | 'type'>, searchParent?: boolean): T {
+function findCellDefById<T extends PblNgridCellDefDirectiveBase>(cellDefs: Array<T>, colDef: Pick<PblMetaColumn, 'id' | 'type'>, searchParent?: boolean): T {
   for (const cellDef of cellDefs) {
     if (cellDef.type) {
       if (colDef.type && cellDef.type === colDef.type.name) {
@@ -126,11 +126,11 @@ function findCellDefById<T extends PblTableCellDefDirectiveBase>(cellDefs: Array
   }
 }
 
-export function findCellDef<T = any>(registry: PblTableRegistryService, colDef: PblColumn, kind: 'tableCell' | 'editorCell',  searchParent?: boolean): PblTableCellDefDirective<T>;
-export function findCellDef<T = any>(registry: PblTableRegistryService, colDef: PblMetaColumn | PblColumn, kind: 'headerCell', searchParent?: boolean): PblTableHeaderCellDefDirective<T>;
-export function findCellDef<T = any>(registry: PblTableRegistryService, colDef: PblMetaColumn | PblColumn, kind: 'footerCell', searchParent?: boolean): PblTableFooterCellDefDirective<T>;
-export function findCellDef<T = any>(registry: PblTableRegistryService, colDef: COLUMN, kind: 'headerCell' | 'footerCell' | 'tableCell' | 'editorCell', searchParent?: boolean): PblTableCellDefDirective<T> | PblTableHeaderCellDefDirective<T> | PblTableFooterCellDefDirective <T> {
-  const cellDefs: PblTableCellDefDirectiveBase[] = registry.getMulti(kind);
+export function findCellDef<T = any>(registry: PblNgridRegistryService, colDef: PblColumn, kind: 'tableCell' | 'editorCell',  searchParent?: boolean): PblNgridCellDefDirective<T>;
+export function findCellDef<T = any>(registry: PblNgridRegistryService, colDef: PblMetaColumn | PblColumn, kind: 'headerCell', searchParent?: boolean): PblNgridHeaderCellDefDirective<T>;
+export function findCellDef<T = any>(registry: PblNgridRegistryService, colDef: PblMetaColumn | PblColumn, kind: 'footerCell', searchParent?: boolean): PblNgridFooterCellDefDirective<T>;
+export function findCellDef<T = any>(registry: PblNgridRegistryService, colDef: COLUMN, kind: 'headerCell' | 'footerCell' | 'tableCell' | 'editorCell', searchParent?: boolean): PblNgridCellDefDirective<T> | PblNgridHeaderCellDefDirective<T> | PblNgridFooterCellDefDirective <T> {
+  const cellDefs: PblNgridCellDefDirectiveBase[] = registry.getMulti(kind);
 
   if (cellDefs) {
     let type: Pick<PblMetaColumn, 'id' | 'type'>;

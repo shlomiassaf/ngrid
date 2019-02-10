@@ -14,14 +14,14 @@ import { CdkColumnDef } from '@angular/cdk/table';
 import { COLUMN } from '../columns';
 import { isPblColumn } from '../columns/column';
 import { CellContext } from '../context/index';
-import { PblTableComponent } from '../table.component';
-import { EXT_API_TOKEN, PblTableExtensionApi } from '../../ext/table-ext-api';
+import { PblNgridComponent } from '../table.component';
+import { EXT_API_TOKEN, PblNgridExtensionApi } from '../../ext/table-ext-api';
 import { parseStyleWidth } from '../columns/utils';
 import { uniqueColumnCss } from '../circular-dep-bridge';
 
 /* TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
-  PblTableColumnDef use's the default object KeyValueDiffer provides with angular.
+  PblNgridColumnDef use's the default object KeyValueDiffer provides with angular.
   This differ will perform the diff on the entire object which IS NOT REQUIRED!
   We need to create a custom differ that does the diff on selected properties only.
 */
@@ -31,14 +31,14 @@ import { uniqueColumnCss } from '../circular-dep-bridge';
  * Defines a set of cells available for a table column.
  */
 @Directive({
-  selector: '[pblTableColumnDef]',
+  selector: '[pblNgridColumnDef]',
   providers: [
-    { provide: CdkColumnDef, useExisting: PblTableColumnDef },
-    { provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: PblTableColumnDef }
+    { provide: CdkColumnDef, useExisting: PblNgridColumnDef },
+    { provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: PblNgridColumnDef }
   ],
 })
-export class PblTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef implements DoCheck, OnDestroy {
-  @Input('pblTableColumnDef') get column(): T { return this._column; };
+export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef implements DoCheck, OnDestroy {
+  @Input('pblNgridColumnDef') get column(): T { return this._column; };
   set column(value: T) { this.attach(value); }
 
   get isDirty(): boolean {
@@ -66,7 +66,7 @@ export class PblTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
   isDragging = false;
 
   protected _colDiffer: KeyValueDiffer<any, any>;
-  protected table: PblTableComponent<any>;
+  protected table: PblNgridComponent<any>;
 
   private _column: T;
   private _isDirty = false;
@@ -99,7 +99,7 @@ export class PblTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
    */
   private _netWidth: number;
 
-  constructor(protected readonly _differs: KeyValueDiffers, @Inject(EXT_API_TOKEN) protected extApi: PblTableExtensionApi<any> ) {
+  constructor(protected readonly _differs: KeyValueDiffers, @Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<any> ) {
     super();
     this.table = extApi.table;
   }
@@ -118,12 +118,12 @@ export class PblTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
    * Lazy means it will run the check only when the diff is requested (i.e. querying the `hasChanged` property).
    * This allow aggregation of changes between CD cycles, i.e. calling `markForCheck()` multiple times within the same CD cycle does not hit performance.
    *
-   * Once marked for check, `pblTableColumnDef` handles it's dirty (`isDirty`) state automatically, when `isDirty` is true it will remain true until the
-   * CD cycle ends, i.e. until `ngDoCheck()` hits. This means that only children of `pblTableColumnDef` can relay on `isDirty`, all children will run their
-   * `ngDoCheck()` before `ngDoCheck()` of `pblTableColumnDef`.
+   * Once marked for check, `pblNgridColumnDef` handles it's dirty (`isDirty`) state automatically, when `isDirty` is true it will remain true until the
+   * CD cycle ends, i.e. until `ngDoCheck()` hits. This means that only children of `pblNgridColumnDef` can relay on `isDirty`, all children will run their
+   * `ngDoCheck()` before `ngDoCheck()` of `pblNgridColumnDef`.
    *
    * This is a how we notify all cell directives about changes in a column. It is done through angular's CD logic and does not require manual
-   * CD kicks and special channels between pblTableColumnDef and it's children.
+   * CD kicks and special channels between pblNgridColumnDef and it's children.
    */
   markForCheck(): void {
     if (!this._colDiffer) {
@@ -194,16 +194,16 @@ export class PblTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
       for (const f of filter) {
         switch (f) {
           case 'table':
-           query.push(`.pbl-table-cell${cssId}`);
+           query.push(`.pbl-ngrid-cell${cssId}`);
            break;
           case 'header':
-           query.push(`.pbl-table-header-cell${cssId}:not(.pbl-header-group-cell)`);
+           query.push(`.pbl-ngrid-header-cell${cssId}:not(.pbl-header-group-cell)`);
            break;
           case 'headerGroup':
            query.push(`.pbl-header-group-cell${cssId}`);
            break;
           case 'footer':
-           query.push(`.pbl-table-footer-cell${cssId}:not(.pbl-footer-group-cell)`);
+           query.push(`.pbl-ngrid-footer-cell${cssId}:not(.pbl-footer-group-cell)`);
            break;
           case 'footerGroup':
            query.push(`.pbl-footer-group-cell${cssId}`);

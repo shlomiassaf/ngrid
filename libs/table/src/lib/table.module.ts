@@ -6,32 +6,32 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
 
 import {
-  PEB_ANGRID_CONFIG, PblTableConfig,
-  PblTableRegistryService,
+  PEB_ANGRID_CONFIG, PblNgridConfig,
+  PblNgridRegistryService,
   PblCdkTableComponent,
-  PblTableComponent,
+  PblNgridComponent,
 
-  PblTableRowComponent,
-  PblTableMetaRowContainerComponent, PblMetaRowDirective,
-  PblTableColumnDef,
-  PblTableHeaderCellDefDirective,
-  PblTableFooterCellDefDirective,
-  PblTableCellDefDirective, PblTableEditorCellDefDirective,
-  PblTableHeaderCellComponent,
-  PblTableCellDirective,
-  PblTableFooterCellDirective,
+  PblNgridRowComponent,
+  PblNgridMetaRowContainerComponent, PblMetaRowDirective,
+  PblNgridColumnDef,
+  PblNgridHeaderCellDefDirective,
+  PblNgridFooterCellDefDirective,
+  PblNgridCellDefDirective, PblNgridEditorCellDefDirective,
+  PblNgridHeaderCellComponent,
+  PblNgridCellDirective,
+  PblNgridFooterCellDirective,
 
   ParentNgStyleDirective, ParentNgClassDirective,
-  PblTableOuterSectionDirective,
-  PblTableNoDataRefDirective,
-  PblTablePaginatorRefDirective,
+  PblNgridOuterSectionDirective,
+  PblNgridNoDataRefDirective,
+  PblNgridPaginatorRefDirective,
 
   PblColumnSizeObserver,
-  PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblTableScrolling,
+  PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblNgridScrolling,
 
-  PblTableCellEditAutoFocusDirective,
+  PblNgridCellEditAutoFocusDirective,
 
-  PblTableConfigService,
+  PblNgridConfigService,
 } from './table/index';
 import { TableMetaCellContextPipe } from './table/pipes/table-cell-context.pipe';
 
@@ -60,54 +60,54 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     CdkTableModule,
   ],
   declarations: [
-    PblTableMetaRowContainerComponent, PblMetaRowDirective,
+    PblNgridMetaRowContainerComponent, PblMetaRowDirective,
     PblCdkTableComponent,
-    PblTableColumnDef,
-    PblTableRowComponent,
+    PblNgridColumnDef,
+    PblNgridRowComponent,
     ParentNgStyleDirective, ParentNgClassDirective,
-    PblTableOuterSectionDirective,
-    PblTableNoDataRefDirective,
-    PblTablePaginatorRefDirective,
-    PblTableHeaderCellDefDirective,
-    PblTableFooterCellDefDirective,
-    PblTableCellDefDirective, PblTableEditorCellDefDirective,
-    PblTableHeaderCellComponent,
-    PblTableCellDirective,
-    PblTableFooterCellDirective,
+    PblNgridOuterSectionDirective,
+    PblNgridNoDataRefDirective,
+    PblNgridPaginatorRefDirective,
+    PblNgridHeaderCellDefDirective,
+    PblNgridFooterCellDefDirective,
+    PblNgridCellDefDirective, PblNgridEditorCellDefDirective,
+    PblNgridHeaderCellComponent,
+    PblNgridCellDirective,
+    PblNgridFooterCellDirective,
 
     PblColumnSizeObserver,
-    PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblTableScrolling,
+    PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblNgridScrolling,
 
-    PblTableCellEditAutoFocusDirective,
+    PblNgridCellEditAutoFocusDirective,
 
-    PblTableComponent,
+    PblNgridComponent,
     TableMetaCellContextPipe
   ],
   exports: [
-    PblTableRowComponent,
+    PblNgridRowComponent,
     ParentNgStyleDirective, ParentNgClassDirective,
-    PblTableOuterSectionDirective,
-    PblTableNoDataRefDirective,
-    PblTablePaginatorRefDirective,
-    PblTableHeaderCellDefDirective,
-    PblTableFooterCellDefDirective,
-    PblTableCellDefDirective, PblTableEditorCellDefDirective, PblTableScrolling,
-    PblTableHeaderCellComponent,
-    PblTableCellDirective,
-    PblTableFooterCellDirective,
+    PblNgridOuterSectionDirective,
+    PblNgridNoDataRefDirective,
+    PblNgridPaginatorRefDirective,
+    PblNgridHeaderCellDefDirective,
+    PblNgridFooterCellDefDirective,
+    PblNgridCellDefDirective, PblNgridEditorCellDefDirective, PblNgridScrolling,
+    PblNgridHeaderCellComponent,
+    PblNgridCellDirective,
+    PblNgridFooterCellDirective,
 
     PblColumnSizeObserver,
     PblCdkVirtualScrollDirective,
 
-    PblTableCellEditAutoFocusDirective,
+    PblNgridCellEditAutoFocusDirective,
 
-    PblTableComponent,
+    PblNgridComponent,
   ],
 })
-export class PblTableModule {
+export class PblNgridModule {
 
   constructor(ngRef: NgModuleRef<any>,
-              registry: PblTableRegistryService,
+              registry: PblNgridRegistryService,
               @Inject(COMMON_TABLE_TEMPLATE_INIT) @Optional() @Self() components: CommonTemplateInit[][]) {
     if (components) {
       for (const multi of components) {
@@ -115,18 +115,18 @@ export class PblTableModule {
           if (c.root) {
             registry = registry.getRoot();
           }
-          PblTableModule.loadCommonTemplates(ngRef, c.component, { registry, destroy: true });
+          PblNgridModule.loadCommonTemplates(ngRef, c.component, { registry, destroy: true });
         }
       }
     }
   }
 
-  static forRoot(config: PblTableConfig, components: CommonTemplateInit[]): ModuleWithProviders {
+  static forRoot(config: PblNgridConfig, components: CommonTemplateInit[]): ModuleWithProviders {
     return {
-      ngModule: PblTableModule,
+      ngModule: PblNgridModule,
       providers: [
         { provide: PEB_ANGRID_CONFIG, useValue: config },
-        PblTableConfigService,
+        PblNgridConfigService,
         provideCommon(components),
       ]
     };
@@ -134,7 +134,7 @@ export class PblTableModule {
 
   static withCommon(components: CommonTemplateInit[]): ModuleWithProviders {
     return {
-      ngModule: PblTableModule,
+      ngModule: PblNgridModule,
       providers: provideCommon(components),
     };
   }
@@ -143,7 +143,7 @@ export class PblTableModule {
                                 component: Type<T>,
                                 options?: {
                                   /** When set will use it as first registry in the DI tree */
-                                  registry?: PblTableRegistryService;
+                                  registry?: PblNgridRegistryService;
                                   /** When set will destroy the component when the module is destroyed. */
                                   destroy?: boolean;
                                 }): ComponentRef<T> {
@@ -152,7 +152,7 @@ export class PblTableModule {
 
     if (registry) {
       injector = Injector.create({
-        providers: [ { provide: PblTableRegistryService, useValue: registry.getRoot() } ],
+        providers: [ { provide: PblNgridRegistryService, useValue: registry.getRoot() } ],
         parent: ngRef.injector
       });
     }
