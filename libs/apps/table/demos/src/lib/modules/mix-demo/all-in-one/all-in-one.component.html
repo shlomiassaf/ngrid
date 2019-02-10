@@ -21,25 +21,25 @@
             class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
     <pbl-demo-action-row filter label="Demo 2"></pbl-demo-action-row>
     <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS NEG-TABLE -->
-    <div *negTableBlockUiDef class="pbl-table-ui-block">
+    <div *pblTableBlockUiDef class="pbl-table-ui-block">
       <mat-spinner></mat-spinner>
     </div>
     <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS NEG-TABLE -->
 
     <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS NEG-TABLE -->
-    <div *negTableNoDataRef class="pbl-table-no-data"><span>No Results</span></div>
+    <div *pblTableNoDataRef class="pbl-table-no-data"><span>No Results</span></div>
     <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS NEG-TABLE -->
 
     <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS NEG-TABLE -->
-    <pbl-table-paginator *negTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-table-paginator>
+    <pbl-table-paginator *pblTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-table-paginator>
     <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS NEG-TABLE -->
 
     <!-- DETAIL ROW TEMPLATE DEFINITION-->
-    <pbl-table-row *negTableDetailRowParentRef="let row; table as table"
+    <pbl-table-row *pblTableDetailRowParentRef="let row; table as table"
                   [detailRow]="row"
                   matRipple>
     </pbl-table-row>
-    <div *negTableDetailRowDef="let row"
+    <div *pblTableDetailRowDef="let row"
         class="pbl-detail-row" [@detailExpand]>
       <div>
         <h1>Detail Row</h1>
@@ -51,21 +51,21 @@
 
     <!-- DEFAULT CELL TEMPLATE DEFINITION-->
     <!-- We can omit this because the table has a default cell template similar to this. It is here for reference -->
-    <div *negTableCellDef="'*'; value as value;"> {{value}} </div>
+    <div *pblTableCellDef="'*'; value as value;"> {{value}} </div>
     <!-- DEFAULT CELL TEMPLATE DEFINITION-->
 
 
     <!-- SPECIFIC CELL TEMPLATE DEFINITION-->
-    <div *negTableCellDef="'name'; value as value;"><b>{{value}}</b></div>
-    <div *negTableCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data.currency(row):'symbol':'1.0-2'}}</div>
-    <div *negTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
-    <div *negTableCellDef="'balance'; value as value;" [parentNgClass]="{ 'balance-negative': value < 0, 'balance-positive': value > 0 }">{{ value | number:'1.0-0'}}</div>
-    <div *negTableCellDef="'settings.background'; value as value;" [parentNgStyle]="{ backgroundColor: value }"><b>{{value}}</b></div>
-    <div *negTableCellDef="'settings.avatar'; value as value;"><img [src]="value" height="40px" /></div>
+    <div *pblTableCellDef="'name'; value as value;"><b>{{value}}</b></div>
+    <div *pblTableCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data.currency(row):'symbol':'1.0-2'}}</div>
+    <div *pblTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
+    <div *pblTableCellDef="'balance'; value as value;" [parentNgClass]="{ 'balance-negative': value < 0, 'balance-positive': value > 0 }">{{ value | number:'1.0-0'}}</div>
+    <div *pblTableCellDef="'settings.background'; value as value;" [parentNgStyle]="{ backgroundColor: value }"><b>{{value}}</b></div>
+    <div *pblTableCellDef="'settings.avatar'; value as value;"><img [src]="value" height="40px" /></div>
     <!-- SPECIFIC DEFAULT CELL TEMPLATE DEFINITION-->
 
     <!-- CELL EDITOR TEMPLATES -->
-    <div *negTableCellEditorDef="'settings.emailFrequency'; let ctx">
+    <div *pblTableCellEditorDef="'settings.emailFrequency'; let ctx">
       <mat-form-field>
         <mat-select #matSelect [value]="ctx.value"
                     (ngAfterViewInit)="matSelect.open()"
@@ -83,22 +83,22 @@
 
     <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
     <!-- We can omit this because the table has a default header cell template similar to this. It is here for reference -->
-    <div *negTableHeaderCellDef="'*'; col as col">
+    <div *pblTableHeaderCellDef="'*'; col as col">
       <span style="text-decoration: underline; font-weight: bold">{{col.label}}</span>
     </div>
-    <div *negTableHeaderCellTypeDef="'country'; col as col">
+    <div *pblTableHeaderCellTypeDef="'country'; col as col">
       <span>🏳 {{col.label}} 🏳</span>
     </div>
-    <div *negTableHeaderCellTypeDef="'language'; col as col">
+    <div *pblTableHeaderCellTypeDef="'language'; col as col">
       <span>🌐 {{col.label}} 🌐</span>
       </div>
-    <div *negTableFooterCellDef="'*'; col as col">
+    <div *pblTableFooterCellDef="'*'; col as col">
       <span style="opacity: 0.5">{{col.label}}</span>
     </div>
     <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
 
     <!-- DEFAULT HEADER CELL TEMPLATE DEFINITION-->
-    <div *negTableHeaderCellDef="'name'; col as col"><span style="font-size: 22px; font-weight: bold">{{col.label}}</span></div>
+    <div *pblTableHeaderCellDef="'name'; col as col"><span style="font-size: 22px; font-weight: bold">{{col.label}}</span></div>
     <!-- SPECIFIC HEADER DEFAULT CELL TEMPLATE DEFINITION-->
 
   </pbl-table>

@@ -29,7 +29,7 @@ In this scenario the entire process is handled automatically by the table, based
             vScrollNone
             [dataSource]="clientSideDS"
             [columns]="columns">
-    <pbl-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
   </pbl-table>
@@ -59,7 +59,7 @@ Regardless, it is the same information, transforming from one method to the othe
             blockUi
             [dataSource]="pageNumberDS"
             [columns]="columns">
-    <pbl-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
   </pbl-table>
@@ -79,7 +79,7 @@ With this method might be missing the total amount of rows/pages depending on th
             blockUi
             [dataSource]="tokenDS"
             [columns]="columns">
-    <pbl-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
   </pbl-table>
@@ -101,7 +101,7 @@ With this method might be missing the total amount of rows/pages depending on th
             [columns]="columnsPaginatorAsFooter"
             [stickyFooter]="[0]"
             style="background: transparent">
-    <div *negTableFooterCellTypeDef="'PAGINATOR'; table as table"
+    <div *pblTableFooterCellTypeDef="'PAGINATOR'; table as table"
         style="display: flex; justify-content: flex-end; width: 100%;">
       <pbl-table-paginator [table]="table"
                           [paginator]="table.ds.paginator"></pbl-table-paginator>

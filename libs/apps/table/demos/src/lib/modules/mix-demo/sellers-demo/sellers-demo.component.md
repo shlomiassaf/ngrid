@@ -10,9 +10,9 @@
            style="height: 500px"
            class=" pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
   <pbl-demo-action-row filter label="Sellers" (refresh)="refresh()" ></pbl-demo-action-row>
-  <div *negTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
+  <div *pblTableCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
 
-  <div *negTableHeaderCellTypeDef="'pbl-groupby-row'; col as col; table as table" negAggregationContainer #agg="negAggregationContainer"
+  <div *pblTableHeaderCellTypeDef="'pbl-groupby-row'; col as col; table as table" negAggregationContainer #agg="negAggregationContainer"
        fxLayoutAlign="start center"
        style="position: absolute; height: 100%; width: 100%;">
     <mat-icon>format_list_bulleted</mat-icon>

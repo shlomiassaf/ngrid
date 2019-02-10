@@ -1,38 +1,38 @@
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR NEG-TABLE -->
-<div *negTableBlockUiDef class="pbl-table-ui-block">
+<div *pblTableBlockUiDef class="pbl-table-ui-block">
   <mat-spinner></mat-spinner>
 </div>
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR NEG-TABLE -->
 
 <!-- DEFINING DEFAULT NO DATA TEMPLATE -->
-<div *negTableNoDataRef class="pbl-table-no-data"><span>No Results</span></div>
+<div *pblTableNoDataRef class="pbl-table-no-data"><span>No Results</span></div>
 <!-- DEFINING DEFAULT NO DATA TEMPLATE -->
 
-<pbl-table-drag-resize *negTableCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
+<pbl-table-drag-resize *pblTableCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
   <span class="pbl-table-column-resizer-handle"></span>
 </pbl-table-drag-resize>
-<span *negTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx" cdkDragRootElementClass="cdk-drag column-reorder-handle" ></span>
+<span *pblTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx" cdkDragRootElementClass="cdk-drag column-reorder-handle" ></span>
 
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE COLUMNS FOR NEG-TABLE -->
-<div *negTableCellDef="'*'; value as value;">{{value}}</div>
-<div *negTableCellTypeDef="'visualBool'; value as value;">{{ value ? '✅' : '🚫' }}</div>
-<div *negTableCellTypeDef="'date'; value as value;">{{value | date: 'MMM dd, yyyy'}}</div>
-<div *negTableCellTypeDef="'number'; value as value;">{{value | number: '1.0-2'}}</div>
+<div *pblTableCellDef="'*'; value as value;">{{value}}</div>
+<div *pblTableCellTypeDef="'visualBool'; value as value;">{{ value ? '✅' : '🚫' }}</div>
+<div *pblTableCellTypeDef="'date'; value as value;">{{value | date: 'MMM dd, yyyy'}}</div>
+<div *pblTableCellTypeDef="'number'; value as value;">{{value | number: '1.0-2'}}</div>
 <!-- Set's the currency based on a predefined currency in ISO format, provided in the `type.data` property of the column -->
-<div *negTableCellTypeDef="'currency'; value as value; col as col;">{{value | currency:col.type.data:'symbol':'1.0-2'}}</div>
-<div *negTableCellTypeDef="'datetime'; value as value;">{{value | date: 'MMM dd, yyyy  HH:mm'}}</div>
-<div *negTableHeaderCellDef="'*'; col as col;">{{col.label}}</div>
-<div *negTableFooterCellDef="'*'; col as col;">{{col.label}}</div>
+<div *pblTableCellTypeDef="'currency'; value as value; col as col;">{{value | currency:col.type.data:'symbol':'1.0-2'}}</div>
+<div *pblTableCellTypeDef="'datetime'; value as value;">{{value | date: 'MMM dd, yyyy  HH:mm'}}</div>
+<div *pblTableHeaderCellDef="'*'; col as col;">{{col.label}}</div>
+<div *pblTableFooterCellDef="'*'; col as col;">{{col.label}}</div>
 
 
-<div *negTableHeaderCellTypeDef="'drag_and_drop_handle'"></div>
-<div *negTableCellTypeDef="'drag_and_drop_handle'; let ctx" [negTableRowDrag]="ctx" style="cursor: move">
+<div *pblTableHeaderCellTypeDef="'drag_and_drop_handle'"></div>
+<div *pblTableCellTypeDef="'drag_and_drop_handle'; let ctx" [negTableRowDrag]="ctx" style="cursor: move">
   <mat-icon negDragHandle class="pbl-table-row-drag-handle">drag_handle</mat-icon>
   <div class="pbl-table-row-drag-placeholder" *cdkDragPlaceholder></div>
 </div>
 
 <!-- START RATINGS -->
-<div *negTableCellTypeDef="'starRatings'; value as value">
+<div *pblTableCellTypeDef="'starRatings'; value as value">
   {{ value >= 1 ? '★' : '☆' }}
   {{ value >= 2 ? '★' : '☆' }}
   {{ value >= 3 ? '★' : '☆' }}
@@ -40,7 +40,7 @@
   {{ value === 5 ? '★' : '☆' }}
 </div>
 
-<div *negTableCellTypeDef="'progressBar'; value as value; col as col"
+<div *pblTableCellTypeDef="'progressBar'; value as value; col as col"
      [ngStyle]="col.type.data.style(value)" [style.width]="value + '%'">
   <div>{{ value }}%</div>
 </div>

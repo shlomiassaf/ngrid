@@ -2,10 +2,10 @@
 
 When the datasource does not contain items (length is 0) the table will show the empty collection template.
 
-The template can be defined at any location using the structural directive **`*negTableNoDataRef`**
+The template can be defined at any location using the structural directive **`*pblTableNoDataRef`**
 
 ```html
-<div *negTableNoDataRef class="pbl-table-no-data">
+<div *pblTableNoDataRef class="pbl-table-no-data">
   <span>No Results</span>
 </div>
 ```

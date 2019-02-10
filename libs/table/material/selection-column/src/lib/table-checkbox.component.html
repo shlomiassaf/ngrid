@@ -1,4 +1,4 @@
-<ng-container *negTableHeaderCellDef="name; col as col;">
+<ng-container *pblTableHeaderCellDef="name; col as col;">
   <mat-checkbox *ngIf="bulkSelectMode !== 'none'"
                 style="overflow: initial"
                 color="primary"
@@ -8,11 +8,11 @@
                 [indeterminate]="length > 0 && !allSelected">
   </mat-checkbox>
 </ng-container>
-<mat-checkbox *negTableCellDef="name; row as row;"
+<mat-checkbox *pblTableCellDef="name; row as row;"
               style="overflow: initial"
               color="primary"
               (click)="$event.stopPropagation()"
               (change)="rowItemChange(row)"
               [checked]="selection.isSelected(row)">
 </mat-checkbox>
-<span *negTableFooterCellDef="name; col as col;">{{ length ? length : '' }}</span>
+<span *pblTableFooterCellDef="name; col as col;">{{ length ? length : '' }}</span>

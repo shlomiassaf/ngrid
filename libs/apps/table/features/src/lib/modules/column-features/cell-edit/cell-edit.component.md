@@ -7,13 +7,13 @@ Let's start with a simple example:
 <docsi-mat-example-with-source title="Simple cell edit" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
   <pbl-table [dataSource]="ds1" [columns]="columns1">
-    <div *negTableCellDef="'ttt'; let ctx">
+    <div *pblTableCellDef="'ttt'; let ctx">
       {{!!ctx.rowContext.firstRender}}
     </div>
-    <div *negTableCellDef="'name'; let ctx">
+    <div *pblTableCellDef="'name'; let ctx">
       <a (click)="ctx.startEdit(true)">{{ ctx.value }}</a>
     </div>
-    <div *negTableCellEditorDef="'name'; let ctx">
+    <div *pblTableCellEditorDef="'name'; let ctx">
       <input #input [value]="ctx.value" [negCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
     </div>
   </pbl-table>
@@ -45,7 +45,7 @@ These are the specific property directives definitions, there are also type base
 - `negTableCellEditorTypeDef` defining the write view of the cell.
 
 ```html
-<div *negTableCellDef="'name'; let ctx">
+<div *pblTableCellDef="'name'; let ctx">
   <a (click)="ctx.startEdit()">{{ ctx.value }}</a>
 </div>
 ```
@@ -53,7 +53,7 @@ These are the specific property directives definitions, there are also type base
 The read-only definition is straight-forward, the main change is that we use the cell context to invoke a `startEdit()` command.
 
 ```html
-<div *negTableCellEditorDef="'name'; let ctx">
+<div *pblTableCellEditorDef="'name'; let ctx">
   <input #input [value]="ctx.value" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" (ngAfterViewInit)="input.focus()"/>
 </div>
 ```
@@ -91,13 +91,13 @@ For this we make use of the `target-events` plugin that allow us to handle speci
   <!--@pebula-example:ex-2-->
   <pbl-table (cellClick)="$event.context.startEdit()"
              [dataSource]="ds2" [columns]="columns2">
-    <div *negTableCellDef="'name'; let ctx">
+    <div *pblTableCellDef="'name'; let ctx">
       <a (click)="ctx.startEdit(true)">{{ ctx.value }}</a>
     </div>
-    <div *negTableCellEditorDef="'name'; let ctx">
+    <div *pblTableCellEditorDef="'name'; let ctx">
       <input [value]="ctx.value" [negCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
     </div>
-    <div *negTableCellEditorDef="'lead'; let ctx">
+    <div *pblTableCellEditorDef="'lead'; let ctx">
       <input type="checkbox" [checked]="ctx.value"
              [negCellEditAutoFocus]="ctx"
              (change)="changeCheckbox(cb, ctx)"
@@ -112,7 +112,7 @@ This time, clicking on a cell in the **lead** column will start edit mode.
 ```html
 <pbl-table (cellClick)="$event.context.startEdit()"
             [dataSource]="ds2" [columns]="columns2">
-  <div *negTableCellEditorDef="'lead'; let ctx">
+  <div *pblTableCellEditorDef="'lead'; let ctx">
     <input #cb type="checkbox" [checked]="ctx.value"
             (change)="changeCheckbox(cb, ctx)"
             (blur)="ctx.stopEdit()"
@@ -152,7 +152,7 @@ the `editable` property set to true.
   <!--@pebula-example:ex-3-->
   <pbl-table cellEditClick
              [dataSource]="ds3" [columns]="columns3">
-    <div *negTableCellEditorTypeDef="'date'; let ctx">
+    <div *pblTableCellEditorTypeDef="'date'; let ctx">
       <mat-form-field>
         <input matInput [matDatepicker]="picker" [value]="ctx.value"
                (dateChange)="ctx.value = $event.value">

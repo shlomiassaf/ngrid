@@ -66,7 +66,7 @@ behavior and/or look of the resizing process we need override these templates.
 To override resizing we need to provide a template that the table will use to render the drag element that listen to all mouse/touch events
 and act upon them.
 
-To do that we use the structural directive `*negTableCellResizerRef`. This directive will automatically register the template for us
+To do that we use the structural directive `*pblTableCellResizerRef`. This directive will automatically register the template for us
 and provide us with the **column*** and **table** instances as context:
 
 ```typescript
@@ -80,10 +80,10 @@ export interface PblTableMetaCellTemplateContext<T> {
 The default resizing template in `PblTableDragModule.withDefaultTemplates()` is fairly simple:
 
 ```html
-<pbl-table-drag-resize *negTableCellResizerRef="let ctx" [context]="ctx"></pbl-table-drag-resize>
+<pbl-table-drag-resize *pblTableCellResizerRef="let ctx" [context]="ctx"></pbl-table-drag-resize>
 ```
 
-We use `*negTableCellResizerRef` to instruct the table which template to use pass the context to `pbl-table-drag-resize` which does all the resizing business.
+We use `*pblTableCellResizerRef` to instruct the table which template to use pass the context to `pbl-table-drag-resize` which does all the resizing business.
 
 `pbl-table-drag-resize` is a component that the plugin provides. It extends `CdkDrag` adding some logic for the resizing scenario.
 It accepts a content which it will display, allowing you to control the handle's look and feel.
@@ -91,7 +91,7 @@ It accepts a content which it will display, allowing you to control the handle's
 <docsi-mat-example-with-source title="Custom resizing" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-4'}]">
   <!--@pebula-example:ex-4-->
   <pbl-table [dataSource]="ds4" [columns]="columns4">
-    <pbl-table-drag-resize *negTableCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
+    <pbl-table-drag-resize *pblTableCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
       <span class="pbl-table-column-resizer-handle"></span>
     </pbl-table-drag-resize>
   </pbl-table>
@@ -105,7 +105,7 @@ Notice how we also use groups in this example, resizing will cause the groups to
 This is just our way of doing it, for complete custom handling, one might do:
 
 ```html
-<my-custom-drag-handler *negTableCellResizerRef="let ctx" [table]="ctx.table" [column]="ctx.col"></my-custom-drag-handler>
+<my-custom-drag-handler *pblTableCellResizerRef="let ctx" [table]="ctx.table" [column]="ctx.col"></my-custom-drag-handler>
 ```
 
 `my-custom-drag-handler` will be rendered on each header cell and should take care of all resizing logic.

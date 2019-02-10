@@ -19,7 +19,7 @@ A Plugin for `pbl-table` with a `Paginator` impelementation using components fro
 
 ```html
 <pbl-table>
-  <pbl-table-paginator *negTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-table-paginator>
+  <pbl-table-paginator *pblTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-table-paginator>
 </pbl-table>
 ```
 

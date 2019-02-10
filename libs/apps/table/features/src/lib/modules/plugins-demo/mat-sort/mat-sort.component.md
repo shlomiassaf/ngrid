@@ -9,7 +9,7 @@
              fallbackMinHeight="300"
              [dataSource]="simpleSortDS"
              [columns]="columns1">
-    <pbl-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
   </pbl-table>
@@ -22,7 +22,7 @@
             blockUi
             [dataSource]="defaultSortDS"
             [columns]="columns">
-    <pbl-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
   </pbl-table>
@@ -37,7 +37,7 @@
              blockUi
              [dataSource]="progSortDS"
              [columns]="columns">
-    <pbl-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
   </pbl-table>

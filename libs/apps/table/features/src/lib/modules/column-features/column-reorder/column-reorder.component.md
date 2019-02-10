@@ -123,7 +123,7 @@ behavior and/or look of the reordering process we need override these templates.
 To override reordering we need to provide a template that the table will use to render the drag element that listen to all mouse/touch events
 and act upon them.
 
-To do that we use the structural directive `*negTableCellDraggerRef`. This directive will automatically register the template for us
+To do that we use the structural directive `*pblTableCellDraggerRef`. This directive will automatically register the template for us
 and provide us with the **column*** and **table** instances as context:
 
 ```typescript
@@ -137,10 +137,10 @@ export interface PblTableMetaCellTemplateContext<T> {
 The default re-order template in `PblTableDragModule.withDefaultTemplates()` is fairly simple:
 
 ```html
-<span *negTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx"></span>
+<span *pblTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx"></span>
 ```
 
-We use `*negTableCellDraggerRef` to instruct the table which template to use pass the context to `[negTableColumnDrag]` which does all the reordering business.
+We use `*pblTableCellDraggerRef` to instruct the table which template to use pass the context to `[negTableColumnDrag]` which does all the reordering business.
 
 `[negTableColumnDrag]` is a directive that the plugin provides. It extends `CdkDrag` adding some logic for the re-order scenario.
 
@@ -149,7 +149,7 @@ We use `*negTableCellDraggerRef` to instruct the table which template to use pas
 `[negTableColumnDrag]` is just our way of doing it, for complete custom handling, one might do:
 
 ```html
-<my-custom-drag-handler *negTableCellDraggerRef="let ctx" [table]="ctx.table" [column]="ctx.col"></my-custom-drag-handler>
+<my-custom-drag-handler *pblTableCellDraggerRef="let ctx" [table]="ctx.table" [column]="ctx.col"></my-custom-drag-handler>
 ```
 
 `my-custom-drag-handler` will be rendered on each header cell and should take care of all re-order logic.

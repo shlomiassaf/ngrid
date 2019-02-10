@@ -23,8 +23,8 @@ The layout is built from 3 sections:
   <div fxFlex="50%">
     <pbl-table showFooter vScrollNone
               [columns]="columns" [dataSource]="ds">
-      <div *negTableOuterSection="'top'"></div>
-      <div *negTableOuterSection="'bottom'"></div>
+      <div *pblTableOuterSection="'top'"></div>
+      <div *pblTableOuterSection="'bottom'"></div>
     </pbl-table>
   </div>
 </div>
@@ -77,13 +77,13 @@ Templates can be added programmatically (`PblTableComponent.createView()` API) o
   <div fxFlex="50%">
     <pbl-table showFooter vScrollNone
               [columns]="{ table: { cols: [ { prop: '__virtual__', label: ' ' } ] } }" [dataSource]="[ {} ]">
-      <div *negTableOuterSection="'top'">
+      <div *pblTableOuterSection="'top'">
         <h1>Outer Top Section</h1>
       </div>
-      <div *negTableCellDef="'__virtual__'">
+      <div *pblTableCellDef="'__virtual__'">
         <h1>Inner Section</h1>
       </div>
-      <div *negTableOuterSection="'bottom'">
+      <div *pblTableOuterSection="'bottom'">
         <h1>Outer Bottom Section</h1>
       </div>
     </pbl-table>
@@ -128,8 +128,8 @@ To use the **AfterContent** section you need to use `PblTableComponent.createVie
 <docsi-mat-example-with-source title="Simple Model" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
   <pbl-table style="height: 110px" [dataSource]="ds" [columns]="columns">
-    <div *negTableOuterSection="'top'"></div>
-    <div *negTableOuterSection="'bottom'"></div>
+    <div *pblTableOuterSection="'top'"></div>
+    <div *pblTableOuterSection="'bottom'"></div>
   </pbl-table>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>

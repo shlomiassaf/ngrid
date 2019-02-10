@@ -175,15 +175,15 @@ Let's take a look again, this time we enable both header and footer rows and use
 
 <div fxLayout>
   <pbl-table fxFlex="208px" style="height: 260px" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel2" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
-    <div *negTableHeaderCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data highlight-data-header">DATA ROW (HEADER)</div>
-    <div *negTableCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW</div>
-    <div *negTableFooterCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data highlight-data-footer">DATA ROW (FOOTER)</div>
+    <div *pblTableHeaderCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data highlight-data-header">DATA ROW (HEADER)</div>
+    <div *pblTableCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW</div>
+    <div *pblTableFooterCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data highlight-data-footer">DATA ROW (FOOTER)</div>
   </pbl-table>
   <div fxFlex="24px"></div>
   <pbl-table fxFlex="*" style="height: 260px" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
-    <div *negTableHeaderCellDef="'*'; col as col" style="text-decoration: underline">{{ col.label | uppercase }}</div>
-    <div *negTableCellDef="'*'; value as value">-> {{value}} <-</div>
-    <div *negTableFooterCellDef="'*'; col as col">({{ col.label }})</div>
+    <div *pblTableHeaderCellDef="'*'; col as col" style="text-decoration: underline">{{ col.label | uppercase }}</div>
+    <div *pblTableCellDef="'*'; value as value">-> {{value}} <-</div>
+    <div *pblTableFooterCellDef="'*'; col as col">({{ col.label }})</div>
   </pbl-table>
 </div>
 
@@ -265,11 +265,11 @@ A table without meta columns. Each data column (id, name, gender, email) is defi
 
 <div fxLayout>
   <pbl-table fxFlex="208px" style="height: 400px" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta2" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
-    <div *negTableHeaderCellTypeDef="'metaRow'; col as col" parentNgClass="column-model-demo-highlight-header">META ROW ({{ col.label }})</div>
-    <div *negTableHeaderCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW (HEADER)</div>
-    <div *negTableCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW</div>
-    <div *negTableFooterCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW (FOOTER)</div>
-    <div *negTableFooterCellTypeDef="'metaRow'; col as col" parentNgClass="column-model-demo-highlight-footer">META ROW ({{ col.label }})</div>
+    <div *pblTableHeaderCellTypeDef="'metaRow'; col as col" parentNgClass="column-model-demo-highlight-header">META ROW ({{ col.label }})</div>
+    <div *pblTableHeaderCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW (HEADER)</div>
+    <div *pblTableCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW</div>
+    <div *pblTableFooterCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW (FOOTER)</div>
+    <div *pblTableFooterCellTypeDef="'metaRow'; col as col" parentNgClass="column-model-demo-highlight-footer">META ROW ({{ col.label }})</div>
   </pbl-table>
   <div fxFlex="24px"></div>
   <pbl-table fxFlex="*" style="height: 400px" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-table>

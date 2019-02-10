@@ -104,7 +104,7 @@ For demonstration we enabled **pagination** and **sorting**, but NOT **filtering
 <docsi-mat-example-with-source title="Enabling custom triggers" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
   <pbl-table [dataSource]="dsCustomTrigger" [columns]="columns" usePagination>
-    <pbl-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *pblTablePaginatorRef="let table"
                          [table]="table"
                          [paginator]="table.ds.paginator"></pbl-table-paginator>
   </pbl-table>

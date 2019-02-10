@@ -58,6 +58,6 @@ export class PblTableDetailRowParentRefDirective<T> extends CdkRowDef<T> impleme
  */
 @Component({
   selector: 'pbl-table-default-detail-row-parent',
-  template: `<pbl-table-row *negTableDetailRowParentRef="let row; table as table" [detailRow]="row"></pbl-table-row>`,
+  template: `<pbl-table-row *pblTableDetailRowParentRef="let row; table as table" [detailRow]="row"></pbl-table-row>`,
 })
 export class PblTableDefaultDetailRowParentComponent { }

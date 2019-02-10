@@ -49,32 +49,32 @@ Registering cell templates for all columns with the **id** `avatar`:
 
 ```html
   <!-- Header cell template  -->
-  <div *negTableHeaderCellDef="'avatar'; col as col">{{ col.label | uppercase }}</div>
+  <div *pblTableHeaderCellDef="'avatar'; col as col">{{ col.label | uppercase }}</div>
 
   <!-- Data cell template -->
-  <div *negTableCellDef="'avatar'; value as value"><img [src]="avatar" /></div>
+  <div *pblTableCellDef="'avatar'; value as value"><img [src]="avatar" /></div>
 
   <!-- Data Editor cell template -->
-  <div *negTableCellEditorDef="'avatar'; value as value"> <input /> </div>
+  <div *pblTableCellEditorDef="'avatar'; value as value"> <input /> </div>
 
   <!-- Footer cell template -->
-  <div *negTableFooterCellDef="'avatar'; col as col">{{ col.label }}</div>
+  <div *pblTableFooterCellDef="'avatar'; col as col">{{ col.label }}</div>
 ```
 
 Registering cell templates for all columns with the **type** `image`:
 
 ```html
   <!-- Header cell template  -->
-  <div *negTableHeaderCellTypeDef="'image'; col as col">{{ col.label | uppercase }}</div>
+  <div *pblTableHeaderCellTypeDef="'image'; col as col">{{ col.label | uppercase }}</div>
 
   <!-- Data cell template -->
-  <div *negTableCellTypeDef="'image'; value as value"><img [src]="avatar" /></div>
+  <div *pblTableCellTypeDef="'image'; value as value"><img [src]="avatar" /></div>
 
   <!-- Data Editor cell template -->
-  <div *negTableCellEditorTypeDef="'image'; value as value"> <input /> </div>
+  <div *pblTableCellEditorTypeDef="'image'; value as value"> <input /> </div>
 
   <!-- Footer cell template -->
-  <div *negTableFooterCellTypeDef="'image'; col as col">{{ col.label }}</div>
+  <div *pblTableFooterCellTypeDef="'image'; col as col">{{ col.label }}</div>
 ```
 
 The location of the template will determine the registry used to store it.
@@ -84,7 +84,7 @@ set as a child of the table component it will be available only to that table in
 
 ```html
 <pbl-table>
-  <div *negTableCellTypeDef="'image'; value as value"><img [src]="avatar" /></div>
+  <div *pblTableCellTypeDef="'image'; value as value"><img [src]="avatar" /></div>
 </pbl-table>
 ```
 
@@ -93,10 +93,10 @@ One more time:
 ```html
 <pbl-table></pbl-table>
 <pbl-table>
-  <div *negTableCellTypeDef="'image'; value as value"> IMAGE 0 </div>
+  <div *pblTableCellTypeDef="'image'; value as value"> IMAGE 0 </div>
 </pbl-table>
 
-<div *negTableCellTypeDef="'image'; value as value"> IMAGE 1 </div>
+<div *pblTableCellTypeDef="'image'; value as value"> IMAGE 1 </div>
 ```
 
 In this example the first table (top) will get the template showing **IMAGE 1** and the 2nd table will get the template shoing **IMAGE 0**
@@ -108,16 +108,16 @@ by using an **id** cell template definition with the value `'*'`.
 
 ```html
   <!-- Header cell template  -->
-  <div *negTableHeaderCellDef="'*'; col as col">{{ col.label | uppercase }}</div>
+  <div *pblTableHeaderCellDef="'*'; col as col">{{ col.label | uppercase }}</div>
 
   <!-- Data cell template -->
-  <div *negTableCellDef="'*'; value as value"><img [src]="avatar" /></div>
+  <div *pblTableCellDef="'*'; value as value"><img [src]="avatar" /></div>
 
   <!-- Data Editor cell template -->
-  <div *negTableCellEditorDef="'*'; value as value"> <input /> </div>
+  <div *pblTableCellEditorDef="'*'; value as value"> <input /> </div>
 
   <!-- Footer cell template -->
-  <div *negTableFooterCellDef="'*'; col as col">{{ col.label }}</div>
+  <div *pblTableFooterCellDef="'*'; col as col">{{ col.label }}</div>
 ```
 
 W> When exists, the default template is used instead of passing the query to the parent registry. Registry default templates in the root registry or close.
