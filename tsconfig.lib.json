@@ -3,44 +3,44 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "@neg/table": [
-        "dist/@neg/table"
+      "@pebula/table": [
+        "dist/@pebula/table"
       ],
-      "@neg/table/sticky": [
-        "dist/@neg/table/sticky"
+      "@pebula/table/sticky": [
+        "dist/@pebula/table/sticky"
       ],
-      "@neg/table/detail-row": [
-        "dist/@neg/table/detail-row"
+      "@pebula/table/detail-row": [
+        "dist/@pebula/table/detail-row"
       ],
-      "@neg/table/block-ui": [
-        "dist/@neg/table/block-ui"
+      "@pebula/table/block-ui": [
+        "dist/@pebula/table/block-ui"
       ],
-      "@neg/table/transpose": [
-        "dist/@neg/table/transpose"
+      "@pebula/table/transpose": [
+        "dist/@pebula/table/transpose"
       ],
-      "@neg/table/target-events": [
-        "dist/@neg/table/target-events"
+      "@pebula/table/target-events": [
+        "dist/@pebula/table/target-events"
       ],
-      "@neg/table/drag": [
-        "dist/@neg/table/drag"
+      "@pebula/table/drag": [
+        "dist/@pebula/table/drag"
       ],
-      "@neg/table/material/selection-column": [
-        "dist/@neg/table/material/selection-column"
+      "@pebula/table/material/selection-column": [
+        "dist/@pebula/table/material/selection-column"
       ],
-      "@neg/table/material/mat-paginator": [
-        "dist/@neg/table/material/mat-paginator"
+      "@pebula/table/material/mat-paginator": [
+        "dist/@pebula/table/material/mat-paginator"
       ],
-      "@neg/table/material/mat-sort": [
-        "dist/@neg/table/material/mat-sort"
+      "@pebula/table/material/mat-sort": [
+        "dist/@pebula/table/material/mat-sort"
       ],
-      "@neg/table/material/cell-tooltip": [
-        "dist/@neg/table/material/cell-tooltip"
+      "@pebula/table/material/cell-tooltip": [
+        "dist/@pebula/table/material/cell-tooltip"
       ],
-      "@neg/utils": [
-        "dist/@neg/utils"
+      "@pebula/utils": [
+        "dist/@pebula/utils"
       ],
-      "@neg/*": [
-        "dist/@neg/*"
+      "@pebula/*": [
+        "dist/@pebula/*"
       ]
     }
   }

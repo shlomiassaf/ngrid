@@ -8,7 +8,7 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { CdkDragConfig, DragDropRegistry, CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
 
-import { NegTableComponent, NegColumn, NegTableMetaCellContext } from '@neg/table';
+import { NegTableComponent, NegColumn, NegTableMetaCellContext } from '@pebula/table';
 import { toggleNativeDragInteractions } from './cdk-encapsulated-code';
 
 import './extend-table';

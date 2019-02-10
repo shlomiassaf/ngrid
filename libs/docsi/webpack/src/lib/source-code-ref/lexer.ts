@@ -39,17 +39,17 @@ export function getLanguageLexerGroup(lang: keyof LanguageToLexerGroupMap): Lexe
 }
 
 setLexerGroup('htmlStyle', {
-  section: /<!--\s*@neg-example:(.+)\s*-->/,
-  ignore: /<!--\s*@neg-ignore:(.+)\s*-->/,
-  ignoreLine: /<!--\s*@neg-ignore-line\s*(?!:\s*-->):?(.+)?-->/,
-  ignoreNextLine: /<!--\s*@neg-ignore-next-line\s*(?!:\s*-->):?(.+)?-->/
+  section: /<!--\s*@pebula-example:(.+)\s*-->/,
+  ignore: /<!--\s*@pebula-ignore:(.+)\s*-->/,
+  ignoreLine: /<!--\s*@pebula-ignore-line\s*(?!:\s*-->):?(.+)?-->/,
+  ignoreNextLine: /<!--\s*@pebula-ignore-next-line\s*(?!:\s*-->):?(.+)?-->/
 });
 
 setLexerGroup('codeStyle', {
-  section: /\/\*\s*@neg-example:(.+)\*\//,
-  ignore: /\/\*\s*@neg-ignore:(.+)\*\//,
-  ignoreLine: /\/\*\s*@neg-ignore-line\s*(?!:\s*\*\/):?(.+)?\*\//,
-  ignoreNextLine: /\/\*\s*@neg-ignore-next-line\s*(?!:\s*\*\/):?(.+)?\*\//
+  section: /\/\*\s*@pebula-example:(.+)\*\//,
+  ignore: /\/\*\s*@pebula-ignore:(.+)\*\//,
+  ignoreLine: /\/\*\s*@pebula-ignore-line\s*(?!:\s*\*\/):?(.+)?\*\//,
+  ignoreNextLine: /\/\*\s*@pebula-ignore-next-line\s*(?!:\s*\*\/):?(.+)?\*\//
 });
 
 bindLanguage('html', 'htmlStyle');

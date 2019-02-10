@@ -1,8 +1,8 @@
 // tslint:disable:member-ordering
-/* @neg-example:ex-1 ex-2 */
+/* @pebula-example:ex-1 ex-2 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory} from '@neg/table';
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { createDS, columnFactory} from '@pebula/table';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
   selector: 'neg-column-factory-table-example-component',
@@ -49,4 +49,4 @@ export class ColumnFactoryTableExampleComponent {
   constructor(private datasource: DemoDataSource) { }
 
 }
-/* @neg-example:ex-1 ex-2 */
+/* @pebula-example:ex-1 ex-2 */

@@ -1,5 +1,5 @@
 
-import { SourceCodeRef } from '@neg/docsi/webpack';
+import { SourceCodeRef } from '@pebula/docsi/webpack';
 
 export function normalizeExtractCode(code: SourceCodeRef[]): SourceCodeRef[] {
   if (!code) {

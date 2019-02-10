@@ -31,11 +31,11 @@ import {
   CdkDropList,
 } from '@angular/cdk/drag-drop';
 
-import { NegTableComponent, TablePlugin, NegColumn, NegTablePluginController, NegTableCellContext } from '@neg/table';
+import { NegTableComponent, TablePlugin, NegColumn, NegTablePluginController, NegTableCellContext } from '@pebula/table';
 import { CdkLazyDropList, CdkLazyDrag } from '../core';
 
 import './extend-table';
-declare module '@neg/table/lib/ext/types' {
+declare module '@pebula/table/lib/ext/types' {
   interface NegTablePluginExtension {
     columnReorder?: NegTableColumnReorderPluginDirective;
   }

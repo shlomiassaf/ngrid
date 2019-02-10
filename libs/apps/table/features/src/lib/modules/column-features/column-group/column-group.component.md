@@ -3,9 +3,9 @@
 A column group is a collection of columns represented as a column header that spans over the child column.
 
 <docsi-mat-example-with-source title="Basic Group Example" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <neg-table [dataSource]="ds1" [columns]="columns1"></neg-table>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 In the example we have 2 groups, for columns **name** and **gender** and for **country** and **language**.
@@ -54,9 +54,9 @@ A table can host multiple header rows including multiple group rows, when settin
 <p>This can become hard to track, luckily for us the <a [routerLink]="['../', 'column-factory']">columns factory</a>  will strip the complexity for us.</p>
 
 <docsi-mat-example-with-source title="Multi-header Column Groups" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
   <neg-table [dataSource]="ds2" [columns]="columns2"></neg-table>
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 ## Complex Group Hierarchy

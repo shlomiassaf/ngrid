@@ -9,7 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { DocsiModule } from '@neg/docsi';
+import { DocsiModule } from '@pebula/docsi';
 import { SourceCodeComponent, ExampleWithSourceComponent } from './components';
 
 

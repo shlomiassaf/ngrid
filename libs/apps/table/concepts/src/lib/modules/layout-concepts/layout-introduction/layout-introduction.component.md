@@ -126,12 +126,12 @@ To use the **AfterContent** section you need to use `NegTableComponent.createVie
 <p>You can read more on the programmatic approach, using the API in the <a [routerLink]="['../..', 'stories', 'action-row']">action-row story</a>.</p>
 
 <docsi-mat-example-with-source title="Simple Model" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <neg-table style="height: 110px" [dataSource]="ds" [columns]="columns">
     <div *negTableOuterSection="'top'"></div>
     <div *negTableOuterSection="'bottom'"></div>
   </neg-table>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 ## Data section

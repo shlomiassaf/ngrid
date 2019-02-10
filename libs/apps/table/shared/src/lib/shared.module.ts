@@ -17,9 +17,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { DocsiModule } from '@neg/docsi';
-import { DocsiTocModule } from '@neg/docsi/toc';
-import { DocsiMaterialSuiteModule } from '@neg/docsi/material-suite';
+import { DocsiModule } from '@pebula/docsi';
+import { DocsiTocModule } from '@pebula/docsi/toc';
+import { DocsiMaterialSuiteModule } from '@pebula/docsi/material-suite';
 
 import { ExampleGroupComponent } from './example-group';
 import { NgCustomLogoComponent } from './ng-custom-logo/ng-custom-logo.component';

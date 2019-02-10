@@ -12,11 +12,11 @@ in the column definitions.
 ```
 
 <docsi-mat-example-with-source title="Resizing with the API" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <button (click)="resize(negTable1)">Resize id to 200px</button>
   <button (click)="negTable1.autoSizeColumnToFit()">Fit Content</button>
   <neg-table #negTable1 [dataSource]="ds1" [columns]="columns1" class="neg-table-cell-ellipsis neg-table-header-cell-ellipsis"></neg-table>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 W> `resizeColumn()` does not enforce business logic, It is up to the caller to implement such.
@@ -29,9 +29,9 @@ The `drag` plugin add support for column resizing through mouse or touch and the
 Let's start with a simple example, enabling resize for columns **name** and **gender**:
 
 <docsi-mat-example-with-source title="Simple Resizing" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
   <neg-table [dataSource]="ds2" [columns]="columns2" class="neg-table-cell-ellipsis neg-table-header-cell-ellipsis"></neg-table>
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 To enable column resizing each column must have the `resize` property set to true.
@@ -51,9 +51,9 @@ Notice that you can resize the columns **name** and **gender** to any size, even
 To provide boundaries use the `minWidth` and `maxWidth` properties in the column API.
 
 <docsi-mat-example-with-source title="Resize boundaries" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
-  <!--@neg-example:ex-3-->
+  <!--@pebula-example:ex-3-->
   <neg-table [dataSource]="ds3" [columns]="columns3"></neg-table>
-  <!--@neg-example:ex-3-->
+  <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>
 
 We've limited **name** to a minimum width of 100px and maximum width of 400px and **gender** to a minimum width of 50px.
@@ -89,13 +89,13 @@ We use `*negTableCellResizerRef` to instruct the table which template to use pas
 It accepts a content which it will display, allowing you to control the handle's look and feel.
 
 <docsi-mat-example-with-source title="Custom resizing" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-4'}]">
-  <!--@neg-example:ex-4-->
+  <!--@pebula-example:ex-4-->
   <neg-table [dataSource]="ds4" [columns]="columns4">
     <neg-table-drag-resize *negTableCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
       <span class="neg-table-column-resizer-handle"></span>
     </neg-table-drag-resize>
   </neg-table>
-  <!--@neg-example:ex-4-->
+  <!--@pebula-example:ex-4-->
 </docsi-mat-example-with-source>
 
 Notice how we also use groups in this example, resizing will cause the groups to follow.

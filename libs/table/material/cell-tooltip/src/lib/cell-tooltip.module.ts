@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { NegTableModule, NegTablePluginController, NegTableConfigService } from '@neg/table';
-import { NegTableTargetEventsModule } from '@neg/table/target-events';
+import { NegTableModule, NegTablePluginController, NegTableConfigService } from '@pebula/table';
+import { NegTableTargetEventsModule } from '@pebula/table/target-events';
 
 import { NegTableCellTooltipDirective } from './cell-tooltip.directive';
 

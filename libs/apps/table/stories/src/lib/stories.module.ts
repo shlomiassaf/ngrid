@@ -12,16 +12,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-import { NegTableModule, NegTableRegistryService } from '@neg/table';
-import { NegTableDragModule } from '@neg/table/drag';
-import { NegTableTargetEventsModule } from '@neg/table/target-events';
-import { NegTableTransposeModule } from '@neg/table/transpose';
-import { NegTableBlockUiModule } from '@neg/table/block-ui';
-import { NegTableDetailRowModule } from '@neg/table/detail-row';
-import { NegTableStickyModule } from '@neg/table/sticky';
-import { NegTableMaterialModule } from '@neg/table/material';
+import { NegTableModule, NegTableRegistryService } from '@pebula/table';
+import { NegTableDragModule } from '@pebula/table/drag';
+import { NegTableTargetEventsModule } from '@pebula/table/target-events';
+import { NegTableTransposeModule } from '@pebula/table/transpose';
+import { NegTableBlockUiModule } from '@pebula/table/block-ui';
+import { NegTableDetailRowModule } from '@pebula/table/detail-row';
+import { NegTableStickyModule } from '@pebula/table/sticky';
+import { NegTableMaterialModule } from '@pebula/table/material';
 
-import { SharedModule, ExampleGroupRegistryService } from '@neg/apps/table/shared';
+import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { StoriesHomePageComponent } from './components';
 import { ActionRowStoryTableExampleComponent } from './action-row/action-row.component';
 import { TableActionRowComponent } from './action-row/table-action-row/table-action-row.component';
@@ -76,7 +76,7 @@ export class StoriesModule {
   }
 }
 
-declare module '@neg/apps/table/shared/src/lib/example-group/example-group-registry.service' {
+declare module '@pebula/apps/table/shared/src/lib/example-group/example-group-registry.service' {
   interface ExampleGroupMap {
     stories: ExampleGroupMetadata;
   }

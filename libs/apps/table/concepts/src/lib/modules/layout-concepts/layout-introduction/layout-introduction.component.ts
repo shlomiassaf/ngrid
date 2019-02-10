@@ -1,7 +1,7 @@
-/* @neg-example:ex-1 ex-2 ex-3 ex-4 */
+/* @pebula-example:ex-1 ex-2 ex-3 ex-4 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@neg/table';
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { createDS, columnFactory } from '@pebula/table';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
   selector: 'neg-layout-introduction-table-example-component',
@@ -26,4 +26,4 @@ export class LayoutIntroductionTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @neg-example:ex-1 ex-2 ex-3 ex-4 */
+/* @pebula-example:ex-1 ex-2 ex-3 ex-4 */

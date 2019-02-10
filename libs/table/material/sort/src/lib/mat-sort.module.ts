@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatSortModule, MatSortHeader } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 
-import { NegTableModule, NegTableRegistryService } from '@neg/table';
+import { NegTableModule, NegTableRegistryService } from '@pebula/table';
 import { NegTableMatSortDirective } from './mat-sort.directive';
 import { MatSortExtension } from './mat-sort-component-extension';
 

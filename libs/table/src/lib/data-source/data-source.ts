@@ -5,7 +5,7 @@ import { SelectionModel, CollectionViewer, ListRange } from '@angular/cdk/collec
 import { DataSource } from '@angular/cdk/table';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 
-import { UnRx } from '@neg/utils';
+import { UnRx } from '@pebula/utils';
 
 import { NegColumn } from '../table/columns';
 import { NegTablePaginatorKind, NegPaginator, NegPagingPaginator, NegTokenPaginator } from '../paginator';

@@ -1,10 +1,10 @@
 import { Directive, OnDestroy } from '@angular/core';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 
-import { UnRx } from '@neg/utils';
-import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableSortDefinition } from '@neg/table';
+import { UnRx } from '@pebula/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableSortDefinition } from '@pebula/table';
 
-declare module '@neg/table/lib/ext/types' {
+declare module '@pebula/table/lib/ext/types' {
   interface NegTablePluginExtension {
     matSort?: NegTableMatSortDirective;
   }

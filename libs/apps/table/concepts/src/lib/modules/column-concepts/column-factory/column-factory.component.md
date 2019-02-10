@@ -63,14 +63,14 @@ Let's take this made up requirement for a table:
 And: All columns must be at least 40px wide.
 
 <docsi-mat-example-with-source title="Column Factory" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <neg-table [dataSource]="ds" [columns]="columns" fallbackMinHeight="150"></neg-table>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
-<!--@neg-example:ex-2-->
+<!--@pebula-example:ex-2-->
 All meta rows are set in the order they we're added.
-<!--@neg-example:ex-2-->
+<!--@pebula-example:ex-2-->
 
 ## The static build pitfall
 

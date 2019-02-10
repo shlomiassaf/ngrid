@@ -1,8 +1,8 @@
 // tslint:disable:member-ordering
-/* @neg-example:ex-1 ex-2 */
+/* @pebula-example:ex-1 ex-2 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS } from '@neg/table';
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { createDS } from '@pebula/table';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
   selector: 'neg-datasource-factory-table-example-component',
@@ -23,7 +23,7 @@ export class DatasourceFactoryTableExampleComponent {
     },
   };
 
-  /* @neg-ignore:ex-2 */
+  /* @pebula-ignore:ex-2 */
   dsManualTrigger = createDS<Person, number>()
     .onTrigger( event => this.datasource.getPeople(0, event.data.curr || event.data.prev || 0) )
     .create();
@@ -31,9 +31,9 @@ export class DatasourceFactoryTableExampleComponent {
   refresh(rowCount: number): void {
     this.dsManualTrigger.refresh(rowCount)
   }
-  /* @neg-ignore:ex-2 */
+  /* @pebula-ignore:ex-2 */
 
-  /* @neg-ignore:ex-1 */
+  /* @pebula-ignore:ex-1 */
   dsCustomTrigger = createDS<Person>()
     .setCustomTriggers('pagination', 'sort')
     .onTrigger( event => {
@@ -48,9 +48,9 @@ export class DatasourceFactoryTableExampleComponent {
       return false;
     })
     .create();
-  /* @neg-ignore:ex-1 */
+  /* @pebula-ignore:ex-1 */
 
   constructor(private datasource: DemoDataSource) { }
 
 }
-/* @neg-example:ex-1 ex-2 */
+/* @pebula-example:ex-1 ex-2 */

@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
 
-import { NegTableRegistryService } from '@neg/table';
-import { SharedModule, ExampleGroupRegistryService } from '@neg/apps/table/shared';
+import { NegTableRegistryService } from '@pebula/table';
+import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { FeaturesHomePageComponent } from './components';
 
 const TABLE_EXAMPLES = [
@@ -36,7 +36,7 @@ export class FeaturesModule {
   }
 }
 
-declare module '@neg/apps/table/shared/src/lib/example-group/example-group-registry.service' {
+declare module '@pebula/apps/table/shared/src/lib/example-group/example-group-registry.service' {
   interface ExampleGroupMap {
     columns: ExampleGroupMetadata;
     datasource: ExampleGroupMetadata;

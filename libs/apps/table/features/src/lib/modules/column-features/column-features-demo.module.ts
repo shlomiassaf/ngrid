@@ -7,11 +7,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
 
-import { NegTableModule, NegTableRegistryService } from '@neg/table';
-import { NegTableTargetEventsModule } from '@neg/table/target-events';
-import { NegTableDragModule } from '@neg/table/drag';
+import { NegTableModule, NegTableRegistryService } from '@pebula/table';
+import { NegTableTargetEventsModule } from '@pebula/table/target-events';
+import { NegTableDragModule } from '@pebula/table/drag';
 
-import { SharedModule, ExampleGroupRegistryService } from '@neg/apps/table/shared';
+import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { HideColumnsTableExampleComponent } from './hide-columns/hide-columns.component';
 import { ColumnWidthTableExampleComponent } from './column-width/column-width.component';
 import { ColumnGroupTableExampleComponent } from './column-group/column-group.component';

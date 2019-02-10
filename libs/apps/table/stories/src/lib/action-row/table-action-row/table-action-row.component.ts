@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, Input, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { NegTableComponent } from '@neg/table';
+import { NegTableComponent } from '@pebula/table';
 
 @Component({
   // tslint:disable-next-line:component-selector

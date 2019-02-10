@@ -1,9 +1,9 @@
-/* @neg-example:ex-row-1 */
-/* @neg-example:ex-row-2 */
-/* @neg-example:ex-row-3 */
+/* @pebula-example:ex-row-1 */
+/* @pebula-example:ex-row-2 */
+/* @pebula-example:ex-row-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@neg/table';
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { createDS, columnFactory } from '@pebula/table';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
   selector: 'neg-sticky-row-table-example-component',
@@ -14,7 +14,7 @@ import { Person, DemoDataSource } from '@neg/apps/table/shared';
 })
 export class StickyRowTableExampleComponent {
 
-  /* @neg-ignore:ex-2 ex-3 */
+  /* @pebula-ignore:ex-2 ex-3 */
   columnsDef = columnFactory()
     .default({minWidth: 100})
     .table(
@@ -40,9 +40,9 @@ export class StickyRowTableExampleComponent {
       { id: 'HEADER3', label: `I'M A STICKY HEADER` },
     )
     .build();
-  /* @neg-ignore:ex-2 ex-3 */
+  /* @pebula-ignore:ex-2 ex-3 */
 
-  /* @neg-ignore:ex-1 ex-3 */
+  /* @pebula-ignore:ex-1 ex-3 */
   columns = columnFactory()
     .default({minWidth: 100})
     .table(
@@ -52,9 +52,9 @@ export class StickyRowTableExampleComponent {
       { prop: 'birthdate', type: 'date' }
     )
     .build();
-  /* @neg-ignore:ex-1 ex-3 */
+  /* @pebula-ignore:ex-1 ex-3 */
 
-  /* @neg-ignore:ex-1 ex-2 */
+  /* @pebula-ignore:ex-1 ex-2 */
   columnsMulti = columnFactory()
     .default({minWidth: 100})
     .table(
@@ -82,7 +82,7 @@ export class StickyRowTableExampleComponent {
       { id: 'MULTI_FOOTER_2', label: 'This table is the property of Nobody & CO (LLC)' },
     )
     .build();
-  /* @neg-ignore:ex-1 ex-2 */
+  /* @pebula-ignore:ex-1 ex-2 */
 
   ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
   ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
@@ -90,6 +90,6 @@ export class StickyRowTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @neg-example:ex-row-3 */
-/* @neg-example:ex-row-2 */
-/* @neg-example:ex-row-1 */
+/* @pebula-example:ex-row-3 */
+/* @pebula-example:ex-row-2 */
+/* @pebula-example:ex-row-1 */

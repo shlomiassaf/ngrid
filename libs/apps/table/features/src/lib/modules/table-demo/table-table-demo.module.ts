@@ -14,16 +14,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-import { NegTableModule, NegTableRegistryService, NegTableConfigService } from '@neg/table';
-import { NegTableDragModule } from '@neg/table/drag';
-import { NegTableTargetEventsModule } from '@neg/table/target-events';
-import { NegTableTransposeModule } from '@neg/table/transpose';
-import { NegTableBlockUiModule } from '@neg/table/block-ui';
-import { NegTableDetailRowModule } from '@neg/table/detail-row';
-import { NegTableStickyModule } from '@neg/table/sticky';
-import { NegTableMaterialModule } from '@neg/table/material';
+import { NegTableModule, NegTableRegistryService, NegTableConfigService } from '@pebula/table';
+import { NegTableDragModule } from '@pebula/table/drag';
+import { NegTableTargetEventsModule } from '@pebula/table/target-events';
+import { NegTableTransposeModule } from '@pebula/table/transpose';
+import { NegTableBlockUiModule } from '@pebula/table/block-ui';
+import { NegTableDetailRowModule } from '@pebula/table/detail-row';
+import { NegTableStickyModule } from '@pebula/table/sticky';
+import { NegTableMaterialModule } from '@pebula/table/material';
 
-import { SharedModule, ExampleGroupRegistryService } from '@neg/apps/table/shared';
+import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { RowHeightTableExampleComponent } from './row-height/row-height.component';
 import { PaginatorTableExampleComponent } from './paginator';
 import { NoDataTableExampleComponent } from './no-data';

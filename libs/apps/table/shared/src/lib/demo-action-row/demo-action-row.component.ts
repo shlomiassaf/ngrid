@@ -2,7 +2,7 @@ import { Component, EventEmitter, ViewEncapsulation, Input, ViewChild, TemplateR
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatMenuTrigger } from '@angular/material/menu';
 
-import { NegTableComponent, AutoSizeToFitOptions } from '@neg/table';
+import { NegTableComponent, AutoSizeToFitOptions } from '@pebula/table';
 
 
 @Component({

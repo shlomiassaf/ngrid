@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
-import { NegTableComponent, createDS, columnFactory, NegTablePaginatorKind, AutoSizeToFitOptions } from '@neg/table';
-import { toggleDetailRow } from '@neg/table/detail-row';
-import { setStickyRow, setStickyColumns } from '@neg/table/sticky';
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { NegTableComponent, createDS, columnFactory, NegTablePaginatorKind, AutoSizeToFitOptions } from '@pebula/table';
+import { toggleDetailRow } from '@pebula/table/detail-row';
+import { setStickyRow, setStickyColumns } from '@pebula/table/sticky';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 // A function that returns the currency value placed in a `SecurityWithMarketDataDto` object.
 // implementation is an IIFE that returns the getValue method bound to an NegColumn instance of the currency column...
@@ -15,7 +15,7 @@ const COUNTRY_GETTER = {
   data: undefined as any
 }
 
-declare module '@neg/table/lib/table/columns/types' {
+declare module '@pebula/table/lib/table/columns/types' {
   interface NegColumnTypeDefinitionDataMap {
     currencyFn: (row: Person) => string;
     countryNameDynamic: (row: Person) => string;

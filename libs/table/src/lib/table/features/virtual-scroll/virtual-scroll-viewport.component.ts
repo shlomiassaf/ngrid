@@ -27,7 +27,7 @@ import {
   CdkScrollable,
 } from '@angular/cdk/scrolling';
 
-import { UnRx } from '@neg/utils';
+import { UnRx } from '@pebula/utils';
 
 import { NegTablePluginController } from '../../../ext/plugin-control';
 import { NegTableConfigService } from '../../services/config';

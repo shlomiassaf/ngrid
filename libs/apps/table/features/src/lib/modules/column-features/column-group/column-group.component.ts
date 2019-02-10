@@ -1,7 +1,7 @@
-/* @neg-example:ex-1 ex-2  */
+/* @pebula-example:ex-1 ex-2  */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { NegTableComponent, createDS, columnFactory } from '@neg/table';
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { NegTableComponent, createDS, columnFactory } from '@pebula/table';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
   selector: 'neg-column-group-table-example-component',
@@ -12,7 +12,7 @@ import { Person, DemoDataSource } from '@neg/apps/table/shared';
 })
 export class ColumnGroupTableExampleComponent {
 
-  /* @neg-ignore:ex-2 */
+  /* @pebula-ignore:ex-2 */
   columns1 = columnFactory()
     .table(
       { prop: 'id', width: '40px' },
@@ -28,8 +28,8 @@ export class ColumnGroupTableExampleComponent {
     )
     .build();
   ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
-  /* @neg-ignore:ex-2 */
-  /* @neg-ignore:ex-1 */
+  /* @pebula-ignore:ex-2 */
+  /* @pebula-ignore:ex-1 */
   columns2 = columnFactory()
     .table(
       { prop: 'id', width: '40px' },
@@ -54,8 +54,8 @@ export class ColumnGroupTableExampleComponent {
     )
     .build();
   ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
-  /* @neg-ignore:ex-1 */
+  /* @pebula-ignore:ex-1 */
 
   constructor(private datasource: DemoDataSource) {}
 }
-/* @neg-example:ex-1 ex-2 */
+/* @pebula-example:ex-1 ex-2 */

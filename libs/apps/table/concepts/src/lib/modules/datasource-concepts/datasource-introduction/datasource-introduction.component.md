@@ -28,9 +28,9 @@ const dataSource = [
 ```
 
 <docsi-mat-example-with-source title="Simple Model" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <neg-table style="height: 110px" [dataSource]="ds" [columns]="columns"></neg-table>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 Using a **Promise** adds async functionality and using an **Observable** adds streaming capabilities on top of that.
@@ -62,9 +62,9 @@ Using the factory you can create and define a datasource with a simple API that 
 while providing an dead simple API for reacting to sort, filter and pagination updates in server side mode.
 
 <docsi-mat-example-with-source title="Working with NegDataSource" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
   <neg-table [dataSource]="ds2" [columns]="columns"></neg-table>
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 ## Datasource Factory

@@ -1,4 +1,4 @@
-import { NegColumnDefinition, NegColumn } from '@neg/table';
+import { NegColumnDefinition, NegColumn } from '@pebula/table';
 
 const TRANSFORM_ROW_REF = Symbol('TRANSFORM_ROW_REF');
 

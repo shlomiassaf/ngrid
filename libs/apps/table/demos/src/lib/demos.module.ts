@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NegTableModule } from '@neg/table';
-import { NegTableDragModule } from '@neg/table/drag';
-import { SharedModule } from '@neg/apps/table/shared';
+import { NegTableModule } from '@pebula/table';
+import { NegTableDragModule } from '@pebula/table/drag';
+import { SharedModule } from '@pebula/apps/table/shared';
 import { TableMixDemoModule, GeneralDemoTableExampleComponent, AllInOneTableExampleComponent } from './modules/mix-demo';
 
 import { DemoContainerPageComponent } from './demo-container-page/demo-container-page.component';

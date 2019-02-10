@@ -1,7 +1,7 @@
 //tslint:disable:use-input-property-decorator
 
 import { Component } from '@angular/core';
-import { SourceCodeRefMetadata } from '@neg/docsi/webpack';
+import { SourceCodeRefMetadata } from '@pebula/docsi/webpack';
 
 /** Remove the variants of the second union of string literals from the first. */
 export type Diff<T extends string, U extends string> = ({ [P in T]: P } & { [P in U]: never } & { [x: string]: never })[T];

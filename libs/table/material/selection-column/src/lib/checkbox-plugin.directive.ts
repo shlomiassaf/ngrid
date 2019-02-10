@@ -1,11 +1,11 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 
-import { UnRx } from '@neg/utils';
-import { NegTableComponent, NegTablePluginController, TablePlugin } from '@neg/table';
+import { UnRx } from '@pebula/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin } from '@pebula/table';
 
 import { NegTableCheckboxComponent } from './table-checkbox.component';
 
-declare module '@neg/table/lib/ext/types' {
+declare module '@pebula/table/lib/ext/types' {
   interface NegTablePluginExtension {
     matCheckboxSelection?: NegTableMatCheckboxSelectionDirective;
   }

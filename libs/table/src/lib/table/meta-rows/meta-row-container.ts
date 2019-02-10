@@ -1,6 +1,6 @@
 import { Component, Input, ElementRef } from '@angular/core';
 
-import { UnRx } from '@neg/utils';
+import { UnRx } from '@pebula/utils';
 
 import { NegMetaRowDefinitions } from '../columns/types';
 import { NegTableMetaRowService } from './meta-row.service';

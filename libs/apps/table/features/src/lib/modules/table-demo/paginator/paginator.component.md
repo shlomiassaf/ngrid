@@ -12,7 +12,7 @@ The table comes with native support for **logical** pagination in 3 flavors:
 ## Logical Pagination
 
 Logical pagination means that the table does not include any concrete UI implementation, this is provided by plugins.
-In the following examples we use the `@neg/table/mat-paginator" which is a  paginator based on the Material Design spec.
+In the following examples we use the `@pebula/table/mat-paginator" which is a  paginator based on the Material Design spec.
 
 In fact, pagination itself is a native datasource feature and the table does not handle any logic, only the datasource.
 
@@ -23,7 +23,7 @@ Client side pagination is applied when the entire datasource is available offlin
 In this scenario the entire process is handled automatically by the table, based on external configuration input.
 
 <docsi-mat-example-with-source title="Client side Paginator" contentClass="table-height-300 mat-elevation-z7" query="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <neg-table usePagination
             blockUi
             vScrollNone
@@ -33,7 +33,7 @@ In this scenario the entire process is handled automatically by the table, based
                         [table]="table"
                         [paginator]="table.ds.paginator"></neg-table-paginator>
   </neg-table>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 Changing the current pages done synchronously because the data exists.
@@ -54,7 +54,7 @@ SKIP and the number or rows to TAKE.
 Regardless, it is the same information, transforming from one method to the other is simple math.
 
 <docsi-mat-example-with-source title="Page number based Server side Paginator" contentClass="table-height-300 mat-elevation-z7" query="[{section: 'ex-2'}]">
-    <!--@neg-example:ex-2-->
+    <!--@pebula-example:ex-2-->
   <neg-table usePagination
             blockUi
             [dataSource]="pageNumberDS"
@@ -63,7 +63,7 @@ Regardless, it is the same information, transforming from one method to the othe
                         [table]="table"
                         [paginator]="table.ds.paginator"></neg-table-paginator>
   </neg-table>
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 ### Tokens
@@ -74,7 +74,7 @@ From that point, the response is the data set with an additional token that we c
 With this method might be missing the total amount of rows/pages depending on the implementation.
 
 <docsi-mat-example-with-source title="Token based based Server side Paginator" contentClass="table-height-300 mat-elevation-z7" query="[{section: 'ex-3'}]">
-    <!--@neg-example:ex-3-->
+    <!--@pebula-example:ex-3-->
   <neg-table usePagination="token"
             blockUi
             [dataSource]="tokenDS"
@@ -83,7 +83,7 @@ With this method might be missing the total amount of rows/pages depending on th
                         [table]="table"
                         [paginator]="table.ds.paginator"></neg-table-paginator>
   </neg-table>
-  <!--@neg-example:ex-3-->
+  <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Paginator using footer row with [stickyFooter]" contentClass="table-height-300 mat-elevation-z7" query="[{section: 'ex-4'}]">
@@ -94,7 +94,7 @@ With this method might be missing the total amount of rows/pages depending on th
     <p>
       The default behaviour, using a dedicated slot will comes after footer rows and will always stick to the bottom
     </p>
-    <!--@neg-example:ex-4-->
+    <!--@pebula-example:ex-4-->
   <neg-table usePagination
             blockUi
             [dataSource]="footerRowDS"
@@ -107,5 +107,5 @@ With this method might be missing the total amount of rows/pages depending on th
                           [paginator]="table.ds.paginator"></neg-table-paginator>
     </div>
   </neg-table>
-  <!--@neg-example:ex-4-->
+  <!--@pebula-example:ex-4-->
 </docsi-mat-example-with-source>

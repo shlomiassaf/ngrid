@@ -1,6 +1,6 @@
 {
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../../dist/@neg/table/material/paginator",
+  "dest": "../../../../dist/@pebula/table/material/paginator",
   "lib": {
     "entryFile": "src/index.ts"
   }

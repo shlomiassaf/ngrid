@@ -48,9 +48,9 @@ export class Person { id: number;    name: string;    email: string; }
 And now a real one:
 
 <docsi-mat-example-with-source title="Simple Model" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <neg-table style="height: 110px" [dataSource]="dsSimpleModel" [columns]="columnsSimpleModel"></neg-table>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 We got 2 rows for 1 instance. The first row represents headers for the data columns and the 2nd row the data itself.

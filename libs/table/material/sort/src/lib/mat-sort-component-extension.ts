@@ -1,7 +1,7 @@
 import { ComponentFactory, ComponentRef, ComponentFactoryResolver } from '@angular/core';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 
-import { NegTableMultiComponentRegistry, NegTableDataHeaderExtensionContext } from '@neg/table';
+import { NegTableMultiComponentRegistry, NegTableDataHeaderExtensionContext } from '@pebula/table';
 
 export class MatSortExtension extends NegTableMultiComponentRegistry<MatSortHeader, 'dataHeaderExtensions'> {
   readonly name: 'sortContainer' = 'sortContainer';

@@ -1,13 +1,13 @@
 import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, Optional, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 
-import { UnRx } from '@neg/utils';
+import { UnRx } from '@pebula/utils';
 import {
   NegTableComponent,
   NegTableHeaderCellDefDirective,
   NegTableCellDefDirective,
   NegTableFooterCellDefDirective,
-} from '@neg/table';
+} from '@pebula/table';
 
 @Component({
   selector: 'neg-table-checkbox',

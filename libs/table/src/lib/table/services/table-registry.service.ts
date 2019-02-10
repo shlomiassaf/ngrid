@@ -6,7 +6,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { UnRx } from '@neg/utils';
+import { UnRx } from '@pebula/utils';
 
 import {
   NegTableCellDefDirective,

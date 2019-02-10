@@ -12,8 +12,8 @@ import {
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
-import { UnRx } from '@neg/utils';
-import { NegTableComponent, NegTablePluginController, NegTableRowComponent, NegTableExtensionApi, EXT_API_TOKEN } from '@neg/table';
+import { UnRx } from '@pebula/utils';
+import { NegTableComponent, NegTablePluginController, NegTableRowComponent, NegTableExtensionApi, EXT_API_TOKEN } from '@pebula/table';
 
 import { NegTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
 

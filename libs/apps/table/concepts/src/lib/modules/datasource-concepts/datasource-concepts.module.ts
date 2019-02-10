@@ -6,10 +6,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
 
-import { NegTableModule, NegTableRegistryService } from '@neg/table';
-import { NegTablePaginatorModule } from '@neg/table/material/paginator';
+import { NegTableModule, NegTableRegistryService } from '@pebula/table';
+import { NegTablePaginatorModule } from '@pebula/table/material/paginator';
 
-import { SharedModule, ExampleGroupRegistryService } from '@neg/apps/table/shared';
+import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { DatasourceQuickthroughTableExampleComponent } from './datasource-quickthrough/datasource-quickthrough.component';
 import { DatasourceIntroductionlTableExampleComponent } from './datasource-introduction/datasource-introduction.component';
 import { DatasourceFactoryTableExampleComponent } from './datasource-factory/datasource-factory.component';

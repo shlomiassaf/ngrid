@@ -10,7 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 
 import { NxModule } from '@nrwl/nx';
 
-import { SharedModule } from '@neg/apps/table/shared';
+import { SharedModule } from '@pebula/apps/table/shared';
 
 import { DemoHomePageComponent } from './demo-home-page/demo-home-page.component';
 import { AppComponent } from './app.component';
@@ -30,10 +30,10 @@ import { AppComponent } from './app.component';
     MatMenuModule,
     RouterModule.forRoot(
       [
-        { path: '', loadChildren: '@neg/apps/table/demos#DemosModule' },
-        { path: 'concepts', loadChildren: '@neg/apps/table/concepts#ConceptsModule' },
-        { path: 'features', loadChildren: '@neg/apps/table/features#FeaturesModule' },
-        { path: 'stories', loadChildren: '@neg/apps/table/stories#StoriesModule' },
+        { path: '', loadChildren: '@pebula/apps/table/demos#DemosModule' },
+        { path: 'concepts', loadChildren: '@pebula/apps/table/concepts#ConceptsModule' },
+        { path: 'features', loadChildren: '@pebula/apps/table/features#FeaturesModule' },
+        { path: 'stories', loadChildren: '@pebula/apps/table/stories#StoriesModule' },
       ],
       {
         useHash: true,

@@ -3,10 +3,10 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
-import { NegTableModule, NegTablePluginController, NegTableConfigService } from '@neg/table';
+import { NegTableModule, NegTablePluginController, NegTableConfigService } from '@pebula/table';
 import { NegTableStickyPluginDirective, setStickyRow, setStickyColumns } from './sticky/sticky-plugin';
 
-declare module '@neg/table/lib/table/services/config' {
+declare module '@pebula/table/lib/table/services/config' {
   interface NegTableConfig {
     stickyPlugin?: {
       headers?: Array<'table' | number>;

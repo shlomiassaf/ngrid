@@ -1,5 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { NegTableRegistryService, NegTableMultiTemplateRegistry, NegTableDataHeaderExtensionRef, NegTableDataHeaderExtensionContext } from '@neg/table';
+import { NegTableRegistryService, NegTableMultiTemplateRegistry, NegTableDataHeaderExtensionRef, NegTableDataHeaderExtensionContext } from '@pebula/table';
 
 /**
  * Marks the element as the resizer template for cells.

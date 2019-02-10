@@ -1,7 +1,7 @@
-/* @neg-example:ex-column-1 ex-column-2 ex-column-3 ex-column-4 */
+/* @pebula-example:ex-column-1 ex-column-2 ex-column-3 ex-column-4 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@neg/table';
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { createDS, columnFactory } from '@pebula/table';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 function createColumns(pinned: { start?: string[], end?: string[] } = {}) {
   const COLUMNS = columnFactory()
@@ -60,4 +60,4 @@ export class StickyColumnTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @neg-example:ex-column-1 ex-column-2 ex-column-3 ex-column-4 */
+/* @pebula-example:ex-column-1 ex-column-2 ex-column-3 ex-column-4 */

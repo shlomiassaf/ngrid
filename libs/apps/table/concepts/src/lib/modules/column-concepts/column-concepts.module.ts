@@ -6,11 +6,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
 
-import { NegTableModule, NegTableRegistryService } from '@neg/table';
-import { NegTableTargetEventsModule } from '@neg/table/target-events';
-import { NegTableDragModule } from '@neg/table/drag';
+import { NegTableModule, NegTableRegistryService } from '@pebula/table';
+import { NegTableTargetEventsModule } from '@pebula/table/target-events';
+import { NegTableDragModule } from '@pebula/table/drag';
 
-import { SharedModule, ExampleGroupRegistryService } from '@neg/apps/table/shared';
+import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { ColumnQuickthroughTableExampleComponent } from './column-quickthrough/column-quickthrough.component';
 import { ColumnModelTableExampleComponent } from './column-model/column-model.component';
 import { ColumnFactoryTableExampleComponent } from './column-factory/column-factory.component';

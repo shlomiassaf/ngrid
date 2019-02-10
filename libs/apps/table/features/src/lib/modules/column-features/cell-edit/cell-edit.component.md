@@ -5,7 +5,7 @@ Cell editing is supported programmatically (`ColumnApi`) and through the UI (mou
 Let's start with a simple example:
 
 <docsi-mat-example-with-source title="Simple cell edit" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <neg-table [dataSource]="ds1" [columns]="columns1">
     <div *negTableCellDef="'ttt'; let ctx">
       {{!!ctx.rowContext.firstRender}}
@@ -17,7 +17,7 @@ Let's start with a simple example:
       <input #input [value]="ctx.value" [negCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
     </div>
   </neg-table>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 Clicking on the name will trigger an input box, leaving the input box (blur) will return to the read-only view.
@@ -88,7 +88,7 @@ at a higher level, once for all editable cells.
 For this we make use of the `target-events` plugin that allow us to handle specific cell events in a single place.
 
 <docsi-mat-example-with-source title="Triggering edits globally" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
   <neg-table (cellClick)="$event.context.startEdit()"
              [dataSource]="ds2" [columns]="columns2">
     <div *negTableCellDef="'name'; let ctx">
@@ -104,7 +104,7 @@ For this we make use of the `target-events` plugin that allow us to handle speci
              (blur)="ctx.stopEdit()" />
     </div>
   </neg-table>
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 This time, clicking on a cell in the **lead** column will start edit mode.
@@ -149,7 +149,7 @@ The `target-events` plugin comes with a directive that simplify the process, thi
 the `editable` property set to true.
 
 <docsi-mat-example-with-source title="Cell edit directives" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
-  <!--@neg-example:ex-3-->
+  <!--@pebula-example:ex-3-->
   <neg-table cellEditClick
              [dataSource]="ds3" [columns]="columns3">
     <div *negTableCellEditorTypeDef="'date'; let ctx">
@@ -161,7 +161,7 @@ the `editable` property set to true.
       </mat-form-field>
     </div>
   </neg-table>
-  <!--@neg-example:ex-3-->
+  <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>
 
 In this example we've used an advanced editing component, the data picker from `@angular/material2` applied on every column

@@ -37,7 +37,7 @@ Each strategy is also a directive that we can use to apply a strategy on a table
 ```
 
 <docsi-mat-example-with-source title="Virtual Scroll" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <mat-radio-group #rdGroup="matRadioGroup" value="auto" (change)="removeDatasource()">
     <mat-radio-button value="auto">Auto Size</mat-radio-button>
     <mat-radio-button value="fixed">Fixed Size</mat-radio-button>
@@ -49,7 +49,7 @@ Each strategy is also a directive that we can use to apply a strategy on a table
     <neg-table *ngSwitchCase="'none'" blockUi [dataSource]="ds" [columns]="columns" vScrollNone></neg-table>
   </ng-container>
   <button mat-button [disabled]="ds" (click)="ds = createDatasource()">Load Data</button>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 ## Global Strategy (default)
@@ -61,7 +61,7 @@ You can configure the global strategy with `NegTableModule.forRoot`:
 ```typescript {10,21}
 import { NgModule } from '@angular/core';
 import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
-import { NegTableModule, NoVirtualScrollStrategy } from '@neg/table';
+import { NegTableModule, NoVirtualScrollStrategy } from '@pebula/table';
 
 // DISABLING VIRTUAL SCROLL
 
@@ -117,12 +117,12 @@ I> The CSS flag is mostly used for plugins, cell template packs, etc. It require
 for application components.
 
 <docsi-mat-example-with-source title="Scrolling State" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
   <neg-table [dataSource]="dsScrollingEvents" [columns]="columns" (scrolling)="isScrolling = $event"></neg-table>
   <h1>Scrolling is <span class="virtual-scroll-css-scrolling-demo-on">ON</span><span class="virtual-scroll-css-scrolling-demo-off">OFF</span> - (CSS)</h1>
   <h1>Scrolling is {{ isScrolling ? 'ON' : 'OFF' }} - (scrolling) event</h1>
   <h1>Last Scrolling Direction: {{ isScrolling === 1 ? 'END' : 'START' }}</h1>
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 ## Performance

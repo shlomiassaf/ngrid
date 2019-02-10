@@ -1,12 +1,12 @@
-/* @neg-example:ex-1 */
-/* @neg-example:ex-2 */
-/* @neg-example:ex-3 */
+/* @pebula-example:ex-1 */
+/* @pebula-example:ex-2 */
+/* @pebula-example:ex-3 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@neg/table';
-import { NegTableRowEvent, NegTableCellEvent } from '@neg/table/target-events';
+import { createDS, columnFactory } from '@pebula/table';
+import { NegTableRowEvent, NegTableCellEvent } from '@pebula/table/target-events';
 
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 function isCellEvent<T>(event: NegTableRowEvent<T> | NegTableCellEvent<T>): event is NegTableCellEvent<T> {
   return !!(event as  NegTableCellEvent<T>).cellTarget;
@@ -108,6 +108,6 @@ export class TargetEventsTableExampleComponent {
     }
   }
 }
-/* @neg-example:ex-3 */
-/* @neg-example:ex-2 */
-/* @neg-example:ex-1 */
+/* @pebula-example:ex-3 */
+/* @pebula-example:ex-2 */
+/* @pebula-example:ex-1 */

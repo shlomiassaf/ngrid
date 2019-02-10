@@ -1,10 +1,10 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef, DoCheck } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { NegTableComponent, NegTablePluginController, TablePlugin } from '@neg/table';
+import { NegTableComponent, NegTablePluginController, TablePlugin } from '@pebula/table';
 
 import { NegPaginatorComponent } from './table-paginator.component';
 
-declare module '@neg/table/lib/ext/types' {
+declare module '@pebula/table/lib/ext/types' {
   interface NegTablePluginExtension {
     matPaginator?: NegTableMatPaginatorDirective;
   }

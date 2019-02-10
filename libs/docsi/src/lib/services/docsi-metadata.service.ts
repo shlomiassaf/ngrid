@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DocsiMetadata, ApiReferenceMap } from '@neg/docsi/webpack';
+import { DocsiMetadata, ApiReferenceMap } from '@pebula/docsi/webpack';
 
 const DOCSI_METADATA = require('/Users/shlomiassaf/Desktop/Code/shlomi/__LIB__/neg/docsi-client-metadata');
 

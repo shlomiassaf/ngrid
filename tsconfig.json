@@ -18,74 +18,74 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@neg/apps/table/concepts": [
+      "@pebula/apps/table/concepts": [
         "libs/apps/table/concepts/src/index.ts"
       ],
-      "@neg/apps/table/features": [
+      "@pebula/apps/table/features": [
         "libs/apps/table/features/src/index.ts"
       ],
-      "@neg/apps/table/stories": [
+      "@pebula/apps/table/stories": [
         "libs/apps/table/stories/src/index.ts"
       ],
-      "@neg/apps/table/demos": [
+      "@pebula/apps/table/demos": [
         "libs/apps/table/demos/src/index.ts"
       ],
-      "@neg/apps/table/shared": [
+      "@pebula/apps/table/shared": [
         "libs/apps/table/shared/src/index.ts"
       ],
-      "@neg/docsi": [
+      "@pebula/docsi": [
         "libs/docsi/src/index.ts"
       ],
-      "@neg/docsi/webpack": [
+      "@pebula/docsi/webpack": [
         "libs/docsi/webpack/src/index.ts"
       ],
-      "@neg/docsi/toc": [
+      "@pebula/docsi/toc": [
         "libs/docsi/toc/src/index.ts"
       ],
-      "@neg/docsi/material-suite": [
+      "@pebula/docsi/material-suite": [
         "libs/docsi/material-suite/src/index.ts"
       ],
-      "@neg/table*": [
+      "@pebula/table*": [
         "libs/table/src*",
         "libs/table/src/index.ts"
       ],
-      "@neg/table/sticky": [
+      "@pebula/table/sticky": [
         "libs/table/sticky/src/index.ts"
       ],
-      "@neg/table/detail-row": [
+      "@pebula/table/detail-row": [
         "libs/table/detail-row/src/index.ts"
       ],
-      "@neg/table/block-ui": [
+      "@pebula/table/block-ui": [
         "libs/table/block-ui/src/index.ts"
       ],
-      "@neg/table/transpose": [
+      "@pebula/table/transpose": [
         "libs/table/transpose/src/index.ts"
       ],
-      "@neg/table/target-events": [
+      "@pebula/table/target-events": [
         "libs/table/target-events/src/index.ts"
       ],
-      "@neg/table/material/selection-column": [
+      "@pebula/table/material/selection-column": [
         "libs/table/material/selection-column/src/index.ts"
       ],
-      "@neg/table/material/paginator": [
+      "@pebula/table/material/paginator": [
         "libs/table/material/paginator/src/index.ts"
       ],
-      "@neg/table/material/sort": [
+      "@pebula/table/material/sort": [
         "libs/table/material/sort/src/index.ts"
       ],
-      "@neg/table/material/cell-tooltip": [
+      "@pebula/table/material/cell-tooltip": [
         "libs/table/material/cell-tooltip/src/index.ts"
       ],
-      "@neg/table/material": [
+      "@pebula/table/material": [
         "libs/table/material/src/index.ts"
       ],
-      "@neg/table/drag": [
+      "@pebula/table/drag": [
         "libs/table/drag/src/index.ts"
       ],
-      "@neg/utils": [
+      "@pebula/utils": [
         "libs/utils/src/index.ts"
       ],
-      "@neg/*": [
+      "@pebula/*": [
         "libs/*"
       ]
     }

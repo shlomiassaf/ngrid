@@ -303,22 +303,22 @@
                     {
                       "glob": "_theming.scss",
                       "input": "libs/table",
-                      "output": "dist/@neg/table"
+                      "output": "dist/@pebula/table"
                     },
                     {
                       "glob": "**/*.scss",
                       "input": "libs/table/theme",
-                      "output": "dist/@neg/table/theme"
+                      "output": "dist/@pebula/table/theme"
                     },
                     {
                       "glob": "_theming.scss",
                       "input": "libs/table/material",
-                      "output": "dist/@neg/table/material"
+                      "output": "dist/@pebula/table/material"
                     },
                     {
                       "glob": "**/*.scss",
                       "input": "libs/table/material/theme",
-                      "output": "dist/@neg/table/material/theme"
+                      "output": "dist/@pebula/table/material/theme"
                     }
                   ]
                 }

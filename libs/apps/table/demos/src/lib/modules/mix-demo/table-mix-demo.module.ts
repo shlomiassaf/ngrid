@@ -15,16 +15,16 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 
-import { NegTableModule } from '@neg/table';
-import { NegTableDragModule } from '@neg/table/drag';
-import { NegTableTargetEventsModule } from '@neg/table/target-events';
-import { NegTableTransposeModule } from '@neg/table/transpose';
-import { NegTableBlockUiModule } from '@neg/table/block-ui';
-import { NegTableDetailRowModule } from '@neg/table/detail-row';
-import { NegTableStickyModule } from '@neg/table/sticky';
-import { NegTableMaterialModule } from '@neg/table/material';
+import { NegTableModule } from '@pebula/table';
+import { NegTableDragModule } from '@pebula/table/drag';
+import { NegTableTargetEventsModule } from '@pebula/table/target-events';
+import { NegTableTransposeModule } from '@pebula/table/transpose';
+import { NegTableBlockUiModule } from '@pebula/table/block-ui';
+import { NegTableDetailRowModule } from '@pebula/table/detail-row';
+import { NegTableStickyModule } from '@pebula/table/sticky';
+import { NegTableMaterialModule } from '@pebula/table/material';
 
-import { SharedModule } from '@neg/apps/table/shared';
+import { SharedModule } from '@pebula/apps/table/shared';
 import { CommonTableTemplatesComponent } from './common-table-templates/common-table-templates.component';
 import { AllInOneTableExampleComponent } from './all-in-one/all-in-one.component';
 import { VirtualScrollPerformanceDemoTableExampleComponent } from './virtual-scroll-performance-demo/virtual-scroll-performance-demo.component';

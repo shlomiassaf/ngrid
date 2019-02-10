@@ -45,11 +45,11 @@ leaving the group of columns between the 2 in the same place.
 ```
 
 <docsi-mat-example-with-source title="Moving with the API" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <button (click)="move(t)">Move id after gender</button><button (click)="swap(t)">Swap name after birthdate</button>
   <neg-table #t [dataSource]="ds1" [columns]="columns1">
   </neg-table>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 ## Using the `drag` plugin
@@ -59,11 +59,11 @@ The `drag` plugin add support for column reordering through mouse or touch and t
 Let's start with a simple example:
 
 <docsi-mat-example-with-source title="Simple Reordering" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
   <neg-table columnReorder
              [dataSource]="ds2" [columns]="columns2">
   </neg-table>
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 To enable column reordering:
@@ -81,11 +81,11 @@ The `reorder` property controls if the column can be dragged or not, nothing mor
 To lock a column for reordering we need to enable the `wontBudge` property.
 
 <docsi-mat-example-with-source title="Locking columns" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
-  <!--@neg-example:ex-3-->
+  <!--@pebula-example:ex-3-->
   <neg-table columnReorder
              [dataSource]="ds3" [columns]="columns3">
   </neg-table>
-  <!--@neg-example:ex-3-->
+  <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>
 
 We've enabled `wontBudge` in columns **in** and **birthdate**, trying to re-order columns before/after them will not work.  
@@ -102,11 +102,11 @@ By default, a group has no effect on reordering of columns but it is possible to
 To enable group columns lock set the `lockColumns` property on the group definitions to **true**.
 
 <docsi-mat-example-with-source title="Group columns locks" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-4'}]">
-  <!--@neg-example:ex-4-->
+  <!--@pebula-example:ex-4-->
   <neg-table columnReorder
              [dataSource]="ds4" [columns]="columns4">
   </neg-table>
-  <!--@neg-example:ex-4-->
+  <!--@pebula-example:ex-4-->
 </docsi-mat-example-with-source>
 
 When a group is not locked it can split by a re-order of an other column or one of it's own columns. A locked group does not allow it's own columns

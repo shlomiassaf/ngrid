@@ -1,4 +1,4 @@
-import { SourceCodeRef } from '@neg/docsi/webpack';
+import { SourceCodeRef } from '@pebula/docsi/webpack';
 import { Omit } from '../utils';
 
 export interface ExtractedCodeQuery extends Partial<Omit<SourceCodeRef, 'code'>> { }

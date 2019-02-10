@@ -1,6 +1,6 @@
 import * as Path from 'path';
 import { Configuration } from 'webpack';
-import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin } from '@neg/docsi/webpack';
+import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin } from '@pebula/docsi/webpack';
 import { ServiceWorkerTsPlugin } from '../../tools/service-worker-ts-plugin';
 
 const SERVICE_WORKER_HTTP_SERVER_REGEXP = /.+service-worker\.ts$/;

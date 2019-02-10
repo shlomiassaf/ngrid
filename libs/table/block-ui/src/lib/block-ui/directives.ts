@@ -1,8 +1,8 @@
 // tslint:disable:use-host-property-decorator
 import { Directive, TemplateRef } from '@angular/core';
-import { NegTableComponent, NegTableRegistryService, NegTableSingleTemplateRegistry } from '@neg/table';
+import { NegTableComponent, NegTableRegistryService, NegTableSingleTemplateRegistry } from '@pebula/table';
 
-declare module '@neg/table/lib/table/services/table-registry.service' {
+declare module '@pebula/table/lib/table/services/table-registry.service' {
   interface NegTableSingleRegistryMap {
     blocker?: NegTableBlockUiDefDirective;
   }

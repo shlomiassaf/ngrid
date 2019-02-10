@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DragDropModule, DragDrop } from '@angular/cdk/drag-drop';
 
-import { NegTableModule, provideCommon } from '@neg/table';
+import { NegTableModule, provideCommon } from '@pebula/table';
 
 import {
   NegDragDrop,

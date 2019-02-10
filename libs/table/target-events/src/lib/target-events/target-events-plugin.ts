@@ -2,13 +2,13 @@ import { fromEvent, timer, Observer } from 'rxjs';
 import { bufferWhen, debounce, map, filter } from 'rxjs/operators';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
-import { UnRx } from '@neg/utils';
-import { NegTableComponent, NegTablePluginController, TablePlugin } from '@neg/table';
+import { UnRx } from '@pebula/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin } from '@pebula/table';
 
 import * as Events from './events';
 import { matrixRowFromRow, isRowContainer, findCellIndex, findParentCell } from './utils';
 
-declare module '@neg/table/lib/ext/types' {
+declare module '@pebula/table/lib/ext/types' {
   interface NegTablePluginExtension {
     targetEvents?: NegTableTargetEventsPlugin;
   }

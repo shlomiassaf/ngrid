@@ -1,7 +1,7 @@
-/* @neg-example:ex-1 ex-2 ex-3 ex-4 */
+/* @pebula-example:ex-1 ex-2 ex-3 ex-4 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@neg/table';
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { createDS, columnFactory } from '@pebula/table';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
   selector: 'neg-column-model-table-example-component',
@@ -21,7 +21,7 @@ export class ColumnModelTableExampleComponent {
       ],
     },
   };
-  /* @neg-ignore:ex-1 */
+  /* @pebula-ignore:ex-1 */
   columnsSimpleModel2 = columnFactory()
     .table(
       { prop: '__', type: 'dataRow', headerType: 'dataRow', footerType: 'dataRow', width: '160px' },
@@ -60,7 +60,7 @@ export class ColumnModelTableExampleComponent {
       { id: '__meta2', width: '160px', type: 'metaRow', label: 'FOOTER' },
     )
     .build();
-  /* @neg-ignore:ex-1 */
+  /* @pebula-ignore:ex-1 */
 
   dsSimpleModel = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 1) ).create();
 
@@ -68,4 +68,4 @@ export class ColumnModelTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @neg-example:ex-1 ex-2 ex-3 ex-4 */
+/* @pebula-example:ex-1 ex-2 ex-3 ex-4 */

@@ -22,7 +22,7 @@ import {
   DragRef, DropListRef
 } from '@angular/cdk/drag-drop';
 
-import { NegTableComponent, NegTablePluginController, NegColumn } from '@neg/table';
+import { NegTableComponent, NegTablePluginController, NegColumn } from '@pebula/table';
 import { CdkLazyDropList, NegDragRef } from '../core';
 import { NegTableColumnDragDirective } from './column-reorder-plugin';
 

@@ -1,10 +1,10 @@
-/* @neg-example:ex-1 */
-/* @neg-example:ex-2 */
-/* @neg-example:ex-3 */
+/* @pebula-example:ex-1 */
+/* @pebula-example:ex-2 */
+/* @pebula-example:ex-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@neg/table';
+import { createDS, columnFactory } from '@pebula/table';
 
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
   selector: 'neg-column-width-table-example-component',
@@ -48,6 +48,6 @@ export class ColumnWidthTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 }
-/* @neg-example:ex-3 */
-/* @neg-example:ex-2 */
-/* @neg-example:ex-1 */
+/* @pebula-example:ex-3 */
+/* @pebula-example:ex-2 */
+/* @pebula-example:ex-1 */

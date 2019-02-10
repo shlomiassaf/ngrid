@@ -1,8 +1,8 @@
 import { Component, ViewEncapsulation, ChangeDetectorRef, ViewChild } from '@angular/core';
 
-import { UnRx } from '@neg/utils';
-import { createDS, columnFactory, NegTableComponent } from '@neg/table';
-import {  Customer, DemoDataSource } from '@neg/apps/table/shared';
+import { UnRx } from '@pebula/utils';
+import { createDS, columnFactory, NegTableComponent } from '@pebula/table';
+import {  Customer, DemoDataSource } from '@pebula/apps/table/shared';
 import { MatRadioChange } from '@angular/material';
 
 const COUNTRY_GETTER = {

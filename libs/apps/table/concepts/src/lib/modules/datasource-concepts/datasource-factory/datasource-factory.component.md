@@ -61,10 +61,10 @@ A manual trigger is fired through the datasource by calling the `refresh()` meth
 to provide an object that is passed on as a value.
 
 <docsi-mat-example-with-source title="Manual Trigger" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <button *ngFor="let count of [50, 100, 500, 1000]" mat-stroked-button (click)="refresh(count)">{{ count }} Rows</button>
   <neg-table [dataSource]="dsManualTrigger" [columns]="columns"></neg-table>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 In this example each button will trigger a refresh with a passed parameter, the number of items to return.
@@ -102,13 +102,13 @@ This is suitable for remote data sources that return paginated responses (which 
 For demonstration we enabled **pagination** and **sorting**, but NOT **filtering**, which will result in a per page filter behavior.
 
 <docsi-mat-example-with-source title="Enabling custom triggers" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
   <neg-table [dataSource]="dsCustomTrigger" [columns]="columns" usePagination>
     <neg-table-paginator *negTablePaginatorRef="let table"
                          [table]="table"
                          [paginator]="table.ds.paginator"></neg-table-paginator>
   </neg-table>
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 ## Skipping initial update

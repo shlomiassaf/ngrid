@@ -1,12 +1,12 @@
-/* @neg-example:ex-1 */
-/* @neg-example:ex-2 */
-/* @neg-example:ex-3 */
-/* @neg-example:ex-4 */
+/* @pebula-example:ex-1 */
+/* @pebula-example:ex-2 */
+/* @pebula-example:ex-3 */
+/* @pebula-example:ex-4 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@neg/table';
+import { createDS, columnFactory } from '@pebula/table';
 
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 const COLUMNS = () => columnFactory()
   .default({minWidth: 100})
@@ -63,7 +63,7 @@ export class DetailRowExampleComponent  {
     }
   }
 }
-/* @neg-example:ex-4 */
-/* @neg-example:ex-3 */
-/* @neg-example:ex-2 */
-/* @neg-example:ex-1 */
+/* @pebula-example:ex-4 */
+/* @pebula-example:ex-3 */
+/* @pebula-example:ex-2 */
+/* @pebula-example:ex-1 */

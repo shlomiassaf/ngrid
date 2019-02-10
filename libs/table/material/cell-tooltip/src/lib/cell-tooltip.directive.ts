@@ -16,11 +16,11 @@ import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Platform} from '@angular/cdk/platform';
 import { TooltipPosition, MatTooltipDefaultOptions, MatTooltip, MAT_TOOLTIP_SCROLL_STRATEGY, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
-import { UnRx } from '@neg/utils';
-import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableConfigService } from '@neg/table';
-import { NegTableCellEvent } from '@neg/table/target-events';
+import { UnRx } from '@pebula/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableConfigService } from '@pebula/table';
+import { NegTableCellEvent } from '@pebula/table/target-events';
 
-declare module '@neg/table/lib/table/services/config' {
+declare module '@pebula/table/lib/table/services/config' {
   interface NegTableConfig {
     cellTooltip?: CellTooltipOptions & {
       /** When set to true will apply the default cell tooltip to ALL tables */
@@ -29,7 +29,7 @@ declare module '@neg/table/lib/table/services/config' {
   }
 }
 
-declare module '@neg/table/lib/ext/types' {
+declare module '@pebula/table/lib/ext/types' {
   interface NegTablePluginExtension {
     cellTooltip?: NegTableCellTooltipDirective<any>;
   }

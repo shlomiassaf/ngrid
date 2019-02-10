@@ -1,13 +1,13 @@
 import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { UnRx } from '@neg/utils';
-import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableRowContext } from '@neg/table';
+import { UnRx } from '@pebula/utils';
+import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableRowContext } from '@pebula/table';
 
 import { NegTableDetailRowComponent } from './row';
 import { NegTableDetailRowParentRefDirective, NegTableDefaultDetailRowParentComponent } from './directives';
 
-declare module '@neg/table/lib/ext/types' {
+declare module '@pebula/table/lib/ext/types' {
   interface NegTablePluginExtension {
     detailRow?: NegTableDetailRowPluginDirective<any>;
   }

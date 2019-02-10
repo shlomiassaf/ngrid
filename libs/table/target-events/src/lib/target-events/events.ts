@@ -1,4 +1,4 @@
-import { NegColumn, NegMetaColumn, NegColumnGroup, NegTableCellContext, NegTableRowContext } from '@neg/table';
+import { NegColumn, NegMetaColumn, NegColumnGroup, NegTableCellContext, NegTableRowContext } from '@pebula/table';
 
 export type ROW_TYPE = 'header' | 'data' | 'footer';
 export interface ROW_META_TYPE {

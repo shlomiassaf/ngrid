@@ -1,7 +1,7 @@
 import { Observable, isObservable, of as obsOf, from as obsFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { UnRx } from '@neg/utils';
+import { UnRx } from '@pebula/utils';
 import {
   NegTableColumnDefinitionSet,
   NegTableComponent,
@@ -9,7 +9,7 @@ import {
   NegDataSource,
   NegColumn,
   NegDataSourceTriggerChangedEvent,
-} from '@neg/table';
+} from '@pebula/table';
 
 export const LOCAL_COLUMN_DEF = Symbol('LOCAL_COLUMN_DEF');
 export const VIRTUAL_REFRESH = {};

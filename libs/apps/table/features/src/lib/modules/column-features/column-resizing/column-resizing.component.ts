@@ -1,7 +1,7 @@
-/* @neg-example:ex-1 ex-2 ex-3 ex-4 */
+/* @pebula-example:ex-1 ex-2 ex-3 ex-4 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { NegTableComponent, createDS, columnFactory } from '@neg/table';
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { NegTableComponent, createDS, columnFactory } from '@pebula/table';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
   selector: 'neg-column-resizing-table-example-component',
@@ -11,7 +11,7 @@ import { Person, DemoDataSource } from '@neg/apps/table/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnResizingTableExampleComponent {
-  /* @neg-ignore:ex-2 ex-3 ex-4 */
+  /* @pebula-ignore:ex-2 ex-3 ex-4 */
   columns1 = columnFactory()
     .table(
       { prop: 'id', width: '40px' },
@@ -26,8 +26,8 @@ export class ColumnResizingTableExampleComponent {
     const id = table.columnApi.findColumn('id');
     table.columnApi.resizeColumn(id, '200px');
   }
-  /* @neg-ignore:ex-2 ex-3 ex-4 */
-  /* @neg-ignore:ex-1 ex-3 ex-4 */
+  /* @pebula-ignore:ex-2 ex-3 ex-4 */
+  /* @pebula-ignore:ex-1 ex-3 ex-4 */
   columns2 = columnFactory()
     .table(
       { prop: 'id', width: '40px' },
@@ -37,8 +37,8 @@ export class ColumnResizingTableExampleComponent {
     )
     .build();
   ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
-  /* @neg-ignore:ex-1 ex-3 ex-4 */
-  /* @neg-ignore:ex-1 ex-2 ex-4 */
+  /* @pebula-ignore:ex-1 ex-3 ex-4 */
+  /* @pebula-ignore:ex-1 ex-2 ex-4 */
   columns3 = columnFactory()
     .table(
       { prop: 'id', width: '40px' },
@@ -47,8 +47,8 @@ export class ColumnResizingTableExampleComponent {
       { prop: 'birthdate', type: 'date' }
     )
     .build();
-  ds3 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create(); /* @neg-ignore:ex-1 ex-2 ex-4 */
-  /* @neg-ignore:ex-1 ex-2 ex-3 */
+  ds3 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create(); /* @pebula-ignore:ex-1 ex-2 ex-4 */
+  /* @pebula-ignore:ex-1 ex-2 ex-3 */
   columns4 = columnFactory()
     .default({ resize: true })
     .table(
@@ -75,8 +75,8 @@ export class ColumnResizingTableExampleComponent {
     )
     .build();
   ds4 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
-  /* @neg-ignore:ex-1 ex-2 ex-3 */
+  /* @pebula-ignore:ex-1 ex-2 ex-3 */
 
   constructor(private datasource: DemoDataSource) {}
 }
-/* @neg-example:ex-1 ex-2 ex-3 ex-4 */
+/* @pebula-example:ex-1 ex-2 ex-3 ex-4 */

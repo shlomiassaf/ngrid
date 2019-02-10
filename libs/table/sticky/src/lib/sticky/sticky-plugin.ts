@@ -1,10 +1,10 @@
 import { filter } from 'rxjs/operators';
 import { Directive, Input, IterableDiffers, IterableDiffer, IterableChangeRecord, OnDestroy } from '@angular/core';
 
-import { NegTableComponent, NegTablePluginController, TablePlugin } from '@neg/table';
+import { NegTableComponent, NegTablePluginController, TablePlugin } from '@pebula/table';
 
 
-declare module '@neg/table/lib/ext/types' {
+declare module '@pebula/table/lib/ext/types' {
   interface NegTablePluginExtension {
     sticky?: NegTableStickyPluginDirective;
   }

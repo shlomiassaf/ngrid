@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy, Inject, Optional, ChangeDetectorRef } from '@angular/core';
 
-import { ExampleCodeContainerComponent, ExtractedCodeGroup, ExtractedCodeQuery } from '@neg/docsi';
+import { ExampleCodeContainerComponent, ExtractedCodeGroup, ExtractedCodeQuery } from '@pebula/docsi';
 
 @Component({
   selector: 'docsi-mat-example-with-source',

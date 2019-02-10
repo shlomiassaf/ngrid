@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { NegTableComponent, createDS, columnFactory } from '@neg/table';
-import { Seller, DemoDataSource } from '@neg/apps/table/shared';
+import { NegTableComponent, createDS, columnFactory } from '@pebula/table';
+import { Seller, DemoDataSource } from '@pebula/apps/table/shared';
 
 // A function that returns the currency value placed in a `SecurityWithMarketDataDto` object.
 // implementation is an IIFE that returns the getValue method bound to an NegColumn instance of the currency column...

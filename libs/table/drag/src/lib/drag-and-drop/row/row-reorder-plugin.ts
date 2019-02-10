@@ -23,10 +23,10 @@ import {
   DragRef, DropListRef
 } from '@angular/cdk/drag-drop';
 
-import { NegTableComponent, TablePlugin, NegTablePluginController, NegTableCellContext } from '@neg/table';
+import { NegTableComponent, TablePlugin, NegTablePluginController, NegTableCellContext } from '@pebula/table';
 import { CdkLazyDropList, CdkLazyDrag } from '../core';
 
-declare module '@neg/table/lib/ext/types' {
+declare module '@pebula/table/lib/ext/types' {
   interface NegTablePluginExtension {
     rowReorder?: NegTableRowReorderPluginDirective;
   }

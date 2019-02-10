@@ -5,7 +5,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 
-import { NegTableModule } from '@neg/table';
+import { NegTableModule } from '@pebula/table';
 import { NegPaginatorComponent } from './table-paginator.component';
 // TODO: Remove MatPaginatorModule and the initial code in the constructor
 // set the styles in the SCSS.

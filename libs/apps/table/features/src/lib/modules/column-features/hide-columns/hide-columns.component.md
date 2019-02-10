@@ -1,7 +1,7 @@
 # Hide Columns
 
 <docsi-mat-example-with-source title="Hide Columns" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
   <neg-table #negTbl1 [hideColumns]="hideColumns1" [dataSource]="ds1" [columns]="columns1"></neg-table>
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" style="margin: 8px 16px">
     <h3>Hide: </h3>
@@ -12,11 +12,11 @@
                         (change)="toggleColumn(hideColumns1, c.id)">{{c.label}}</mat-button-toggle>
     </mat-button-toggle-group>
   </div>
-  <!--@neg-example:ex-1-->
+  <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Hide Columns with Group Headers" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
   <neg-table #negTbl2 [hideColumns]="hideColumns2" [dataSource]="ds2" [columns]="columns2"></neg-table>
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" style="margin: 8px 16px">
     <h3>Hide: </h3>
@@ -28,11 +28,11 @@
     </mat-button-toggle-group>
   </div>
 
-  <!--@neg-example:ex-2-->
+  <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Hide Columns" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@neg-example:ex-3-->
+  <!--@pebula-example:ex-3-->
   3
-  <!--@neg-example:ex-3-->
+  <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>

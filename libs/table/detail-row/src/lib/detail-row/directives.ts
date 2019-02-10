@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import { CdkRowDef } from '@angular/cdk/table';
 
-import { NegTableRegistryService, NegTableSingleTemplateRegistry, NegTableRowContext } from '@neg/table';
+import { NegTableRegistryService, NegTableSingleTemplateRegistry, NegTableRowContext } from '@pebula/table';
 
-declare module '@neg/table/lib/table/services/table-registry.service' {
+declare module '@pebula/table/lib/table/services/table-registry.service' {
   interface NegTableSingleRegistryMap {
     detailRowParent?: NegTableDetailRowParentRefDirective<any>;
     detailRow?: NegTableDetailRowDefDirective;

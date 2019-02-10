@@ -1,12 +1,12 @@
-/* @neg-example:ex-1 */
-/* @neg-example:ex-2 */
-/* @neg-example:ex-3 */
+/* @pebula-example:ex-1 */
+/* @pebula-example:ex-2 */
+/* @pebula-example:ex-3 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@neg/table';
-import { NegTableCellEvent } from '@neg/table/target-events';
+import { createDS, columnFactory } from '@pebula/table';
+import { NegTableCellEvent } from '@pebula/table/target-events';
 
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -42,6 +42,6 @@ export class CellTooltipTableExampleComponent {
     return `${event.colIndex} / ${event.rowIndex} -> ${event.rowIndex % 2 ? 'ODD' : 'EVEN'} ROW\n\n${event.cellTarget.innerText}`;
   }
 }
-/* @neg-example:ex-3 */
-/* @neg-example:ex-2 */
-/* @neg-example:ex-1 */
+/* @pebula-example:ex-3 */
+/* @pebula-example:ex-2 */
+/* @pebula-example:ex-1 */

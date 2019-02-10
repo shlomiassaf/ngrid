@@ -1,7 +1,7 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { UnRx } from '@neg/utils';
+import { UnRx } from '@pebula/utils';
 import {
   columnFactory,
   NegTableConfigService,
@@ -11,14 +11,14 @@ import {
   NegTablePluginController,
   NegColumn,
   TablePlugin,
-} from '@neg/table';
+} from '@pebula/table';
 
 import { TransposeTableSession, LOCAL_COLUMN_DEF, VIRTUAL_REFRESH } from './transpose-table-session';
 import { getCellValueTransformed, createTransformedColumn } from './utils';
 
 const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'neg-table-header-cell neg-table-transposed-header-cell' };
 
-declare module '@neg/table/lib/table/services/config' {
+declare module '@pebula/table/lib/table/services/config' {
   interface NegTableConfig {
     transposePlugin?: {
       header?: Partial<NegColumnDefinition>;
@@ -28,7 +28,7 @@ declare module '@neg/table/lib/table/services/config' {
   }
 }
 
-declare module '@neg/table/lib/ext/types' {
+declare module '@pebula/table/lib/ext/types' {
   interface NegTablePluginExtension {
     transpose?: NegTableTransposePluginDirective;
   }

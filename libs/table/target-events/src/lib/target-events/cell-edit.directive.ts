@@ -1,8 +1,8 @@
 import { Directive, Input, Injector } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { UnRx } from '@neg/utils';
-import { NegColumn, NegTableComponent, NegTablePluginController } from '@neg/table';
+import { UnRx } from '@pebula/utils';
+import { NegColumn, NegTableComponent, NegTablePluginController } from '@pebula/table';
 import { NegTableTargetEventsPlugin } from './target-events-plugin';
 
 NegColumn.extendProperty('editable');

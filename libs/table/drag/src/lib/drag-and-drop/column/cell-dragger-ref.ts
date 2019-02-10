@@ -1,5 +1,5 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { NegTableRegistryService, NegTableMultiTemplateRegistry, NegTableDataHeaderExtensionRef, NegTableDataHeaderExtensionContext, NegTablePluginController } from '@neg/table';
+import { NegTableRegistryService, NegTableMultiTemplateRegistry, NegTableDataHeaderExtensionRef, NegTableDataHeaderExtensionContext, NegTablePluginController } from '@pebula/table';
 
 import { PLUGIN_KEY } from './column-reorder-plugin';
 

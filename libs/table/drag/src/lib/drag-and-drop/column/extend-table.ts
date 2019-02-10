@@ -1,6 +1,6 @@
-import { NegColumn, NegColumnGroup } from '@neg/table';
+import { NegColumn, NegColumnGroup } from '@pebula/table';
 
-declare module '@neg/table/lib/table/columns/column' {
+declare module '@pebula/table/lib/table/columns/column' {
   interface NegColumn {
 
     reorder: boolean;
@@ -21,7 +21,7 @@ declare module '@neg/table/lib/table/columns/column' {
   }
 }
 
-declare module '@neg/table/lib/table/columns/group-column' {
+declare module '@pebula/table/lib/table/columns/group-column' {
   interface NegColumnGroup {
     /**
      * Lock column in the group, preventing the group from splitting.
@@ -31,7 +31,7 @@ declare module '@neg/table/lib/table/columns/group-column' {
   }
 }
 
-declare module '@neg/table/lib/table/columns/types' {
+declare module '@pebula/table/lib/table/columns/types' {
   interface NegColumnDefinition {
     reorder?: boolean;
     /**

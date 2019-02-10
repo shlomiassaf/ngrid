@@ -1,7 +1,7 @@
-/* @neg-example:ex-1 ex-2 ex-3 */
+/* @pebula-example:ex-1 ex-2 ex-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
-import { NegTableCellContext, createDS, columnFactory } from '@neg/table';
-import { Person, DemoDataSource } from '@neg/apps/table/shared';
+import { NegTableCellContext, createDS, columnFactory } from '@pebula/table';
+import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
   selector: 'neg-cell-edit-table-example-component',
@@ -12,7 +12,7 @@ import { Person, DemoDataSource } from '@neg/apps/table/shared';
 })
 export class CellEditTableExampleComponent {
 
-  /* @neg-ignore:ex-2 ex-3 */
+  /* @pebula-ignore:ex-2 ex-3 */
   columns1 = columnFactory()
     .table(
       { prop: 'id', width: '40px' },
@@ -23,8 +23,8 @@ export class CellEditTableExampleComponent {
     )
     .build();
   ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
-  /* @neg-ignore:ex-2 ex-3 */
-  /* @neg-ignore:ex-1 ex-3 */
+  /* @pebula-ignore:ex-2 ex-3 */
+  /* @pebula-ignore:ex-1 ex-3 */
   columns2 = columnFactory()
     .table(
       { prop: 'id', width: '40px' },
@@ -40,8 +40,8 @@ export class CellEditTableExampleComponent {
     ctx.value = input.checked;
     setTimeout( () => ctx.stopEdit(true) );
   }
-  /* @neg-ignore:ex-1 ex-3 */
-  /* @neg-ignore:ex-1 ex-2 */
+  /* @pebula-ignore:ex-1 ex-3 */
+  /* @pebula-ignore:ex-1 ex-2 */
   columns3 = columnFactory()
   .table(
     { prop: 'id', width: '40px' },
@@ -51,8 +51,8 @@ export class CellEditTableExampleComponent {
   )
   .build();
   ds3 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
-  /* @neg-ignore:ex-1 ex-2 */
+  /* @pebula-ignore:ex-1 ex-2 */
 
   constructor(private datasource: DemoDataSource, private cdr: ChangeDetectorRef) {}
 }
-/* @neg-example:ex-1 ex-2 ex-3 */
+/* @pebula-example:ex-1 ex-2 ex-3 */

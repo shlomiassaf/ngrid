@@ -26,7 +26,7 @@ import {
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
-import { UnRx } from '@neg/utils';
+import { UnRx } from '@pebula/utils';
 
 import { EXT_API_TOKEN, NegTableExtensionApi } from '../ext/table-ext-api';
 import { NegTablePluginController, NegTablePluginContext } from '../ext/plugin-control';

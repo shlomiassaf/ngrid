@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy, Optional, Inject, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core';
 
-import { ExampleCodeContainerComponent, ExtractedCodeGroup, ExtractedCodeQuery } from '@neg/docsi';
+import { ExampleCodeContainerComponent, ExtractedCodeGroup, ExtractedCodeQuery } from '@pebula/docsi';
 
 export interface CodeViewItem {
   file?: string;

@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
-import { UnRx } from '@neg/utils';
-import { NegPagingPaginator, NegPaginatorChangeEvent, NegTableComponent } from '@neg/table';
+import { UnRx } from '@pebula/utils';
+import { NegPagingPaginator, NegPaginatorChangeEvent, NegTableComponent } from '@pebula/table';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
 
