@@ -49,7 +49,7 @@ And now a real one:
 
 <docsi-mat-example-with-source title="Simple Model" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-table style="height: 110px" [dataSource]="dsSimpleModel" [columns]="columnsSimpleModel"></pbl-table>
+  <pbl-ngrid style="height: 110px" [dataSource]="dsSimpleModel" [columns]="columnsSimpleModel"></pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -174,17 +174,17 @@ We've seen that the data column (from here on just column), represent a property
 Let's take a look again, this time we enable both header and footer rows and use a collection with 3 `Person` instances:
 
 <div fxLayout>
-  <pbl-table fxFlex="208px" style="height: 260px" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel2" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
+  <pbl-ngrid fxFlex="208px" style="height: 260px" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel2" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
     <div *pblTableHeaderCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data highlight-data-header">DATA ROW (HEADER)</div>
     <div *pblTableCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW</div>
     <div *pblTableFooterCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data highlight-data-footer">DATA ROW (FOOTER)</div>
-  </pbl-table>
+  </pbl-ngrid>
   <div fxFlex="24px"></div>
-  <pbl-table fxFlex="*" style="height: 260px" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
+  <pbl-ngrid fxFlex="*" style="height: 260px" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
     <div *pblTableHeaderCellDef="'*'; col as col" style="text-decoration: underline">{{ col.label | uppercase }}</div>
     <div *pblTableCellDef="'*'; value as value">-> {{value}} <-</div>
     <div *pblTableFooterCellDef="'*'; col as col">({{ col.label }})</div>
-  </pbl-table>
+  </pbl-ngrid>
 </div>
 
 I> On the left, 3 row markers, indicating the type of each row.
@@ -264,15 +264,15 @@ If a label is provided, it will display but it can also be ignored based on the 
 A table without meta columns. Each data column (id, name, gender, email) is defined once but it can reference 3 templates, header, cell and footer.
 
 <div fxLayout>
-  <pbl-table fxFlex="208px" style="height: 400px" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta2" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
+  <pbl-ngrid fxFlex="208px" style="height: 400px" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta2" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
     <div *pblTableHeaderCellTypeDef="'metaRow'; col as col" parentNgClass="column-model-demo-highlight-header">META ROW ({{ col.label }})</div>
     <div *pblTableHeaderCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW (HEADER)</div>
     <div *pblTableCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW</div>
     <div *pblTableFooterCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW (FOOTER)</div>
     <div *pblTableFooterCellTypeDef="'metaRow'; col as col" parentNgClass="column-model-demo-highlight-footer">META ROW ({{ col.label }})</div>
-  </pbl-table>
+  </pbl-ngrid>
   <div fxFlex="24px"></div>
-  <pbl-table fxFlex="*" style="height: 400px" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-table>
+  <pbl-ngrid fxFlex="*" style="height: 400px" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-ngrid>
 </div>
 
 In this example, several meta columns are defined - spread across 3 rows.

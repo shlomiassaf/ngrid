@@ -55,7 +55,7 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
  */
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'pbl-table[transpose]' })
+@Directive({ selector: 'pbl-ngrid[transpose]' })
 @UnRx()
 export class PblTableTransposePluginDirective implements OnDestroy {
 

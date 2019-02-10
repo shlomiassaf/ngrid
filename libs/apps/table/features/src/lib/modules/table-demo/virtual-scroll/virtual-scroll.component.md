@@ -29,11 +29,11 @@ And one for disabling virtual scroll: **vScrollNone**.
 Each strategy is also a directive that we can use to apply a strategy on a table
 
 ```html
-<pbl-table vScrollAuto></pbl-table>
+<pbl-ngrid vScrollAuto></pbl-ngrid>
 
-<pbl-table vScrollFixed="48"></pbl-table>
+<pbl-ngrid vScrollFixed="48"></pbl-ngrid>
 
-<pbl-table vScrollNone></pbl-table>
+<pbl-ngrid vScrollNone></pbl-ngrid>
 ```
 
 <docsi-mat-example-with-source title="Virtual Scroll" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
@@ -44,9 +44,9 @@ Each strategy is also a directive that we can use to apply a strategy on a table
     <mat-radio-button value="none">No Virtual Scroll</mat-radio-button>
   </mat-radio-group>
   <ng-container *ngIf="ds" [ngSwitch]="rdGroup.value">
-    <pbl-table *ngSwitchCase="'auto'" blockUi [dataSource]="ds" [columns]="columns" vScrollAuto></pbl-table>
-    <pbl-table *ngSwitchCase="'fixed'" blockUi [dataSource]="ds" [columns]="columns" vScrollFixed="48"></pbl-table>
-    <pbl-table *ngSwitchCase="'none'" blockUi [dataSource]="ds" [columns]="columns" vScrollNone></pbl-table>
+    <pbl-ngrid *ngSwitchCase="'auto'" blockUi [dataSource]="ds" [columns]="columns" vScrollAuto></pbl-ngrid>
+    <pbl-ngrid *ngSwitchCase="'fixed'" blockUi [dataSource]="ds" [columns]="columns" vScrollFixed="48"></pbl-ngrid>
+    <pbl-ngrid *ngSwitchCase="'none'" blockUi [dataSource]="ds" [columns]="columns" vScrollNone></pbl-ngrid>
   </ng-container>
   <button mat-button [disabled]="ds" (click)="ds = createDatasource()">Load Data</button>
   <!--@pebula-example:ex-1-->
@@ -118,7 +118,7 @@ for application components.
 
 <docsi-mat-example-with-source title="Scrolling State" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <pbl-table [dataSource]="dsScrollingEvents" [columns]="columns" (scrolling)="isScrolling = $event"></pbl-table>
+  <pbl-ngrid [dataSource]="dsScrollingEvents" [columns]="columns" (scrolling)="isScrolling = $event"></pbl-ngrid>
   <h1>Scrolling is <span class="virtual-scroll-css-scrolling-demo-on">ON</span><span class="virtual-scroll-css-scrolling-demo-off">OFF</span> - (CSS)</h1>
   <h1>Scrolling is {{ isScrolling ? 'ON' : 'OFF' }} - (scrolling) event</h1>
   <h1>Last Scrolling Direction: {{ isScrolling === 1 ? 'END' : 'START' }}</h1>

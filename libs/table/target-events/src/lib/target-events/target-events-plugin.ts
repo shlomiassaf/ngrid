@@ -315,7 +315,7 @@ export class PblTableTargetEventsPlugin<T = any> {
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: 'pbl-table[rowClick], pbl-table[rowDblClick], pbl-table[rowEnter], pbl-table[rowLeave], pbl-table[cellClick], pbl-table[cellDblClick], pbl-table[cellEnter], pbl-table[cellLeave]',
+  selector: 'pbl-ngrid[rowClick], pbl-ngrid[rowDblClick], pbl-ngrid[rowEnter], pbl-ngrid[rowLeave], pbl-ngrid[cellClick], pbl-ngrid[cellDblClick], pbl-ngrid[cellEnter], pbl-ngrid[cellLeave]',
   // tslint:disable-next-line:use-output-property-decorator
   outputs: [ 'rowClick', 'rowClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellDblClick', 'cellEnter', 'cellLeave' ]
 })

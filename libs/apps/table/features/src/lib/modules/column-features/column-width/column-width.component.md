@@ -56,7 +56,7 @@ Note that the width for **bio** is not set, the table will assign a width to it.
 
 <docsi-mat-example-with-source title="Column Width" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-table [dataSource]="ds1" [columns]="columns1"></pbl-table>
+  <pbl-ngrid [dataSource]="ds1" [columns]="columns1"></pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -83,7 +83,7 @@ because the actual table size is 1200 which is 4 columns X 300px.
 
 <docsi-mat-example-with-source title="Minimum Column Width" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-2-->
-  <pbl-table [dataSource]="ds2" [columns]="columns2"></pbl-table>
+  <pbl-ngrid [dataSource]="ds2" [columns]="columns2"></pbl-ngrid>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
@@ -99,6 +99,6 @@ We did not set any width related option in the remaining columns so they will sp
 
 <docsi-mat-example-with-source title="Maximum Column Width" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-3-->
-  <pbl-table [dataSource]="ds3" [columns]="columns3"></pbl-table>
+  <pbl-ngrid [dataSource]="ds3" [columns]="columns3"></pbl-ngrid>
   <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>

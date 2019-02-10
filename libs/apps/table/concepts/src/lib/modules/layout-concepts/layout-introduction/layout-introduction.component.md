@@ -12,20 +12,20 @@ The layout is built from 3 sections:
   <div fxFlex="50%">
 
 ```html
-<pbl-table>
+<pbl-ngrid>
   <!-- Outer Top section -->
   <!-- Inner section -->
   <!-- Outer Bottom -->
-</pbl-table>
+</pbl-ngrid>
 ```
 
   </div>
   <div fxFlex="50%">
-    <pbl-table showFooter vScrollNone
+    <pbl-ngrid showFooter vScrollNone
               [columns]="columns" [dataSource]="ds">
       <div *pblTableOuterSection="'top'"></div>
       <div *pblTableOuterSection="'bottom'"></div>
-    </pbl-table>
+    </pbl-ngrid>
   </div>
 </div>
 
@@ -58,7 +58,7 @@ Templates can be added programmatically (`PblTableComponent.createView()` API) o
   <div fxFlex="50%">
 
 ```html
-<pbl-table>
+<pbl-ngrid>
   <!-- Outer Top section -->
     <!-- Custom elements -->
     <!-- Header rows of type fixed -->
@@ -70,12 +70,12 @@ Templates can be added programmatically (`PblTableComponent.createView()` API) o
     <!-- Footer rows of type fixed -->
     <!-- Custom elements -->
   <!-- Outer Bottom section -->
-</pbl-table>
+</pbl-ngrid>
 ```
 
   </div>
   <div fxFlex="50%">
-    <pbl-table showFooter vScrollNone
+    <pbl-ngrid showFooter vScrollNone
               [columns]="{ table: { cols: [ { prop: '__virtual__', label: ' ' } ] } }" [dataSource]="[ {} ]">
       <div *pblTableOuterSection="'top'">
         <h1>Outer Top Section</h1>
@@ -86,7 +86,7 @@ Templates can be added programmatically (`PblTableComponent.createView()` API) o
       <div *pblTableOuterSection="'bottom'">
         <h1>Outer Bottom Section</h1>
       </div>
-    </pbl-table>
+    </pbl-ngrid>
   </div>
 </div>
 
@@ -108,7 +108,7 @@ To use the **Content** section, is taken from the content inside the host compon
 To use the **AfterContent** section you need to use `PblTableComponent.createView()` API.
 
 ```html
-<pbl-table>
+<pbl-ngrid>
   <!-- Outer Top section -->
   <!-- Inner section -->
 
@@ -120,17 +120,17 @@ To use the **AfterContent** section you need to use `PblTableComponent.createVie
       <!-- After content -->
     <!-- Outer elements -->
   <!-- Outer Bottom section -->
-</pbl-table>
+</pbl-ngrid>
 ```
 
 <p>You can read more on the programmatic approach, using the API in the <a [routerLink]="['../..', 'stories', 'action-row']">action-row story</a>.</p>
 
 <docsi-mat-example-with-source title="Simple Model" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-table style="height: 110px" [dataSource]="ds" [columns]="columns">
+  <pbl-ngrid style="height: 110px" [dataSource]="ds" [columns]="columns">
     <div *pblTableOuterSection="'top'"></div>
     <div *pblTableOuterSection="'bottom'"></div>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 

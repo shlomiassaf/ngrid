@@ -12,7 +12,7 @@ $typography-config: pbl-typography-config();
 @include mat-pbl-table-theme($pbl-shell-theme);
 
 @include mat-pbl-table-spacing();
-pbl-table.slim {
+.pbl-table.slim {
   @include mat-pbl-table-spacing('narrow');
 }
 
@@ -29,7 +29,7 @@ html, body {
 }
 
 .table-height-300 {
-  pbl-table {
+  .pbl-table {
     height: 300px;
   }
 }

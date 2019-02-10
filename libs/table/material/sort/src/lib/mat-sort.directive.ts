@@ -12,7 +12,7 @@ declare module '@pebula/table/lib/ext/types' {
 const PLUGIN_KEY: 'matSort' = 'matSort';
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'pbl-table[matSort]', exportAs: 'pblMatSort' })
+@Directive({ selector: 'pbl-ngrid[matSort]', exportAs: 'pblMatSort' })
 @UnRx()
 export class PblTableMatSortDirective implements OnDestroy {
   private _removePlugin: (table: PblTableComponent<any>) => void;

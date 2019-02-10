@@ -1,4 +1,4 @@
-<pbl-table identityProp="id" rowReorder columnReorder
+<pbl-ngrid identityProp="id" rowReorder columnReorder
            blockUi
            matSort vScrollFixed
            cellTooltip
@@ -28,4 +28,4 @@
     </mat-chip-list>
     <div *cdkDragPlaceholder></div>
   </div>
-</pbl-table>
+</pbl-ngrid>

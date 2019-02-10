@@ -29,7 +29,7 @@
 
 <div class="pbl-table-container">
   <ng-container #beforeTable></ng-container>
-  <div pbl-table-fixed-meta-row-container="header"></div>
+  <div pbl-ngrid-fixed-meta-row-container="header"></div>
   <pbl-cdk-virtual-scroll-viewport class="pbl-table-scroll-container" [minWidth]="_cdkTable?.minWidth"
                                    [stickyRowHeaderContainer]="stickyRowHeaderContainer" [stickyRowFooterContainer]="stickyRowFooterContainer">
     <pbl-cdk-table>
@@ -73,7 +73,7 @@
       <!-- TABLE RECORD ROW DEFINITION TEMPLATES -->
     </pbl-cdk-table>
   </pbl-cdk-virtual-scroll-viewport>
-  <div pbl-table-fixed-meta-row-container="footer"></div>
+  <div pbl-ngrid-fixed-meta-row-container="footer"></div>
   <ng-container #beforeContent>
     <!-- This dummy row is used to extract an initial row height -->
     <pbl-table-row style="display: none"></pbl-table-row>

@@ -9,7 +9,7 @@ PblColumn.extendProperty('editable');
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: 'pbl-table[cellEditClick], pbl-table[cellEditDblClick]',
+  selector: 'pbl-ngrid[cellEditClick], pbl-ngrid[cellEditDblClick]',
 })
 @UnRx()
 export class PblTableCellEditDirective<T> {

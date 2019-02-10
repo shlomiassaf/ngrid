@@ -47,7 +47,7 @@ let _uniqueIdCounter = 0;
 
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({
-  selector: 'pbl-table[columnReorder]',
+  selector: 'pbl-ngrid[columnReorder]',
   exportAs: 'pblTableColumnReorder',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',

@@ -15,9 +15,9 @@ Here is the final result:
 
 <docsi-mat-example-with-source title="Action Row" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-table blockUi [dataSource]="ds1" [columns]="columns">
+  <pbl-ngrid blockUi [dataSource]="ds1" [columns]="columns">
     <my-table-action-row filter label="My Table"></my-table-action-row>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 

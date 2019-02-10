@@ -78,11 +78,11 @@ export class PblTablePaginatorRefDirective extends PblTableSingleTemplateRegistr
  *
  * @example
  * ```html
- *   <pbl-table>
+ *   <pbl-ngrid>
  *     <div *pblTableNoDataRef style="height: 100%; display: flex; align-items: center; justify-content: center">
  *       <span>No Data</span>
  *     </div>
- *   </pbl-table>
+ *   </pbl-ngrid>
  * ```
  */
 @Directive({ selector: '[pblTableNoDataRef]' })

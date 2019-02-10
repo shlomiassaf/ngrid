@@ -78,7 +78,7 @@
   }
 }
 
-pbl-table:not(.pbl-table-scrolling) .pbl-table-column-type-progressBar.pbl-table-cell {
+.pbl-table:not(.pbl-table-scrolling) .pbl-table-column-type-progressBar.pbl-table-cell {
   > div {
     width: 0;
     transition: width 350ms cubic-bezier(0.075, 0.82, 0.165, 1);

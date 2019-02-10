@@ -1,5 +1,5 @@
 <div fxLayout="column" style="height: 100%">
-  <pbl-table #pblTbl
+  <pbl-ngrid #pblTbl
             identityProp="id"
             rowReorder columnReorder
             blockUi
@@ -101,7 +101,7 @@
     <div *pblTableHeaderCellDef="'name'; col as col"><span style="font-size: 22px; font-weight: bold">{{col.label}}</span></div>
     <!-- SPECIFIC HEADER DEFAULT CELL TEMPLATE DEFINITION-->
 
-  </pbl-table>
+  </pbl-ngrid>
 
   <ng-container *ngIf="false">
     <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">

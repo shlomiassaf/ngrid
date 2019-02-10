@@ -4,8 +4,8 @@ The most simple definition for a column is a vertical series of cells.
 
 <div fxLayoutAlign="start stretch">
   <div fxFlex="0 1 332px" class="col-quickthrough-table1">
-    <pbl-table showFooter [columns]="columns" vScrollNone
-              [dataSource]="[ { id: 1, name: 'John', age: 25 }, { id: 2, name: 'Tom', age: 44 } ]"></pbl-table>
+    <pbl-ngrid showFooter [columns]="columns" vScrollNone
+              [dataSource]="[ { id: 1, name: 'John', age: 25 }, { id: 2, name: 'Tom', age: 44 } ]"></pbl-ngrid>
   </div>
   <div fxLayoutAlign="center center">
     <div class="text-subtitle" style="width: 75%">

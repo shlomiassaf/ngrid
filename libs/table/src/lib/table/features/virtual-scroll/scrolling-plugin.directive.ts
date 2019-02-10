@@ -3,7 +3,7 @@ import { PblTablePluginController } from '../../../ext/plugin-control';
 import { PblTableComponent } from '../../table.component';
 
 @Directive({
-  selector: 'pbl-table[scrolling]'
+  selector: 'pbl-ngrid[scrolling]'
 })
 export class PblTableScrolling<T = any> {
 

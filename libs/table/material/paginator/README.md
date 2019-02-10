@@ -18,9 +18,9 @@ A Plugin for `pbl-table` with a `Paginator` impelementation using components fro
 **Using a component & the paginator ref instruction**
 
 ```html
-<pbl-table>
+<pbl-ngrid>
   <pbl-table-paginator *pblTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-table-paginator>
-</pbl-table>
+</pbl-ngrid>
 ```
 
 > TIP: You can use `pblTablePaginatorRef` outside of the table, (root component), to define a gloal paginator.

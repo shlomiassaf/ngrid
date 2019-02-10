@@ -6,7 +6,7 @@ import { PblMetaRowDefinitions } from '../columns/types';
 import { PblTableMetaRowService } from './meta-row.service';
 
 @Component({
-  selector: 'div[pbl-table-fixed-meta-row-container]',
+  selector: 'div[pbl-ngrid-fixed-meta-row-container]',
   template: `<div class="pbl-cdk-table" [style.min-width]="_minWidth"></div>`,
   host: { // tslint:disable-line:use-host-property-decorator
     style: 'flex: 0 0 auto; overflow: hidden;',
@@ -16,7 +16,7 @@ import { PblTableMetaRowService } from './meta-row.service';
 @UnRx()
 export class PblTableMetaRowContainerComponent {
 
-  @Input('pbl-table-fixed-meta-row-container') set type(value: 'header' | 'footer') {
+  @Input('pbl-ngrid-fixed-meta-row-container') set type(value: 'header' | 'footer') {
     if (this._type !== value) {
       this.init(value);
     }

@@ -24,7 +24,7 @@ In this scenario the entire process is handled automatically by the table, based
 
 <docsi-mat-example-with-source title="Client side Paginator" contentClass="table-height-300 mat-elevation-z7" query="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-table usePagination
+  <pbl-ngrid usePagination
             blockUi
             vScrollNone
             [dataSource]="clientSideDS"
@@ -32,7 +32,7 @@ In this scenario the entire process is handled automatically by the table, based
     <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -55,14 +55,14 @@ Regardless, it is the same information, transforming from one method to the othe
 
 <docsi-mat-example-with-source title="Page number based Server side Paginator" contentClass="table-height-300 mat-elevation-z7" query="[{section: 'ex-2'}]">
     <!--@pebula-example:ex-2-->
-  <pbl-table usePagination
+  <pbl-ngrid usePagination
             blockUi
             [dataSource]="pageNumberDS"
             [columns]="columns">
     <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
@@ -75,14 +75,14 @@ With this method might be missing the total amount of rows/pages depending on th
 
 <docsi-mat-example-with-source title="Token based based Server side Paginator" contentClass="table-height-300 mat-elevation-z7" query="[{section: 'ex-3'}]">
     <!--@pebula-example:ex-3-->
-  <pbl-table usePagination="token"
+  <pbl-ngrid usePagination="token"
             blockUi
             [dataSource]="tokenDS"
             [columns]="columns">
     <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>
 
@@ -95,7 +95,7 @@ With this method might be missing the total amount of rows/pages depending on th
       The default behaviour, using a dedicated slot will comes after footer rows and will always stick to the bottom
     </p>
     <!--@pebula-example:ex-4-->
-  <pbl-table usePagination
+  <pbl-ngrid usePagination
             blockUi
             [dataSource]="footerRowDS"
             [columns]="columnsPaginatorAsFooter"
@@ -106,6 +106,6 @@ With this method might be missing the total amount of rows/pages depending on th
       <pbl-table-paginator [table]="table"
                           [paginator]="table.ds.paginator"></pbl-table-paginator>
     </div>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-4-->
 </docsi-mat-example-with-source>

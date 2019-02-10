@@ -62,7 +62,7 @@ export function _vScrollStrategyFactory(directive: { _scrollStrategy: VirtualScr
 
 /** A virtual scroll strategy that supports unknown or dynamic size items. */
 @Directive({
-  selector: 'pbl-table[vScrollAuto], pbl-table[vScrollFixed], pbl-table[vScrollNone]',
+  selector: 'pbl-ngrid[vScrollAuto], pbl-ngrid[vScrollFixed], pbl-ngrid[vScrollNone]',
   providers: [{
     provide: VIRTUAL_SCROLL_STRATEGY,
     useExisting: PblCdkVirtualScrollDirective,

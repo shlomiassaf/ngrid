@@ -4,7 +4,7 @@ A column group is a collection of columns represented as a column header that sp
 
 <docsi-mat-example-with-source title="Basic Group Example" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-table [dataSource]="ds1" [columns]="columns1"></pbl-table>
+  <pbl-ngrid [dataSource]="ds1" [columns]="columns1"></pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -55,7 +55,7 @@ A table can host multiple header rows including multiple group rows, when settin
 
 <docsi-mat-example-with-source title="Multi-header Column Groups" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <pbl-table [dataSource]="ds2" [columns]="columns2"></pbl-table>
+  <pbl-ngrid [dataSource]="ds2" [columns]="columns2"></pbl-ngrid>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 

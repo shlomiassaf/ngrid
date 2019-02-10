@@ -6,7 +6,7 @@ Let's start with a simple example:
 
 <docsi-mat-example-with-source title="Simple cell edit" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-table [dataSource]="ds1" [columns]="columns1">
+  <pbl-ngrid [dataSource]="ds1" [columns]="columns1">
     <div *pblTableCellDef="'ttt'; let ctx">
       {{!!ctx.rowContext.firstRender}}
     </div>
@@ -16,7 +16,7 @@ Let's start with a simple example:
     <div *pblTableCellEditorDef="'name'; let ctx">
       <input #input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
     </div>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -89,7 +89,7 @@ For this we make use of the `target-events` plugin that allow us to handle speci
 
 <docsi-mat-example-with-source title="Triggering edits globally" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <pbl-table (cellClick)="$event.context.startEdit()"
+  <pbl-ngrid (cellClick)="$event.context.startEdit()"
              [dataSource]="ds2" [columns]="columns2">
     <div *pblTableCellDef="'name'; let ctx">
       <a (click)="ctx.startEdit(true)">{{ ctx.value }}</a>
@@ -103,14 +103,14 @@ For this we make use of the `target-events` plugin that allow us to handle speci
              (change)="changeCheckbox(cb, ctx)"
              (blur)="ctx.stopEdit()" />
     </div>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 This time, clicking on a cell in the **lead** column will start edit mode.
 
 ```html
-<pbl-table (cellClick)="$event.context.startEdit()"
+<pbl-ngrid (cellClick)="$event.context.startEdit()"
             [dataSource]="ds2" [columns]="columns2">
   <div *pblTableCellEditorDef="'lead'; let ctx">
     <input #cb type="checkbox" [checked]="ctx.value"
@@ -118,7 +118,7 @@ This time, clicking on a cell in the **lead** column will start edit mode.
             (blur)="ctx.stopEdit()"
             (ngAfterViewInit)="cb.focus()"/>
   </div>
-</pbl-table>
+</pbl-ngrid>
 ```
 
 Now we only need to defined an edit template for the cell and let the table handle the click events.  
@@ -150,7 +150,7 @@ the `editable` property set to true.
 
 <docsi-mat-example-with-source title="Cell edit directives" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
   <!--@pebula-example:ex-3-->
-  <pbl-table cellEditClick
+  <pbl-ngrid cellEditClick
              [dataSource]="ds3" [columns]="columns3">
     <div *pblTableCellEditorTypeDef="'date'; let ctx">
       <mat-form-field>
@@ -160,7 +160,7 @@ the `editable` property set to true.
         <mat-datepicker #picker [opened]="true" (closed)="ctx.stopEdit()"></mat-datepicker>
       </mat-form-field>
     </div>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>
 

@@ -35,7 +35,7 @@ export interface PblDetailsRowToggleEvent<T = any> {
 }
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'pbl-table[detailRow]' })
+@Directive({ selector: 'pbl-ngrid[detailRow]' })
 @UnRx()
 export class PblTableDetailRowPluginDirective<T> implements OnDestroy {
   /**

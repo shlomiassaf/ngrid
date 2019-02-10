@@ -13,7 +13,7 @@ declare module '@pebula/table/lib/ext/types' {
 const PLUGIN_KEY: 'matPaginator' = 'matPaginator';
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'pbl-table[matPaginator]' })
+@Directive({ selector: 'pbl-ngrid[matPaginator]' })
 export class PblTableMatPaginatorDirective implements OnDestroy, DoCheck {
   /**
    * Add's a selection column using material's `mat-checkbox` in the column specified.

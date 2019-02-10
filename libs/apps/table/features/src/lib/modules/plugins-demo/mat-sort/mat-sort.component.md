@@ -2,7 +2,7 @@
 
 <docsi-mat-example-with-source title="Sorting" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-table matSort
+  <pbl-ngrid matSort
              usePagination
              blockUi
              vScrollNone
@@ -12,26 +12,26 @@
     <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Sorting with default active column and direcion" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <pbl-table matSort matSortActive="name" matSortDirection="desc"
+  <pbl-ngrid matSort matSortActive="name" matSortDirection="desc"
             blockUi
             [dataSource]="defaultSortDS"
             [columns]="columns">
     <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Programatic Sorting" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
   <!--@pebula-example:ex-3-->
-  <pbl-table #matSort="pblMatSort"
+  <pbl-ngrid #matSort="pblMatSort"
              matSort
              [stickyHeader]="['table']"
              blockUi
@@ -40,7 +40,7 @@
     <pbl-table-paginator *pblTablePaginatorRef="let table"
                         [table]="table"
                         [paginator]="table.ds.paginator"></pbl-table-paginator>
-  </pbl-table>
+  </pbl-ngrid>
 
   <mat-form-field>
     <mat-select #selectColumn>

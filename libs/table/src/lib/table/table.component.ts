@@ -54,8 +54,9 @@ export function pluginControllerFactory(table: { _plugin: PblTablePluginContext;
 export function metaRowServiceFactory(table: { _extApi: PblTableExtensionApi; }) { return table._extApi.metaRowService; }
 
 @Component({
-  selector: 'pbl-table',
+  selector: 'pbl-ngrid',
   host: { // tslint:disable-line:use-host-property-decorator
+    '[class.pbl-table]': 'true',
     '[class.pbl-table-empty]': '!ds || ds.renderLength === 0',
   },
   templateUrl: './table.component.html',

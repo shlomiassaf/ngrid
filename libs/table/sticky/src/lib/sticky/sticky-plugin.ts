@@ -79,7 +79,7 @@ export function setStickyColumns(table: PblTableComponent<any>, type: 'start' | 
 }
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'pbl-table[stickyColumnStart], pbl-table[stickyColumnEnd], pbl-table[stickyHeader], pbl-table[stickyFooter]' })
+@Directive({ selector: 'pbl-ngrid[stickyColumnStart], pbl-ngrid[stickyColumnEnd], pbl-ngrid[stickyHeader], pbl-ngrid[stickyFooter]' })
 export class PblTableStickyPluginDirective implements OnDestroy {
   /**
    * Set the header rows you want to apply sticky positioning to.

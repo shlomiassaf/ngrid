@@ -14,13 +14,13 @@ There are 2 ways, both require an existing column definition:
 
 **Using a directive**
 ```html
-<pbl-table matCheckboxSelection="selection"></pbl-table>
+<pbl-ngrid matCheckboxSelection="selection"></pbl-ngrid>
 ```
 
 **Using a component**
 ```html
-<pbl-table>
+<pbl-ngrid>
   <pbl-table-checkbox name="selection"></pbl-table-checkbox>
-</pbl-table>
+</pbl-ngrid>
 ```
 

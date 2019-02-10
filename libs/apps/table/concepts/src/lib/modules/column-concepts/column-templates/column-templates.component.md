@@ -83,18 +83,18 @@ For example if set in the application root component it will be registered in th
 set as a child of the table component it will be available only to that table instance an will be destroyed once the table is destroyed.
 
 ```html
-<pbl-table>
+<pbl-ngrid>
   <div *pblTableCellTypeDef="'image'; value as value"><img [src]="avatar" /></div>
-</pbl-table>
+</pbl-ngrid>
 ```
 
 One more time:
 
 ```html
-<pbl-table></pbl-table>
-<pbl-table>
+<pbl-ngrid></pbl-ngrid>
+<pbl-ngrid>
   <div *pblTableCellTypeDef="'image'; value as value"> IMAGE 0 </div>
-</pbl-table>
+</pbl-ngrid>
 
 <div *pblTableCellTypeDef="'image'; value as value"> IMAGE 1 </div>
 ```

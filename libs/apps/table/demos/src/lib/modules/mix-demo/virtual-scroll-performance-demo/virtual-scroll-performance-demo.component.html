@@ -20,7 +20,7 @@
     </mat-select>
   </mat-form-field>
   <div style="flex: 1 1 100%; display: flex; min-height: 0px">
-    <pbl-table *ngIf="showTable" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis" style="height: 100%; width: 100%;"
+    <pbl-ngrid *ngIf="showTable" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis" style="height: 100%; width: 100%;"
                identityProp="id"
                [dataSource]="dataSource" [columns]="columns"
                vScrollAuto maxBufferPx="100" minBufferPx="50" [wheelMode]="wheelMode"
@@ -37,7 +37,7 @@
           [parentNgClass]="value < 0 ? col.type.data.pbl : col.type.data.pos">{{ value | currency:col.type.data.meta.currency(row):'symbol':col.type.data.format }}</div>
       <div *pblTableCellTypeDef="'flagAndCountry'; col as col; row as row">{{ col.type.data.flagAndCountry(row) }}</div>
 
-    </pbl-table>
+    </pbl-ngrid>
   </div>
 </div>
 

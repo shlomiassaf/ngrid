@@ -15,7 +15,7 @@ in the column definitions.
   <!--@pebula-example:ex-1-->
   <button (click)="resize(pblTable1)">Resize id to 200px</button>
   <button (click)="pblTable1.autoSizeColumnToFit()">Fit Content</button>
-  <pbl-table #pblTable1 [dataSource]="ds1" [columns]="columns1" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-table>
+  <pbl-ngrid #pblTable1 [dataSource]="ds1" [columns]="columns1" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -30,7 +30,7 @@ Let's start with a simple example, enabling resize for columns **name** and **ge
 
 <docsi-mat-example-with-source title="Simple Resizing" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <pbl-table [dataSource]="ds2" [columns]="columns2" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-table>
+  <pbl-ngrid [dataSource]="ds2" [columns]="columns2" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-ngrid>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
@@ -52,7 +52,7 @@ To provide boundaries use the `minWidth` and `maxWidth` properties in the column
 
 <docsi-mat-example-with-source title="Resize boundaries" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
   <!--@pebula-example:ex-3-->
-  <pbl-table [dataSource]="ds3" [columns]="columns3"></pbl-table>
+  <pbl-ngrid [dataSource]="ds3" [columns]="columns3"></pbl-ngrid>
   <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>
 
@@ -90,11 +90,11 @@ It accepts a content which it will display, allowing you to control the handle's
 
 <docsi-mat-example-with-source title="Custom resizing" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-4'}]">
   <!--@pebula-example:ex-4-->
-  <pbl-table [dataSource]="ds4" [columns]="columns4">
+  <pbl-ngrid [dataSource]="ds4" [columns]="columns4">
     <pbl-table-drag-resize *pblTableCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
       <span class="pbl-table-column-resizer-handle"></span>
     </pbl-table-drag-resize>
-  </pbl-table>
+  </pbl-ngrid>
   <!--@pebula-example:ex-4-->
 </docsi-mat-example-with-source>
 
