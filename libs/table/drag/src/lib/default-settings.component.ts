@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'neg-drag-plugin-default-templates',
+  selector: 'pbl-drag-plugin-default-templates',
   template:
-`<neg-table-drag-resize *negTableCellResizerRef="let ctx" [context]="ctx"></neg-table-drag-resize>
+`<pbl-table-drag-resize *negTableCellResizerRef="let ctx" [context]="ctx"></pbl-table-drag-resize>
 <span *negTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx" cdkDragRootElementClass="cdk-drag"></span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

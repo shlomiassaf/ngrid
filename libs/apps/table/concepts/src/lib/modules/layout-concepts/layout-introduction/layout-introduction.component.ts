@@ -4,7 +4,7 @@ import { createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
-  selector: 'neg-layout-introduction-table-example-component',
+  selector: 'pbl-layout-introduction-table-example-component',
   templateUrl: './layout-introduction.component.html',
   styleUrls: ['./layout-introduction.component.scss'],
   encapsulation: ViewEncapsulation.None,

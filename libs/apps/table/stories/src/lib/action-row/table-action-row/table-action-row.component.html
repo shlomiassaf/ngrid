@@ -1,6 +1,6 @@
 <ng-template #actionRow>
-  <div class="neg-table-header-row neg-table-action-label-row neg-full-width">
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" class="neg-table-header-cell">
+  <div class="pbl-table-header-row pbl-table-action-label-row pbl-full-width">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" class="pbl-table-header-cell">
       <h1 fxFlex="noshrink">{{ label }}</h1>
       <div fxFlex="*"></div>
       <mat-form-field *ngIf="filter" appearance="outline" class="search-form-field">
@@ -8,7 +8,7 @@
         <input matInput (keyup)="actionRowFilter($event.target.value)">
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
-      <button mat-stroked-button class="neg-stroked-icon" color="primary" (click)="refresh()"><mat-icon>refresh</mat-icon></button>
+      <button mat-stroked-button class="pbl-stroked-icon" color="primary" (click)="refresh()"><mat-icon>refresh</mat-icon></button>
     </div>
   </div>
 </ng-template>

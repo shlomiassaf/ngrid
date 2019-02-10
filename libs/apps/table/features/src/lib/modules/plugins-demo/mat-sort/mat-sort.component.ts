@@ -19,7 +19,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'neg-mat-sort-table-example-component',
+  selector: 'pbl-mat-sort-table-example-component',
   templateUrl: './mat-sort.component.html',
   styleUrls: ['./mat-sort.component.scss'],
   encapsulation: ViewEncapsulation.None,

@@ -60,7 +60,7 @@ const COLUMNS2 = columnFactory()
   .build();
 
 @Component({
-  selector: 'neg-target-events-table-example-component',
+  selector: 'pbl-target-events-table-example-component',
   templateUrl: './target-events.component.html',
   styleUrls: ['./target-events.component.scss'],
   encapsulation: ViewEncapsulation.None,

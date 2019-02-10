@@ -315,7 +315,7 @@ export class NegTableTargetEventsPlugin<T = any> {
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: 'neg-table[rowClick], neg-table[rowDblClick], neg-table[rowEnter], neg-table[rowLeave], neg-table[cellClick], neg-table[cellDblClick], neg-table[cellEnter], neg-table[cellLeave]',
+  selector: 'pbl-table[rowClick], pbl-table[rowDblClick], pbl-table[rowEnter], pbl-table[rowLeave], pbl-table[cellClick], pbl-table[cellDblClick], pbl-table[cellEnter], pbl-table[cellLeave]',
   // tslint:disable-next-line:use-output-property-decorator
   outputs: [ 'rowClick', 'rowClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellDblClick', 'cellEnter', 'cellLeave' ]
 })

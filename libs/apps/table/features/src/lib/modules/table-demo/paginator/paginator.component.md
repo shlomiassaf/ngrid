@@ -24,15 +24,15 @@ In this scenario the entire process is handled automatically by the table, based
 
 <docsi-mat-example-with-source title="Client side Paginator" contentClass="table-height-300 mat-elevation-z7" query="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <neg-table usePagination
+  <pbl-table usePagination
             blockUi
             vScrollNone
             [dataSource]="clientSideDS"
             [columns]="columns">
-    <neg-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.ds.paginator"></neg-table-paginator>
-  </neg-table>
+                        [paginator]="table.ds.paginator"></pbl-table-paginator>
+  </pbl-table>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -55,14 +55,14 @@ Regardless, it is the same information, transforming from one method to the othe
 
 <docsi-mat-example-with-source title="Page number based Server side Paginator" contentClass="table-height-300 mat-elevation-z7" query="[{section: 'ex-2'}]">
     <!--@pebula-example:ex-2-->
-  <neg-table usePagination
+  <pbl-table usePagination
             blockUi
             [dataSource]="pageNumberDS"
             [columns]="columns">
-    <neg-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.ds.paginator"></neg-table-paginator>
-  </neg-table>
+                        [paginator]="table.ds.paginator"></pbl-table-paginator>
+  </pbl-table>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
@@ -75,14 +75,14 @@ With this method might be missing the total amount of rows/pages depending on th
 
 <docsi-mat-example-with-source title="Token based based Server side Paginator" contentClass="table-height-300 mat-elevation-z7" query="[{section: 'ex-3'}]">
     <!--@pebula-example:ex-3-->
-  <neg-table usePagination="token"
+  <pbl-table usePagination="token"
             blockUi
             [dataSource]="tokenDS"
             [columns]="columns">
-    <neg-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.ds.paginator"></neg-table-paginator>
-  </neg-table>
+                        [paginator]="table.ds.paginator"></pbl-table-paginator>
+  </pbl-table>
   <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>
 
@@ -95,7 +95,7 @@ With this method might be missing the total amount of rows/pages depending on th
       The default behaviour, using a dedicated slot will comes after footer rows and will always stick to the bottom
     </p>
     <!--@pebula-example:ex-4-->
-  <neg-table usePagination
+  <pbl-table usePagination
             blockUi
             [dataSource]="footerRowDS"
             [columns]="columnsPaginatorAsFooter"
@@ -103,9 +103,9 @@ With this method might be missing the total amount of rows/pages depending on th
             style="background: transparent">
     <div *negTableFooterCellTypeDef="'PAGINATOR'; table as table"
         style="display: flex; justify-content: flex-end; width: 100%;">
-      <neg-table-paginator [table]="table"
-                          [paginator]="table.ds.paginator"></neg-table-paginator>
+      <pbl-table-paginator [table]="table"
+                          [paginator]="table.ds.paginator"></pbl-table-paginator>
     </div>
-  </neg-table>
+  </pbl-table>
   <!--@pebula-example:ex-4-->
 </docsi-mat-example-with-source>

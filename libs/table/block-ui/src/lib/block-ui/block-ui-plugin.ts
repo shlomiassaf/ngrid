@@ -14,7 +14,7 @@ declare module '@pebula/table/lib/ext/types' {
 const PLUGIN_KEY: 'blockUi' = 'blockUi';
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'neg-table[blockUi]', exportAs: 'blockUi' })
+@Directive({ selector: 'pbl-table[blockUi]', exportAs: 'blockUi' })
 @UnRx()
 export class NegTableBlockUiPluginDirective<T> implements OnDestroy {
 
@@ -42,7 +42,7 @@ export class NegTableBlockUiPluginDirective<T> implements OnDestroy {
    *
    * Also note that when sending an observable it is treated as "notifier", do not send cold observable as they get subscribed to.
    * For example, sending the returned value from `HttpClient` will probably result in 2 HTTP calls, if you already subscribed to it
-   * > The default value is `auto` which means that `<neg-table blockUi>` is similar to `<neg-table blockUi="auto">`
+   * > The default value is `auto` which means that `<pbl-table blockUi>` is similar to `<pbl-table blockUi="auto">`
    */
   @Input() get blockUi(): boolean | 'auto' | Observable<boolean> { return this._blockUi; }
   set blockUi(value: boolean | 'auto' | Observable<boolean>) {

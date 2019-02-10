@@ -24,8 +24,8 @@ import { NegTableMultiRegistryMap } from '../services/table-registry.service';
 import { NegTableColumnDef } from './column-def';
 import { NegTableDataHeaderExtensionContext, NegTableMultiComponentRegistry, NegTableMultiTemplateRegistry } from './registry.directives';
 
-const HEADER_GROUP_CSS = `neg-header-group-cell`;
-const HEADER_GROUP_PLACE_HOLDER_CSS = `neg-header-group-cell-placeholder`;
+const HEADER_GROUP_CSS = `pbl-header-group-cell`;
+const HEADER_GROUP_PLACE_HOLDER_CSS = `pbl-header-group-cell-placeholder`;
 
 function initCellElement(el: HTMLElement, column: COLUMN): void {
   el.classList.add(uniqueColumnCss(column.columnDef));
@@ -57,9 +57,9 @@ const lastDataHeaderExtensions = new Map<NegTableComponent<any>, NegTableMultiRe
  * Examples: Sorting behavior, drag&drop/resize handlers, menus etc...
  */
 @Component({
-  selector: 'neg-table-header-cell',
+  selector: 'pbl-table-header-cell',
   host: {
-    class: 'neg-table-header-cell',
+    class: 'pbl-table-header-cell',
     role: 'columnheader',
   },
   template: `<ng-container #vcRef></ng-container>`,
@@ -182,9 +182,9 @@ export class NegTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
 
 /** Cell template container that adds the right classes and role. */
 @Directive({
-  selector: 'neg-table-cell',
+  selector: 'pbl-table-cell',
   host: {
-    'class': 'neg-table-cell',
+    'class': 'pbl-table-cell',
     'role': 'gridcell',
   },
   exportAs: 'negTableCell',
@@ -210,9 +210,9 @@ export class NegTableCellDirective extends CdkCell implements DoCheck {
 }
 
 @Directive({
-  selector: 'neg-table-footer-cell',
+  selector: 'pbl-table-footer-cell',
   host: {
-    'class': 'neg-table-footer-cell',
+    'class': 'pbl-table-footer-cell',
     'role': 'gridcell',
   },
  })

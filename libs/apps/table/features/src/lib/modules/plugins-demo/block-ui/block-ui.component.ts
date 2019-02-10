@@ -16,7 +16,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'neg-block-ui-table-example-component',
+  selector: 'pbl-block-ui-table-example-component',
   templateUrl: './block-ui.component.html',
   styleUrls: ['./block-ui.component.scss'],
   encapsulation: ViewEncapsulation.None,

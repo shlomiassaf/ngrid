@@ -1,50 +1,50 @@
-@import './_neg-cdk-table.component-theme';
+@import './_pbl-cdk-table.component-theme';
 @import './plugins/drag.plugin';
 
-@mixin neg-table-theme($tableTheme) {
-  @include neg-cdk-table-theme($tableTheme);
+@mixin pbl-table-theme($tableTheme) {
+  @include pbl-cdk-table-theme($tableTheme);
 
   $border-color: map-get($tableTheme, border-color);
   $space-fill-background: map-get($tableTheme, space-fill-background);
 
-  .neg-table-scroll-container {
-    .neg-table-space-fill {
+  .pbl-table-scroll-container {
+    .pbl-table-space-fill {
       background: $space-fill-background;
     }
   }
 
-  .neg-table-cell-ellipsis {
-    .neg-table-cell, .neg-table-cell > *:first-child {
+  .pbl-table-cell-ellipsis {
+    .pbl-table-cell, .pbl-table-cell > *:first-child {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
   }
 
-  .neg-table-header-cell-ellipsis {
-    .neg-table-header-cell, .neg-table-header-cell > *:first-child {
+  .pbl-table-header-cell-ellipsis {
+    .pbl-table-header-cell, .pbl-table-header-cell > *:first-child {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
   }
 
-  .neg-table-footer-cell-ellipsis {
-    .neg-table-footer-cell, .neg-table-footer-cell > *:first-child {
+  .pbl-table-footer-cell-ellipsis {
+    .pbl-table-footer-cell, .pbl-table-footer-cell > *:first-child {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
   }
 
-  .neg-table-column-resizer-handle {
+  .pbl-table-column-resizer-handle {
     background: $border-color;
   }
 
-  @include neg-table-drag-plugin-theme($tableTheme);
+  @include pbl-table-drag-plugin-theme($tableTheme);
 }
 
-@mixin neg-table-spacing($spacingTheme) {
+@mixin pbl-table-spacing($spacingTheme) {
 
   $header-row-height: map-get($spacingTheme, header-row-height);
   $row-height: map-get($spacingTheme, row-height);
@@ -52,19 +52,19 @@
   $row-spacing: map-get($spacingTheme, row-spacing);
   $cell-spacing: map-get($spacingTheme, cell-spacing);
 
-  .neg-table-header-row {
+  .pbl-table-header-row {
     min-height: $header-row-height;
   }
 
-  .neg-table-row {
+  .pbl-table-row {
     min-height: $row-height;
   }
 
-  .neg-table-footer-row {
+  .pbl-table-footer-row {
     min-height: $footer-row-height;
   }
 
-  .neg-table-cell:first-of-type, .neg-table-header-cell:first-of-type, .neg-table-footer-cell:first-of-type {
+  .pbl-table-cell:first-of-type, .pbl-table-header-cell:first-of-type, .pbl-table-footer-cell:first-of-type {
     padding-left: $row-spacing;
 
     [dir='rtl'] & {
@@ -73,7 +73,7 @@
     }
   }
 
-  .neg-table-cell:last-of-type, .neg-table-header-cell:last-of-type, .neg-table-footer-cell:last-of-type {
+  .pbl-table-cell:last-of-type, .pbl-table-header-cell:last-of-type, .pbl-table-footer-cell:last-of-type {
     padding-right: $row-spacing;
 
     [dir='rtl'] & {
@@ -82,7 +82,7 @@
     }
   }
 
-  .neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
+  .pbl-table-cell, .pbl-table-header-cell, .pbl-table-footer-cell {
     padding-left: $cell-spacing;
 
     &.cdk-table-sticky {
@@ -90,8 +90,8 @@
     }
   }
 
-  .neg-table-margin-cell-box-model {
-    .neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
+  .pbl-table-margin-cell-box-model {
+    .pbl-table-cell, .pbl-table-header-cell, .pbl-table-footer-cell {
       box-sizing: border-box;
 
       margin-left: $cell-spacing;
@@ -127,7 +127,7 @@
   }
 
   // row-reorder (drag & drop)
-  .neg-table-row-prefix {
+  .pbl-table-row-prefix {
     display: none;
     position: absolute;
     cursor: move;
@@ -135,12 +135,12 @@
     height: 100%;
   }
 
-  .neg-row-reorder .neg-table-row-prefix {
+  .pbl-row-reorder .pbl-table-row-prefix {
     display: block;
   }
 
 }
 
-@mixin neg-table-typography($config) {
-  @include neg-cdk-table-typography($config);
+@mixin pbl-table-typography($config) {
+  @include pbl-cdk-table-typography($config);
 }

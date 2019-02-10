@@ -105,22 +105,22 @@ export class NegColumn implements NegColumnDefinition {
   orgProp: string;
 
   /**
-   * Used by neg-table to apply custom cell template, or the default when not set.
+   * Used by pbl-table to apply custom cell template, or the default when not set.
    * @internal
    */
   cellTpl: TemplateRef<NegTableCellContext<any>>;
     /**
-   * Used by neg-table to apply custom cell template, or the default when not set.
+   * Used by pbl-table to apply custom cell template, or the default when not set.
    * @internal
    */
   editorTpl: TemplateRef<NegTableCellContext<any>>;
   /**
-   * Used by neg-table to apply a custom header cell template, or the default when not set.
+   * Used by pbl-table to apply a custom header cell template, or the default when not set.
    * @internal
    */
   headerCellTpl: TemplateRef<NegTableMetaCellContext<any>>;
   /**
-   * Used by neg-table to apply a custom footer cell template, or the default when not set.
+   * Used by pbl-table to apply a custom footer cell template, or the default when not set.
    * @internal
    */
   footerCellTpl: TemplateRef<NegTableMetaCellContext<any>>;

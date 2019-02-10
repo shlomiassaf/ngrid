@@ -15,7 +15,7 @@ import { NegPagingPaginator, NegPaginatorChangeEvent, NegTableComponent } from '
 const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
 
 @Component({
-  selector: 'neg-table-paginator',
+  selector: 'pbl-table-paginator',
   templateUrl: './table-paginator.component.html',
   styleUrls: ['./table-paginator.component.scss'],
   host: {

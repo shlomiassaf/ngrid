@@ -194,19 +194,19 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
       for (const f of filter) {
         switch (f) {
           case 'table':
-           query.push(`.neg-table-cell${cssId}`);
+           query.push(`.pbl-table-cell${cssId}`);
            break;
           case 'header':
-           query.push(`.neg-table-header-cell${cssId}:not(.neg-header-group-cell)`);
+           query.push(`.pbl-table-header-cell${cssId}:not(.pbl-header-group-cell)`);
            break;
           case 'headerGroup':
-           query.push(`.neg-header-group-cell${cssId}`);
+           query.push(`.pbl-header-group-cell${cssId}`);
            break;
           case 'footer':
-           query.push(`.neg-table-footer-cell${cssId}:not(.neg-footer-group-cell)`);
+           query.push(`.pbl-table-footer-cell${cssId}:not(.pbl-footer-group-cell)`);
            break;
           case 'footerGroup':
-           query.push(`.neg-footer-group-cell${cssId}`);
+           query.push(`.pbl-footer-group-cell${cssId}`);
            break;
         }
       }

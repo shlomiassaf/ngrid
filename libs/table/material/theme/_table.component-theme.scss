@@ -1,13 +1,13 @@
 @import '../../theming';
 
-@mixin mat-neg-table-theme($theme) {
+@mixin mat-pbl-table-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  @include neg-table-theme((
+  @include pbl-table-theme((
     space-fill-background: #ffffff,
     border-color: mat-color($foreground, divider),
     row-background: mat-color($background, 'card'),
@@ -17,9 +17,9 @@
   ));
 }
 
-@mixin mat-neg-table-spacing($type: 'original') {
+@mixin mat-pbl-table-spacing($type: 'original') {
   @if $type == 'narrow' {
-    @include neg-table-spacing((
+    @include pbl-table-spacing((
       header-row-height: 30px,
       row-height: 26px,
       footer-row-height: 30px,
@@ -27,7 +27,7 @@
       cell-spacing: 12px,
     ));
   } @else {
-    @include neg-table-spacing((
+    @include pbl-table-spacing((
       header-row-height: 56px,
       row-height: 48px,
       footer-row-height: 48px,
@@ -37,6 +37,6 @@
   }
 }
 
-@mixin mat-neg-table-typography($config) {
-  @include neg-cdk-table-typography($config);
+@mixin mat-pbl-table-typography($config) {
+  @include pbl-cdk-table-typography($config);
 }

@@ -4,13 +4,13 @@ import { EXT_API_TOKEN, NegTableExtensionApi } from '../../ext/table-ext-api';
 import { NegRowContext } from '../context/index';
 
 
-export const NEG_TABLE_ROW_TEMPLATE  = `<ng-content select=".neg-table-row-prefix"></ng-content>${CDK_ROW_TEMPLATE}<ng-content select=".neg-table-row-suffix"></ng-content>`;
+export const NEG_TABLE_ROW_TEMPLATE  = `<ng-content select=".pbl-table-row-prefix"></ng-content>${CDK_ROW_TEMPLATE}<ng-content select=".pbl-table-row-suffix"></ng-content>`;
 
 @Component({
-  selector: 'neg-table-row:not([detailRow])',
+  selector: 'pbl-table-row:not([detailRow])',
   template: NEG_TABLE_ROW_TEMPLATE,
   host: { // tslint:disable-line:use-host-property-decorator
-    'class': 'neg-table-row',
+    'class': 'pbl-table-row',
     'role': 'row',
   },
   providers: [

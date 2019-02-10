@@ -4,7 +4,7 @@ import { NegTableComponent, createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
-  selector: 'neg-column-group-table-example-component',
+  selector: 'pbl-column-group-table-example-component',
   templateUrl: './column-group.component.html',
   styleUrls: ['./column-group.component.scss'],
   encapsulation: ViewEncapsulation.None,

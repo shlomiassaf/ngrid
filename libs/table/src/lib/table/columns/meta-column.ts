@@ -88,7 +88,7 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
   stickyEnd: boolean;
 
   /**
-   * Used by neg-table to apply a custom header/footer cell template, or the default when not set.
+   * Used by pbl-table to apply a custom header/footer cell template, or the default when not set.
    * @internal
    */
   template: TemplateRef<NegTableMetaCellContext<any>>;

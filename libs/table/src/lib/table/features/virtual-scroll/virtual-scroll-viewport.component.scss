@@ -29,7 +29,7 @@
 
 
 // Scrolling container.
-neg-cdk-virtual-scroll-viewport {
+pbl-cdk-virtual-scroll-viewport {
   display: block;
   position: relative;
   overflow: auto;
@@ -97,7 +97,7 @@ neg-cdk-virtual-scroll-viewport {
   }
 }
 
-.neg-table-space-fill {
+.pbl-table-space-fill {
   position: absolute;
   left: 0;
   width: 100%

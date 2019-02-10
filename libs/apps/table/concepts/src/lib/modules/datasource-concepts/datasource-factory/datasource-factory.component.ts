@@ -5,7 +5,7 @@ import { createDS } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
-  selector: 'neg-datasource-factory-table-example-component',
+  selector: 'pbl-datasource-factory-table-example-component',
   templateUrl: './datasource-factory.component.html',
   styleUrls: ['./datasource-factory.component.scss'],
   encapsulation: ViewEncapsulation.None,

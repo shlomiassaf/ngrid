@@ -47,7 +47,7 @@ let _uniqueIdCounter = 0;
 
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({
-  selector: 'neg-table[columnReorder]',
+  selector: 'pbl-table[columnReorder]',
   exportAs: 'negTableColumnReorder',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
@@ -60,7 +60,7 @@ let _uniqueIdCounter = 0;
   ],
 })
 export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropList<T, NegTableColumnReorderPluginDirective<T>> implements OnInit, OnDestroy {
-  id = `neg-table-column-reorder-list-${_uniqueIdCounter++}`;
+  id = `pbl-table-column-reorder-list-${_uniqueIdCounter++}`;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   @Input() get columnReorder(): boolean { return this._columnReorder; };
@@ -104,7 +104,7 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
     super(element, dragDropRegistry as any, changeDetectorRef, dir, group, _document, dragDrop);
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    this.directContainerElement = '.neg-table-header-row-main';
+    this.directContainerElement = '.pbl-table-header-row-main';
     this.dropped.subscribe( (event: CdkDragDrop<T, any>) => {
       if (!this.manualOverride) {
         this.table.columnApi.moveColumn((event.item as NegTableColumnDragDirective<T>).column, event.currentIndex);
@@ -114,9 +114,9 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
     this.dragging.subscribe( isDragging => {
       const el = element.nativeElement;
       if (isDragging) {
-        el.classList.add('neg-table-column-list-dragging');
+        el.classList.add('pbl-table-column-list-dragging');
       } else {
-        el.classList.remove('neg-table-column-list-dragging');
+        el.classList.remove('pbl-table-column-list-dragging');
       }
       this.lastSwap = undefined;
     });
@@ -229,7 +229,7 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
   ]
 })
 export class NegTableColumnDragDirective<T = any> extends CdkLazyDrag<T, NegTableColumnReorderPluginDirective<T>, NegTableColumnDragDirective<T>> implements AfterViewInit {
-  rootElementSelector = 'neg-table-header-cell';
+  rootElementSelector = 'pbl-table-header-cell';
 
   column: NegColumn;
 

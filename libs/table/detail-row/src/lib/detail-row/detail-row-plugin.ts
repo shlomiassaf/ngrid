@@ -35,7 +35,7 @@ export interface NegDetailsRowToggleEvent<T = any> {
 }
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'neg-table[detailRow]' })
+@Directive({ selector: 'pbl-table[detailRow]' })
 @UnRx()
 export class NegTableDetailRowPluginDirective<T> implements OnDestroy {
   /**

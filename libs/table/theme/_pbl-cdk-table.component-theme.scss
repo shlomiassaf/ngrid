@@ -3,55 +3,55 @@
 
 // THIS FILE REQUIRE @import '~@angular/material/theming';
 
-@mixin neg-cdk-table-theme($tableTheme) {
+@mixin pbl-cdk-table-theme($tableTheme) {
   $border-color: map-get($tableTheme, border-color);
   $row-background: map-get($tableTheme, row-background);
   $header-cell-color: map-get($tableTheme, header-cell-color);
   $cell-color: map-get($tableTheme, cell-color);
   $footer-cell-color: map-get($tableTheme, footer-cell-color);
 
-  .neg-table-row, .neg-table-header-row, .neg-table-footer-row {
+  .pbl-table-row, .pbl-table-header-row, .pbl-table-footer-row {
     position: relative;
   }
 
-  .neg-table-row, .neg-table-header-row, .neg-table-footer-row,
-  .neg-table-header-cell, .neg-table-cell, .neg-table-footer-cell {
+  .pbl-table-row, .pbl-table-header-row, .pbl-table-footer-row,
+  .pbl-table-header-cell, .pbl-table-cell, .pbl-table-footer-cell {
     border-color: $border-color;
   }
 
-  // border of "padding" cell box model (not .neg-table-margin-cell-box-model)
-  .neg-table-header-cell.neg-header-group-cell:before {
+  // border of "padding" cell box model (not .pbl-table-margin-cell-box-model)
+  .pbl-table-header-cell.pbl-header-group-cell:before {
     border-color: $border-color;
   }
 
-  .neg-table-row, .neg-table-header-row, .neg-table-footer-row {
+  .pbl-table-row, .pbl-table-header-row, .pbl-table-footer-row {
     background: $row-background;
   }
 
-  .neg-table-header-cell {
+  .pbl-table-header-cell {
     color: $header-cell-color;
   }
 
-  .neg-table-cell {
+  .pbl-table-cell {
     color: $cell-color;
   }
 
-  .neg-table-footer-cell {
+  .pbl-table-footer-cell {
     color: $footer-cell-color;
   }
 }
 
-@mixin neg-cdk-table-typography($config) {
-  .neg-cdk-table {
+@mixin pbl-cdk-table-typography($config) {
+  .pbl-cdk-table {
     font-family: mat-font-family($config);
   }
 
-  .neg-table-header-cell {
+  .pbl-table-header-cell {
     font-size: mat-font-size($config, caption);
     font-weight: mat-font-weight($config, body-2);
   }
 
-  .neg-table-cell, .neg-table-footer-cell {
+  .pbl-table-cell, .pbl-table-footer-cell {
     font-size: mat-font-size($config, body-1);
   }
 }

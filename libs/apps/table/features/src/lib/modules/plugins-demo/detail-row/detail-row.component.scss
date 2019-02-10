@@ -1,11 +1,11 @@
-.neg-row-detail-parent {
-  &:not(.neg-row-detail-opened) {
+.pbl-row-detail-parent {
+  &:not(.pbl-row-detail-opened) {
     &:hover {
       background: #f5f5f5;
     }
   }
 }
 
-.neg-row-detail-parent .detail-row-handle {
+.pbl-row-detail-parent .detail-row-handle {
   font-size: 24px;
 }

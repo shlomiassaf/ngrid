@@ -16,7 +16,7 @@ import {
 import { TransposeTableSession, LOCAL_COLUMN_DEF, VIRTUAL_REFRESH } from './transpose-table-session';
 import { getCellValueTransformed, createTransformedColumn } from './utils';
 
-const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'neg-table-header-cell neg-table-transposed-header-cell' };
+const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'pbl-table-header-cell pbl-table-transposed-header-cell' };
 
 declare module '@pebula/table/lib/table/services/config' {
   interface NegTableConfig {
@@ -55,7 +55,7 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
  */
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'neg-table[transpose]' })
+@Directive({ selector: 'pbl-table[transpose]' })
 @UnRx()
 export class NegTableTransposePluginDirective implements OnDestroy {
 
@@ -82,7 +82,7 @@ export class NegTableTransposePluginDirective implements OnDestroy {
    * ```js
    * {
    *  prop: '__transpose__',
-   *  css: 'neg-table-header-cell neg-table-transposed-header-cell',
+   *  css: 'pbl-table-header-cell pbl-table-transposed-header-cell',
    * }
    * ```
    *

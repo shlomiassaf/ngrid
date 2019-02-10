@@ -5,8 +5,8 @@
 import { CdkColumnDef } from '@angular/cdk/table';
 import { NegColumnTypeDefinition } from './columns/types';
 
-const COLUMN_NAME_CSS_PREFIX = 'neg-table-column';
-export const COLUMN_EDITABLE_CELL_CLASS = 'neg-table-editable-cell';
+const COLUMN_NAME_CSS_PREFIX = 'pbl-table-column';
+export const COLUMN_EDITABLE_CELL_CLASS = 'pbl-table-editable-cell';
 
 /**
  * Returns a css class unique to the column

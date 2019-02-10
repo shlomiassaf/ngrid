@@ -20,7 +20,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'neg-row-height-table-example-component',
+  selector: 'pbl-row-height-table-example-component',
   templateUrl: './row-height.component.html',
   styleUrls: ['./row-height.component.scss'],
   encapsulation: ViewEncapsulation.None,

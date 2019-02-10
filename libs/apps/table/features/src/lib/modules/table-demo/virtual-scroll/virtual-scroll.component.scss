@@ -1,11 +1,11 @@
 /* @pebula-example:ex-2 */
-neg-table + h1 {
+pbl-table + h1 {
   .virtual-scroll-css-scrolling-demo-on {
     display: none;
   }
 }
 
-neg-table.neg-table-scrolling + h1 {
+pbl-table.pbl-table-scrolling + h1 {
   .virtual-scroll-css-scrolling-demo-on {
     display: inline;
   }

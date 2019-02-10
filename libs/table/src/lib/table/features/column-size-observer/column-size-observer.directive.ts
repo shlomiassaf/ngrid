@@ -80,7 +80,7 @@ class NegTableGroupHeaderSizeController {
  * Because most of the size changes concern all columns of a row and because ResizeObserver will emit them all in the same event
  * an entire row should emit once, with all columns.
  */
-@Directive({ selector: 'neg-table-cell[observeSize], neg-table-header-cell[observeSize]' })
+@Directive({ selector: 'pbl-table-cell[observeSize], pbl-table-header-cell[observeSize]' })
 export class NegColumnSizeObserver extends ColumnSizeInfo implements OnDestroy {
   @Input('observeSize') get column(): NegColumn { return this._column; }
   set column(value: NegColumn) { this.attachColumn(value); }

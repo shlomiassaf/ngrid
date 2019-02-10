@@ -248,7 +248,7 @@ export class NegColumnFactory {
   }
 
   private genRowClass(rowOptions: { rowClassName?: string }, fallbackRowIndex: number): string {
-    return (rowOptions && rowOptions.rowClassName) || `neg-table-row-index-${fallbackRowIndex.toString()}`;
+    return (rowOptions && rowOptions.rowClassName) || `pbl-table-row-index-${fallbackRowIndex.toString()}`;
   }
 
   private buildHeaderGroups(rowIndex: number, headerGroupDefs: NegColumnGroupDefinition[], table: NegColumn[]): NegColumnGroup[] {

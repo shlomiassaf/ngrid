@@ -4,7 +4,7 @@ import { NegTableComponent, createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
-  selector: 'neg-column-resizing-table-example-component',
+  selector: 'pbl-column-resizing-table-example-component',
   templateUrl: './column-resizing.component.html',
   styleUrls: ['./column-resizing.component.scss'],
   encapsulation: ViewEncapsulation.None,

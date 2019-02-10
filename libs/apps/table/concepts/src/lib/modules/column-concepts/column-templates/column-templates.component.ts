@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 
 
 @Component({
-  selector: 'neg-column-templates-table-example-component',
+  selector: 'pbl-column-templates-table-example-component',
   templateUrl: './column-templates.component.html',
   styleUrls: ['./column-templates.component.scss'],
   encapsulation: ViewEncapsulation.None,

@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
-  selector: 'neg-demo-common-table-templates',
+  selector: 'pbl-demo-common-table-templates',
   templateUrl: './common-table-templates.component.html',
   styleUrls: [ './common-table-templates.component.scss' ],
   animations: [

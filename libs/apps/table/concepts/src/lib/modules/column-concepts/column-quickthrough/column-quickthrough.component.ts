@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'neg-column-quickthrough-table-example-component',
+  selector: 'pbl-column-quickthrough-table-example-component',
   templateUrl: './column-quickthrough.component.html',
   styleUrls: ['./column-quickthrough.component.scss'],
   encapsulation: ViewEncapsulation.None,

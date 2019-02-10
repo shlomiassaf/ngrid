@@ -4,7 +4,7 @@ import { NegTableComponent, createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
-  selector: 'neg-column-reorder-table-example-component',
+  selector: 'pbl-column-reorder-table-example-component',
   templateUrl: './column-reorder.component.html',
   styleUrls: ['./column-reorder.component.scss'],
   encapsulation: ViewEncapsulation.None,

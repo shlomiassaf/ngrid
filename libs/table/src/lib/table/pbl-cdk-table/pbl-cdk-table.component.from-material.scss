@@ -4,11 +4,11 @@
 /**
  * Flex-based table structure
  */
-.neg-cdk-table {
+.pbl-cdk-table {
   display: block;
 }
 
-.neg-table-row, .neg-table-header-row, .neg-table-footer-row {
+.pbl-table-row, .pbl-table-header-row, .pbl-table-footer-row {
   display: flex;
   // Define a border style, but then widths default to 3px. Reset them to 0px except the bottom
   // which should be 1px;
@@ -28,7 +28,7 @@
   }
 }
 
-.neg-table-cell, .neg-table-header-cell, .neg-table-footer-cell {
+.pbl-table-cell, .pbl-table-header-cell, .pbl-table-footer-cell {
   flex: 1;
   display: flex;
   align-items: center;

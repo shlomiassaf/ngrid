@@ -64,7 +64,7 @@ And: All columns must be at least 40px wide.
 
 <docsi-mat-example-with-source title="Column Factory" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <neg-table [dataSource]="ds" [columns]="columns" fallbackMinHeight="150"></neg-table>
+  <pbl-table [dataSource]="ds" [columns]="columns" fallbackMinHeight="150"></pbl-table>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 

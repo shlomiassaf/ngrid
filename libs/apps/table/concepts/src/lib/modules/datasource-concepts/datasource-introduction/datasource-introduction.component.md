@@ -29,7 +29,7 @@ const dataSource = [
 
 <docsi-mat-example-with-source title="Simple Model" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <neg-table style="height: 110px" [dataSource]="ds" [columns]="columns"></neg-table>
+  <pbl-table style="height: 110px" [dataSource]="ds" [columns]="columns"></pbl-table>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -63,7 +63,7 @@ while providing an dead simple API for reacting to sort, filter and pagination u
 
 <docsi-mat-example-with-source title="Working with NegDataSource" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <neg-table [dataSource]="ds2" [columns]="columns"></neg-table>
+  <pbl-table [dataSource]="ds2" [columns]="columns"></pbl-table>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 

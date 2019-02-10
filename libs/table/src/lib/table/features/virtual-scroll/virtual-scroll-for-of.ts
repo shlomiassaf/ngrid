@@ -8,7 +8,7 @@ import { NegTableExtensionApi } from '../../../ext/table-ext-api';
 import { NegTableComponent } from '../../table.component';
 import { NegTablePluginController } from '../../../ext/plugin-control';
 import { NegDataSource } from '../../../data-source/data-source';
-import { NegCdkTableComponent } from '../../neg-cdk-table/neg-cdk-table.component';
+import { NegCdkTableComponent } from '../../pbl-cdk-table/pbl-cdk-table.component';
 import { NegCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import { splitRange, updateStickyRows, measureRangeSize, StickyDirectionVt } from './utils';
 import { MetaRowStickyScroll } from './meta-row-sticky-scroll';
@@ -279,9 +279,9 @@ export class NegVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
 
               // Here we update the main header row, when we need to hide it we apply a class that will hide it virtually, i.e. not showing but keeping internal layout.
               if (!(renderedRows[rowIndex] = rowIndex >= header.start) && !stickyRows[rowIndex]) {
-                htmlRows[rowIndex].classList.add('neg-table-row-visually-hidden');
+                htmlRows[rowIndex].classList.add('pbl-table-row-visually-hidden');
               } else if (this.table.showHeader && htmlRows[rowIndex]) {
-                htmlRows[rowIndex].classList.remove('neg-table-row-visually-hidden');
+                htmlRows[rowIndex].classList.remove('pbl-table-row-visually-hidden');
               }
             }
 

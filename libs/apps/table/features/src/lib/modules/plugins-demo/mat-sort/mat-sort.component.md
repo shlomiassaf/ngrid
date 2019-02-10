@@ -2,45 +2,45 @@
 
 <docsi-mat-example-with-source title="Sorting" contentClass="mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <neg-table matSort
+  <pbl-table matSort
              usePagination
              blockUi
              vScrollNone
              fallbackMinHeight="300"
              [dataSource]="simpleSortDS"
              [columns]="columns1">
-    <neg-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.ds.paginator"></neg-table-paginator>
-  </neg-table>
+                        [paginator]="table.ds.paginator"></pbl-table-paginator>
+  </pbl-table>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Sorting with default active column and direcion" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <neg-table matSort matSortActive="name" matSortDirection="desc"
+  <pbl-table matSort matSortActive="name" matSortDirection="desc"
             blockUi
             [dataSource]="defaultSortDS"
             [columns]="columns">
-    <neg-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.ds.paginator"></neg-table-paginator>
-  </neg-table>
+                        [paginator]="table.ds.paginator"></pbl-table-paginator>
+  </pbl-table>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Programatic Sorting" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
   <!--@pebula-example:ex-3-->
-  <neg-table #matSort="negMatSort"
+  <pbl-table #matSort="negMatSort"
              matSort
              [stickyHeader]="['table']"
              blockUi
              [dataSource]="progSortDS"
              [columns]="columns">
-    <neg-table-paginator *negTablePaginatorRef="let table"
+    <pbl-table-paginator *negTablePaginatorRef="let table"
                         [table]="table"
-                        [paginator]="table.ds.paginator"></neg-table-paginator>
-  </neg-table>
+                        [paginator]="table.ds.paginator"></pbl-table-paginator>
+  </pbl-table>
 
   <mat-form-field>
     <mat-select #selectColumn>

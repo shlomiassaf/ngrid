@@ -49,7 +49,7 @@ export abstract class NegTableBaseCellDef<Z> implements OnInit, OnDestroy, NegTa
 }
 
 /**
- * Header Cell definition for the neg-table.
+ * Header Cell definition for the pbl-table.
  * Captures the template of a column's data row header cell as well as header cell-specific properties.
  *
  * `negTableHeaderCellDef` does the same thing that `matHeaderCellDef` and `cdkHeaderCellDef` do with one difference,
@@ -72,7 +72,7 @@ export class NegTableHeaderCellDefDirective<T> extends NegTableBaseCellDef<NegTa
 }
 
 /**
- * Cell definition for the neg-table.
+ * Cell definition for the pbl-table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  *
  * `negTableCellDef` does the same thing that `matCellDef` and `cdkCellDef` do with one difference, `negTableCellDef` is

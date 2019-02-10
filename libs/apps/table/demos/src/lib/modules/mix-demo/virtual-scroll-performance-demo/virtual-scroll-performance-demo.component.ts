@@ -62,7 +62,7 @@ function createColumns(noType = false) {
 }
 
 @Component({
-  selector: 'neg-virtual-scroll-performance-demo',
+  selector: 'pbl-virtual-scroll-performance-demo',
   templateUrl: './virtual-scroll-performance-demo.component.html',
   styleUrls: ['./virtual-scroll-performance-demo.component.scss'],
   encapsulation: ViewEncapsulation.None,

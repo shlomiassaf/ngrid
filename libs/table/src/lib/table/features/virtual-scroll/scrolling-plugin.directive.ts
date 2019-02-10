@@ -3,7 +3,7 @@ import { NegTablePluginController } from '../../../ext/plugin-control';
 import { NegTableComponent } from '../../table.component';
 
 @Directive({
-  selector: 'neg-table[scrolling]'
+  selector: 'pbl-table[scrolling]'
 })
 export class NegTableScrolling<T = any> {
 

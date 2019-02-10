@@ -1,4 +1,4 @@
-neg-table {
+pbl-table {
   display: block;
 }
 
@@ -10,7 +10,7 @@ neg-table {
 // The adjustments address the need to be able to keep the row aligned with the table so it can update
 // the header cell size (width...) and publish events so other cells can follow (e.g. group rows)
 // The header row is the key to all cell width's...
-.neg-table-row-visually-hidden {
+.pbl-table-row-visually-hidden {
   border-top: 0;
   border-bottom: 0;
   clip: rect(0 0 0 0);
@@ -28,11 +28,11 @@ neg-table {
   -moz-appearance: none;
 }
 
-.neg-table-row-hidden {
+.pbl-table-row-hidden {
   display: none !important;
 }
 
-.neg-table-container {
+.pbl-table-container {
   position: relative;
   height: 100%;
   width: 100%;
@@ -43,7 +43,7 @@ neg-table {
   // justify-content: flex-end;
 }
 
-.neg-table-scroll-container {
+.pbl-table-scroll-container {
   flex: 1 1 auto;
   box-sizing: border-box;
   min-height: auto;
@@ -52,21 +52,21 @@ neg-table {
   }
 }
 
-.neg-table-sticky-row-scroll-container {
+.pbl-table-sticky-row-scroll-container {
   position: fixed;
   overflow: hidden;
 }
 
-.neg-table-empty-spacer {
+.pbl-table-empty-spacer {
   display: none;
 }
-.neg-table-empty {
+.pbl-table-empty {
   .cdk-virtual-scroll-content-wrapper {
     min-height: 100%;
     display: flex;
     flex-direction: column;
 
-    .neg-cdk-table {
+    .pbl-cdk-table {
       display: flex;
       flex-direction: column;
       flex: 1 1 100%;
@@ -75,7 +75,7 @@ neg-table {
         flex: 0 0 auto;
       }
 
-      & > .neg-table-empty-spacer {
+      & > .pbl-table-empty-spacer {
         display: block;
         flex: 1 1 auto;
       }
@@ -83,6 +83,6 @@ neg-table {
   }
 }
 
-.neg-table-scrolling neg-cdk-table {
+.pbl-table-scrolling pbl-cdk-table {
   pointer-events: none;
 }

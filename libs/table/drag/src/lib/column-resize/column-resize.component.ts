@@ -20,9 +20,9 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: tr
 const activeEventListenerOptions = normalizePassiveListenerOptions({passive: false});
 
 @Component({
-  selector: 'neg-table-drag-resize', // tslint:disable-line:component-selector
+  selector: 'pbl-table-drag-resize', // tslint:disable-line:component-selector
   host: { // tslint:disable-line:use-host-property-decorator
-    'class': 'neg-table-column-resizer',
+    'class': 'pbl-table-column-resizer',
     '[style.width.px]': 'grabAreaWidth',
   },
   templateUrl: './column-resize.component.html',

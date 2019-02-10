@@ -24,7 +24,7 @@ export {
 
 export { NegTableMetaCellContext, NegTableCellContext, NegTableRowContext, NegRowContext } from './context/index';
 
-export { NegCdkTableComponent } from './neg-cdk-table/neg-cdk-table.component';
+export { NegCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 
 export * from './events';
 export { NegTableComponent } from './table.component';

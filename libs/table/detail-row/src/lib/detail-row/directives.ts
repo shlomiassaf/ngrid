@@ -57,7 +57,7 @@ export class NegTableDetailRowParentRefDirective<T> extends CdkRowDef<T> impleme
  * @internal
  */
 @Component({
-  selector: 'neg-table-default-detail-row-parent',
-  template: `<neg-table-row *negTableDetailRowParentRef="let row; table as table" [detailRow]="row"></neg-table-row>`,
+  selector: 'pbl-table-default-detail-row-parent',
+  template: `<pbl-table-row *negTableDetailRowParentRef="let row; table as table" [detailRow]="row"></pbl-table-row>`,
 })
 export class NegTableDefaultDetailRowParentComponent { }

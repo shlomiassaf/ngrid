@@ -1,54 +1,54 @@
-$neg-shell-primary: mat-palette($mat-blue);
-$neg-shell-accent:  mat-palette($mat-light-green);
+$pbl-shell-primary: mat-palette($mat-blue);
+$pbl-shell-accent:  mat-palette($mat-light-green);
 
-@function neg-default-light-theme() {
-  $neg-shell-theme: mat-light-theme($neg-shell-primary, $neg-shell-accent);
+@function pbl-default-light-theme() {
+  $pbl-shell-theme: mat-light-theme($pbl-shell-primary, $pbl-shell-accent);
 
   $background-background: #F8F9FD;
 
-  $neg-default-light-theme-background: (
+  $pbl-default-light-theme-background: (
     app-bar: #ffffff, // overwriting default color, when no primary/accent/warn are set.
     background: $background-background,
   );
 
   $foreground-text: #4A4A4A;
 
-  $neg-default-light-theme-foreground: (
+  $pbl-default-light-theme-foreground: (
     text: $foreground-text,
     text-header: #3F5972,
     text-success: #4caf50,
     text-error: #f44336,
   );
 
-  $neg-shell-theme: map-merge($neg-shell-theme, (
-    background: map-merge($mat-light-theme-background, $neg-default-light-theme-background),
-    foreground: map-merge($mat-light-theme-foreground, $neg-default-light-theme-foreground)
+  $pbl-shell-theme: map-merge($pbl-shell-theme, (
+    background: map-merge($mat-light-theme-background, $pbl-default-light-theme-background),
+    foreground: map-merge($mat-light-theme-foreground, $pbl-default-light-theme-foreground)
   ));
 
-  @return $neg-shell-theme;
+  @return $pbl-shell-theme;
 }
 
-@function neg-default-dark-theme() {
-  $neg-shell-theme: mat-dark-theme($neg-shell-primary, $neg-shell-accent);
+@function pbl-default-dark-theme() {
+  $pbl-shell-theme: mat-dark-theme($pbl-shell-primary, $pbl-shell-accent);
 
-  $neg-default-dark-theme-background: (
+  $pbl-default-dark-theme-background: (
   );
 
-  $neg-default-dark-theme-foreground: (
+  $pbl-default-dark-theme-foreground: (
     text-header: rgb(64, 90, 114),
     text-success: #4caf50,
     text-error: #f44336
   );
 
-  $neg-shell-theme: map-merge($neg-shell-theme, (
-    background: map-merge($mat-dark-theme-background, $neg-default-dark-theme-background),
-    foreground: map-merge($mat-dark-theme-foreground, $neg-default-dark-theme-foreground)
+  $pbl-shell-theme: map-merge($pbl-shell-theme, (
+    background: map-merge($mat-dark-theme-background, $pbl-default-dark-theme-background),
+    foreground: map-merge($mat-dark-theme-foreground, $pbl-default-dark-theme-foreground)
   ));
 
-  @return $neg-shell-theme;
+  @return $pbl-shell-theme;
 }
 
-@function neg-typography-config() {
+@function pbl-typography-config() {
   @return mat-typography-config(
     $display-3:     mat-typography-level(56px, 56px, 300),
     $display-2:     mat-typography-level(45px, 48px, 300),
@@ -63,7 +63,7 @@ $neg-shell-accent:  mat-palette($mat-light-green);
   );
 }
 
-@mixin neg-shell-app-theme($theme, $typography-config, $typography-selector: '.mat-typography') {
+@mixin pbl-shell-app-theme($theme, $typography-config, $typography-selector: '.mat-typography') {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
@@ -86,13 +86,13 @@ $neg-shell-accent:  mat-palette($mat-light-green);
   }
 
   // TOOLTIP
-  .neg-large-tooltip {
+  .pbl-large-tooltip {
     font-size: 16px;
     background: transparentize(mat-color($primary, default), .1);
   }
 
   .mat-icon-button, .mat-menu-item {
-    .mat-icon.neg-unicode {
+    .mat-icon.pbl-unicode {
       line-height: 150%;
       height: 100%;
     }

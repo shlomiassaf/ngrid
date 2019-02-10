@@ -15,7 +15,7 @@ const COLUMNS = columnFactory()
 
 
 @Component({
-  selector: 'neg-action-row-table-example-component',
+  selector: 'pbl-action-row-table-example-component',
   templateUrl: './action-row.component.html',
   styleUrls: ['./action-row.component.scss'],
   encapsulation: ViewEncapsulation.None,

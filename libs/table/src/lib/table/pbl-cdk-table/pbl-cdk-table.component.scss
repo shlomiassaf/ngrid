@@ -1,27 +1,27 @@
-@import './neg-cdk-table.component.from-material';
+@import './pbl-cdk-table.component.from-material';
 
 /* MULTI COLUMN AND COLUMN SPAN */
-.neg-table-header-cell.neg-header-group-cell {
+.pbl-table-header-cell.pbl-header-group-cell {
   display: flex;
   align-items: center;
 
-  &.neg-header-group-cell-placeholder {
+  &.pbl-header-group-cell-placeholder {
     border: none;
   }
 }
 
-.neg-table-header-cell {
+.pbl-table-header-cell {
   position: relative; // We need this for column-resize feature
 }
 
-.neg-table-cell {
+.pbl-table-cell {
   cursor: default;
 }
-.neg-table-editable-cell {
+.pbl-table-editable-cell {
   cursor: text;
 }
 
-.neg-cdk-table:not(.neg-table-margin-cell-box-model) .neg-table-header-cell.neg-header-group-cell {
+.pbl-cdk-table:not(.pbl-table-margin-cell-box-model) .pbl-table-header-cell.pbl-header-group-cell {
   position: relative;
 
   &:not(:first-child):before {
@@ -36,7 +36,7 @@
   }
 }
 
-.neg-cdk-table.neg-table-margin-cell-box-model .neg-table-header-cell.neg-header-group-cell {
+.pbl-cdk-table.pbl-table-margin-cell-box-model .pbl-table-header-cell.pbl-header-group-cell {
   &:not(:last-child) {
     border-right-width: 1px;
     border-right-style: solid;

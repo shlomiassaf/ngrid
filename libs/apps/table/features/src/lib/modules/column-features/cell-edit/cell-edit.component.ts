@@ -4,7 +4,7 @@ import { NegTableCellContext, createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
-  selector: 'neg-cell-edit-table-example-component',
+  selector: 'pbl-cell-edit-table-example-component',
   templateUrl: './cell-edit.component.html',
   styleUrls: ['./cell-edit.component.scss'],
   encapsulation: ViewEncapsulation.None,

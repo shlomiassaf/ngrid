@@ -1,16 +1,16 @@
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR NEG-TABLE -->
-<div *negTableBlockUiDef class="neg-table-ui-block">
+<div *negTableBlockUiDef class="pbl-table-ui-block">
   <mat-spinner></mat-spinner>
 </div>
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR NEG-TABLE -->
 
 <!-- DEFINING DEFAULT NO DATA TEMPLATE -->
-<div *negTableNoDataRef class="neg-table-no-data"><span>No Results</span></div>
+<div *negTableNoDataRef class="pbl-table-no-data"><span>No Results</span></div>
 <!-- DEFINING DEFAULT NO DATA TEMPLATE -->
 
-<neg-table-drag-resize *negTableCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
-  <span class="neg-table-column-resizer-handle"></span>
-</neg-table-drag-resize>
+<pbl-table-drag-resize *negTableCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
+  <span class="pbl-table-column-resizer-handle"></span>
+</pbl-table-drag-resize>
 <span *negTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx" cdkDragRootElementClass="cdk-drag column-reorder-handle" ></span>
 
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE COLUMNS FOR NEG-TABLE -->
@@ -27,8 +27,8 @@
 
 <div *negTableHeaderCellTypeDef="'drag_and_drop_handle'"></div>
 <div *negTableCellTypeDef="'drag_and_drop_handle'; let ctx" [negTableRowDrag]="ctx" style="cursor: move">
-  <mat-icon negDragHandle class="neg-table-row-drag-handle">drag_handle</mat-icon>
-  <div class="neg-table-row-drag-placeholder" *cdkDragPlaceholder></div>
+  <mat-icon negDragHandle class="pbl-table-row-drag-handle">drag_handle</mat-icon>
+  <div class="pbl-table-row-drag-placeholder" *cdkDragPlaceholder></div>
 </div>
 
 <!-- START RATINGS -->

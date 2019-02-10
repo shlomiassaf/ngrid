@@ -79,7 +79,7 @@ export function setStickyColumns(table: NegTableComponent<any>, type: 'start' | 
 }
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'neg-table[stickyColumnStart], neg-table[stickyColumnEnd], neg-table[stickyHeader], neg-table[stickyFooter]' })
+@Directive({ selector: 'pbl-table[stickyColumnStart], pbl-table[stickyColumnEnd], pbl-table[stickyHeader], pbl-table[stickyFooter]' })
 export class NegTableStickyPluginDirective implements OnDestroy {
   /**
    * Set the header rows you want to apply sticky positioning to.

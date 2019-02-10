@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { ExampleGroupRegistryService } from './example-group-registry.service';
 
 @Component({
-  selector: 'neg-example-group',
+  selector: 'pbl-example-group',
   templateUrl: './example-group.component.html',
   styleUrls: [ './example-group.component.scss' ]
 })

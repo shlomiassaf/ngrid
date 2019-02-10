@@ -21,7 +21,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'neg-cell-tooltip-table-example-component',
+  selector: 'pbl-cell-tooltip-table-example-component',
   templateUrl: './cell-tooltip.component.html',
   styleUrls: ['./cell-tooltip.component.scss'],
   encapsulation: ViewEncapsulation.None,

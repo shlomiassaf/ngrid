@@ -42,7 +42,7 @@ function createColumns(pinned: { start?: string[], end?: string[] } = {}) {
 
 
 @Component({
-  selector: 'neg-sticky-column-table-example-component',
+  selector: 'pbl-sticky-column-table-example-component',
   templateUrl: './sticky-column.component.html',
   styleUrls: ['./sticky-column.component.scss'],
   encapsulation: ViewEncapsulation.None,

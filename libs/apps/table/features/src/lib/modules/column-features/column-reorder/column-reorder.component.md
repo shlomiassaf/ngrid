@@ -47,8 +47,8 @@ leaving the group of columns between the 2 in the same place.
 <docsi-mat-example-with-source title="Moving with the API" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
   <button (click)="move(t)">Move id after gender</button><button (click)="swap(t)">Swap name after birthdate</button>
-  <neg-table #t [dataSource]="ds1" [columns]="columns1">
-  </neg-table>
+  <pbl-table #t [dataSource]="ds1" [columns]="columns1">
+  </pbl-table>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -60,9 +60,9 @@ Let's start with a simple example:
 
 <docsi-mat-example-with-source title="Simple Reordering" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <neg-table columnReorder
+  <pbl-table columnReorder
              [dataSource]="ds2" [columns]="columns2">
-  </neg-table>
+  </pbl-table>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
@@ -82,9 +82,9 @@ To lock a column for reordering we need to enable the `wontBudge` property.
 
 <docsi-mat-example-with-source title="Locking columns" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
   <!--@pebula-example:ex-3-->
-  <neg-table columnReorder
+  <pbl-table columnReorder
              [dataSource]="ds3" [columns]="columns3">
-  </neg-table>
+  </pbl-table>
   <!--@pebula-example:ex-3-->
 </docsi-mat-example-with-source>
 
@@ -103,9 +103,9 @@ To enable group columns lock set the `lockColumns` property on the group definit
 
 <docsi-mat-example-with-source title="Group columns locks" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-4'}]">
   <!--@pebula-example:ex-4-->
-  <neg-table columnReorder
+  <pbl-table columnReorder
              [dataSource]="ds4" [columns]="columns4">
-  </neg-table>
+  </pbl-table>
   <!--@pebula-example:ex-4-->
 </docsi-mat-example-with-source>
 

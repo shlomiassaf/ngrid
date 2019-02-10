@@ -7,7 +7,7 @@ import { NegTableComponent, AutoSizeToFitOptions } from '@pebula/table';
 
 @Component({
   // tslint:disable-next-line:component-selector
-  selector: 'neg-demo-action-row',
+  selector: 'pbl-demo-action-row',
   templateUrl: './demo-action-row.component.html',
   styleUrls: [ './demo-action-row.component.scss' ],
   encapsulation: ViewEncapsulation.None,

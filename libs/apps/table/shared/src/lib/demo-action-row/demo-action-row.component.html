@@ -1,6 +1,6 @@
 <ng-template #actionRow>
-  <div class="neg-table-header-row neg-table-action-label-row neg-full-width">
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" class="neg-table-header-cell">
+  <div class="pbl-table-header-row pbl-table-action-label-row pbl-full-width">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" class="pbl-table-header-cell">
       <h1 fxFlex="noshrink">{{ label }}</h1>
       <div fxFlex="*"></div>
       <p *ngIf="showFps">Scroll FPS
@@ -15,12 +15,12 @@
         <input matInput (keyup)="actionRowFilter($event.target.value)">
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
-      <button mat-stroked-button class="neg-stroked-icon" color="primary" (click)="_refresh()"><mat-icon>refresh</mat-icon></button>
+      <button mat-stroked-button class="pbl-stroked-icon" color="primary" (click)="_refresh()"><mat-icon>refresh</mat-icon></button>
       <button mat-icon-button [matMenuTriggerFor]="sizeMenu">
-        <mat-icon class="neg-unicode">⇄</mat-icon>
+        <mat-icon class="pbl-unicode">⇄</mat-icon>
       </button>
       <button mat-icon-button [matMenuTriggerFor]="moreMenu" #moreMenuTrigger="matMenuTrigger">
-        <mat-icon class="neg-unicode">more_vert</mat-icon>
+        <mat-icon class="pbl-unicode">more_vert</mat-icon>
       </button>
 
       <mat-menu #sizeMenu="matMenu">
@@ -28,19 +28,19 @@
           <mat-icon>restore</mat-icon>
           <span>Restore Columns</span>
         </button>
-        <button mat-menu-item matTooltip="Will fit to content setting new size values in the same unit. (px, %)" matTooltipClass="neg-large-tooltip"
+        <button mat-menu-item matTooltip="Will fit to content setting new size values in the same unit. (px, %)" matTooltipClass="pbl-large-tooltip"
                               (click)="table.autoSizeColumnToFit(autoSizeColumnToFitOptions)">
-          <mat-icon class="neg-unicode">↹</mat-icon>
+          <mat-icon class="pbl-unicode">↹</mat-icon>
           <span>Fit Columns To Content</span>
         </button>
         <button mat-menu-item
-                matTooltip="Will fit to content and force all column to be in %, resizing the browser will not result in a horizontal scroll bar" matTooltipClass="neg-large-tooltip"
+                matTooltip="Will fit to content and force all column to be in %, resizing the browser will not result in a horizontal scroll bar" matTooltipClass="pbl-large-tooltip"
                 (click)="table.autoSizeColumnToFit(autoSizeColumnToFitOptionsForever)">
-          <mat-icon class="neg-unicode">↹</mat-icon>
+          <mat-icon class="pbl-unicode">↹</mat-icon>
           <span>Fit Columns To Content (%)</span>
         </button>
         <button mat-menu-item (click)="table.columnApi.autoSizeColumns()">
-          <mat-icon class="neg-unicode">⇥</mat-icon>
+          <mat-icon class="pbl-unicode">⇥</mat-icon>
           <span>Auto Size Columns</span>
         </button>
       </mat-menu>

@@ -35,13 +35,13 @@ import { NegCdkVirtualScrollViewportComponent } from '../features/virtual-scroll
  * This approach will allow easy removal when a feature is no longer required/implemented natively.
  */
 @Component({
-  selector: 'neg-cdk-table',
+  selector: 'pbl-cdk-table',
   exportAs: 'negCdkTable',
   template: CDK_TABLE_TEMPLATE,
-  styleUrls: ['./neg-cdk-table.component.scss'],
+  styleUrls: ['./pbl-cdk-table.component.scss'],
   host: { // tslint:disable-line:use-host-property-decorator
-    'class': 'neg-cdk-table',
-    '[class.neg-table-margin-cell-box-model]': `isMarginSpace`
+    'class': 'pbl-cdk-table',
+    '[class.pbl-table-margin-cell-box-model]': `isMarginSpace`
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

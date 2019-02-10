@@ -5,7 +5,7 @@ import { createDS, columnFactory} from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
-  selector: 'neg-column-factory-table-example-component',
+  selector: 'pbl-column-factory-table-example-component',
   templateUrl: './column-factory.component.html',
   styleUrls: ['./column-factory.component.scss'],
   encapsulation: ViewEncapsulation.None,

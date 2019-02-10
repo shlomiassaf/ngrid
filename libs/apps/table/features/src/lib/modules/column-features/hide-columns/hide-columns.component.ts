@@ -47,7 +47,7 @@ const COLUMNS2 = columnFactory()
   .build();
 
 @Component({
-  selector: 'neg-hide-columns-table-example-component',
+  selector: 'pbl-hide-columns-table-example-component',
   templateUrl: './hide-columns.component.html',
   styleUrls: ['./hide-columns.component.scss'],
   encapsulation: ViewEncapsulation.None,

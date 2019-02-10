@@ -4,43 +4,43 @@ I> Requires `@pebula/table/target-event` plugin
 
 <docsi-mat-example-with-source title="Detail Row" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <neg-table blockUi [dataSource]="ds1" [columns]="columns1" detailRow vScrollNone>
-    <div *negTableDetailRowDef="let row" class="neg-detail-row">
+  <pbl-table blockUi [dataSource]="ds1" [columns]="columns1" detailRow vScrollNone>
+    <div *negTableDetailRowDef="let row" class="pbl-detail-row">
       <div>
         <h1>Detail Row</h1>
         <pre>{{row | json}}</pre>
       </div>
     </div>
-  </neg-table>
+  </pbl-table>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Detail Row custom parent" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <neg-table blockUi [dataSource]="ds2" [columns]="columns2" detailRow vScrollNone>
-    <div *negTableDetailRowDef="let row" class="neg-detail-row">
+  <pbl-table blockUi [dataSource]="ds2" [columns]="columns2" detailRow vScrollNone>
+    <div *negTableDetailRowDef="let row" class="pbl-detail-row">
       <div>
         <h1>Detail Row</h1>
         <pre>{{row | json}}</pre>
       </div>
     </div>
-    <neg-table-row *negTableDetailRowParentRef="let row; table as table" [detailRow]="row" matRipple></neg-table-row>
+    <pbl-table-row *negTableDetailRowParentRef="let row; table as table" [detailRow]="row" matRipple></pbl-table-row>
     <div *negTableCellTypeDef="'detailRowHandle'" class="detail-row-handle">⊞</div>
-  </neg-table>
+  </pbl-table>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
 <docsi-mat-example-with-source title="Detail Row Single mode & exclude toggle mode" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
   <!--@pebula-example:ex-3-->
-  <neg-table blockUi [dataSource]="ds3" [columns]="columns3"
+  <pbl-table blockUi [dataSource]="ds3" [columns]="columns3"
             detailRow [singleDetailRow]="forceSingle" [excludeToggleFrom]="disableName" vScrollNone>
-    <div *negTableDetailRowDef="let row" class="neg-detail-row">
+    <div *negTableDetailRowDef="let row" class="pbl-detail-row">
       <div>
         <h1>Detail Row</h1>
         <pre>{{row | json}}</pre>
       </div>
     </div>
-  </neg-table>
+  </pbl-table>
   <mat-checkbox [checked]="forceSingle" (change)="forceSingle = $event.checked">Force single row</mat-checkbox>
   <mat-checkbox [checked]="disableName.length > 0" (change)="disableName = disableName.length === 0 ? ['name'] : []">Disable toggle from 'Name'</mat-checkbox>
   <!--@pebula-example:ex-3-->
@@ -48,15 +48,15 @@ I> Requires `@pebula/table/target-event` plugin
 
 <docsi-mat-example-with-source title="Detail Row predicate" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-4'}]">
   <!--@pebula-example:ex-4-->
-  <neg-table blockUi [dataSource]="ds4" [columns]="columns4"
+  <pbl-table blockUi [dataSource]="ds4" [columns]="columns4"
             [detailRow]="detailRowPredicate" vScrollNone>
-    <div *negTableDetailRowDef="let row" class="neg-detail-row">
+    <div *negTableDetailRowDef="let row" class="pbl-detail-row">
       <div>
         <h1>Detail Row</h1>
         <pre>{{row | json}}</pre>
       </div>
     </div>
-  </neg-table>
+  </pbl-table>
   <mat-radio-group (change)="onDetailRowChange($event.value)" [value]="detailRow">
     <mat-radio-button value="off">Off</mat-radio-button>
     <mat-radio-button value="on">On</mat-radio-button>

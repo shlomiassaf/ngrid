@@ -18,16 +18,16 @@ import { NegTableComponent, NegTablePluginController, NegTableRowComponent, NegT
 import { NegTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
 
 @Component({
-  selector: 'neg-table-row[detailRow]',
+  selector: 'pbl-table-row[detailRow]',
   exportAs: 'negTableDetailRow',
   host: { // tslint:disable-line:use-host-property-decorator
-    class: 'neg-table-row neg-row-detail-parent',
+    class: 'pbl-table-row pbl-row-detail-parent',
     role: 'row',
     '[attr.tabindex]': 'table?.rowFocus',
     '(keydown)': 'handleKeydown($event)'
   },
   template: CDK_ROW_TEMPLATE,
-  styles: [ `.neg-row-detail-parent { position: relative; cursor: pointer; }` ],
+  styles: [ `.pbl-row-detail-parent { position: relative; cursor: pointer; }` ],
   providers: [
     { provide: CdkRow, useExisting: NegTableDetailRowComponent }
   ],
@@ -88,14 +88,14 @@ export class NegTableDetailRowComponent extends NegTableRowComponent implements 
     if (this.opened !== forceState) {
       if ( this.opened ) {
         this.vcRef.clear();
-        this._element.classList.remove('neg-row-detail-opened');
+        this._element.classList.remove('pbl-row-detail-opened');
       } else {
         this.render();
       }
       this.opened = this.vcRef.length > 0;
 
       if (this.opened) {
-        this._element.classList.add('neg-row-detail-opened');
+        this._element.classList.add('pbl-row-detail-opened');
       }
       this.plugin.detailRowToggled(this);
     }

@@ -9,7 +9,7 @@ NegColumn.extendProperty('editable');
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: 'neg-table[cellEditClick], neg-table[cellEditDblClick]',
+  selector: 'pbl-table[cellEditClick], pbl-table[cellEditDblClick]',
 })
 @UnRx()
 export class NegTableCellEditDirective<T> {

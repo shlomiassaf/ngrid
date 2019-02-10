@@ -15,7 +15,7 @@ const COLUMNS = columnFactory()
 
 
 @Component({
-  selector: 'neg-virtual-scroll-table-example-component',
+  selector: 'pbl-virtual-scroll-table-example-component',
   templateUrl: './virtual-scroll.component.html',
   styleUrls: ['./virtual-scroll.component.scss'],
   encapsulation: ViewEncapsulation.None,

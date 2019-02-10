@@ -14,7 +14,7 @@ declare module '@pebula/table/lib/ext/types' {
 const PLUGIN_KEY: 'matCheckboxSelection' = 'matCheckboxSelection';
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'neg-table[matCheckboxSelection]' })
+@Directive({ selector: 'pbl-table[matCheckboxSelection]' })
 @UnRx()
 export class NegTableMatCheckboxSelectionDirective implements OnDestroy {
   /**

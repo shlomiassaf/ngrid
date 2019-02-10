@@ -37,12 +37,12 @@ const COLUMNS = columnFactory()
     { prop: 'feedback', sort: true, type: { name: 'progressBar', data: { style: progressBarStyle } }, width: '150px' },
   )
   .header(
-    { rowClassName: 'neg-groupby-row' },
-    { id: 'neg-groupby-row', type: 'neg-groupby-row', label: ' ' },
+    { rowClassName: 'pbl-groupby-row' },
+    { id: 'pbl-groupby-row', type: 'pbl-groupby-row', label: ' ' },
   );
 
 @Component({
-  selector: 'neg-sellers-demo',
+  selector: 'pbl-sellers-demo',
   templateUrl: './sellers-demo.component.html',
   styleUrls: ['./sellers-demo.component.scss']
 })

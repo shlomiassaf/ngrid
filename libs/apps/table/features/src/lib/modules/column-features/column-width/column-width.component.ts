@@ -7,7 +7,7 @@ import { createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
-  selector: 'neg-column-width-table-example-component',
+  selector: 'pbl-column-width-table-example-component',
   templateUrl: './column-width.component.html',
   styleUrls: ['./column-width.component.scss'],
   encapsulation: ViewEncapsulation.None,

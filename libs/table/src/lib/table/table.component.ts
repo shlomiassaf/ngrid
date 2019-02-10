@@ -32,7 +32,7 @@ import { EXT_API_TOKEN, NegTableExtensionApi } from '../ext/table-ext-api';
 import { NegTablePluginController, NegTablePluginContext } from '../ext/plugin-control';
 import { NegTablePaginatorKind } from '../paginator';
 import { NegDataSource, DataSourceOf, createDS } from '../data-source/index';
-import { NegCdkTableComponent } from './neg-cdk-table/neg-cdk-table.component';
+import { NegCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
 import { findCellDef } from './directives/cell-def';
 import { NegColumn, NegColumnStore, NegMetaColumnStore, NegTableColumnSet, NegTableColumnDefinitionSet } from './columns';
@@ -54,9 +54,9 @@ export function pluginControllerFactory(table: { _plugin: NegTablePluginContext;
 export function metaRowServiceFactory(table: { _extApi: NegTableExtensionApi; }) { return table._extApi.metaRowService; }
 
 @Component({
-  selector: 'neg-table',
+  selector: 'pbl-table',
   host: { // tslint:disable-line:use-host-property-decorator
-    '[class.neg-table-empty]': '!ds || ds.renderLength === 0',
+    '[class.pbl-table-empty]': '!ds || ds.renderLength === 0',
   },
   templateUrl: './table.component.html',
   styleUrls: [ './table.component.scss' ],
@@ -101,7 +101,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
         : DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY
       ;
       if (this.isInit) {
-        // The UI changes are applied by toggle the `neg-table-margin-cell-box-model` CSS class.
+        // The UI changes are applied by toggle the `pbl-table-margin-cell-box-model` CSS class.
         // This is managed through binding in `NegCdkTableComponent`.
         // After this change we need to measure the cell's width again so we trigger a resizeRows call.
         // We must run it deferred to allow binding to commit.
@@ -384,7 +384,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
 
     // Adding a div before the footer row view reference, this div will be used to fill up the space between header & footer rows
     const div = document.createElement('div');
-    div.classList.add('neg-table-empty-spacer')
+    div.classList.add('pbl-table-empty-spacer')
     this._cdkTable._element.insertBefore(div, this._cdkTable._footerRowOutlet.elementRef.nativeElement);
   }
 
@@ -486,7 +486,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
               el.style.minHeight = h + 'px';
             } else {
               // TODO: When viewport is disabled, we can skip the call to measureRenderedContentSize() and let the browser
-              // do the job by setting `contain: unset` in `neg-cdk-virtual-scroll-viewport`
+              // do the job by setting `contain: unset` in `pbl-cdk-virtual-scroll-viewport`
               el.style.minHeight = this.viewport.enabled ? null : this.viewport.measureRenderedContentSize() + 'px';
             }
           });
@@ -519,7 +519,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
         Invalidating the store will result in new `NegColumn` instances (cloned or completely new) held inside a new array (all arrays in the store are re-created on invalidate)
         New array and new instances will also result in new directive instances of `NegTableColumnDef` for every column.
 
-        Each data row has data cells with the `NegTableCellDirective` directive (`neg-table-cell`).
+        Each data row has data cells with the `NegTableCellDirective` directive (`pbl-table-cell`).
         `NegTableCellDirective` has a reference to `NegTableColumnDef` through dependency injection, i.e. it will not update through change detection!
 
         Now, the problem:

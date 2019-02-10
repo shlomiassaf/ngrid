@@ -63,7 +63,7 @@ to provide an object that is passed on as a value.
 <docsi-mat-example-with-source title="Manual Trigger" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
   <button *ngFor="let count of [50, 100, 500, 1000]" mat-stroked-button (click)="refresh(count)">{{ count }} Rows</button>
-  <neg-table [dataSource]="dsManualTrigger" [columns]="columns"></neg-table>
+  <pbl-table [dataSource]="dsManualTrigger" [columns]="columns"></pbl-table>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
@@ -103,11 +103,11 @@ For demonstration we enabled **pagination** and **sorting**, but NOT **filtering
 
 <docsi-mat-example-with-source title="Enabling custom triggers" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
-  <neg-table [dataSource]="dsCustomTrigger" [columns]="columns" usePagination>
-    <neg-table-paginator *negTablePaginatorRef="let table"
+  <pbl-table [dataSource]="dsCustomTrigger" [columns]="columns" usePagination>
+    <pbl-table-paginator *negTablePaginatorRef="let table"
                          [table]="table"
-                         [paginator]="table.ds.paginator"></neg-table-paginator>
-  </neg-table>
+                         [paginator]="table.ds.paginator"></pbl-table-paginator>
+  </pbl-table>
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 

@@ -56,7 +56,7 @@ function resolveScrollStrategy(config: NegTableConfigService, scrollStrategy?: V
 }
 
 @Component({
-  selector: 'neg-cdk-virtual-scroll-viewport',
+  selector: 'pbl-cdk-virtual-scroll-viewport',
   templateUrl: 'virtual-scroll-viewport.component.html',
   styleUrls: [ './virtual-scroll-viewport.component.scss' ],
   host: { // tslint:disable-line:use-host-property-decorator
@@ -211,9 +211,9 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
       .subscribe( isScrolling => {
         this._isScrolling = !!isScrolling;
         if (isScrolling) {
-          table.addClass('neg-table-scrolling');
+          table.addClass('pbl-table-scrolling');
         } else {
-          table.removeClass('neg-table-scrolling');
+          table.removeClass('pbl-table-scrolling');
         }
       });
   }

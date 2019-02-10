@@ -2,7 +2,7 @@ import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
 import { NegTableMatrixRow } from './events';
 
 /**
- * Returns true if the element is a row element (`neg-table-row`, `cdk-row`).
+ * Returns true if the element is a row element (`pbl-table-row`, `cdk-row`).
  *
  * This function works under the following assumptions:
  *

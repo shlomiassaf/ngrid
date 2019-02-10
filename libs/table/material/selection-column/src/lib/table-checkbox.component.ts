@@ -10,7 +10,7 @@ import {
 } from '@pebula/table';
 
 @Component({
-  selector: 'neg-table-checkbox',
+  selector: 'pbl-table-checkbox',
   templateUrl: './table-checkbox.component.html',
   styleUrls: ['./table-checkbox.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

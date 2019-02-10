@@ -4,8 +4,8 @@ The most simple definition for a column is a vertical series of cells.
 
 <div fxLayoutAlign="start stretch">
   <div fxFlex="0 1 332px" class="col-quickthrough-table1">
-    <neg-table showFooter [columns]="columns" vScrollNone
-              [dataSource]="[ { id: 1, name: 'John', age: 25 }, { id: 2, name: 'Tom', age: 44 } ]"></neg-table>
+    <pbl-table showFooter [columns]="columns" vScrollNone
+              [dataSource]="[ { id: 1, name: 'John', age: 25 }, { id: 2, name: 'Tom', age: 44 } ]"></pbl-table>
   </div>
   <div fxLayoutAlign="center center">
     <div class="text-subtitle" style="width: 75%">
@@ -35,13 +35,13 @@ The split is fixed, it will always be 1/N/1.
 Each **sub-role** will have its unique
 
 - Rendering template (more on this later...)
-- **Role** CSS class name (`neg-table-header-cell`, `neg-table-cell`, `neg-table-footer-cell`)
+- **Role** CSS class name (`pbl-table-header-cell`, `pbl-table-cell`, `pbl-table-footer-cell`)
 - Column data type (optional)
 
 > The CSS classes shared by all **sub-roles**:
 >
 > - CSS set in the column definitions definitions (`css`) 
-> - **Identity** CSS (neg-table-column-**[Identity]**)
+> - **Identity** CSS (pbl-table-column-**[Identity]**)
 
 They all share a logical connection, they work as one unit:
 

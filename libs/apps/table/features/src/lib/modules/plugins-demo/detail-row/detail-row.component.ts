@@ -21,7 +21,7 @@ const COLUMNS = () => columnFactory()
 
 
 @Component({
-  selector: 'neg-detail-row',
+  selector: 'pbl-detail-row',
   templateUrl: './detail-row.component.html',
   styleUrls: ['./detail-row.component.scss'],
   encapsulation: ViewEncapsulation.None,

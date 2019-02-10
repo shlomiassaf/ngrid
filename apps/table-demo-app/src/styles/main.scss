@@ -1,19 +1,19 @@
 @import './variables';
 
-$typography-config: neg-typography-config();
+$typography-config: pbl-typography-config();
 @include mat-core($typography-config);
 
-@include mat-neg-table-typography($typography-config);
+@include mat-pbl-table-typography($typography-config);
 
 // Include the default theme styles.
-@include angular-material-theme($neg-shell-theme);
-@include neg-shell-app-theme($neg-shell-theme, $typography-config);
+@include angular-material-theme($pbl-shell-theme);
+@include pbl-shell-app-theme($pbl-shell-theme, $typography-config);
 
-@include mat-neg-table-theme($neg-shell-theme);
+@include mat-pbl-table-theme($pbl-shell-theme);
 
-@include mat-neg-table-spacing();
-neg-table.slim {
-  @include mat-neg-table-spacing('narrow');
+@include mat-pbl-table-spacing();
+pbl-table.slim {
+  @include mat-pbl-table-spacing('narrow');
 }
 
 @import './markdown'; // load markdown styles
@@ -29,7 +29,7 @@ html, body {
 }
 
 .table-height-300 {
-  neg-table {
+  pbl-table {
     height: 300px;
   }
 }

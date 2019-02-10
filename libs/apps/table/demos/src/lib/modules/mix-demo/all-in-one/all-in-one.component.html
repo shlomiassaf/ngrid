@@ -1,5 +1,5 @@
 <div fxLayout="column" style="height: 100%">
-  <neg-table #negTbl
+  <pbl-table #negTbl
             identityProp="id"
             rowReorder columnReorder
             blockUi
@@ -18,29 +18,29 @@
             [columns]="columns"
             (cellClick)="$event.context && $event.context.startEdit()"
             style="height: 100%; width: 100%;"
-            class="neg-table-cell-ellipsis neg-table-header-cell-ellipsis">
-    <neg-demo-action-row filter label="Demo 2"></neg-demo-action-row>
+            class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
+    <pbl-demo-action-row filter label="Demo 2"></pbl-demo-action-row>
     <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS NEG-TABLE -->
-    <div *negTableBlockUiDef class="neg-table-ui-block">
+    <div *negTableBlockUiDef class="pbl-table-ui-block">
       <mat-spinner></mat-spinner>
     </div>
     <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS NEG-TABLE -->
 
     <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS NEG-TABLE -->
-    <div *negTableNoDataRef class="neg-table-no-data"><span>No Results</span></div>
+    <div *negTableNoDataRef class="pbl-table-no-data"><span>No Results</span></div>
     <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS NEG-TABLE -->
 
     <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS NEG-TABLE -->
-    <neg-table-paginator *negTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></neg-table-paginator>
+    <pbl-table-paginator *negTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-table-paginator>
     <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS NEG-TABLE -->
 
     <!-- DETAIL ROW TEMPLATE DEFINITION-->
-    <neg-table-row *negTableDetailRowParentRef="let row; table as table"
+    <pbl-table-row *negTableDetailRowParentRef="let row; table as table"
                   [detailRow]="row"
                   matRipple>
-    </neg-table-row>
+    </pbl-table-row>
     <div *negTableDetailRowDef="let row"
-        class="neg-detail-row" [@detailExpand]>
+        class="pbl-detail-row" [@detailExpand]>
       <div>
         <h1>Detail Row</h1>
         <pre>{{row | json}}</pre>
@@ -101,7 +101,7 @@
     <div *negTableHeaderCellDef="'name'; col as col"><span style="font-size: 22px; font-weight: bold">{{col.label}}</span></div>
     <!-- SPECIFIC HEADER DEFAULT CELL TEMPLATE DEFINITION-->
 
-  </neg-table>
+  </pbl-table>
 
   <ng-container *ngIf="false">
     <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">

@@ -23,7 +23,7 @@ const COLUMNS1 = columnFactory()
 
 
 @Component({
-  selector: 'neg-selection-column-table-example-component',
+  selector: 'pbl-selection-column-table-example-component',
   templateUrl: './selection-column.component.html',
   styleUrls: ['./selection-column.component.scss'],
   encapsulation: ViewEncapsulation.None,

@@ -1,6 +1,6 @@
 # Material Paginator implementation
 
-A Plugin for `neg-table` with a `Paginator` impelementation using components from `@angular/material`.
+A Plugin for `pbl-table` with a `Paginator` impelementation using components from `@angular/material`.
 
 ## Impotred `@angular/material` modules
 
@@ -18,9 +18,9 @@ A Plugin for `neg-table` with a `Paginator` impelementation using components fro
 **Using a component & the paginator ref instruction**
 
 ```html
-<neg-table>
-  <neg-table-paginator *negTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></neg-table-paginator>
-</neg-table>
+<pbl-table>
+  <pbl-table-paginator *negTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-table-paginator>
+</pbl-table>
 ```
 
 > TIP: You can use `negTablePaginatorRef` outside of the table, (root component), to define a gloal paginator.

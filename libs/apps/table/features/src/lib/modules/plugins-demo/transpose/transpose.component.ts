@@ -19,7 +19,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'neg-transpose-table-example-component',
+  selector: 'pbl-transpose-table-example-component',
   templateUrl: './transpose.component.html',
   styleUrls: ['./transpose.component.scss'],
   encapsulation: ViewEncapsulation.None,

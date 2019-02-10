@@ -15,7 +15,7 @@ const COLUMNS = columnFactory()
   .build();
 
 @Component({
-  selector: 'neg-no-data-table-example-component',
+  selector: 'pbl-no-data-table-example-component',
   templateUrl: './no-data.component.html',
   styleUrls: ['./no-data.component.scss'],
   encapsulation: ViewEncapsulation.None,

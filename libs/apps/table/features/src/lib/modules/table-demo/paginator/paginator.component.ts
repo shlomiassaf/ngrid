@@ -51,7 +51,7 @@ function emulateServerSideTokenPaginationCall(datasource: DemoDataSource, tokenO
 }
 
 @Component({
-  selector: 'neg-paginator-table-example-component',
+  selector: 'pbl-paginator-table-example-component',
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.scss'],
   encapsulation: ViewEncapsulation.None,

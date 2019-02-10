@@ -91,7 +91,7 @@ const COLUMNS = columnFactory()
   );
 
 @Component({
-  selector: 'neg-all-in-one-table-example-component',
+  selector: 'pbl-all-in-one-table-example-component',
   templateUrl: './all-in-one.component.html',
   styleUrls: ['./all-in-one.component.scss'],
   animations: [

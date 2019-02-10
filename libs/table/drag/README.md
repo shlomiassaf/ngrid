@@ -1,6 +1,6 @@
 # Drag plugin
 
-A Plugin for `neg-table` that add dragging capabilities:
+A Plugin for `pbl-table` that add dragging capabilities:
 
 - Resize
 - Reorder column

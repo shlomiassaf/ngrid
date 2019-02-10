@@ -83,18 +83,18 @@ For example if set in the application root component it will be registered in th
 set as a child of the table component it will be available only to that table instance an will be destroyed once the table is destroyed.
 
 ```html
-<neg-table>
+<pbl-table>
   <div *negTableCellTypeDef="'image'; value as value"><img [src]="avatar" /></div>
-</neg-table>
+</pbl-table>
 ```
 
 One more time:
 
 ```html
-<neg-table></neg-table>
-<neg-table>
+<pbl-table></pbl-table>
+<pbl-table>
   <div *negTableCellTypeDef="'image'; value as value"> IMAGE 0 </div>
-</neg-table>
+</pbl-table>
 
 <div *negTableCellTypeDef="'image'; value as value"> IMAGE 1 </div>
 ```

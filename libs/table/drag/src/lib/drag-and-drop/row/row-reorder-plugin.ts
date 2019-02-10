@@ -38,14 +38,14 @@ let _uniqueIdCounter = 0;
 
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({
-  selector: 'neg-table[rowReorder]',
+  selector: 'pbl-table[rowReorder]',
   exportAs: 'negTableRowReorder',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
     '[id]': 'id',
     '[class.cdk-drop-list-dragging]': '_dropListRef.isDragging()',
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
-    '[class.neg-row-reorder]': 'rowReorder && !this.table.ds?.sort.sort?.order && !this.table.ds?.filter?.filter',
+    '[class.pbl-row-reorder]': 'rowReorder && !this.table.ds?.sort.sort?.order && !this.table.ds?.filter?.filter',
   },
   providers: [
     { provide: CdkDropListGroup, useValue: undefined },
@@ -54,7 +54,7 @@ let _uniqueIdCounter = 0;
 })
 export class NegTableRowReorderPluginDirective<T = any> extends CdkLazyDropList<T> implements OnDestroy {
 
-  id = `neg-table-row-reorder-list-${_uniqueIdCounter++}`;
+  id = `pbl-table-row-reorder-list-${_uniqueIdCounter++}`;
 
   @Input() get rowReorder(): boolean { return this._rowReorder; };
   set rowReorder(value: boolean) {
@@ -99,7 +99,7 @@ export class NegTableRowReorderPluginDirective<T = any> extends CdkLazyDropList<
   ]
 })
 export class NegTableRowDragDirective<T = any> extends CdkLazyDrag<T, NegTableRowReorderPluginDirective<T>> implements AfterViewInit {
-  rootElementSelector = 'neg-table-row';
+  rootElementSelector = 'pbl-table-row';
 
   @Input('negTableRowDrag') set context(value: Pick<NegTableCellContext<T>, 'col' | 'table'> & Partial<Pick<NegTableCellContext<T>, 'row' | 'value'>>) {
     this._context = value;

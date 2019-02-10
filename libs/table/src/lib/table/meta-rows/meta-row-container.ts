@@ -6,8 +6,8 @@ import { NegMetaRowDefinitions } from '../columns/types';
 import { NegTableMetaRowService } from './meta-row.service';
 
 @Component({
-  selector: 'div[neg-table-fixed-meta-row-container]',
-  template: `<div class="neg-cdk-table" [style.min-width]="_minWidth"></div>`,
+  selector: 'div[pbl-table-fixed-meta-row-container]',
+  template: `<div class="pbl-cdk-table" [style.min-width]="_minWidth"></div>`,
   host: { // tslint:disable-line:use-host-property-decorator
     style: 'flex: 0 0 auto; overflow: hidden;',
     '[style.width]': '_innerWidth'
@@ -16,7 +16,7 @@ import { NegTableMetaRowService } from './meta-row.service';
 @UnRx()
 export class NegTableMetaRowContainerComponent {
 
-  @Input('neg-table-fixed-meta-row-container') set type(value: 'header' | 'footer') {
+  @Input('pbl-table-fixed-meta-row-container') set type(value: 'header' | 'footer') {
     if (this._type !== value) {
       this.init(value);
     }

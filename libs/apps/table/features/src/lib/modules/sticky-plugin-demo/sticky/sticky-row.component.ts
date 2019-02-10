@@ -6,7 +6,7 @@ import { createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
-  selector: 'neg-sticky-row-table-example-component',
+  selector: 'pbl-sticky-row-table-example-component',
   templateUrl: './sticky-row.component.html',
   styleUrls: ['./sticky-row.component.scss'],
   encapsulation: ViewEncapsulation.None,

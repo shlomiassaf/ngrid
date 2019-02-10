@@ -40,7 +40,7 @@ let _uniqueIdCounter = 0;
   ],
 })
 export class NegTableAggregationContainerDirective<T = any> extends CdkLazyDropList<T> implements OnDestroy {
-  id = `neg-table-column-aggregation-container-${_uniqueIdCounter++}`;
+  id = `pbl-table-column-aggregation-container-${_uniqueIdCounter++}`;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   pending: NegColumn;
