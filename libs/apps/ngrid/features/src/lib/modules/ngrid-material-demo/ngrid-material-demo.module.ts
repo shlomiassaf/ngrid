@@ -19,13 +19,14 @@ import { PblNgridTransposeModule } from '@pebula/ngrid/transpose';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridDetailRowModule } from '@pebula/ngrid/detail-row';
 import { PblNgridStickyModule } from '@pebula/ngrid/sticky';
+import { PblNgridMaterialModule } from '@pebula/ngrid-material';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
 
-import { BlockUiGridExampleComponent } from './block-ui';
-import { TransposeGridExampleComponent } from './transpose/transpose.component';
-import { DetailRowExampleComponent } from './detail-row/detail-row.component';
-import { TargetEventsGridExampleComponent } from './target-events/target-events.component';
+import { CellTooltipGridExampleComponent } from './cell-tooltip/cell-tooltip.component';
+import { SelectionColumnGridExampleComponent } from './selection-column/selection-column.component';
+import { MatSortGridExampleComponent } from './mat-sort';
+import { PaginatorGridExampleComponent } from './paginator';
 
 const MATERIAL = [
   MatProgressSpinnerModule,
@@ -41,17 +42,17 @@ const MATERIAL = [
 ];
 
 const DECLARATION = [
-  BlockUiGridExampleComponent,
-  TransposeGridExampleComponent,
-  DetailRowExampleComponent,
-  TargetEventsGridExampleComponent,
+  CellTooltipGridExampleComponent,
+  SelectionColumnGridExampleComponent,
+  MatSortGridExampleComponent,
+  PaginatorGridExampleComponent,
 ];
 
 const ROUTES = [
-  { path: 'target-events', component: TargetEventsGridExampleComponent, data: { title: 'Target Events' } },
-  { path: 'block-ui', component: BlockUiGridExampleComponent, data: { title: 'Block UI' } },
-  { path: 'transpose', component: TransposeGridExampleComponent, data: { title: 'Transpose' } },
-  { path: 'detail-row', component: DetailRowExampleComponent, data: { title: 'Detail Row' } },
+  { path: 'cell-tooltip', component: CellTooltipGridExampleComponent, data: { title: 'Cell Tooltip' } },
+  { path: 'selection-column', component: SelectionColumnGridExampleComponent, data: { title: 'Selection Column' } },
+  { path: 'mat-sort', component: MatSortGridExampleComponent, data: { title: 'Sorting with mat-sort' } },
+  { path: 'pagination', component: PaginatorGridExampleComponent, data: { title: 'Pagination' } },
 ];
 
 @NgModule({
@@ -67,12 +68,13 @@ const ROUTES = [
     PblNgridTransposeModule,
     PblNgridDetailRowModule,
     PblNgridStickyModule,
+    PblNgridMaterialModule,
   ],
   exports: [ MatRippleModule ], // we need this for detail-row
   providers: [ PblNgridRegistryService ],
 })
-export class TablePluginsDemoModule {
+export class NgridMaterialDemoModule {
   constructor(registry: ExampleGroupRegistryService) {
-    registry.registerSubGroupRoutes('plugins', ROUTES);
+    registry.registerSubGroupRoutes('ngridMaterial', ROUTES);
   }
 }

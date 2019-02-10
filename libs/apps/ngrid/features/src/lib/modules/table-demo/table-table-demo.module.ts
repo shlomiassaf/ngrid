@@ -21,11 +21,9 @@ import { PblNgridTransposeModule } from '@pebula/ngrid/transpose';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridDetailRowModule } from '@pebula/ngrid/detail-row';
 import { PblNgridStickyModule } from '@pebula/ngrid/sticky';
-import { PblNgridMaterialModule } from '@pebula/ngrid-material';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
 import { RowHeightGridExampleComponent } from './row-height/row-height.component';
-import { PaginatorGridExampleComponent } from './paginator';
 import { NoDataGridExampleComponent } from './no-data';
 import { VirtualScrollGridExampleComponent } from './virtual-scroll/virtual-scroll.component';
 
@@ -45,7 +43,6 @@ const MATERIAL = [
 
 const DECLARATION = [
   RowHeightGridExampleComponent,
-  PaginatorGridExampleComponent,
   NoDataGridExampleComponent,
   VirtualScrollGridExampleComponent,
 ];
@@ -54,7 +51,6 @@ const ROUTES = [
   { path: 'row-height', component: RowHeightGridExampleComponent, data: { title: 'Row Height' } },
   { path: 'no-data', component: NoDataGridExampleComponent, data: { title: 'No Date' } },
   { path: 'virtual-scroll', component: VirtualScrollGridExampleComponent, data: { title: 'Virtual Scroll' } },
-  { path: 'pagination', component: PaginatorGridExampleComponent, data: { title: 'Pagination' } },
 ];
 
 @NgModule({
@@ -70,7 +66,6 @@ const ROUTES = [
     PblNgridTransposeModule,
     PblNgridDetailRowModule,
     PblNgridStickyModule,
-    PblNgridMaterialModule,
   ],
   exports: [ MatRippleModule ], // we need this for detail-row
   providers: [ PblNgridRegistryService ],

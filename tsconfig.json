@@ -18,21 +18,6 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@pebula/apps/ngrid/concepts": [
-        "libs/apps/ngrid/concepts/src/index.ts"
-      ],
-      "@pebula/apps/ngrid/features": [
-        "libs/apps/ngrid/features/src/index.ts"
-      ],
-      "@pebula/apps/ngrid/stories": [
-        "libs/apps/ngrid/stories/src/index.ts"
-      ],
-      "@pebula/apps/ngrid/demos": [
-        "libs/apps/ngrid/demos/src/index.ts"
-      ],
-      "@pebula/apps/ngrid/shared": [
-        "libs/apps/ngrid/shared/src/index.ts"
-      ],
       "@pebula/docsi": [
         "libs/docsi/src/index.ts"
       ],
@@ -44,6 +29,10 @@
       ],
       "@pebula/docsi/material-suite": [
         "libs/docsi/material-suite/src/index.ts"
+      ],
+      "@pebula/apps/ngrid/*": [
+        "libs/apps/ngrid/*",
+        "libs/apps/ngrid/*/src/index.ts"
       ],
       "@pebula/ngrid*": [
         "libs/ngrid/src*",

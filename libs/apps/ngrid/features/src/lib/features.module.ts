@@ -14,6 +14,7 @@ const ROUTES = [
   { path: '', loadChildren: './modules/table-demo/table-table-demo.module#TableTableDemoModule' },
   { path: '', loadChildren: './modules/column-features/column-features-demo.module#ColumnFeaturesDemoModule' },
   { path: '', loadChildren: './modules/plugins-demo/table-plugins-demo.module#TablePluginsDemoModule' },
+  { path: '', loadChildren: './modules/ngrid-material-demo/ngrid-material-demo.module#NgridMaterialDemoModule' },
   { path: '', loadChildren: './modules/sticky-plugin-demo/table-sticky-plugin-demo.module#TableStickyPluginDemoModule' },
 ];
 
@@ -33,6 +34,7 @@ export class FeaturesModule {
     registry.registerGroup({ id: 'columns', title: 'Columns' });
     registry.registerGroup({ id: 'table', title: 'Table' });
     registry.registerGroup({ id: 'plugins', title: 'Plugins' });
+    registry.registerGroup({ id: 'ngridMaterial', title: '@pebula/ngrid-material' });
   }
 }
 
@@ -42,5 +44,6 @@ declare module '@pebula/apps/ngrid/shared/src/lib/example-group/example-group-re
     datasource: ExampleGroupMetadata;
     table: ExampleGroupMetadata;
     plugins: ExampleGroupMetadata;
+    'ngridMaterial': ExampleGroupMetadata;
   }
 }
