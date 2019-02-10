@@ -28,17 +28,17 @@ import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table'
 
 import { UnRx } from '@pebula/utils';
 
-import { EXT_API_TOKEN, NegTableExtensionApi } from '../ext/table-ext-api';
-import { NegTablePluginController, NegTablePluginContext } from '../ext/plugin-control';
-import { NegTablePaginatorKind } from '../paginator';
-import { NegDataSource, DataSourceOf, createDS } from '../data-source/index';
-import { NegCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
+import { EXT_API_TOKEN, PblTableExtensionApi } from '../ext/table-ext-api';
+import { PblTablePluginController, PblTablePluginContext } from '../ext/plugin-control';
+import { PblTablePaginatorKind } from '../paginator';
+import { PblDataSource, DataSourceOf, createDS } from '../data-source/index';
+import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
 import { findCellDef } from './directives/cell-def';
-import { NegColumn, NegColumnStore, NegMetaColumnStore, NegTableColumnSet, NegTableColumnDefinitionSet } from './columns';
-import { NegTableCellContext, NegTableMetaCellContext, ContextApi } from './context/index';
-import { NegTableRegistryService } from './services/table-registry.service';
-import { NegTableConfigService } from './services/config';
+import { PblColumn, PblColumnStore, PblMetaColumnStore, PblTableColumnSet, PblTableColumnDefinitionSet } from './columns';
+import { PblTableCellContext, PblTableMetaCellContext, ContextApi } from './context/index';
+import { PblTableRegistryService } from './services/table-registry.service';
+import { PblTableConfigService } from './services/config';
 import {
   DynamicColumnWidthLogic,
   BoxModelSpaceStrategy,
@@ -46,12 +46,12 @@ import {
   DYNAMIC_MARGIN_BOX_MODEL_SPACE_STRATEGY
 } from './col-width-logic/dynamic-column-width';
 import { ColumnApi, AutoSizeToFitOptions } from './column-api';
-import { NegCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
-import { NegTableMetaRowService } from './meta-rows/index';
+import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
+import { PblTableMetaRowService } from './meta-rows/index';
 
-export function internalApiFactory(table: { _extApi: NegTableExtensionApi; }) { return table._extApi; }
-export function pluginControllerFactory(table: { _plugin: NegTablePluginContext; }) { return table._plugin.controller; }
-export function metaRowServiceFactory(table: { _extApi: NegTableExtensionApi; }) { return table._extApi.metaRowService; }
+export function internalApiFactory(table: { _extApi: PblTableExtensionApi; }) { return table._extApi; }
+export function pluginControllerFactory(table: { _plugin: PblTablePluginContext; }) { return table._plugin.controller; }
+export function metaRowServiceFactory(table: { _extApi: PblTableExtensionApi; }) { return table._extApi.metaRowService; }
 
 @Component({
   selector: 'pbl-table',
@@ -61,28 +61,28 @@ export function metaRowServiceFactory(table: { _extApi: NegTableExtensionApi; })
   templateUrl: './table.component.html',
   styleUrls: [ './table.component.scss' ],
   providers: [
-    NegTableRegistryService,
+    PblTableRegistryService,
     {
-      provide: NegTablePluginController,
+      provide: PblTablePluginController,
       useFactory: pluginControllerFactory,
-      deps: [forwardRef(() => NegTableComponent)],
+      deps: [forwardRef(() => PblTableComponent)],
     },
     {
       provide: EXT_API_TOKEN,
       useFactory: internalApiFactory,
-      deps: [forwardRef(() => NegTableComponent)],
+      deps: [forwardRef(() => PblTableComponent)],
     },
     {
-      provide: NegTableMetaRowService,
+      provide: PblTableMetaRowService,
       useFactory: metaRowServiceFactory,
-      deps: [forwardRef(() => NegTableComponent)],
+      deps: [forwardRef(() => PblTableComponent)],
     }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 @UnRx()
-export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
+export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
   readonly self = this;
 
   /**
@@ -102,7 +102,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
       ;
       if (this.isInit) {
         // The UI changes are applied by toggle the `pbl-table-margin-cell-box-model` CSS class.
-        // This is managed through binding in `NegCdkTableComponent`.
+        // This is managed through binding in `PblCdkTableComponent`.
         // After this change we need to measure the cell's width again so we trigger a resizeRows call.
         // We must run it deferred to allow binding to commit.
         this.ngZone.onStable.pipe(take(1)).subscribe( () => this.resizeColumns() );
@@ -156,9 +156,9 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
    * The table's source of data, which can be provided in 2 ways:
    *
    * - DataSourceOf<T>
-   * - NegDataSource<T>
+   * - PblDataSource<T>
    *
-   * The table only works with `NegDataSource<T>`, `DataSourceOf<T>` is a shortcut for providing
+   * The table only works with `PblDataSource<T>`, `DataSourceOf<T>` is a shortcut for providing
    * the data array directly.
    *
    * `DataSourceOf<T>` can be:
@@ -167,11 +167,11 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
    * - Promise for a data array
    * - Stream that emits a data array each time the array changes
    *
-   * When a `DataSourceOf<T>` is provided it is converted into an instance of `NegDataSource<T>`.
+   * When a `DataSourceOf<T>` is provided it is converted into an instance of `PblDataSource<T>`.
    *
-   * To access the `NegDataSource<T>` instance use the `ds` property (readonly).
+   * To access the `PblDataSource<T>` instance use the `ds` property (readonly).
    *
-   * It is highly recommended to use `NegDataSource<T>` directly, the datasource factory makes it easy.
+   * It is highly recommended to use `PblDataSource<T>` directly, the datasource factory makes it easy.
    * For example, when an array is provided the factory is used to convert it to a datasource:
    *
    * ```typescript
@@ -181,18 +181,18 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
    *
    * > This is a write-only (setter) property that triggers the `setDataSource` method.
    */
-  @Input() set dataSource(value: NegDataSource<T> | DataSourceOf<T>) {
-    if (value instanceof NegDataSource) {
+  @Input() set dataSource(value: PblDataSource<T> | DataSourceOf<T>) {
+    if (value instanceof PblDataSource) {
       this.setDataSource(value);
     } else {
       this.setDataSource(createDS<T>().onTrigger( () => value || [] ).create());
     }
   }
 
-  get ds(): NegDataSource<T> { return this._dataSource; };
+  get ds(): PblDataSource<T> { return this._dataSource; };
 
-  @Input() get usePagination(): NegTablePaginatorKind | false { return this._pagination; }
-  set usePagination(value: NegTablePaginatorKind | false) {
+  @Input() get usePagination(): PblTablePaginatorKind | false { return this._pagination; }
+  set usePagination(value: PblTablePaginatorKind | false) {
     if ((value as any) === '') {
       value = 'pageNumber';
     }
@@ -221,7 +221,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   /**
    * The column definitions for this table.
    */
-  @Input() columns: NegTableColumnSet | NegTableColumnDefinitionSet;
+  @Input() columns: PblTableColumnSet | PblTableColumnDefinitionSet;
 
   @Input() set hideColumns(value: string[]) {
     this._hideColumns = value;
@@ -261,49 +261,49 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   cellFocus: 0 | '' = '';
 
   private _fallbackMinHeight = 0;
-  private _dataSource: NegDataSource<T>;
+  private _dataSource: PblDataSource<T>;
 
   @ViewChild('beforeTable', { read: ViewContainerRef}) _vcRefBeforeTable: ViewContainerRef;
   @ViewChild('beforeContent', { read: ViewContainerRef}) _vcRefBeforeContent: ViewContainerRef;
   @ViewChild('afterContent', { read: ViewContainerRef}) _vcRefAfterContent: ViewContainerRef;
-  @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<NegTableCellContext<T>>;
-  @ViewChild('fbHeaderCell', { read: TemplateRef}) _fbHeaderCell: TemplateRef<NegTableMetaCellContext<T>>;
-  @ViewChild('fbFooterCell', { read: TemplateRef}) _fbFooterCell: TemplateRef<NegTableMetaCellContext<T>>;
+  @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<PblTableCellContext<T>>;
+  @ViewChild('fbHeaderCell', { read: TemplateRef}) _fbHeaderCell: TemplateRef<PblTableMetaCellContext<T>>;
+  @ViewChild('fbFooterCell', { read: TemplateRef}) _fbFooterCell: TemplateRef<PblTableMetaCellContext<T>>;
   @ViewChild(CdkRowDef) _tableRowDef: CdkRowDef<T>;
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
 
-  get metaColumnIds(): NegColumnStore['metaColumnIds'] { return this._store.metaColumnIds; }
-  get metaColumns(): NegColumnStore['metaColumns'] { return this._store.metaColumns; }
+  get metaColumnIds(): PblColumnStore['metaColumnIds'] { return this._store.metaColumnIds; }
+  get metaColumns(): PblColumnStore['metaColumns'] { return this._store.metaColumns; }
   get columnRowDef() { return { header: this._store.headerColumnDef, footer: this._store.footerColumnDef }; }
   /**
    * True when the component is initialized (after AfterViewInit)
    */
   readonly isInit: boolean;
   readonly columnApi: ColumnApi<T>;
-  get viewport(): NegCdkVirtualScrollViewportComponent | undefined { return this._viewport; }
+  get viewport(): PblCdkVirtualScrollViewportComponent | undefined { return this._viewport; }
 
-  _cdkTable: NegCdkTableComponent<T>;
-  private _store: NegColumnStore = new NegColumnStore();
+  _cdkTable: PblCdkTableComponent<T>;
+  private _store: PblColumnStore = new PblColumnStore();
   private _hideColumnsDirty: boolean;
   private _hideColumns: string[];
   private _colHideDiffer: IterableDiffer<string>;
   private _noDateEmbeddedVRef: EmbeddedViewRef<any>;
   private _paginatorEmbeddedVRef: EmbeddedViewRef<any>;
-  private _pagination: NegTablePaginatorKind | false;
+  private _pagination: PblTablePaginatorKind | false;
   private _noCachePaginator = false;
   private _minimumRowWidth: string;
-  private _viewport?: NegCdkVirtualScrollViewportComponent;
-  private _plugin: NegTablePluginContext;
-  private _extApi: NegTableExtensionApi<T>;
+  private _viewport?: PblCdkVirtualScrollViewportComponent;
+  private _plugin: PblTablePluginContext;
+  private _extApi: PblTableExtensionApi<T>;
 
   constructor(injector: Injector, vcRef: ViewContainerRef,
               private elRef: ElementRef<HTMLElement>,
               private differs: IterableDiffers,
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
-              private config: NegTableConfigService,
-              public registry: NegTableRegistryService) {
+              private config: PblTableConfigService,
+              public registry: PblTableRegistryService) {
     const tableConfig = config.get('table');
     this.boxSpaceModel = tableConfig.boxSpaceModel;
     this.showHeader = tableConfig.showHeader;
@@ -416,7 +416,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     return index;
   }
 
-  setDataSource(value: NegDataSource<T>): void {
+  setDataSource(value: PblDataSource<T>): void {
     if (this._dataSource !== value) {
       this.setupPaginator();
       this.setupNoData(false);
@@ -516,19 +516,19 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
 
         Why? first, some background:
 
-        Invalidating the store will result in new `NegColumn` instances (cloned or completely new) held inside a new array (all arrays in the store are re-created on invalidate)
-        New array and new instances will also result in new directive instances of `NegTableColumnDef` for every column.
+        Invalidating the store will result in new `PblColumn` instances (cloned or completely new) held inside a new array (all arrays in the store are re-created on invalidate)
+        New array and new instances will also result in new directive instances of `PblTableColumnDef` for every column.
 
-        Each data row has data cells with the `NegTableCellDirective` directive (`pbl-table-cell`).
-        `NegTableCellDirective` has a reference to `NegTableColumnDef` through dependency injection, i.e. it will not update through change detection!
+        Each data row has data cells with the `PblTableCellDirective` directive (`pbl-table-cell`).
+        `PblTableCellDirective` has a reference to `PblTableColumnDef` through dependency injection, i.e. it will not update through change detection!
 
         Now, the problem:
         The `CdkTable` will cache rows and their cells, reusing them for performance.
-        This means that the `NegTableColumnDef` instance inside each cell will not change.
-        So, creating new columns and columnDefs will result in stale cells with reference to dead instances of `NegColumn` and `NegTableColumnDef`.
+        This means that the `PblTableColumnDef` instance inside each cell will not change.
+        So, creating new columns and columnDefs will result in stale cells with reference to dead instances of `PblColumn` and `PblTableColumnDef`.
 
-        One solution is to refactor `NegTableCellDirective` to get the `NegTableColumnDef` through data binding.
-        While this will work it will put more work on each cell while doing CD and will require complex logic to handle each change because `NegTableCellDirective`
+        One solution is to refactor `PblTableCellDirective` to get the `PblTableColumnDef` through data binding.
+        While this will work it will put more work on each cell while doing CD and will require complex logic to handle each change because `PblTableCellDirective`
         also create a context which has reference to a column thus a new context is required.
         Keeping track for all references will be difficult and bugs are likely to occur, which are hard to track.
 
@@ -592,7 +592,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
     }
   }
 
-  resizeColumns(columns?: NegColumn[]): void {
+  resizeColumns(columns?: PblColumn[]): void {
     if (!columns) {
       columns = this._store.columns;
     }
@@ -711,7 +711,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
       ],
       parent: injector,
     });
-    this._plugin = new NegTablePluginContext(this, pluginInjector, this._extApi);
+    this._plugin = new PblTablePluginContext(this, pluginInjector, this._extApi);
   }
 
   private initExtApi(): void {
@@ -726,7 +726,7 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
         return extApi.contextApi;
       },
       get metaRowService() {
-        Object.defineProperty(this, 'metaRowService', { value: new NegTableMetaRowService<T>(extApi) });
+        Object.defineProperty(this, 'metaRowService', { value: new PblTableMetaRowService<T>(extApi) });
         return extApi.metaRowService;
       },
       onInit: (fn: () => void) => {
@@ -817,11 +817,11 @@ export class NegTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   }
 
   private attachCustomHeaderCellTemplates(): void {
-    const columns: Array<NegColumn | NegMetaColumnStore> = [].concat(this._store.columns, this._store.metaColumns);
+    const columns: Array<PblColumn | PblMetaColumnStore> = [].concat(this._store.columns, this._store.metaColumns);
     const defaultHeaderCellTemplate = this.registry.getMultiDefault('headerCell') || { tRef: this._fbHeaderCell };
     const defaultFooterCellTemplate = this.registry.getMultiDefault('footerCell') || { tRef: this._fbFooterCell };
     for (const col of columns) {
-      if (col instanceof NegColumn) {
+      if (col instanceof PblColumn) {
         const headerCellDef = findCellDef<T>(this.registry, col, 'headerCell', true) || defaultHeaderCellTemplate;
         const footerCellDef = findCellDef<T>(this.registry, col, 'footerCell', true) || defaultFooterCellTemplate;
         col.headerCellTpl = headerCellDef.tRef;

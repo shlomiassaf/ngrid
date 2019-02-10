@@ -94,7 +94,7 @@ but because each serve a different purpose they also have unique definitions.
 The basic definitions for all columns:
 
 ```typescript
-export interface NegBaseColumnDefinition {
+export interface PblBaseColumnDefinition {
   /** A Unique ID for the column. */
   id: string;
 
@@ -102,7 +102,7 @@ export interface NegBaseColumnDefinition {
   label?: string;
 
   /** The type of the values in this column. */
-  type?: string | NegColumnTypeDefinition;
+  type?: string | PblColumnTypeDefinition;
 
   /** CSS class that get applied on the header and cell. */
   css?: string;

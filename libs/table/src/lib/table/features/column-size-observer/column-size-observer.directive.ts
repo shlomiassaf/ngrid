@@ -7,37 +7,37 @@ import {
   OnDestroy
 } from '@angular/core';
 
-import { NegTableComponent } from '../../table.component';
-import { NegColumn, ColumnSizeInfo } from '../../columns/index';
+import { PblTableComponent } from '../../table.component';
+import { PblColumn, ColumnSizeInfo } from '../../columns/index';
 
-const NEG_TABLE_MAP = new Map<NegTableComponent<any>, NegTableGroupHeaderSizeController>();
+const NEG_TABLE_MAP = new Map<PblTableComponent<any>, PblTableGroupHeaderSizeController>();
 
-class NegTableGroupHeaderSizeController {
-  private entries: WeakMap<any, NegColumnSizeObserver>;
+class PblTableGroupHeaderSizeController {
+  private entries: WeakMap<any, PblColumnSizeObserver>;
   private ro: ResizeObserver;
-  private columns: NegColumnSizeObserver[] = [];
+  private columns: PblColumnSizeObserver[] = [];
 
-  constructor(private table: NegTableComponent<any>) {
-    this.entries = new WeakMap<any, NegColumnSizeObserver>();
+  constructor(private table: PblTableComponent<any>) {
+    this.entries = new WeakMap<any, PblColumnSizeObserver>();
     this.ro = new ResizeObserver( entries => this.onResize(entries) );
   }
 
-  static get(table: NegTableComponent<any>): NegTableGroupHeaderSizeController {
+  static get(table: PblTableComponent<any>): PblTableGroupHeaderSizeController {
     let controller = NEG_TABLE_MAP.get(table);
     if (!controller) {
-      controller = new NegTableGroupHeaderSizeController(table);
+      controller = new PblTableGroupHeaderSizeController(table);
       NEG_TABLE_MAP.set(table, controller);
     }
     return controller;
   }
 
-  add(col: NegColumnSizeObserver): void {
+  add(col: PblColumnSizeObserver): void {
     this.entries.set(col.target, col);
     this.ro.observe(col.target);
     this.columns.push(col);
   }
 
-  remove(col: NegColumnSizeObserver): void {
+  remove(col: PblColumnSizeObserver): void {
     this.ro.unobserve(col.target);
     this.entries.delete(col.target);
     const idx = this.columns.indexOf(col);
@@ -51,7 +51,7 @@ class NegTableGroupHeaderSizeController {
   }
 
   private onResize(entries: ResizeObserverEntry[]): void {
-    const resized: NegColumnSizeObserver[] = [];
+    const resized: PblColumnSizeObserver[] = [];
     for (const entry of entries) {
       const o = this.entries.get(entry.target);
       if (o) {
@@ -73,23 +73,23 @@ class NegTableGroupHeaderSizeController {
 
 /**
  * A directive that listen to size changes from the element of a cell, using ResizeObserver.
- * When a change occurs it will emit it to the NegTable host of this directive, along with all other observed columns for the table.
+ * When a change occurs it will emit it to the PblTable host of this directive, along with all other observed columns for the table.
  *
- * In other words, all columns of a table, marked with `NegColumnSizeObserver`, will be sent.
+ * In other words, all columns of a table, marked with `PblColumnSizeObserver`, will be sent.
  *
  * Because most of the size changes concern all columns of a row and because ResizeObserver will emit them all in the same event
  * an entire row should emit once, with all columns.
  */
 @Directive({ selector: 'pbl-table-cell[observeSize], pbl-table-header-cell[observeSize]' })
-export class NegColumnSizeObserver extends ColumnSizeInfo implements OnDestroy {
-  @Input('observeSize') get column(): NegColumn { return this._column; }
-  set column(value: NegColumn) { this.attachColumn(value); }
+export class PblColumnSizeObserver extends ColumnSizeInfo implements OnDestroy {
+  @Input('observeSize') get column(): PblColumn { return this._column; }
+  set column(value: PblColumn) { this.attachColumn(value); }
 
-  private controller: NegTableGroupHeaderSizeController;
+  private controller: PblTableGroupHeaderSizeController;
 
-  constructor(el: ElementRef, table: NegTableComponent<any>) {
+  constructor(el: ElementRef, table: PblTableComponent<any>) {
     super(el.nativeElement);
-    this.controller = NegTableGroupHeaderSizeController.get(table);
+    this.controller = PblTableGroupHeaderSizeController.get(table);
     this.controller.add(this);
   }
 

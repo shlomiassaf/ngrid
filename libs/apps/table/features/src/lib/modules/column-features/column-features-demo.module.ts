@@ -7,9 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
 
-import { NegTableModule, NegTableRegistryService } from '@pebula/table';
-import { NegTableTargetEventsModule } from '@pebula/table/target-events';
-import { NegTableDragModule } from '@pebula/table/drag';
+import { PblTableModule, PblTableRegistryService } from '@pebula/table';
+import { PblTableTargetEventsModule } from '@pebula/table/target-events';
+import { PblTableDragModule } from '@pebula/table/drag';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { HideColumnsTableExampleComponent } from './hide-columns/hide-columns.component';
@@ -50,11 +50,11 @@ const ROUTES = [
     RouterModule.forChild(ROUTES),
     MATERIAL,
     SharedModule,
-    NegTableModule,
-    NegTableTargetEventsModule,
-    NegTableDragModule.withDefaultTemplates(),
+    PblTableModule,
+    PblTableTargetEventsModule,
+    PblTableDragModule.withDefaultTemplates(),
   ],
-  providers: [ NegTableRegistryService ],
+  providers: [ PblTableRegistryService ],
 })
 export class ColumnFeaturesDemoModule {
   constructor(registry: ExampleGroupRegistryService) {

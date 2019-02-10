@@ -3,35 +3,35 @@ export * from './directives/index';
 export * from './meta-rows/index';
 
 export {
-  NegColumnTypeDefinition, NegColumnTypeDefinitionDataMap,
-  NegBaseColumnDefinition,
-  NegMetaColumnDefinition,
-  NegColumnDefinition,
-  NegColumnGroupDefinition,
-  NegColumnSet, NegMetaRowDefinitions,
-  NegTableColumnSet, NegTableColumnDefinitionSet,
+  PblColumnTypeDefinition, PblColumnTypeDefinitionDataMap,
+  PblBaseColumnDefinition,
+  PblMetaColumnDefinition,
+  PblColumnDefinition,
+  PblColumnGroupDefinition,
+  PblColumnSet, PblMetaRowDefinitions,
+  PblTableColumnSet, PblTableColumnDefinitionSet,
 
   META_COLUMN_TYPES,
   COLUMN_TYPES,
 
-  NegMetaColumn,
-  NegColumn,
-  NegColumnGroup,
+  PblMetaColumn,
+  PblColumn,
+  PblColumnGroup,
   COLUMN,
-  NegColumnFactory,
+  PblColumnFactory,
   columnFactory
 } from './columns/index';
 
-export { NegTableMetaCellContext, NegTableCellContext, NegTableRowContext, NegRowContext } from './context/index';
+export { PblTableMetaCellContext, PblTableCellContext, PblTableRowContext, PblRowContext } from './context/index';
 
-export { NegCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
+export { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 
 export * from './events';
-export { NegTableComponent } from './table.component';
-export { NegTableRegistryService } from './services/table-registry.service';
+export { PblTableComponent } from './table.component';
+export { PblTableRegistryService } from './services/table-registry.service';
 export { AutoSizeToFitOptions, ColumnApi } from './column-api';
 
-export { NegColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';
+export { PblColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';
 export * from './features/virtual-scroll/index';
 
 export * from './utils/index';

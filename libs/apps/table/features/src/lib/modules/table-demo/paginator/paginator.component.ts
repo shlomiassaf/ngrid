@@ -6,7 +6,7 @@ import { from as rxFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
-import { createDS, columnFactory, NegTokenPaginator } from '@pebula/table';
+import { createDS, columnFactory, PblTokenPaginator } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 const COLUMNS = columnFactory()
@@ -91,7 +91,7 @@ export class PaginatorTableExampleComponent {
       return emulateServerSideTokenPaginationCall(this.datasource, pageChanged || perPage).pipe(
         map( result => {
           if (result.token) {
-            const paginator: NegTokenPaginator = <any> this.tokenDS.paginator;
+            const paginator: PblTokenPaginator = <any> this.tokenDS.paginator;
             paginator.addNext(result.token);
           }
           event.updateTotalLength(result.data.length);

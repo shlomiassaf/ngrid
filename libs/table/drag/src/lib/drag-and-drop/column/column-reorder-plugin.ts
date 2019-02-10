@@ -31,13 +31,13 @@ import {
   CdkDropList,
 } from '@angular/cdk/drag-drop';
 
-import { NegTableComponent, TablePlugin, NegColumn, NegTablePluginController, NegTableCellContext } from '@pebula/table';
+import { PblTableComponent, TablePlugin, PblColumn, PblTablePluginController, PblTableCellContext } from '@pebula/table';
 import { CdkLazyDropList, CdkLazyDrag } from '../core';
 
 import './extend-table';
 declare module '@pebula/table/lib/ext/types' {
-  interface NegTablePluginExtension {
-    columnReorder?: NegTableColumnReorderPluginDirective;
+  interface PblTablePluginExtension {
+    columnReorder?: PblTableColumnReorderPluginDirective;
   }
 }
 
@@ -56,10 +56,10 @@ let _uniqueIdCounter = 0;
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
   },
   providers: [
-    { provide: CDK_DROP_LIST, useExisting: NegTableColumnReorderPluginDirective },
+    { provide: CDK_DROP_LIST, useExisting: PblTableColumnReorderPluginDirective },
   ],
 })
-export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropList<T, NegTableColumnReorderPluginDirective<T>> implements OnInit, OnDestroy {
+export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropList<T, PblTableColumnReorderPluginDirective<T>> implements OnInit, OnDestroy {
   id = `pbl-table-column-reorder-list-${_uniqueIdCounter++}`;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
@@ -80,20 +80,20 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
 
   private _columnReorder = false;
   private _manualOverride = false;
-  private _removePlugin: (table: NegTableComponent<any>) => void;
-  private lastSwap: DragRef<NegTableColumnDragDirective<T>>;
-  private lastSorted: { drag: DragRef<NegTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; };
+  private _removePlugin: (table: PblTableComponent<any>) => void;
+  private lastSwap: DragRef<PblTableColumnDragDirective<T>>;
+  private lastSorted: { drag: DragRef<PblTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; };
 
   // Stuff to workaround encapsulation in CdkDropList
-  private get negGetItemIndexFromPointerPosition(): (item: DragRef<NegTableColumnDragDirective<T>>, pointerX: number, pointerY: number, delta?: {x: number, y: number}) => number {
+  private get negGetItemIndexFromPointerPosition(): (item: DragRef<PblTableColumnDragDirective<T>>, pointerX: number, pointerY: number, delta?: {x: number, y: number}) => number {
     return (this._dropListRef as any)._getItemIndexFromPointerPosition.bind(this._dropListRef);
   }
-  private get negGetPositionCacheItems(): { drag: DragRef<NegTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; }[] {
+  private get negGetPositionCacheItems(): { drag: DragRef<PblTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; }[] {
     return (this._dropListRef as any)._itemPositions;
   }
 
-  constructor(public table: NegTableComponent<T>,
-              pluginCtrl: NegTablePluginController,
+  constructor(public table: PblTableComponent<T>,
+              pluginCtrl: PblTablePluginController,
               element: ElementRef<HTMLElement>,
               dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
               changeDetectorRef: ChangeDetectorRef,
@@ -107,7 +107,7 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
     this.directContainerElement = '.pbl-table-header-row-main';
     this.dropped.subscribe( (event: CdkDragDrop<T, any>) => {
       if (!this.manualOverride) {
-        this.table.columnApi.moveColumn((event.item as NegTableColumnDragDirective<T>).column, event.currentIndex);
+        this.table.columnApi.moveColumn((event.item as PblTableColumnDragDirective<T>).column, event.currentIndex);
       }
     });
 
@@ -169,7 +169,7 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
     this.negDropListRef._sortItem = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number, pointerDelta: {x: number, y: number}): void => {
       const siblings = this.negGetPositionCacheItems;
       this.lastSorted = siblings.find( s => s.drag === item );
-      const newIndex = this.negGetItemIndexFromPointerPosition(item as DragRef<NegTableColumnDragDirective<T>>, pointerX, pointerY, pointerDelta);
+      const newIndex = this.negGetItemIndexFromPointerPosition(item as DragRef<PblTableColumnDragDirective<T>>, pointerX, pointerY, pointerDelta);
       if (newIndex === -1 && siblings.length > 0) {
         return;
       }
@@ -225,25 +225,25 @@ export class NegTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
   providers: [
-    { provide: CdkDrag, useExisting: NegTableColumnDragDirective }
+    { provide: CdkDrag, useExisting: PblTableColumnDragDirective }
   ]
 })
-export class NegTableColumnDragDirective<T = any> extends CdkLazyDrag<T, NegTableColumnReorderPluginDirective<T>, NegTableColumnDragDirective<T>> implements AfterViewInit {
+export class PblTableColumnDragDirective<T = any> extends CdkLazyDrag<T, PblTableColumnReorderPluginDirective<T>, PblTableColumnDragDirective<T>> implements AfterViewInit {
   rootElementSelector = 'pbl-table-header-cell';
 
-  column: NegColumn;
+  column: PblColumn;
 
-  @Input('negTableColumnDrag') set context(value: Pick<NegTableCellContext<T>, 'col' | 'table'> & Partial<Pick<NegTableCellContext<T>, 'row' | 'value'>>) {
+  @Input('negTableColumnDrag') set context(value: Pick<PblTableCellContext<T>, 'col' | 'table'> & Partial<Pick<PblTableCellContext<T>, 'row' | 'value'>>) {
     this._context = value;
     this.column = value && value.col;
-    const pluginCtrl = this.pluginCtrl = value && NegTablePluginController.find(value.table);
+    const pluginCtrl = this.pluginCtrl = value && PblTablePluginController.find(value.table);
     const plugin = pluginCtrl && pluginCtrl.getPlugin(PLUGIN_KEY);
     this.cdkDropList = plugin || undefined;
     this.disabled = this.column && this.column.reorder ? false : true;
   }
 
-  private _context: Pick<NegTableCellContext<T>, 'col' | 'table'> & Partial<Pick<NegTableCellContext<T>, 'row' | 'value'>>
-  private pluginCtrl: NegTablePluginController;
+  private _context: Pick<PblTableCellContext<T>, 'col' | 'table'> & Partial<Pick<PblTableCellContext<T>, 'row' | 'value'>>
+  private pluginCtrl: PblTablePluginController;
   private cache: HTMLElement[];
 
   ngAfterViewInit(): void {

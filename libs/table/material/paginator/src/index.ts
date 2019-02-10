@@ -1,1 +1,1 @@
-export { NegTablePaginatorModule } from './lib/table-paginator.module';
+export { PblTablePaginatorModule } from './lib/table-paginator.module';

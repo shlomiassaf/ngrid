@@ -22,10 +22,10 @@ import { Platform } from '@angular/cdk/platform';
 import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef } from '@angular/cdk/table';
 import { Directionality } from '@angular/cdk/bidi';
 
-import { NegTableComponent } from '../table.component';
-import { NegTableExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
-import { NegVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
-import { NegCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/virtual-scroll-viewport.component';
+import { PblTableComponent } from '../table.component';
+import { PblTableExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
+import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
+import { PblCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/virtual-scroll-viewport.component';
 
 /**
  * Wrapper for the CdkTable that extends it's functionality to support various table features.
@@ -46,7 +46,7 @@ import { NegCdkVirtualScrollViewportComponent } from '../features/virtual-scroll
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
+export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
 
   get _element(): HTMLElement { return this._elementRef.nativeElement; }
 
@@ -74,8 +74,8 @@ export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
               @Attribute('role') role: string,
               @Optional() _dir: Directionality,
               protected injector: Injector,
-              protected table: NegTableComponent<T>,
-              @Inject(EXT_API_TOKEN) protected extApi: NegTableExtensionApi<T>,
+              protected table: PblTableComponent<T>,
+              @Inject(EXT_API_TOKEN) protected extApi: PblTableExtensionApi<T>,
               @Inject(DOCUMENT) _document?: any,
               platform?: Platform) {
     super(_differs, _changeDetectorRef, _elementRef, role, _dir, document, platform);
@@ -138,11 +138,11 @@ export class NegCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
   //#endregion CLEAR-ROW-DEFS
 
   //#region VIRTUAL-SCROLL
-  private forOf: NegVirtualScrollForOf<T>; //tslint:disable-line
+  private forOf: PblVirtualScrollForOf<T>; //tslint:disable-line
 
   attachViewPort(): void {
     this.detachViewPort();
-    this.forOf = new NegVirtualScrollForOf<T>(this.extApi, this.injector.get(NgZone));
+    this.forOf = new PblVirtualScrollForOf<T>(this.extApi, this.injector.get(NgZone));
   }
 
   detachViewPort(): void {

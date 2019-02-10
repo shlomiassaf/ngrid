@@ -1,10 +1,10 @@
 // tslint:disable:use-host-property-decorator
 import { Directive, TemplateRef } from '@angular/core';
-import { NegTableComponent, NegTableRegistryService, NegTableSingleTemplateRegistry } from '@pebula/table';
+import { PblTableComponent, PblTableRegistryService, PblTableSingleTemplateRegistry } from '@pebula/table';
 
 declare module '@pebula/table/lib/table/services/table-registry.service' {
-  interface NegTableSingleRegistryMap {
-    blocker?: NegTableBlockUiDefDirective;
+  interface PblTableSingleRegistryMap {
+    blocker?: PblTableBlockUiDefDirective;
   }
 }
 
@@ -12,7 +12,7 @@ declare module '@pebula/table/lib/table/services/table-registry.service' {
  * Marks the element as the display element when the form is busy.
  */
 @Directive({ selector: '[negTableBlockUiDef]' })
-export class NegTableBlockUiDefDirective extends NegTableSingleTemplateRegistry<{ $implicit: NegTableComponent<any> }, 'blocker'> {
+export class PblTableBlockUiDefDirective extends PblTableSingleTemplateRegistry<{ $implicit: PblTableComponent<any> }, 'blocker'> {
   readonly kind = 'blocker';
-  constructor(tRef: TemplateRef<{ $implicit: NegTableComponent<any> }>, registry: NegTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<{ $implicit: PblTableComponent<any> }>, registry: PblTableRegistryService) { super(tRef, registry); }
 }

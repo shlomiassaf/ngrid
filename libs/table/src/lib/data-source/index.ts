@@ -1,11 +1,11 @@
 export {
-  NegDataSourceConfigurableTriggers,
-  NegDataSourceTriggers,
-  NegDataSourceTriggerChange,
-  NegDataSourceTriggerChangedEvent
+  PblDataSourceConfigurableTriggers,
+  PblDataSourceTriggers,
+  PblDataSourceTriggerChange,
+  PblDataSourceTriggerChangedEvent
 } from './data-source-adapter.types';
-export { NegDataSourceAdapter } from './data-source-adapter';
-export { NegTableSortInstructions, NegTableSortDefinition, NegTableSorter, NegTableDataSourceSortChange } from './types';
-export { NegDataSource, NegDataSourceOptions, DataSourceOf } from './data-source';
-export { NegDataSourceFactory, createDS } from './factory';
+export { PblDataSourceAdapter } from './data-source-adapter';
+export { PblTableSortInstructions, PblTableSortDefinition, PblTableSorter, PblTableDataSourceSortChange } from './types';
+export { PblDataSource, PblDataSourceOptions, DataSourceOf } from './data-source';
+export { PblDataSourceFactory, createDS } from './factory';
 export { applySort } from './sorting';

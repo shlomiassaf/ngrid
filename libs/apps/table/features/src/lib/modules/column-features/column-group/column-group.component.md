@@ -28,7 +28,7 @@ The definition is linear and does not allow picking random child columns by id, 
 In addition, each column group must describe which row it belongs to using the **rowIndex** property.
 
 ```typescript
-export interface NegColumnGroupDefinition extends NegBaseColumnDefinition {
+export interface PblColumnGroupDefinition extends PblBaseColumnDefinition {
 
   id?: string;
 

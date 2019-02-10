@@ -17,7 +17,7 @@ The most simple definition for a column is a vertical series of cells.
 
 There are 2 roles: **Data Column**{style="color:green"} and **Meta Column**{style="color:deepskyblue"}
 
-## Data Columns (`NegColumn`)
+## Data Columns (`PblColumn`)
 {style="color:green"}
 
 - All **green cells**{style="color:green"} belong to the column `name`.
@@ -51,7 +51,7 @@ They all share a logical connection, they work as one unit:
 
 I> A data column is the only column that span over a **vertical** series of cells.
 
-## Meta Columns (`NegMetaColumn`)
+## Meta Columns (`PblMetaColumn`)
 {style="color:deepskyblue"}
 
 - All **skyblue cells**{style="color:deepskyblue"} are meta columns
@@ -60,4 +60,4 @@ I> A data column is the only column that span over a **vertical** series of cell
 
 Each **sub-role** is hosted in a meta row of the same type, having columns from the same **sub-role**.
 
-I> The **`Meta Header Group`**{style="color:purple"} has it's own class `NegColumnGroup`, extending `NegMetaColumn`
+I> The **`Meta Header Group`**{style="color:purple"} has it's own class `PblColumnGroup`, extending `PblMetaColumn`

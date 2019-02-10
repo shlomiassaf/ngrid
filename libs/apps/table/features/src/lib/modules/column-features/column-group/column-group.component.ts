@@ -1,6 +1,6 @@
 /* @pebula-example:ex-1 ex-2  */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { NegTableComponent, createDS, columnFactory } from '@pebula/table';
+import { PblTableComponent, createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({

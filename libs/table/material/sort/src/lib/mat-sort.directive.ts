@@ -2,11 +2,11 @@ import { Directive, OnDestroy } from '@angular/core';
 import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
 
 import { UnRx } from '@pebula/utils';
-import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableSortDefinition } from '@pebula/table';
+import { PblTableComponent, PblTablePluginController, TablePlugin, PblTableSortDefinition } from '@pebula/table';
 
 declare module '@pebula/table/lib/ext/types' {
-  interface NegTablePluginExtension {
-    matSort?: NegTableMatSortDirective;
+  interface PblTablePluginExtension {
+    matSort?: PblTableMatSortDirective;
   }
 }
 const PLUGIN_KEY: 'matSort' = 'matSort';
@@ -14,10 +14,10 @@ const PLUGIN_KEY: 'matSort' = 'matSort';
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-table[matSort]', exportAs: 'negMatSort' })
 @UnRx()
-export class NegTableMatSortDirective implements OnDestroy {
-  private _removePlugin: (table: NegTableComponent<any>) => void;
+export class PblTableMatSortDirective implements OnDestroy {
+  private _removePlugin: (table: PblTableComponent<any>) => void;
 
-  constructor(public table: NegTableComponent<any>, private pluginCtrl: NegTablePluginController, public sort: MatSort) {
+  constructor(public table: PblTableComponent<any>, private pluginCtrl: PblTablePluginController, public sort: MatSort) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     this.sort.sortChange.pipe(UnRx(this)).subscribe(s => this.onSort(s));
@@ -66,7 +66,7 @@ export class NegTableMatSortDirective implements OnDestroy {
     if ( !column || !column.sort ) {
       return;
     } else {
-      const newSort: NegTableSortDefinition = { };
+      const newSort: PblTableSortDefinition = { };
       const sortFn = typeof column.sort === 'function' && column.sort;
       if (sort.direction) {
         newSort.order = sort.direction;

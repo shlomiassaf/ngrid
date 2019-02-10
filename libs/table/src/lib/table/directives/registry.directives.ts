@@ -2,16 +2,16 @@
 
 import { Directive, TemplateRef, OnInit, OnDestroy, ComponentFactory, ComponentRef, Injector } from '@angular/core';
 
-import { NegColumn } from '../columns/column';
-import { NegTableComponent } from '../table.component';
-import { MetaCellContext, NegTableMetaCellContext } from '../context/index';
-import { NegTableHeaderCellComponent } from './cell';
-import { NegTableSingleRegistryMap, NegTableMultiRegistryMap, NegTableRegistryService } from '../services/table-registry.service';
+import { PblColumn } from '../columns/column';
+import { PblTableComponent } from '../table.component';
+import { MetaCellContext, PblTableMetaCellContext } from '../context/index';
+import { PblTableHeaderCellComponent } from './cell';
+import { PblTableSingleRegistryMap, PblTableMultiRegistryMap, PblTableRegistryService } from '../services/table-registry.service';
 
-export abstract class NegTableSingleTemplateRegistry<T, TKind extends keyof NegTableSingleRegistryMap> implements OnInit, OnDestroy {
+export abstract class PblTableSingleTemplateRegistry<T, TKind extends keyof PblTableSingleRegistryMap> implements OnInit, OnDestroy {
   abstract readonly kind: TKind;
 
-  constructor(public tRef: TemplateRef<T>, protected registry: NegTableRegistryService) { }
+  constructor(public tRef: TemplateRef<T>, protected registry: PblTableRegistryService) { }
 
   ngOnInit(): void {
     this.registry.setSingle(this.kind, this as any);
@@ -22,11 +22,11 @@ export abstract class NegTableSingleTemplateRegistry<T, TKind extends keyof NegT
   }
 }
 
-export abstract class NegTableMultiTemplateRegistry<T, TKind extends keyof NegTableMultiRegistryMap> implements OnInit, OnDestroy {
+export abstract class PblTableMultiTemplateRegistry<T, TKind extends keyof PblTableMultiRegistryMap> implements OnInit, OnDestroy {
   abstract readonly name: string;
   abstract readonly kind: TKind;
 
-  constructor(public tRef: TemplateRef<T>, protected registry: NegTableRegistryService) { }
+  constructor(public tRef: TemplateRef<T>, protected registry: PblTableRegistryService) { }
 
   ngOnInit(): void {
     this.registry.addMulti(this.kind, this as any);
@@ -37,7 +37,7 @@ export abstract class NegTableMultiTemplateRegistry<T, TKind extends keyof NegTa
   }
 }
 
-export abstract class NegTableMultiComponentRegistry<T, TKind extends keyof NegTableMultiRegistryMap> {
+export abstract class PblTableMultiComponentRegistry<T, TKind extends keyof PblTableMultiRegistryMap> {
   abstract readonly name: string;
   abstract readonly kind: TKind;
 
@@ -50,27 +50,27 @@ export abstract class NegTableMultiComponentRegistry<T, TKind extends keyof NegT
    */
   readonly projectContent?: boolean;
 
-  abstract getFactory(context: NegTableMetaCellContext<any, NegColumn>): ComponentFactory<T>;
-  onCreated?(context: NegTableMetaCellContext<any, NegColumn>, cmpRef: ComponentRef<T>): void;
+  abstract getFactory(context: PblTableMetaCellContext<any, PblColumn>): ComponentFactory<T>;
+  onCreated?(context: PblTableMetaCellContext<any, PblColumn>, cmpRef: ComponentRef<T>): void;
 }
 
-export class NegTableDataHeaderExtensionContext<T = any> extends MetaCellContext<T, NegColumn> {
-  constructor(headerCell: NegTableHeaderCellComponent<NegColumn>, public readonly injector: Injector) {
+export class PblTableDataHeaderExtensionContext<T = any> extends MetaCellContext<T, PblColumn> {
+  constructor(headerCell: PblTableHeaderCellComponent<PblColumn>, public readonly injector: Injector) {
     super(headerCell.columnDef.column, headerCell.table);
   }
 }
 
-export interface NegTableDataHeaderExtensionRef<T = any> {
-  shouldRender?(context: NegTableDataHeaderExtensionContext<T>): boolean;
+export interface PblTableDataHeaderExtensionRef<T = any> {
+  shouldRender?(context: PblTableDataHeaderExtensionContext<T>): boolean;
 }
 
 /**
  * Marks the element as the display element for pagination
  */
 @Directive({ selector: '[negTablePaginatorRef]' })
-export class NegTablePaginatorRefDirective extends NegTableSingleTemplateRegistry<{ $implicit: NegTableComponent<any> }, 'paginator'> {
+export class PblTablePaginatorRefDirective extends PblTableSingleTemplateRegistry<{ $implicit: PblTableComponent<any> }, 'paginator'> {
   readonly kind: 'paginator' = 'paginator';
-  constructor(tRef: TemplateRef<{ $implicit: NegTableComponent<any> }>, registry: NegTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<{ $implicit: PblTableComponent<any> }>, registry: PblTableRegistryService) { super(tRef, registry); }
 }
 
 /**
@@ -86,7 +86,7 @@ export class NegTablePaginatorRefDirective extends NegTableSingleTemplateRegistr
  * ```
  */
 @Directive({ selector: '[negTableNoDataRef]' })
-export class NegTableNoDataRefDirective extends NegTableSingleTemplateRegistry<{ $implicit: NegTableComponent<any> }, 'noData'> {
+export class PblTableNoDataRefDirective extends PblTableSingleTemplateRegistry<{ $implicit: PblTableComponent<any> }, 'noData'> {
   readonly kind: 'noData' = 'noData';
-  constructor(tRef: TemplateRef<{ $implicit: NegTableComponent<any> }>, registry: NegTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<{ $implicit: PblTableComponent<any> }>, registry: PblTableRegistryService) { super(tRef, registry); }
 }

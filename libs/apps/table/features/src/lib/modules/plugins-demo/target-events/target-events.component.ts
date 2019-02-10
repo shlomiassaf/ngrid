@@ -4,12 +4,12 @@
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/table';
-import { NegTableRowEvent, NegTableCellEvent } from '@pebula/table/target-events';
+import { PblTableRowEvent, PblTableCellEvent } from '@pebula/table/target-events';
 
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
-function isCellEvent<T>(event: NegTableRowEvent<T> | NegTableCellEvent<T>): event is NegTableCellEvent<T> {
-  return !!(event as  NegTableCellEvent<T>).cellTarget;
+function isCellEvent<T>(event: PblTableRowEvent<T> | PblTableCellEvent<T>): event is PblTableCellEvent<T> {
+  return !!(event as  PblTableCellEvent<T>).cellTarget;
 }
 
 const COLUMNS = columnFactory()
@@ -77,7 +77,7 @@ export class TargetEventsTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 
-  onClickEvents(event: NegTableRowEvent<Person> | NegTableCellEvent<Person>) {
+  onClickEvents(event: PblTableRowEvent<Person> | PblTableCellEvent<Person>) {
     let cellSuffix = '';
     if (isCellEvent(event)) {
       cellSuffix = `  CELL: ${event.colIndex}`;
@@ -89,7 +89,7 @@ export class TargetEventsTableExampleComponent {
     alert(`CLICK EVENT at ROW: ${event.rowIndex}${cellSuffix}\nType: ${event.type}\nSubType: ${event.subType}`);
   }
 
-  onEnterLeaveEvents(event: NegTableRowEvent<Person> | NegTableCellEvent<Person>, isEnter = false) {
+  onEnterLeaveEvents(event: PblTableRowEvent<Person> | PblTableCellEvent<Person>, isEnter = false) {
     if (isCellEvent(event)) {
       if (isEnter) {
         event.cellTarget.classList.add('cell-hovered');

@@ -1,7 +1,7 @@
-import { NegColumn, NegColumnGroup } from '@pebula/table';
+import { PblColumn, PblColumnGroup } from '@pebula/table';
 
 declare module '@pebula/table/lib/table/columns/column' {
-  interface NegColumn {
+  interface PblColumn {
 
     reorder: boolean;
     /**
@@ -17,12 +17,12 @@ declare module '@pebula/table/lib/table/columns/column' {
      *
      * The process will check both scenarios.
      */
-    checkGroupLockConstraint(column: NegColumn): boolean;
+    checkGroupLockConstraint(column: PblColumn): boolean;
   }
 }
 
 declare module '@pebula/table/lib/table/columns/group-column' {
-  interface NegColumnGroup {
+  interface PblColumnGroup {
     /**
      * Lock column in the group, preventing the group from splitting.
      * Splitting is block actively (column from the group dragged outside) and passively (column outside of the group dragging into the group).
@@ -32,7 +32,7 @@ declare module '@pebula/table/lib/table/columns/group-column' {
 }
 
 declare module '@pebula/table/lib/table/columns/types' {
-  interface NegColumnDefinition {
+  interface PblColumnDefinition {
     reorder?: boolean;
     /**
      * When true, the item can be reordered based on the `reorder` property but
@@ -40,7 +40,7 @@ declare module '@pebula/table/lib/table/columns/types' {
      */
     wontBudge?: boolean;
   }
-  interface NegColumnGroupDefinition {
+  interface PblColumnGroupDefinition {
     /**
      * Lock column in the group, preventing the group from splitting.
      * Splitting is block actively (column from the group dragged outside) and passively (column outside of the group dragging into the group).
@@ -49,7 +49,7 @@ declare module '@pebula/table/lib/table/columns/types' {
   }
 }
 
-function checkGroupLockConstraint(this: NegColumn, column: NegColumn): boolean {
+function checkGroupLockConstraint(this: PblColumn, column: PblColumn): boolean {
   for (const id of this.groups) {
     const g = this.groupStore.find(id);
     if (g && g.lockColumns && !column.isInGroup(g)) {
@@ -59,10 +59,10 @@ function checkGroupLockConstraint(this: NegColumn, column: NegColumn): boolean {
   return true;
 }
 
-NegColumn.extendProperty('reorder');
-NegColumn.extendProperty('wontBudge');
-NegColumn.prototype.checkGroupLockConstraint = function (this: NegColumn, column: NegColumn): boolean {
+PblColumn.extendProperty('reorder');
+PblColumn.extendProperty('wontBudge');
+PblColumn.prototype.checkGroupLockConstraint = function (this: PblColumn, column: PblColumn): boolean {
   return checkGroupLockConstraint.call(this, column) && checkGroupLockConstraint.call(column, this);
 }
 
-NegColumnGroup.extendProperty('lockColumns');
+PblColumnGroup.extendProperty('lockColumns');

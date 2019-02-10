@@ -1,5 +1,5 @@
-import { NegPaginatorChangeEvent } from '../paginator';
-import { NegTableDataSourceSortChange, DataSourceFilter } from './types';
+import { PblPaginatorChangeEvent } from '../paginator';
+import { PblTableDataSourceSortChange, DataSourceFilter } from './types';
 
 /** @internal */
 export type RefreshDataWrapper<T> = { data: T };
@@ -8,26 +8,26 @@ export type RefreshDataWrapper<T> = { data: T };
  * Data source event triggers map with triggers that the user can opt in a custom behaviour.
  * The properties represent the trigger name/key and the value represent the event input in it's raw form.
  */
-export interface NegDataSourceConfigurableTriggers {
+export interface PblDataSourceConfigurableTriggers {
   filter?: DataSourceFilter;
-  sort?: NegTableDataSourceSortChange;
-  pagination?: NegPaginatorChangeEvent;
+  sort?: PblTableDataSourceSortChange;
+  pagination?: PblPaginatorChangeEvent;
 }
 
 /**
  * Data source event triggers map.
  * The properties represent the trigger name/key and the value represent the event input in it's raw form.
  */
-export interface NegDataSourceTriggers<T = any> extends NegDataSourceConfigurableTriggers {
+export interface PblDataSourceTriggers<T = any> extends PblDataSourceConfigurableTriggers {
   /**
    * Represents input from `refresh` emissions. T does not necessarily represents the type of the datasource.
    */
   data?: RefreshDataWrapper<T>;
 }
 
-export interface NegDataSourceTriggerCache<T = any> {
+export interface PblDataSourceTriggerCache<T = any> {
   filter?: DataSourceFilter;
-  sort?: NegTableDataSourceSortChange;
+  sort?: PblTableDataSourceSortChange;
   pagination?: {
     page?: any;
     perPage?: number;
@@ -35,21 +35,21 @@ export interface NegDataSourceTriggerCache<T = any> {
   data?: RefreshDataWrapper<T>;
 }
 
-export interface NegDataSourceTriggerChange<T> {
+export interface PblDataSourceTriggerChange<T> {
   changed: boolean;
   prev: T;
   curr?: T;
 }
 
-export interface NegDataSourceTriggerChangedEvent<T = any> {
-  filter: NegDataSourceTriggerChange<DataSourceFilter>;
-  sort: NegDataSourceTriggerChange<NegTableDataSourceSortChange>;
+export interface PblDataSourceTriggerChangedEvent<T = any> {
+  filter: PblDataSourceTriggerChange<DataSourceFilter>;
+  sort: PblDataSourceTriggerChange<PblTableDataSourceSortChange>;
   pagination: {
     changed: boolean;
-    page: NegDataSourceTriggerChange<any>;
-    perPage: NegDataSourceTriggerChange<number>;
+    page: PblDataSourceTriggerChange<any>;
+    perPage: PblDataSourceTriggerChange<number>;
   }
-  data: NegDataSourceTriggerChange<T>;
+  data: PblDataSourceTriggerChange<T>;
 
 
   /**
@@ -66,6 +66,6 @@ export interface NegDataSourceTriggerChangedEvent<T = any> {
   updateTotalLength(totalLength: number): void;
 }
 
-export type TriggerChangedEventResponse<T = any, TDate = any> = { event: NegDataSourceTriggerChangedEvent<TDate>; data: T[] };
+export type TriggerChangedEventResponse<T = any, TDate = any> = { event: PblDataSourceTriggerChangedEvent<TDate>; data: T[] };
 
-export type TriggerChangedEventFor<P extends keyof NegDataSourceTriggerCache> = P extends keyof NegDataSourceTriggerChangedEvent ? NegDataSourceTriggerChangedEvent[P] :  NegDataSourceTriggerChange<NegDataSourceTriggerCache[P]>;
+export type TriggerChangedEventFor<P extends keyof PblDataSourceTriggerCache> = P extends keyof PblDataSourceTriggerChangedEvent ? PblDataSourceTriggerChangedEvent[P] :  PblDataSourceTriggerChange<PblDataSourceTriggerCache[P]>;

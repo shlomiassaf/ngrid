@@ -6,32 +6,32 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
 
 import {
-  NEG_TABLE_CONFIG, NegTableConfig,
-  NegTableRegistryService,
-  NegCdkTableComponent,
-  NegTableComponent,
+  NEG_TABLE_CONFIG, PblTableConfig,
+  PblTableRegistryService,
+  PblCdkTableComponent,
+  PblTableComponent,
 
-  NegTableRowComponent,
-  NegTableMetaRowContainerComponent, NegMetaRowDirective,
-  NegTableColumnDef,
-  NegTableHeaderCellDefDirective,
-  NegTableFooterCellDefDirective,
-  NegTableCellDefDirective, NegTableEditorCellDefDirective,
-  NegTableHeaderCellComponent,
-  NegTableCellDirective,
-  NegTableFooterCellDirective,
+  PblTableRowComponent,
+  PblTableMetaRowContainerComponent, PblMetaRowDirective,
+  PblTableColumnDef,
+  PblTableHeaderCellDefDirective,
+  PblTableFooterCellDefDirective,
+  PblTableCellDefDirective, PblTableEditorCellDefDirective,
+  PblTableHeaderCellComponent,
+  PblTableCellDirective,
+  PblTableFooterCellDirective,
 
   ParentNgStyleDirective, ParentNgClassDirective,
-  NegTableOuterSectionDirective,
-  NegTableNoDataRefDirective,
-  NegTablePaginatorRefDirective,
+  PblTableOuterSectionDirective,
+  PblTableNoDataRefDirective,
+  PblTablePaginatorRefDirective,
 
-  NegColumnSizeObserver,
-  NegCdkVirtualScrollViewportComponent, NegCdkVirtualScrollDirective, NegTableScrolling,
+  PblColumnSizeObserver,
+  PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblTableScrolling,
 
-  NegTableCellEditAutoFocusDirective,
+  PblTableCellEditAutoFocusDirective,
 
-  NegTableConfigService,
+  PblTableConfigService,
 } from './table/index';
 import { TableMetaCellContextPipe } from './table/pipes/table-cell-context.pipe';
 
@@ -60,54 +60,54 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     CdkTableModule,
   ],
   declarations: [
-    NegTableMetaRowContainerComponent, NegMetaRowDirective,
-    NegCdkTableComponent,
-    NegTableColumnDef,
-    NegTableRowComponent,
+    PblTableMetaRowContainerComponent, PblMetaRowDirective,
+    PblCdkTableComponent,
+    PblTableColumnDef,
+    PblTableRowComponent,
     ParentNgStyleDirective, ParentNgClassDirective,
-    NegTableOuterSectionDirective,
-    NegTableNoDataRefDirective,
-    NegTablePaginatorRefDirective,
-    NegTableHeaderCellDefDirective,
-    NegTableFooterCellDefDirective,
-    NegTableCellDefDirective, NegTableEditorCellDefDirective,
-    NegTableHeaderCellComponent,
-    NegTableCellDirective,
-    NegTableFooterCellDirective,
+    PblTableOuterSectionDirective,
+    PblTableNoDataRefDirective,
+    PblTablePaginatorRefDirective,
+    PblTableHeaderCellDefDirective,
+    PblTableFooterCellDefDirective,
+    PblTableCellDefDirective, PblTableEditorCellDefDirective,
+    PblTableHeaderCellComponent,
+    PblTableCellDirective,
+    PblTableFooterCellDirective,
 
-    NegColumnSizeObserver,
-    NegCdkVirtualScrollViewportComponent, NegCdkVirtualScrollDirective, NegTableScrolling,
+    PblColumnSizeObserver,
+    PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblTableScrolling,
 
-    NegTableCellEditAutoFocusDirective,
+    PblTableCellEditAutoFocusDirective,
 
-    NegTableComponent,
+    PblTableComponent,
     TableMetaCellContextPipe
   ],
   exports: [
-    NegTableRowComponent,
+    PblTableRowComponent,
     ParentNgStyleDirective, ParentNgClassDirective,
-    NegTableOuterSectionDirective,
-    NegTableNoDataRefDirective,
-    NegTablePaginatorRefDirective,
-    NegTableHeaderCellDefDirective,
-    NegTableFooterCellDefDirective,
-    NegTableCellDefDirective, NegTableEditorCellDefDirective, NegTableScrolling,
-    NegTableHeaderCellComponent,
-    NegTableCellDirective,
-    NegTableFooterCellDirective,
+    PblTableOuterSectionDirective,
+    PblTableNoDataRefDirective,
+    PblTablePaginatorRefDirective,
+    PblTableHeaderCellDefDirective,
+    PblTableFooterCellDefDirective,
+    PblTableCellDefDirective, PblTableEditorCellDefDirective, PblTableScrolling,
+    PblTableHeaderCellComponent,
+    PblTableCellDirective,
+    PblTableFooterCellDirective,
 
-    NegColumnSizeObserver,
-    NegCdkVirtualScrollDirective,
+    PblColumnSizeObserver,
+    PblCdkVirtualScrollDirective,
 
-    NegTableCellEditAutoFocusDirective,
+    PblTableCellEditAutoFocusDirective,
 
-    NegTableComponent,
+    PblTableComponent,
   ],
 })
-export class NegTableModule {
+export class PblTableModule {
 
   constructor(ngRef: NgModuleRef<any>,
-              registry: NegTableRegistryService,
+              registry: PblTableRegistryService,
               @Inject(COMMON_TABLE_TEMPLATE_INIT) @Optional() @Self() components: CommonTemplateInit[][]) {
     if (components) {
       for (const multi of components) {
@@ -115,18 +115,18 @@ export class NegTableModule {
           if (c.root) {
             registry = registry.getRoot();
           }
-          NegTableModule.loadCommonTemplates(ngRef, c.component, { registry, destroy: true });
+          PblTableModule.loadCommonTemplates(ngRef, c.component, { registry, destroy: true });
         }
       }
     }
   }
 
-  static forRoot(config: NegTableConfig, components: CommonTemplateInit[]): ModuleWithProviders {
+  static forRoot(config: PblTableConfig, components: CommonTemplateInit[]): ModuleWithProviders {
     return {
-      ngModule: NegTableModule,
+      ngModule: PblTableModule,
       providers: [
         { provide: NEG_TABLE_CONFIG, useValue: config },
-        NegTableConfigService,
+        PblTableConfigService,
         provideCommon(components),
       ]
     };
@@ -134,7 +134,7 @@ export class NegTableModule {
 
   static withCommon(components: CommonTemplateInit[]): ModuleWithProviders {
     return {
-      ngModule: NegTableModule,
+      ngModule: PblTableModule,
       providers: provideCommon(components),
     };
   }
@@ -143,7 +143,7 @@ export class NegTableModule {
                                 component: Type<T>,
                                 options?: {
                                   /** When set will use it as first registry in the DI tree */
-                                  registry?: NegTableRegistryService;
+                                  registry?: PblTableRegistryService;
                                   /** When set will destroy the component when the module is destroyed. */
                                   destroy?: boolean;
                                 }): ComponentRef<T> {
@@ -152,7 +152,7 @@ export class NegTableModule {
 
     if (registry) {
       injector = Injector.create({
-        providers: [ { provide: NegTableRegistryService, useValue: registry.getRoot() } ],
+        providers: [ { provide: PblTableRegistryService, useValue: registry.getRoot() } ],
         parent: ngRef.injector
       });
     }

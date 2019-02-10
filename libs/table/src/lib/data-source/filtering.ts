@@ -1,7 +1,7 @@
-import { NegColumn } from '../table/columns';
+import { PblColumn } from '../table/columns';
 import { DataSourceFilter, DataSourceFilterToken, DataSourcePredicate } from './types';
 
-export function createFilter(value: DataSourceFilterToken, columns: NegColumn[]): DataSourceFilter {
+export function createFilter(value: DataSourceFilterToken, columns: PblColumn[]): DataSourceFilter {
   return value === undefined
     ? undefined
     : {

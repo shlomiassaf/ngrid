@@ -2,53 +2,53 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DragDropModule, DragDrop } from '@angular/cdk/drag-drop';
 
-import { NegTableModule, provideCommon } from '@pebula/table';
+import { PblTableModule, provideCommon } from '@pebula/table';
 
 import {
-  NegDragDrop,
-  CdkLazyDropList, CdkLazyDrag, NegDragHandle,
-  NegTableRowReorderPluginDirective, NegTableRowDragDirective,
-  NegTableColumnReorderPluginDirective, NegTableColumnDragDirective, NegTableCellDraggerRefDirective,
-  NegTableAggregationContainerDirective,
+  PblDragDrop,
+  CdkLazyDropList, CdkLazyDrag, PblDragHandle,
+  PblTableRowReorderPluginDirective, PblTableRowDragDirective,
+  PblTableColumnReorderPluginDirective, PblTableColumnDragDirective, PblTableCellDraggerRefDirective,
+  PblTableAggregationContainerDirective,
 } from './drag-and-drop/index';
 
-import { NegTableDragResizeComponent, NegTableCellResizerRefDirective } from './column-resize/index';
+import { PblTableDragResizeComponent, PblTableCellResizerRefDirective } from './column-resize/index';
 
 import { DragPluginDefaultTemplatesComponent } from './default-settings.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    NegTableModule,
+    PblTableModule,
     DragDropModule
   ],
   declarations: [
     DragPluginDefaultTemplatesComponent,
-    CdkLazyDropList, CdkLazyDrag, NegDragHandle,
-    NegTableRowReorderPluginDirective, NegTableRowDragDirective,
-    NegTableColumnReorderPluginDirective, NegTableColumnDragDirective, NegTableCellDraggerRefDirective,
-    NegTableAggregationContainerDirective,
-    NegTableDragResizeComponent, NegTableCellResizerRefDirective,
+    CdkLazyDropList, CdkLazyDrag, PblDragHandle,
+    PblTableRowReorderPluginDirective, PblTableRowDragDirective,
+    PblTableColumnReorderPluginDirective, PblTableColumnDragDirective, PblTableCellDraggerRefDirective,
+    PblTableAggregationContainerDirective,
+    PblTableDragResizeComponent, PblTableCellResizerRefDirective,
   ],
   exports: [
     DragDropModule,
-    CdkLazyDropList, CdkLazyDrag, NegDragHandle,
-    NegTableRowReorderPluginDirective, NegTableRowDragDirective,
-    NegTableColumnReorderPluginDirective, NegTableColumnDragDirective, NegTableCellDraggerRefDirective,
-    NegTableAggregationContainerDirective,
-    NegTableDragResizeComponent, NegTableCellResizerRefDirective,
+    CdkLazyDropList, CdkLazyDrag, PblDragHandle,
+    PblTableRowReorderPluginDirective, PblTableRowDragDirective,
+    PblTableColumnReorderPluginDirective, PblTableColumnDragDirective, PblTableCellDraggerRefDirective,
+    PblTableAggregationContainerDirective,
+    PblTableDragResizeComponent, PblTableCellResizerRefDirective,
   ],
   providers: [
-    NegDragDrop,
-    { provide: DragDrop, useExisting: NegDragDrop },
+    PblDragDrop,
+    { provide: DragDrop, useExisting: PblDragDrop },
   ],
   entryComponents: [ DragPluginDefaultTemplatesComponent ],
 })
-export class NegTableDragModule {
+export class PblTableDragModule {
 
   static withDefaultTemplates(): ModuleWithProviders {
     return {
-      ngModule: NegTableDragModule,
+      ngModule: PblTableDragModule,
       providers: provideCommon( [ { component: DragPluginDefaultTemplatesComponent } ]),
     };
   }

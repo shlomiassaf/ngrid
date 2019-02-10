@@ -1,4 +1,4 @@
-import { NegColumn } from '../columns';
+import { PblColumn } from '../columns';
 
 /**
  * A column width object representing the relative column using a combination of percentage and pixels.
@@ -26,7 +26,7 @@ export interface ColumnWidth {
  * In addition, a `minimumRowWidth` is calculated, which represents the minimum width required width of the row, i.e. table.
  *
  * The `StaticColumnWidthLogic` does not take into account real-time DOM measurements (especially box-model metadata), hence "static".
- * It performs the calculation based on "dry" `NegColumn` metadata input from the user.
+ * It performs the calculation based on "dry" `PblColumn` metadata input from the user.
  *
  * The `StaticColumnWidthLogic` is less accurate and best used as a measurement baseline followed by a more accurate calculation.
  * This is why it outputs a default column width and not a column specific width.
@@ -75,7 +75,7 @@ export class StaticColumnWidthLogic {
     return { pct, px };
   }
 
-  addColumn(column: NegColumn): void {
+  addColumn(column: PblColumn): void {
     const agg = this._agg;
     const width = column.parsedWidth;
 

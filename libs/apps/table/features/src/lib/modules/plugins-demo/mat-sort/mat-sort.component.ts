@@ -3,8 +3,8 @@
 /* @pebula-example:ex-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
-import { columnFactory, createDS, NegColumn } from '@pebula/table';
-import { NegTableMatSortDirective } from '@pebula/table/material/sort';
+import { columnFactory, createDS, PblColumn } from '@pebula/table';
+import { PblTableMatSortDirective } from '@pebula/table/material/sort';
 
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
@@ -43,11 +43,11 @@ export class MatSortTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 
-  toggleActive(matSort: NegTableMatSortDirective, column: NegColumn, state: boolean): void {
+  toggleActive(matSort: PblTableMatSortDirective, column: PblColumn, state: boolean): void {
     matSort.table.ds.setSort(column, { order: state ? 'asc' : undefined });
   }
 
-  isActive(matSort: NegTableMatSortDirective, column: NegColumn): boolean {
+  isActive(matSort: PblTableMatSortDirective, column: PblColumn): boolean {
     return matSort.sort.active === column.id && !!matSort.sort.direction;
   }
 }

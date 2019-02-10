@@ -1,35 +1,35 @@
 import { Observable, Subject } from 'rxjs';
 import { Injector } from '@angular/core';
 
-import { NegTableComponent } from '../table/table.component';
+import { PblTableComponent } from '../table/table.component';
 import {
-  NegTablePlugin,
-  NegTablePluginExtension,
-  NegTablePluginExtensionFactories,
-  NegTableEvents,
+  PblTablePlugin,
+  PblTablePluginExtension,
+  PblTablePluginExtensionFactories,
+  PblTableEvents,
 } from './types';
-import { NegTableExtensionApi } from './table-ext-api';
+import { PblTableExtensionApi } from './table-ext-api';
 import { PLUGIN_STORE } from './table-plugin';
 
-const TABLE_PLUGIN_CONTEXT = new WeakMap<NegTableComponent<any>, NegTablePluginContext>();
+const TABLE_PLUGIN_CONTEXT = new WeakMap<PblTableComponent<any>, PblTablePluginContext>();
 
 /** @internal */
-export class NegTablePluginContext<T = any> {
-  readonly controller: NegTablePluginController<T>;
-  readonly events: Observable<NegTableEvents>;
-  private _events = new Subject<NegTableEvents>();
+export class PblTablePluginContext<T = any> {
+  readonly controller: PblTablePluginController<T>;
+  readonly events: Observable<PblTableEvents>;
+  private _events = new Subject<PblTableEvents>();
 
-  constructor(public table: NegTableComponent<any>, public injector: Injector, public extApi: NegTableExtensionApi) {
+  constructor(public table: PblTableComponent<any>, public injector: Injector, public extApi: PblTableExtensionApi) {
     if (TABLE_PLUGIN_CONTEXT.has(table)) {
       throw new Error(`Table is already registered for extensions.`);
     }
 
     TABLE_PLUGIN_CONTEXT.set(table, this);
     this.events = this._events.asObservable();
-    this.controller = new NegTablePluginController(this);
+    this.controller = new PblTablePluginController(this);
   }
 
-  emitEvent(event: NegTableEvents): void {
+  emitEvent(event: PblTableEvents): void {
     this._events.next(event);
   }
 
@@ -42,41 +42,41 @@ export class NegTablePluginContext<T = any> {
   }
 }
 
-export class NegTablePluginController<T = any> {
-  private static readonly created$ = new Subject<{ table: NegTableComponent<any>, controller: NegTablePluginController<any> }>();
-  static readonly created = NegTablePluginController.created$.asObservable();
+export class PblTablePluginController<T = any> {
+  private static readonly created$ = new Subject<{ table: PblTableComponent<any>, controller: PblTablePluginController<any> }>();
+  static readonly created = PblTablePluginController.created$.asObservable();
 
-  readonly extApi: NegTableExtensionApi
-  readonly events: Observable<NegTableEvents>;
-  private readonly table: NegTableComponent<T>
-  private readonly plugins = new Map<keyof NegTablePluginExtension, NegTablePlugin>();
+  readonly extApi: PblTableExtensionApi
+  readonly events: Observable<PblTableEvents>;
+  private readonly table: PblTableComponent<T>
+  private readonly plugins = new Map<keyof PblTablePluginExtension, PblTablePlugin>();
 
-  constructor(private context: NegTablePluginContext) {
+  constructor(private context: PblTablePluginContext) {
     this.table = context.table;
     this.extApi = context.extApi;
     this.events = context.events;
-    NegTablePluginController.created$.next({ table: this.table, controller: this });
+    PblTablePluginController.created$.next({ table: this.table, controller: this });
   }
 
-  static find<T = any>(table: NegTableComponent<T>): NegTablePluginController<T> | undefined {
+  static find<T = any>(table: PblTableComponent<T>): PblTablePluginController<T> | undefined {
     const context = TABLE_PLUGIN_CONTEXT.get(table);
     if (context) {
       return context.controller;
     }
   }
 
-  hasPlugin<P extends keyof NegTablePluginExtension>(name: P): boolean {
+  hasPlugin<P extends keyof PblTablePluginExtension>(name: P): boolean {
     return this.plugins.has(name);
   }
 
-  getPlugin<P extends keyof NegTablePluginExtension>(name: P): NegTablePluginExtension[P] | undefined  {
+  getPlugin<P extends keyof PblTablePluginExtension>(name: P): PblTablePluginExtension[P] | undefined  {
     return this.plugins.get(name) as any;
   }
 
   /**
    * Registers the `plugin` with the `name` with the `table`
    */
-  setPlugin<P extends keyof NegTablePluginExtension>(name: P, plugin: NegTablePluginExtension[P]): (table: NegTableComponent<any>) => void {
+  setPlugin<P extends keyof PblTablePluginExtension>(name: P, plugin: PblTablePluginExtension[P]): (table: PblTableComponent<any>) => void {
     if (!PLUGIN_STORE.has(name)) {
       throw new Error(`Unknown plugin ${name}.`);
     }
@@ -84,10 +84,10 @@ export class NegTablePluginController<T = any> {
       throw new Error(`Plugin ${name} is not registered for this table.`);
     }
     this.plugins.set(name, plugin);
-    return (tbl: NegTableComponent<any>) => this.table === tbl && this.plugins.delete(name);
+    return (tbl: PblTableComponent<any>) => this.table === tbl && this.plugins.delete(name);
   }
 
-  createPlugin<P extends (keyof NegTablePluginExtensionFactories & keyof NegTablePluginExtension)>(name: P): NegTablePluginExtension[P] {
+  createPlugin<P extends (keyof PblTablePluginExtensionFactories & keyof PblTablePluginExtension)>(name: P): PblTablePluginExtension[P] {
     if (!PLUGIN_STORE.has(name)) {
       throw new Error(`Unknown plugin ${name}.`);
     }

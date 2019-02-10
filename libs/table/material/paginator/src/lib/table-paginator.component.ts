@@ -10,7 +10,7 @@ import {
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
 import { UnRx } from '@pebula/utils';
-import { NegPagingPaginator, NegPaginatorChangeEvent, NegTableComponent } from '@pebula/table';
+import { PblPagingPaginator, PblPaginatorChangeEvent, PblTableComponent } from '@pebula/table';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
 
@@ -25,7 +25,7 @@ const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
   encapsulation: ViewEncapsulation.None
 })
 @UnRx()
-export class NegPaginatorComponent implements OnDestroy {
+export class PblPaginatorComponent implements OnDestroy {
   pages: number[] = [];
   pageSizes: number[] = DEFAULT_PAGE_SIZE_OPTIONS.slice();
 
@@ -36,8 +36,8 @@ export class NegPaginatorComponent implements OnDestroy {
     this.updatePageSizes();
   }
 
-  @Input() get paginator(): NegPagingPaginator { return this._paginator; }
-  set paginator(value: NegPagingPaginator) {
+  @Input() get paginator(): PblPagingPaginator { return this._paginator; }
+  set paginator(value: PblPagingPaginator) {
     if (this._paginator === value) {
       return;
     }
@@ -54,12 +54,12 @@ export class NegPaginatorComponent implements OnDestroy {
     }
   }
 
-  @Input() table: NegTableComponent<any>;
+  @Input() table: PblTableComponent<any>;
 
   private _pageSizeOptions: number[];
-  private _paginator: NegPagingPaginator;
+  private _paginator: PblPagingPaginator;
 
-  constructor(@Optional() table: NegTableComponent<any>,
+  constructor(@Optional() table: PblTableComponent<any>,
               public _intl: MatPaginatorIntl,
               private cdr: ChangeDetectorRef) {
     if (table) {
@@ -81,7 +81,7 @@ export class NegPaginatorComponent implements OnDestroy {
     this.pageSizes.sort((a, b) => a - b);
   }
 
-  private handlePageChange(event: NegPaginatorChangeEvent): void {
+  private handlePageChange(event: PblPaginatorChangeEvent): void {
     if (this.pages.length !== this.paginator.totalPages) {
       const pages = this.pages = [];
       for (let i = 1, len = this.paginator.totalPages+1; i<len; i++) { pages.push(i); }

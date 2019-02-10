@@ -1,7 +1,7 @@
 // tslint:disable:use-host-property-decorator
 import { Directive, TemplateRef, AfterViewInit } from '@angular/core';
 
-import { NegTableComponent } from '../table.component';
+import { PblTableComponent } from '../table.component';
 
 /**
  * A directive that marks the template as a projected section inside the table.
@@ -13,11 +13,11 @@ import { NegTableComponent } from '../table.component';
   selector: '[negTableOuterSection]',
   inputs: [ 'position:negTableOuterSection' ] // tslint:disable-line:use-input-property-decorator
 })
-export class NegTableOuterSectionDirective implements AfterViewInit {
+export class PblTableOuterSectionDirective implements AfterViewInit {
 
   position: 'top' | 'bottom'; // tslint:disable-line:no-input-rename
 
-  constructor(private table: NegTableComponent<any>, private tRef: TemplateRef<{ $implicit: NegTableComponent<any> }>) { }
+  constructor(private table: PblTableComponent<any>, private tRef: TemplateRef<{ $implicit: PblTableComponent<any> }>) { }
 
   ngAfterViewInit(): void {
     this.table.createView(this.position === 'bottom' ? 'beforeContent' : 'beforeTable', this.tRef);

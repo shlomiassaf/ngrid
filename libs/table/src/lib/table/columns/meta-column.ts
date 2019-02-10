@@ -1,19 +1,19 @@
 import { TemplateRef } from '@angular/core';
 
-import { NegTableColumnDef } from '../directives';
-import { NegTableMetaCellContext } from '../context/types';
-import { NegMetaColumnDefinition, NegColumnTypeDefinition } from './types';
+import { PblTableColumnDef } from '../directives';
+import { PblTableMetaCellContext } from '../context/types';
+import { PblMetaColumnDefinition, PblColumnTypeDefinition } from './types';
 import { parseStyleWidth, initDefinitions } from './utils';
 
-const NEG_META_COLUMN_MARK = Symbol('NegMetaColumn');
-const CLONE_PROPERTIES: Array<keyof NegMetaColumn> = ['kind', 'rowIndex'];
+const NEG_META_COLUMN_MARK = Symbol('PblMetaColumn');
+const CLONE_PROPERTIES: Array<keyof PblMetaColumn> = ['kind', 'rowIndex'];
 
-function isNegMetaColumn(def: NegMetaColumnDefinition): def is NegMetaColumn {
-  return def instanceof NegMetaColumn || def[NEG_META_COLUMN_MARK] === true;
+function isPblMetaColumn(def: PblMetaColumnDefinition): def is PblMetaColumn {
+  return def instanceof PblMetaColumn || def[NEG_META_COLUMN_MARK] === true;
 }
 
-export class NegMetaColumn implements NegMetaColumnDefinition {
-  //#region NegCdkVirtualScrollViewportComponentBaseColumnDefinition
+export class PblMetaColumn implements PblMetaColumnDefinition {
+  //#region PblCdkVirtualScrollViewportComponentBaseColumnDefinition
 
    /**
    * A Unique ID for the column.
@@ -30,7 +30,7 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
    * The type of the values in this column.
    * This is an additional level for matching columns to templates, grouping templates for a type.
    */
-  type?: NegColumnTypeDefinition;
+  type?: PblColumnTypeDefinition;
 
   /**
    * CSS class that get applied on the header and cell.
@@ -66,9 +66,9 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
    * This must be an object, values are shadow-copied so persist data between multiple plugins.
    */
   data: any = {};
-  //#endregion NegCdkVirtualScrollViewportComponentBaseColumnDefinition
+  //#endregion PblCdkVirtualScrollViewportComponentBaseColumnDefinition
 
-  //#region NegMetaColumnDefinition
+  //#region PblMetaColumnDefinition
 
   kind: 'header' | 'footer';
 
@@ -80,7 +80,7 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
    * row do not set a rowIndex.
    */
   rowIndex: number;
-//#endregion NegMetaColumnDefinition
+//#endregion PblMetaColumnDefinition
 
   get parsedWidth(): { value: number; type: 'px' | '%' } | undefined { return this._parsedWidth; }
 
@@ -91,7 +91,7 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
    * Used by pbl-table to apply a custom header/footer cell template, or the default when not set.
    * @internal
    */
-  template: TemplateRef<NegTableMetaCellContext<any>>;
+  template: TemplateRef<PblTableMetaCellContext<any>>;
 
   /**
    * When true indicates that the width is set with type pixels.
@@ -102,14 +102,14 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
   /**
    * The column def for this column.
    */
-  get columnDef(): NegTableColumnDef<NegMetaColumn> { return this._columnDef; }
+  get columnDef(): PblTableColumnDef<PblMetaColumn> { return this._columnDef; }
 
   private _width?: string;
   private _parsedWidth: ReturnType<typeof parseStyleWidth>;
-  private _columnDef: NegTableColumnDef<NegMetaColumn>;
+  private _columnDef: PblTableColumnDef<PblMetaColumn>;
   private defaultWidth = '';
 
-  constructor(def: NegMetaColumnDefinition) {
+  constructor(def: PblMetaColumnDefinition) {
     this[NEG_META_COLUMN_MARK] = true;
     initDefinitions(def, this);
 
@@ -119,20 +119,20 @@ export class NegMetaColumn implements NegMetaColumnDefinition {
       }
     }
 
-    if (!isNegMetaColumn(def)) {
+    if (!isPblMetaColumn(def)) {
       if (typeof def.type === 'string') {
         this.type = { name: def.type } as any;
       }
     }
   }
 
-  static extendProperty(name: keyof NegMetaColumn): void {
+  static extendProperty(name: keyof PblMetaColumn): void {
     if (CLONE_PROPERTIES.indexOf(name) === -1) {
       CLONE_PROPERTIES.push(name);
     }
   }
 
-  attach(columnDef: NegTableColumnDef<NegMetaColumn>): void {
+  attach(columnDef: PblTableColumnDef<PblMetaColumn>): void {
     this.detach();
     this._columnDef = columnDef;
     this.columnDef.updateWidth(this.width || this.defaultWidth);

@@ -1,6 +1,6 @@
 /* @pebula-example:ex-1 ex-2 ex-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
-import { NegTableCellContext, createDS, columnFactory } from '@pebula/table';
+import { PblTableCellContext, createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
@@ -36,7 +36,7 @@ export class CellEditTableExampleComponent {
     .build();
   ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
 
-  changeCheckbox(input: HTMLInputElement, ctx: NegTableCellContext): void {
+  changeCheckbox(input: HTMLInputElement, ctx: PblTableCellContext): void {
     ctx.value = input.checked;
     setTimeout( () => ctx.stopEdit(true) );
   }

@@ -3,7 +3,7 @@
  */
 
 import { CdkColumnDef } from '@angular/cdk/table';
-import { NegColumnTypeDefinition } from './columns/types';
+import { PblColumnTypeDefinition } from './columns/types';
 
 const COLUMN_NAME_CSS_PREFIX = 'pbl-table-column';
 export const COLUMN_EDITABLE_CELL_CLASS = 'pbl-table-editable-cell';
@@ -18,7 +18,7 @@ export function uniqueColumnCss(columnDef: CdkColumnDef): string {
 /**
  * Returns a css class unique to the type of the column (columns might share types)
  */
-export function uniqueColumnTypeCss(type: NegColumnTypeDefinition): string {
+export function uniqueColumnTypeCss(type: PblColumnTypeDefinition): string {
   return `${COLUMN_NAME_CSS_PREFIX}-type-${type.name}`;
 }
 

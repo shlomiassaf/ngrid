@@ -1,22 +1,22 @@
-import { NegColumn } from '../table/columns';
-import { NegTableSortDefinition, NegTableSortInstructions, NegTableSorter } from './types';
+import { PblColumn } from '../table/columns';
+import { PblTableSortDefinition, PblTableSortInstructions, PblTableSorter } from './types';
 
 /**
  * Apply sorting on a collection, based on column and sort definitions.
  * If the sort definition doesn't have a sorting function the default sorter is used.
  */
-export function applySort<T>(column: NegColumn, sort: NegTableSortDefinition, data: T[]): T[] {
+export function applySort<T>(column: PblColumn, sort: PblTableSortDefinition, data: T[]): T[] {
   if (!sort || !sort.order) {
     return data;
   }
-  const sortFn: NegTableSorter<T> = typeof sort.sortFn === 'function' ? sort.sortFn : defaultSorter;
+  const sortFn: PblTableSorter<T> = typeof sort.sortFn === 'function' ? sort.sortFn : defaultSorter;
   return column && data
     ? sortFn(column, sort, data)
     : data || []
   ;
 }
 
-function defaultSorter<T>(column: NegColumn, sort: NegTableSortInstructions, data: T[]): T[] {
+function defaultSorter<T>(column: PblColumn, sort: PblTableSortInstructions, data: T[]): T[] {
   return data.slice().sort((a, b) => {
     let valueA = column.getValue(a);
     let valueB = column.getValue(b);

@@ -1,39 +1,39 @@
-import { NegColumn, NegMetaColumn, NegColumnGroup, NegTableCellContext, NegTableRowContext } from '@pebula/table';
+import { PblColumn, PblMetaColumn, PblColumnGroup, PblTableCellContext, PblTableRowContext } from '@pebula/table';
 
 export type ROW_TYPE = 'header' | 'data' | 'footer';
 export interface ROW_META_TYPE {
-  data: NegColumn;
-  meta: NegMetaColumn;
-  'meta-group': NegColumnGroup;
+  data: PblColumn;
+  meta: PblMetaColumn;
+  'meta-group': PblColumnGroup;
 }
 
-export interface NegTableMatrixRow<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> {
+export interface PblTableMatrixRow<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> {
   type: RType;
   subType: RMetaType;
   rowIndex: number;
 }
 
-export interface NegTableMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends NegTableMatrixRow<RType, RMetaType> {
+export interface PblTableMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends PblTableMatrixRow<RType, RMetaType> {
   colIndex: number;
 }
 
-export interface NegTableDataMatrixRow<T = any> extends NegTableMatrixRow<'data'> {
+export interface PblTableDataMatrixRow<T = any> extends PblTableMatrixRow<'data'> {
   row: T;
-  context: NegTableRowContext<T>;
+  context: PblTableRowContext<T>;
 }
 
-export interface NegTableColumnMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends NegTableMatrixPoint<RType, RMetaType> {
+export interface PblTableColumnMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends PblTableMatrixPoint<RType, RMetaType> {
   column: ROW_META_TYPE[RMetaType];
 }
 
-export interface NegTableDataMatrixPoint<T = any> extends NegTableColumnMatrixPoint<'data'> {
+export interface PblTableDataMatrixPoint<T = any> extends PblTableColumnMatrixPoint<'data'> {
   row: T;
-  context: NegTableCellContext;
+  context: PblTableCellContext;
 }
 
-export type NegTableCellEvent<T = any> = { source: MouseEvent; cellTarget: HTMLElement; rowTarget: HTMLElement; }
-  & (NegTableDataMatrixPoint<T> | NegTableColumnMatrixPoint<'header' | 'footer'> | NegTableColumnMatrixPoint<'header' | 'footer', 'meta'>  | NegTableColumnMatrixPoint<'header' | 'footer', 'meta-group'>);
+export type PblTableCellEvent<T = any> = { source: MouseEvent; cellTarget: HTMLElement; rowTarget: HTMLElement; }
+  & (PblTableDataMatrixPoint<T> | PblTableColumnMatrixPoint<'header' | 'footer'> | PblTableColumnMatrixPoint<'header' | 'footer', 'meta'>  | PblTableColumnMatrixPoint<'header' | 'footer', 'meta-group'>);
 
-export type NegTableRowEvent<T = any> = { source: MouseEvent; rowTarget: HTMLElement; root?: NegTableCellEvent<T>; }
-  & (NegTableDataMatrixRow<T> | NegTableMatrixRow<'header' | 'footer'> | NegTableMatrixRow<'header' | 'footer', 'meta'>  | NegTableMatrixRow<'header' | 'footer', 'meta-group'>);
+export type PblTableRowEvent<T = any> = { source: MouseEvent; rowTarget: HTMLElement; root?: PblTableCellEvent<T>; }
+  & (PblTableDataMatrixRow<T> | PblTableMatrixRow<'header' | 'footer'> | PblTableMatrixRow<'header' | 'footer', 'meta'>  | PblTableMatrixRow<'header' | 'footer', 'meta-group'>);
 

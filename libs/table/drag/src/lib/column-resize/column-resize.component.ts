@@ -8,7 +8,7 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { CdkDragConfig, DragDropRegistry, CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
 
-import { NegTableComponent, NegColumn, NegTableMetaCellContext } from '@pebula/table';
+import { PblTableComponent, PblColumn, PblTableMetaCellContext } from '@pebula/table';
 import { toggleNativeDragInteractions } from './cdk-encapsulated-code';
 
 import './extend-table';
@@ -30,13 +30,13 @@ const activeEventListenerOptions = normalizePassiveListenerOptions({passive: fal
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class NegTableDragResizeComponent implements AfterViewInit, OnDestroy {
+export class PblTableDragResizeComponent implements AfterViewInit, OnDestroy {
 
   // tslint:disable-next-line:no-input-rename
-  @Input() set context(value: NegTableMetaCellContext<any>) {
+  @Input() set context(value: PblTableMetaCellContext<any>) {
     if (value) {
       const { col, table } = value;
-      if (col && col instanceof NegColumn) {
+      if (col && col instanceof PblColumn) {
         this.column = col;
         this.table = table;
         return;
@@ -51,8 +51,8 @@ export class NegTableDragResizeComponent implements AfterViewInit, OnDestroy {
    */
   @Input() grabAreaWidth = 6;
 
-  column: NegColumn;
-  table: NegTableComponent<any>;
+  column: PblColumn;
+  table: PblTableComponent<any>;
 
   _hasStartedDragging: boolean;
   private _hasMoved: boolean;
@@ -71,7 +71,7 @@ export class NegTableDragResizeComponent implements AfterViewInit, OnDestroy {
   constructor(public element: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
               private _viewportRuler: ViewportRuler,
-              private _dragDropRegistry: DragDropRegistry<NegTableDragResizeComponent, any>,
+              private _dragDropRegistry: DragDropRegistry<PblTableDragResizeComponent, any>,
               @Inject(CDK_DRAG_CONFIG) private _config: CdkDragConfig,
               @Optional() private _dir: Directionality) {
     _dragDropRegistry.registerDragItem(this);

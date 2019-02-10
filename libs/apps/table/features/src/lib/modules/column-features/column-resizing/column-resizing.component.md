@@ -8,7 +8,7 @@ Resizing a column requires the column and the new width. The width can be set in
 in the column definitions.
 
 ```typescript
-  resizeColumn(column: NegColumn, width: string): void;
+  resizeColumn(column: PblColumn, width: string): void;
 ```
 
 <docsi-mat-example-with-source title="Resizing with the API" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
@@ -36,7 +36,7 @@ Let's start with a simple example, enabling resize for columns **name** and **ge
 
 To enable column resizing each column must have the `resize` property set to true.
 
-I> When we registered `NegTableDragModule` we used `NegTableDragModule.withDefaultTemplates()` which pre-loads
+I> When we registered `PblTableDragModule` we used `PblTableDragModule.withDefaultTemplates()` which pre-loads
 default templates for the plugin to work out of the box, we will cover customization shortly.
 
 The default template does not include a resize handler but it is there, hover over the right
@@ -70,14 +70,14 @@ To do that we use the structural directive `*negTableCellResizerRef`. This direc
 and provide us with the **column*** and **table** instances as context:
 
 ```typescript
-export interface NegTableMetaCellTemplateContext<T> {
-  $implicit: NegTableMetaCellTemplateContext<T>;
-  col: NegMetaColumn | NegColumn;
-  table: NegTableComponent<T>;
+export interface PblTableMetaCellTemplateContext<T> {
+  $implicit: PblTableMetaCellTemplateContext<T>;
+  col: PblMetaColumn | PblColumn;
+  table: PblTableComponent<T>;
 }
 ```
 
-The default resizing template in `NegTableDragModule.withDefaultTemplates()` is fairly simple:
+The default resizing template in `PblTableDragModule.withDefaultTemplates()` is fairly simple:
 
 ```html
 <pbl-table-drag-resize *negTableCellResizerRef="let ctx" [context]="ctx"></pbl-table-drag-resize>

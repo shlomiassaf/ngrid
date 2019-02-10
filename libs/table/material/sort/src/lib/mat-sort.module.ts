@@ -3,18 +3,18 @@ import { CommonModule } from '@angular/common';
 import { MatSortModule, MatSortHeader } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 
-import { NegTableModule, NegTableRegistryService } from '@pebula/table';
-import { NegTableMatSortDirective } from './mat-sort.directive';
+import { PblTableModule, PblTableRegistryService } from '@pebula/table';
+import { PblTableMatSortDirective } from './mat-sort.directive';
 import { MatSortExtension } from './mat-sort-component-extension';
 
 @NgModule({
-  imports: [ CommonModule, MatButtonModule, MatSortModule, NegTableModule ],
-  declarations: [ NegTableMatSortDirective ],
-  exports: [ NegTableMatSortDirective, MatSortModule ],
+  imports: [ CommonModule, MatButtonModule, MatSortModule, PblTableModule ],
+  declarations: [ PblTableMatSortDirective ],
+  exports: [ PblTableMatSortDirective, MatSortModule ],
   entryComponents: [ MatSortHeader ],
 })
-export class NegTableMatSortModule {
-  constructor(private registry: NegTableRegistryService, cfr: ComponentFactoryResolver) {
+export class PblTableMatSortModule {
+  constructor(private registry: PblTableRegistryService, cfr: ComponentFactoryResolver) {
     registry.addMulti('dataHeaderExtensions', new MatSortExtension(cfr));
   }
 }

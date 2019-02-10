@@ -1,29 +1,29 @@
-import { NegTableColumnDef } from '../directives';
-import { NegBaseColumnDefinition, NegColumnGroupDefinition } from './types';
-import { NegMetaColumn } from './meta-column';
-import { NegColumn } from './column';
+import { PblTableColumnDef } from '../directives';
+import { PblBaseColumnDefinition, PblColumnGroupDefinition } from './types';
+import { PblMetaColumn } from './meta-column';
+import { PblColumn } from './column';
 
-const NEG_COLUMN_GROUP_MARK = Symbol('NegColumnGroup');
-const CLONE_PROPERTIES: Array<keyof NegColumnGroup> = [];
+const NEG_COLUMN_GROUP_MARK = Symbol('PblColumnGroup');
+const CLONE_PROPERTIES: Array<keyof PblColumnGroup> = [];
 
-function isNegColumnGroup(def: NegColumnGroupDefinition): def is NegColumnGroup {
-  return def instanceof NegColumnGroup || def[NEG_COLUMN_GROUP_MARK] === true;
+function isPblColumnGroup(def: PblColumnGroupDefinition): def is PblColumnGroup {
+  return def instanceof PblColumnGroup || def[NEG_COLUMN_GROUP_MARK] === true;
 }
 
 function getId(value: string | { id: string }): string {
   return typeof value === 'string' ? value : value.id;
 }
 
-export class NegColumnGroupStore {
-  get all(): NegColumnGroup[] { return this._all; }
+export class PblColumnGroupStore {
+  get all(): PblColumnGroup[] { return this._all; }
 
-  private store = new Map<string, { group: NegColumnGroup; activeColumns: Set<string>; }>();
-  private _all: NegColumnGroup[] = [];
+  private store = new Map<string, { group: PblColumnGroup; activeColumns: Set<string>; }>();
+  private _all: PblColumnGroup[] = [];
 
   /**
    * Attach a column to a group.
    */
-  attach(group: string | NegColumnGroup, column: string | NegColumn): boolean {
+  attach(group: string | PblColumnGroup, column: string | PblColumn): boolean {
     const g = this._find(group);
     if (g) {
       g.activeColumns.add(getId(column));
@@ -35,7 +35,7 @@ export class NegColumnGroupStore {
   /**
    * Detach a column from a group.
    */
-  detach(group: string | NegColumnGroup, column: string | NegColumn): boolean {
+  detach(group: string | PblColumnGroup, column: string | PblColumn): boolean {
     const g = this._find(group);
     if (g) {
       return g.activeColumns.delete(getId(column));
@@ -44,20 +44,20 @@ export class NegColumnGroupStore {
   }
 
   /**
-   * Returns a list of `NegColumnGroup` that does not have columns attached.
+   * Returns a list of `PblColumnGroup` that does not have columns attached.
    */
-  findGhosts(): NegColumnGroup[] {
+  findGhosts(): PblColumnGroup[] {
     return Array.from(this.store.values())
       .filter( item => item.activeColumns.size === 0 )
       .map( item => item.group );
   }
 
-  add(group: NegColumnGroup): void {
+  add(group: PblColumnGroup): void {
     this.store.set(group.id, { group, activeColumns: new Set<string>() });
     this.updateAll();
   }
 
-  remove(group: string | NegColumnGroup): boolean {
+  remove(group: string | PblColumnGroup): boolean {
     const g = this.find(group);
     if (g && this.store.delete(g.id)) {
       this.updateAll();
@@ -66,21 +66,21 @@ export class NegColumnGroupStore {
     return false;
   }
 
-  find(group: string | NegColumnGroup): NegColumnGroup | undefined {
+  find(group: string | PblColumnGroup): PblColumnGroup | undefined {
     const g = this._find(group);
     if (g) {
       return g.group;
     }
   }
 
-  clone(): NegColumnGroupStore {
-    const c = new NegColumnGroupStore();
-    c.store = new Map<string, { group: NegColumnGroup; activeColumns: Set<string>; }>(this.store);
+  clone(): PblColumnGroupStore {
+    const c = new PblColumnGroupStore();
+    c.store = new Map<string, { group: PblColumnGroup; activeColumns: Set<string>; }>(this.store);
     c.updateAll();
     return c;
   }
 
-  private _find(group: string | NegColumnGroup): { group: NegColumnGroup; activeColumns: Set<string>; } | undefined {
+  private _find(group: string | PblColumnGroup): { group: PblColumnGroup; activeColumns: Set<string>; } | undefined {
     return this.store.get(getId(group));
   }
 
@@ -89,9 +89,9 @@ export class NegColumnGroupStore {
   }
 }
 
-export class NegColumnGroup extends NegMetaColumn implements NegColumnGroupDefinition {
+export class PblColumnGroup extends PblMetaColumn implements PblColumnGroupDefinition {
 
-  //#region NegColumnGroupDefinition
+  //#region PblColumnGroupDefinition
   /**
    * The table's column that is the first child column for this group.
    */
@@ -105,7 +105,7 @@ export class NegColumnGroup extends NegMetaColumn implements NegColumnGroupDefin
    * being spanned although the UI will span only 1 column... (because the 2nd is hidden...)
    */
   span: number;
-  //#endregion NegColumnGroupDefinition
+  //#endregion PblColumnGroupDefinition
 
   /**
    * Returns the visible state of the column.
@@ -117,19 +117,19 @@ export class NegColumnGroup extends NegMetaColumn implements NegColumnGroupDefin
     /**
    * The column def for this column.
    */
-  columnDef: NegTableColumnDef<NegColumnGroup>;
+  columnDef: PblTableColumnDef<PblColumnGroup>;
 
   /**
    * When set, this column is a cloned column of an existing column caused by a split.
    * @internal
    */
-  slaveOf?: NegColumnGroup;
+  slaveOf?: PblColumnGroup;
 
   /** @internal */
-  readonly columns: NegColumn[];
+  readonly columns: PblColumn[];
 
-  constructor(def: NegColumnGroup | NegColumnGroupDefinition, columns: NegColumn[], public readonly placeholder = false) {
-    super(isNegColumnGroup(def)
+  constructor(def: PblColumnGroup | PblColumnGroupDefinition, columns: PblColumn[], public readonly placeholder = false) {
+    super(isPblColumnGroup(def)
       ? def
       : { id: `group-${def.prop}-span-${def.span}-row-${def.rowIndex}`, kind: 'header' as 'header', ...(def as any) }
     );
@@ -148,21 +148,21 @@ export class NegColumnGroup extends NegMetaColumn implements NegColumnGroupDefin
     }
   }
 
-  static extendProperty(name: keyof NegColumnGroup): void {
+  static extendProperty(name: keyof PblColumnGroup): void {
     if (CLONE_PROPERTIES.indexOf(name) === -1) {
       CLONE_PROPERTIES.push(name);
     }
   }
 
-  createSlave(columns: NegColumn[] = []): NegColumnGroup {
-    const slave = new NegColumnGroup(this, columns);
+  createSlave(columns: PblColumn[] = []): PblColumnGroup {
+    const slave = new PblColumnGroup(this, columns);
     slave.id += '-slave' + Date.now();
     slave.slaveOf = this;
     slave.template = this.template;
     return slave;
   }
 
-  replace(newColumn: NegColumn): boolean {
+  replace(newColumn: PblColumn): boolean {
     const { id } = newColumn;
     const idx = this.columns.findIndex( c => c.id === id );
     if (idx > -1) {

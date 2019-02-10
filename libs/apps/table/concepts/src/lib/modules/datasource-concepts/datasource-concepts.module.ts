@@ -6,8 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
 
-import { NegTableModule, NegTableRegistryService } from '@pebula/table';
-import { NegTablePaginatorModule } from '@pebula/table/material/paginator';
+import { PblTableModule, PblTableRegistryService } from '@pebula/table';
+import { PblTablePaginatorModule } from '@pebula/table/material/paginator';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { DatasourceQuickthroughTableExampleComponent } from './datasource-quickthrough/datasource-quickthrough.component';
@@ -38,10 +38,10 @@ const ROUTES = [
     RouterModule.forChild(ROUTES),
     MATERIAL,
     SharedModule,
-    NegTableModule,
-    NegTablePaginatorModule,
+    PblTableModule,
+    PblTablePaginatorModule,
   ],
-  providers: [ NegTableRegistryService ],
+  providers: [ PblTableRegistryService ],
 })
 export class DatasourceConceptsModule {
   constructor(registry: ExampleGroupRegistryService) {

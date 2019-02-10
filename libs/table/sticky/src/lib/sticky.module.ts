@@ -3,11 +3,11 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
-import { NegTableModule, NegTablePluginController, NegTableConfigService } from '@pebula/table';
-import { NegTableStickyPluginDirective, setStickyRow, setStickyColumns } from './sticky/sticky-plugin';
+import { PblTableModule, PblTablePluginController, PblTableConfigService } from '@pebula/table';
+import { PblTableStickyPluginDirective, setStickyRow, setStickyColumns } from './sticky/sticky-plugin';
 
 declare module '@pebula/table/lib/table/services/config' {
-  interface NegTableConfig {
+  interface PblTableConfig {
     stickyPlugin?: {
       headers?: Array<'table' | number>;
       footers?: Array<'table' | number>;
@@ -20,18 +20,18 @@ declare module '@pebula/table/lib/table/services/config' {
 const MAPPER = <T>(v: T): [T, boolean] => [v, true];
 
 @NgModule({
-  imports: [ CommonModule, CdkTableModule, NegTableModule ],
-  declarations: [ NegTableStickyPluginDirective ],
-  exports: [ NegTableStickyPluginDirective ],
+  imports: [ CommonModule, CdkTableModule, PblTableModule ],
+  declarations: [ PblTableStickyPluginDirective ],
+  exports: [ PblTableStickyPluginDirective ],
 })
-export class NegTableStickyModule {
-  constructor(@Optional() @SkipSelf() parentModule: NegTableStickyModule,
-              configService: NegTableConfigService) {
+export class PblTableStickyModule {
+  constructor(@Optional() @SkipSelf() parentModule: PblTableStickyModule,
+              configService: PblTableConfigService) {
     if (parentModule) {
       return;
     }
 
-    NegTablePluginController.created
+    PblTablePluginController.created
       .subscribe( event => {
         const { table, controller } = event;
         if (controller && !controller.hasPlugin('sticky')) {

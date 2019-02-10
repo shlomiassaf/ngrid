@@ -2,29 +2,29 @@ import { Directive, Input, ElementRef, OnDestroy } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
 
-import { NegMetaRowDefinitions } from '../columns/types';
+import { PblMetaRowDefinitions } from '../columns/types';
 
-import { NegColumnStoreMetaRow } from '../columns/column-store';
-import { NegTableMetaRowService } from './meta-row.service';
+import { PblColumnStoreMetaRow } from '../columns/column-store';
+import { PblTableMetaRowService } from './meta-row.service';
 
 
 @Directive({
   selector: '[negMetaRow]',
 })
 @UnRx()
-export class NegMetaRowDirective implements OnDestroy {
+export class PblMetaRowDirective implements OnDestroy {
 
   // tslint:disable-next-line:no-input-rename
-  @Input('negMetaRow') get meta(): NegMetaRowDefinitions { return this._meta; }
-  set meta(value: NegMetaRowDefinitions) {
+  @Input('negMetaRow') get meta(): PblMetaRowDefinitions { return this._meta; }
+  set meta(value: PblMetaRowDefinitions) {
     if (value !== this._meta) {
       this.update(value);
     }
   }
 
-  private _meta: NegMetaRowDefinitions;
+  private _meta: PblMetaRowDefinitions;
 
-  constructor(public readonly metaRows: NegTableMetaRowService, public elRef: ElementRef<HTMLElement>) {
+  constructor(public readonly metaRows: PblTableMetaRowService, public elRef: ElementRef<HTMLElement>) {
 
   }
 
@@ -32,7 +32,7 @@ export class NegMetaRowDirective implements OnDestroy {
     this.metaRows.removeMetaRow(this);
   }
 
-  private update(meta: NegMetaRowDefinitions): void {
+  private update(meta: PblMetaRowDefinitions): void {
     const oldMeta = this._meta;
 
     if (oldMeta) {

@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
-import { NegTableComponent, createDS, columnFactory, NegTablePaginatorKind, AutoSizeToFitOptions } from '@pebula/table';
+import { PblTableComponent, createDS, columnFactory, PblTablePaginatorKind, AutoSizeToFitOptions } from '@pebula/table';
 import { toggleDetailRow } from '@pebula/table/detail-row';
 import { setStickyRow, setStickyColumns } from '@pebula/table/sticky';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 // A function that returns the currency value placed in a `SecurityWithMarketDataDto` object.
-// implementation is an IIFE that returns the getValue method bound to an NegColumn instance of the currency column...
+// implementation is an IIFE that returns the getValue method bound to an PblColumn instance of the currency column...
 const COUNTRY_GETTER = {
   currency: row => COUNTRY_GETTER.data.countries[row.country].currencies[0],
   name: row => COUNTRY_GETTER.flag(row) + ' ' + COUNTRY_GETTER.data.countries[row.country].name,
@@ -16,7 +16,7 @@ const COUNTRY_GETTER = {
 }
 
 declare module '@pebula/table/lib/table/columns/types' {
-  interface NegColumnTypeDefinitionDataMap {
+  interface PblColumnTypeDefinitionDataMap {
     currencyFn: (row: Person) => string;
     countryNameDynamic: (row: Person) => string;
   }
@@ -117,7 +117,7 @@ export class AllInOneTableExampleComponent {
 
   emailFrequencyToggle: boolean;
 
-  usePagination: false | NegTablePaginatorKind = false// 'pageNumber';
+  usePagination: false | PblTablePaginatorKind = false// 'pageNumber';
   showFooter = false;
   showHeader = true;
   hideColumns: string[] = [];
@@ -126,7 +126,7 @@ export class AllInOneTableExampleComponent {
   enableRowSelection = true;
   singleDetailRow = false;
 
-  @ViewChild(NegTableComponent) negTable: NegTableComponent<any>;
+  @ViewChild(PblTableComponent) negTable: PblTableComponent<any>;
 
   setStickyRow = setStickyRow;
   setStickyColumns = setStickyColumns;
@@ -160,7 +160,7 @@ export class AllInOneTableExampleComponent {
     }
   }
 
-  toggleDetailRow(negTbl: NegTableComponent<any>, item: Person): void {
+  toggleDetailRow(negTbl: PblTableComponent<any>, item: Person): void {
     toggleDetailRow(negTbl, item)
   }
 

@@ -2,24 +2,24 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
-import { NegTableModule } from '@pebula/table';
-import { NegTableTargetEventsModule } from '@pebula/table/target-events';
+import { PblTableModule } from '@pebula/table';
+import { PblTableTargetEventsModule } from '@pebula/table/target-events';
 
-import { NegTableDetailRowParentRefDirective, NegTableDetailRowDefDirective, NegTableDefaultDetailRowParentComponent } from './detail-row/directives';
-import { NegTableDetailRowPluginDirective } from './detail-row/detail-row-plugin';
-import { NegTableDetailRowComponent } from './detail-row/row';
+import { PblTableDetailRowParentRefDirective, PblTableDetailRowDefDirective, PblTableDefaultDetailRowParentComponent } from './detail-row/directives';
+import { PblTableDetailRowPluginDirective } from './detail-row/detail-row-plugin';
+import { PblTableDetailRowComponent } from './detail-row/row';
 
 const DETAIL_ROW = [
-  NegTableDetailRowPluginDirective,
-  NegTableDetailRowComponent,
-  NegTableDetailRowParentRefDirective,
-  NegTableDetailRowDefDirective,
+  PblTableDetailRowPluginDirective,
+  PblTableDetailRowComponent,
+  PblTableDetailRowParentRefDirective,
+  PblTableDetailRowDefDirective,
 ];
 
 @NgModule({
-  imports: [ CommonModule, CdkTableModule, NegTableModule, NegTableTargetEventsModule ],
-  declarations: [ DETAIL_ROW, NegTableDefaultDetailRowParentComponent ],
+  imports: [ CommonModule, CdkTableModule, PblTableModule, PblTableTargetEventsModule ],
+  declarations: [ DETAIL_ROW, PblTableDefaultDetailRowParentComponent ],
   exports: [ DETAIL_ROW ],
-  entryComponents: [ NegTableDetailRowComponent, NegTableDefaultDetailRowParentComponent ]
+  entryComponents: [ PblTableDetailRowComponent, PblTableDefaultDetailRowParentComponent ]
 })
-export class NegTableDetailRowModule { }
+export class PblTableDetailRowModule { }

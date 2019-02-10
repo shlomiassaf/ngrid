@@ -1,29 +1,29 @@
-import { NegTableDataSourceSortChange, DataSourceFilter } from './types';
+import { PblTableDataSourceSortChange, DataSourceFilter } from './types';
 
 import {
   RefreshDataWrapper,
-  NegDataSourceTriggerChange,
-  NegDataSourceTriggers,
-  NegDataSourceTriggerCache,
-  NegDataSourceTriggerChangedEvent,
+  PblDataSourceTriggerChange,
+  PblDataSourceTriggers,
+  PblDataSourceTriggerCache,
+  PblDataSourceTriggerChangedEvent,
   TriggerChangedEventFor,
 } from './data-source-adapter.types';
 
 export const EMPTY: any = Object.freeze({});
 
 /** @internal */
-export type DEEP_COMPARATORS<K extends keyof NegDataSourceTriggerCache> = {
-  [P in K]?: (prev: NegDataSourceTriggerCache[P], curr: NegDataSourceTriggerCache[P]) => boolean;
+export type DEEP_COMPARATORS<K extends keyof PblDataSourceTriggerCache> = {
+  [P in K]?: (prev: PblDataSourceTriggerCache[P], curr: PblDataSourceTriggerCache[P]) => boolean;
 };
 
-export const DEEP_COMPARATORS: DEEP_COMPARATORS<keyof NegDataSourceTriggerCache> = {
+export const DEEP_COMPARATORS: DEEP_COMPARATORS<keyof PblDataSourceTriggerCache> = {
   filter(prev: DataSourceFilter, curr: DataSourceFilter): boolean {
     return prev.filter === curr.filter
       && prev.type == curr.type;
       // TODO: deep compare columns
       // && (prev.columns || []).join() === (curr.columns || []).join();
   },
-  sort(prev: NegTableDataSourceSortChange, curr: NegTableDataSourceSortChange): boolean {
+  sort(prev: PblTableDataSourceSortChange, curr: PblTableDataSourceSortChange): boolean {
     if (prev.column === curr.column) {
       const pSort = prev.sort || {};
       const cSort = curr.sort || {};
@@ -35,7 +35,7 @@ export const DEEP_COMPARATORS: DEEP_COMPARATORS<keyof NegDataSourceTriggerCache>
   }
 };
 
-export function fromRefreshDataWrapper<T>(change: NegDataSourceTriggerChange<RefreshDataWrapper<T>>): NegDataSourceTriggerChange<T> {
+export function fromRefreshDataWrapper<T>(change: PblDataSourceTriggerChange<RefreshDataWrapper<T>>): PblDataSourceTriggerChange<T> {
   return {
     changed: change.changed,
     prev: change.prev.data,
@@ -43,18 +43,18 @@ export function fromRefreshDataWrapper<T>(change: NegDataSourceTriggerChange<Ref
   };
 }
 
-export type CoValue<P extends keyof NegDataSourceTriggerCache> = P extends keyof NegDataSourceTriggers ? NegDataSourceTriggers[P] : NegDataSourceTriggerCache[P];
+export type CoValue<P extends keyof PblDataSourceTriggerCache> = P extends keyof PblDataSourceTriggers ? PblDataSourceTriggers[P] : PblDataSourceTriggerCache[P];
 
-export function createChangeContainer<P extends keyof NegDataSourceTriggerCache>(type: P,
+export function createChangeContainer<P extends keyof PblDataSourceTriggerCache>(type: P,
                                                                                 value: CoValue<P>,
-                                                                                cache: NegDataSourceTriggerCache): TriggerChangedEventFor<P> {
+                                                                                cache: PblDataSourceTriggerCache): TriggerChangedEventFor<P> {
   if (type === 'pagination') {
-    const pagination: NegDataSourceTriggers['pagination'] = (value || {}) as any;
+    const pagination: PblDataSourceTriggers['pagination'] = (value || {}) as any;
     const cached = cache['pagination'];
     // we compare weak because we dont want changes from undefined to null etc...
-    const changedKeys: Array<keyof NegDataSourceTriggers['pagination']> = Object.keys(pagination).filter( k => cached[k] != pagination[k][1] && k !== 'total') as any;
+    const changedKeys: Array<keyof PblDataSourceTriggers['pagination']> = Object.keys(pagination).filter( k => cached[k] != pagination[k][1] && k !== 'total') as any;
 
-    const event: NegDataSourceTriggerChangedEvent['pagination'] = {
+    const event: PblDataSourceTriggerChangedEvent['pagination'] = {
       changed: changedKeys.length > 0,
       page: createNotChangedEvent(cached.page),
       perPage: createNotChangedEvent(cached.perPage),
@@ -73,7 +73,7 @@ export function createChangeContainer<P extends keyof NegDataSourceTriggerCache>
     if (value === cachedValue) {
       return createNotChangedEvent(cachedValue) as any;
     } else if (value !== EMPTY && cachedValue !== EMPTY) {
-      const fn: (prev: NegDataSourceTriggerCache[P], curr: NegDataSourceTriggerCache[P]) => boolean = DEEP_COMPARATORS[type];
+      const fn: (prev: PblDataSourceTriggerCache[P], curr: PblDataSourceTriggerCache[P]) => boolean = DEEP_COMPARATORS[type];
       if (fn(cachedValue, value as any)) {
         return createNotChangedEvent(cachedValue) as any;
       }
@@ -83,6 +83,6 @@ export function createChangeContainer<P extends keyof NegDataSourceTriggerCache>
   }
 }
 
-function createNotChangedEvent<T>(value: T): NegDataSourceTriggerChange<T> {
+function createNotChangedEvent<T>(value: T): PblDataSourceTriggerChange<T> {
   return { changed: false, prev: value, curr: value };
 }

@@ -3,10 +3,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 import { UnRx } from '@pebula/utils';
 import {
-  NegTableComponent,
-  NegTableHeaderCellDefDirective,
-  NegTableCellDefDirective,
-  NegTableFooterCellDefDirective,
+  PblTableComponent,
+  PblTableHeaderCellDefDirective,
+  PblTableCellDefDirective,
+  PblTableFooterCellDefDirective,
 } from '@pebula/table';
 
 @Component({
@@ -17,7 +17,7 @@ import {
   encapsulation: ViewEncapsulation.None,
 })
 @UnRx()
-export class NegTableCheckboxComponent implements AfterViewInit {
+export class PblTableCheckboxComponent implements AfterViewInit {
   /**
    * Unique name for the checkbox column.
    * When not set, the name 'checkbox' is used.
@@ -57,9 +57,9 @@ export class NegTableCheckboxComponent implements AfterViewInit {
     }
   }
 
-  @ViewChild(NegTableHeaderCellDefDirective) headerDef: NegTableHeaderCellDefDirective<any>;
-  @ViewChild(NegTableCellDefDirective) cellDef: NegTableCellDefDirective<any>;
-  @ViewChild(NegTableFooterCellDefDirective) footerDef: NegTableFooterCellDefDirective<any>;
+  @ViewChild(PblTableHeaderCellDefDirective) headerDef: PblTableHeaderCellDefDirective<any>;
+  @ViewChild(PblTableCellDefDirective) cellDef: PblTableCellDefDirective<any>;
+  @ViewChild(PblTableFooterCellDefDirective) footerDef: PblTableFooterCellDefDirective<any>;
 
   allSelected = false;
   length: number;
@@ -67,7 +67,7 @@ export class NegTableCheckboxComponent implements AfterViewInit {
   private _selection: SelectionModel<any>;
   private _bulkSelectMode: 'all' | 'view' | 'none';
 
-  constructor(@Optional() public table: NegTableComponent<any>, private cdr: ChangeDetectorRef) {}
+  constructor(@Optional() public table: PblTableComponent<any>, private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
 

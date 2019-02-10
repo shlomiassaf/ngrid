@@ -1,16 +1,16 @@
-import { NegColumn } from '@pebula/table';
+import { PblColumn } from '@pebula/table';
 
 declare module '@pebula/table/lib/table/columns/column' {
-  interface NegColumn {
+  interface PblColumn {
     resize: boolean;
   }
 }
 
 
 declare module '@pebula/table/lib/table/columns/types' {
-  interface NegColumnDefinition {
+  interface PblColumnDefinition {
     resize?: boolean;
   }
 }
 
-NegColumn.extendProperty('resize');
+PblColumn.extendProperty('resize');

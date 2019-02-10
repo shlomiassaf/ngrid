@@ -4,12 +4,12 @@ import { filter, startWith, pairwise, take, tap, takeUntil, map, debounceTime } 
 import { NgZone, ViewContainerRef } from '@angular/core';
 import { CollectionViewer, ListRange } from '@angular/cdk/collections';
 
-import { NegTableExtensionApi } from '../../../ext/table-ext-api';
-import { NegTableComponent } from '../../table.component';
-import { NegTablePluginController } from '../../../ext/plugin-control';
-import { NegDataSource } from '../../../data-source/data-source';
-import { NegCdkTableComponent } from '../../pbl-cdk-table/pbl-cdk-table.component';
-import { NegCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
+import { PblTableExtensionApi } from '../../../ext/table-ext-api';
+import { PblTableComponent } from '../../table.component';
+import { PblTablePluginController } from '../../../ext/plugin-control';
+import { PblDataSource } from '../../../data-source/data-source';
+import { PblCdkTableComponent } from '../../pbl-cdk-table/pbl-cdk-table.component';
+import { PblCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import { splitRange, updateStickyRows, measureRangeSize, StickyDirectionVt } from './utils';
 import { MetaRowStickyScroll } from './meta-row-sticky-scroll';
 
@@ -23,7 +23,7 @@ export interface NgeVirtualTableRowInfo {
   readonly footerLength: number;
 }
 
-export class NegVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTableRowInfo {
+export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTableRowInfo {
   viewChange: Observable<ListRange>;
 
   dataStream: Observable<T[] | ReadonlyArray<T>>;
@@ -33,7 +33,7 @@ export class NegVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
   get footerLength(): number { return this.footer.rows.length  }
 
   private destroyed = new Subject<void>();
-  private ds: NegDataSource<T>;
+  private ds: PblDataSource<T>;
 
   private get vcRefs(): Record<'header' | 'data' | 'footer', ViewContainerRef> {
     const value = {
@@ -54,17 +54,17 @@ export class NegVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
   private header = { rows: [] as HTMLElement[], sticky: [] as boolean[], rendered: [] as boolean[] };
   private footer = { rows: [] as HTMLElement[], sticky: [] as boolean[], rendered: [] as boolean[] };
 
-  private table: NegTableComponent<T>;
-  private cdkTable: NegCdkTableComponent<T>;
-  private viewport: NegCdkVirtualScrollViewportComponent;
-  constructor(private extApi: NegTableExtensionApi<T>, private ngZone: NgZone) {
+  private table: PblTableComponent<T>;
+  private cdkTable: PblCdkTableComponent<T>;
+  private viewport: PblCdkVirtualScrollViewportComponent;
+  constructor(private extApi: PblTableExtensionApi<T>, private ngZone: NgZone) {
     this.table = extApi.table;
     this.cdkTable = extApi.cdkTable;
     this.viewport = extApi.table.viewport;
 
     this.viewChange = this.cdkTable.viewChange;
 
-    NegTablePluginController.find(extApi.table).events
+    PblTablePluginController.find(extApi.table).events
       .pipe( takeUntil(this.destroyed) )
       .subscribe( event => {
         if (event.kind === 'onDataSource') {
@@ -213,7 +213,7 @@ export class NegVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
     this.destroyed.complete();
   }
 
-  private attachView(ds: NegDataSource<T>): void {
+  private attachView(ds: PblDataSource<T>): void {
     if (ds) {
       this.ds = ds;
       this._renderedRanges = [ { start: 0, end: 0 }, this.cdkTable.viewChange.value, { start: 0, end: 0 } ];

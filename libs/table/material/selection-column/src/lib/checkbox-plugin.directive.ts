@@ -1,13 +1,13 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
-import { NegTableComponent, NegTablePluginController, TablePlugin } from '@pebula/table';
+import { PblTableComponent, PblTablePluginController, TablePlugin } from '@pebula/table';
 
-import { NegTableCheckboxComponent } from './table-checkbox.component';
+import { PblTableCheckboxComponent } from './table-checkbox.component';
 
 declare module '@pebula/table/lib/ext/types' {
-  interface NegTablePluginExtension {
-    matCheckboxSelection?: NegTableMatCheckboxSelectionDirective;
+  interface PblTablePluginExtension {
+    matCheckboxSelection?: PblTableMatCheckboxSelectionDirective;
   }
 }
 
@@ -16,7 +16,7 @@ const PLUGIN_KEY: 'matCheckboxSelection' = 'matCheckboxSelection';
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-table[matCheckboxSelection]' })
 @UnRx()
-export class NegTableMatCheckboxSelectionDirective implements OnDestroy {
+export class PblTableMatCheckboxSelectionDirective implements OnDestroy {
   /**
    * Add's a selection column using material's `mat-checkbox` in the column specified.
    */
@@ -31,7 +31,7 @@ export class NegTableMatCheckboxSelectionDirective implements OnDestroy {
         }
       } else {
         if (!this.cmpRef) {
-          this.cmpRef = this.cfr.resolveComponentFactory(NegTableCheckboxComponent).create(this.injector);
+          this.cmpRef = this.cfr.resolveComponentFactory(PblTableCheckboxComponent).create(this.injector);
           this.cmpRef.instance.table = this.table;
           if (this._bulkSelectMode) {
             this.cmpRef.instance.bulkSelectMode = this._bulkSelectMode;
@@ -64,13 +64,13 @@ export class NegTableMatCheckboxSelectionDirective implements OnDestroy {
 
   private _name: string;
   private _bulkSelectMode: 'all' | 'view' | 'none';
-  private cmpRef: ComponentRef<NegTableCheckboxComponent>;
-  private _removePlugin: (table: NegTableComponent<any>) => void;
+  private cmpRef: ComponentRef<PblTableCheckboxComponent>;
+  private _removePlugin: (table: PblTableComponent<any>) => void;
 
-  constructor(private table: NegTableComponent<any>,
+  constructor(private table: PblTableComponent<any>,
               private cfr: ComponentFactoryResolver,
               private injector: Injector,
-              pluginCtrl: NegTablePluginController) {
+              pluginCtrl: PblTablePluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
   }
 

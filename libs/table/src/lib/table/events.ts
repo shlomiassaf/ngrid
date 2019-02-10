@@ -1,7 +1,7 @@
-import { NegColumn } from './columns/column';
+import { PblColumn } from './columns/column';
 
-export interface NegTableCellClickEvent<T = any> {
+export interface PblTableCellClickEvent<T = any> {
   source: MouseEvent;
-  column: NegColumn;
+  column: PblColumn;
   row: T;
 }

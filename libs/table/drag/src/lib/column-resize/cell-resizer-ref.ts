@@ -1,17 +1,17 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { NegTableRegistryService, NegTableMultiTemplateRegistry, NegTableDataHeaderExtensionRef, NegTableDataHeaderExtensionContext } from '@pebula/table';
+import { PblTableRegistryService, PblTableMultiTemplateRegistry, PblTableDataHeaderExtensionRef, PblTableDataHeaderExtensionContext } from '@pebula/table';
 
 /**
  * Marks the element as the resizer template for cells.
  */
 @Directive({ selector: '[negTableCellResizerRef]' })
-export class NegTableCellResizerRefDirective extends NegTableMultiTemplateRegistry<NegTableDataHeaderExtensionContext, 'dataHeaderExtensions'> implements NegTableDataHeaderExtensionRef {
+export class PblTableCellResizerRefDirective extends PblTableMultiTemplateRegistry<PblTableDataHeaderExtensionContext, 'dataHeaderExtensions'> implements PblTableDataHeaderExtensionRef {
   readonly name: 'cellResizer' = 'cellResizer';
   readonly kind: 'dataHeaderExtensions' = 'dataHeaderExtensions';
 
-  constructor(tRef: TemplateRef<NegTableDataHeaderExtensionContext>, registry: NegTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<PblTableDataHeaderExtensionContext>, registry: PblTableRegistryService) { super(tRef, registry); }
 
-  shouldRender(context: NegTableDataHeaderExtensionContext): boolean {
+  shouldRender(context: PblTableDataHeaderExtensionContext): boolean {
     return !!context.col.resize;
   }
 }

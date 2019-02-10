@@ -16,13 +16,13 @@ import {
 } from '@angular/core';
 import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
 
-import { NegTableComponent } from '../table.component';
+import { PblTableComponent } from '../table.component';
 import { uniqueColumnCss, uniqueColumnTypeCss, COLUMN_EDITABLE_CELL_CLASS } from '../circular-dep-bridge';
-import { COLUMN, NegMetaColumn, NegColumn, NegColumnGroup } from '../columns';
-import { MetaCellContext, NegTableMetaCellContext } from '../context/index';
-import { NegTableMultiRegistryMap } from '../services/table-registry.service';
-import { NegTableColumnDef } from './column-def';
-import { NegTableDataHeaderExtensionContext, NegTableMultiComponentRegistry, NegTableMultiTemplateRegistry } from './registry.directives';
+import { COLUMN, PblMetaColumn, PblColumn, PblColumnGroup } from '../columns';
+import { MetaCellContext, PblTableMetaCellContext } from '../context/index';
+import { PblTableMultiRegistryMap } from '../services/table-registry.service';
+import { PblTableColumnDef } from './column-def';
+import { PblTableDataHeaderExtensionContext, PblTableMultiComponentRegistry, PblTableMultiTemplateRegistry } from './registry.directives';
 
 const HEADER_GROUP_CSS = `pbl-header-group-cell`;
 const HEADER_GROUP_PLACE_HOLDER_CSS = `pbl-header-group-cell-placeholder`;
@@ -40,13 +40,13 @@ function initCellElement(el: HTMLElement, column: COLUMN): void {
   }
 }
 
-function initDataCellElement(el: HTMLElement, column: NegColumn): void {
+function initDataCellElement(el: HTMLElement, column: PblColumn): void {
   if (column.editable && column.editorTpl) {
     el.classList.add(COLUMN_EDITABLE_CELL_CLASS);
   }
 }
 
-const lastDataHeaderExtensions = new Map<NegTableComponent<any>, NegTableMultiRegistryMap['dataHeaderExtensions'][]>();
+const lastDataHeaderExtensions = new Map<PblTableComponent<any>, PblTableMultiRegistryMap['dataHeaderExtensions'][]>();
 
 /**
  * Header cell component.
@@ -66,20 +66,20 @@ const lastDataHeaderExtensions = new Map<NegTableComponent<any>, NegTableMultiRe
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class NegTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements DoCheck, AfterViewInit {
+export class PblTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements DoCheck, AfterViewInit {
   @ViewChild('vcRef', { read: ViewContainerRef }) vcRef: ViewContainerRef;
 
   private el: HTMLElement;
 
-  constructor(public readonly columnDef: NegTableColumnDef<T>,
-              public readonly table: NegTableComponent<any>,
+  constructor(public readonly columnDef: PblTableColumnDef<T>,
+              public readonly table: PblTableComponent<any>,
               public readonly elementRef: ElementRef,
               private zone: NgZone) {
     super(columnDef, elementRef);
     const column = columnDef.column;
     const el = this.el = elementRef.nativeElement;
 
-    if (column instanceof NegColumnGroup) {
+    if (column instanceof PblColumnGroup) {
       el.classList.add(HEADER_GROUP_CSS);
       if (column.placeholder) {
         el.classList.add(HEADER_GROUP_PLACE_HOLDER_CSS);
@@ -90,15 +90,15 @@ export class NegTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
   ngAfterViewInit(): void {
     const col: COLUMN = this.columnDef.column;
     const { vcRef } = this;
-    let view: EmbeddedViewRef<NegTableMetaCellContext<any, NegMetaColumn | NegColumn>>;
+    let view: EmbeddedViewRef<PblTableMetaCellContext<any, PblMetaColumn | PblColumn>>;
 
-    if (col instanceof NegColumn) {
-      const context = new NegTableDataHeaderExtensionContext(this as NegTableHeaderCellComponent<NegColumn>, vcRef.injector);
+    if (col instanceof PblColumn) {
+      const context = new PblTableDataHeaderExtensionContext(this as PblTableHeaderCellComponent<PblColumn>, vcRef.injector);
       view = vcRef.createEmbeddedView(col.headerCellTpl, context);
       this.zone.onStable
         .pipe(first())
         .subscribe( () => {
-          this.runHeaderExtensions(context, view as EmbeddedViewRef<NegTableMetaCellContext<any, NegColumn>>);
+          this.runHeaderExtensions(context, view as EmbeddedViewRef<PblTableMetaCellContext<any, PblColumn>>);
           const v = vcRef.get(0);
           // at this point the view might get destroyed, its possible...
           if (!v.destroyed) {
@@ -121,7 +121,7 @@ export class NegTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
     }
   }
 
-  protected runHeaderExtensions(context: NegTableDataHeaderExtensionContext, view: EmbeddedViewRef<NegTableMetaCellContext<any, NegColumn>>): void {
+  protected runHeaderExtensions(context: PblTableDataHeaderExtensionContext, view: EmbeddedViewRef<PblTableMetaCellContext<any, PblColumn>>): void {
     // we collect the first header extension for each unique name only once per table instance
     let extensions = lastDataHeaderExtensions.get(this.table);
     if (!extensions) {
@@ -148,17 +148,17 @@ export class NegTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
 
     for (const ext of extensions) {
       if (!ext.shouldRender || ext.shouldRender(context)) {
-        if (ext instanceof NegTableMultiTemplateRegistry) {
+        if (ext instanceof PblTableMultiTemplateRegistry) {
           const extView = this.vcRef.createEmbeddedView(ext.tRef, context);
           extView.markForCheck();
-        } else if (ext instanceof NegTableMultiComponentRegistry) {
+        } else if (ext instanceof PblTableMultiComponentRegistry) {
           rootNodes = this.createComponent(ext, context, rootNodes);
         }
       }
     }
   }
 
-  protected createComponent(ext: NegTableMultiComponentRegistry<any, "dataHeaderExtensions">, context: NegTableDataHeaderExtensionContext, rootNodes: any[]): any[] {
+  protected createComponent(ext: PblTableMultiComponentRegistry<any, "dataHeaderExtensions">, context: PblTableDataHeaderExtensionContext, rootNodes: any[]): any[] {
     const factory = ext.getFactory(context);
     const projectedContent: any[][] = [];
 
@@ -189,16 +189,16 @@ export class NegTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
   },
   exportAs: 'negTableCell',
 })
-export class NegTableCellDirective extends CdkCell implements DoCheck {
+export class PblTableCellDirective extends CdkCell implements DoCheck {
 
   private el: HTMLElement;
 
-  constructor(private columnDef: NegTableColumnDef, elementRef: ElementRef) {
+  constructor(private columnDef: PblTableColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
     this.el = elementRef.nativeElement;
     columnDef.applyWidth(this.el);
     initCellElement(this.el, columnDef.column);
-    initDataCellElement(this.el, columnDef.column as NegColumn);
+    initDataCellElement(this.el, columnDef.column as PblColumn);
   }
 
   // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
@@ -216,10 +216,10 @@ export class NegTableCellDirective extends CdkCell implements DoCheck {
     'role': 'gridcell',
   },
  })
-export class NegTableFooterCellDirective extends CdkFooterCell implements DoCheck {
+export class PblTableFooterCellDirective extends CdkFooterCell implements DoCheck {
   private el: HTMLElement;
 
-  constructor(private columnDef: NegTableColumnDef, elementRef: ElementRef) {
+  constructor(private columnDef: PblTableColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
     this.el = elementRef.nativeElement;
     const column = columnDef.column;

@@ -1,6 +1,6 @@
 # Column Width
 
-Column width is set though column definition in `NegColumn`.
+Column width is set though column definition in `PblColumn`.
 
 We set the width in the **width** property, which accepts a string value representing the width in pixels or percentage. (e.g. "100px" or "50%")
 

@@ -1,16 +1,16 @@
 
     import { async, TestBed } from '@angular/core/testing';
-    import { NegTableDragModule } from './table-drag.module';
+    import { PblTableDragModule } from './table-drag.module';
 
-    describe('NegTableDragModule', () => {
+    describe('PblTableDragModule', () => {
       beforeEach(async(() => {
         TestBed.configureTestingModule({
-          imports: [ NegTableDragModule ]
+          imports: [ PblTableDragModule ]
         })
         .compileComponents();
       }));
 
       it('should create', () => {
-        expect(NegTableDragModule).toBeDefined();
+        expect(PblTableDragModule).toBeDefined();
       });
     });

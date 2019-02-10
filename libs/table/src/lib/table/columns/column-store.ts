@@ -1,63 +1,63 @@
-import { NegTableColumnDefinitionSet, NegTableColumnSet } from './types';
-import { NegMetaColumn } from './meta-column';
-import { NegColumn } from './column';
-import { NegColumnSet, NegMetaRowDefinitions } from './types';
-import { NegColumnGroup, NegColumnGroupStore } from './group-column';
+import { PblTableColumnDefinitionSet, PblTableColumnSet } from './types';
+import { PblMetaColumn } from './meta-column';
+import { PblColumn } from './column';
+import { PblColumnSet, PblMetaRowDefinitions } from './types';
+import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 import { resetColumnWidths } from '../utils/helpers';
-import { NegColumnFactory } from './factory';
+import { PblColumnFactory } from './factory';
 
-export interface NegMetaColumnStore {
+export interface PblMetaColumnStore {
   id: string;
-  header?: NegMetaColumn;
-  footer?: NegMetaColumn;
-  headerGroup?: NegColumnGroup;
-  footerGroup?: NegColumnGroup;
+  header?: PblMetaColumn;
+  footer?: PblMetaColumn;
+  headerGroup?: PblColumnGroup;
+  footerGroup?: PblColumnGroup;
 }
 
-export interface NegColumnStoreMetaRow {
-  rowDef: NegMetaRowDefinitions,
+export interface PblColumnStoreMetaRow {
+  rowDef: PblMetaRowDefinitions,
   keys: string[];
   isGroup?: boolean;
 }
 
-export class NegColumnStore {
-  metaColumnIds: { header: Array<NegColumnStoreMetaRow>; footer: Array<NegColumnStoreMetaRow>; };
-  metaColumns: NegMetaColumnStore[];
+export class PblColumnStore {
+  metaColumnIds: { header: Array<PblColumnStoreMetaRow>; footer: Array<PblColumnStoreMetaRow>; };
+  metaColumns: PblMetaColumnStore[];
   columnIds: string[];
-  columns: NegColumn[];
-  allColumns: NegColumn[];
-  headerColumnDef: NegMetaRowDefinitions;
-  footerColumnDef: NegMetaRowDefinitions;
+  columns: PblColumn[];
+  allColumns: PblColumn[];
+  headerColumnDef: PblMetaRowDefinitions;
+  footerColumnDef: PblMetaRowDefinitions;
 
   set hidden(value: string[]) {
     this._hidden = value;
     this.setHidden();
   }
 
-  get groupBy(): NegColumn[] { return this._groupBy; }
+  get groupBy(): PblColumn[] { return this._groupBy; }
 
-  get groupStore(): NegColumnGroupStore { return this._groupStore; }
+  get groupStore(): PblColumnGroupStore { return this._groupStore; }
 
-  private _metaRows: { header: Array<NegColumnStoreMetaRow & { allKeys?: string[] }>; footer: Array<NegColumnStoreMetaRow & { allKeys?: string[] }>; };
+  private _metaRows: { header: Array<PblColumnStoreMetaRow & { allKeys?: string[] }>; footer: Array<PblColumnStoreMetaRow & { allKeys?: string[] }>; };
   private _hidden: string[];
   private _allHidden: string[];
-  private _groupBy: NegColumn[] = [];
-  private byId = new Map<string, NegMetaColumnStore & { data?: NegColumn }>();
-  private _groupStore: NegColumnGroupStore;
-  private lastSet: NegTableColumnSet;
+  private _groupBy: PblColumn[] = [];
+  private byId = new Map<string, PblMetaColumnStore & { data?: PblColumn }>();
+  private _groupStore: PblColumnGroupStore;
+  private lastSet: PblTableColumnSet;
 
   constructor() {
     this.resetIds();
     this.resetColumns();
   }
 
-  addGroupBy(...column: NegColumn[]): void {
+  addGroupBy(...column: PblColumn[]): void {
     this.groupBy.push(...column);
     this.setHidden();
   }
 
-  removeGroupBy(...column: NegColumn[]): void {
+  removeGroupBy(...column: PblColumn[]): void {
     for (const c of column) {
       const idx = this.groupBy.findIndex( gbc => gbc.id === c.id );
       if (idx > -1) {
@@ -72,7 +72,7 @@ export class NegColumnStore {
    * The new location of the anchor column will be it's original location plus or minus 1, depending on the delta between
    * the columns. If the origin of the `column` is before the `anchor` then the anchor's new position is minus one, otherwise plus 1.
    */
-  moveColumn(column: NegColumn, anchor: NegColumn): boolean {
+  moveColumn(column: PblColumn, anchor: PblColumn): boolean {
     const { columns, columnIds, allColumns } = this;
     let anchorIndex = columns.indexOf(anchor);
     let columnIndex = columns.indexOf(column);
@@ -88,7 +88,7 @@ export class NegColumnStore {
     }
   }
 
-  swapColumns(col1: NegColumn, col2: NegColumn): boolean {
+  swapColumns(col1: PblColumn, col2: PblColumn): boolean {
     let col1Index = this.columns.indexOf(col1);
     let col2Index = this.columns.indexOf(col2);
     if (col1Index > -1 && col2Index > -1) {
@@ -109,11 +109,11 @@ export class NegColumnStore {
     return false;
   }
 
-  find(id: string): NegMetaColumnStore & { data?: NegColumn } | undefined {
+  find(id: string): PblMetaColumnStore & { data?: PblColumn } | undefined {
     return this.byId.get(id);
   }
 
-  getAllHeaderGroup(): NegColumnGroup[] {
+  getAllHeaderGroup(): PblColumnGroup[] {
     return this._groupStore ? this._groupStore.all : [];
   }
 
@@ -125,10 +125,10 @@ export class NegColumnStore {
     return rowWidth;
   }
 
-  invalidate(columnOrDefinitionSet: NegTableColumnDefinitionSet | NegTableColumnSet): void {
-    const columnSet: NegTableColumnSet = this.lastSet = 'groupStore' in columnOrDefinitionSet
+  invalidate(columnOrDefinitionSet: PblTableColumnDefinitionSet | PblTableColumnSet): void {
+    const columnSet: PblTableColumnSet = this.lastSet = 'groupStore' in columnOrDefinitionSet
       ? columnOrDefinitionSet
-      : NegColumnFactory.fromDefinitionSet(columnOrDefinitionSet).build()
+      : PblColumnFactory.fromDefinitionSet(columnOrDefinitionSet).build()
     ;
     const { groupStore, table, header, footer, headerGroup } = columnSet;
 
@@ -149,8 +149,8 @@ export class NegColumnStore {
     }
 
     for (const def of table.cols) {
-      let column: NegColumn;
-      column = new NegColumn(def, this.groupStore);
+      let column: PblColumn;
+      column = new PblColumn(def, this.groupStore);
       const columnRecord = this.getColumnRecord(column.id);
       columnRecord.data = column;
       this.allColumns.push(column);
@@ -167,7 +167,7 @@ export class NegColumnStore {
       const keys: string[] = [];
       for (const def of rowDef.cols) {
         const metaCol = this.getColumnRecord(def.id, this.metaColumns);
-        const column = metaCol.header || (metaCol.header = new NegMetaColumn(def));
+        const column = metaCol.header || (metaCol.header = new PblMetaColumn(def));
         keys.push(column.id);
       }
       this._metaRows.header[rowDef.rowIndex] = { rowDef, keys };
@@ -181,7 +181,7 @@ export class NegColumnStore {
       const keys: string[] = [];
       for (const def of rowDef.cols) {
         const metaCol = this.getColumnRecord(def.id, this.metaColumns);
-        const column = metaCol.footer || (metaCol.footer = new NegMetaColumn(def));
+        const column = metaCol.footer || (metaCol.footer = new PblMetaColumn(def));
         keys.push(column.id);
       }
       this._metaRows.footer.push({ rowDef, keys });
@@ -209,11 +209,11 @@ export class NegColumnStore {
     }
   }
 
-  private _updateGroup(columnSet: NegColumnSet<NegColumnGroup>): void {
+  private _updateGroup(columnSet: PblColumnSet<PblColumnGroup>): void {
     const keys: string[] = [];
     const allKeys: string[] = [];
 
-    const groups: NegColumnGroup[] = [];
+    const groups: PblColumnGroup[] = [];
 
     for (let tIndex = 0; tIndex < this.columns.length; tIndex++) {
       const columns = [this.columns[tIndex - 1], this.columns[tIndex], this.columns[tIndex + 1]];
@@ -262,13 +262,13 @@ export class NegColumnStore {
   }
 
 
-  private updateMetaRow<P extends keyof NegColumnStore['_metaRows']>(type: P, rowIndex: number, value: NegColumnStore['_metaRows'][P][0]): void {
+  private updateMetaRow<P extends keyof PblColumnStore['_metaRows']>(type: P, rowIndex: number, value: PblColumnStore['_metaRows'][P][0]): void {
     const curr = this._metaRows[type][rowIndex] || {};
     this._metaRows[type][rowIndex] = Object.assign(curr, value);
   }
 
-  private getColumnRecord<T extends NegMetaColumnStore & { data?: NegColumn }>(id: string, collection?: T[]): T  {
-    let columnRecord: NegMetaColumnStore & { data?: NegColumn } = this.byId.get(id);
+  private getColumnRecord<T extends PblMetaColumnStore & { data?: PblColumn }>(id: string, collection?: T[]): T  {
+    let columnRecord: PblMetaColumnStore & { data?: PblColumn } = this.byId.get(id);
     if (!columnRecord) {
       this.byId.set(id, columnRecord = { id });
       if (collection) {

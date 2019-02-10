@@ -52,7 +52,7 @@ Outer elements will come right next to the fixed meta rows.
 An outlet for custom element driven by templates (`TemplateRef`).  
 Examples: Pagination elements, Action rows, etc...
 
-Templates can be added programmatically (`NegTableComponent.createView()` API) or declaratively (`negTableOuterSection` structural directive).
+Templates can be added programmatically (`PblTableComponent.createView()` API) or declaratively (`negTableOuterSection` structural directive).
 
 <div fxLayout>
   <div fxFlex="50%">
@@ -90,7 +90,7 @@ Templates can be added programmatically (`NegTableComponent.createView()` API) o
   </div>
 </div>
 
-I> The `negTableOuterSection` directive is a helper that uses the `NegTableComponent.createView()` API internally to provide a declarative interface using templates.
+I> The `negTableOuterSection` directive is a helper that uses the `PblTableComponent.createView()` API internally to provide a declarative interface using templates.
 
 ### Fine detailed **Outer Bottom** section
 
@@ -105,7 +105,7 @@ There are 3 sub-section under the **Custom Element** outlet:
 To simplify the layout, when `negTableOuterSection` is set to `bottom` it will use the **Before content** section.
 
 To use the **Content** section, is taken from the content inside the host component.
-To use the **AfterContent** section you need to use `NegTableComponent.createView()` API.
+To use the **AfterContent** section you need to use `PblTableComponent.createView()` API.
 
 ```html
 <pbl-table>

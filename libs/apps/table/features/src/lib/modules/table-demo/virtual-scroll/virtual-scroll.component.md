@@ -56,18 +56,18 @@ Each strategy is also a directive that we can use to apply a strategy on a table
 
 The global strategy for all tables is `vScrollAuto`. If a virtual scroll strategy is not set the global strategy is used.
 
-You can configure the global strategy with `NegTableModule.forRoot`:
+You can configure the global strategy with `PblTableModule.forRoot`:
 
 ```typescript {10,21}
 import { NgModule } from '@angular/core';
 import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
-import { NegTableModule, NoVirtualScrollStrategy } from '@pebula/table';
+import { PblTableModule, NoVirtualScrollStrategy } from '@pebula/table';
 
 // DISABLING VIRTUAL SCROLL
 
 @NgModule({
   imports: [
-    NegTableModule.forRoot({
+    PblTableModule.forRoot({
       defaultStrategy: () => new NoVirtualScrollStrategy()
     })
   ]
@@ -78,7 +78,7 @@ export class TablesWithoutVirtualScrollModule { }
 
 @NgModule({
   imports: [
-    NegTableModule.forRoot({
+    PblTableModule.forRoot({
       wheelMode: 18, // default wheel mode
       defaultStrategy: () => new FixedSizeVirtualScrollStrategy(48, 100, 200);
     })

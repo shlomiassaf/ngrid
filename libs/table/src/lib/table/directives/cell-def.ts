@@ -6,43 +6,43 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { COLUMN, NegColumnTypeDefinitionDataMap, NegColumn, NegMetaColumn } from '../columns';
-import { NegTableCellContext, NegTableMetaCellContext } from '../context/index';
-import { NegTableRegistryService } from '../services/table-registry.service';
+import { COLUMN, PblColumnTypeDefinitionDataMap, PblColumn, PblMetaColumn } from '../columns';
+import { PblTableCellContext, PblTableMetaCellContext } from '../context/index';
+import { PblTableRegistryService } from '../services/table-registry.service';
 
-export interface NegTableCellDefDirectiveBase {
+export interface PblTableCellDefDirectiveBase {
   name: string;
-  type: keyof NegColumnTypeDefinitionDataMap;
+  type: keyof PblColumnTypeDefinitionDataMap;
 }
 
-export abstract class NegTableBaseCellDef<Z> implements OnInit, OnDestroy, NegTableCellDefDirectiveBase {
+export abstract class PblTableBaseCellDef<Z> implements OnInit, OnDestroy, PblTableCellDefDirectiveBase {
   name: string;
-  type: keyof NegColumnTypeDefinitionDataMap;
+  type: keyof PblColumnTypeDefinitionDataMap;
 
   constructor(public tRef: TemplateRef<Z>,
-              protected registry: NegTableRegistryService) { }
+              protected registry: PblTableRegistryService) { }
 
   ngOnInit(): void {
     // TODO: listen to property changes (name) and re-register cell
-    if (this instanceof NegTableHeaderCellDefDirective) {
+    if (this instanceof PblTableHeaderCellDefDirective) {
       this.registry.addMulti('headerCell', this);
-    } else if (this instanceof NegTableCellDefDirective) {
+    } else if (this instanceof PblTableCellDefDirective) {
       this.registry.addMulti('tableCell', this);
-    } else if (this instanceof NegTableEditorCellDefDirective) {
+    } else if (this instanceof PblTableEditorCellDefDirective) {
       this.registry.addMulti('editorCell', this);
-    } else if (this instanceof NegTableFooterCellDefDirective) {
+    } else if (this instanceof PblTableFooterCellDefDirective) {
       this.registry.addMulti('footerCell', this);
     }
   }
 
   ngOnDestroy(): void {
-    if (this instanceof NegTableHeaderCellDefDirective) {
+    if (this instanceof PblTableHeaderCellDefDirective) {
       this.registry.removeMulti('headerCell', this);
-    } else if (this instanceof NegTableCellDefDirective) {
+    } else if (this instanceof PblTableCellDefDirective) {
       this.registry.removeMulti('tableCell', this);
-    } else if (this instanceof NegTableEditorCellDefDirective) {
+    } else if (this instanceof PblTableEditorCellDefDirective) {
       this.registry.removeMulti('editorCell', this);
-    } else if (this instanceof NegTableFooterCellDefDirective) {
+    } else if (this instanceof PblTableFooterCellDefDirective) {
       this.registry.removeMulti('footerCell', this);
     }
   }
@@ -67,8 +67,8 @@ export abstract class NegTableBaseCellDef<Z> implements OnInit, OnDestroy, NegTa
   selector: '[negTableHeaderCellDef], [negTableHeaderCellTypeDef]',
   inputs: [ 'name:negTableHeaderCellDef', 'type:negTableHeaderCellTypeDef' ]
 })
-export class NegTableHeaderCellDefDirective<T> extends NegTableBaseCellDef<NegTableMetaCellContext<T>> {
-  constructor(tRef: TemplateRef<NegTableMetaCellContext<T>>, registry: NegTableRegistryService) { super(tRef, registry); }
+export class PblTableHeaderCellDefDirective<T> extends PblTableBaseCellDef<PblTableMetaCellContext<T>> {
+  constructor(tRef: TemplateRef<PblTableMetaCellContext<T>>, registry: PblTableRegistryService) { super(tRef, registry); }
 }
 
 /**
@@ -89,29 +89,29 @@ export class NegTableHeaderCellDefDirective<T> extends NegTableBaseCellDef<NegTa
   selector: '[negTableCellDef], [negTableCellTypeDef]',
   inputs: [ 'name:negTableCellDef', 'type:negTableCellTypeDef' ]
 })
-export class NegTableCellDefDirective<T, P extends keyof NegColumnTypeDefinitionDataMap = any> extends NegTableBaseCellDef<NegTableCellContext<T, P>> {
+export class PblTableCellDefDirective<T, P extends keyof PblColumnTypeDefinitionDataMap = any> extends PblTableBaseCellDef<PblTableCellContext<T, P>> {
   type: P;
-  constructor(tRef: TemplateRef<NegTableCellContext<any, P>>, registry: NegTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<PblTableCellContext<any, P>>, registry: PblTableRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
   selector: '[negTableCellEditorDef], [negTableCellEditorTypeDef]',
   inputs: [ 'name:negTableCellEditorDef', 'type:negTableCellEditorTypeDef' ]
 })
-export class NegTableEditorCellDefDirective<T, P extends keyof NegColumnTypeDefinitionDataMap = any> extends NegTableBaseCellDef<NegTableCellContext<T, P>> {
+export class PblTableEditorCellDefDirective<T, P extends keyof PblColumnTypeDefinitionDataMap = any> extends PblTableBaseCellDef<PblTableCellContext<T, P>> {
   type: P;
-  constructor(tRef: TemplateRef<NegTableCellContext<any, P>>, registry: NegTableRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<PblTableCellContext<any, P>>, registry: PblTableRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
   selector: '[negTableFooterCellDef], [negTableFooterCellTypeDef]',
   inputs: [ 'name:negTableFooterCellDef', 'type:negTableFooterCellTypeDef' ]
 })
-export class NegTableFooterCellDefDirective<T> extends NegTableBaseCellDef<NegTableMetaCellContext<T>> {
-  constructor(tRef: TemplateRef<NegTableMetaCellContext<T>>, registry: NegTableRegistryService) { super(tRef, registry); }
+export class PblTableFooterCellDefDirective<T> extends PblTableBaseCellDef<PblTableMetaCellContext<T>> {
+  constructor(tRef: TemplateRef<PblTableMetaCellContext<T>>, registry: PblTableRegistryService) { super(tRef, registry); }
 }
 
-function findCellDefById<T extends NegTableCellDefDirectiveBase>(cellDefs: Array<T>, colDef: Pick<NegMetaColumn, 'id' | 'type'>, searchParent?: boolean): T {
+function findCellDefById<T extends PblTableCellDefDirectiveBase>(cellDefs: Array<T>, colDef: Pick<PblMetaColumn, 'id' | 'type'>, searchParent?: boolean): T {
   for (const cellDef of cellDefs) {
     if (cellDef.type) {
       if (colDef.type && cellDef.type === colDef.type.name) {
@@ -126,15 +126,15 @@ function findCellDefById<T extends NegTableCellDefDirectiveBase>(cellDefs: Array
   }
 }
 
-export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: NegColumn, kind: 'tableCell' | 'editorCell',  searchParent?: boolean): NegTableCellDefDirective<T>;
-export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: NegMetaColumn | NegColumn, kind: 'headerCell', searchParent?: boolean): NegTableHeaderCellDefDirective<T>;
-export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: NegMetaColumn | NegColumn, kind: 'footerCell', searchParent?: boolean): NegTableFooterCellDefDirective<T>;
-export function findCellDef<T = any>(registry: NegTableRegistryService, colDef: COLUMN, kind: 'headerCell' | 'footerCell' | 'tableCell' | 'editorCell', searchParent?: boolean): NegTableCellDefDirective<T> | NegTableHeaderCellDefDirective<T> | NegTableFooterCellDefDirective <T> {
-  const cellDefs: NegTableCellDefDirectiveBase[] = registry.getMulti(kind);
+export function findCellDef<T = any>(registry: PblTableRegistryService, colDef: PblColumn, kind: 'tableCell' | 'editorCell',  searchParent?: boolean): PblTableCellDefDirective<T>;
+export function findCellDef<T = any>(registry: PblTableRegistryService, colDef: PblMetaColumn | PblColumn, kind: 'headerCell', searchParent?: boolean): PblTableHeaderCellDefDirective<T>;
+export function findCellDef<T = any>(registry: PblTableRegistryService, colDef: PblMetaColumn | PblColumn, kind: 'footerCell', searchParent?: boolean): PblTableFooterCellDefDirective<T>;
+export function findCellDef<T = any>(registry: PblTableRegistryService, colDef: COLUMN, kind: 'headerCell' | 'footerCell' | 'tableCell' | 'editorCell', searchParent?: boolean): PblTableCellDefDirective<T> | PblTableHeaderCellDefDirective<T> | PblTableFooterCellDefDirective <T> {
+  const cellDefs: PblTableCellDefDirectiveBase[] = registry.getMulti(kind);
 
   if (cellDefs) {
-    let type: Pick<NegMetaColumn, 'id' | 'type'>;
-    if (colDef instanceof NegColumn) {
+    let type: Pick<PblMetaColumn, 'id' | 'type'>;
+    if (colDef instanceof PblColumn) {
       switch (kind) {
         case 'headerCell':
           if (colDef.headerType) {

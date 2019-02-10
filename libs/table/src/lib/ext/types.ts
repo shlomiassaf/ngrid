@@ -1,33 +1,33 @@
-import { NegDataSource } from '../data-source';
+import { PblDataSource } from '../data-source';
 
-export interface NegTablePlugin { }
+export interface PblTablePlugin { }
 
-export interface NegTablePluginExtension { }
+export interface PblTablePluginExtension { }
 
-export interface NegTablePluginExtensionFactories { }
+export interface PblTablePluginExtensionFactories { }
 
-export interface NegTableOnInitEvent {
+export interface PblTableOnInitEvent {
   kind: 'onInit';
 }
 
-export interface NegTableOnResizeRowtEvent {
+export interface PblTableOnResizeRowtEvent {
   kind: 'onResizeRow';
 }
 
-export interface NegTableOnInvalidateHeadersEvent {
+export interface PblTableOnInvalidateHeadersEvent {
   kind: 'onInvalidateHeaders';
 }
 
-export interface NegTableOnDataSourcetEvent {
+export interface PblTableOnDataSourcetEvent {
   kind: 'onDataSource';
-  prev: NegDataSource<any>;
-  curr: NegDataSource<any>;
+  prev: PblDataSource<any>;
+  curr: PblDataSource<any>;
 }
 
-export type NegTableEvents =
-  | NegTableOnInitEvent
-  | NegTableOnResizeRowtEvent
-  | NegTableOnInvalidateHeadersEvent
-  | NegTableOnDataSourcetEvent;
+export type PblTableEvents =
+  | PblTableOnInitEvent
+  | PblTableOnResizeRowtEvent
+  | PblTableOnInvalidateHeadersEvent
+  | PblTableOnDataSourcetEvent;
 
 

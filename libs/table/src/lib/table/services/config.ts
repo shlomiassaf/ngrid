@@ -2,7 +2,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 
-export interface NegTableConfig {
+export interface PblTableConfig {
   table?: {
     showHeader?: boolean;
     showFooter?: boolean;
@@ -10,23 +10,23 @@ export interface NegTableConfig {
   }
 }
 
-const DEFAULT_TABLE_CONFIG: NegTableConfig['table'] = {
+const DEFAULT_TABLE_CONFIG: PblTableConfig['table'] = {
   showHeader: true,
   showFooter: false,
   boxSpaceModel: 'padding',
 };
 
-export const NEG_TABLE_CONFIG = new InjectionToken<NegTableConfig>('NEG_TABLE_CONFIG');
+export const NEG_TABLE_CONFIG = new InjectionToken<PblTableConfig>('NEG_TABLE_CONFIG');
 
 @Injectable({
   providedIn: 'root',
 })
-export class NegTableConfigService {
+export class PblTableConfigService {
 
-  private config = new Map<keyof NegTableConfig, any>();
-  private configNotify = new Map<keyof NegTableConfig, ReplaySubject<any>>();
+  private config = new Map<keyof PblTableConfig, any>();
+  private configNotify = new Map<keyof PblTableConfig, ReplaySubject<any>>();
 
-  constructor(@Optional() @Inject(NEG_TABLE_CONFIG) _config: NegTableConfig) {
+  constructor(@Optional() @Inject(NEG_TABLE_CONFIG) _config: PblTableConfig) {
     if (_config) {
       for (const key of Object.keys(_config)) {
         (this.config as any).set(key, _config[key]);
@@ -40,15 +40,15 @@ export class NegTableConfigService {
     });
   }
 
-  has(section: keyof NegTableConfig): boolean {
+  has(section: keyof PblTableConfig): boolean {
     return this.config.has(section);
   }
 
-  get<T extends keyof NegTableConfig>(section: T): NegTableConfig[T] | undefined {
+  get<T extends keyof PblTableConfig>(section: T): PblTableConfig[T] | undefined {
     return this.config.get(section);
   }
 
-  set<T extends keyof NegTableConfig>(section: T, value: NegTableConfig[T]): void {
+  set<T extends keyof PblTableConfig>(section: T, value: PblTableConfig[T]): void {
     const prev = this.get(section);
     value = Object.assign({}, value);
     Object.freeze(value);
@@ -56,11 +56,11 @@ export class NegTableConfigService {
     this.notify(section, value, prev);
   }
 
-  onUpdate<T extends keyof NegTableConfig>(section: T): Observable<{ curr: NegTableConfig[T]; prev: NegTableConfig[T] | undefined; }> {
+  onUpdate<T extends keyof PblTableConfig>(section: T): Observable<{ curr: PblTableConfig[T]; prev: PblTableConfig[T] | undefined; }> {
     return this.getGetNotifier(section);
   }
 
-  private getGetNotifier<T extends keyof NegTableConfig>(section: T): ReplaySubject<any> {
+  private getGetNotifier<T extends keyof PblTableConfig>(section: T): ReplaySubject<any> {
     let notifier = this.configNotify.get(section);
     if (!notifier) {
       this.configNotify.set(section, notifier = new ReplaySubject<any>(1));
@@ -68,7 +68,7 @@ export class NegTableConfigService {
     return notifier;
   }
 
-  private notify<T extends keyof NegTableConfig>(section: T, curr: NegTableConfig[T], prev: NegTableConfig[T]): void {
+  private notify<T extends keyof PblTableConfig>(section: T, curr: PblTableConfig[T], prev: PblTableConfig[T]): void {
     this.getGetNotifier(section).next({ curr, prev });
   }
 }

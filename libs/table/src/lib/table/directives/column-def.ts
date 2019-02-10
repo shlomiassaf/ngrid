@@ -12,16 +12,16 @@ import {
 import { CdkColumnDef } from '@angular/cdk/table';
 
 import { COLUMN } from '../columns';
-import { isNegColumn } from '../columns/column';
+import { isPblColumn } from '../columns/column';
 import { CellContext } from '../context/index';
-import { NegTableComponent } from '../table.component';
-import { EXT_API_TOKEN, NegTableExtensionApi } from '../../ext/table-ext-api';
+import { PblTableComponent } from '../table.component';
+import { EXT_API_TOKEN, PblTableExtensionApi } from '../../ext/table-ext-api';
 import { parseStyleWidth } from '../columns/utils';
 import { uniqueColumnCss } from '../circular-dep-bridge';
 
 /* TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
-  NegTableColumnDef use's the default object KeyValueDiffer provides with angular.
+  PblTableColumnDef use's the default object KeyValueDiffer provides with angular.
   This differ will perform the diff on the entire object which IS NOT REQUIRED!
   We need to create a custom differ that does the diff on selected properties only.
 */
@@ -33,11 +33,11 @@ import { uniqueColumnCss } from '../circular-dep-bridge';
 @Directive({
   selector: '[negTableColumnDef]',
   providers: [
-    { provide: CdkColumnDef, useExisting: NegTableColumnDef },
-    { provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: NegTableColumnDef }
+    { provide: CdkColumnDef, useExisting: PblTableColumnDef },
+    { provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: PblTableColumnDef }
   ],
 })
-export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef implements DoCheck, OnDestroy {
+export class PblTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef implements DoCheck, OnDestroy {
   @Input('negTableColumnDef') get column(): T { return this._column; };
   set column(value: T) { this.attach(value); }
 
@@ -66,7 +66,7 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
   isDragging = false;
 
   protected _colDiffer: KeyValueDiffer<any, any>;
-  protected table: NegTableComponent<any>;
+  protected table: PblTableComponent<any>;
 
   private _column: T;
   private _isDirty = false;
@@ -99,7 +99,7 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
    */
   private _netWidth: number;
 
-  constructor(protected readonly _differs: KeyValueDiffers, @Inject(EXT_API_TOKEN) protected extApi: NegTableExtensionApi<any> ) {
+  constructor(protected readonly _differs: KeyValueDiffers, @Inject(EXT_API_TOKEN) protected extApi: PblTableExtensionApi<any> ) {
     super();
     this.table = extApi.table;
   }
@@ -108,7 +108,7 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
    * Create a cell context for the current column at the provided row index, relative to the rendered rows (not the entire datasource).
    */
   createContext<Z = any>(renderRowIndex: number): CellContext<Z> {
-    if (isNegColumn(this.column)) {
+    if (isPblColumn(this.column)) {
       return this.extApi.contextApi.createCellContext(renderRowIndex, this.column)
     }
   }
@@ -226,7 +226,7 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
   ngOnDestroy(): void { this.detach(); }
 
   onResize(): void {
-    if (isNegColumn(this.column)) {
+    if (isPblColumn(this.column)) {
       const prevNetWidth = this._netWidth;
       this._netWidth = this.extApi.dynamicColumnWidthFactory().widthBreakout(this.column.sizeInfo).content;
 
@@ -249,7 +249,7 @@ export class NegTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
         (column as any).attach(this);
         this.name = column.id.replace(/ /g, '_');
 
-        if (isNegColumn(column)) {
+        if (isPblColumn(column)) {
           this.sticky = this.stickyEnd = false;
           switch(column.pin) {
             case 'start':

@@ -4,7 +4,7 @@
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/table';
-import { NegTableCellEvent } from '@pebula/table/target-events';
+import { PblTableCellEvent } from '@pebula/table/target-events';
 
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
@@ -38,7 +38,7 @@ export class CellTooltipTableExampleComponent {
 
   constructor(private datasource: DemoDataSource) { }
 
-  getTooltipMessage(event: NegTableCellEvent<Person>): string {
+  getTooltipMessage(event: PblTableCellEvent<Person>): string {
     return `${event.colIndex} / ${event.rowIndex} -> ${event.rowIndex % 2 ? 'ODD' : 'EVEN'} ROW\n\n${event.cellTarget.innerText}`;
   }
 }

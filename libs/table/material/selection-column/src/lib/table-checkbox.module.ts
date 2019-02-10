@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { NegTableModule } from '@pebula/table';
-import { NegTableMatCheckboxSelectionDirective } from './checkbox-plugin.directive';
-import { NegTableCheckboxComponent } from './table-checkbox.component';
+import { PblTableModule } from '@pebula/table';
+import { PblTableMatCheckboxSelectionDirective } from './checkbox-plugin.directive';
+import { PblTableCheckboxComponent } from './table-checkbox.component';
 
 @NgModule({
-  imports: [ CommonModule, MatCheckboxModule, NegTableModule ],
-  declarations: [ NegTableMatCheckboxSelectionDirective, NegTableCheckboxComponent ],
-  exports: [ NegTableMatCheckboxSelectionDirective, NegTableCheckboxComponent ],
-  entryComponents: [ NegTableCheckboxComponent ]
+  imports: [ CommonModule, MatCheckboxModule, PblTableModule ],
+  declarations: [ PblTableMatCheckboxSelectionDirective, PblTableCheckboxComponent ],
+  exports: [ PblTableMatCheckboxSelectionDirective, PblTableCheckboxComponent ],
+  entryComponents: [ PblTableCheckboxComponent ]
 })
-export class NegTableCheckboxModule { }
+export class PblTableCheckboxModule { }

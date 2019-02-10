@@ -1,7 +1,7 @@
 import { CdkRow, CDK_ROW_TEMPLATE, RowContext } from '@angular/cdk/table';
 import { ChangeDetectionStrategy, Component, ElementRef, EmbeddedViewRef, Inject, Input, ViewEncapsulation } from '@angular/core';
-import { EXT_API_TOKEN, NegTableExtensionApi } from '../../ext/table-ext-api';
-import { NegRowContext } from '../context/index';
+import { EXT_API_TOKEN, PblTableExtensionApi } from '../../ext/table-ext-api';
+import { PblRowContext } from '../context/index';
 
 
 export const NEG_TABLE_ROW_TEMPLATE  = `<ng-content select=".pbl-table-row-prefix"></ng-content>${CDK_ROW_TEMPLATE}<ng-content select=".pbl-table-row-suffix"></ng-content>`;
@@ -14,13 +14,13 @@ export const NEG_TABLE_ROW_TEMPLATE  = `<ng-content select=".pbl-table-row-prefi
     'role': 'row',
   },
   providers: [
-    { provide: CdkRow, useExisting: NegTableRowComponent }
+    { provide: CdkRow, useExisting: PblTableRowComponent }
   ],
   exportAs: 'negTableRow',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class NegTableRowComponent<T = any> extends CdkRow {
+export class PblTableRowComponent<T = any> extends CdkRow {
 
   @Input() set row(value: T) {
     if (! (this.rowRenderIndex >= 0) ) {
@@ -30,9 +30,9 @@ export class NegTableRowComponent<T = any> extends CdkRow {
   }
 
   rowRenderIndex: number;
-  context: NegRowContext<T>;
+  context: PblRowContext<T>;
 
-  constructor(@Inject(EXT_API_TOKEN) protected extApi: NegTableExtensionApi<T>, protected el: ElementRef<HTMLElement>) {
+  constructor(@Inject(EXT_API_TOKEN) protected extApi: PblTableExtensionApi<T>, protected el: ElementRef<HTMLElement>) {
     super();
   }
 

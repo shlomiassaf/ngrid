@@ -1,7 +1,7 @@
-import { NegColumn } from './columns/column';
+import { PblColumn } from './columns/column';
 
-export interface NegColumnSizeInfo {
-  column: NegColumn;
+export interface PblColumnSizeInfo {
+  column: PblColumn;
   height: number;
   width: number;
   style: CSSStyleDeclaration;

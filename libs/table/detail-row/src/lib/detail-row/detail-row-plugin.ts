@@ -2,14 +2,14 @@ import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, O
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { UnRx } from '@pebula/utils';
-import { NegTableComponent, NegTablePluginController, TablePlugin, NegTableRowContext } from '@pebula/table';
+import { PblTableComponent, PblTablePluginController, TablePlugin, PblTableRowContext } from '@pebula/table';
 
-import { NegTableDetailRowComponent } from './row';
-import { NegTableDetailRowParentRefDirective, NegTableDefaultDetailRowParentComponent } from './directives';
+import { PblTableDetailRowComponent } from './row';
+import { PblTableDetailRowParentRefDirective, PblTableDefaultDetailRowParentComponent } from './directives';
 
 declare module '@pebula/table/lib/ext/types' {
-  interface NegTablePluginExtension {
-    detailRow?: NegTableDetailRowPluginDirective<any>;
+  interface PblTablePluginExtension {
+    detailRow?: PblTableDetailRowPluginDirective<any>;
   }
 }
 
@@ -18,8 +18,8 @@ export const PLUGIN_KEY: 'detailRow' = 'detailRow';
 export const ROW_WHEN_TRUE = () => true;
 export const ROW_WHEN_FALSE = () => false;
 
-export function toggleDetailRow<T = any>(table: NegTableComponent<T>, row: T, forceState?: boolean): boolean | void {
-  const controller = NegTablePluginController.find(table);
+export function toggleDetailRow<T = any>(table: PblTableComponent<T>, row: T, forceState?: boolean): boolean | void {
+  const controller = PblTablePluginController.find(table);
   if (controller) {
     const plugin = controller.getPlugin(PLUGIN_KEY);
     if (plugin) {
@@ -28,7 +28,7 @@ export function toggleDetailRow<T = any>(table: NegTableComponent<T>, row: T, fo
   }
 }
 
-export interface NegDetailsRowToggleEvent<T = any> {
+export interface PblDetailsRowToggleEvent<T = any> {
   row: T;
   expended: boolean;
   toggle(): void;
@@ -37,7 +37,7 @@ export interface NegDetailsRowToggleEvent<T = any> {
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-table[detailRow]' })
 @UnRx()
-export class NegTableDetailRowPluginDirective<T> implements OnDestroy {
+export class PblTableDetailRowPluginDirective<T> implements OnDestroy {
   /**
    * Detail row control (none / all rows / selective rows)
    *
@@ -86,19 +86,19 @@ export class NegTableDetailRowPluginDirective<T> implements OnDestroy {
    */
   @Input() excludeToggleFrom: string[];
 
-  @Output() toggleChange = new EventEmitter<NegDetailsRowToggleEvent<T>>();
+  @Output() toggleChange = new EventEmitter<PblDetailsRowToggleEvent<T>>();
 
-  private _openedRow?: NegDetailsRowToggleEvent<T>;
+  private _openedRow?: PblDetailsRowToggleEvent<T>;
   private _forceSingle: boolean;
   private _isSimpleRow: (index: number, rowData: T) => boolean = ROW_WHEN_TRUE;
   private _isDetailRow: (index: number, rowData: T) => boolean = ROW_WHEN_FALSE;
-  private _detailRowRows = new Map<any, NegTableDetailRowComponent>();
+  private _detailRowRows = new Map<any, PblTableDetailRowComponent>();
   private _detailRow: ( (index: number, rowData: T) => boolean ) | boolean;
-  private _detailRowDef: NegTableDetailRowParentRefDirective<T>;
-  private _defaultParentRef: ComponentRef<NegTableDefaultDetailRowParentComponent>;
-  private _removePlugin: (table: NegTableComponent<any>) => void;
+  private _detailRowDef: PblTableDetailRowParentRefDirective<T>;
+  private _defaultParentRef: ComponentRef<PblTableDefaultDetailRowParentComponent>;
+  private _removePlugin: (table: PblTableComponent<any>) => void;
 
-  constructor(private table: NegTableComponent<any>, pluginCtrl: NegTablePluginController<T>, private injector: Injector) {
+  constructor(private table: PblTableComponent<any>, pluginCtrl: PblTablePluginController<T>, private injector: Injector) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     let subscription = pluginCtrl.events.subscribe( event => {
@@ -140,11 +140,11 @@ export class NegTableDetailRowPluginDirective<T> implements OnDestroy {
     });
   }
 
-  addDetailRow(detailRow: NegTableDetailRowComponent): void {
+  addDetailRow(detailRow: PblTableDetailRowComponent): void {
     this._detailRowRows.set(detailRow.row, detailRow);
   }
 
-  removeDetailRow(detailRow: NegTableDetailRowComponent): void {
+  removeDetailRow(detailRow: PblTableDetailRowComponent): void {
     this._detailRowRows.delete(detailRow.row);
   }
 
@@ -164,7 +164,7 @@ export class NegTableDetailRowPluginDirective<T> implements OnDestroy {
   }
 
   /** @internal */
-  detailRowToggled(event: NegDetailsRowToggleEvent<T>): void {
+  detailRowToggled(event: PblDetailsRowToggleEvent<T>): void {
     // logic for closing previous row
     const isSelf = this._openedRow && this._openedRow.row === event.row;
     if (event.expended) {
@@ -195,7 +195,7 @@ export class NegTableDetailRowPluginDirective<T> implements OnDestroy {
       } else if (!this._defaultParentRef) {
         // TODO: move to module? set in root registry? put elsewhere to avoid table sync (see event of registry change)...
         this._defaultParentRef = this.injector.get(ComponentFactoryResolver)
-          .resolveComponentFactory(NegTableDefaultDetailRowParentComponent)
+          .resolveComponentFactory(PblTableDefaultDetailRowParentComponent)
           .create(this.injector);
         this._defaultParentRef.changeDetectorRef.detectChanges();
         return;

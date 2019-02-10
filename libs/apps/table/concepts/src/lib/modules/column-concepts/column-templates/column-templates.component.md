@@ -126,20 +126,20 @@ W> When exists, the default template is used instead of passing the query to the
 
 A context is attached to every rendered cell, based on the type of the column.
 
-- Data cells - `NegTableCellContext`
-- Meta cells - `NegTableMetaCellContext`
+- Data cells - `PblTableCellContext`
+- Meta cells - `PblTableMetaCellContext`
 
-### NegTableCellContext
+### PblTableCellContext
 
 ```typescript
-export interface NegTableCellContext<T = any> {
-  col: NegColumn;
-  table: NegTableComponent<T>;
+export interface PblTableCellContext<T = any> {
+  col: PblColumn;
+  table: PblTableComponent<T>;
 
   /**
    * The context for the row
    */
-  rowContext: NegTableRowContext<T>,
+  rowContext: PblTableRowContext<T>,
 
   /**
    * The data item

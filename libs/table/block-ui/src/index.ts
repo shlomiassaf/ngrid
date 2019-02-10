@@ -1,1 +1,1 @@
-export { NegTableBlockUiModule } from './lib/table-block-ui.module';
+export { PblTableBlockUiModule } from './lib/table-block-ui.module';

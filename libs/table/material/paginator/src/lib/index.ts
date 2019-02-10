@@ -1,1 +1,1 @@
-export { NegPaginatorComponent } from './table-paginator.component';
+export { PblPaginatorComponent } from './table-paginator.component';

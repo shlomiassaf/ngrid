@@ -1,4 +1,4 @@
-export interface NegTableAggregators {
+export interface PblTableAggregators {
   sum: SumAggregator;
   min: MinAggregator;
   max: MaxAggregator;
@@ -8,7 +8,7 @@ export interface NegTableAggregators {
 }
 
 export interface Aggregator<T = any, TAgg = any> {
-  id: keyof NegTableAggregators;
+  id: keyof PblTableAggregators;
   label?: string;
   add(value: T): boolean;
   set(value: T[]): void;

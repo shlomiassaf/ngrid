@@ -2,24 +2,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { NegTableCheckboxModule } from '@pebula/table/material/selection-column';
-import { NegTablePaginatorModule } from '@pebula/table/material/paginator';
-import { NegTableMatSortModule } from '@pebula/table/material/sort';
-import { NegTableCellTooltipModule } from '@pebula/table/material/cell-tooltip';
+import { PblTableCheckboxModule } from '@pebula/table/material/selection-column';
+import { PblTablePaginatorModule } from '@pebula/table/material/paginator';
+import { PblTableMatSortModule } from '@pebula/table/material/sort';
+import { PblTableCellTooltipModule } from '@pebula/table/material/cell-tooltip';
 
 @NgModule({
   imports: [
     CommonModule,
-    NegTableCheckboxModule,
-    NegTablePaginatorModule,
-    NegTableMatSortModule,
-    NegTableCellTooltipModule,
+    PblTableCheckboxModule,
+    PblTablePaginatorModule,
+    PblTableMatSortModule,
+    PblTableCellTooltipModule,
   ],
   exports: [
-    NegTableCheckboxModule,
-    NegTablePaginatorModule,
-    NegTableMatSortModule,
-    NegTableCellTooltipModule,
+    PblTableCheckboxModule,
+    PblTablePaginatorModule,
+    PblTableMatSortModule,
+    PblTableCellTooltipModule,
   ]
 })
-export class NegTableMaterialModule { }
+export class PblTableMaterialModule { }

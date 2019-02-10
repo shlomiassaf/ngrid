@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, ChangeDetectorRef, ViewChild } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
-import { createDS, columnFactory, NegTableComponent } from '@pebula/table';
+import { createDS, columnFactory, PblTableComponent } from '@pebula/table';
 import {  Customer, DemoDataSource } from '@pebula/apps/table/shared';
 import { MatRadioChange } from '@angular/material';
 
@@ -81,7 +81,7 @@ export class VirtualScrollPerformanceDemoTableExampleComponent {
   showTable = true;
   hideColumns: string[] = [];
 
-  @ViewChild(NegTableComponent) negTable: NegTableComponent<any>;
+  @ViewChild(PblTableComponent) negTable: PblTableComponent<any>;
 
   constructor(private datasource: DemoDataSource, private cdr: ChangeDetectorRef) {
     datasource.getCountries().then( c => COUNTRY_GETTER.data = c );

@@ -1,1 +1,1 @@
-export { NegTablePaginatorKind, NegPaginator, NegTokenPaginator, NegPagingPaginator, NegPaginatorChangeEvent } from './paginator';
+export { PblTablePaginatorKind, PblPaginator, PblTokenPaginator, PblPagingPaginator, PblPaginatorChangeEvent } from './paginator';

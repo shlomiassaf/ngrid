@@ -1,22 +1,22 @@
 import { TemplateRef } from '@angular/core';
 
-import { NegTableSorter } from '../../data-source/types';
-import { NegTableColumnDef } from '../directives';
+import { PblTableSorter } from '../../data-source/types';
+import { PblTableColumnDef } from '../directives';
 import { deepPathGet, deepPathSet } from '../utils';
-import { NegColumnSizeInfo } from '../types';
-import { NegTableMetaCellContext, NegTableCellContext } from '../context/types';
-import { NegColumnDefinition, NegColumnTypeDefinition } from './types';
+import { PblColumnSizeInfo } from '../types';
+import { PblTableMetaCellContext, PblTableCellContext } from '../context/types';
+import { PblColumnDefinition, PblColumnTypeDefinition } from './types';
 import { initDefinitions, parseStyleWidth } from './utils';
-import { NegColumnGroup, NegColumnGroupStore } from './group-column';
+import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 
-const NEG_COLUMN_MARK = Symbol('NegColumn');
-const CLONE_PROPERTIES: Array<keyof NegColumn> = ['sort', 'headerType', 'footerType', 'pin'];
+const NEG_COLUMN_MARK = Symbol('PblColumn');
+const CLONE_PROPERTIES: Array<keyof PblColumn> = ['sort', 'headerType', 'footerType', 'pin'];
 
-export function isNegColumn(def: any): def is NegColumn {
-  return def instanceof NegColumn || def[NEG_COLUMN_MARK] === true;
+export function isPblColumn(def: any): def is PblColumn {
+  return def instanceof PblColumn || def[NEG_COLUMN_MARK] === true;
 }
 
-export class NegColumn implements NegColumnDefinition {
+export class PblColumn implements PblColumnDefinition {
   id: string;
   label?: string;
 
@@ -83,11 +83,11 @@ export class NegColumn implements NegColumnDefinition {
    * The type of the values in this column.
    * This is an additional level for matching columns to templates, grouping templates for a type.
    */
-  type?: NegColumnTypeDefinition;
-  headerType?: NegColumnTypeDefinition;
-  footerType?: NegColumnTypeDefinition;
+  type?: PblColumnTypeDefinition;
+  headerType?: PblColumnTypeDefinition;
+  footerType?: PblColumnTypeDefinition;
 
-  sort?: boolean | NegTableSorter;
+  sort?: boolean | PblTableSorter;
 
   /**
    * Marks the table as editable. An editable column also requires an edit template to qualify as editable, this flag alone is not enough.
@@ -108,22 +108,22 @@ export class NegColumn implements NegColumnDefinition {
    * Used by pbl-table to apply custom cell template, or the default when not set.
    * @internal
    */
-  cellTpl: TemplateRef<NegTableCellContext<any>>;
+  cellTpl: TemplateRef<PblTableCellContext<any>>;
     /**
    * Used by pbl-table to apply custom cell template, or the default when not set.
    * @internal
    */
-  editorTpl: TemplateRef<NegTableCellContext<any>>;
+  editorTpl: TemplateRef<PblTableCellContext<any>>;
   /**
    * Used by pbl-table to apply a custom header cell template, or the default when not set.
    * @internal
    */
-  headerCellTpl: TemplateRef<NegTableMetaCellContext<any>>;
+  headerCellTpl: TemplateRef<PblTableMetaCellContext<any>>;
   /**
    * Used by pbl-table to apply a custom footer cell template, or the default when not set.
    * @internal
    */
-  footerCellTpl: TemplateRef<NegTableMetaCellContext<any>>;
+  footerCellTpl: TemplateRef<PblTableMetaCellContext<any>>;
 
   /**
    * Used by the library as a logical flag representing the column hidden state.
@@ -140,10 +140,10 @@ export class NegColumn implements NegColumnDefinition {
   readonly isFixedWidth?: boolean;
 
   /**
-   * An on-demand size info object, populated by `NegColumnSizeObserver`
+   * An on-demand size info object, populated by `PblColumnSizeObserver`
    * @internal
    */
-  sizeInfo?: NegColumnSizeInfo;
+  sizeInfo?: PblColumnSizeInfo;
 
   /** @internal */
   maxWidthLock: boolean;
@@ -151,17 +151,17 @@ export class NegColumn implements NegColumnDefinition {
   /**
    * The column def for this column.
    */
-  get columnDef(): NegTableColumnDef<NegColumn> { return this._columnDef; }
+  get columnDef(): PblTableColumnDef<PblColumn> { return this._columnDef; }
 
   get groups(): string[] { return Array.from(this._groups.values()); }
 
   /** @internal */
-  public readonly groupStore: NegColumnGroupStore;
+  public readonly groupStore: PblColumnGroupStore;
 
   private _width?: string;
   private _parsedWidth: ReturnType<typeof parseStyleWidth>;
 
-  private _columnDef: NegTableColumnDef<NegColumn>;
+  private _columnDef: PblTableColumnDef<PblColumn>;
   private defaultWidth = '';
 
   /**
@@ -170,12 +170,12 @@ export class NegColumn implements NegColumnDefinition {
    */
   private _groups = new Set<string>();
 
-  constructor(def: NegColumn, groupStore?: NegColumnGroupStore);
-  constructor(def: NegColumnDefinition, groupStore: NegColumnGroupStore);
-  constructor(def: NegColumn | NegColumnDefinition, groupStore?: NegColumnGroupStore) {
+  constructor(def: PblColumn, groupStore?: PblColumnGroupStore);
+  constructor(def: PblColumnDefinition, groupStore: PblColumnGroupStore);
+  constructor(def: PblColumn | PblColumnDefinition, groupStore?: PblColumnGroupStore) {
     this[NEG_COLUMN_MARK] = true;
 
-    if (isNegColumn(def)) {
+    if (isPblColumn(def)) {
       initDefinitions(def, this);
       this.prop = def.prop;
       this.path = def.path;
@@ -224,13 +224,13 @@ export class NegColumn implements NegColumnDefinition {
     }
   }
 
-  static extendProperty(name: keyof NegColumn): void {
+  static extendProperty(name: keyof PblColumn): void {
     if (CLONE_PROPERTIES.indexOf(name) === -1) {
       CLONE_PROPERTIES.push(name);
     }
   }
 
-  attach(columnDef: NegTableColumnDef<NegColumn>): void {
+  attach(columnDef: PblTableColumnDef<PblColumn>): void {
     this.detach();
     this._columnDef = columnDef;
     if (this.defaultWidth) {
@@ -277,7 +277,7 @@ export class NegColumn implements NegColumnDefinition {
    * Mark's that this column belong to the provided group.
    * \> Note that this internal to the column and does not effect the group in any way.
    */
-  markInGroup(g: NegColumnGroup): void {
+  markInGroup(g: PblColumnGroup): void {
     this.groupStore.attach(g, this);
     this._groups.add(g.id);
   }
@@ -286,16 +286,16 @@ export class NegColumn implements NegColumnDefinition {
    * Mark's that this column does not belong to the provided group.
    * \> Note that this internal to the column and does not effect the group in any way.
    */
-  markNotInGroup(g: NegColumnGroup): boolean {
+  markNotInGroup(g: PblColumnGroup): boolean {
     this.groupStore.detach(g, this);
     return this._groups.delete(g.id);
   }
 
-  isInGroup(g: NegColumnGroup): boolean {
+  isInGroup(g: PblColumnGroup): boolean {
     return this._groups.has(g.id);
   }
 
-  getGroupOfRow(rowIndex: number): NegColumnGroup | undefined {
+  getGroupOfRow(rowIndex: number): PblColumnGroup | undefined {
     const groupIds = this.groups;
     for (const id of groupIds) {
       const g = this.groupStore.find(id);
@@ -305,7 +305,7 @@ export class NegColumn implements NegColumnDefinition {
     }
   }
 
-  groupLogic(columnGroups: [NegColumnGroup, NegColumnGroup, NegColumnGroup], groupExists: boolean): NegColumnGroup {
+  groupLogic(columnGroups: [PblColumnGroup, PblColumnGroup, PblColumnGroup], groupExists: boolean): PblColumnGroup {
     const [gPrev, gCurr, gNext] = columnGroups;
 
     // STATE: This column has same group of previous column, nothing to do.

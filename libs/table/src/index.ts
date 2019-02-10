@@ -1,64 +1,64 @@
 export {
-  NegTablePaginatorKind,
-  NegPaginator,
-  NegPagingPaginator,
-  NegTokenPaginator,
-  NegPaginatorChangeEvent
+  PblTablePaginatorKind,
+  PblPaginator,
+  PblPagingPaginator,
+  PblTokenPaginator,
+  PblPaginatorChangeEvent
 } from './lib/paginator/index';
 
 export {
-  NegDataSourceConfigurableTriggers,
-  NegDataSourceTriggers,
-  NegDataSourceTriggerChange,
-  NegDataSourceTriggerChangedEvent,
-  NegDataSourceAdapter,
-  NegDataSource, NegDataSourceOptions,
-  NegTableSortInstructions, NegTableSortDefinition, NegTableSorter, applySort,
-  NegDataSourceFactory, createDS, DataSourceOf,
+  PblDataSourceConfigurableTriggers,
+  PblDataSourceTriggers,
+  PblDataSourceTriggerChange,
+  PblDataSourceTriggerChangedEvent,
+  PblDataSourceAdapter,
+  PblDataSource, PblDataSourceOptions,
+  PblTableSortInstructions, PblTableSortDefinition, PblTableSorter, applySort,
+  PblDataSourceFactory, createDS, DataSourceOf,
 } from './lib/data-source/index';
 
 export {
-  NEG_TABLE_CONFIG, NegTableConfig, NegTableConfigService,
+  NEG_TABLE_CONFIG, PblTableConfig, PblTableConfigService,
 
-  NegColumn, NegMetaColumn, NegColumnGroup, NegColumnFactory, COLUMN, columnFactory,
+  PblColumn, PblMetaColumn, PblColumnGroup, PblColumnFactory, COLUMN, columnFactory,
 
-  NEG_TABLE_ROW_TEMPLATE, NegTableRowComponent,
+  NEG_TABLE_ROW_TEMPLATE, PblTableRowComponent,
 
-  NegTableComponent,
-  NegTableRegistryService,
+  PblTableComponent,
+  PblTableRegistryService,
   AutoSizeToFitOptions, ColumnApi,
 
-  NegTableSingleTemplateRegistry, NegTableMultiTemplateRegistry, NegTableMultiComponentRegistry,
-  NegTableDataHeaderExtensionRef, NegTableDataHeaderExtensionContext,
-  NegTableCellDefDirective,
-  NegTableHeaderCellDefDirective,
-  NegTableFooterCellDefDirective,
+  PblTableSingleTemplateRegistry, PblTableMultiTemplateRegistry, PblTableMultiComponentRegistry,
+  PblTableDataHeaderExtensionRef, PblTableDataHeaderExtensionContext,
+  PblTableCellDefDirective,
+  PblTableHeaderCellDefDirective,
+  PblTableFooterCellDefDirective,
   ParentNgStyleDirective, ParentNgClassDirective,
-  NegTableNoDataRefDirective,
-  NegColumnTypeDefinition, NegColumnTypeDefinitionDataMap,
-  NegColumnDefinition,
-  NegColumnGroupDefinition,
-  NegColumnSet, NegMetaRowDefinitions,
-  NegTableColumnSet, NegTableColumnDefinitionSet,
+  PblTableNoDataRefDirective,
+  PblColumnTypeDefinition, PblColumnTypeDefinitionDataMap,
+  PblColumnDefinition,
+  PblColumnGroupDefinition,
+  PblColumnSet, PblMetaRowDefinitions,
+  PblTableColumnSet, PblTableColumnDefinitionSet,
 
   NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy,
 
-  NegTableCellClickEvent,
-  NegTableMetaCellContext, NegTableCellContext, NegTableRowContext, NegRowContext,
+  PblTableCellClickEvent,
+  PblTableMetaCellContext, PblTableCellContext, PblTableRowContext, PblRowContext,
 } from './lib/table/index';
 
 export {
-  NegTablePlugin,
-  NegTablePluginExtension,
-  NegTableOnInitEvent,
-  NegTableOnResizeRowtEvent,
-  NegTableOnInvalidateHeadersEvent,
-  NegTableOnDataSourcetEvent,
-  NegTableEvents,
+  PblTablePlugin,
+  PblTablePluginExtension,
+  PblTableOnInitEvent,
+  PblTableOnResizeRowtEvent,
+  PblTableOnInvalidateHeadersEvent,
+  PblTableOnDataSourcetEvent,
+  PblTableEvents,
  } from './lib/ext/types';
 
-export { EXT_API_TOKEN, NegTableExtensionApi } from './lib/ext/table-ext-api';
+export { EXT_API_TOKEN, PblTableExtensionApi } from './lib/ext/table-ext-api';
 export { TablePlugin, TablePluginMetadata } from './lib/ext/table-plugin';
-export { NegTablePluginController } from './lib/ext/plugin-control';
+export { PblTablePluginController } from './lib/ext/plugin-control';
 
-export { NegTableModule, provideCommon } from './lib/table.module';
+export { PblTableModule, provideCommon } from './lib/table.module';

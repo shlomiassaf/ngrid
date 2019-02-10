@@ -3,9 +3,9 @@
 The source for data items that show up as rows in the table.
 
 - The data source represents a container of data items
-- The table's datasource is `NegDataSource`
-- `Array`, `Promise<Array>` and `Observable<Array>` are also supported, internally transformed to `NegDataSource`
-- We will use a factory function to define and create `NegDataSource` (manual creation is possible)
+- The table's datasource is `PblDataSource`
+- `Array`, `Promise<Array>` and `Observable<Array>` are also supported, internally transformed to `PblDataSource`
+- We will use a factory function to define and create `PblDataSource` (manual creation is possible)
 
 ## Datasource Factory Definitions
 
@@ -57,7 +57,7 @@ const dsCustomTrigger = createDS<Person>()
 ```
 
 We use `setCustomTriggers()` to opt-in for custom handling. When pagination data changes or when a filter or sort descriptor changes
-the function we provided to `onTrigger()` gets invoked with the `event` object `NegDataSourceTriggerChangedEvent`.
+the function we provided to `onTrigger()` gets invoked with the `event` object `PblDataSourceTriggerChangedEvent`.
 
 We use the `event` object to extract the information we need to make the call to the server, this will include (among other data):
 

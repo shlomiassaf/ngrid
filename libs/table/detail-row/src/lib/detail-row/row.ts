@@ -13,9 +13,9 @@ import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
 import { UnRx } from '@pebula/utils';
-import { NegTableComponent, NegTablePluginController, NegTableRowComponent, NegTableExtensionApi, EXT_API_TOKEN } from '@pebula/table';
+import { PblTableComponent, PblTablePluginController, PblTableRowComponent, PblTableExtensionApi, EXT_API_TOKEN } from '@pebula/table';
 
-import { NegTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
+import { PblTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
 
 @Component({
   selector: 'pbl-table-row[detailRow]',
@@ -29,13 +29,13 @@ import { NegTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugi
   template: CDK_ROW_TEMPLATE,
   styles: [ `.pbl-row-detail-parent { position: relative; cursor: pointer; }` ],
   providers: [
-    { provide: CdkRow, useExisting: NegTableDetailRowComponent }
+    { provide: CdkRow, useExisting: PblTableDetailRowComponent }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 @UnRx()
-export class NegTableDetailRowComponent extends NegTableRowComponent implements OnInit, OnDestroy {
+export class PblTableDetailRowComponent extends PblTableRowComponent implements OnInit, OnDestroy {
 
   get expended(): boolean {
     return this.opened;
@@ -44,19 +44,19 @@ export class NegTableDetailRowComponent extends NegTableRowComponent implements 
   @Input('detailRow') get detailRow(): any { return this.context.$implicit; };
   set detailRow(value: any) { this.row = value; };
 
-  table: NegTableComponent<any>;
+  table: PblTableComponent<any>;
 
   private get _element(): HTMLElement { return this.el.nativeElement; }
   private opened = false;
-  private plugin: NegTableDetailRowPluginDirective<any>;
+  private plugin: PblTableDetailRowPluginDirective<any>;
 
-  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: NegTableExtensionApi<any>, el: ElementRef<HTMLElement>, private vcRef: ViewContainerRef) {
+  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: PblTableExtensionApi<any>, el: ElementRef<HTMLElement>, private vcRef: ViewContainerRef) {
     super(extApi, el);
   }
 
   ngOnInit(): void {
     this.table = this.context.table;
-    const controller = NegTablePluginController.find(this.table);
+    const controller = PblTablePluginController.find(this.table);
     this.plugin = controller.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
     const tradeEvents = controller.getPlugin('targetEvents');

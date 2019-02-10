@@ -2,9 +2,9 @@ import { ElementRef, EventEmitter } from '@angular/core';
 import { coerceElement } from '@angular/cdk/coercion';
 import { DragRef } from '@angular/cdk/drag-drop';
 
-import { NegDropListRef } from './drop-list-ref';
+import { PblDropListRef } from './drop-list-ref';
 
-export class NegDragRef<T = any> extends DragRef<T> {
+export class PblDragRef<T = any> extends DragRef<T> {
 
   /**
    * Fires when the root element changes
@@ -20,7 +20,7 @@ export class NegDragRef<T = any> extends DragRef<T> {
     super(...args);
     this.exited.subscribe( e => {
       const { container } = e;
-      if (container instanceof NegDropListRef) {
+      if (container instanceof PblDropListRef) {
         container.beforeExit.next({ item: this });
       }
     });

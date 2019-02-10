@@ -1,2 +1,2 @@
-export { NegTableDragResizeComponent } from './column-resize.component';
-export { NegTableCellResizerRefDirective } from './cell-resizer-ref';
+export { PblTableDragResizeComponent } from './column-resize.component';
+export { PblTableCellResizerRefDirective } from './cell-resizer-ref';

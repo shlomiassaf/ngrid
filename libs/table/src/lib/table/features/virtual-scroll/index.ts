@@ -1,4 +1,4 @@
-export { NegCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component'
-export { NegCdkVirtualScrollDirective, NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies'
+export { PblCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component'
+export { PblCdkVirtualScrollDirective, NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies'
 export * from './virtual-scroll-for-of';
-export { NegTableScrolling } from './scrolling-plugin.directive';
+export { PblTableScrolling } from './scrolling-plugin.directive';

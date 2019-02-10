@@ -1,21 +1,21 @@
 import { RowContext } from '@angular/cdk/table';
 
-import { NegTableComponent } from '../table.component';
-import { NegColumnTypeDefinitionDataMap, NegMetaColumn, NegColumn } from '../columns';
+import { PblTableComponent } from '../table.component';
+import { PblColumnTypeDefinitionDataMap, PblMetaColumn, PblColumn } from '../columns';
 
-export interface NegTableMetaCellContext<T, TCol extends NegMetaColumn | NegColumn = NegMetaColumn | NegColumn> {
-  $implicit: NegTableMetaCellContext<T>;
+export interface PblTableMetaCellContext<T, TCol extends PblMetaColumn | PblColumn = PblMetaColumn | PblColumn> {
+  $implicit: PblTableMetaCellContext<T>;
   col: TCol;
-  table: NegTableComponent<T>;
+  table: PblTableComponent<T>;
 }
 
-export interface NegTableCellContext<T = any, P extends keyof NegColumnTypeDefinitionDataMap = keyof NegColumnTypeDefinitionDataMap> {
-  rowContext: NegTableRowContext<T>,
-  $implicit: NegTableCellContext<T>;
+export interface PblTableCellContext<T = any, P extends keyof PblColumnTypeDefinitionDataMap = keyof PblColumnTypeDefinitionDataMap> {
+  rowContext: PblTableRowContext<T>,
+  $implicit: PblTableCellContext<T>;
   row: T,
   value: any;
-  col: NegColumn;
-  table: NegTableComponent<T>;
+  col: PblColumn;
+  table: PblTableComponent<T>;
   readonly index: number;
   readonly editing: boolean;
 
@@ -26,7 +26,7 @@ export interface NegTableCellContext<T = any, P extends keyof NegColumnTypeDefin
   // selectCell(): void;
 }
 
-export interface NegTableRowContext<T = any> extends RowContext<T> {
+export interface PblTableRowContext<T = any> extends RowContext<T> {
   identity: number;
 
   /**
@@ -52,7 +52,7 @@ export interface NegTableRowContext<T = any> extends RowContext<T> {
    */
   outOfView: boolean;
 
-  readonly table: NegTableComponent<T>;
+  readonly table: PblTableComponent<T>;
 
   updateOutOfViewState(): void;
 }

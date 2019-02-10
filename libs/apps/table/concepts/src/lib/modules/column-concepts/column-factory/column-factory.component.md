@@ -77,18 +77,18 @@ All meta rows are set in the order they we're added.
 The column factory has 2 steps:
 
 - **Definition**: Adding column configuration (header, table, footer)
-- **Build**: Building the `NegTableColumnSet` for the configuration set in the **definition step**
+- **Build**: Building the `PblTableColumnSet` for the configuration set in the **definition step**
 
 ```typescript
 /* Definition step */
-const factory: NegColumnFactory = columnFactory().table( { prop: 'id' }, { prop: 'name' } );
+const factory: PblColumnFactory = columnFactory().table( { prop: 'id' }, { prop: 'name' } );
 
 /* Build step */
-const columnSet: NegTableColumnSet = factory.build();
+const columnSet: PblTableColumnSet = factory.build();
 ```
 
 In the definition step all data is stored as simple objects (POJO).  
-When we build, the factory takes these simple objects and convert them to the relevant column instances (`NegColumn`, `NegMetaColumn`, etc...).
+When we build, the factory takes these simple objects and convert them to the relevant column instances (`PblColumn`, `PblMetaColumn`, etc...).
 
 The table is extensible, plugins can add or modify behaviors including addition of new column definitions. For example, the `drag` plugin add the `reorder` property.
 to the table column definition.

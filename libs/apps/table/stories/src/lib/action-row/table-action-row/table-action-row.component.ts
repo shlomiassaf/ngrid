@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, Input, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { NegTableComponent } from '@pebula/table';
+import { PblTableComponent } from '@pebula/table';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -21,7 +21,7 @@ export class TableActionRowComponent implements AfterViewInit {
 
   private _filter = false;
 
-  constructor(public table: NegTableComponent<any>) { }
+  constructor(public table: PblTableComponent<any>) { }
 
   refresh(): void {
     this.table.ds.refresh();

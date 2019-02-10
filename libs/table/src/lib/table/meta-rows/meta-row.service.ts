@@ -3,23 +3,23 @@ import { auditTime, filter, take, debounceTime } from 'rxjs/operators';
 
 import { Injectable, Inject } from '@angular/core';
 
-import { NegTableExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
-import { NegMetaRowDefinitions } from '../columns/types';
-import { NegMetaRowDirective } from './meta-row.directive';
+import { PblTableExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
+import { PblMetaRowDefinitions } from '../columns/types';
+import { PblMetaRowDirective } from './meta-row.directive';
 
 function metaRowSectionFactory(): MetaRowSection {
   return { fixed: [], row: [], sticky: [], all: [] };
 }
 
 export interface MetaRowSection {
-  fixed: Array<{ index: number, rowDef: NegMetaRowDefinitions; el?: HTMLElement; }>;
-  row: Array<{ index: number, rowDef: NegMetaRowDefinitions; el?: HTMLElement; }>;
-  sticky: Array<{ index: number, rowDef: NegMetaRowDefinitions; el?: HTMLElement; }>;
-  all: NegMetaRowDefinitions[];
+  fixed: Array<{ index: number, rowDef: PblMetaRowDefinitions; el?: HTMLElement; }>;
+  row: Array<{ index: number, rowDef: PblMetaRowDefinitions; el?: HTMLElement; }>;
+  sticky: Array<{ index: number, rowDef: PblMetaRowDefinitions; el?: HTMLElement; }>;
+  all: PblMetaRowDefinitions[];
 }
 
 @Injectable()
-export class NegTableMetaRowService<T = any> {
+export class PblTableMetaRowService<T = any> {
   header: MetaRowSection = metaRowSectionFactory();
   footer: MetaRowSection = metaRowSectionFactory();
 
@@ -28,7 +28,7 @@ export class NegTableMetaRowService<T = any> {
   private sync$ = new Subject<void>();
   private hzScroll$ = new Subject<number>();
 
-  constructor(@Inject(EXT_API_TOKEN) public readonly extApi: NegTableExtensionApi<T>) {
+  constructor(@Inject(EXT_API_TOKEN) public readonly extApi: PblTableExtensionApi<T>) {
     this.sync = this.sync$ // TODO: complete
       .pipe(
         debounceTime(0, asapScheduler),
@@ -59,7 +59,7 @@ export class NegTableMetaRowService<T = any> {
     });
   }
 
-  addMetaRow(metaRow: NegMetaRowDirective): void {
+  addMetaRow(metaRow: PblMetaRowDirective): void {
     const { columnStore } = this.extApi;
     const { header, footer } = columnStore.metaColumnIds;
 
@@ -84,7 +84,7 @@ export class NegTableMetaRowService<T = any> {
     this.sync$.next();
   }
 
-  removeMetaRow(metaRow: NegMetaRowDirective): void {
+  removeMetaRow(metaRow: PblMetaRowDirective): void {
     const rowDef = metaRow.meta;
     let index = this.header.all.indexOf(metaRow.meta);
     if (index > -1) {
@@ -98,7 +98,7 @@ export class NegTableMetaRowService<T = any> {
     }
   }
 
-  private addToSection(section: MetaRowSection, metaRow: NegMetaRowDirective, index: number): void {
+  private addToSection(section: MetaRowSection, metaRow: PblMetaRowDirective, index: number): void {
     const rowDef = metaRow.meta;
     section[rowDef.type].push( { index, rowDef, el: metaRow.elRef.nativeElement } );
     section.all.push(rowDef);

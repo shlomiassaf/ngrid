@@ -29,22 +29,22 @@ import {
 
 import { UnRx } from '@pebula/utils';
 
-import { NegTablePluginController } from '../../../ext/plugin-control';
-import { NegTableConfigService } from '../../services/config';
-import { NegTableComponent } from '../../table.component';
-import { NegCdkVirtualScrollDirective, NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies';
+import { PblTablePluginController } from '../../../ext/plugin-control';
+import { PblTableConfigService } from '../../services/config';
+import { PblTableComponent } from '../../table.component';
+import { PblCdkVirtualScrollDirective, NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies';
 import { NgeVirtualTableRowInfo } from './virtual-scroll-for-of';
 
 declare module '../../services/config' {
-  interface NegTableConfig {
+  interface PblTableConfig {
     virtualScroll?: {
-      wheelMode?: NegCdkVirtualScrollDirective['wheelMode'];
+      wheelMode?: PblCdkVirtualScrollDirective['wheelMode'];
       defaultStrategy?(): VirtualScrollStrategy;
     }
   }
 }
 
-function resolveScrollStrategy(config: NegTableConfigService, scrollStrategy?: VirtualScrollStrategy): VirtualScrollStrategy {
+function resolveScrollStrategy(config: PblTableConfigService, scrollStrategy?: VirtualScrollStrategy): VirtualScrollStrategy {
   if (!scrollStrategy && config.has('virtualScroll')) {
     const virtualScrollConfig = config.get('virtualScroll');
     if (typeof virtualScrollConfig.defaultStrategy === 'function') {
@@ -69,7 +69,7 @@ function resolveScrollStrategy(config: NegTableConfigService, scrollStrategy?: V
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 @UnRx()
-export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewport implements OnInit, AfterViewInit, OnDestroy {
+export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewport implements OnInit, AfterViewInit, OnDestroy {
 
   get isScrolling(): boolean { return this._isScrolling; }
   readonly enabled: boolean;
@@ -136,8 +136,8 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   ngeRenderedContentSize = 0;
   negFillerHeight: string;
 
-  get wheelMode(): NegCdkVirtualScrollDirective['wheelMode'] {
-    return (this.negScrollStrategy as NegCdkVirtualScrollDirective).wheelMode || this.wheelModeDefault || 'passive';
+  get wheelMode(): PblCdkVirtualScrollDirective['wheelMode'] {
+    return (this.negScrollStrategy as PblCdkVirtualScrollDirective).wheelMode || this.wheelModeDefault || 'passive';
   }
 
   get innerWidth(): number {
@@ -154,17 +154,17 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   private isCDPending: boolean;
   private _isScrolling = false;
 
-  private wheelModeDefault:  NegCdkVirtualScrollDirective['wheelMode'];
+  private wheelModeDefault:  PblCdkVirtualScrollDirective['wheelMode'];
 
   constructor(elementRef: ElementRef<HTMLElement>,
               cdr: ChangeDetectorRef,
               ngZone: NgZone,
-              config: NegTableConfigService,
+              config: PblTableConfigService,
               @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) public negScrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher,
-              pluginCtrl: NegTablePluginController,
-              private table: NegTableComponent<any>) {
+              pluginCtrl: PblTablePluginController,
+              private table: PblTableComponent<any>) {
     super(elementRef,
           cdr,
           ngZone,
@@ -177,7 +177,7 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     }
     config.onUpdate('virtualScroll').pipe(UnRx(this)).subscribe( change => this.wheelModeDefault = change.curr.wheelMode);
 
-    if (negScrollStrategy instanceof NegCdkVirtualScrollDirective) {
+    if (negScrollStrategy instanceof PblCdkVirtualScrollDirective) {
       this.enabled = negScrollStrategy.type !== 'vScrollNone';
     } else {
       this.enabled = !(negScrollStrategy instanceof NoVirtualScrollStrategy);
@@ -264,7 +264,7 @@ export class NegCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   attach(forOf: CdkVirtualForOf<any> & NgeVirtualTableRowInfo) {
     super.attach(forOf);
-    const scrollStrategy = this.negScrollStrategy instanceof NegCdkVirtualScrollDirective
+    const scrollStrategy = this.negScrollStrategy instanceof PblCdkVirtualScrollDirective
       ? this.negScrollStrategy._scrollStrategy
       : this.negScrollStrategy
     ;

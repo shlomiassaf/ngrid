@@ -2,17 +2,17 @@ import { Directive, Input, Injector } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { UnRx } from '@pebula/utils';
-import { NegColumn, NegTableComponent, NegTablePluginController } from '@pebula/table';
-import { NegTableTargetEventsPlugin } from './target-events-plugin';
+import { PblColumn, PblTableComponent, PblTablePluginController } from '@pebula/table';
+import { PblTableTargetEventsPlugin } from './target-events-plugin';
 
-NegColumn.extendProperty('editable');
+PblColumn.extendProperty('editable');
 
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: 'pbl-table[cellEditClick], pbl-table[cellEditDblClick]',
 })
 @UnRx()
-export class NegTableCellEditDirective<T> {
+export class PblTableCellEditDirective<T> {
   @Input() set cellEditClick(value: boolean) {
     value = coerceBooleanProperty(value);
     if (this._click !== value) {
@@ -30,9 +30,9 @@ export class NegTableCellEditDirective<T> {
 
   private _click = false;
   private _dblClick = false;
-  private targetEventsPlugin: NegTableTargetEventsPlugin<T>;
+  private targetEventsPlugin: PblTableTargetEventsPlugin<T>;
 
-  constructor(table: NegTableComponent<any>, injector: Injector, pluginCtrl: NegTablePluginController) {
+  constructor(table: PblTableComponent<any>, injector: Injector, pluginCtrl: PblTablePluginController) {
 
     let subscription = pluginCtrl.events.subscribe( event => {
       if (event.kind === 'onInit') {

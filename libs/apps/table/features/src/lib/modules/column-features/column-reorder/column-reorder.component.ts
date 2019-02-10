@@ -1,6 +1,6 @@
 /* @pebula-example:ex-1 ex-2 ex-3 ex-4  */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { NegTableComponent, createDS, columnFactory } from '@pebula/table';
+import { PblTableComponent, createDS, columnFactory } from '@pebula/table';
 import { Person, DemoDataSource } from '@pebula/apps/table/shared';
 
 @Component({
@@ -23,13 +23,13 @@ export class ColumnReorderTableExampleComponent {
     .build();
   ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
 
-  move(table: NegTableComponent<Person>): void {
+  move(table: PblTableComponent<Person>): void {
     const id = table.columnApi.findColumn('id');
     const gender = table.columnApi.findColumn('gender');
     table.columnApi.moveColumn(id, gender);
   }
 
-  swap(table: NegTableComponent<Person>): void {
+  swap(table: PblTableComponent<Person>): void {
     const name = table.columnApi.findColumn('name');
     const birthdate = table.columnApi.findColumn('birthdate');
     table.columnApi.swapColumns(name, birthdate);

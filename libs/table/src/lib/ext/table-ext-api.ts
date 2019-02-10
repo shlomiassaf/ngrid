@@ -1,26 +1,26 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
 
-import { NegCdkTableComponent } from '../table';
+import { PblCdkTableComponent } from '../table';
 import { ContextApi } from '../table/context/context';
-import { NegTableComponent } from '../table/table.component';
-import { NegColumnStore } from '../table/columns/column-store';
+import { PblTableComponent } from '../table/table.component';
+import { PblColumnStore } from '../table/columns/column-store';
 import { DynamicColumnWidthLogic } from '../table/col-width-logic/dynamic-column-width';
-import { NegCdkVirtualScrollViewportComponent } from '../table/features/virtual-scroll/virtual-scroll-viewport.component'
-import { NegTableEvents } from './types';
-import { NegTableMetaRowService } from '../table/meta-rows/index';
+import { PblCdkVirtualScrollViewportComponent } from '../table/features/virtual-scroll/virtual-scroll-viewport.component'
+import { PblTableEvents } from './types';
+import { PblTableMetaRowService } from '../table/meta-rows/index';
 
 export const EXT_API_TOKEN = new InjectionToken('NEG_TABLE_EXTERNAL_API');
 
-export interface NegTableExtensionApi<T = any> {
-  table: NegTableComponent<T>;
+export interface PblTableExtensionApi<T = any> {
+  table: PblTableComponent<T>;
   element: HTMLElement;
-  cdkTable: NegCdkTableComponent<T>;
-  columnStore: NegColumnStore;
+  cdkTable: PblCdkTableComponent<T>;
+  columnStore: PblColumnStore;
   contextApi: ContextApi<T>;
-  events: Observable<NegTableEvents>;
-  metaRowService: NegTableMetaRowService;
+  events: Observable<PblTableEvents>;
+  metaRowService: PblTableMetaRowService;
   onInit(fn: () => void): void;
-  setViewport(viewport: NegCdkVirtualScrollViewportComponent): void;
+  setViewport(viewport: PblCdkVirtualScrollViewportComponent): void;
   dynamicColumnWidthFactory(): DynamicColumnWidthLogic;
 }

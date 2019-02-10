@@ -1,1 +1,1 @@
-export { NegTableCheckboxModule } from './lib/table-checkbox.module';
+export { PblTableCheckboxModule } from './lib/table-checkbox.module';

@@ -1,7 +1,7 @@
-import { NegTableExtensionApi } from '../ext/table-ext-api';
-import { NegTableComponent } from './table.component';
-import { NegColumn } from './columns/column';
-import { NegColumnStore } from './columns/column-store';
+import { PblTableExtensionApi } from '../ext/table-ext-api';
+import { PblTableComponent } from './table.component';
+import { PblColumn } from './columns/column';
+import { PblColumnStore } from './columns/column-store';
 
 export interface AutoSizeToFitOptions {
   /**
@@ -35,27 +35,27 @@ export interface AutoSizeToFitOptions {
 
   /**
    * A function for per-column fine tuning of the process.
-   * The function receives the `NegColumn`, its relative width (in %, 0 to 1) and total width (in pixels) and should return
+   * The function receives the `PblColumn`, its relative width (in %, 0 to 1) and total width (in pixels) and should return
    * an object describing how it should auto fit.
    *
    * When the function returns undefined the options are taken from the root.
    */
-  columnBehavior?(column: NegColumn): Pick<AutoSizeToFitOptions, 'forceWidthType' | 'keepMinWidth' | 'keepMaxWidth'> | undefined;
+  columnBehavior?(column: PblColumn): Pick<AutoSizeToFitOptions, 'forceWidthType' | 'keepMinWidth' | 'keepMaxWidth'> | undefined;
 }
 
 export class ColumnApi<T> {
 
-  get groupByColumns(): NegColumn[] { return this.store.groupBy; }
+  get groupByColumns(): PblColumn[] { return this.store.groupBy; }
   get visibleColumnIds(): string[] { return this.store.columnIds; }
-  get visibleColumns(): NegColumn[] { return this.store.columns; }
-  get columns(): NegColumn[] { return this.store.allColumns; }
+  get visibleColumns(): PblColumn[] { return this.store.columns; }
+  get columns(): PblColumn[] { return this.store.allColumns; }
 
-  constructor(private table: NegTableComponent<T>, private store: NegColumnStore, private extApi: NegTableExtensionApi) { }
+  constructor(private table: PblTableComponent<T>, private store: PblColumnStore, private extApi: PblTableExtensionApi) { }
 
   /**
-   * Returns the `NegColumn` at the specified index from the list of rendered columns (i.e. not hidden).
+   * Returns the `PblColumn` at the specified index from the list of rendered columns (i.e. not hidden).
    */
-  findColumnAt(renderColumnIndex: number): NegColumn | undefined {
+  findColumnAt(renderColumnIndex: number): PblColumn | undefined {
     return this.store.columns[renderColumnIndex];
   }
 
@@ -64,7 +64,7 @@ export class ColumnApi<T> {
    *
    * The search is performed on all known columns.
    */
-  findColumn(id: string): NegColumn | undefined {
+  findColumn(id: string): PblColumn | undefined {
     const result = this.store.find(id);
     if (result) {
       return result.data;
@@ -76,7 +76,7 @@ export class ColumnApi<T> {
   *
   * The render index represents the current location of the column in the group of visible columns.
   */
-  renderIndexOf(column: NegColumn): number {
+  renderIndexOf(column: PblColumn): number {
     return this.store.columns.indexOf(column);
   }
 
@@ -88,7 +88,7 @@ export class ColumnApi<T> {
    *
    * Resizing the column will trigger a table width resizing event, updating column group if necessary.
    */
-  resizeColumn(column: NegColumn, width: string): void {
+  resizeColumn(column: PblColumn, width: string): void {
     column.updateWidth(true, width)
     this.table.resetColumnsWidth();
     this.table.resizeColumns();
@@ -102,7 +102,7 @@ export class ColumnApi<T> {
    *
    * The best fit found (width) is then used to call `resizeColumn()`.
    */
-  autoSizeColumn(column: NegColumn): void {
+  autoSizeColumn(column: PblColumn): void {
     const size = this.findColumnAutoSize(column);
     this.resizeColumn(column, `${size}px`);
   }
@@ -119,8 +119,8 @@ export class ColumnApi<T> {
    * Make sure you are not resizing an hidden column.
    * This method will simply run `autoSizeColumn()` on the columns provided.
    */
-  autoSizeColumns(...columns: NegColumn[]): void; // tslint:disable-line:unified-signatures
-  autoSizeColumns(...columns: NegColumn[]): void {
+  autoSizeColumns(...columns: PblColumn[]): void; // tslint:disable-line:unified-signatures
+  autoSizeColumns(...columns: PblColumn[]): void {
     const cols = columns.length > 0 ? columns : this.visibleColumns;
     for (const column of cols) {
       const size = this.findColumnAutoSize(column);
@@ -214,14 +214,14 @@ export class ColumnApi<T> {
    * The new location of the anchor column will be it's original location plus or minus 1, depending on the delta between
    * the columns. If the origin of the `column` is before the `anchor` then the anchor's new position is minus one, otherwise plus 1.
    */
-  moveColumn(column: NegColumn, anchor: NegColumn): boolean;
+  moveColumn(column: PblColumn, anchor: PblColumn): boolean;
     /**
    * Move the provided `column` to the position of the column at `renderColumnIndex`.
    * `renderColumnIndex` must be a visible column (i.e. not hidden)
    */
-  moveColumn(column: NegColumn, renderColumnIndex: number): boolean; // tslint:disable-line:unified-signatures
-  moveColumn(column: NegColumn, anchor: NegColumn | number): boolean {
-    if (anchor instanceof NegColumn) {
+  moveColumn(column: PblColumn, renderColumnIndex: number): boolean; // tslint:disable-line:unified-signatures
+  moveColumn(column: PblColumn, anchor: PblColumn | number): boolean {
+    if (anchor instanceof PblColumn) {
       const result = column === anchor ? false : this.store.moveColumn(column, anchor);
       if (result) {
         this.afterColumnPositionChange();
@@ -236,7 +236,7 @@ export class ColumnApi<T> {
   /**
    * Swap positions between 2 existing columns.
    */
-  swapColumns(col1: NegColumn, col2: NegColumn): boolean {
+  swapColumns(col1: PblColumn, col2: PblColumn): boolean {
     const result = this.store.swapColumns(col1, col2);
     if (result) {
       this.afterColumnPositionChange();
@@ -244,10 +244,10 @@ export class ColumnApi<T> {
     return result;
   }
 
-  addGroupBy(...column: NegColumn[]): void { this.store.addGroupBy(...column); }
-  removeGroupBy(...column: NegColumn[]): void { this.store.removeGroupBy(...column); }
+  addGroupBy(...column: PblColumn[]): void { this.store.addGroupBy(...column); }
+  removeGroupBy(...column: PblColumn[]): void { this.store.removeGroupBy(...column); }
 
-  private findColumnAutoSize(column: NegColumn): number {
+  private findColumnAutoSize(column: PblColumn): number {
     const { columnDef } = column;
     const cells = columnDef.queryCellElements();
     let size = 0;

@@ -58,15 +58,15 @@ The read-only definition is straight-forward, the main change is that we use the
 </div>
 ```
 
-The write only view also make use if the cell context (`NegTableCellContext) to assign the new value and to exit editing when the input is out of focus.
+The write only view also make use if the cell context (`PblTableCellContext) to assign the new value and to exit editing when the input is out of focus.
 
 ### Cell context
 
 The cell context is used to toggle between write and read view's, i.e. toggle between the edit and main templates.
 
-We start editing by invoking `NegTableCellContext.startEdit()` and stop editing with `NegTableCellContext.stopEdit()`.
+We start editing by invoking `PblTableCellContext.startEdit()` and stop editing with `PblTableCellContext.stopEdit()`.
 
-W> An edit template is mandatory. Calling `NegTableCellContext.startEdit()` when the column does not have an edit template will be ignored.
+W> An edit template is mandatory. Calling `PblTableCellContext.startEdit()` when the column does not have an edit template will be ignored.
 Note that this is the only restriction.
 
 ## The `editable` definition
@@ -74,7 +74,7 @@ Note that this is the only restriction.
 The column definitions include the `editable` property, indicating if a column is editable or not.
 When set to `true` (and an edit template exists) the cell will include the CSS class **pbl-table-editable-cell**.
 
-The `editable` flag has no impact in `NegTableCellContext.startEdit()` but it might be used by plugins or by the developer to
+The `editable` flag has no impact in `PblTableCellContext.startEdit()` but it might be used by plugins or by the developer to
 create *editing logic*
 
 For example, the directives `cellEditClick` / `cellEditDblClick` (**target-events** plugin) allow simple editing integration that
@@ -127,7 +127,7 @@ This time we used `(cellClick)` but we can also use `(cellDblClick)`
 When the checked value changes we use a method to assign the new value and stop cell editing:
 
 ```typescript
-changeCheckbox(input: HTMLInputElement, ctx: NegTableCellContext): void {
+changeCheckbox(input: HTMLInputElement, ctx: PblTableCellContext): void {
   ctx.value = input.checked;
   setTimeout( () => ctx.stopEdit(true) );
 }

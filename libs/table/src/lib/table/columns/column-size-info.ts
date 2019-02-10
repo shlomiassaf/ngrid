@@ -1,9 +1,9 @@
-import { NegColumnSizeInfo } from '../types';
-import { NegColumn } from './column';
+import { PblColumnSizeInfo } from '../types';
+import { PblColumn } from './column';
 
-export class ColumnSizeInfo implements NegColumnSizeInfo {
-  get column(): NegColumn { return this._column; }
-  set column(value: NegColumn) { this.attachColumn(value); }
+export class ColumnSizeInfo implements PblColumnSizeInfo {
+  get column(): PblColumn { return this._column; }
+  set column(value: PblColumn) { this.attachColumn(value); }
 
   /**
    * The height of the column (subpixel resolution)
@@ -20,11 +20,11 @@ export class ColumnSizeInfo implements NegColumnSizeInfo {
    */
   style: CSSStyleDeclaration;
 
-  protected _column: NegColumn;
+  protected _column: PblColumn;
 
   constructor(public readonly target: HTMLElement) { }
 
-  attachColumn(column: NegColumn): void {
+  attachColumn(column: PblColumn): void {
     this.detachColumn();
 
     if (column) {

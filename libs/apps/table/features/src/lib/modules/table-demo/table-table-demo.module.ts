@@ -14,14 +14,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-import { NegTableModule, NegTableRegistryService, NegTableConfigService } from '@pebula/table';
-import { NegTableDragModule } from '@pebula/table/drag';
-import { NegTableTargetEventsModule } from '@pebula/table/target-events';
-import { NegTableTransposeModule } from '@pebula/table/transpose';
-import { NegTableBlockUiModule } from '@pebula/table/block-ui';
-import { NegTableDetailRowModule } from '@pebula/table/detail-row';
-import { NegTableStickyModule } from '@pebula/table/sticky';
-import { NegTableMaterialModule } from '@pebula/table/material';
+import { PblTableModule, PblTableRegistryService, PblTableConfigService } from '@pebula/table';
+import { PblTableDragModule } from '@pebula/table/drag';
+import { PblTableTargetEventsModule } from '@pebula/table/target-events';
+import { PblTableTransposeModule } from '@pebula/table/transpose';
+import { PblTableBlockUiModule } from '@pebula/table/block-ui';
+import { PblTableDetailRowModule } from '@pebula/table/detail-row';
+import { PblTableStickyModule } from '@pebula/table/sticky';
+import { PblTableMaterialModule } from '@pebula/table/material';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/table/shared';
 import { RowHeightTableExampleComponent } from './row-height/row-height.component';
@@ -63,20 +63,20 @@ const ROUTES = [
     RouterModule.forChild(ROUTES),
     SharedModule,
     MATERIAL, MatRippleModule,
-    NegTableModule,
-    NegTableDragModule,
-    NegTableTargetEventsModule,
-    NegTableBlockUiModule,
-    NegTableTransposeModule,
-    NegTableDetailRowModule,
-    NegTableStickyModule,
-    NegTableMaterialModule,
+    PblTableModule,
+    PblTableDragModule,
+    PblTableTargetEventsModule,
+    PblTableBlockUiModule,
+    PblTableTransposeModule,
+    PblTableDetailRowModule,
+    PblTableStickyModule,
+    PblTableMaterialModule,
   ],
   exports: [ MatRippleModule ], // we need this for detail-row
-  providers: [ NegTableRegistryService ],
+  providers: [ PblTableRegistryService ],
 })
 export class TableTableDemoModule {
-  constructor(registry: ExampleGroupRegistryService, config: NegTableConfigService) {
+  constructor(registry: ExampleGroupRegistryService, config: PblTableConfigService) {
     config.set('cellTooltip', { autoSetAll: true });
     registry.registerSubGroupRoutes('table', ROUTES);
   }

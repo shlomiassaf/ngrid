@@ -1,8 +1,8 @@
 export {
-  CdkLazyDropList, CdkLazyDrag, NegDragHandle,
-  NegTableRowReorderPluginDirective, NegTableRowDragDirective,
-  NegTableColumnReorderPluginDirective, NegTableColumnDragDirective,
+  CdkLazyDropList, CdkLazyDrag, PblDragHandle,
+  PblTableRowReorderPluginDirective, PblTableRowDragDirective,
+  PblTableColumnReorderPluginDirective, PblTableColumnDragDirective,
 } from './lib/drag-and-drop/index';
 
-export { NegTableDragResizeComponent } from './lib/column-resize/index';
-export { NegTableDragModule } from './lib/table-drag.module';
+export { PblTableDragResizeComponent } from './lib/column-resize/index';
+export { PblTableDragModule } from './lib/table-drag.module';

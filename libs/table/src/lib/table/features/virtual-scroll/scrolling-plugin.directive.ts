@@ -1,11 +1,11 @@
 import { Directive, EventEmitter, Output, NgZone } from '@angular/core';
-import { NegTablePluginController } from '../../../ext/plugin-control';
-import { NegTableComponent } from '../../table.component';
+import { PblTablePluginController } from '../../../ext/plugin-control';
+import { PblTableComponent } from '../../table.component';
 
 @Directive({
   selector: 'pbl-table[scrolling]'
 })
-export class NegTableScrolling<T = any> {
+export class PblTableScrolling<T = any> {
 
   /**
    * Event emitted when the scrolling state of rows in the table changes.
@@ -21,7 +21,7 @@ export class NegTableScrolling<T = any> {
    */
   @Output() scrolling = new EventEmitter< -1 | 0 | 1 >();
 
-  constructor(table: NegTableComponent<T>, pluginCtrl: NegTablePluginController, zone: NgZone) {
+  constructor(table: PblTableComponent<T>, pluginCtrl: PblTablePluginController, zone: NgZone) {
     let subscription = pluginCtrl.events.subscribe( event => {
       if (event.kind === 'onInit') {
         const { viewport } = table;

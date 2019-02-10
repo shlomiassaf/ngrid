@@ -8,10 +8,10 @@ You can provide the following datasources:
 - Array - Direct interface
 - Promise - Async interface
 - Observable - Async stream interface
-- `NegDataSource` - Async stream interface
+- `PblDataSource` - Async stream interface
 
-The table supports all of the above but works with `NegDataSource<T>`.
-When an array, promise or observable is provided it is converted into `NegDataSource<T>`.
+The table supports all of the above but works with `PblDataSource<T>`.
+When an array, promise or observable is provided it is converted into `PblDataSource<T>`.
 
 ## Array, Promise, Observable
 
@@ -53,15 +53,15 @@ and the logic sits on the remote source.
 
 We need to find a simple way to support both scenarios in a single, easy to use API.
 
-## NegDataSource
+## PblDataSource
 
-To scale up the table provides the datasource container `NegDataSource<T>` with a simple to use datasource factory.
+To scale up the table provides the datasource container `PblDataSource<T>` with a simple to use datasource factory.
 
-Using the `NegDataSource<T>` API you can invoke a manual data update, define the sorters, filters and more.  
+Using the `PblDataSource<T>` API you can invoke a manual data update, define the sorters, filters and more.  
 Using the factory you can create and define a datasource with a simple API that handles sorting, filtering and pagination for us in client side more
 while providing an dead simple API for reacting to sort, filter and pagination updates in server side mode.
 
-<docsi-mat-example-with-source title="Working with NegDataSource" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
+<docsi-mat-example-with-source title="Working with PblDataSource" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
   <!--@pebula-example:ex-2-->
   <pbl-table [dataSource]="ds2" [columns]="columns"></pbl-table>
   <!--@pebula-example:ex-2-->
@@ -96,10 +96,10 @@ The datasource factory will work for you almost all use cases, however, sometime
 
 The actual structure of the datasource is split into 2 parts:
 
-- `NegDataSource<T>`
-- `NegDataSourceAdapter<T, TData>`
+- `PblDataSource<T>`
+- `PblDataSourceAdapter<T, TData>`
 
-`NegDataSource<T>` handles all external APIs, the adapter implements the logic and the factory binds the two.
+`PblDataSource<T>` handles all external APIs, the adapter implements the logic and the factory binds the two.
 
 For example, the factory that comes with the table is bundled with an adapter that automatically handles sorting, filtering and pagination
 (client side mode) but also contains logic that allow "outsourcing" selected operations to the user.

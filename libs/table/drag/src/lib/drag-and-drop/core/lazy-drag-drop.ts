@@ -1,8 +1,8 @@
 import { take } from 'rxjs/operators';
 import { Input, Directive, ElementRef, QueryList, OnDestroy, Optional, AfterViewInit, OnInit } from '@angular/core';
 import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST } from '@angular/cdk/drag-drop';
-import { NegDropListRef } from './drop-list-ref';
-import { NegDragRef } from './drag-ref';
+import { PblDropListRef } from './drop-list-ref';
+import { PblDragRef } from './drag-ref';
 
 @Directive({
   selector: '[cdkLazyDropList]',
@@ -18,7 +18,7 @@ import { NegDragRef } from './drag-ref';
   }
 })
 export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> implements OnInit {
-  get negDropListRef(): NegDropListRef<DRef> { return this._dropListRef as any; }
+  get negDropListRef(): PblDropListRef<DRef> { return this._dropListRef as any; }
 
   /**
    * Selector that will be used to determine the direct container element, starting from
@@ -35,8 +35,8 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   private _draggablesSet = new Set<CdkDrag>();
 
   ngOnInit(): void {
-    if (this.negDropListRef instanceof NegDropListRef === false) {
-      throw new Error('Invalid `DropListRef` injection, the ref is not an instance of NegDropListRef')
+    if (this.negDropListRef instanceof PblDropListRef === false) {
+      throw new Error('Invalid `DropListRef` injection, the ref is not an instance of PblDropListRef')
     }
     this._dropListRef.beforeStarted.subscribe( () => this.beforeStarted() );
   }
@@ -97,7 +97,7 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
     this._rootClass = value;
   }
 
-  get negDragRef(): NegDragRef<DRef> { return this._dragRef as any; }
+  get negDragRef(): PblDragRef<DRef> { return this._dragRef as any; }
 
   @Input() get cdkDropList(): Z { return this.dropContainer as Z; }
   set cdkDropList(value: Z) {
@@ -116,8 +116,8 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
   private _hostNotRoot = false;
 
   ngOnInit(): void {
-    if (this.negDragRef instanceof NegDragRef === false) {
-      throw new Error('Invalid `DragRef` injection, the ref is not an instance of NegDragRef')
+    if (this.negDragRef instanceof PblDragRef === false) {
+      throw new Error('Invalid `DragRef` injection, the ref is not an instance of PblDragRef')
     }
     this.negDragRef.rootElementChanged.subscribe( event => {
       const rootElementSelectorClass = this._rootClass;
@@ -169,10 +169,10 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
   providers: [
     {
       provide: CdkDragHandle,
-      useExisting: NegDragHandle
+      useExisting: PblDragHandle
     }
   ]
 })
-export class NegDragHandle extends CdkDragHandle {
+export class PblDragHandle extends CdkDragHandle {
   constructor(public element: ElementRef<HTMLElement>, @Optional() parentDrag?: CdkDrag) { super(element, parentDrag); }
 }

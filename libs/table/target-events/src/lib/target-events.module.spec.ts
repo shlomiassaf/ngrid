@@ -1,16 +1,16 @@
 
     import { async, TestBed } from '@angular/core/testing';
-    import { NegTableTargetEventsModule } from './target-events.module';
+    import { PblTableTargetEventsModule } from './target-events.module';
 
-    describe('NegTableTargetEventsModule', () => {
+    describe('PblTableTargetEventsModule', () => {
       beforeEach(async(() => {
         TestBed.configureTestingModule({
-          imports: [ NegTableTargetEventsModule ]
+          imports: [ PblTableTargetEventsModule ]
         })
         .compileComponents();
       }));
 
       it('should create', () => {
-        expect(NegTableTargetEventsModule).toBeDefined();
+        expect(PblTableTargetEventsModule).toBeDefined();
       });
     });

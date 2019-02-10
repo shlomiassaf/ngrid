@@ -26,25 +26,25 @@ The trigger is called when a data update is required by a source, the sources ar
 - Filter - Filter has changed and filtering trigger is enabled
 - Pagination - Pagination has changed and pagination trigger is enabled
 
-With each trigger the `NegDataSourceTriggerChangedEvent<TData>` object is provided, containing information about the sources for this trigger
+With each trigger the `PblDataSourceTriggerChangedEvent<TData>` object is provided, containing information about the sources for this trigger
 and any additional information available.
 
 ```typescript
-export interface NegDataSourceTriggerChange<T> {
+export interface PblDataSourceTriggerChange<T> {
   changed: boolean;
   prev: T;
   curr?: T;
 }
 
-export interface NegDataSourceTriggerChangedEvent<T = any> {
-  filter?: NegDataSourceTriggerChange<DataSourceFilter>;
-  sort?: NegDataSourceTriggerChange<NegTableDataSourceSortChange>;
+export interface PblDataSourceTriggerChangedEvent<T = any> {
+  filter?: PblDataSourceTriggerChange<DataSourceFilter>;
+  sort?: PblDataSourceTriggerChange<PblTableDataSourceSortChange>;
   pagination: {
     changed: boolean;
-    page: NegDataSourceTriggerChange<any>;
-    perPage: NegDataSourceTriggerChange<number>;
+    page: PblDataSourceTriggerChange<any>;
+    perPage: PblDataSourceTriggerChange<number>;
   }
-  data: NegDataSourceTriggerChange<T>;
+  data: PblDataSourceTriggerChange<T>;
 
   /**
    * Set the total length of the paginator (for server-side rendering, client-side pagination is automatically set)

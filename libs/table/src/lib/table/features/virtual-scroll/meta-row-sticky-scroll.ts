@@ -1,6 +1,6 @@
 
 import { ViewContainerRef } from '@angular/core';
-import { NegCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
+import { PblCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import { updateStickyRows } from './utils';
 
 /**
@@ -25,7 +25,7 @@ export class MetaRowStickyScroll {
   private movedFooterRows: Array<[HTMLElement, HTMLElement, number]> = [];
   private movedHeaderRows: Array<[HTMLElement, HTMLElement, number]> = [];
 
-  constructor(private viewport: NegCdkVirtualScrollViewportComponent,
+  constructor(private viewport: PblCdkVirtualScrollViewportComponent,
               private viewPortEl: HTMLElement,
               private metaRows: Record<'header' | 'footer', { rows: HTMLElement[]; sticky: boolean[]; rendered: boolean[] }>) { }
 

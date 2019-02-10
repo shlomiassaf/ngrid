@@ -1,12 +1,12 @@
-import { NegColumnDefinition } from '../columns/types';
-import { NegColumn } from '../columns/column';
-import { NegMetaColumnStore } from '../columns/column-store';
+import { PblColumnDefinition } from '../columns/types';
+import { PblColumn } from '../columns/column';
+import { PblMetaColumnStore } from '../columns/column-store';
 import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 
 /**
  * Given an object (item) and a path, returns the value at the path
  */
-export function deepPathGet(item: any, col: NegColumnDefinition): any {
+export function deepPathGet(item: any, col: PblColumnDefinition): any {
   if ( col.path ) {
     for ( const p of col.path ) {
       item = item[ p ];
@@ -19,7 +19,7 @@ export function deepPathGet(item: any, col: NegColumnDefinition): any {
 /**
  * Given an object (item) and a path, returns the value at the path
  */
-export function deepPathSet(item: any, col: NegColumnDefinition, value: any): void {
+export function deepPathSet(item: any, col: PblColumnDefinition, value: any): void {
   if ( col.path ) {
     for ( const p of col.path ) {
       item = item[ p ];
@@ -34,8 +34,8 @@ export function deepPathSet(item: any, col: NegColumnDefinition, value: any): vo
  * The final width represent a static width, it is the value as set in the definition (except column without width, where the calculated global width is set).
  */
 export function resetColumnWidths(rowWidth: StaticColumnWidthLogic,
-                                  tableColumns: NegColumn[],
-                                  metaColumns: NegMetaColumnStore[],
+                                  tableColumns: PblColumn[],
+                                  metaColumns: PblMetaColumnStore[],
                                   options: { tableMarkForCheck?: boolean; metaMarkForCheck?: boolean; } = {}): void {
   const { pct, px } = rowWidth.defaultColumnWidth;
   const defaultWidth = `calc(${pct}% - ${px}px)`;
@@ -57,7 +57,7 @@ export function resetColumnWidths(rowWidth: StaticColumnWidthLogic,
       }
     }
 
-    // We don't handle groups because they are handled by `NegTableComponent.resizeRows()`
+    // We don't handle groups because they are handled by `PblTableComponent.resizeRows()`
     // which set the width for each.
   }
 }

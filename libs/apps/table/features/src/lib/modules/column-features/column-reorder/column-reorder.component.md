@@ -21,17 +21,17 @@ If the origin was **before** the anchor, the anchor and group will move decremen
 I> Only visible (not hidden) columns can move, if at least one column is hidden the move is rejected.
 
 ```typescript
-  moveColumn(column: NegColumn, anchor: NegColumn): boolean;
+  moveColumn(column: PblColumn, anchor: PblColumn): boolean;
 ```
 
 It is also possible to provide an index, representing the location of the anchor column.
 The index should reflect the position **inside the group of rendered columns**, i.e: the columns that are not hidden.
 
 ```typescript
-  moveColumn(column: NegColumn, renderColumnIndex: number): boolean;
+  moveColumn(column: PblColumn, renderColumnIndex: number): boolean;
 ```
 
-I> We recommend moving with absolute columns, if you are working with index's use the methods in `ColumnApi` to resolve to `NegColumn`
+I> We recommend moving with absolute columns, if you are working with index's use the methods in `ColumnApi` to resolve to `PblColumn`
 
 ### Swapping columns
 
@@ -41,7 +41,7 @@ Similar to moving, swapping require 2 columns both visible however swapping will
 leaving the group of columns between the 2 in the same place.
 
 ```typescript
-  swapColumns(col1: NegColumn, col2: NegColumn): boolean;
+  swapColumns(col1: PblColumn, col2: PblColumn): boolean;
 ```
 
 <docsi-mat-example-with-source title="Moving with the API" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
@@ -71,7 +71,7 @@ To enable column reordering:
 1. The directive `[columnReorder]` must be applied on the table
 2. Each column must have the `reorder` property set to true.
 
-I> When we registered `NegTableDragModule` we used `NegTableDragModule.withDefaultTemplates()` which pre-loads
+I> When we registered `PblTableDragModule` we used `PblTableDragModule.withDefaultTemplates()` which pre-loads
 default templates for the plugin to work out of the box, we will cover customization shortly.
 
 ## Locking columns
@@ -127,14 +127,14 @@ To do that we use the structural directive `*negTableCellDraggerRef`. This direc
 and provide us with the **column*** and **table** instances as context:
 
 ```typescript
-export interface NegTableMetaCellTemplateContext<T> {
-  $implicit: NegTableMetaCellTemplateContext<T>;
-  col: NegMetaColumn | NegColumn;
-  table: NegTableComponent<T>;
+export interface PblTableMetaCellTemplateContext<T> {
+  $implicit: PblTableMetaCellTemplateContext<T>;
+  col: PblMetaColumn | PblColumn;
+  table: PblTableComponent<T>;
 }
 ```
 
-The default re-order template in `NegTableDragModule.withDefaultTemplates()` is fairly simple:
+The default re-order template in `PblTableDragModule.withDefaultTemplates()` is fairly simple:
 
 ```html
 <span *negTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx"></span>

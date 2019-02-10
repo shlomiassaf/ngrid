@@ -3,10 +3,10 @@ import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { UnRx } from '@pebula/utils';
-import { NegTableComponent, NegTablePluginController, TablePlugin } from '@pebula/table';
+import { PblTableComponent, PblTablePluginController, TablePlugin } from '@pebula/table';
 
 declare module '@pebula/table/lib/ext/types' {
-  interface NegTablePluginExtension {
+  interface PblTablePluginExtension {
     blockUi?: { blockUi: boolean | 'auto' | Observable<boolean> };
   }
 }
@@ -16,10 +16,10 @@ const PLUGIN_KEY: 'blockUi' = 'blockUi';
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-table[blockUi]', exportAs: 'blockUi' })
 @UnRx()
-export class NegTableBlockUiPluginDirective<T> implements OnDestroy {
+export class PblTableBlockUiPluginDirective<T> implements OnDestroy {
 
   /**
-   * Blocks the UI with the template defined via `NegTableBlockUiDefDirective`.
+   * Blocks the UI with the template defined via `PblTableBlockUiDefDirective`.
    * If a template does not exist blocking is ignored.
    *
    * There are 3 operation modes, the modes are set based on the input value:
@@ -72,9 +72,9 @@ export class NegTableBlockUiPluginDirective<T> implements OnDestroy {
   private _blockInProgress: boolean = false;
   private _blockUi: boolean | 'auto' | Observable<boolean>;
   private _blockerEmbeddedVRef: EmbeddedViewRef<any>;
-  private _removePlugin: (table: NegTableComponent<any>) => void;
+  private _removePlugin: (table: PblTableComponent<any>) => void;
 
-  constructor(private table: NegTableComponent<any>, pluginCtrl: NegTablePluginController<T>) {
+  constructor(private table: PblTableComponent<any>, pluginCtrl: PblTablePluginController<T>) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     table.registry.changes.subscribe( changes => {

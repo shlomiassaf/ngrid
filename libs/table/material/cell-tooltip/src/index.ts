@@ -1,2 +1,2 @@
-export { NegTableCellTooltipModule } from './lib/cell-tooltip.module';
-export { NegTableCellTooltipDirective, CellTooltipOptions } from './lib/cell-tooltip.directive';
+export { PblTableCellTooltipModule } from './lib/cell-tooltip.module';
+export { PblTableCellTooltipDirective, CellTooltipOptions } from './lib/cell-tooltip.directive';

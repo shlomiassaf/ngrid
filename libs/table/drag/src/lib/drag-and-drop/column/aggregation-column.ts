@@ -22,9 +22,9 @@ import {
   DragRef, DropListRef
 } from '@angular/cdk/drag-drop';
 
-import { NegTableComponent, NegTablePluginController, NegColumn } from '@pebula/table';
-import { CdkLazyDropList, NegDragRef } from '../core';
-import { NegTableColumnDragDirective } from './column-reorder-plugin';
+import { PblTableComponent, PblTablePluginController, PblColumn } from '@pebula/table';
+import { CdkLazyDropList, PblDragRef } from '../core';
+import { PblTableColumnDragDirective } from './column-reorder-plugin';
 
 let _uniqueIdCounter = 0;
 
@@ -36,17 +36,17 @@ let _uniqueIdCounter = 0;
     '[id]': 'id',
   },
   providers: [
-    { provide: CDK_DROP_LIST, useExisting: NegTableAggregationContainerDirective },
+    { provide: CDK_DROP_LIST, useExisting: PblTableAggregationContainerDirective },
   ],
 })
-export class NegTableAggregationContainerDirective<T = any> extends CdkLazyDropList<T> implements OnDestroy {
+export class PblTableAggregationContainerDirective<T = any> extends CdkLazyDropList<T> implements OnDestroy {
   id = `pbl-table-column-aggregation-container-${_uniqueIdCounter++}`;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
-  pending: NegColumn;
+  pending: PblColumn;
 
-  constructor(public table: NegTableComponent<T>,
-              pluginCtrl: NegTablePluginController,
+  constructor(public table: PblTableComponent<T>,
+              pluginCtrl: PblTablePluginController,
               element: ElementRef<HTMLElement>,
               dragDropRegistry: DragDropRegistry<DragRef, DropListRef<T>>,
               changeDetectorRef: ChangeDetectorRef,
@@ -60,14 +60,14 @@ export class NegTableAggregationContainerDirective<T = any> extends CdkLazyDropL
 
     this.negDropListRef.dropped
       .subscribe( event => {
-        const item = event.item as NegDragRef<NegTableColumnDragDirective<any>>;
+        const item = event.item as PblDragRef<PblTableColumnDragDirective<any>>;
         this.pending = undefined;
         this.table.columnApi.addGroupBy(item.data.column);
       });
 
     this.negDropListRef.entered
       .subscribe( event => {
-        const item = event.item as NegDragRef<NegTableColumnDragDirective<any>>;
+        const item = event.item as PblDragRef<PblTableColumnDragDirective<any>>;
         this.pending = item.data.column;
         item.getPlaceholderElement().style.display = 'none';
         for (const c of item.data.getCells()) {
@@ -77,7 +77,7 @@ export class NegTableAggregationContainerDirective<T = any> extends CdkLazyDropL
 
     this.negDropListRef.exited
       .subscribe( event => {
-        const item = event.item as NegDragRef<NegTableColumnDragDirective<any>>;
+        const item = event.item as PblDragRef<PblTableColumnDragDirective<any>>;
         this.pending = undefined;
         item.getPlaceholderElement().style.display = '';
         for (const c of item.data.getCells()) {

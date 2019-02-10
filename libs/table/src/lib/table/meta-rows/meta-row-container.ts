@@ -2,8 +2,8 @@ import { Component, Input, ElementRef } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
 
-import { NegMetaRowDefinitions } from '../columns/types';
-import { NegTableMetaRowService } from './meta-row.service';
+import { PblMetaRowDefinitions } from '../columns/types';
+import { PblTableMetaRowService } from './meta-row.service';
 
 @Component({
   selector: 'div[pbl-table-fixed-meta-row-container]',
@@ -14,7 +14,7 @@ import { NegTableMetaRowService } from './meta-row.service';
   }
 })
 @UnRx()
-export class NegTableMetaRowContainerComponent {
+export class PblTableMetaRowContainerComponent {
 
   @Input('pbl-table-fixed-meta-row-container') set type(value: 'header' | 'footer') {
     if (this._type !== value) {
@@ -30,10 +30,10 @@ export class NegTableMetaRowContainerComponent {
   _minWidth: string;
 
   private _type: 'header' | 'footer';
-  private defs: Array<{ index: number; rowDef: NegMetaRowDefinitions }>;
+  private defs: Array<{ index: number; rowDef: PblMetaRowDefinitions }>;
   private element: HTMLElement;
 
-  constructor(public readonly metaRows: NegTableMetaRowService, elRef: ElementRef<HTMLElement>) {
+  constructor(public readonly metaRows: PblTableMetaRowService, elRef: ElementRef<HTMLElement>) {
     this.element = elRef.nativeElement;
     metaRows.sync.pipe(UnRx(this)).subscribe( () => this.syncRowDefinitions() );
     this.metaRows.extApi.events

@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { NegTableModule } from '@pebula/table';
-import { NegTableTransposePluginDirective } from './transpose-plugin.directive';
+import { PblTableModule } from '@pebula/table';
+import { PblTableTransposePluginDirective } from './transpose-plugin.directive';
 
 @NgModule({
-  imports: [ CommonModule, MatCheckboxModule, NegTableModule ],
-  declarations: [ NegTableTransposePluginDirective ],
-  exports: [ NegTableTransposePluginDirective ],
+  imports: [ CommonModule, MatCheckboxModule, PblTableModule ],
+  declarations: [ PblTableTransposePluginDirective ],
+  exports: [ PblTableTransposePluginDirective ],
 })
-export class NegTableTransposeModule { }
+export class PblTableTransposeModule { }

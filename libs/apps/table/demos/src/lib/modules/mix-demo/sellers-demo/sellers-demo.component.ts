@@ -1,10 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { NegTableComponent, createDS, columnFactory } from '@pebula/table';
+import { PblTableComponent, createDS, columnFactory } from '@pebula/table';
 import { Seller, DemoDataSource } from '@pebula/apps/table/shared';
 
 // A function that returns the currency value placed in a `SecurityWithMarketDataDto` object.
-// implementation is an IIFE that returns the getValue method bound to an NegColumn instance of the currency column...
+// implementation is an IIFE that returns the getValue method bound to an PblColumn instance of the currency column...
 const COUNTRY_GETTER = {
   currency: row => COUNTRY_GETTER.data.countries[row.country].currencies[0],
   name: row => COUNTRY_GETTER.flag(row) + ' ' + COUNTRY_GETTER.data.countries[row.country].name,
@@ -53,7 +53,7 @@ export class SellersDemoComponent {
 
   columns = COLUMNS.build();
 
-  @ViewChild(NegTableComponent) table: NegTableComponent<Seller>;
+  @ViewChild(PblTableComponent) table: PblTableComponent<Seller>;
 
   constructor(private ds: DemoDataSource) {
     ds.getCountries().then( c => COUNTRY_GETTER.data = c );

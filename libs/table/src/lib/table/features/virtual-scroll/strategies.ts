@@ -6,7 +6,7 @@ import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, FixedSizeVirtualScrollStrategy, VirtualScrollStrategy, VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
 import { AutoSizeVirtualScrollStrategy, ItemSizeAverager } from '@angular/cdk-experimental/scrolling';
 
-import { NegTableComponent } from '../../table.component';
+import { PblTableComponent } from '../../table.component';
 import { NgeVirtualTableRowInfo } from './virtual-scroll-for-of';
 
 const noop = function(nv?: any, nv1?: any) { };
@@ -65,10 +65,10 @@ export function _vScrollStrategyFactory(directive: { _scrollStrategy: VirtualScr
   selector: 'pbl-table[vScrollAuto], pbl-table[vScrollFixed], pbl-table[vScrollNone]',
   providers: [{
     provide: VIRTUAL_SCROLL_STRATEGY,
-    useExisting: NegCdkVirtualScrollDirective,
+    useExisting: PblCdkVirtualScrollDirective,
   }],
 })
-export class NegCdkVirtualScrollDirective implements OnInit, OnChanges, VirtualScrollStrategy {
+export class PblCdkVirtualScrollDirective implements OnInit, OnChanges, VirtualScrollStrategy {
     /**
    * The size of the items in the list (in pixels).
    * Valid for `vScrollFixed` only!
@@ -132,7 +132,7 @@ export class NegCdkVirtualScrollDirective implements OnInit, OnChanges, VirtualS
 
   readonly type: 'vScrollFixed' | 'vScrollAuto' | 'vScrollNone';
 
-  constructor(el: ElementRef<HTMLElement>, private table: NegTableComponent<any>) {
+  constructor(el: ElementRef<HTMLElement>, private table: PblTableComponent<any>) {
     const types = TYPES.filter( t => el.nativeElement.hasAttribute(t));
     if (types.length > 1) {
       throw new Error(`Invalid vScroll instruction, only one value is allow: ${JSON.stringify(types)}`);

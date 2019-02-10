@@ -3,38 +3,38 @@ import { filter, map, switchMap, tap, debounceTime, observeOn } from 'rxjs/opera
 
 import { Omit } from '../table/utils/type-helpers';
 import { DataSourceOf } from './data-source';
-import { NegPaginator, NegPaginatorChangeEvent } from '../paginator';
-import { NegTableDataSourceSortChange, DataSourceFilter } from './types';
+import { PblPaginator, PblPaginatorChangeEvent } from '../paginator';
+import { PblTableDataSourceSortChange, DataSourceFilter } from './types';
 import { filter as filteringFn } from './filtering';
 import { applySort } from './sorting';
 
 import {
   RefreshDataWrapper,
-  NegDataSourceConfigurableTriggers,
-  NegDataSourceTriggers,
-  NegDataSourceTriggerCache,
-  NegDataSourceTriggerChangedEvent,
+  PblDataSourceConfigurableTriggers,
+  PblDataSourceTriggers,
+  PblDataSourceTriggerCache,
+  PblDataSourceTriggerChangedEvent,
   TriggerChangedEventFor,
 } from './data-source-adapter.types';
 
 import { createChangeContainer, fromRefreshDataWrapper, EMPTY } from './data-source-adapter.helpers';
 
-const CUSTOM_BEHAVIOR_TRIGGER_KEYS: Array<keyof NegDataSourceConfigurableTriggers> = ['sort', 'filter', 'pagination'];
-const TRIGGER_KEYS: Array<keyof NegDataSourceTriggers> = [...CUSTOM_BEHAVIOR_TRIGGER_KEYS, 'data'];
+const CUSTOM_BEHAVIOR_TRIGGER_KEYS: Array<keyof PblDataSourceConfigurableTriggers> = ['sort', 'filter', 'pagination'];
+const TRIGGER_KEYS: Array<keyof PblDataSourceTriggers> = [...CUSTOM_BEHAVIOR_TRIGGER_KEYS, 'data'];
 const SOURCE_CHANGING_TOKEN = {};
 
-const DEFAULT_INITIAL_CACHE_STATE: NegDataSourceTriggerCache<any> = { filter: EMPTY, sort: EMPTY, pagination: {}, data: EMPTY };
+const DEFAULT_INITIAL_CACHE_STATE: PblDataSourceTriggerCache<any> = { filter: EMPTY, sort: EMPTY, pagination: {}, data: EMPTY };
 
 /**
  * An adapter that handles changes
  */
-export class NegDataSourceAdapter<T = any, TData = any> {
+export class PblDataSourceAdapter<T = any, TData = any> {
   onSourceChanged: Observable<T[]>;
   onSourceChanging: Observable<void>;
 
-  protected paginator?: NegPaginator<any>;
-  private readonly config: Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>>;
-  private cache: NegDataSourceTriggerCache<TData>;
+  protected paginator?: PblPaginator<any>;
+  private readonly config: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>;
+  private cache: PblDataSourceTriggerCache<TData>;
   private _onSourceChange$: Subject<any | T[]>;
   private _refresh$: Subject<RefreshDataWrapper<TData>>;
   private _lastSource: T[];
@@ -82,8 +82,8 @@ export class NegDataSourceAdapter<T = any, TData = any> {
    * When `sourceFactory` returns false the entire trigger cycle is skipped.
    * @param config - A configuration object describing how this adapter should behave.
    */
-  constructor(public sourceFactory: (event: NegDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>),
-              config?: false | Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>>) {
+  constructor(public sourceFactory: (event: PblDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>),
+              config?: false | Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>) {
     this.config = Object.assign({}, config || {});
     this.initStreams();
   }
@@ -97,14 +97,14 @@ export class NegDataSourceAdapter<T = any, TData = any> {
     this._refresh$.next({ data });
   }
 
-  setPaginator(paginator: NegPaginator<any> | undefined): void {
+  setPaginator(paginator: PblPaginator<any> | undefined): void {
     this.paginator = paginator;
   }
 
   updateProcessingLogic(filter$: Observable<DataSourceFilter>,
-                        sort$: Observable<NegTableDataSourceSortChange>,
-                        pagination$: Observable<NegPaginatorChangeEvent>,
-                        initialState: Partial<NegDataSourceTriggerCache<TData>> = {}): Observable<{ event: NegDataSourceTriggerChangedEvent<TData>, data: T[] }> {
+                        sort$: Observable<PblTableDataSourceSortChange>,
+                        pagination$: Observable<PblPaginatorChangeEvent>,
+                        initialState: Partial<PblDataSourceTriggerCache<TData>> = {}): Observable<{ event: PblDataSourceTriggerChangedEvent<TData>, data: T[] }> {
     let updates = -1;
     const changedFilter = e => updates === -1 || e.changed;
     this._lastSource = undefined;
@@ -133,7 +133,7 @@ export class NegDataSourceAdapter<T = any, TData = any> {
         debounceTime(0),
         switchMap( ([filter, sort, pagination, data ]) => {
           updates++; // if first, will be 0 now (starts from -1).
-          const event: NegDataSourceTriggerChangedEvent<TData> = {
+          const event: PblDataSourceTriggerChangedEvent<TData> = {
             filter,
             sort,
             pagination,
@@ -164,7 +164,7 @@ export class NegDataSourceAdapter<T = any, TData = any> {
 
           // mark which of the triggers has changes
           // The logic is based on the user's configuration and the incoming event
-          const withChanges: Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>> = {};
+          const withChanges: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>> = {};
           for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
             if (!config[key] && (event.isInitial || event[key].changed)) {
               withChanges[key] = true;
@@ -207,7 +207,7 @@ export class NegDataSourceAdapter<T = any, TData = any> {
             data = this.applyPagination(data);
           }
 
-          const clonedEvent: NegDataSourceTriggerChangedEvent<TData> = { ...event };
+          const clonedEvent: PblDataSourceTriggerChangedEvent<TData> = { ...event };
 
           // We use `combineLatest` which caches pervious events, only new events are replaced.
           // We need to mark everything as NOT CHANGED, so subsequent calls will not have their changed flag set to true.
@@ -237,7 +237,7 @@ export class NegDataSourceAdapter<T = any, TData = any> {
     return data;
   }
 
-  protected applySort(data: T[], event: NegTableDataSourceSortChange): T[] {
+  protected applySort(data: T[], event: PblTableDataSourceSortChange): T[] {
     return applySort(event.column, event.sort, data);
   }
 
@@ -284,7 +284,7 @@ export class NegDataSourceAdapter<T = any, TData = any> {
    * When the response is false that handler wants to skip this cycle, this means that onSourceChanged will not emit and
    * a dead-end observable is returned (observable that will never emit).
    */
-  private runHandle(event: NegDataSourceTriggerChangedEvent<TData>): Observable<T[]> {
+  private runHandle(event: PblDataSourceTriggerChangedEvent<TData>): Observable<T[]> {
     this._onSourceChange$.next(SOURCE_CHANGING_TOKEN);
 
     const result = this.sourceFactory(event);

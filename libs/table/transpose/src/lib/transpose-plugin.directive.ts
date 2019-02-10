@@ -4,12 +4,12 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { UnRx } from '@pebula/utils';
 import {
   columnFactory,
-  NegTableConfigService,
-  NegColumnDefinition,
-  NegTableColumnDefinitionSet,
-  NegTableComponent,
-  NegTablePluginController,
-  NegColumn,
+  PblTableConfigService,
+  PblColumnDefinition,
+  PblTableColumnDefinitionSet,
+  PblTableComponent,
+  PblTablePluginController,
+  PblColumn,
   TablePlugin,
 } from '@pebula/table';
 
@@ -19,18 +19,18 @@ import { getCellValueTransformed, createTransformedColumn } from './utils';
 const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'pbl-table-header-cell pbl-table-transposed-header-cell' };
 
 declare module '@pebula/table/lib/table/services/config' {
-  interface NegTableConfig {
+  interface PblTableConfig {
     transposePlugin?: {
-      header?: Partial<NegColumnDefinition>;
-      defaultCol?: Partial<NegColumnDefinition>;
+      header?: Partial<PblColumnDefinition>;
+      defaultCol?: Partial<PblColumnDefinition>;
       matchTemplates?: boolean;
     }
   }
 }
 
 declare module '@pebula/table/lib/ext/types' {
-  interface NegTablePluginExtension {
-    transpose?: NegTableTransposePluginDirective;
+  interface PblTablePluginExtension {
+    transpose?: PblTableTransposePluginDirective;
   }
 }
 const PLUGIN_KEY: 'transpose' = 'transpose';
@@ -57,7 +57,7 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-table[transpose]' })
 @UnRx()
-export class NegTableTransposePluginDirective implements OnDestroy {
+export class PblTableTransposePluginDirective implements OnDestroy {
 
   @Input() get transpose(): boolean { return this.enabled; };
   set transpose(value: boolean) {
@@ -93,7 +93,7 @@ export class NegTableTransposePluginDirective implements OnDestroy {
    * When using this approach the column defined on the table is used as is (no merging). Just make sure you use the right `prop` value for it.
    * e.g. if `header` is not set here its `__transpose__` otherwise, the actual `prop` value.
    */
-  @Input('transposeHeaderCol') set header(value: Partial<NegColumnDefinition>) {
+  @Input('transposeHeaderCol') set header(value: Partial<PblColumnDefinition>) {
     this._header = Object.assign({}, DEFAULT_HEADER_COLUMN, value || {})
   }
 
@@ -101,7 +101,7 @@ export class NegTableTransposePluginDirective implements OnDestroy {
    * Column definitions to be used as the base default definitions for the new transposed columns.
    * This is an optional value, when not set no default's are applied.
    */
-  @Input('transposeDefaultCol') defaultCol: Partial<NegColumnDefinition>;
+  @Input('transposeDefaultCol') defaultCol: Partial<PblColumnDefinition>;
 
   /**
    * When true, will try to use the original template of the cell, i.e. the template that would have been used
@@ -112,13 +112,13 @@ export class NegTableTransposePluginDirective implements OnDestroy {
   @Input() matchTemplates: boolean;
 
   private enabled: boolean;
-  private _header: NegColumnDefinition = DEFAULT_HEADER_COLUMN;
+  private _header: PblColumnDefinition = DEFAULT_HEADER_COLUMN;
   private tableState: TransposeTableSession;
-  private columns: NegColumn[];
-  private selfColumn: NegColumn;
-  private _removePlugin: (table: NegTableComponent<any>) => void;
+  private columns: PblColumn[];
+  private selfColumn: PblColumn;
+  private _removePlugin: (table: PblTableComponent<any>) => void;
 
-  constructor(private table: NegTableComponent<any>, private pluginCtrl: NegTablePluginController, config: NegTableConfigService) {
+  constructor(private table: PblTableComponent<any>, private pluginCtrl: PblTablePluginController, config: PblTableConfigService) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     const transposePlugin = config.get('transposePlugin');
     if (transposePlugin) {
@@ -148,7 +148,7 @@ export class NegTableTransposePluginDirective implements OnDestroy {
 
     const sourceFactoryWrapper = (results: any[]) => {
       if (results) {
-        const local: NegTableColumnDefinitionSet = this.table.columns = columnFactory()
+        const local: PblTableColumnDefinitionSet = this.table.columns = columnFactory()
         .default(this.defaultCol || {})
         .table(
           this.selfColumn,
@@ -166,10 +166,10 @@ export class NegTableTransposePluginDirective implements OnDestroy {
 
         const matchTemplates = coerceBooleanProperty(this.matchTemplates);
         const { prop } = this._header;
-        let currentColumn: NegColumn;
+        let currentColumn: PblColumn;
         for (const c of this.table.columnApi.visibleColumns) {
           if (c.orgProp === prop) {
-            c.getValue = (row: NegColumn) => {
+            c.getValue = (row: PblColumn) => {
               currentColumn = row;
               return row.label as any;
             };
@@ -200,7 +200,7 @@ export class NegTableTransposePluginDirective implements OnDestroy {
     }
   }
 
-  private updateColumns(columns: NegColumn[]): void {
+  private updateColumns(columns: PblColumn[]): void {
     const { prop } = this._header;
     this.columns = [];
     for (const c of columns) {
@@ -212,7 +212,7 @@ export class NegTableTransposePluginDirective implements OnDestroy {
     }
     if (!this.selfColumn) {
       // TODO: don't assume columns[0]
-      this.selfColumn = new NegColumn(this._header, this.pluginCtrl.extApi.columnStore.groupStore);
+      this.selfColumn = new PblColumn(this._header, this.pluginCtrl.extApi.columnStore.groupStore);
     }
   }
 }

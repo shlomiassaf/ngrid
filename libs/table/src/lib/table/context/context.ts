@@ -1,19 +1,19 @@
 import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
 import { RowContext } from '@angular/cdk/table';
 
-import { NegTableExtensionApi } from '../../ext/table-ext-api';
-import { NegTableComponent } from '../table.component';
-import { NegTableCellContext, NegTableMetaCellContext, NegTableRowContext  } from './types';
-import { NegColumn } from '../columns/column';
-import { NegMetaColumn } from '../columns/meta-column';
+import { PblTableExtensionApi } from '../../ext/table-ext-api';
+import { PblTableComponent } from '../table.component';
+import { PblTableCellContext, PblTableMetaCellContext, PblTableRowContext  } from './types';
+import { PblColumn } from '../columns/column';
+import { PblMetaColumn } from '../columns/meta-column';
 import { ColumnApi } from '../column-api';
 
 declare module '@angular/cdk/table/typings/row.d' {
   export interface CdkCellOutletRowContext<T> {
-    negRowContext: NegTableRowContext<T>;
+    negRowContext: PblTableRowContext<T>;
   }
   export interface CdkCellOutletMultiRowContext<T> {
-    negRowContext: NegTableRowContext<T>;
+    negRowContext: PblTableRowContext<T>;
   }
 }
 
@@ -27,38 +27,38 @@ export interface RowContextState<T = any> {
   firstRender: boolean;
 }
 
-export class MetaCellContext<T, TCol extends NegMetaColumn | NegColumn = NegMetaColumn> implements NegTableMetaCellContext<T, TCol> {
+export class MetaCellContext<T, TCol extends PblMetaColumn | PblColumn = PblMetaColumn> implements PblTableMetaCellContext<T, TCol> {
   get $implicit(): MetaCellContext<T, TCol> { return this; }
 
-  constructor(public col: TCol, public table: NegTableComponent<any>) {}
+  constructor(public col: TCol, public table: PblTableComponent<any>) {}
 }
 
-export class CellContext<T = any> implements NegTableCellContext<T> {
+export class CellContext<T = any> implements PblTableCellContext<T> {
   get $implicit(): CellContext<T> { return this; }
   get row(): T { return this.rowContext.$implicit; };
   get value(): any { return this.col.getValue(this.row); }
   set value(v: any) { this.col.setValue(this.row, v); }
 
-  get rowContext(): NegTableRowContext<T> { return this._rowContext; }
+  get rowContext(): PblTableRowContext<T> { return this._rowContext; }
   get editing(): boolean { return this._editing; }
 
   readonly index: number;
 
-  private _rowContext: NegTableRowContext<T>;
+  private _rowContext: PblTableRowContext<T>;
   private _editing = false;
 
-  constructor(rowContext: NegTableRowContext<T>, public col: NegColumn, public table: NegTableComponent<any>) {
+  constructor(rowContext: PblTableRowContext<T>, public col: PblColumn, public table: PblTableComponent<any>) {
     this.index = table.columnApi.visibleColumns.indexOf(col);
     this._rowContext = rowContext;
   }
 
-  static fromState<T>(rowContext: NegRowContext<T>, state: CellContextState<T>, cellContext: CellContext<T>, skipRowUpdate?: boolean): void {
+  static fromState<T>(rowContext: PblRowContext<T>, state: CellContextState<T>, cellContext: CellContext<T>, skipRowUpdate?: boolean): void {
     const requiresReset = !skipRowUpdate && cellContext._editing === state.editing;
 
     cellContext._rowContext = rowContext;
     cellContext._editing = state.editing;
     if (requiresReset) {
-      NegRowContext.updateCell(rowContext, cellContext);
+      PblRowContext.updateCell(rowContext, cellContext);
     }
   }
 
@@ -68,7 +68,7 @@ export class CellContext<T = any> implements NegTableCellContext<T> {
 
   clone(): CellContext<T> {
     const ctx = new CellContext<T>(this._rowContext, this.col, this.table);
-    CellContext.fromState(this._rowContext as NegRowContext<T>, this.getState(), ctx, true);
+    CellContext.fromState(this._rowContext as PblRowContext<T>, this.getState(), ctx, true);
     return ctx;
   }
 
@@ -81,7 +81,7 @@ export class CellContext<T = any> implements NegTableCellContext<T> {
   startEdit(markForCheck?: boolean): void {
     if (this.col.editorTpl && !this.editing) {
       this._editing = true;
-      NegRowContext.updateCell(this.rowContext as NegRowContext<T>, this);
+      PblRowContext.updateCell(this.rowContext as PblRowContext<T>, this);
       if (markForCheck) {
         this.table._cdkTable.syncRows('data', true, this.rowContext.index);
       }
@@ -91,7 +91,7 @@ export class CellContext<T = any> implements NegTableCellContext<T> {
   stopEdit(markForCheck?: boolean): void {
     if (this.editing && !this.table.viewport.isScrolling) {
       this._editing = false;
-      NegRowContext.updateCell(this.rowContext as NegRowContext<T>, this);
+      PblRowContext.updateCell(this.rowContext as PblRowContext<T>, this);
       if (markForCheck) {
         this.table._cdkTable.syncRows('data', this.rowContext.index);
       }
@@ -99,7 +99,7 @@ export class CellContext<T = any> implements NegTableCellContext<T> {
   }
 }
 
-export class NegRowContext<T> implements NegTableRowContext<T> {
+export class PblRowContext<T> implements PblTableRowContext<T> {
   /** Data for the row that this cell is located within. */
   $implicit?: T;
   /** Index of the data object in the provided data array. */
@@ -121,14 +121,14 @@ export class NegRowContext<T> implements NegTableRowContext<T> {
 
   firstRender: boolean;
   outOfView: boolean;
-  readonly table: NegTableComponent<T>;
+  readonly table: PblTableComponent<T>;
 
-  get negRowContext(): NegTableRowContext<T> { return this; }
-  set negRowContext(value: NegTableRowContext<T>) { }
+  get negRowContext(): PblTableRowContext<T> { return this; }
+  set negRowContext(value: PblTableRowContext<T>) { }
 
   private cells: CellContext<T>[];
 
-  constructor(public identity: any, private extApi: NegTableExtensionApi<T>) {
+  constructor(public identity: any, private extApi: PblTableExtensionApi<T>) {
     /*  TODO: material2#14198
         The row context come from the `cdk` and it can be of 2 types, depending if multiple row templates are used or not.
         `index` is used for single row template mode and `renderIndex` for multi row template mode.
@@ -160,7 +160,7 @@ export class NegRowContext<T> implements NegTableRowContext<T> {
     }
   }
 
-  static updateCell<T>(rowContext: NegRowContext<T>, cell: CellContext<T>): boolean {
+  static updateCell<T>(rowContext: PblRowContext<T>, cell: CellContext<T>): boolean {
     // if (rowContext.cells[cell.index] === cell) {
       rowContext.cells[cell.index] = cell.clone();
       return true;
@@ -168,7 +168,7 @@ export class NegRowContext<T> implements NegTableRowContext<T> {
     // return false;
   }
 
-  static fromState<T>(rowContext: NegRowContext<T>, state: RowContextState<T>): void {
+  static fromState<T>(rowContext: PblRowContext<T>, state: RowContextState<T>): void {
     rowContext.identity = state.identity;
     rowContext.firstRender = state.firstRender;
     for (let i = 0, len = rowContext.cells.length; i < len; i++) {
@@ -206,12 +206,12 @@ export class NegRowContext<T> implements NegTableRowContext<T> {
 }
 
 export class ContextApi<T = any> {
-  private viewCache = new Map<number, NegRowContext<T>>();
+  private viewCache = new Map<number, PblRowContext<T>>();
   private cache = new Map<number, RowContextState<T>>();
   private vcRef: ViewContainerRef;
   private columnApi: ColumnApi<T>;
 
-  constructor(private extApi: NegTableExtensionApi<T>) {
+  constructor(private extApi: PblTableExtensionApi<T>) {
     this.vcRef = extApi.cdkTable._rowOutlet.viewContainer;
     this.columnApi = extApi.table.columnApi;
 
@@ -294,14 +294,14 @@ export class ContextApi<T = any> {
             const state = from.getState();
             state.identity = to.identity;
             this.cache.set(to.identity, state);
-            NegRowContext.fromState(to, state);
+            PblRowContext.fromState(to, state);
             to.$implicit = from.$implicit;
           }
 
           const to = this.viewCache.get(lastOp.pair[0]);
           lastOp.state.identity = to.identity;
           this.cache.set(to.identity, lastOp.state);
-          NegRowContext.fromState(to, lastOp.state);
+          PblRowContext.fromState(to, lastOp.state);
           to.$implicit = lastOp.data;
         }
       }
@@ -330,7 +330,7 @@ export class ContextApi<T = any> {
     this.cache.clear();
   }
 
-  getRow(row: number): NegTableRowContext<T> | undefined {
+  getRow(row: number): PblTableRowContext<T> | undefined {
     return this.rowContext(row);
   }
 
@@ -339,24 +339,24 @@ export class ContextApi<T = any> {
    * @param row
    * @param col
    */
-  getCell(row: number, col: number): NegTableCellContext | undefined {
+  getCell(row: number, col: number): PblTableCellContext | undefined {
     const rowContext = this.rowContext(row);
     if (rowContext) {
       return rowContext.cell(col);
     }
   }
 
-  createCellContext(renderRowIndex: number, column: NegColumn): CellContext<T> {
+  createCellContext(renderRowIndex: number, column: PblColumn): CellContext<T> {
     const rowContext = this.rowContext(renderRowIndex);
     const colIndex = this.columnApi.visibleColumns.indexOf(column);
     return rowContext.cell(colIndex);
   }
 
-  rowContext(renderRowIndex: number): NegRowContext<T> | undefined {
+  rowContext(renderRowIndex: number): PblRowContext<T> | undefined {
     return this.viewCache.get(renderRowIndex);
   }
 
-  updateOutOfViewState(rowContext: NegRowContext<T>): void {
+  updateOutOfViewState(rowContext: PblRowContext<T>): void {
     const viewPortRect = this.getViewRect();
     const viewRef = this.findViewRef(rowContext.index);
     processOutOfView(viewRef, viewPortRect);
@@ -386,16 +386,16 @@ export class ContextApi<T = any> {
    * The position is required for caching the context state when a specific row is thrown out of the viewport (virtual scroll).
    * Each `RowContext` gets a unique identity using the position relative to the current render range in the data source.
    */
-  private findRowContext(viewRef: EmbeddedViewRef<RowContext<T>>, renderRowIndex: number): NegRowContext<T> | undefined {
+  private findRowContext(viewRef: EmbeddedViewRef<RowContext<T>>, renderRowIndex: number): PblRowContext<T> | undefined {
     const { context } = viewRef;
     const identity = this.extApi.table.identityProp
       ? viewRef.context.$implicit[this.extApi.table.identityProp]
       : this.extApi.table.ds.renderStart + renderRowIndex
     ;
-    let rowContext: NegRowContext<T> = context.negRowContext as NegRowContext<T>;
+    let rowContext: PblRowContext<T> = context.negRowContext as PblRowContext<T>;
 
     if (!this.cache.has(identity)) {
-      this.cache.set(identity, NegRowContext.defaultState(identity, this.columnApi.columns.length));
+      this.cache.set(identity, PblRowContext.defaultState(identity, this.columnApi.columns.length));
     }
 
     if (!rowContext) {
@@ -413,7 +413,7 @@ export class ContextApi<T = any> {
       const gap = identity - rowContext.identity;
       if (gap > 0) {
         const siblingViewRef = this.findViewRef(renderRowIndex + gap);
-        const siblingRowContext = siblingViewRef && siblingViewRef.context.negRowContext as NegRowContext<T>;
+        const siblingRowContext = siblingViewRef && siblingViewRef.context.negRowContext as PblRowContext<T>;
         if (siblingRowContext) {
           this.cache.set(siblingRowContext.identity, siblingRowContext.getState());
         }
@@ -421,13 +421,13 @@ export class ContextApi<T = any> {
     } else {
       return rowContext;
     }
-    NegRowContext.fromState(rowContext, this.cache.get(identity));
+    PblRowContext.fromState(rowContext, this.cache.get(identity));
 
     return rowContext;
   }
 
-  private createRowContext(identity: number, context: RowContext<T>): NegRowContext<T> {
-    const rowContext = new NegRowContext<T>(identity, this.extApi);
+  private createRowContext(identity: number, context: RowContext<T>): PblRowContext<T> {
+    const rowContext = new PblRowContext<T>(identity, this.extApi);
 
     rowContext.updateContext(context);
     return rowContext;

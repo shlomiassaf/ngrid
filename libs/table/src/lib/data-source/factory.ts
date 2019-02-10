@@ -1,19 +1,19 @@
-import { NegDataSource, DataSourceOf, NegDataSourceOptions } from './data-source';
-import { NegDataSourceAdapter } from './data-source-adapter';
+import { PblDataSource, DataSourceOf, PblDataSourceOptions } from './data-source';
+import { PblDataSourceAdapter } from './data-source-adapter';
 import {
-  NegDataSourceConfigurableTriggers,
-  NegDataSourceTriggerChangedEvent,
+  PblDataSourceConfigurableTriggers,
+  PblDataSourceTriggerChangedEvent,
  } from './data-source-adapter.types';
 
 interface AdapterParams<T> {
-  onTrigger?: (event: NegDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>);
-  customTriggers?: false | Partial<Record<keyof NegDataSourceConfigurableTriggers, boolean>>;
+  onTrigger?: (event: PblDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>);
+  customTriggers?: false | Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>;
 }
 
-export class NegDataSourceFactory<T, TData = any> {
+export class PblDataSourceFactory<T, TData = any> {
   private _adapter: AdapterParams<T> = { };
-  private _dsOptions: NegDataSourceOptions = { };
-  private _onCreated: (dataSource: NegDataSource<T, TData>) => void;
+  private _dsOptions: PblDataSourceOptions = { };
+  private _onCreated: (dataSource: PblDataSource<T, TData>) => void;
 
   /**
    * Set the main trigger handler.
@@ -22,7 +22,7 @@ export class NegDataSourceFactory<T, TData = any> {
    * By default the handler is triggered only when the datasource is required.
    * This can happened when:
    *   - The table connected to the datasource.
-   *   - A manual call to `NegDataSource.refresh()` was invoked.
+   *   - A manual call to `PblDataSource.refresh()` was invoked.
    *
    * There are additional triggers (filter/sort/pagination) which occur when their values change, e.g. when
    * a filter has change or when a page in the paginator was changed.
@@ -32,7 +32,7 @@ export class NegDataSourceFactory<T, TData = any> {
    *
    * To handle additional trigger you need to explicitly set them using `setCustomTriggers`.
    */
-  onTrigger(handler: (event: NegDataSourceTriggerChangedEvent<TData>) => (false | DataSourceOf<T>)): this {
+  onTrigger(handler: (event: PblDataSourceTriggerChangedEvent<TData>) => (false | DataSourceOf<T>)): this {
     this._adapter.onTrigger = handler;
     return this;
   }
@@ -44,7 +44,7 @@ export class NegDataSourceFactory<T, TData = any> {
    *
    * You can mix and match, e.g. support only paging from the server, or only paging and sorting, and leave filtering for the client side.
    */
-  setCustomTriggers(...triggers: Array<keyof NegDataSourceConfigurableTriggers>): this {
+  setCustomTriggers(...triggers: Array<keyof PblDataSourceConfigurableTriggers>): this {
     if (triggers.length === 0) {
       this._adapter.customTriggers = false;
     } else {
@@ -72,18 +72,18 @@ export class NegDataSourceFactory<T, TData = any> {
     return this;
   }
 
-  onCreated(handler: (dataSource: NegDataSource<T, TData>) => void ): this {
+  onCreated(handler: (dataSource: PblDataSource<T, TData>) => void ): this {
     this._onCreated = handler;
     return this;
   }
 
-  create(): NegDataSource<T, TData> {
+  create(): PblDataSource<T, TData> {
     const _adapter = this._adapter;
-    const adapter = new NegDataSourceAdapter<T, TData>(
+    const adapter = new PblDataSourceAdapter<T, TData>(
       _adapter.onTrigger,
       _adapter.customTriggers || false,
     )
-    const ds = new NegDataSource<T, TData>(adapter, this._dsOptions);
+    const ds = new PblDataSource<T, TData>(adapter, this._dsOptions);
     if (this._onCreated) {
       this._onCreated(ds);
     }
@@ -91,6 +91,6 @@ export class NegDataSourceFactory<T, TData = any> {
   }
 }
 
-export function createDS<T, TData = T[]>(): NegDataSourceFactory<T, TData> {
-  return new NegDataSourceFactory<T, TData>();
+export function createDS<T, TData = T[]>(): PblDataSourceFactory<T, TData> {
+  return new PblDataSourceFactory<T, TData>();
 }
