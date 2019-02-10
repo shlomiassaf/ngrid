@@ -10,7 +10,7 @@ import {
 import { PblTableComponent } from '../../table.component';
 import { PblColumn, ColumnSizeInfo } from '../../columns/index';
 
-const NEG_TABLE_MAP = new Map<PblTableComponent<any>, PblTableGroupHeaderSizeController>();
+const PGB_ANGRID_MAP = new Map<PblTableComponent<any>, PblTableGroupHeaderSizeController>();
 
 class PblTableGroupHeaderSizeController {
   private entries: WeakMap<any, PblColumnSizeObserver>;
@@ -23,10 +23,10 @@ class PblTableGroupHeaderSizeController {
   }
 
   static get(table: PblTableComponent<any>): PblTableGroupHeaderSizeController {
-    let controller = NEG_TABLE_MAP.get(table);
+    let controller = PGB_ANGRID_MAP.get(table);
     if (!controller) {
       controller = new PblTableGroupHeaderSizeController(table);
-      NEG_TABLE_MAP.set(table, controller);
+      PGB_ANGRID_MAP.set(table, controller);
     }
     return controller;
   }
@@ -46,7 +46,7 @@ class PblTableGroupHeaderSizeController {
     }
     if (this.columns.length === 0) {
       this.ro.disconnect();
-      NEG_TABLE_MAP.delete(this.table);
+      PGB_ANGRID_MAP.delete(this.table);
     }
   }
 

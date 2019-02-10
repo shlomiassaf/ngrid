@@ -11,7 +11,7 @@ declare module '@pebula/table/lib/table/services/table-registry.service' {
 /**
  * Marks the element as the display element when the form is busy.
  */
-@Directive({ selector: '[negTableBlockUiDef]' })
+@Directive({ selector: '[pblTableBlockUiDef]' })
 export class PblTableBlockUiDefDirective extends PblTableSingleTemplateRegistry<{ $implicit: PblTableComponent<any> }, 'blocker'> {
   readonly kind = 'blocker';
   constructor(tRef: TemplateRef<{ $implicit: PblTableComponent<any> }>, registry: PblTableRegistryService) { super(tRef, registry); }

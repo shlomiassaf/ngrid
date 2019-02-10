@@ -1,6 +1,6 @@
 <!-- TABLE HEADER ROW DEF -->
 <cdk-header-row *cdkHeaderRowDef="columnApi.visibleColumnIds; sticky: columnRowDef.header?.type === 'sticky'"
-                [negMetaRow]="columnRowDef.header"
+                [pblMetaRow]="columnRowDef.header"
                 data-rowtype="header"
                 class="pbl-table-header-row pbl-table-header-row-main"
                 [class.pbl-table-row-visually-hidden]="!showHeader"></cdk-header-row>
@@ -8,21 +8,21 @@
 <!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
 <ng-container *ngFor="let row of metaColumnIds.header;">
   <cdk-header-row *cdkHeaderRowDef="row.keys; sticky: row.rowDef.type === 'sticky'"
-                  [negMetaRow]="row.rowDef"
+                  [pblMetaRow]="row.rowDef"
                   data-rowtype="meta-header" class="pbl-table-header-row"
                   [class.pbl-meta-group-row]="row.isGroup"></cdk-header-row>
 </ng-container>
 
 <!-- TABLE FOOTER ROW DEF -->
 <cdk-footer-row *cdkFooterRowDef="columnApi.visibleColumnIds; sticky: columnRowDef.footer?.type === 'sticky'"
-                [negMetaRow]="columnRowDef.footer"
+                [pblMetaRow]="columnRowDef.footer"
                 data-rowtype="footer"
                 class="pbl-table-footer-row"
                 [class.pbl-table-row-hidden]="!showFooter"></cdk-footer-row> <!-- TABLE FOOTER ROW DEF -->
 <!-- MULTI-FOOTER ROW DEF -->
 <ng-container *ngFor="let row of metaColumnIds.footer">   <!-- MULTI-FOOTER ROW DEF -->
   <cdk-footer-row *cdkFooterRowDef="row.keys; sticky: row.rowDef.type === 'sticky'"
-                  [negMetaRow]="row.rowDef"
+                  [pblMetaRow]="row.rowDef"
                   data-rowtype="meta-footer" class="pbl-table-footer-row"
                   [class.pbl-meta-group-row]="row.isGroup"></cdk-footer-row>
 </ng-container>
@@ -37,12 +37,12 @@
 
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
       <ng-container *ngFor="let meta of metaColumns">
-        <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [negTableColumnDef]="c">
+        <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [pblTableColumnDef]="c">
           <pbl-table-header-cell *cdkHeaderCellDef>
             <ng-container *ngTemplateOutlet="c.template; context: (c | tableMetaCellContext:self)"></ng-container>
           </pbl-table-header-cell>
         </ng-container>
-        <ng-container *ngIf="meta.footer as c" [negTableColumnDef]="c">
+        <ng-container *ngIf="meta.footer as c" [pblTableColumnDef]="c">
           <pbl-table-footer-cell *cdkFooterCellDef>
             <ng-container *ngTemplateOutlet="c.template; context: (c | tableMetaCellContext:self)"></ng-container>
           </pbl-table-footer-cell>
@@ -51,12 +51,12 @@
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
 
        <!-- HEADER-RECORD-FOOTER CELL DEF -->
-      <ng-container *ngFor="let c of columnApi.visibleColumns; index as index" [negTableColumnDef]="c">
+      <ng-container *ngFor="let c of columnApi.visibleColumns; index as index" [pblTableColumnDef]="c">
         <!-- TABLE HEADER CELL DEF -->
         <pbl-table-header-cell *cdkHeaderCellDef [observeSize]="c"></pbl-table-header-cell>
         <!-- RECORD CELL DEF -->
-        <pbl-table-cell *cdkCellDef="let row; negRowContext as negRowContext" [attr.tabindex]="cellFocus">
-          <ng-container *ngIf="negRowContext && negRowContext.cell(index) as ctx">
+        <pbl-table-cell *cdkCellDef="let row; pblRowContext as pblRowContext" [attr.tabindex]="cellFocus">
+          <ng-container *ngIf="pblRowContext && pblRowContext.cell(index) as ctx">
             <ng-container *ngTemplateOutlet="ctx.editing ? ctx.col.editorTpl : ctx.col.cellTpl; context: ctx"></ng-container>
           </ng-container>
         </pbl-table-cell>

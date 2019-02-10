@@ -48,7 +48,7 @@ let _uniqueIdCounter = 0;
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({
   selector: 'pbl-table[columnReorder]',
-  exportAs: 'negTableColumnReorder',
+  exportAs: 'pblTableColumnReorder',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
     '[id]': 'id',
@@ -85,10 +85,10 @@ export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
   private lastSorted: { drag: DragRef<PblTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; };
 
   // Stuff to workaround encapsulation in CdkDropList
-  private get negGetItemIndexFromPointerPosition(): (item: DragRef<PblTableColumnDragDirective<T>>, pointerX: number, pointerY: number, delta?: {x: number, y: number}) => number {
+  private get pblGetItemIndexFromPointerPosition(): (item: DragRef<PblTableColumnDragDirective<T>>, pointerX: number, pointerY: number, delta?: {x: number, y: number}) => number {
     return (this._dropListRef as any)._getItemIndexFromPointerPosition.bind(this._dropListRef);
   }
-  private get negGetPositionCacheItems(): { drag: DragRef<PblTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; }[] {
+  private get pblGetPositionCacheItems(): { drag: DragRef<PblTableColumnDragDirective<T>>; offset: number; clientRect: ClientRect; }[] {
     return (this._dropListRef as any)._itemPositions;
   }
 
@@ -127,8 +127,8 @@ export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.dropped.subscribe( e => this._negReset() );
-    this.negDropListRef.beforeExit.subscribe( e => this._negReset() );
+    this.dropped.subscribe( e => this._pblReset() );
+    this.pblDropListRef.beforeExit.subscribe( e => this._pblReset() );
   }
 
   ngOnDestroy(): void {
@@ -142,9 +142,9 @@ export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
     this.dragging.next(true);
   }
 
-  private _negReset(): void {
+  private _pblReset(): void {
     this.dragging.next(false);
-    const siblings = this.negGetPositionCacheItems;
+    const siblings = this.pblGetPositionCacheItems;
     siblings.forEach((sibling, index) => {
       for (const c of sibling.drag.data.getCells()) {
         c.style.transform = ``;
@@ -155,7 +155,7 @@ export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
   private monkeyPatchDropListRef(): void {
     const { _sortItem, enter } = this._dropListRef;
 
-    this.negDropListRef.enter = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number): void => {
+    this.pblDropListRef.enter = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number): void => {
       const lastSorted = this.lastSorted
       this.lastSorted = undefined;
       if (lastSorted && lastSorted.drag === item) {
@@ -166,10 +166,10 @@ export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
       enter.call(this._dropListRef, item, pointerX, pointerY);
     };
 
-    this.negDropListRef._sortItem = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number, pointerDelta: {x: number, y: number}): void => {
-      const siblings = this.negGetPositionCacheItems;
+    this.pblDropListRef._sortItem = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number, pointerDelta: {x: number, y: number}): void => {
+      const siblings = this.pblGetPositionCacheItems;
       this.lastSorted = siblings.find( s => s.drag === item );
-      const newIndex = this.negGetItemIndexFromPointerPosition(item as DragRef<PblTableColumnDragDirective<T>>, pointerX, pointerY, pointerDelta);
+      const newIndex = this.pblGetItemIndexFromPointerPosition(item as DragRef<PblTableColumnDragDirective<T>>, pointerX, pointerY, pointerDelta);
       if (newIndex === -1 && siblings.length > 0) {
         return;
       }
@@ -218,8 +218,8 @@ export class PblTableColumnReorderPluginDirective<T = any> extends CdkLazyDropLi
 }
 
 @Directive({
-  selector: '[negTableColumnDrag]',
-  exportAs: 'negTableColumnDrag',
+  selector: '[pblTableColumnDrag]',
+  exportAs: 'pblTableColumnDrag',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drag',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
@@ -233,7 +233,7 @@ export class PblTableColumnDragDirective<T = any> extends CdkLazyDrag<T, PblTabl
 
   column: PblColumn;
 
-  @Input('negTableColumnDrag') set context(value: Pick<PblTableCellContext<T>, 'col' | 'table'> & Partial<Pick<PblTableCellContext<T>, 'row' | 'value'>>) {
+  @Input('pblTableColumnDrag') set context(value: Pick<PblTableCellContext<T>, 'col' | 'table'> & Partial<Pick<PblTableCellContext<T>, 'row' | 'value'>>) {
     this._context = value;
     this.column = value && value.col;
     const pluginCtrl = this.pluginCtrl = value && PblTablePluginController.find(value.table);

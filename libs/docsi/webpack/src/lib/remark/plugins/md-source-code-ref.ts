@@ -43,7 +43,7 @@ export function mdSourceCodeRef(staticOptions?: MarkdownToHtmlRuntimeOptions['md
     return visit(ast, 'code', visitor);
 
     function visitor (node: CodeNode, index: number, parent: any) {
-      if (node.lang === 'json negCode') {
+      if (node.lang === 'json pblCode') {
         try {
           const codeExtractions: SourceCodeRefMetadata[] = JSON.parse(node.value);
           onMatch({ resourcePath, node, instructions: codeExtractions });

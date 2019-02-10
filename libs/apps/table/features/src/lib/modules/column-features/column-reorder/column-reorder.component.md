@@ -137,16 +137,16 @@ export interface PblTableMetaCellTemplateContext<T> {
 The default re-order template in `PblTableDragModule.withDefaultTemplates()` is fairly simple:
 
 ```html
-<span *pblTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx"></span>
+<span *pblTableCellDraggerRef="let ctx" [pblTableColumnDrag]="ctx"></span>
 ```
 
-We use `*pblTableCellDraggerRef` to instruct the table which template to use pass the context to `[negTableColumnDrag]` which does all the reordering business.
+We use `*pblTableCellDraggerRef` to instruct the table which template to use pass the context to `[pblTableColumnDrag]` which does all the reordering business.
 
-`[negTableColumnDrag]` is a directive that the plugin provides. It extends `CdkDrag` adding some logic for the re-order scenario.
+`[pblTableColumnDrag]` is a directive that the plugin provides. It extends `CdkDrag` adding some logic for the re-order scenario.
 
 ### Manual all the way
 
-`[negTableColumnDrag]` is just our way of doing it, for complete custom handling, one might do:
+`[pblTableColumnDrag]` is just our way of doing it, for complete custom handling, one might do:
 
 ```html
 <my-custom-drag-handler *pblTableCellDraggerRef="let ctx" [table]="ctx.table" [column]="ctx.col"></my-custom-drag-handler>
@@ -154,7 +154,7 @@ We use `*pblTableCellDraggerRef` to instruct the table which template to use pas
 
 `my-custom-drag-handler` will be rendered on each header cell and should take care of all re-order logic.
 
-You can extend `[negTableColumnDrag]`, make it a component, add your custom drag handler icons and more..
+You can extend `[pblTableColumnDrag]`, make it a component, add your custom drag handler icons and more..
 
 I> The `drag` plugin is using `@angular/cdk/drag` as the low level package for handling drag and drop, you can benefit from other
 features this library offers when building you own custom solution.

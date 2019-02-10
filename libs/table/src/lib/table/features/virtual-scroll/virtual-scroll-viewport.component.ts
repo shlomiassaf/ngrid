@@ -134,10 +134,10 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   scrollHeight = 0;
 
   ngeRenderedContentSize = 0;
-  negFillerHeight: string;
+  pblFillerHeight: string;
 
   get wheelMode(): PblCdkVirtualScrollDirective['wheelMode'] {
-    return (this.negScrollStrategy as PblCdkVirtualScrollDirective).wheelMode || this.wheelModeDefault || 'passive';
+    return (this.pblScrollStrategy as PblCdkVirtualScrollDirective).wheelMode || this.wheelModeDefault || 'passive';
   }
 
   get innerWidth(): number {
@@ -160,7 +160,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
               cdr: ChangeDetectorRef,
               ngZone: NgZone,
               config: PblTableConfigService,
-              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) public negScrollStrategy: VirtualScrollStrategy,
+              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) public pblScrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher,
               pluginCtrl: PblTablePluginController,
@@ -168,7 +168,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     super(elementRef,
           cdr,
           ngZone,
-          negScrollStrategy = resolveScrollStrategy(config, negScrollStrategy),
+          pblScrollStrategy = resolveScrollStrategy(config, pblScrollStrategy),
           dir,
           scrollDispatcher);
 
@@ -177,10 +177,10 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     }
     config.onUpdate('virtualScroll').pipe(UnRx(this)).subscribe( change => this.wheelModeDefault = change.curr.wheelMode);
 
-    if (negScrollStrategy instanceof PblCdkVirtualScrollDirective) {
-      this.enabled = negScrollStrategy.type !== 'vScrollNone';
+    if (pblScrollStrategy instanceof PblCdkVirtualScrollDirective) {
+      this.enabled = pblScrollStrategy.type !== 'vScrollNone';
     } else {
-      this.enabled = !(negScrollStrategy instanceof NoVirtualScrollStrategy);
+      this.enabled = !(pblScrollStrategy instanceof NoVirtualScrollStrategy);
     }
     pluginCtrl.extApi.setViewport(this);
     this.offsetChange = this.offsetChange$.asObservable();
@@ -251,7 +251,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   private updateFiller(): void {
     this.measureRenderedContentSize();
-    this.negFillerHeight = this.getViewportSize() >= this.ngeRenderedContentSize ?
+    this.pblFillerHeight = this.getViewportSize() >= this.ngeRenderedContentSize ?
       `calc(100% - ${this.ngeRenderedContentSize}px)`
       : undefined
     ;
@@ -264,9 +264,9 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   attach(forOf: CdkVirtualForOf<any> & NgeVirtualTableRowInfo) {
     super.attach(forOf);
-    const scrollStrategy = this.negScrollStrategy instanceof PblCdkVirtualScrollDirective
-      ? this.negScrollStrategy._scrollStrategy
-      : this.negScrollStrategy
+    const scrollStrategy = this.pblScrollStrategy instanceof PblCdkVirtualScrollDirective
+      ? this.pblScrollStrategy._scrollStrategy
+      : this.pblScrollStrategy
     ;
     if (scrollStrategy instanceof TableAutoSizeVirtualScrollStrategy) {
       scrollStrategy.averager.setRowInfo(forOf);

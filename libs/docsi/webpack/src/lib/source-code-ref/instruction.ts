@@ -21,7 +21,7 @@ export class ParsedInstructionCache {
       instruction.isNew = false;
     }
     if ( i.section && !instruction.parseResult.sections[ i.section ] ) {
-      throw new Error(`Could not find neg code extract section "${i.section}" in ${i.file}`);
+      throw new Error(`Could not find pbl code extract section "${i.section}" in ${i.file}`);
     }
     return instruction;
   }
@@ -106,7 +106,7 @@ export class Instruction {
       throw new Error(`"default" sections is reserved and can not be used in a CodeExtractionInstructions.`);
     }
     if (!FS.existsSync(this.fullPath)) {
-      throw new Error(`Could not find neg code ref file ${i.file} within the context of ${this.pwd}`);
+      throw new Error(`Could not find pbl code ref file ${i.file} within the context of ${this.pwd}`);
     }
   }
 }

@@ -18,7 +18,7 @@ import { PblDragRef } from './drag-ref';
   }
 })
 export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> implements OnInit {
-  get negDropListRef(): PblDropListRef<DRef> { return this._dropListRef as any; }
+  get pblDropListRef(): PblDropListRef<DRef> { return this._dropListRef as any; }
 
   /**
    * Selector that will be used to determine the direct container element, starting from
@@ -35,7 +35,7 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   private _draggablesSet = new Set<CdkDrag>();
 
   ngOnInit(): void {
-    if (this.negDropListRef instanceof PblDropListRef === false) {
+    if (this.pblDropListRef instanceof PblDropListRef === false) {
       throw new Error('Invalid `DropListRef` injection, the ref is not an instance of PblDropListRef')
     }
     this._dropListRef.beforeStarted.subscribe( () => this.beforeStarted() );
@@ -68,7 +68,7 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
     } else {
       this.element = this.originalElement;
     }
-    this.negDropListRef.withElement(this.element);
+    this.pblDropListRef.withElement(this.element);
   }
 }
 
@@ -97,7 +97,7 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
     this._rootClass = value;
   }
 
-  get negDragRef(): PblDragRef<DRef> { return this._dragRef as any; }
+  get pblDragRef(): PblDragRef<DRef> { return this._dragRef as any; }
 
   @Input() get cdkDropList(): Z { return this.dropContainer as Z; }
   set cdkDropList(value: Z) {
@@ -116,10 +116,10 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
   private _hostNotRoot = false;
 
   ngOnInit(): void {
-    if (this.negDragRef instanceof PblDragRef === false) {
+    if (this.pblDragRef instanceof PblDragRef === false) {
       throw new Error('Invalid `DragRef` injection, the ref is not an instance of PblDragRef')
     }
-    this.negDragRef.rootElementChanged.subscribe( event => {
+    this.pblDragRef.rootElementChanged.subscribe( event => {
       const rootElementSelectorClass = this._rootClass;
       const hostNotRoot = this.element.nativeElement !== event.curr;
 
@@ -162,7 +162,7 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
 
 /** Handle that can be used to drag and CdkDrag instance. */
 @Directive({
-  selector: '[negDragHandle]',
+  selector: '[pblDragHandle]',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drag-handle'
   },

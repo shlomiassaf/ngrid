@@ -176,7 +176,7 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
    *
    * ```typescript
    * const collection: T[] = [];
-   * const negDataSource = createDS<T>().onTrigger( () => collection ).create();
+   * const pblDataSource = createDS<T>().onTrigger( () => collection ).create();
    * ```
    *
    * > This is a write-only (setter) property that triggers the `setDataSource` method.
@@ -780,7 +780,7 @@ export class PblTableComponent<T> implements AfterContentInit, AfterViewInit, Do
   }
 
   private setupPaginator(): void {
-    const paginationKillKey = 'negPaginationKillKey';
+    const paginationKillKey = 'pblPaginationKillKey';
     if (this.isInit) {
       UnRx.kill(this, paginationKillKey);
       if (this._paginatorEmbeddedVRef) {

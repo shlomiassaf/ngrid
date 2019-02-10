@@ -126,7 +126,7 @@ export class AllInOneTableExampleComponent {
   enableRowSelection = true;
   singleDetailRow = false;
 
-  @ViewChild(PblTableComponent) negTable: PblTableComponent<any>;
+  @ViewChild(PblTableComponent) pblTable: PblTableComponent<any>;
 
   setStickyRow = setStickyRow;
   setStickyColumns = setStickyColumns;
@@ -160,8 +160,8 @@ export class AllInOneTableExampleComponent {
     }
   }
 
-  toggleDetailRow(negTbl: PblTableComponent<any>, item: Person): void {
-    toggleDetailRow(negTbl, item)
+  toggleDetailRow(pblTbl: PblTableComponent<any>, item: Person): void {
+    toggleDetailRow(pblTbl, item)
   }
 
 }

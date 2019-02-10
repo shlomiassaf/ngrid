@@ -29,8 +29,8 @@ import { PblTableColumnDragDirective } from './column-reorder-plugin';
 let _uniqueIdCounter = 0;
 
 @Directive({
-  selector: '[negAggregationContainer]',
-  exportAs: 'negAggregationContainer',
+  selector: '[pblAggregationContainer]',
+  exportAs: 'pblAggregationContainer',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
     '[id]': 'id',
@@ -58,14 +58,14 @@ export class PblTableAggregationContainerDirective<T = any> extends CdkLazyDropL
     const reorder = pluginCtrl.getPlugin('columnReorder');
     reorder.connectedTo = this.id;
 
-    this.negDropListRef.dropped
+    this.pblDropListRef.dropped
       .subscribe( event => {
         const item = event.item as PblDragRef<PblTableColumnDragDirective<any>>;
         this.pending = undefined;
         this.table.columnApi.addGroupBy(item.data.column);
       });
 
-    this.negDropListRef.entered
+    this.pblDropListRef.entered
       .subscribe( event => {
         const item = event.item as PblDragRef<PblTableColumnDragDirective<any>>;
         this.pending = item.data.column;
@@ -75,7 +75,7 @@ export class PblTableAggregationContainerDirective<T = any> extends CdkLazyDropL
         }
       });
 
-    this.negDropListRef.exited
+    this.pblDropListRef.exited
       .subscribe( event => {
         const item = event.item as PblDragRef<PblTableColumnDragDirective<any>>;
         this.pending = undefined;

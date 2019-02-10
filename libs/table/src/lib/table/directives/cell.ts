@@ -187,7 +187,7 @@ export class PblTableHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
     'class': 'pbl-table-cell',
     'role': 'gridcell',
   },
-  exportAs: 'negTableCell',
+  exportAs: 'pblTableCell',
 })
 export class PblTableCellDirective extends CdkCell implements DoCheck {
 

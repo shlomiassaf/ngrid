@@ -1,5 +1,5 @@
 {
-  "npmScope": "neg",
+  "npmScope": "pebula",
   "implicitDependencies": {
     "angular.json": "*",
     "package.json": "*",

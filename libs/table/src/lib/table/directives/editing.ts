@@ -3,11 +3,11 @@ import { take } from 'rxjs/operators';
 import { Directive, AfterViewInit, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
 import { PblTableCellContext } from '../context/index';
 
-@Directive({ selector: '[negCellEditAutoFocus]' })
+@Directive({ selector: '[pblCellEditAutoFocus]' })
 export class PblTableCellEditAutoFocusDirective implements AfterViewInit, OnDestroy {
 
   // tslint:disable-next-line:no-input-rename
-  @Input('negCellEditAutoFocus') context: PblTableCellContext<any>;
+  @Input('pblCellEditAutoFocus') context: PblTableCellContext<any>;
 
   private _destroyed: boolean;
 

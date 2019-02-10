@@ -31,14 +31,14 @@ import { uniqueColumnCss } from '../circular-dep-bridge';
  * Defines a set of cells available for a table column.
  */
 @Directive({
-  selector: '[negTableColumnDef]',
+  selector: '[pblTableColumnDef]',
   providers: [
     { provide: CdkColumnDef, useExisting: PblTableColumnDef },
     { provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: PblTableColumnDef }
   ],
 })
 export class PblTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef implements DoCheck, OnDestroy {
-  @Input('negTableColumnDef') get column(): T { return this._column; };
+  @Input('pblTableColumnDef') get column(): T { return this._column; };
   set column(value: T) { this.attach(value); }
 
   get isDirty(): boolean {
@@ -118,12 +118,12 @@ export class PblTableColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
    * Lazy means it will run the check only when the diff is requested (i.e. querying the `hasChanged` property).
    * This allow aggregation of changes between CD cycles, i.e. calling `markForCheck()` multiple times within the same CD cycle does not hit performance.
    *
-   * Once marked for check, `negTableColumnDef` handles it's dirty (`isDirty`) state automatically, when `isDirty` is true it will remain true until the
-   * CD cycle ends, i.e. until `ngDoCheck()` hits. This means that only children of `negTableColumnDef` can relay on `isDirty`, all children will run their
-   * `ngDoCheck()` before `ngDoCheck()` of `negTableColumnDef`.
+   * Once marked for check, `pblTableColumnDef` handles it's dirty (`isDirty`) state automatically, when `isDirty` is true it will remain true until the
+   * CD cycle ends, i.e. until `ngDoCheck()` hits. This means that only children of `pblTableColumnDef` can relay on `isDirty`, all children will run their
+   * `ngDoCheck()` before `ngDoCheck()` of `pblTableColumnDef`.
    *
    * This is a how we notify all cell directives about changes in a column. It is done through angular's CD logic and does not require manual
-   * CD kicks and special channels between negTableColumnDef and it's children.
+   * CD kicks and special channels between pblTableColumnDef and it's children.
    */
   markForCheck(): void {
     if (!this._colDiffer) {

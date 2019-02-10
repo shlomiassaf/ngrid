@@ -36,7 +36,7 @@ import { PblCdkVirtualScrollViewportComponent } from '../features/virtual-scroll
  */
 @Component({
   selector: 'pbl-cdk-table',
-  exportAs: 'negCdkTable',
+  exportAs: 'pblCdkTable',
   template: CDK_TABLE_TEMPLATE,
   styleUrls: ['./pbl-cdk-table.component.scss'],
   host: { // tslint:disable-line:use-host-property-decorator
@@ -220,7 +220,7 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     }
   }
 
-  negForceRenderDataRows(): void {
+  pblForceRenderDataRows(): void {
     try{
       (this as any)._forceRenderDataRows();
     } catch (ex) {

@@ -10,10 +10,10 @@ import { ColumnApi } from '../column-api';
 
 declare module '@angular/cdk/table/typings/row.d' {
   export interface CdkCellOutletRowContext<T> {
-    negRowContext: PblTableRowContext<T>;
+    pblRowContext: PblTableRowContext<T>;
   }
   export interface CdkCellOutletMultiRowContext<T> {
-    negRowContext: PblTableRowContext<T>;
+    pblRowContext: PblTableRowContext<T>;
   }
 }
 
@@ -123,8 +123,8 @@ export class PblRowContext<T> implements PblTableRowContext<T> {
   outOfView: boolean;
   readonly table: PblTableComponent<T>;
 
-  get negRowContext(): PblTableRowContext<T> { return this; }
-  set negRowContext(value: PblTableRowContext<T>) { }
+  get pblRowContext(): PblTableRowContext<T> { return this; }
+  set pblRowContext(value: PblTableRowContext<T>) { }
 
   private cells: CellContext<T>[];
 
@@ -324,7 +324,7 @@ export class ContextApi<T = any> {
   clear(): void {
     for (let i = 0, len = this.vcRef.length; i < len; i++) {
       const viewRef = this.findViewRef(i);
-      delete viewRef.context.negRowContext;
+      delete viewRef.context.pblRowContext;
     }
     this.viewCache.clear();
     this.cache.clear();
@@ -392,17 +392,17 @@ export class ContextApi<T = any> {
       ? viewRef.context.$implicit[this.extApi.table.identityProp]
       : this.extApi.table.ds.renderStart + renderRowIndex
     ;
-    let rowContext: PblRowContext<T> = context.negRowContext as PblRowContext<T>;
+    let rowContext: PblRowContext<T> = context.pblRowContext as PblRowContext<T>;
 
     if (!this.cache.has(identity)) {
       this.cache.set(identity, PblRowContext.defaultState(identity, this.columnApi.columns.length));
     }
 
     if (!rowContext) {
-      rowContext = context.negRowContext = this.createRowContext(identity, context);
+      rowContext = context.pblRowContext = this.createRowContext(identity, context);
       viewRef.onDestroy(() => {
         this.viewCache.delete(renderRowIndex);
-        delete context.negRowContext;
+        delete context.pblRowContext;
       });
     } else if (rowContext.identity !== identity) {
       // save old state before applying new state
@@ -413,7 +413,7 @@ export class ContextApi<T = any> {
       const gap = identity - rowContext.identity;
       if (gap > 0) {
         const siblingViewRef = this.findViewRef(renderRowIndex + gap);
-        const siblingRowContext = siblingViewRef && siblingViewRef.context.negRowContext as PblRowContext<T>;
+        const siblingRowContext = siblingViewRef && siblingViewRef.context.pblRowContext as PblRowContext<T>;
         if (siblingRowContext) {
           this.cache.set(siblingRowContext.identity, siblingRowContext.getState());
         }
@@ -440,7 +440,7 @@ export class ContextApi<T = any> {
 
 function processOutOfView(viewRef: EmbeddedViewRef<RowContext<any>>, viewPortRect: ClientRect | DOMRect, location?: 'top' | 'bottom'): boolean {
   const el: HTMLElement = viewRef.rootNodes[0];
-  const rowContext = viewRef.context.negRowContext;
+  const rowContext = viewRef.context.pblRowContext;
   const elRect = el.getBoundingClientRect();
 
   let isInsideOfView: boolean;

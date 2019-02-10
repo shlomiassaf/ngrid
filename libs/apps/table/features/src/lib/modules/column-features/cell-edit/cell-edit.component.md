@@ -14,7 +14,7 @@ Let's start with a simple example:
       <a (click)="ctx.startEdit(true)">{{ ctx.value }}</a>
     </div>
     <div *pblTableCellEditorDef="'name'; let ctx">
-      <input #input [value]="ctx.value" [negCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
+      <input #input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
     </div>
   </pbl-table>
   <!--@pebula-example:ex-1-->
@@ -22,7 +22,7 @@ Let's start with a simple example:
 
 Clicking on the name will trigger an input box, leaving the input box (blur) will return to the read-only view.
 
-I> If you wondering what is the `[negCellEditAutoFocus]` directive, it is just a simple *helper* directive that will handle auto-focusing logic of
+I> If you wondering what is the `[pblCellEditAutoFocus]` directive, it is just a simple *helper* directive that will handle auto-focusing logic of
 the input element.
 
 ## Edit Template
@@ -36,13 +36,13 @@ I> There is no default edit template, you can use `*` to define one but the tabl
 
 In the example above there are 2 cell definitions inside the table that handle the `name` column:
 
-- `negTableCellDef` defining the read-only view of the cell
-- `negTableCellEditorDef` defining the write view of the cell.
+- `pblTableCellDef` defining the read-only view of the cell
+- `pblTableCellEditorDef` defining the write view of the cell.
 
 These are the specific property directives definitions, there are also type based definitions:
 
-- `negTableCellTypeDef` defining the read-only view of the cell
-- `negTableCellEditorTypeDef` defining the write view of the cell.
+- `pblTableCellTypeDef` defining the read-only view of the cell
+- `pblTableCellEditorTypeDef` defining the write view of the cell.
 
 ```html
 <div *pblTableCellDef="'name'; let ctx">
@@ -95,11 +95,11 @@ For this we make use of the `target-events` plugin that allow us to handle speci
       <a (click)="ctx.startEdit(true)">{{ ctx.value }}</a>
     </div>
     <div *pblTableCellEditorDef="'name'; let ctx">
-      <input [value]="ctx.value" [negCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
+      <input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
     </div>
     <div *pblTableCellEditorDef="'lead'; let ctx">
       <input type="checkbox" [checked]="ctx.value"
-             [negCellEditAutoFocus]="ctx"
+             [pblCellEditAutoFocus]="ctx"
              (change)="changeCheckbox(cb, ctx)"
              (blur)="ctx.stopEdit()" />
     </div>

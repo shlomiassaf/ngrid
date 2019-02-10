@@ -18,11 +18,11 @@ export {
 } from './lib/data-source/index';
 
 export {
-  NEG_TABLE_CONFIG, PblTableConfig, PblTableConfigService,
+  PEB_ANGRID_CONFIG, PblTableConfig, PblTableConfigService,
 
   PblColumn, PblMetaColumn, PblColumnGroup, PblColumnFactory, COLUMN, columnFactory,
 
-  NEG_TABLE_ROW_TEMPLATE, PblTableRowComponent,
+  PBL_ANGRID_ROW_TEMPLATE, PblTableRowComponent,
 
   PblTableComponent,
   PblTableRegistryService,

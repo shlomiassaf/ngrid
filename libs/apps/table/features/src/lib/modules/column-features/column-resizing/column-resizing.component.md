@@ -13,9 +13,9 @@ in the column definitions.
 
 <docsi-mat-example-with-source title="Resizing with the API" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <button (click)="resize(negTable1)">Resize id to 200px</button>
-  <button (click)="negTable1.autoSizeColumnToFit()">Fit Content</button>
-  <pbl-table #negTable1 [dataSource]="ds1" [columns]="columns1" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-table>
+  <button (click)="resize(pblTable1)">Resize id to 200px</button>
+  <button (click)="pblTable1.autoSizeColumnToFit()">Fit Content</button>
+  <pbl-table #pblTable1 [dataSource]="ds1" [columns]="columns1" class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis"></pbl-table>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 

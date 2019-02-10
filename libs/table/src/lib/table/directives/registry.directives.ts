@@ -67,7 +67,7 @@ export interface PblTableDataHeaderExtensionRef<T = any> {
 /**
  * Marks the element as the display element for pagination
  */
-@Directive({ selector: '[negTablePaginatorRef]' })
+@Directive({ selector: '[pblTablePaginatorRef]' })
 export class PblTablePaginatorRefDirective extends PblTableSingleTemplateRegistry<{ $implicit: PblTableComponent<any> }, 'paginator'> {
   readonly kind: 'paginator' = 'paginator';
   constructor(tRef: TemplateRef<{ $implicit: PblTableComponent<any> }>, registry: PblTableRegistryService) { super(tRef, registry); }
@@ -85,7 +85,7 @@ export class PblTablePaginatorRefDirective extends PblTableSingleTemplateRegistr
  *   </pbl-table>
  * ```
  */
-@Directive({ selector: '[negTableNoDataRef]' })
+@Directive({ selector: '[pblTableNoDataRef]' })
 export class PblTableNoDataRefDirective extends PblTableSingleTemplateRegistry<{ $implicit: PblTableComponent<any> }, 'noData'> {
   readonly kind: 'noData' = 'noData';
   constructor(tRef: TemplateRef<{ $implicit: PblTableComponent<any> }>, registry: PblTableRegistryService) { super(tRef, registry); }

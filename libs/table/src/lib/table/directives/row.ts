@@ -4,11 +4,11 @@ import { EXT_API_TOKEN, PblTableExtensionApi } from '../../ext/table-ext-api';
 import { PblRowContext } from '../context/index';
 
 
-export const NEG_TABLE_ROW_TEMPLATE  = `<ng-content select=".pbl-table-row-prefix"></ng-content>${CDK_ROW_TEMPLATE}<ng-content select=".pbl-table-row-suffix"></ng-content>`;
+export const PBL_ANGRID_ROW_TEMPLATE  = `<ng-content select=".pbl-table-row-prefix"></ng-content>${CDK_ROW_TEMPLATE}<ng-content select=".pbl-table-row-suffix"></ng-content>`;
 
 @Component({
   selector: 'pbl-table-row:not([detailRow])',
-  template: NEG_TABLE_ROW_TEMPLATE,
+  template: PBL_ANGRID_ROW_TEMPLATE,
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'pbl-table-row',
     'role': 'row',
@@ -16,7 +16,7 @@ export const NEG_TABLE_ROW_TEMPLATE  = `<ng-content select=".pbl-table-row-prefi
   providers: [
     { provide: CdkRow, useExisting: PblTableRowComponent }
   ],
-  exportAs: 'negTableRow',
+  exportAs: 'pblTableRow',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

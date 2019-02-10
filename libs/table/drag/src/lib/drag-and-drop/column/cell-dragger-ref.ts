@@ -6,7 +6,7 @@ import { PLUGIN_KEY } from './column-reorder-plugin';
 /**
  * Marks the element as the resizer template for cells.
  */
-@Directive({ selector: '[negTableCellDraggerRef]' })
+@Directive({ selector: '[pblTableCellDraggerRef]' })
 export class PblTableCellDraggerRefDirective extends PblTableMultiTemplateRegistry<PblTableDataHeaderExtensionContext, 'dataHeaderExtensions'> implements PblTableDataHeaderExtensionRef {
   readonly name: 'cellDragger' = 'cellDragger';
   readonly kind: 'dataHeaderExtensions' = 'dataHeaderExtensions';

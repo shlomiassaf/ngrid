@@ -23,4 +23,4 @@ A Plugin for `pbl-table` with a `Paginator` impelementation using components fro
 </pbl-table>
 ```
 
-> TIP: You can use `negTablePaginatorRef` outside of the table, (root component), to define a gloal paginator.
+> TIP: You can use `pblTablePaginatorRef` outside of the table, (root component), to define a gloal paginator.

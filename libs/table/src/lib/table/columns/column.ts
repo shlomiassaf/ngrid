@@ -9,11 +9,11 @@ import { PblColumnDefinition, PblColumnTypeDefinition } from './types';
 import { initDefinitions, parseStyleWidth } from './utils';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 
-const NEG_COLUMN_MARK = Symbol('PblColumn');
+const PBL_ANGRID_COLUMN_MARK = Symbol('PblColumn');
 const CLONE_PROPERTIES: Array<keyof PblColumn> = ['sort', 'headerType', 'footerType', 'pin'];
 
 export function isPblColumn(def: any): def is PblColumn {
-  return def instanceof PblColumn || def[NEG_COLUMN_MARK] === true;
+  return def instanceof PblColumn || def[PBL_ANGRID_COLUMN_MARK] === true;
 }
 
 export class PblColumn implements PblColumnDefinition {
@@ -173,7 +173,7 @@ export class PblColumn implements PblColumnDefinition {
   constructor(def: PblColumn, groupStore?: PblColumnGroupStore);
   constructor(def: PblColumnDefinition, groupStore: PblColumnGroupStore);
   constructor(def: PblColumn | PblColumnDefinition, groupStore?: PblColumnGroupStore) {
-    this[NEG_COLUMN_MARK] = true;
+    this[PBL_ANGRID_COLUMN_MARK] = true;
 
     if (isPblColumn(def)) {
       initDefinitions(def, this);

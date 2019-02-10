@@ -7,7 +7,7 @@
       "root": "apps/table-demo-app/",
       "sourceRoot": "apps/table-demo-app/src",
       "projectType": "application",
-      "prefix": "neg",
+      "prefix": "pbl",
       "schematics": {
         "@nrwl/schematics:component": {
           "styleext": "scss"
@@ -143,7 +143,7 @@
       "root": "libs/demo-apps/shared",
       "sourceRoot": "libs/demo-apps/shared/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -171,7 +171,7 @@
       "root": "libs/demo-apps/concepts",
       "sourceRoot": "libs/demo-apps/concepts/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -199,7 +199,7 @@
       "root": "libs/demo-apps/features",
       "sourceRoot": "libs/demo-apps/features/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -227,7 +227,7 @@
       "root": "libs/demo-apps/stories",
       "sourceRoot": "libs/demo-apps/stories/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -255,7 +255,7 @@
       "root": "libs/demo-apps/demos",
       "sourceRoot": "libs/demo-apps/demos/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -283,7 +283,7 @@
       "root": "libs/table",
       "sourceRoot": "libs/table/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "schematics": {
         "@schematics/angular:component": {
           "styleext": "scss"
@@ -357,7 +357,7 @@
       "root": "libs/table/sticky",
       "sourceRoot": "libs/table/sticky/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -397,7 +397,7 @@
       "root": "libs/table/detail-row",
       "sourceRoot": "libs/table/detail-row/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -437,7 +437,7 @@
       "root": "libs/table/block-ui",
       "sourceRoot": "libs/table/block-ui/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -477,7 +477,7 @@
       "root": "libs/table/transpose",
       "sourceRoot": "libs/table/transpose/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -517,7 +517,7 @@
       "root": "libs/table/target-events",
       "sourceRoot": "libs/table/target-events/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -545,7 +545,7 @@
       "root": "libs/table/material/selection-column",
       "sourceRoot": "libs/table/material/selection-column/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -585,7 +585,7 @@
       "root": "libs/table/material/paginator",
       "sourceRoot": "libs/table/material/paginator/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -625,7 +625,7 @@
       "root": "libs/table/material/sort",
       "sourceRoot": "libs/table/material/sort/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -665,7 +665,7 @@
       "root": "libs/table/material/cell-tooltip",
       "sourceRoot": "libs/table/material/cell-tooltip/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -705,7 +705,7 @@
       "root": "libs/table/material",
       "sourceRoot": "libs/table/material/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -740,7 +740,7 @@
       "root": "libs/table/drag",
       "sourceRoot": "libs/table/drag/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -775,7 +775,7 @@
       "root": "libs/docsi",
       "sourceRoot": "libs/docsi/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -815,7 +815,7 @@
       "root": "libs/docsi/webpack",
       "sourceRoot": "libs/docsi/webpack/src",
       "projectType": "library",
-      "prefix": "neg",
+      "prefix": "pbl",
       "architect": {
         "test": {
           "builder": "@angular-devkit/build-angular:karma",

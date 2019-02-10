@@ -6,7 +6,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
 
 import {
-  NEG_TABLE_CONFIG, PblTableConfig,
+  PEB_ANGRID_CONFIG, PblTableConfig,
   PblTableRegistryService,
   PblCdkTableComponent,
   PblTableComponent,
@@ -125,7 +125,7 @@ export class PblTableModule {
     return {
       ngModule: PblTableModule,
       providers: [
-        { provide: NEG_TABLE_CONFIG, useValue: config },
+        { provide: PEB_ANGRID_CONFIG, useValue: config },
         PblTableConfigService,
         provideCommon(components),
       ]

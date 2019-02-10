@@ -13,7 +13,7 @@ const COUNTRY_GETTER = {
   data: undefined as any
 }
 
-const ACCOUNT_BALANCE_TYPE = { name: 'accountBalance', data: { neg: 'balance-negative', pos: 'balance-positive', format: '1.0-2', meta: COUNTRY_GETTER } };
+const ACCOUNT_BALANCE_TYPE = { name: 'accountBalance', data: { pbl: 'balance-negative', pos: 'balance-positive', format: '1.0-2', meta: COUNTRY_GETTER } };
 
 function createColumns(noType = false) {
   const getType = <T>(type: T): T | undefined => noType ? undefined : type;
@@ -81,7 +81,7 @@ export class VirtualScrollPerformanceDemoTableExampleComponent {
   showTable = true;
   hideColumns: string[] = [];
 
-  @ViewChild(PblTableComponent) negTable: PblTableComponent<any>;
+  @ViewChild(PblTableComponent) pblTable: PblTableComponent<any>;
 
   constructor(private datasource: DemoDataSource, private cdr: ChangeDetectorRef) {
     datasource.getCountries().then( c => COUNTRY_GETTER.data = c );

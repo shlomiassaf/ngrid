@@ -9,13 +9,13 @@ import { PblTableMetaRowService } from './meta-row.service';
 
 
 @Directive({
-  selector: '[negMetaRow]',
+  selector: '[pblMetaRow]',
 })
 @UnRx()
 export class PblMetaRowDirective implements OnDestroy {
 
   // tslint:disable-next-line:no-input-rename
-  @Input('negMetaRow') get meta(): PblMetaRowDefinitions { return this._meta; }
+  @Input('pblMetaRow') get meta(): PblMetaRowDefinitions { return this._meta; }
   set meta(value: PblMetaRowDefinitions) {
     if (value !== this._meta) {
       this.update(value);

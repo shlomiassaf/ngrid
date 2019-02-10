@@ -34,7 +34,7 @@
                matCheckboxSelection="selection">
       <pbl-demo-action-row filter label="Virtual Scroll Performance" showFps></pbl-demo-action-row>
       <div *pblTableCellTypeDef="'accountBalance'; value as value; col as col; row as row"
-          [parentNgClass]="value < 0 ? col.type.data.neg : col.type.data.pos">{{ value | currency:col.type.data.meta.currency(row):'symbol':col.type.data.format }}</div>
+          [parentNgClass]="value < 0 ? col.type.data.pbl : col.type.data.pos">{{ value | currency:col.type.data.meta.currency(row):'symbol':col.type.data.format }}</div>
       <div *pblTableCellTypeDef="'flagAndCountry'; col as col; row as row">{{ col.type.data.flagAndCountry(row) }}</div>
 
     </pbl-table>

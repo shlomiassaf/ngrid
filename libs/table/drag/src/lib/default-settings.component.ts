@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/
   selector: 'pbl-drag-plugin-default-templates',
   template:
 `<pbl-table-drag-resize *pblTableCellResizerRef="let ctx" [context]="ctx"></pbl-table-drag-resize>
-<span *pblTableCellDraggerRef="let ctx" [negTableColumnDrag]="ctx" cdkDragRootElementClass="cdk-drag"></span>`,
+<span *pblTableCellDraggerRef="let ctx" [pblTableColumnDrag]="ctx" cdkDragRootElementClass="cdk-drag"></span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

@@ -5,11 +5,11 @@ import { PblTableMetaCellContext } from '../context/types';
 import { PblMetaColumnDefinition, PblColumnTypeDefinition } from './types';
 import { parseStyleWidth, initDefinitions } from './utils';
 
-const NEG_META_COLUMN_MARK = Symbol('PblMetaColumn');
+const PBL_ANGRID_META_COLUMN_MARK = Symbol('PblMetaColumn');
 const CLONE_PROPERTIES: Array<keyof PblMetaColumn> = ['kind', 'rowIndex'];
 
 function isPblMetaColumn(def: PblMetaColumnDefinition): def is PblMetaColumn {
-  return def instanceof PblMetaColumn || def[NEG_META_COLUMN_MARK] === true;
+  return def instanceof PblMetaColumn || def[PBL_ANGRID_META_COLUMN_MARK] === true;
 }
 
 export class PblMetaColumn implements PblMetaColumnDefinition {
@@ -110,7 +110,7 @@ export class PblMetaColumn implements PblMetaColumnDefinition {
   private defaultWidth = '';
 
   constructor(def: PblMetaColumnDefinition) {
-    this[NEG_META_COLUMN_MARK] = true;
+    this[PBL_ANGRID_META_COLUMN_MARK] = true;
     initDefinitions(def, this);
 
     for (const prop of CLONE_PROPERTIES) {

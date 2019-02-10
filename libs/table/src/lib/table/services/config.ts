@@ -16,7 +16,7 @@ const DEFAULT_TABLE_CONFIG: PblTableConfig['table'] = {
   boxSpaceModel: 'padding',
 };
 
-export const NEG_TABLE_CONFIG = new InjectionToken<PblTableConfig>('NEG_TABLE_CONFIG');
+export const PEB_ANGRID_CONFIG = new InjectionToken<PblTableConfig>('PEB_ANGRID_CONFIG');
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +26,7 @@ export class PblTableConfigService {
   private config = new Map<keyof PblTableConfig, any>();
   private configNotify = new Map<keyof PblTableConfig, ReplaySubject<any>>();
 
-  constructor(@Optional() @Inject(NEG_TABLE_CONFIG) _config: PblTableConfig) {
+  constructor(@Optional() @Inject(PEB_ANGRID_CONFIG) _config: PblTableConfig) {
     if (_config) {
       for (const key of Object.keys(_config)) {
         (this.config as any).set(key, _config[key]);

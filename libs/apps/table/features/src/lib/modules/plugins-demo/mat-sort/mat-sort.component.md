@@ -31,7 +31,7 @@
 
 <docsi-mat-example-with-source title="Programatic Sorting" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
   <!--@pebula-example:ex-3-->
-  <pbl-table #matSort="negMatSort"
+  <pbl-table #matSort="pblMatSort"
              matSort
              [stickyHeader]="['table']"
              blockUi

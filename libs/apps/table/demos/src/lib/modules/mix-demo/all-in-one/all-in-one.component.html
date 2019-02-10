@@ -1,5 +1,5 @@
 <div fxLayout="column" style="height: 100%">
-  <pbl-table #negTbl
+  <pbl-table #pblTbl
             identityProp="id"
             rowReorder columnReorder
             blockUi
@@ -20,19 +20,19 @@
             style="height: 100%; width: 100%;"
             class="pbl-table-cell-ellipsis pbl-table-header-cell-ellipsis">
     <pbl-demo-action-row filter label="Demo 2"></pbl-demo-action-row>
-    <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS NEG-TABLE -->
+    <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS PBL-ANGRID -->
     <div *pblTableBlockUiDef class="pbl-table-ui-block">
       <mat-spinner></mat-spinner>
     </div>
-    <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS NEG-TABLE -->
+    <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS PBL-ANGRID -->
 
-    <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS NEG-TABLE -->
+    <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS PBL-ANGRID -->
     <div *pblTableNoDataRef class="pbl-table-no-data"><span>No Results</span></div>
-    <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS NEG-TABLE -->
+    <!-- DEFINING DEFAULT NO DATA TEMPLATE FOR THIS PBL-ANGRID -->
 
-    <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS NEG-TABLE -->
+    <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS PBL-ANGRID -->
     <pbl-table-paginator *pblTablePaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-table-paginator>
-    <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS NEG-TABLE -->
+    <!-- DEFINING DEFAULT PAGINATOR TEMPLATE FOR THIS PBL-ANGRID -->
 
     <!-- DETAIL ROW TEMPLATE DEFINITION-->
     <pbl-table-row *pblTableDetailRowParentRef="let row; table as table"
@@ -120,7 +120,7 @@
       <div class="example-feature-action" fxFlex>
         <mat-form-field>
           <mat-select #selectHiddenColumn>
-            <mat-option *ngFor="let o of negTbl.columnApi.columns" [value]="o">{{o.label}}</mat-option>
+            <mat-option *ngFor="let o of pblTbl.columnApi.columns" [value]="o">{{o.label}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-checkbox *ngIf="selectHiddenColumn?.selected?.value as c"
@@ -155,13 +155,13 @@
     <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
       <div class="example-feature-title" fxFlex="50%">Sticky Header</div>
       <div class="example-feature-action" fxFlex>
-        <mat-checkbox *ngFor="let h of negTbl._headerRowDefs; index as i" (change)="setStickyRow(negTbl, 'header', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
+        <mat-checkbox *ngFor="let h of pblTbl._headerRowDefs; index as i" (change)="setStickyRow(pblTbl, 'header', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
       </div>
     </div>
     <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
       <div class="example-feature-title" fxFlex="50%">Sticky Footer</div>
       <div class="example-feature-action" fxFlex>
-        <mat-checkbox *ngFor="let h of negTbl._footerRowDefs; index as i" (change)="setStickyRow(negTbl, 'footer', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
+        <mat-checkbox *ngFor="let h of pblTbl._footerRowDefs; index as i" (change)="setStickyRow(pblTbl, 'footer', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
       </div>
     </div>
     <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
@@ -169,14 +169,14 @@
       <div class="example-feature-action" fxFlex>
         <mat-form-field>
           <mat-select #selectColumn>
-            <mat-option *ngFor="let o of negTbl.columnApi.visibleColumns" [value]="o">{{o.label}}</mat-option>
+            <mat-option *ngFor="let o of pblTbl.columnApi.visibleColumns" [value]="o">{{o.label}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-checkbox *ngIf="selectColumn?.selected?.value as c"
-                      (change)="setStickyColumns(negTbl, 'start', c.orgProp, $event.checked)"
+                      (change)="setStickyColumns(pblTbl, 'start', c.orgProp, $event.checked)"
                       [checked]="c.stickyStart">Sticky Start</mat-checkbox>
         <mat-checkbox *ngIf="selectColumn?.selected?.value as c"
-                      (change)="setStickyColumns(negTbl, 'end', c.orgProp, $event.checked)"
+                      (change)="setStickyColumns(pblTbl, 'end', c.orgProp, $event.checked)"
                       [checked]="c.stickyEnd">Sticky End</mat-checkbox>
       </div>
     </div>
@@ -189,7 +189,7 @@
             <mat-option *ngFor="let o of dataSource.renderedRows" [value]="o">{{o.id}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <button (click)="toggleDetailRow(negTbl, toggleDetailRowSelect.value)" [disabled]="!toggleDetailRowSelect.value">GO</button>
+        <button (click)="toggleDetailRow(pblTbl, toggleDetailRowSelect.value)" [disabled]="!toggleDetailRowSelect.value">GO</button>
       </div>
     </div> -->
   </ng-container>

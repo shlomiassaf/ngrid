@@ -19,7 +19,7 @@ import { PblTableDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugi
 
 @Component({
   selector: 'pbl-table-row[detailRow]',
-  exportAs: 'negTableDetailRow',
+  exportAs: 'pblTableDetailRow',
   host: { // tslint:disable-line:use-host-property-decorator
     class: 'pbl-table-row pbl-row-detail-parent',
     role: 'row',

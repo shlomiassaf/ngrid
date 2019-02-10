@@ -52,8 +52,8 @@ export abstract class PblTableBaseCellDef<Z> implements OnInit, OnDestroy, PblTa
  * Header Cell definition for the pbl-table.
  * Captures the template of a column's data row header cell as well as header cell-specific properties.
  *
- * `negTableHeaderCellDef` does the same thing that `matHeaderCellDef` and `cdkHeaderCellDef` do with one difference,
- * `negTableHeaderCellDef` is independent and does not require a column definition parent, instead it accept the ID of
+ * `pblTableHeaderCellDef` does the same thing that `matHeaderCellDef` and `cdkHeaderCellDef` do with one difference,
+ * `pblTableHeaderCellDef` is independent and does not require a column definition parent, instead it accept the ID of
  * the header cell.
  *
  * NOTE: Defining '*' as id will declare the header cell template as default, replacing the table's default header cell template.
@@ -64,8 +64,8 @@ export abstract class PblTableBaseCellDef<Z> implements OnInit, OnDestroy, PblTa
  * the `prop` is used (full with dot notation).
  */
 @Directive({
-  selector: '[negTableHeaderCellDef], [negTableHeaderCellTypeDef]',
-  inputs: [ 'name:negTableHeaderCellDef', 'type:negTableHeaderCellTypeDef' ]
+  selector: '[pblTableHeaderCellDef], [pblTableHeaderCellTypeDef]',
+  inputs: [ 'name:pblTableHeaderCellDef', 'type:pblTableHeaderCellTypeDef' ]
 })
 export class PblTableHeaderCellDefDirective<T> extends PblTableBaseCellDef<PblTableMetaCellContext<T>> {
   constructor(tRef: TemplateRef<PblTableMetaCellContext<T>>, registry: PblTableRegistryService) { super(tRef, registry); }
@@ -75,7 +75,7 @@ export class PblTableHeaderCellDefDirective<T> extends PblTableBaseCellDef<PblTa
  * Cell definition for the pbl-table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  *
- * `negTableCellDef` does the same thing that `matCellDef` and `cdkCellDef` do with one difference, `negTableCellDef` is
+ * `pblTableCellDef` does the same thing that `matCellDef` and `cdkCellDef` do with one difference, `pblTableCellDef` is
  * independent and does not require a column definition parent, instead it accept the ID of the cell.
  *
  * NOTE: Defining '*' as id will declare the cell template as default, replacing the table's default cell template.
@@ -86,8 +86,8 @@ export class PblTableHeaderCellDefDirective<T> extends PblTableBaseCellDef<PblTa
  * the `prop` is used (full with dot notation).
  */
 @Directive({
-  selector: '[negTableCellDef], [negTableCellTypeDef]',
-  inputs: [ 'name:negTableCellDef', 'type:negTableCellTypeDef' ]
+  selector: '[pblTableCellDef], [pblTableCellTypeDef]',
+  inputs: [ 'name:pblTableCellDef', 'type:pblTableCellTypeDef' ]
 })
 export class PblTableCellDefDirective<T, P extends keyof PblColumnTypeDefinitionDataMap = any> extends PblTableBaseCellDef<PblTableCellContext<T, P>> {
   type: P;
@@ -95,8 +95,8 @@ export class PblTableCellDefDirective<T, P extends keyof PblColumnTypeDefinition
 }
 
 @Directive({
-  selector: '[negTableCellEditorDef], [negTableCellEditorTypeDef]',
-  inputs: [ 'name:negTableCellEditorDef', 'type:negTableCellEditorTypeDef' ]
+  selector: '[pblTableCellEditorDef], [pblTableCellEditorTypeDef]',
+  inputs: [ 'name:pblTableCellEditorDef', 'type:pblTableCellEditorTypeDef' ]
 })
 export class PblTableEditorCellDefDirective<T, P extends keyof PblColumnTypeDefinitionDataMap = any> extends PblTableBaseCellDef<PblTableCellContext<T, P>> {
   type: P;
@@ -104,8 +104,8 @@ export class PblTableEditorCellDefDirective<T, P extends keyof PblColumnTypeDefi
 }
 
 @Directive({
-  selector: '[negTableFooterCellDef], [negTableFooterCellTypeDef]',
-  inputs: [ 'name:negTableFooterCellDef', 'type:negTableFooterCellTypeDef' ]
+  selector: '[pblTableFooterCellDef], [pblTableFooterCellTypeDef]',
+  inputs: [ 'name:pblTableFooterCellDef', 'type:pblTableFooterCellTypeDef' ]
 })
 export class PblTableFooterCellDefDirective<T> extends PblTableBaseCellDef<PblTableMetaCellContext<T>> {
   constructor(tRef: TemplateRef<PblTableMetaCellContext<T>>, registry: PblTableRegistryService) { super(tRef, registry); }

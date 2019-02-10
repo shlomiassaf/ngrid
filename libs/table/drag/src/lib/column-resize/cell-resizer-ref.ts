@@ -4,7 +4,7 @@ import { PblTableRegistryService, PblTableMultiTemplateRegistry, PblTableDataHea
 /**
  * Marks the element as the resizer template for cells.
  */
-@Directive({ selector: '[negTableCellResizerRef]' })
+@Directive({ selector: '[pblTableCellResizerRef]' })
 export class PblTableCellResizerRefDirective extends PblTableMultiTemplateRegistry<PblTableDataHeaderExtensionContext, 'dataHeaderExtensions'> implements PblTableDataHeaderExtensionRef {
   readonly name: 'cellResizer' = 'cellResizer';
   readonly kind: 'dataHeaderExtensions' = 'dataHeaderExtensions';

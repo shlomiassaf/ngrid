@@ -39,7 +39,7 @@ let _uniqueIdCounter = 0;
 @TablePlugin({ id: PLUGIN_KEY })
 @Directive({
   selector: 'pbl-table[rowReorder]',
-  exportAs: 'negTableRowReorder',
+  exportAs: 'pblTableRowReorder',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
     '[id]': 'id',
@@ -88,8 +88,8 @@ export class PblTableRowReorderPluginDirective<T = any> extends CdkLazyDropList<
 }
 
 @Directive({
-  selector: '[negTableRowDrag]',
-  exportAs: 'negTableRowDrag',
+  selector: '[pblTableRowDrag]',
+  exportAs: 'pblTableRowDrag',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drag',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
@@ -101,7 +101,7 @@ export class PblTableRowReorderPluginDirective<T = any> extends CdkLazyDropList<
 export class PblTableRowDragDirective<T = any> extends CdkLazyDrag<T, PblTableRowReorderPluginDirective<T>> implements AfterViewInit {
   rootElementSelector = 'pbl-table-row';
 
-  @Input('negTableRowDrag') set context(value: Pick<PblTableCellContext<T>, 'col' | 'table'> & Partial<Pick<PblTableCellContext<T>, 'row' | 'value'>>) {
+  @Input('pblTableRowDrag') set context(value: Pick<PblTableCellContext<T>, 'col' | 'table'> & Partial<Pick<PblTableCellContext<T>, 'row' | 'value'>>) {
     this._context = value;
 
     const pluginCtrl = this.pluginCtrl = value && PblTablePluginController.find(value.table);

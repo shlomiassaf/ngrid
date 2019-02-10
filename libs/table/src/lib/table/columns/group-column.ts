@@ -3,11 +3,11 @@ import { PblBaseColumnDefinition, PblColumnGroupDefinition } from './types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';
 
-const NEG_COLUMN_GROUP_MARK = Symbol('PblColumnGroup');
+const PBL_ANGRID_COLUMN_GROUP_MARK = Symbol('PblColumnGroup');
 const CLONE_PROPERTIES: Array<keyof PblColumnGroup> = [];
 
 function isPblColumnGroup(def: PblColumnGroupDefinition): def is PblColumnGroup {
-  return def instanceof PblColumnGroup || def[NEG_COLUMN_GROUP_MARK] === true;
+  return def instanceof PblColumnGroup || def[PBL_ANGRID_COLUMN_GROUP_MARK] === true;
 }
 
 function getId(value: string | { id: string }): string {
@@ -133,7 +133,7 @@ export class PblColumnGroup extends PblMetaColumn implements PblColumnGroupDefin
       ? def
       : { id: `group-${def.prop}-span-${def.span}-row-${def.rowIndex}`, kind: 'header' as 'header', ...(def as any) }
     );
-    this[NEG_COLUMN_GROUP_MARK] = true;
+    this[PBL_ANGRID_COLUMN_GROUP_MARK] = true;
     this.prop = def.prop;
     this.span = def.span;
     this.columns = columns;

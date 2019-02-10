@@ -21,15 +21,15 @@ declare module '@pebula/table/lib/table/services/table-registry.service' {
 /**
  * Marks the element as the display element for the detail row itself.
  */
-@Directive({ selector: '[negTableDetailRowDef]' })
+@Directive({ selector: '[pblTableDetailRowDef]' })
 export class PblTableDetailRowDefDirective extends PblTableSingleTemplateRegistry<PblTableRowContext<any>, 'detailRow'> {
   readonly kind: 'detailRow' = 'detailRow';
   constructor(tRef: TemplateRef<PblTableRowContext<any>>, registry: PblTableRegistryService) { super(tRef, registry); }
 }
 
 @Directive({
-  selector: '[negTableDetailRowParentRef]',
-  inputs: ['columns: negTableDetailRowParentRef', 'when: negTableDetailRowParentRefWhen'],
+  selector: '[pblTableDetailRowParentRef]',
+  inputs: ['columns: pblTableDetailRowParentRef', 'when: pblTableDetailRowParentRefWhen'],
 })
 export class PblTableDetailRowParentRefDirective<T> extends CdkRowDef<T> implements OnInit, OnDestroy {
 
@@ -53,7 +53,7 @@ export class PblTableDetailRowParentRefDirective<T> extends CdkRowDef<T> impleme
 }
 
 /**
- * Use to set the a default `negTableDetailRowParentRef` if the user did not set one.
+ * Use to set the a default `pblTableDetailRowParentRef` if the user did not set one.
  * @internal
  */
 @Component({

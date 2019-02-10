@@ -10,7 +10,7 @@ import { PblCdkVirtualScrollViewportComponent } from '../table/features/virtual-
 import { PblTableEvents } from './types';
 import { PblTableMetaRowService } from '../table/meta-rows/index';
 
-export const EXT_API_TOKEN = new InjectionToken('NEG_TABLE_EXTERNAL_API');
+export const EXT_API_TOKEN = new InjectionToken('PBL_ANGRID_EXTERNAL_API');
 
 export interface PblTableExtensionApi<T = any> {
   table: PblTableComponent<T>;

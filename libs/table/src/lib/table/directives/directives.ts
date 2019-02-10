@@ -10,8 +10,8 @@ import { PblTableComponent } from '../table.component';
  * Note that this directive can only be set as the content inside the table.
  */
 @Directive({
-  selector: '[negTableOuterSection]',
-  inputs: [ 'position:negTableOuterSection' ] // tslint:disable-line:use-input-property-decorator
+  selector: '[pblTableOuterSection]',
+  inputs: [ 'position:pblTableOuterSection' ] // tslint:disable-line:use-input-property-decorator
 })
 export class PblTableOuterSectionDirective implements AfterViewInit {
 

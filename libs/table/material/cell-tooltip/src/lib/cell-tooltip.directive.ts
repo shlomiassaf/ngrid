@@ -56,7 +56,7 @@ export interface CellTooltipOptions {
 }
 
 @TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
-@Directive({ selector: '[cellTooltip]', exportAs: 'negOverflowTooltip' })
+@Directive({ selector: '[cellTooltip]', exportAs: 'pblOverflowTooltip' })
 @UnRx()
 export class PblTableCellTooltipDirective<T> implements CellTooltipOptions, OnDestroy {
   static readonly PLUGIN_KEY: 'cellTooltip' = PLUGIN_KEY;
