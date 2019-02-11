@@ -30,9 +30,9 @@
       "@pebula/docsi/material-suite": [
         "libs/docsi/material-suite/src/index.ts"
       ],
-      "@pebula/apps/ngrid/*": [
-        "libs/apps/ngrid/*",
-        "libs/apps/ngrid/*/src/index.ts"
+      "@pebula/apps/*": [
+        "libs/apps/*",
+        "libs/apps/*/src/index.ts"
       ],
       "@pebula/ngrid*": [
         "libs/ngrid/src*",

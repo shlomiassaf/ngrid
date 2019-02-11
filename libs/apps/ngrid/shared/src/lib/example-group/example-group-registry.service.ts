@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Injectable, Type } from '@angular/core';
+import { Injectable, Type, Optional, Self, SkipSelf, InjectionToken, Inject } from '@angular/core';
 import { Route } from '@angular/router';
 
 export interface ExampleMetadata {
@@ -33,13 +33,33 @@ export class ExampleDemoItem implements ExampleMetadata {
   }
 }
 
+export const PublicExampleGroupRegistryServiceId = new InjectionToken<string>('PublicExampleGroupRegistryServiceId');
+
 @Injectable({ providedIn: 'root' })
 export class ExampleGroupRegistryService {
+  get isPublic(): boolean { return !!this.publicId; }
+
+  readonly root: ExampleGroupRegistryService;
   readonly groups: Observable<ExampleGroupMetadata[]>;
+
+  private readonly publicRegistries: Map<string, ExampleGroupRegistryService>;
   private readonly groups$: BehaviorSubject<ExampleGroupMetadata[]>;
   private _store = new Map<keyof ExampleGroupMap, ExampleGroupMetadata>();
 
-  constructor() {
+  constructor(@Optional() @SkipSelf() public readonly parent: ExampleGroupRegistryService,
+              @Optional() @Self() @Inject(PublicExampleGroupRegistryServiceId) private readonly publicId?: string) {
+
+    if (!parent) {
+      this.publicRegistries = new Map<string, ExampleGroupRegistryService>();
+    } else {
+      this.root = parent.root || parent;
+      this.publicRegistries = this.root.publicRegistries;
+    }
+
+    if (publicId) {
+      this.publicRegistries.set(publicId, this);
+    }
+
     this.groups$ = new BehaviorSubject<ExampleGroupMetadata[]>([]);
     this.groups = this.groups$.asObservable();
   }

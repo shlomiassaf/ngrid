@@ -8,14 +8,17 @@
     </a>
     <a mat-button [routerLink]="['/', 'concepts']">Concepts</a>
     <a mat-button [routerLink]="['/', 'features']">Features</a>
+    <a mat-button [routerLink]="['/', 'extensions']">Extensions</a>
     <a mat-button [routerLink]="['/', 'stories']">Stories</a>
     <a mat-button [matMenuTriggerFor]="demosMenu">
-      <span>Demos</span>
+      <span>{{ selectedDemoLink ? selectedDemoLink.text : 'Select Demo'}}</span>
       <mat-icon>arrow_drop_down</mat-icon>
     </a>
-    <mat-menu #demosMenu="matMenu">
-      <a mat-menu-item [routerLink]="['/', 'demos', 'all-in-one']">Demo</a>
-      <a mat-menu-item [routerLink]="['/', 'demos', 'virtual-scroll-performance']">Virtual Scroll Demo</a>
+    <mat-menu #demosMenu="matMenu" routerLinkActiveNotify (activeLinkChanged)="demoLinkStatusChanged($event)">
+      <a *ngFor="let demoLink of demoLinks"
+         mat-menu-item
+         [disabled]="selectedDemoLink === demoLink"
+         [routerLink]="demoLink.cmd">{{ demoLink.text }}</a>
     </mat-menu>
   </nav>
 </div>

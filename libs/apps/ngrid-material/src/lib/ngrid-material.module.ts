@@ -75,6 +75,13 @@ const ROUTES = [
 })
 export class NgridMaterialDemoModule {
   constructor(registry: ExampleGroupRegistryService) {
+    registry.registerGroup({ id: 'ngridMaterial', title: '@pebula/ngrid-material' });
     registry.registerSubGroupRoutes('ngridMaterial', ROUTES);
+  }
+}
+
+declare module '@pebula/apps/ngrid/shared/src/lib/example-group/example-group-registry.service' {
+  interface ExampleGroupMap {
+    ngridMaterial: ExampleGroupMetadata;
   }
 }

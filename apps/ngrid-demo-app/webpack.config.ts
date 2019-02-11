@@ -3,10 +3,16 @@ import { Configuration } from 'webpack';
 import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin } from '@pebula/docsi/webpack';
 import { ServiceWorkerTsPlugin } from '../../tools/service-worker-ts-plugin';
 
+// ** CONFIG VALUES **
 const SERVICE_WORKER_HTTP_SERVER_REGEXP = /.+service-worker\.ts$/;
-
-const LIB_APPS_FOLDER = 'apps/ngrid';
-const APP_FOLDER = 'ngrid-demo-app';
+const MAIN_APP_LIBRARY_NAME = 'apps/ngrid';
+const HTML_MARKDOWN_TRANSFORM_LOADER_INCLUDE = [
+  new RegExp(`/${MAIN_APP_LIBRARY_NAME}/`),
+  new RegExp(`/apps/ngrid-material/`),
+];
+const HTML_MARKDOWN_TRANSFORM_LOADER_EXCLUDE = [ new RegExp(`/${MAIN_APP_LIBRARY_NAME}/shared/`) ]
+const SERVICE_WORKER_ENTRY_FILE = Path.join(process.cwd(), `libs/apps/ngrid/shared/src/lib/datastore/datasource.store-service-worker.ts`)
+const SERVICE_WORKER_TSCONFIG_FILE = `apps/ngrid-demo-app/tsconfig.server.service-worker.json`;
 
 function excludeFromTsLoader(loaders, ...regexp) {
   const tsLoaderRules = loaders.filter( l => l.test.test('someFile.ts') );
@@ -49,15 +55,15 @@ function applyLoaders(webpackConfig: Configuration) {
           options: {
             context: process.cwd(),
             transpileOnly: true,
-            configFile: `apps/${APP_FOLDER}/tsconfig.server.service-worker.json`,
+            configFile: SERVICE_WORKER_TSCONFIG_FILE,
           }
         }
       ]
     },
     {
       test: [ /\.html$/ ],
-      include: [ new RegExp(`/${LIB_APPS_FOLDER}/`) ],
-      exclude: [ new RegExp(`/${LIB_APPS_FOLDER}/shared/`) ],
+      include: HTML_MARKDOWN_TRANSFORM_LOADER_INCLUDE,
+      exclude: HTML_MARKDOWN_TRANSFORM_LOADER_EXCLUDE,
       use: [
         {
           loader: "docsi/webpack",
@@ -79,7 +85,7 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
       tsconfig: Path.join(__dirname, 'tsconfig.server.service-worker.json')
     },
     {
-      entry: Path.join(process.cwd(), `libs/${LIB_APPS_FOLDER}/shared/src/lib/datastore/datasource.store-service-worker.ts`)
+      entry: SERVICE_WORKER_ENTRY_FILE,
     }
   );
   // push the new plugin AFTER the angular compiler plugin

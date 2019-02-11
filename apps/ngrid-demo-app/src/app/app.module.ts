@@ -13,12 +13,14 @@ import { NxModule } from '@nrwl/nx';
 import { SharedModule } from '@pebula/apps/ngrid/shared';
 
 import { DemoHomePageComponent } from './demo-home-page/demo-home-page.component';
+import { RouterLinkActiveNotify } from './demo-home-page/router-link-active-notify';
 import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DemoHomePageComponent
+    DemoHomePageComponent,
+    RouterLinkActiveNotify
   ],
   imports: [
     BrowserModule,
@@ -33,6 +35,7 @@ import { AppComponent } from './app.component';
         { path: '', loadChildren: '@pebula/apps/ngrid/demos#DemosModule' },
         { path: 'concepts', loadChildren: '@pebula/apps/ngrid/concepts#ConceptsModule' },
         { path: 'features', loadChildren: '@pebula/apps/ngrid/features#FeaturesModule' },
+        { path: 'extensions', loadChildren: '@pebula/apps/ngrid/extensions#ExtensionsModule' },
         { path: 'stories', loadChildren: '@pebula/apps/ngrid/stories#StoriesModule' },
       ],
       {

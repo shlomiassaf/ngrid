@@ -6,6 +6,8 @@
     ]
   },
   "include": [
-    "**/*.ts"
+    "**/*.ts",
+    "../../libs/apps/ngrid/**/ng-lazy-module-index.ts",
+    "../../libs/apps/ngrid-material/**/ng-lazy-module-index.ts"
   ]
 }

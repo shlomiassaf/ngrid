@@ -2,10 +2,35 @@
 
 The source for data items that show up as rows in the table.
 
-- The data source represents a container of data items
-- The table's datasource is `PblDataSource`
-- `Array`, `Promise<Array>` and `Observable<Array>` are also supported, internally transformed to `PblDataSource`
-- We will use a factory function to define and create `PblDataSource` (manual creation is possible)
+- `NGrid` **only** works with 1 datasource: `PblDataSource` (class)
+- The data source is a container of data items.
+- Internally, `PblDataSource` always use's an array.
+- `Array`, `Promise<Array>` and `Observable<Array>` are also supported, internally transformed into a `PblDataSource`.
+- `NGrid` provides a factory function to create instances of `PblDataSource` which you will probably use 99.99% of the times (manual creation is possible).
+
+## Why `PblDataSource`
+
+It's not crazy to assume that at the core of every grid out there, the low level rendering of rows is done on an array.
+
+`NGrid` is no different, so why the external API only works with `PblDataSource`?
+
+The complete answer to this question is complex, in top-level `PblDataSource` provides:
+
+- Normalization and consistency.
+- Well defined setup and teardown routines (safe memory management)
+- Proper scheduling & event handling
+- Unified interface to filtering / sorting / pagination
+- Handling of subset view (virtual scrolling)
+
+In other words, it is an interface that simplifies the work with all of the scenarios we are facing.
+
+It makes it easy to:
+
+- Update the datasource on-demand (active) or from an event (passive, e.g. next page in pagination clicked, sort clicked, etc...)
+- Deffer when the table is initialized (data-size)
+- Handle client or server scenarios differently but using the same interface
+
+And more...
 
 ## Datasource Factory Definitions
 
