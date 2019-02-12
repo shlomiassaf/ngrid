@@ -31,7 +31,7 @@ We added the action row with this code:
 You can build any kind of action row, in any style and with any functionality you wish.
 
 <docsi-mat-source-code [query]="[
-  { file: 'table-action-row.component.ts' },
+  { file: 'table-action-row.component.ts', lang: 'ts' },
   { file: 'table-action-row.component.html' },
   { file: 'table-action-row.component.scss' }
 ]"></docsi-mat-source-code>
