@@ -9,6 +9,8 @@ import {
   PblNgridFooterCellDefDirective,
 } from '@pebula/ngrid';
 
+const ALWAYS_FALSE_FN = () => false;
+
 @Component({
   selector: 'pbl-ngrid-checkbox',
   templateUrl: './table-checkbox.component.html',
@@ -57,6 +59,16 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
     }
   }
 
+  @Input() get isCheckboxDisabled() { return this._isCheckboxDisabled; }
+  set isCheckboxDisabled(value: (row: any) => boolean) {
+    if (value !== this._isCheckboxDisabled) {
+      this._isCheckboxDisabled = value;
+      if (!this._isCheckboxDisabled || typeof this._isCheckboxDisabled !== 'function') {
+        this._isCheckboxDisabled = ALWAYS_FALSE_FN;
+      }
+    }
+  }
+
   @ViewChild(PblNgridHeaderCellDefDirective) headerDef: PblNgridHeaderCellDefDirective<any>;
   @ViewChild(PblNgridCellDefDirective) cellDef: PblNgridCellDefDirective<any>;
   @ViewChild(PblNgridFooterCellDefDirective) footerDef: PblNgridFooterCellDefDirective<any>;
@@ -66,6 +78,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
 
   private _selection: SelectionModel<any>;
   private _bulkSelectMode: 'all' | 'view' | 'none';
+  private _isCheckboxDisabled: (row: any) => boolean = ALWAYS_FALSE_FN;
 
   constructor(@Optional() public table: PblNgridComponent<any>, private cdr: ChangeDetectorRef) {}
 
@@ -85,7 +98,8 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
     if (this.allSelected) {
       this.selection.clear();
     } else {
-      this.selection.select(...this.getCollection());
+      const selected = this.getCollection().filter(data => !this._isCheckboxDisabled(data));
+      this.selection.select(...selected);
     }
   }
 

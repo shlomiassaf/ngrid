@@ -121,7 +121,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
   protected readonly _onRenderDataChanging = new Subject<{ event: PblDataSourceTriggerChangedEvent<TData>, data: T[] }>();
   protected readonly _renderData$ = new BehaviorSubject<T[]>([]);
   protected readonly _filter$: BehaviorSubject<DataSourceFilter> = new BehaviorSubject<DataSourceFilter>(undefined);
-  protected readonly _sort$ = new BehaviorSubject<PblNgridDataSourceSortChange>({ column: null, sort: null });
+  protected readonly _sort$ = new BehaviorSubject<PblNgridDataSourceSortChange & { skipUpdate: boolean }>({ column: null, sort: null, skipUpdate: false });
   protected _onError$ = new Subject<Error>();
 
   protected _paginator: PblPaginator<any>;
@@ -174,8 +174,15 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
     this._filter$.next(createFilter(value, columns));
   }
 
-  setSort(column: PblColumn, sort: PblNgridSortDefinition): void {
-    this._sort$.next({ column, sort });
+  /**
+   * Set the sorting definition for the current data set.
+   * @param column
+   * @param sort
+   * @param skipUpdate When true will not update the datasource, use this when the data comes sorted and you want to sync the definitions with the current data set.
+   * default to false.
+   */
+  setSort(column: PblColumn, sort: PblNgridSortDefinition, skipUpdate = false): void {
+    this._sort$.next({ column, sort, skipUpdate });
   }
 
   dispose(): void {

@@ -10,7 +10,7 @@ import { initDefinitions, parseStyleWidth } from './utils';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 
 const PBL_NGRID_COLUMN_MARK = Symbol('PblColumn');
-const CLONE_PROPERTIES: Array<keyof PblColumn> = ['sort', 'headerType', 'footerType', 'pin'];
+const CLONE_PROPERTIES: Array<keyof PblColumn> = ['transform', 'sort', 'sortAlias', 'headerType', 'footerType', 'pin'];
 
 export function isPblColumn(def: any): def is PblColumn {
   return def instanceof PblColumn || def[PBL_NGRID_COLUMN_MARK] === true;
@@ -98,6 +98,19 @@ export class PblColumn implements PblColumnDefinition {
 
   pin: 'start' | 'end' | undefined;
 
+    /**
+   * An alias used to identify the sort column.
+   * Useful when the server provides sort metadata that does not have a 1:1 match with the column names.
+   * e.g. Deep path props
+   */
+  sortAlias?: string;
+
+  /**
+   * Optional transformer that control the value output from the combination of a column and a row.
+   * The value returned from this transformer will be returned from `PblColumn.getValue`
+   */
+  transform?: (value: any, row?: any, col?: PblColumn) => any;
+
   /**
    * The original value of `prop`.
    * @internal
@@ -170,8 +183,6 @@ export class PblColumn implements PblColumnDefinition {
    */
   private _groups = new Set<string>();
 
-  constructor(def: PblColumn, groupStore?: PblColumnGroupStore);
-  constructor(def: PblColumnDefinition, groupStore: PblColumnGroupStore);
   constructor(def: PblColumn | PblColumnDefinition, groupStore?: PblColumnGroupStore) {
     this[PBL_NGRID_COLUMN_MARK] = true;
 
@@ -209,7 +220,7 @@ export class PblColumn implements PblColumnDefinition {
 
       initDefinitions(def, this);
 
-      this.groupStore = groupStore;
+      this.groupStore = groupStore || new PblColumnGroupStore();
       this.prop = prop;
       this.orgProp = def.prop;
       if (path.length) {
@@ -263,6 +274,9 @@ export class PblColumn implements PblColumnDefinition {
    * Get the value this column points to in the provided row
    */
   getValue<T = any>(row: any): T {
+    if (this.transform) {
+      return this.transform(deepPathGet(row, this), row, this);
+    }
     return deepPathGet(row, this);
   }
 

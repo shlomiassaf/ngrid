@@ -31,7 +31,7 @@ import { UnRx } from '@pebula/utils';
 import { EXT_API_TOKEN, PblNgridExtensionApi } from '../ext/table-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
 import { PblNgridPaginatorKind } from '../paginator';
-import { PblDataSource, DataSourceOf, createDS } from '../data-source/index';
+import { PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
 import { findCellDef } from './directives/cell-def';
@@ -415,6 +415,20 @@ export class PblNgridComponent<T> implements AfterContentInit, AfterViewInit, Do
 
   trackBy(index: number, item: T): any {
     return index;
+  }
+
+  setSort(columnOrSortAlias: PblColumn | string, sort: PblNgridSortDefinition, skipUpdate = false): void {
+    let column: PblColumn;
+    if (typeof columnOrSortAlias === 'string') {
+      column = this._store.columns.find( c => c.sortAlias ? c.sortAlias === columnOrSortAlias : (c.sort && c.id === columnOrSortAlias) );
+      if (!column && isDevMode()) {
+        console.warn(`Could not find column with sort alias "${columnOrSortAlias}`);
+        return;
+      }
+    } else {
+      column = columnOrSortAlias;
+    }
+    this.ds.setSort(column, sort, skipUpdate);
   }
 
   setDataSource(value: PblDataSource<T>): void {

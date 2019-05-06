@@ -13,6 +13,8 @@
     "cacheable",
     "coeff",
     "mdast",
-    "quickthrough"
+    "pebula",
+    "quickthrough",
+    "sortables"
   ]
 }

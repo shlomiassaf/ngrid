@@ -11,6 +11,7 @@
 <mat-checkbox *pblNgridCellDef="name; row as row;"
               style="overflow: initial"
               color="primary"
+              [disabled]=isCheckboxDisabled(row)
               (click)="$event.stopPropagation()"
               (change)="rowItemChange(row)"
               [checked]="selection.isSelected(row)">

@@ -17,6 +17,18 @@ const PLUGIN_KEY: 'matCheckboxSelection' = 'matCheckboxSelection';
 @Directive({ selector: 'pbl-ngrid[matCheckboxSelection]' })
 @UnRx()
 export class PblNgridMatCheckboxSelectionDirective implements OnDestroy {
+
+  @Input() get isCheckboxDisabled() { return this._isCheckboxDisabled; }
+  set isCheckboxDisabled(value: (row: any) => boolean ) {
+    if (value !== this._isCheckboxDisabled) {
+      this._isCheckboxDisabled = value;
+      if (this.cmpRef && value) {
+        this.cmpRef.instance.isCheckboxDisabled = value;
+        this.cmpRef.changeDetectorRef.detectChanges();
+      }
+    }
+  }
+
   /**
    * Add's a selection column using material's `mat-checkbox` in the column specified.
    */
@@ -36,6 +48,9 @@ export class PblNgridMatCheckboxSelectionDirective implements OnDestroy {
           if (this._bulkSelectMode) {
             this.cmpRef.instance.bulkSelectMode = this._bulkSelectMode;
           }
+        }
+        if (this.isCheckboxDisabled) {
+          this.cmpRef.instance.isCheckboxDisabled = this.isCheckboxDisabled;
         }
         this.cmpRef.instance.name = value;
         this.cmpRef.changeDetectorRef.detectChanges();
@@ -66,6 +81,7 @@ export class PblNgridMatCheckboxSelectionDirective implements OnDestroy {
   private _bulkSelectMode: 'all' | 'view' | 'none';
   private cmpRef: ComponentRef<PblNgridCheckboxComponent>;
   private _removePlugin: (table: PblNgridComponent<any>) => void;
+  private _isCheckboxDisabled: (row: any) => boolean;
 
   constructor(private table: PblNgridComponent<any>,
               private cfr: ComponentFactoryResolver,

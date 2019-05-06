@@ -20,33 +20,40 @@ export class PblNgridMatSortDirective implements OnDestroy {
   constructor(public table: PblNgridComponent<any>, private pluginCtrl: PblNgridPluginController, public sort: MatSort) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    this.sort.sortChange.pipe(UnRx(this)).subscribe(s => this.onSort(s));
+    let origin: 'ds' | 'click' = 'click';
+    this.sort.sortChange
+      .pipe(UnRx(this))
+      .subscribe( s => {
+        this.onSort(s, origin);
+        origin = 'click';
+      });
 
     pluginCtrl.events
       .subscribe( e => {
         if (e.kind === 'onInvalidateHeaders') {
-          const table = this.table;
           if (table.ds && !table.ds.sort.column) {
             if (this.sort && this.sort.active) {
-              this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' });
+              this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' }, origin);
             }
           }
         }
         if (e.kind === 'onDataSource') {
           UnRx.kill(this, e.prev);
-
           if (this.sort && this.sort.active) {
-            this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' });
+            this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' }, origin);
           }
 
           table.ds.sortChange
             .pipe(UnRx(this, e.curr))
             .subscribe( event => {
               if (this.sort && event.column) {
-                const sort = event.sort || {};
-                if (this.sort.active === event.column.id && this.sort.direction === (sort.order || '')) { return; }
-                const sortable: MatSortHeader = <any> this.sort.sortables.get(event.column.id);
+                const _sort = event.sort || {};
+                if (this.sort.active === event.column.id && this.sort.direction === (_sort.order || '')) { return; }
+                const sortable: MatSortHeader = this.sort.sortables.get(event.column.id) as any;
                 if (sortable) {
+                  origin = 'ds';
+                  this.sort.active = undefined;
+                  sortable.start = _sort.order || 'asc';
                   sortable._handleClick();
                 }
               }
@@ -59,11 +66,11 @@ export class PblNgridMatSortDirective implements OnDestroy {
     this._removePlugin(this.table);
   }
 
-  private onSort(sort: Sort): void {
+  private onSort(sort: Sort, origin: 'ds' | 'click'): void {
     const table = this.table;
     const column = table.columnApi.visibleColumns.find(c => c.id === sort.active);
 
-    if ( !column || !column.sort ) {
+    if ( origin !== 'click' || !column || !column.sort ) {
       return;
     } else {
       const newSort: PblNgridSortDefinition = { };
@@ -76,8 +83,8 @@ export class PblNgridMatSortDirective implements OnDestroy {
       }
       const currentSort = table.ds.sort;
       if (column === currentSort.column) {
-        const sort = currentSort.sort || {};
-        if (newSort.order === sort.order) {
+        const _sort = currentSort.sort || {};
+        if (newSort.order === _sort.order) {
           return;
         }
       }

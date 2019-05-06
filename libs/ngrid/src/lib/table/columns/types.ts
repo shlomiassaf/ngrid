@@ -161,6 +161,19 @@ export interface PblColumnDefinition extends PblBaseColumnDefinition {
   editable?: boolean;
 
   pin?: 'start' | 'end';
+
+  /**
+   * An alias used to identify the sort column.
+   * Useful when the server provides sort metadata that does not have a 1:1 match with the column names.
+   * e.g. Deep path props
+   */
+  sortAlias?: string;
+
+  /**
+   * Optional transformer that control the value output from the combination of a column and a row.
+   * The value returned from this transformer will be returned from `PblColumn.getValue`
+   */
+  transform?: (value: any, row?: any, col?: PblColumn) => any;
 }
 
 export interface PblMetaRowDefinitions {

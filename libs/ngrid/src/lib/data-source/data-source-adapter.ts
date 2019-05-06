@@ -1,7 +1,6 @@
 import { Observable, Subject, combineLatest, of, from, isObservable, asapScheduler } from 'rxjs';
 import { filter, map, switchMap, tap, debounceTime, observeOn } from 'rxjs/operators';
 
-import { Omit } from '../table/utils/type-helpers';
 import { DataSourceOf } from './data-source';
 import { PblPaginator, PblPaginatorChangeEvent } from '../paginator';
 import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
@@ -102,11 +101,13 @@ export class PblDataSourceAdapter<T = any, TData = any> {
   }
 
   updateProcessingLogic(filter$: Observable<DataSourceFilter>,
-                        sort$: Observable<PblNgridDataSourceSortChange>,
+                        sort$: Observable<PblNgridDataSourceSortChange & { skipUpdate: boolean }>,
                         pagination$: Observable<PblPaginatorChangeEvent>,
                         initialState: Partial<PblDataSourceTriggerCache<TData>> = {}): Observable<{ event: PblDataSourceTriggerChangedEvent<TData>, data: T[] }> {
     let updates = -1;
     const changedFilter = e => updates === -1 || e.changed;
+    const skipUpdate = (o: PblNgridDataSourceSortChange & { skipUpdate: boolean }) => o.skipUpdate !== true;
+
     this._lastSource = undefined;
 
     this.cache = { ...DEFAULT_INITIAL_CACHE_STATE, ...initialState };
@@ -118,7 +119,7 @@ export class PblDataSourceAdapter<T = any, TData = any> {
       Observable<TriggerChangedEventFor<'data'>>
     ] = [
       filter$.pipe( map( value => createChangeContainer('filter', value, this.cache) ), filter(changedFilter) ),
-      sort$.pipe( map( value => createChangeContainer('sort', value, this.cache) ), filter(changedFilter) ),
+      sort$.pipe( filter(skipUpdate), map( value => createChangeContainer('sort', value, this.cache) ), filter(changedFilter) ),
       pagination$.pipe( map( value => createChangeContainer('pagination', value, this.cache) ), filter(changedFilter) ),
       this._refresh$.pipe( map( value => fromRefreshDataWrapper(createChangeContainer('data', value, this.cache)) ), filter(changedFilter) ),
     ];
