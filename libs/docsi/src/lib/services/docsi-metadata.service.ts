@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { DocsiMetadata, ApiReferenceMap } from '@pebula/docsi/webpack';
 
-const DOCSI_METADATA = require('/Users/shlomiassaf/Desktop/Code/shlomi/__LIB__/neg/docsi-client-metadata');
+/*  There is no package called `docsi-client-metadata` in "node_modules"
+    We optimistically expect it to exist in `InputFileSystem` of the webpack compiler.
+    This is added by the docsi metadata service plugin.
+    SEE "libs/docsi/webpack/src/lib/docsi-webpack-plugins/metadata-file-emitter/plugin.ts"
+*/
+const DOCSI_METADATA = require('docsi-client-metadata');
 
 @Injectable({ providedIn: 'root' })
 export class DocsiMetadataService implements DocsiMetadata {

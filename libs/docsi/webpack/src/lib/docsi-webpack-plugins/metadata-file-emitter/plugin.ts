@@ -1,3 +1,4 @@
+import * as Path from 'path';
 import { SyncHook } from 'tapable';
 import * as webpack from 'webpack';
 
@@ -20,8 +21,12 @@ export class DocsiMetadataFileEmitterWebpackPlugin implements webpack.Plugin {
   apply(compiler: webpack.Compiler): void {
     const metadata: DocsiMetadata = {} as any;
     const updateModule = () => {
+      // We add a file to the file system (virtually) that contains the metadata required
+      // to load files dynamically at runtime.
+      // TODO: User webpack (compiler) to get the root (context) of the project
+      const writePath = Path.join(process.cwd(), 'docsi-client-metadata.js');
       (compiler.inputFileSystem as any)._webpackCompilerHost
-        .writeFile('/Users/shlomiassaf/Desktop/Code/shlomi/__LIB__/neg/docsi-client-metadata.js', `module.exports = ${JSON.stringify(metadata, null, 2)};`);
+        .writeFile(writePath, `module.exports = ${JSON.stringify(metadata, null, 2)};`);
     }
     const notifier = <T extends keyof DocsiMetadata>(key: T, value: DocsiMetadata[T]) => {
       metadata[key] = value;
