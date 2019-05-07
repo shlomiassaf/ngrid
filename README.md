@@ -88,9 +88,12 @@ For example, column resize & reorder will all work programmatically without a pl
 
 - Add `@pebula/ngrid-bootstrap` based on https://ng-bootstrap.github.io?
 
+- Add pre-built (compiled) css theme file to the release
+
 - `@pebula/ngrid-material`
   - Complete cell **view** templates to all types
   - Add cell **edit** templates to all types
+  - Add pre-built (compiled) css themes, for each pre-built material theme, to the release
 
 - `@pebula/ngrid/detail-row`
   - Add "mode" feature (click, double click, cellClick cellDoubleClick, manual)
