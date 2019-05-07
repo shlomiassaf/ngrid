@@ -333,6 +333,10 @@ export class PblNgridComponent<T> implements AfterContentInit, AfterViewInit, Do
       if (changes) {
         this._store.hidden = hideColumns;
         this._minimumRowWidth = '';
+
+        // TODO(shlomiassaf) [perf, 4]: Right now we attach all columns, we can improve it by attaching only those "added" (we know them from "changes")
+        this.attachCustomCellTemplates();
+        this.attachCustomHeaderCellTemplates();
         this._cdkTable.syncRows('header');
       }
       if (!this._hideColumns) {

@@ -55,7 +55,7 @@ const COLUMNS2 = columnFactory()
 })
 export class HideColumnsGridExampleComponent {
 
-  hideColumns1: string[] = [];
+  hideColumns1: string[] = [ 'bio' ];
   columns1 = COLUMNS1;
   ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
 
