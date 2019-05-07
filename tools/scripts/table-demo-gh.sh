@@ -1,4 +1,4 @@
-ng build ngrid-demo-app --prod --base-href table-demo
+ng build ngrid-demo-app --prod --base-href ngrid
 cp dist/apps/ngrid-demo-app/index.html dist/apps/ngrid-demo-app/404.html
 
 cd dist/apps/ngrid-demo-app
