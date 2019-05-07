@@ -74,6 +74,21 @@ For example, column resize & reorder will all work programmatically without a pl
 
 > Currently, `@pebula/ngrid-material` is the only rich UI layer, implementing the UI using `@angular/material`. You can also implemented your own, see how it's done in `@pebula/ngrid-material`.
 
+
+## Design goals
+
+- Developer ergonomics
+- Performance
+- Extensibility (features via plugins)
+
+> In other words: Easy to use, fast and with loads of features.
+
+We try to cut down complexity by splitting features into plugins and having a default option at all times so integration is seamless.
+
+Daily, mundane and repetitive routines like setting up a datasource or creating a column definition are packed into factories that make it easy to use.
+
+Templates should be shared and reused, define a template once and use it multiple times.
+
 ## TODO
 
 See the [todo list here](TODO.md)
