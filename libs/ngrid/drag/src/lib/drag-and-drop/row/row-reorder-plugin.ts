@@ -24,7 +24,7 @@ import {
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, TablePlugin, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
-import { CdkLazyDropList, CdkLazyDrag } from '../core';
+import { CdkLazyDropList, CdkLazyDrag } from '../core/lazy-drag-drop';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {

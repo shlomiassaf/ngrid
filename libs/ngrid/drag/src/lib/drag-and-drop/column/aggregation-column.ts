@@ -23,7 +23,8 @@ import {
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, PblNgridPluginController, PblColumn } from '@pebula/ngrid';
-import { CdkLazyDropList, PblDragRef } from '../core';
+import { CdkLazyDropList } from '../core/lazy-drag-drop';
+import { PblDragRef } from '../core/drag-ref';
 import { PblNgridColumnDragDirective } from './column-reorder-plugin';
 
 let _uniqueIdCounter = 0;
