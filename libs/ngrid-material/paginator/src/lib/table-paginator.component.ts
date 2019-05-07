@@ -3,10 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnDestroy,
   Optional,
   ViewEncapsulation
 } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
 import { UnRx } from '@pebula/utils';
@@ -25,7 +25,7 @@ const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
   encapsulation: ViewEncapsulation.None
 })
 @UnRx()
-export class PblPaginatorComponent implements OnDestroy {
+export class PblPaginatorComponent {
   pages: number[] = [];
   pageSizes: number[] = DEFAULT_PAGE_SIZE_OPTIONS.slice();
 
@@ -56,8 +56,16 @@ export class PblPaginatorComponent implements OnDestroy {
 
   @Input() table: PblNgridComponent<any>;
 
+  @Input() get hidePageSize(): boolean { return this._hidePageSize; }
+  set hidePageSize(value: boolean) { this._hidePageSize = coerceBooleanProperty(value); }
+
+  @Input() get hideRangeSelect(): boolean { return this._hideRangeSelect; }
+  set hideRangeSelect(value: boolean) { this._hideRangeSelect = coerceBooleanProperty(value); }
+
   private _pageSizeOptions: number[];
   private _paginator: PblPagingPaginator;
+  private _hidePageSize = false;
+  private _hideRangeSelect = false;
 
   constructor(@Optional() table: PblNgridComponent<any>,
               public _intl: MatPaginatorIntl,
@@ -68,10 +76,6 @@ export class PblPaginatorComponent implements OnDestroy {
     _intl.changes
       .pipe(UnRx(this))
       .subscribe(() => this.cdr.markForCheck());
-  }
-
-  ngOnDestroy(): void {
-
   }
 
   private updatePageSizes(): void {

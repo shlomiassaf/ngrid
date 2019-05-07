@@ -1,61 +1,63 @@
-<div class="mat-paginator-container">
-  <div class="mat-paginator-page-size">
-    <div class="mat-paginator-page-size-label">
-      {{_intl.itemsPerPageLabel}}
+<div class="mat-paginator-outer-container">
+  <div class="mat-paginator-container">
+    <div *ngIf="!hidePageSize" class="mat-paginator-page-size">
+      <div class="mat-paginator-page-size-label">
+        {{_intl.itemsPerPageLabel}}
+      </div>
+
+      <mat-form-field *ngIf="pageSizes.length > 1"
+                      class="mat-paginator-page-size-select">
+        <mat-select
+          [value]="paginator.perPage"
+          [aria-label]="_intl.itemsPerPageLabel"
+          [disabled]="pageSizes[0] >= paginator.total && (!paginator.hasPrev() && !paginator.hasNext())"
+          (selectionChange)="paginator.perPage = $event.value">
+          <mat-option *ngFor="let pageSizeOption of pageSizes" [value]="pageSizeOption">
+            {{pageSizeOption}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div *ngIf="pageSizes.length <= 1">{{paginator?.perPage}}</div>
     </div>
 
-    <mat-form-field *ngIf="pageSizes.length > 1"
-                    class="mat-paginator-page-size-select">
-      <mat-select
-        [value]="paginator.perPage"
-        [aria-label]="_intl.itemsPerPageLabel"
-        [disabled]="pageSizes[0] >= paginator.total && (!paginator.hasPrev() && !paginator.hasNext())"
-        (selectionChange)="paginator.perPage = $event.value">
-        <mat-option *ngFor="let pageSizeOption of pageSizes" [value]="pageSizeOption">
-          {{pageSizeOption}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div *ngIf="pageSizes.length <= 1">{{paginator?.perPage}}</div>
-  </div>
+    <div class="mat-paginator-range-actions">
+      <div *ngIf="paginator.kind ==='pageNumber'" class="mat-paginator-range-label">
+        {{_intl.getRangeLabel(paginator.page - 1, paginator.perPage, paginator.total)}}
+      </div>
 
-  <div class="mat-paginator-range-actions">
-    <div *ngIf="paginator.kind ==='pageNumber'" class="mat-paginator-range-label">
-      {{_intl.getRangeLabel(paginator.page - 1, paginator.perPage, paginator.total)}}
+      <button mat-icon-button type="button"
+              class="mat-paginator-navigation-previous"
+              (click)="paginator.prevPage()"
+              [attr.aria-label]="_intl.previousPageLabel"
+              [matTooltip]="_intl.previousPageLabel"
+              [matTooltipPosition]="'above'"
+              [disabled]="!paginator.hasPrev()">
+        <svg class="mat-paginator-icon" viewBox="0 0 24 24" focusable="false">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+      </button>
+
+      <mat-form-field *ngIf="!hideRangeSelect && paginator.kind ==='pageNumber' && pageSizes.length >= 1"
+                      class="mat-paginator-page-size-select">
+        <mat-select
+          [value]="paginator.page"
+          [disabled]="paginator.totalPages === 1"
+          (selectionChange)="paginator.page = $event.value">
+          <mat-option *ngFor="let p of pages" [value]="p">{{p}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-icon-button type="button"
+              class="mat-paginator-navigation-next"
+              (click)="paginator.nextPage()"
+              [attr.aria-label]="_intl.nextPageLabel"
+              [matTooltip]="_intl.nextPageLabel"
+              [matTooltipPosition]="'above'"
+              [disabled]="!paginator.hasNext()">
+        <svg class="mat-paginator-icon" viewBox="0 0 24 24" focusable="false">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+        </svg>
+      </button>
     </div>
-
-    <button mat-icon-button type="button"
-            class="mat-paginator-navigation-previous"
-            (click)="paginator.prevPage()"
-            [attr.aria-label]="_intl.previousPageLabel"
-            [matTooltip]="_intl.previousPageLabel"
-            [matTooltipPosition]="'above'"
-            [disabled]="!paginator.hasPrev()">
-      <svg class="mat-paginator-icon" viewBox="0 0 24 24" focusable="false">
-        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-      </svg>
-    </button>
-
-    <mat-form-field *ngIf="paginator.kind ==='pageNumber' && pageSizes.length >= 1"
-                    class="mat-paginator-page-size-select">
-      <mat-select
-        [value]="paginator.page"
-        [disabled]="paginator.totalPages === 1"
-        (selectionChange)="paginator.page = $event.value">
-        <mat-option *ngFor="let p of pages" [value]="p">{{p}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <button mat-icon-button type="button"
-            class="mat-paginator-navigation-next"
-            (click)="paginator.nextPage()"
-            [attr.aria-label]="_intl.nextPageLabel"
-            [matTooltip]="_intl.nextPageLabel"
-            [matTooltipPosition]="'above'"
-            [disabled]="!paginator.hasNext()">
-      <svg class="mat-paginator-icon" viewBox="0 0 24 24" focusable="false">
-        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-      </svg>
-    </button>
   </div>
 </div>
