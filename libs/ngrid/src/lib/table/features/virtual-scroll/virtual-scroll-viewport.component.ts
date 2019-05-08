@@ -157,7 +157,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   private wheelModeDefault:  PblCdkVirtualScrollDirective['wheelMode'];
 
   constructor(elementRef: ElementRef<HTMLElement>,
-              cdr: ChangeDetectorRef,
+              private cdr: ChangeDetectorRef,
               ngZone: NgZone,
               config: PblNgridConfigService,
               @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) public pblScrollStrategy: VirtualScrollStrategy,
@@ -225,8 +225,13 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   setTotalContentSize(size: number) {
     super.setTotalContentSize(size);
+
+    // TODO(shlomiassaf)[perf, 3]: run this once... (aggregate all calls within the same animation frame)
     requestAnimationFrame(() => {
       this.scrollHeight = this.elementRef.nativeElement.scrollHeight; //size;
+      this.updateFiller();
+      // We must trigger a change detection cycle because the filler div element is updated through bindings
+      this.cdr.detectChanges();
     })
   }
 

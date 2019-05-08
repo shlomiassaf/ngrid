@@ -10,7 +10,7 @@ export interface PblNgridOnInitEvent {
   kind: 'onInit';
 }
 
-export interface PblNgridOnResizeRowtEvent {
+export interface PblNgridOnResizeRowEvent {
   kind: 'onResizeRow';
 }
 
@@ -18,7 +18,11 @@ export interface PblNgridOnInvalidateHeadersEvent {
   kind: 'onInvalidateHeaders';
 }
 
-export interface PblNgridOnDataSourcetEvent {
+export interface PblNgridOnDestroyEvent {
+  kind: 'onDestroy';
+}
+
+export interface PblNgridOnDataSourceEvent {
   kind: 'onDataSource';
   prev: PblDataSource<any>;
   curr: PblDataSource<any>;
@@ -26,8 +30,9 @@ export interface PblNgridOnDataSourcetEvent {
 
 export type PblNgridEvents =
   | PblNgridOnInitEvent
-  | PblNgridOnResizeRowtEvent
+  | PblNgridOnResizeRowEvent
   | PblNgridOnInvalidateHeadersEvent
-  | PblNgridOnDataSourcetEvent;
+  | PblNgridOnDataSourceEvent
+  | PblNgridOnDestroyEvent;
 
 

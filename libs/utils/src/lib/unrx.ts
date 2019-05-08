@@ -201,7 +201,7 @@ export namespace UnRx {
    */
   export function kill(component: any, ...tokens: any[]): void;
   export function kill(component: any, ...tokens: any[]): void {
-    unrx.kill(component, tokens);
+    unrx.kill(component, ...tokens);
   }
 
 }

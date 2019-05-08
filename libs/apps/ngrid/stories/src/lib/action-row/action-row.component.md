@@ -15,8 +15,11 @@ Here is the final result:
 
 <docsi-mat-example-with-source title="Action Row" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-ngrid blockUi [dataSource]="ds1" [columns]="columns">
+  <pbl-ngrid blockUi [dataSource]="ds1" [columns]="columns" usePagination>
     <my-table-action-row filter label="My Table"></my-table-action-row>
+    <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
+                    [table]="table"
+                    [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
   </pbl-ngrid>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>

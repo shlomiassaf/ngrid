@@ -97,7 +97,10 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
       if (this.opened) {
         this._element.classList.add('pbl-row-detail-opened');
       }
-      this.plugin.detailRowToggled(this);
+
+      const event = Object.create(this);
+      Object.defineProperty(event, 'row', { value: this.detailRow });
+      this.plugin.detailRowToggled(event);
     }
   }
 

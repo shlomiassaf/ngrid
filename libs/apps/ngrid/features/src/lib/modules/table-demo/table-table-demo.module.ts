@@ -21,11 +21,14 @@ import { PblNgridTransposeModule } from '@pebula/ngrid/transpose';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridDetailRowModule } from '@pebula/ngrid/detail-row';
 import { PblNgridStickyModule } from '@pebula/ngrid/sticky';
+import { PblNgridMaterialModule } from '@pebula/ngrid-material';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
+import { ReuseGridExampleComponent } from './reuse/reuse.component';
 import { RowHeightGridExampleComponent } from './row-height/row-height.component';
 import { NoDataGridExampleComponent } from './no-data';
 import { VirtualScrollGridExampleComponent } from './virtual-scroll/virtual-scroll.component';
+import { FillerGridExampleComponent } from './filler/filler.component';
 
 const MATERIAL = [
   MatProgressSpinnerModule,
@@ -42,15 +45,19 @@ const MATERIAL = [
 ];
 
 const DECLARATION = [
+  ReuseGridExampleComponent,
   RowHeightGridExampleComponent,
   NoDataGridExampleComponent,
   VirtualScrollGridExampleComponent,
+  FillerGridExampleComponent,
 ];
 
 const ROUTES = [
+  { path: 'reuse', component: ReuseGridExampleComponent, data: { title: 'Re-Use' } },
   { path: 'row-height', component: RowHeightGridExampleComponent, data: { title: 'Row Height' } },
   { path: 'no-data', component: NoDataGridExampleComponent, data: { title: 'No Date' } },
   { path: 'virtual-scroll', component: VirtualScrollGridExampleComponent, data: { title: 'Virtual Scroll' } },
+  { path: 'filler', component: FillerGridExampleComponent, data: { title: 'Filler' } },
 ];
 
 @NgModule({
@@ -66,6 +73,7 @@ const ROUTES = [
     PblNgridTransposeModule,
     PblNgridDetailRowModule,
     PblNgridStickyModule,
+    PblNgridMaterialModule,
   ],
   exports: [ MatRippleModule ], // we need this for detail-row
   providers: [ PblNgridRegistryService ],

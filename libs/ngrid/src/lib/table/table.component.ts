@@ -83,7 +83,7 @@ export function metaRowServiceFactory(table: { _extApi: PblNgridExtensionApi; })
   encapsulation: ViewEncapsulation.None,
 })
 @UnRx()
-export class PblNgridComponent<T> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
+export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
   readonly self = this;
 
   /**
@@ -199,15 +199,10 @@ export class PblNgridComponent<T> implements AfterContentInit, AfterViewInit, Do
     }
     if ( value !== this._pagination ) {
       this._pagination = value;
-      if (this.ds) {
-        this.ds.pagination = value;
-        if (this.ds.paginator) {
-          this.ds.paginator.noCacheMode = this._noCachePaginator;
-        }
-      }
       this.setupPaginator();
     }
   }
+
   @Input() get noCachePaginator(): boolean { return this._noCachePaginator; }
   set noCachePaginator(value: boolean) {
     value = coerceBooleanProperty(value);
@@ -411,6 +406,7 @@ export class PblNgridComponent<T> implements AfterContentInit, AfterViewInit, Do
   }
 
   ngOnDestroy(): void {
+    this._plugin.emitEvent({ kind: 'onDestroy' });
     this._plugin.destroy();
     if (this._viewport) {
       this._cdkTable.detachViewPort();
@@ -437,9 +433,6 @@ export class PblNgridComponent<T> implements AfterContentInit, AfterViewInit, Do
 
   setDataSource(value: PblDataSource<T>): void {
     if (this._dataSource !== value) {
-      this.setupPaginator();
-      this.setupNoData(false);
-
       // KILL ALL subscriptions for the previous datasource.
       if (this._dataSource) {
         UnRx.kill(this, this._dataSource);
@@ -448,6 +441,12 @@ export class PblNgridComponent<T> implements AfterContentInit, AfterViewInit, Do
       const prev = this._dataSource;
       this._dataSource = value;
       this._cdkTable.dataSource = value as any;
+
+      this.setupPaginator();
+      this.setupNoData(false);
+
+      // clear the context, new datasource
+      this._extApi.contextApi.clear();
 
       this._plugin.emitEvent({
         kind: 'onDataSource',
@@ -800,13 +799,22 @@ export class PblNgridComponent<T> implements AfterContentInit, AfterViewInit, Do
 
   private setupPaginator(): void {
     const paginationKillKey = 'pblPaginationKillKey';
+    const usePagination = this.ds && this.usePagination;
+
+    if (usePagination) {
+      this.ds.pagination = this._pagination;
+      if (this.ds.paginator) {
+        this.ds.paginator.noCacheMode = this._noCachePaginator;
+      }
+    }
+
     if (this.isInit) {
       UnRx.kill(this, paginationKillKey);
       if (this._paginatorEmbeddedVRef) {
         this.removeView(this._paginatorEmbeddedVRef, 'beforeContent');
         this._paginatorEmbeddedVRef = undefined;
       }
-      if ( this.ds && this.usePagination ) {
+      if (usePagination) {
         const paginatorTemplate = this.registry.getSingle('paginator');
         if (paginatorTemplate) {
           this._paginatorEmbeddedVRef = this.createView('beforeContent', paginatorTemplate.tRef, { $implicit: this });

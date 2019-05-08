@@ -74,7 +74,6 @@ For example, column resize & reorder will all work programmatically without a pl
 
 > Currently, `@pebula/ngrid-material` is the only rich UI layer, implementing the UI using `@angular/material`. You can also implemented your own, see how it's done in `@pebula/ngrid-material`.
 
-
 ## Design goals
 
 - Developer ergonomics

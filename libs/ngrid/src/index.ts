@@ -51,9 +51,9 @@ export {
   PblNgridPlugin,
   PblNgridPluginExtension,
   PblNgridOnInitEvent,
-  PblNgridOnResizeRowtEvent,
+  PblNgridOnResizeRowEvent,
   PblNgridOnInvalidateHeadersEvent,
-  PblNgridOnDataSourcetEvent,
+  PblNgridOnDataSourceEvent,
   PblNgridEvents,
  } from './lib/ext/types';
 

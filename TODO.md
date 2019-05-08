@@ -8,13 +8,16 @@
 
 - API reference document
 
-- CI/CD integration
+- CI/CD integration (including starter app integration on release)
 
 - E2E tests using Cypress
 
 - Add `@pebula/ngrid-bootstrap` based on https://ng-bootstrap.github.io?
 
 - Add pre-built (compiled) css theme file to the release
+
+- Support serialization of column definitions
+  - Support save / loan of table column defs
 
 - `@pebula/ngrid-material`
   - Complete cell **view** templates to all types
