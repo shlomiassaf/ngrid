@@ -15,7 +15,7 @@ In the following example the table is rendered inside a div container that has a
   <!--@pebula-example:ex-1-->
   <div class="filler-table-container">
     <pbl-ngrid blockUi vScrollAuto [dataSource]="dsVScrollAuto" [columns]="columns">
-      <pbl-demo-action-row filter ></pbl-demo-action-row>
+      <pbl-demo-action-row filter></pbl-demo-action-row>
     </pbl-ngrid>
   </div>
   <!--@pebula-example:ex-1-->
@@ -25,7 +25,7 @@ In the following example the table is rendered inside a div container that has a
 
 <div class="filler-table-container">
   <pbl-ngrid blockUi vScrollFixed [dataSource]="dsVScrollFixed" [columns]="columns">
-    <pbl-demo-action-row filter " ></pbl-demo-action-row>
+    <pbl-demo-action-row filter></pbl-demo-action-row>
   </pbl-ngrid>
 </div>
 
@@ -33,6 +33,6 @@ W> Currently, the filler is not supported when virtual scroll is disabled (`vScr
 
 <div class="filler-table-container">
   <pbl-ngrid blockUi vScrollNone [dataSource]="dsVScrollNone" [columns]="columns">
-    <pbl-demo-action-row filter " ></pbl-demo-action-row>
+    <pbl-demo-action-row filter></pbl-demo-action-row>
   </pbl-ngrid>
 </div>

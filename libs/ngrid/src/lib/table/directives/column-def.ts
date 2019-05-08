@@ -81,19 +81,6 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
   private _widths: [string, string, string];
 
   /**
-   * The complete width definition for the column.
-   * There are 3 width definitions: MIN-WIDTH, WIDTH and MAX-WIDTH.
-   *
-   * The tuple represents them in that order, i.e: [ MIN-WIDTH, WIDTH, MAX-WIDTH ]
-   *
-   * This property hold the initial width definitions, set by `StaticColumnWidthLogic`, which represent the user-defined values
-   * as is + the relative default width for columns without a width definition.
-   *
-   * It is used as a cache to store the original width definition because the actual width might change based on implementation (e.e. NgColumn table cells)
-   */
-  private _sWidths: [string, string, string];
-
-  /**
    * The last net width of the column.
    * The net width is the absolute width of the column, without padding, border etc...
    */
@@ -122,7 +109,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
    * CD cycle ends, i.e. until `ngDoCheck()` hits. This means that only children of `pblNgridColumnDef` can relay on `isDirty`, all children will run their
    * `ngDoCheck()` before `ngDoCheck()` of `pblNgridColumnDef`.
    *
-   * This is a how we notify all cell directives about changes in a column. It is done through angular's CD logic and does not require manual
+   * This is a how we notify all cell directives about changes in a column. It is done through angular CD logic and does not require manual
    * CD kicks and special channels between pblNgridColumnDef and it's children.
    */
   markForCheck(): void {
@@ -165,7 +152,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
       : this._column.maxWidth
     ;
 
-    this._widths = this._sWidths = [minWidth || '',  width, maxWidth ? `${maxWidth}px` : width];
+    this._widths = [minWidth || '',  width, maxWidth ? `${maxWidth}px` : width];
     if (element) {
       this.applyWidth(element);
     }
@@ -284,4 +271,16 @@ function setWidth(el: HTMLElement, widths: [string, string, string]) {
   el.style.minWidth = widths[0];
   el.style.width = widths[1];
   el.style.maxWidth = widths[2];
+
+  // TODO(shlomiassaf)[perf, 4]: Instead of using a tuple for width, use a CSSStyleDeclaration object and just assign the props
+  // This will avoid the additional check for %
+  // We will need to implement it in all places that `_widths` is updated in `PblNgridColumnDef`
+  // Another TODO is to cache the previous `boxSizing` in any case the column definition changes.
+
+  // When the column does not have an explicit `minWidth` set and when the `width` is set explicitly to a % value
+  // the logic in `PblNgridColumnDef.updateWidth` will set `minWidth` to the same value in `width`
+  // This will cause an overflow unless we apply the border-box model
+  if (widths[0] && widths[0].endsWith('%')) {
+    el.style.boxSizing = 'border-box';
+  }
 }
