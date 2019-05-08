@@ -225,9 +225,9 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   setTotalContentSize(size: number) {
     super.setTotalContentSize(size);
-    Promise.resolve().then(() => {
+    requestAnimationFrame(() => {
       this.scrollHeight = this.elementRef.nativeElement.scrollHeight; //size;
-    });
+    })
   }
 
   checkViewportSize() {
