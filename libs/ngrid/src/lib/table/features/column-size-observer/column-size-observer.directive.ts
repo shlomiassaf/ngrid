@@ -4,6 +4,7 @@ import {
   Directive,
   ElementRef,
   Input,
+  AfterViewInit,
   OnDestroy
 } from '@angular/core';
 
@@ -19,7 +20,9 @@ class PblNgridGroupHeaderSizeController {
 
   constructor(private table: PblNgridComponent<any>) {
     this.entries = new WeakMap<any, PblColumnSizeObserver>();
-    this.ro = new ResizeObserver( entries => this.onResize(entries) );
+    this.ro = new ResizeObserver( entries => {
+      requestAnimationFrame(() => this.onResize(entries) );
+    });
   }
 
   static get(table: PblNgridComponent<any>): PblNgridGroupHeaderSizeController {
@@ -81,7 +84,7 @@ class PblNgridGroupHeaderSizeController {
  * an entire row should emit once, with all columns.
  */
 @Directive({ selector: 'pbl-ngrid-cell[observeSize], pbl-ngrid-header-cell[observeSize]' })
-export class PblColumnSizeObserver extends ColumnSizeInfo implements OnDestroy {
+export class PblColumnSizeObserver extends ColumnSizeInfo implements AfterViewInit, OnDestroy {
   @Input('observeSize') get column(): PblColumn { return this._column; }
   set column(value: PblColumn) { this.attachColumn(value); }
 
@@ -90,6 +93,9 @@ export class PblColumnSizeObserver extends ColumnSizeInfo implements OnDestroy {
   constructor(el: ElementRef, table: PblNgridComponent<any>) {
     super(el.nativeElement);
     this.controller = PblNgridGroupHeaderSizeController.get(table);
+  }
+
+  ngAfterViewInit(): void {
     this.controller.add(this);
   }
 

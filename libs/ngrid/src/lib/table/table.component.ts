@@ -490,7 +490,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
             startWith(null),
             pairwise(),
             tap( ([prev, curr]) => {
-              if (prev !== curr && (prev === 0 || curr === 0)) {
+              const noDataShowing = !!this._noDateEmbeddedVRef;
+              if ( (curr > 0 && noDataShowing) || (curr === 0 && !noDataShowing) ) {
                 this.setupNoData();
               }
             }),
