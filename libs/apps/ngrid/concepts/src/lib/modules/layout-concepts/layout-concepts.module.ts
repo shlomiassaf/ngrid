@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatNativeDateModule } from '@angular/material';
 
 import { PblNgridModule, PblNgridRegistryService } from '@pebula/ngrid';
@@ -13,7 +14,9 @@ import { PblNgridDragModule } from '@pebula/ngrid/drag';
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
 import { LayoutIntroductionGridExampleComponent } from './layout-introduction/layout-introduction.component';
 
+
 const MATERIAL = [
+  MatCheckboxModule,
   MatButtonToggleModule,
   MatFormFieldModule,
   MatDatepickerModule, MatNativeDateModule,
