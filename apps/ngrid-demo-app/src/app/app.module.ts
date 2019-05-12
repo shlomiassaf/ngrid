@@ -19,6 +19,7 @@ import { AppComponent } from './app.component';
 
 export const DEV_MODE = isDevMode();
 
+// @dynamic
 @NgModule({
   declarations: [
     AppComponent,
