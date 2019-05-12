@@ -3,6 +3,7 @@ import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser'
 import { GestureConfig } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, PreloadAllModules } from '@angular/router';
+import { Angulartics2Module } from 'angulartics2';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -41,8 +42,9 @@ import { AppComponent } from './app.component';
       {
         useHash: true,
         preloadingStrategy: PreloadAllModules,
-      }
-    )
+      },
+    ),
+    Angulartics2Module.forRoot(),
   ],
   providers: [
     { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig },

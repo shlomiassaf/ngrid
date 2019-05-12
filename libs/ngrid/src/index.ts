@@ -44,7 +44,7 @@ export {
   NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy,
 
   PblNgridCellClickEvent,
-  PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext,
+  PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext, PblNgridContextApi,
 } from './lib/table/index';
 
 export {

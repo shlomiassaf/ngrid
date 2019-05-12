@@ -54,5 +54,53 @@ export interface PblNgridRowContext<T = any> extends RowContext<T> {
 
   readonly table: PblNgridComponent<T>;
 
+  /**
+   * Returns the length of cells context stored in this row
+   */
+  readonly length: number;
+
+  cell(index: number): PblNgridCellContext<T> | undefined;
+
+  /**
+   * Returns a shallow copy of the current cell's context array.
+   */
+  getCells(): PblNgridCellContext<T>[];
+
+  /**
+   * Updates the `outOfView` property.
+   */
   updateOutOfViewState(): void;
+}
+
+export interface PblNgridContextApi<T = any> {
+  /**
+   * Clear the current context.
+   * This method will reset the context of all cells.
+   *
+   * In most cases, you do not need to run this method because it will automatically run when
+   * the datasource is replaced (entire datasource instance).
+   *
+   * However, if you are keeping the same datasource but switching data internally (onTrigger)
+   * you can clear the context using this method.
+   */
+  clear(): void;
+
+  /**
+   * Get the row context in the specified index.
+   *
+   * The specified index refers to the rendered index and not the index in the data store.
+   * If you are not using virtual scroll the rendered index is the same as the data index.
+   *
+   * > You can transform data < -- > render index's using the data source.
+   * @param rowIndex The RENDER index position of the row.
+   */
+  getRow(rowIndex: number): PblNgridRowContext<T> | undefined;
+
+  /**
+   * Get the cell context in the specific row index and column index
+   * @param rowIndex The index position of the row.
+   * @param colIndex The index position of the column.
+   */
+  getCell(rowIndex: number, colIndex: number): PblNgridCellContext<T> | undefined;
+
 }

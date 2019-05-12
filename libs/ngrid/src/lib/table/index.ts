@@ -22,7 +22,7 @@ export {
   columnFactory
 } from './columns/index';
 
-export { PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext } from './context/index';
+export { PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext, PblNgridContextApi } from './context/index';
 
 export { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 

@@ -1,6 +1,6 @@
 /* @pebula-example:ex-1 ex-2 ex-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
-import { PblNgridCellContext, createDS, columnFactory } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridCellContext, createDS, columnFactory } from '@pebula/ngrid';
 import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
 
 @Component({
@@ -16,12 +16,13 @@ export class CellEditGridExampleComponent {
   columns1 = columnFactory()
     .table(
       { prop: 'id', width: '40px' },
-      { prop: 'ttt', width: '40px' },
       { prop: 'name', editable: true },
       { prop: 'gender', width: '50px' },
       { prop: 'birthdate' },
+      { prop: '__isFirstRender', label: 'First Render?', width: '60px' },
     )
     .build();
+
   ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
   /* @pebula-ignore:ex-2 ex-3 */
   /* @pebula-ignore:ex-1 ex-3 */
@@ -36,10 +37,6 @@ export class CellEditGridExampleComponent {
     .build();
   ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
 
-  changeCheckbox(input: HTMLInputElement, ctx: PblNgridCellContext): void {
-    ctx.value = input.checked;
-    setTimeout( () => ctx.stopEdit(true) );
-  }
   /* @pebula-ignore:ex-1 ex-3 */
   /* @pebula-ignore:ex-1 ex-2 */
   columns3 = columnFactory()
@@ -54,5 +51,21 @@ export class CellEditGridExampleComponent {
   /* @pebula-ignore:ex-1 ex-2 */
 
   constructor(private datasource: DemoDataSource, private cdr: ChangeDetectorRef) {}
+
+  changeCheckbox(input: HTMLInputElement, ctx: PblNgridCellContext): void {
+    ctx.value = input.checked;
+    setTimeout( () => ctx.stopEdit(true) );
+  }
+
+  update(grid: PblNgridComponent): void {
+    // This is how we get the render position of a column:
+    const nameColumn = grid.columnApi.findColumn('name');
+    const nameColumnIndex = grid.columnApi.renderIndexOf(nameColumn);
+
+    // We could also show a list of which row to apply it on instead of a fixed number
+    // by iterating on `grid.ds.renderLength`
+
+    grid.contextApi.getCell(3, nameColumnIndex).startEdit(true);
+  }
 }
 /* @pebula-example:ex-1 ex-2 ex-3 */

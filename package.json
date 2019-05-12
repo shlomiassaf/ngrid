@@ -77,6 +77,7 @@
     "@types/webpack": "^4.4.23",
     "@types/webpack-sources": "^0.1.5",
     "@webcomponents/custom-elements": "^1.2.1",
+    "angulartics2": "^7.5.2",
     "codelyzer": "~4.5.0",
     "commitizen": "^3.1.1",
     "convert-source-map": "^1.6.0",

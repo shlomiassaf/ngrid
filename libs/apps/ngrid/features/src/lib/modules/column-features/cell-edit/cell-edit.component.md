@@ -6,8 +6,8 @@ Let's start with a simple example:
 
 <docsi-mat-example-with-source title="Simple cell edit" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-ngrid [dataSource]="ds1" [columns]="columns1">
-    <div *pblNgridCellDef="'ttt'; let ctx">
+  <pbl-ngrid #grid1 [dataSource]="ds1" [columns]="columns1">
+    <div *pblNgridCellDef="'__isFirstRender'; let ctx">
       {{!!ctx.rowContext.firstRender}}
     </div>
     <div *pblNgridCellDef="'name'; let ctx">
@@ -17,10 +17,16 @@ Let's start with a simple example:
       <input #input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
     </div>
   </pbl-ngrid>
+
+  <ul>
+    <li>Clicking on any cell in the column <b>name</b> will trigger an input box, leaving the input box (blur) will return to the read-only view.</li>
+    <li>Clicking on <button mat-button (click)="update(grid1)">this button</button> will trigger edit on the 4th <b>rendered</b> row and the 2nd cell (name).</li>
+  </ul>
+  
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 
-Clicking on the name will trigger an input box, leaving the input box (blur) will return to the read-only view.
+I> The `First Render` column will show if the row was first rendered or it was already rendered, this is valid for Virtual Scroll enabled grid.
 
 I> If you wondering what is the `[pblCellEditAutoFocus]` directive, it is just a simple *helper* directive that will handle auto-focusing logic of
 the input element.

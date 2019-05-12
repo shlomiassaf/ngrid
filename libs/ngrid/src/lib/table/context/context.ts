@@ -123,6 +123,13 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   outOfView: boolean;
   readonly table: PblNgridComponent<T>;
 
+  /**
+   * Returns the length of cells context stored in this row
+   */
+  get length(): number {
+    return (this.cells && this.cells.length) || 0;
+  }
+
   get pblRowContext(): PblNgridRowContext<T> { return this; }
   set pblRowContext(value: PblNgridRowContext<T>) { }
 
@@ -200,6 +207,13 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
     return this.cells[index];
   }
 
+  getCells(): CellContext<T>[] {
+    return (this.cells && this.cells.slice()) || [];
+  }
+
+    /**
+   * Updates the `outOfView` property.
+   */
   updateOutOfViewState(): void {
     this.extApi.contextApi.updateOutOfViewState(this);
   }

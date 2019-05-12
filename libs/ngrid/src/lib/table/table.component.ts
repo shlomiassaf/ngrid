@@ -36,7 +36,7 @@ import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
 import { findCellDef } from './directives/cell-def';
 import { PblColumn, PblColumnStore, PblMetaColumnStore, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './columns';
-import { PblNgridCellContext, PblNgridMetaCellContext, ContextApi } from './context/index';
+import { PblNgridCellContext, PblNgridMetaCellContext, ContextApi, PblNgridContextApi } from './context/index';
 import { PblNgridRegistryService } from './services/table-registry.service';
 import { PblNgridConfigService } from './services/config';
 import {
@@ -277,6 +277,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    */
   readonly isInit: boolean;
   readonly columnApi: ColumnApi<T>;
+  get contextApi(): PblNgridContextApi<T> { return this._extApi.contextApi; }
+
   get viewport(): PblCdkVirtualScrollViewportComponent | undefined { return this._viewport; }
 
   _cdkTable: PblCdkTableComponent<T>;
@@ -411,16 +413,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     if (this._viewport) {
       this._cdkTable.detachViewPort();
     }
-  }
-
-  /**
-   * Clear the current context.
-   * This method will reset the context of all cells.
-   *
-   * Use this if you are keeping the same datasource but switching data internally (onTrigger)
-   */
-  clearContext(): void {
-    this._extApi.contextApi.clear();
   }
 
   trackBy(index: number, item: T): any {
