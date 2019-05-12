@@ -17,7 +17,7 @@ import { DemoHomePageComponent } from './demo-home-page/demo-home-page.component
 import { RouterLinkActiveNotify } from './demo-home-page/router-link-active-notify';
 import { AppComponent } from './app.component';
 
-const DEV_MODE = isDevMode();
+export const DEV_MODE = isDevMode();
 
 @NgModule({
   declarations: [
