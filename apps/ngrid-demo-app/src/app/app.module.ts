@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { GestureConfig } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,6 +16,8 @@ import { SharedModule } from '@pebula/apps/ngrid/shared';
 import { DemoHomePageComponent } from './demo-home-page/demo-home-page.component';
 import { RouterLinkActiveNotify } from './demo-home-page/router-link-active-notify';
 import { AppComponent } from './app.component';
+
+const DEV_MODE = isDevMode();
 
 @NgModule({
   declarations: [
@@ -44,7 +46,13 @@ import { AppComponent } from './app.component';
         preloadingStrategy: PreloadAllModules,
       },
     ),
-    Angulartics2Module.forRoot(),
+    Angulartics2Module.forRoot({
+      developerMode: DEV_MODE,
+      pageTracking: {
+        autoTrackVirtualPages: true,
+        basePath: DEV_MODE ? '' : 'ngrid',
+      }
+    }),
   ],
   providers: [
     { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig },
