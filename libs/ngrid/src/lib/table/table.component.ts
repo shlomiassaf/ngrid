@@ -413,6 +413,16 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     }
   }
 
+  /**
+   * Clear the current context.
+   * This method will reset the context of all cells.
+   *
+   * Use this if you are keeping the same datasource but switching data internally (onTrigger)
+   */
+  clearContext(): void {
+    this._extApi.contextApi.clear();
+  }
+
   trackBy(index: number, item: T): any {
     return index;
   }
