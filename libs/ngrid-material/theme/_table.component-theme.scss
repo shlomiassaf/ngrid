@@ -1,4 +1,4 @@
-@import '../../ngrid/theming';
+// It is expected that @pebula/ngrid/theming is loaded
 
 @mixin mat-pbl-ngrid-theme($theme) {
   $primary: map-get($theme, primary);
