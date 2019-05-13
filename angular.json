@@ -301,6 +301,11 @@
                 "copyFile": {
                   "assets": [
                     {
+                      "glob": "README.Md",
+                      "input": ".",
+                      "output": "dist/@pebula/ngrid"
+                    },
+                    {
                       "glob": "_theming.scss",
                       "input": "libs/ngrid",
                       "output": "dist/@pebula/ngrid"
@@ -587,6 +592,11 @@
               "data": {
                 "copyFile": {
                   "assets": [
+                    {
+                      "glob": "README.md",
+                      "input": ".",
+                      "output": "dist/@pebula/ngrid-material"
+                    },
                     {
                       "glob": "_theming.scss",
                       "input": "libs/ngrid-material",
