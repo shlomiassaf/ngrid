@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Angulartics2GoogleTagManager } from 'angulartics2/gtm';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 
 @Component({
   selector: 'pbl-ngrid-demo-root',
@@ -7,7 +7,7 @@ import { Angulartics2GoogleTagManager } from 'angulartics2/gtm';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(angulartics2GoogleTagManager: Angulartics2GoogleTagManager) {
-    angulartics2GoogleTagManager.startTracking();
+  constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
+    angulartics2GoogleAnalytics.startTracking();
   }
 }

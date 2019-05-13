@@ -1,4 +1,4 @@
-import { NgModule, isDevMode } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { GestureConfig } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,13 +13,11 @@ import { NxModule } from '@nrwl/nx';
 
 import { SharedModule } from '@pebula/apps/ngrid/shared';
 
+import { environment } from '../environments/environment';
 import { DemoHomePageComponent } from './demo-home-page/demo-home-page.component';
 import { RouterLinkActiveNotify } from './demo-home-page/router-link-active-notify';
 import { AppComponent } from './app.component';
 
-export const DEV_MODE = isDevMode();
-
-// @dynamic
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,10 +46,9 @@ export const DEV_MODE = isDevMode();
       },
     ),
     Angulartics2Module.forRoot({
-      developerMode: DEV_MODE,
+      developerMode: !environment.production,
       pageTracking: {
         autoTrackVirtualPages: true,
-        basePath: DEV_MODE ? '' : 'ngrid',
       }
     }),
   ],
