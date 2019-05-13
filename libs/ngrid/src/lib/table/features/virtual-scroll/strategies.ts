@@ -186,5 +186,5 @@ export class PblCdkVirtualScrollDirective implements OnInit, OnChanges, VirtualS
   onDataLengthChanged(): void { this._scrollStrategy.onDataLengthChanged(); }
   onContentRendered(): void { this._scrollStrategy.onContentRendered(); }
   onRenderedOffsetChanged(): void { this._scrollStrategy.onRenderedOffsetChanged(); }
-  scrollToIndex(index: number, behavior: ScrollBehavior): void { this.scrollToIndex(index, behavior); }
+  scrollToIndex(index: number, behavior: ScrollBehavior): void { this._scrollStrategy.scrollToIndex(index, behavior); }
 }
