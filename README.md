@@ -15,9 +15,9 @@ documentation is the KEY
 
 ## Quick Start
 
-For a quick start see the [documentation site](https://shlomiassaf.github.io/ngrid) that includes code samples.
-
-Or, take a look at the [starter project](https://github.com/shlomiassaf/ngrid-material-starter)
+- [Documentation site](https://shlomiassaf.github.io/ngrid) with code samples.
+- [Starter @ GitHub](https://github.com/shlomiassaf/ngrid-material-starter)
+- [Starter @ StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter?file=app%2Fapp.component.ts)
 
 ## Setup
 
