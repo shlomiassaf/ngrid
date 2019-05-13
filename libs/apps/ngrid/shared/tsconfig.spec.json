@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/apps/ngrid/shared",
+    "outDir": "../../../../dist/out-tsc/libs/apps/ngrid/shared",
     "types": [
       "jasmine",
       "node"
