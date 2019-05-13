@@ -48,6 +48,7 @@ import {
 import { ColumnApi, AutoSizeToFitOptions } from './column-api';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblNgridMetaRowService } from './meta-rows/index';
+import { bindToDataSource } from './bind-to-datasource';
 
 export function internalApiFactory(table: { _extApi: PblNgridExtensionApi; }) { return table._extApi; }
 export function pluginControllerFactory(table: { _plugin: PblNgridPluginContext; }) { return table._plugin.controller; }
@@ -733,6 +734,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       parent: injector,
     });
     this._plugin = new PblNgridPluginContext(this, pluginInjector, this._extApi);
+    bindToDataSource(this._plugin);
   }
 
   private initExtApi(): void {
