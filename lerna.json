@@ -12,7 +12,6 @@
     }
   },
   "packages": [
-    "libs/utils",
     "libs/ngrid",
     "libs/ngrid-material"
   ]

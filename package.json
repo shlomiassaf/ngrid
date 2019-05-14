@@ -80,6 +80,7 @@
     "angulartics2": "^7.5.2",
     "codelyzer": "~4.5.0",
     "commitizen": "^3.1.1",
+    "conventional-changelog-cli": "^2.0.21",
     "convert-source-map": "^1.6.0",
     "country-data": "^0.0.31",
     "cz-lerna-changelog": "^2.0.2",
