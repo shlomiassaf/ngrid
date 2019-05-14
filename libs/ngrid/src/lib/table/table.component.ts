@@ -1,6 +1,6 @@
 import ResizeObserver from 'resize-observer-polyfill';
 import { asapScheduler, animationFrameScheduler, fromEventPattern } from 'rxjs';
-import { filter, take, tap, observeOn, switchMap, map, mapTo, startWith, pairwise, debounceTime, skip } from 'rxjs/operators';
+import { filter, take, tap, observeOn, switchMap, map, mapTo, startWith, pairwise, debounceTime } from 'rxjs/operators';
 import {
   AfterViewInit,
   Component,
@@ -757,12 +757,16 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       }
     );
 
-    // Skip the first emission, since its called upon calling "observe" on the resizeObserver
-    // Then debounce all resizes until the next complete animation frame without a resize
+    // Skip the first emission
+    // Debounce all resizes until the next complete animation frame without a resize
     // finally maps to the entries collection
+    // TODO(shlomiassaf): We should skip the first emission (`skip(1)`) before we debounce, since its called upon calling "observe" on the resizeObserver.
+    //                    The problem is that some tables might require this because they do change size.
+    //                    An example is a table in a mat-tab that is hidden, the table will hit the resize one when we focus the tab
+    //                    which will require a resize handling because it's initial size is 0
+    //                    We need to find a smart way to detect it, until we do so there will be a redundant resize on every table init
     ro$
       .pipe(
-        skip(1),
         debounceTime(0, animationFrameScheduler),
         UnRx(this),
       )
