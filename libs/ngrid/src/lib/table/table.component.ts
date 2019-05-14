@@ -1,5 +1,6 @@
-import { asapScheduler, animationFrameScheduler } from 'rxjs';
-import { filter, take, tap, observeOn, switchMap, map, mapTo, startWith, pairwise } from 'rxjs/operators';
+import ResizeObserver from 'resize-observer-polyfill';
+import { asapScheduler, animationFrameScheduler, fromEventPattern } from 'rxjs';
+import { filter, take, tap, observeOn, switchMap, map, mapTo, startWith, pairwise, debounceTime, skip } from 'rxjs/operators';
 import {
   AfterViewInit,
   Component,
@@ -389,6 +390,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     const div = document.createElement('div');
     div.classList.add('pbl-ngrid-empty-spacer')
     this._cdkTable._element.insertBefore(div, this._cdkTable._footerRowOutlet.elementRef.nativeElement);
+    this.listenToResize();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -735,6 +737,44 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     });
     this._plugin = new PblNgridPluginContext(this, pluginInjector, this._extApi);
     bindToDataSource(this._plugin);
+  }
+
+  private listenToResize(): void {
+    let resizeObserver: ResizeObserver;
+    const ro$ = fromEventPattern<[ResizeObserverEntry[], ResizeObserver]>(
+      handler => {
+        if (!resizeObserver) {
+          resizeObserver = new ResizeObserver(handler);
+          resizeObserver.observe(this.elRef.nativeElement);
+        }
+      },
+      handler => {
+        if (resizeObserver) {
+          resizeObserver.unobserve(this.elRef.nativeElement);
+          resizeObserver.disconnect();
+          resizeObserver = undefined;
+        }
+      }
+    );
+
+    // Skip the first emission, since its called upon calling "observe" on the resizeObserver
+    // Then debounce all resizes until the next complete animation frame without a resize
+    // finally maps to the entries collection
+    ro$
+      .pipe(
+        skip(1),
+        debounceTime(0, animationFrameScheduler),
+        UnRx(this),
+      )
+      .subscribe( (args: [ResizeObserverEntry[], ResizeObserver]) => this.onResize(args[0]) );
+  }
+
+  private onResize(entries: ResizeObserverEntry[]): void {
+    if (this._viewport) {
+      this._viewport.checkViewportSize();
+    }
+    this.resetColumnsWidth();
+    this.resizeColumns();
   }
 
   private initExtApi(): void {
