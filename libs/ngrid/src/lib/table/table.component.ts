@@ -1,6 +1,6 @@
 import ResizeObserver from 'resize-observer-polyfill';
 import { asapScheduler, animationFrameScheduler, fromEventPattern } from 'rxjs';
-import { filter, take, tap, observeOn, switchMap, map, mapTo, startWith, pairwise, debounceTime } from 'rxjs/operators';
+import { filter, take, tap, observeOn, switchMap, map, mapTo, startWith, pairwise, debounceTime, skip } from 'rxjs/operators';
 import {
   AfterViewInit,
   Component,
@@ -21,7 +21,7 @@ import {
   ViewContainerRef,
   EmbeddedViewRef,
   NgZone,
-  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck
+  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck,
 } from '@angular/core';
 
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
@@ -760,17 +760,27 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     // Skip the first emission
     // Debounce all resizes until the next complete animation frame without a resize
     // finally maps to the entries collection
-    // TODO(shlomiassaf): We should skip the first emission (`skip(1)`) before we debounce, since its called upon calling "observe" on the resizeObserver.
-    //                    The problem is that some tables might require this because they do change size.
-    //                    An example is a table in a mat-tab that is hidden, the table will hit the resize one when we focus the tab
-    //                    which will require a resize handling because it's initial size is 0
-    //                    We need to find a smart way to detect it, until we do so there will be a redundant resize on every table init
+    // SKIP:  We should skip the first emission (`skip(1)`) before we debounce, since its called upon calling "observe" on the resizeObserver.
+    //        The problem is that some tables might require this because they do change size.
+    //        An example is a table in a mat-tab that is hidden, the table will hit the resize one when we focus the tab
+    //        which will require a resize handling because it's initial size is 0
+    //        To workaround this, we only skip elements not yet added to the DOM, which means they will not trigger a resize event.
+    let skipValue = document.contains(this.elRef.nativeElement) ? 1 : 0;
+
     ro$
       .pipe(
+        skip(skipValue),
         debounceTime(0, animationFrameScheduler),
         UnRx(this),
       )
-      .subscribe( (args: [ResizeObserverEntry[], ResizeObserver]) => this.onResize(args[0]) );
+      .subscribe( (args: [ResizeObserverEntry[], ResizeObserver]) => {
+        if (skipValue === 0) {
+          skipValue = 1;
+          const columns = this._store.columns;
+          columns.forEach( c => c.sizeInfo.updateSize() );
+        }
+        this.onResize(args[0]);
+      });
   }
 
   private onResize(entries: ResizeObserverEntry[]): void {
