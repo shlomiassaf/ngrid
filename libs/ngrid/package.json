@@ -1,6 +1,6 @@
 {
   "name": "@pebula/ngrid",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "peerDependencies": {
     "@angular/common": "^7.2.3",
     "@angular/core": "^7.2.3",
