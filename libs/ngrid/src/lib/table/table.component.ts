@@ -57,10 +57,6 @@ export function metaRowServiceFactory(table: { _extApi: PblNgridExtensionApi; })
 
 @Component({
   selector: 'pbl-ngrid',
-  host: { // tslint:disable-line:use-host-property-decorator
-    '[class.pbl-ngrid]': 'true',
-    '[class.pbl-ngrid-empty]': '!ds || ds.renderLength === 0',
-  },
   templateUrl: './table.component.html',
   styleUrls: [ './table.component.scss' ],
   providers: [
@@ -842,10 +838,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       return;
     }
     if (this._dataSource && (this._dataSource.renderLength === 0 || force === true)) {
+      this.addClass('pbl-ngrid-empty');
       const noDataTemplate = this.registry.getSingle('noData');
       if (noDataTemplate) {
         this._noDateEmbeddedVRef = this.createView('beforeContent', noDataTemplate.tRef, { $implicit: this }, 0);
       }
+    } else {
+      this.removeClass('pbl-ngrid-empty');
     }
   }
 

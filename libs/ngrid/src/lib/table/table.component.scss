@@ -1,4 +1,4 @@
-.pbl-ngrid {
+pbl-ngrid {
   display: block;
 }
 
@@ -40,6 +40,7 @@
   box-sizing: border-box;
   display: flex;
   overflow: auto;
+  min-height: inherit;
   // justify-content: flex-end;
 }
 
