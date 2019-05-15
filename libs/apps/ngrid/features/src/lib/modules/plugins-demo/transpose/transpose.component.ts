@@ -14,7 +14,8 @@ const COLUMNS = columnFactory()
     { prop: 'id', sort: true, width: '40px' },
     { prop: 'name', sort: true },
     { prop: 'gender', width: '50px' },
-    { prop: 'birthdate', type: 'date' }
+    // { prop: 'birthdate', type: 'date' },
+    { prop: 'birthdate', type: { name: 'date', data: { format: 'dd MMM, yyyy' } } },
   )
   .build();
 

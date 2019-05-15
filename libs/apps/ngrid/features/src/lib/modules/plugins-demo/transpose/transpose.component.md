@@ -9,9 +9,10 @@ W> and because the table does not support vertical virtual scroll, transpose wil
 <docsi-mat-example-with-source title="Transpose" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
   <pbl-ngrid blockUi
-            [transpose]="transposeToggle"
-            [dataSource]="ds1"
-            [columns]="columns">
+             [transpose]="transposeToggle"
+             [dataSource]="ds1"
+             [columns]="columns">
+    <div *pblNgridCellTypeDef="'date'; value as value; col as col; row as row">{{value | date:col.type.data.format}}</div>
   </pbl-ngrid>
   <mat-checkbox [checked]="transposeToggle" (change)="transposeToggle = $event.checked">Transpose Enabled</mat-checkbox>
   <!--@pebula-example:ex-1-->

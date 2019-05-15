@@ -149,12 +149,12 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
     const sourceFactoryWrapper = (results: any[]) => {
       if (results) {
         const local: PblNgridColumnDefinitionSet = this.table.columns = columnFactory()
-        .default(this.defaultCol || {})
-        .table(
-          this.selfColumn,
-          ...results.map(createTransformedColumn),
-        )
-        .build();
+          .default(this.defaultCol || {})
+          .table(
+            this.selfColumn,
+            ...results.map(createTransformedColumn),
+          )
+          .build();
 
         const prev = this.tableState.columnsInput;
         local.header = prev.header;
@@ -166,6 +166,31 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
 
         const matchTemplates = coerceBooleanProperty(this.matchTemplates);
         const { prop } = this._header;
+        const columnKeysToProxy: Array<keyof PblColumn> = ['type'];
+
+        if (matchTemplates) {
+          columnKeysToProxy.push('cellTpl');
+        }
+
+        /* The following logic is not for the faint of heart.
+           Basically, the transpose plugin does not swap the actual data but the columns.
+           When transposing, all rows will swap to columns so, A new column definition is created,
+           with columns equal to the total number or items in the datasource.
+           Each column (new one) represents a row so we save a reference to the actual row in the new column.
+
+           The next step is to create a new datasource, the new datasource is simply a collection of all of the original columns.
+
+           Now when `getValue` is called on the new column it is called with a "row" which is the original column.
+           Because the new column has a reference to the actual (original) row we can call the `getValue` on the old column with the actual row.
+
+           In this process, all of the column metadata related to the presentation layer is lost. For example, if CSS classes will
+           not be the same, templates, types etc... This is because when the grid renders a cell that cell has a single template across
+           all rows but now we need a different template for every row.
+
+           We can proxy a (VERY) limited set of metadata properties related to the presentation layer, valid only on render time.
+           This relays on the fact that each row is rendered complete, starting from the first cell to the last so
+           with that we can get a reference to the original column tha that now represents the whole row.
+         */
         let currentColumn: PblColumn;
         for (const c of this.table.columnApi.visibleColumns) {
           if (c.orgProp === prop) {
@@ -175,8 +200,8 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
             };
           } else {
             c.getValue = getCellValueTransformed;
-            if (matchTemplates) {
-              Object.defineProperty(c, 'cellTpl', { get: () => currentColumn.cellTpl, set: value => {} });
+            for (const key of columnKeysToProxy) {
+              Object.defineProperty(c, key, { get: () => currentColumn && currentColumn[key], set: value => {} });
             }
           }
         }
