@@ -76,6 +76,7 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkLazyDropList<
     super(element, dragDropRegistry as any, changeDetectorRef, dir, group, _document, dragDrop);
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     this.dropped.subscribe( event => {
+      this.table.contextApi.clear();
       this.table.ds.moveItem(event.previousIndex, event.currentIndex);
       this.table._cdkTable.syncRows('data');
     });

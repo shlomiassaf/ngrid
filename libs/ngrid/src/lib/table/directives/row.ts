@@ -27,6 +27,8 @@ export class PblNgridRowComponent<T = any> extends CdkRow {
       this.getRend();
     }
     this.context = this.extApi.contextApi.rowContext(this.rowRenderIndex);
+    this.el.nativeElement.setAttribute('row-id', this.context.dataIndex as any);
+    this.el.nativeElement.setAttribute('row-key', this.context.identity);
   }
 
   rowRenderIndex: number;

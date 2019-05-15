@@ -32,7 +32,7 @@
   <div pbl-ngrid-fixed-meta-row-container="header"></div>
   <pbl-cdk-virtual-scroll-viewport class="pbl-ngrid-scroll-container" [minWidth]="_cdkTable?.minWidth"
                                    [stickyRowHeaderContainer]="stickyRowHeaderContainer" [stickyRowFooterContainer]="stickyRowFooterContainer">
-    <pbl-cdk-table>
+    <pbl-cdk-table tabindex="-1">
       <!-- Row templates. The columns used are set at the row template level -->
 
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
@@ -51,14 +51,12 @@
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
 
        <!-- HEADER-RECORD-FOOTER CELL DEF -->
-      <ng-container *ngFor="let c of columnApi.visibleColumns; index as index" [pblNgridColumnDef]="c">
+      <ng-container *ngFor="let c of columnApi.visibleColumns;" [pblNgridColumnDef]="c">
         <!-- TABLE HEADER CELL DEF -->
         <pbl-ngrid-header-cell *cdkHeaderCellDef [observeSize]="c"></pbl-ngrid-header-cell>
         <!-- RECORD CELL DEF -->
-        <pbl-ngrid-cell *cdkCellDef="let row; pblRowContext as pblRowContext" [attr.tabindex]="cellFocus">
-          <ng-container *ngIf="pblRowContext && pblRowContext.cell(index) as ctx">
-            <ng-container *ngTemplateOutlet="ctx.editing ? ctx.col.editorTpl : ctx.col.cellTpl; context: ctx"></ng-container>
-          </ng-container>
+        <pbl-ngrid-cell #cell="pblNgridCell" *cdkCellDef="let row; pblRowContext as pblRowContext" [rowCtx]="pblRowContext" [attr.tabindex]="cellFocus" [attr.id]="c.id">
+            <ng-container *ngTemplateOutlet="cell.cellCtx?.editing ? c.editorTpl : c.cellTpl; context: cell.cellCtx"></ng-container>
         </pbl-ngrid-cell>
 
         <!-- TABLE FOOTER CELL DEF -->

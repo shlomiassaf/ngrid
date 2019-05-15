@@ -1,8 +1,8 @@
 /* @pebula-example:ex-1 */
 /* @pebula-example:ex-2 */
 /* @pebula-example:ex-3 */
-import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW } from '@angular/cdk/keycodes';
 import { createDS, columnFactory } from '@pebula/ngrid';
 import { PblNgridRowEvent, PblNgridCellEvent } from '@pebula/ngrid/target-events';
 
@@ -68,11 +68,11 @@ const COLUMNS2 = columnFactory()
 })
 export class TargetEventsGridExampleComponent {
 
-
   columns = COLUMNS;
   columns2 = COLUMNS2;
 
-  ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
+  ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
+  ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
   ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 5) ).create();
 
   constructor(private datasource: DemoDataSource) { }

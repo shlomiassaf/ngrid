@@ -13,13 +13,14 @@ import {
   ViewChild,
   NgZone,
   EmbeddedViewRef,
+  Input,
 } from '@angular/core';
 import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
 
 import { PblNgridComponent } from '../table.component';
 import { uniqueColumnCss, uniqueColumnTypeCss, COLUMN_EDITABLE_CELL_CLASS } from '../circular-dep-bridge';
 import { COLUMN, PblMetaColumn, PblColumn, PblColumnGroup } from '../columns';
-import { MetaCellContext, PblNgridMetaCellContext } from '../context/index';
+import { MetaCellContext, PblNgridMetaCellContext, PblRowContext, PblCellContext } from '../context/index';
 import { PblNgridMultiRegistryMap } from '../services/table-registry.service';
 import { PblNgridColumnDef } from './column-def';
 import { PblNgridDataHeaderExtensionContext, PblNgridMultiComponentRegistry, PblNgridMultiTemplateRegistry } from './registry.directives';
@@ -191,20 +192,58 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
 })
 export class PblNgridCellDirective extends CdkCell implements DoCheck {
 
-  private el: HTMLElement;
+  @Input() set rowCtx(value: PblRowContext<any>) {
+    if (value !== this._rowCtx) {
+      this._rowCtx = value;
+      this.cellCtx = value ? value.cell(this.colIndex) : undefined;
+      this.ngDoCheck();
+    }
+  }
 
-  constructor(private columnDef: PblNgridColumnDef, elementRef: ElementRef) {
-    super(columnDef, elementRef);
+  private _rowCtx: PblRowContext<any>;
+  cellCtx: PblCellContext | undefined;
+
+  /**
+   * The position of the column def among all columns regardless of visibility.
+   */
+  private colIndex: number;
+  private el: HTMLElement;
+  private focused = false;
+  private selected = false;
+
+  constructor(private colDef: PblNgridColumnDef, elementRef: ElementRef) {
+    super(colDef, elementRef);
+    this.colIndex = this.colDef.table.columnApi.indexOf(colDef.column as PblColumn);
     this.el = elementRef.nativeElement;
-    columnDef.applyWidth(this.el);
-    initCellElement(this.el, columnDef.column);
-    initDataCellElement(this.el, columnDef.column as PblColumn);
+    colDef.applyWidth(this.el);
+    initCellElement(this.el, colDef.column);
+    initDataCellElement(this.el, colDef.column as PblColumn);
   }
 
   // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
   ngDoCheck(): void {
-    if (this.columnDef.isDirty) {
-      this.columnDef.applyWidth(this.el);
+    if (this.colDef.isDirty) {
+      this.colDef.applyWidth(this.el);
+    }
+
+    if (this._rowCtx) {
+      const cellContext = this.cellCtx = this._rowCtx.cell(this.colIndex);
+
+      if (cellContext.focused !== this.focused) {
+
+        if (this.focused = cellContext.focused) {
+          this.el.classList.add('pbl-ngrid-cell-focused');
+        } else {
+          this.el.classList.remove('pbl-ngrid-cell-focused');
+        }
+      }
+      if (this.cellCtx.selected !== this.selected) {
+        if (this.selected = cellContext.selected) {
+          this.el.classList.add('pbl-ngrid-cell-selected');
+        } else {
+          this.el.classList.remove('pbl-ngrid-cell-selected');
+        }
+      }
     }
   }
 }

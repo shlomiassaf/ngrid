@@ -14,6 +14,7 @@ export interface PblNgridMatrixRow<RType extends ROW_TYPE, RMetaType extends key
 }
 
 export interface PblNgridMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends PblNgridMatrixRow<RType, RMetaType> {
+  /** The RENDER column index */
   colIndex: number;
 }
 
@@ -31,9 +32,16 @@ export interface PblNgridDataMatrixPoint<T = any> extends PblNgridColumnMatrixPo
   context: PblNgridCellContext;
 }
 
-export type PblNgridCellEvent<T = any> = { source: MouseEvent; cellTarget: HTMLElement; rowTarget: HTMLElement; }
-  & (PblNgridDataMatrixPoint<T> | PblNgridColumnMatrixPoint<'header' | 'footer'> | PblNgridColumnMatrixPoint<'header' | 'footer', 'meta'>  | PblNgridColumnMatrixPoint<'header' | 'footer', 'meta-group'>);
+export type PblNgridBaseCellEvent<TEvent extends Event = MouseEvent | KeyboardEvent> = {
+  source: TEvent;
+  cellTarget: HTMLElement;
+  rowTarget: HTMLElement;
+};
+export type PblNgridDataCellEvent<T = any, TEvent extends Event = MouseEvent | KeyboardEvent> = PblNgridBaseCellEvent<TEvent> & PblNgridDataMatrixPoint<T>;
+export type PblNgridMetaCellEvent<TEvent extends Event = MouseEvent | KeyboardEvent> = PblNgridBaseCellEvent<TEvent> & (PblNgridColumnMatrixPoint<'header' | 'footer'> | PblNgridColumnMatrixPoint<'header' | 'footer', 'meta'>  | PblNgridColumnMatrixPoint<'header' | 'footer', 'meta-group'>);
+export type PblNgridCellEvent<T = any, TEvent extends Event = MouseEvent | KeyboardEvent> = PblNgridBaseCellEvent<TEvent> & (PblNgridDataCellEvent<T, TEvent> | PblNgridMetaCellEvent<TEvent>);
 
-export type PblNgridRowEvent<T = any> = { source: MouseEvent; rowTarget: HTMLElement; root?: PblNgridCellEvent<T>; }
+// TODO: Refactor the row event to be like cell events (meta, data);
+export type PblNgridRowEvent<T = any> = { source: MouseEvent | KeyboardEvent; rowTarget: HTMLElement; root?: PblNgridCellEvent<T>; }
   & (PblNgridDataMatrixRow<T> | PblNgridMatrixRow<'header' | 'footer'> | PblNgridMatrixRow<'header' | 'footer', 'meta'>  | PblNgridMatrixRow<'header' | 'footer', 'meta-group'>);
 

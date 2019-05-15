@@ -1,2 +1,4 @@
 export * from './types';
-export * from './context';
+export * from './cell';
+export * from './row';
+export * from './api';

@@ -387,6 +387,24 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     div.classList.add('pbl-ngrid-empty-spacer')
     this._cdkTable._element.insertBefore(div, this._cdkTable._footerRowOutlet.elementRef.nativeElement);
     this.listenToResize();
+
+    // The following code will catch context focused events, find the HTML element of the cell and focus it.
+    this.contextApi.focusChanged
+      .subscribe( event => {
+        if (event.curr) {
+          const rowContext = this.contextApi.findRowInView(event.curr.rowIdent);
+          if (rowContext) {
+            const view = this._cdkTable._rowOutlet.viewContainer.get(rowContext.index) as EmbeddedViewRef<any>;
+            if (view) {
+              const cellViewIndex = this.columnApi.renderIndexOf(this.columnApi.columns[event.curr.colIndex])
+              const cellElement = view.rootNodes[0].querySelectorAll('pbl-ngrid-cell')[cellViewIndex];
+              if (cellElement) {
+                cellElement.focus();
+              }
+            }
+          }
+        }
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

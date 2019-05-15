@@ -14,6 +14,7 @@
     header-cell-color: mat-color($foreground, secondary-text),
     cell-color: mat-color($foreground, text),
     footer-cell-color: mat-color($foreground, text),
+    cell-focus-color: mat-color($primary),
   ));
 }
 

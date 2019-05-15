@@ -1,12 +1,22 @@
-import { fromEvent, timer, Observer } from 'rxjs';
-import { bufferWhen, debounce, map, filter } from 'rxjs/operators';
+import { fromEvent, timer, Observer, ReplaySubject } from 'rxjs';
+import { bufferWhen, debounce, map, filter, takeUntil } from 'rxjs/operators';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
 import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/ngrid';
 
 import * as Events from './events';
-import { matrixRowFromRow, isRowContainer, findCellIndex, findParentCell } from './utils';
+import { matrixRowFromRow, isRowContainer, findCellRenderIndex, findParentCell } from './utils';
+import { handleFocusAndSelection } from './focus-and-selection';
+
+declare module '@pebula/ngrid/lib/table/services/config' {
+  interface PblNgridConfig {
+    targetEvents?: {
+      /** When set to true will enable the target events plugin on all table instances by default. */
+      autoEnable?: boolean;
+    };
+  }
+}
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -17,13 +27,13 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
-const PLUGIN_KEY: 'targetEvents' = 'targetEvents';
+export const PLUGIN_KEY: 'targetEvents' = 'targetEvents';
 
 function hasListeners(source: { observers: Observer<any>[] }): boolean {
   return source.observers.length > 0;
 }
 
-function findEventSource(source: MouseEvent): { type: 'row' | 'cell', target: HTMLElement } | undefined {
+function findEventSource(source: Event): { type: 'row' | 'cell', target: HTMLElement } | undefined {
   const cellTarget = findParentCell(source.target as any);
   if (cellTarget) {
     return { type: 'cell', target: cellTarget };
@@ -39,15 +49,21 @@ export class PblNgridTargetEventsPlugin<T = any> {
   rowEnter = new EventEmitter<Events.PblNgridRowEvent<T>>();
   rowLeave = new EventEmitter<Events.PblNgridRowEvent<T>>();
 
-  cellClick = new EventEmitter<Events.PblNgridCellEvent<T>>();
-  cellDblClick = new EventEmitter<Events.PblNgridCellEvent<T>>();
-  cellEnter = new EventEmitter<Events.PblNgridCellEvent<T>>();
-  cellLeave = new EventEmitter<Events.PblNgridCellEvent<T>>();
+  cellClick = new EventEmitter<Events.PblNgridCellEvent<T, MouseEvent>>();
+  cellDblClick = new EventEmitter<Events.PblNgridCellEvent<T, MouseEvent>>();
+  cellEnter = new EventEmitter<Events.PblNgridCellEvent<T, MouseEvent>>();
+  cellLeave = new EventEmitter<Events.PblNgridCellEvent<T, MouseEvent>>();
+
+  mouseDown = new EventEmitter<Events.PblNgridCellEvent<T, MouseEvent> | Events.PblNgridRowEvent<T>>();
+  mouseUp = new EventEmitter<Events.PblNgridCellEvent<T, MouseEvent> | Events.PblNgridRowEvent<T>>();
+  keyUp = new EventEmitter<Events.PblNgridCellEvent<T, KeyboardEvent> | Events.PblNgridRowEvent<T>>();
+  keyDown = new EventEmitter<Events.PblNgridCellEvent<T, KeyboardEvent> | Events.PblNgridRowEvent<T>>();
 
   private cdr: ChangeDetectorRef;
   private _removePlugin: (table: PblNgridComponent<any>) => void;
+  protected readonly destroyed = new ReplaySubject<void>();
 
-  constructor(protected table: PblNgridComponent<any>, protected injector: Injector, protected pluginCtrl: PblNgridPluginController) {
+  constructor(public table: PblNgridComponent<any>, protected injector: Injector, protected pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     this.cdr = injector.get(ChangeDetectorRef);
     if (table.isInit) {
@@ -71,6 +87,7 @@ export class PblNgridTargetEventsPlugin<T = any> {
 
   private init(): void {
     this.setupDomEvents();
+    handleFocusAndSelection(this);
   }
 
   private setupDomEvents(): void {
@@ -78,11 +95,11 @@ export class PblNgridTargetEventsPlugin<T = any> {
     const cdkTable = table._cdkTable;
     const cdkTableElement: HTMLElement = cdkTable['_element'];
 
-    const createCellEvent = (cellTarget: HTMLElement, source: MouseEvent): Events.PblNgridCellEvent<T> | undefined => {
+    const createCellEvent = <TEvent extends Event>(cellTarget: HTMLElement, source: TEvent): Events.PblNgridCellEvent<T, TEvent> | undefined => {
       const rowTarget = cellTarget.parentElement;
       const matrixPoint = matrixRowFromRow(rowTarget, cdkTable._rowOutlet.viewContainer);
       if (matrixPoint) {
-        const event: Events.PblNgridCellEvent<T> = { ...matrixPoint, source, cellTarget, rowTarget } as any;
+        const event: Events.PblNgridCellEvent<T, TEvent> = { ...matrixPoint, source, cellTarget, rowTarget } as any;
         if (matrixPoint.type === 'data') {
           (event as Events.PblNgridDataMatrixPoint<T>).row = table.ds.renderedData[matrixPoint.rowIndex];
         } else if (event.subType === 'meta') {
@@ -106,10 +123,12 @@ export class PblNgridTargetEventsPlugin<T = any> {
             If `subType !== 'data'` we need to get the proper column based type (type can only be `header` or `footer` at this point).
             But that's not all, because `metadataFromElement()` does not handle `meta-group` subType we need to do it here...
         */
-        event.colIndex = findCellIndex(cellTarget);
+        event.colIndex = findCellRenderIndex(cellTarget);
         if (matrixPoint.subType === 'data') {
-          (event as Events.PblNgridDataMatrixPoint<T>).context = this.pluginCtrl.extApi.contextApi.getCell(event.rowIndex, event.colIndex);
-          event.column = (event as Events.PblNgridDataMatrixPoint<T>).context.col;
+          const column = this.table.columnApi.findColumnAt(event.colIndex);
+          const columnIndex = this.table.columnApi.indexOf(column);
+          event.column = column;
+          (event as Events.PblNgridDataMatrixPoint<T>).context = this.pluginCtrl.extApi.contextApi.getCell(event.rowIndex, columnIndex);
         } else {
           const store = this.pluginCtrl.extApi.columnStore;
           const rowInfo = store.metaColumnIds[matrixPoint.type][event.rowIndex];
@@ -125,7 +144,7 @@ export class PblNgridTargetEventsPlugin<T = any> {
       }
     }
 
-    const createRowEvent = (rowTarget: HTMLElement, source: MouseEvent, root?: Events.PblNgridCellEvent<T>): Events.PblNgridRowEvent<T> | undefined => {
+    const createRowEvent = <TEvent extends Event>(rowTarget: HTMLElement, source: TEvent, root?: Events.PblNgridCellEvent<T, TEvent>): Events.PblNgridRowEvent<T> | undefined => {
       if (root) {
         const event: Events.PblNgridRowEvent<T> = {
           source,
@@ -169,7 +188,7 @@ export class PblNgridTargetEventsPlugin<T = any> {
       }
     }
 
-    let lastCellEnterEvent: Events.PblNgridCellEvent<T>;
+    let lastCellEnterEvent: Events.PblNgridCellEvent<T, MouseEvent>;
     let lastRowEnterEvent: Events.PblNgridRowEvent<T>;
     const emitCellLeave = (source: MouseEvent): Events.PblNgridCellEvent<T> | undefined => {
       if (lastCellEnterEvent) {
@@ -188,6 +207,63 @@ export class PblNgridTargetEventsPlugin<T = any> {
       }
     }
 
+    const processEvent = <TEvent extends Event>(e: TEvent) => {
+      const result = findEventSource(e);
+      if (result) {
+        if (result.type === 'cell') {
+          const event = createCellEvent<TEvent>(result.target, e);
+          if (event) {
+            return {
+              type: result.type,
+              event,
+              waitTime: hasListeners(this.cellDblClick) ? 250 : 1,
+            };
+          }
+        } else if (result.type === 'row') {
+          const event = createRowEvent(result.target, e);
+          if (event) {
+            return {
+              type: result.type,
+              event,
+              waitTime: hasListeners(this.rowDblClick) ? 250 : 1,
+            };
+          }
+        }
+      }
+    };
+
+    /** Split the result of processEvent into cell and row events, if type is row only row event is returned, if cell then cell is returned and row is created along side. */
+    const splitProcessedEvent = <TEvent extends Event>(event: ReturnType<typeof processEvent>) => {
+      const cellEvent = event.type === 'cell' ? event.event as Events.PblNgridCellEvent<T, TEvent> : undefined;
+      const rowEvent = cellEvent
+        ? createRowEvent<TEvent>(cellEvent.rowTarget, cellEvent.source, cellEvent)
+        : event.event as Events.PblNgridRowEvent<T>
+      ;
+      return { cellEvent, rowEvent };
+    };
+
+    const registerUpDownEvents = <TEvent extends Event>(eventName: string, emitter: EventEmitter<Events.PblNgridCellEvent<T, TEvent> | Events.PblNgridRowEvent<T>>) => {
+      fromEvent(cdkTableElement, eventName)
+        .pipe(
+          takeUntil(this.destroyed),
+          filter( source => hasListeners(emitter) ),
+          map(processEvent),
+          filter( result => !!result ),
+        )
+        .subscribe( result => {
+          result.event.source.stopPropagation();
+          result.event.source.preventDefault();
+          const { cellEvent, rowEvent } = splitProcessedEvent<TEvent>(result);
+          emitter.emit(cellEvent || rowEvent);
+          this.syncRow(cellEvent || rowEvent);
+        });
+    }
+
+    registerUpDownEvents<MouseEvent>('mouseup', this.mouseUp);
+    registerUpDownEvents<MouseEvent>('mousedown', this.mouseDown);
+    registerUpDownEvents<KeyboardEvent>('keyup', this.keyUp);
+    registerUpDownEvents<KeyboardEvent>('keydown', this.keyDown);
+
     /*
       Handling click stream for both click and double click events.
       We want to detect double clicks and clicks with minimal delays
@@ -195,46 +271,21 @@ export class PblNgridTargetEventsPlugin<T = any> {
       TODO: on double click, don't wait the whole 250 ms if 2 clicks happen.
     */
     const clickStream = fromEvent(cdkTableElement, 'click').pipe(
+      takeUntil(this.destroyed),
       filter( source => hasListeners(this.cellClick) || hasListeners(this.cellDblClick) || hasListeners(this.rowClick) || hasListeners(this.rowDblClick) ),
-      map( (source: MouseEvent) => {
-        const result = findEventSource(source);
-        if (result) {
-          if (result.type === 'cell') {
-            const event = createCellEvent(result.target, source);
-            if (event) {
-              return {
-                type: result.type,
-                event,
-                waitTime: hasListeners(this.cellDblClick) ? 250 : 1,
-              };
-            }
-          } else if (result.type === 'row') {
-            const event = createRowEvent(result.target, source);
-            if (event) {
-              return {
-                type: result.type,
-                event,
-                waitTime: hasListeners(this.rowDblClick) ? 250 : 1,
-              };
-            }
-          }
-        }
-      }),
+      map(processEvent),
       filter( result => !!result ),
     );
 
     clickStream
-      .pipe( bufferWhen( () => clickStream.pipe( debounce( e => timer(e.waitTime) ) ) ) )
+      .pipe(
+        bufferWhen( () => clickStream.pipe( debounce( e => timer(e.waitTime) ) ) ),
+        filter( events => events.length > 0 ),
+      )
       .subscribe( events => {
         const event = events.shift();
         const isDoubleClick = events.length === 1; // if we have 2 events its double click, otherwise single.
-
-        const cellEvent = event.type === 'cell' ? event.event : undefined;
-        const rowEvent = cellEvent
-          ? createRowEvent(cellEvent.rowTarget, cellEvent.source, cellEvent)
-          : event.event as Events.PblNgridRowEvent<T>
-        ;
-
+        const { cellEvent, rowEvent } = splitProcessedEvent<MouseEvent>(event);
         if (isDoubleClick) {
           if (cellEvent) {
             this.cellDblClick.emit(cellEvent);
@@ -251,6 +302,9 @@ export class PblNgridTargetEventsPlugin<T = any> {
 
 
     fromEvent(cdkTableElement, 'mouseleave')
+      .pipe(
+        takeUntil(this.destroyed),
+      )
       .subscribe( (source: MouseEvent) => {
         let lastEvent: Events.PblNgridRowEvent<T> | Events.PblNgridCellEvent<T> = emitCellLeave(source);
         lastEvent = emitRowLeave(source) || lastEvent;
@@ -260,12 +314,15 @@ export class PblNgridTargetEventsPlugin<T = any> {
       });
 
     fromEvent(cdkTableElement, 'mousemove')
+      .pipe(
+        takeUntil(this.destroyed),
+      )
       .subscribe( (source: MouseEvent) => {
         const cellTarget: HTMLElement = findParentCell(source.target as any);
         const lastCellTarget = lastCellEnterEvent && lastCellEnterEvent.cellTarget;
         const lastRowTarget = lastRowEnterEvent && lastRowEnterEvent.rowTarget;
 
-        let cellEvent: Events.PblNgridCellEvent<T>;
+        let cellEvent: Events.PblNgridCellEvent<T, MouseEvent>;
         let lastEvent: Events.PblNgridRowEvent<T> | Events.PblNgridCellEvent<T>;
 
         if (lastCellTarget !== cellTarget) {
@@ -305,19 +362,21 @@ export class PblNgridTargetEventsPlugin<T = any> {
   }
 
   destroy(): void {
+    this.destroyed.next();
+    this.destroyed.complete();
     this._removePlugin(this.table);
   }
 
-  private syncRow(event: Events.PblNgridRowEvent<T> | Events.PblNgridCellEvent<T>): void {
+  private syncRow<TEvent extends Event>(event: Events.PblNgridRowEvent<T> | Events.PblNgridCellEvent<T, TEvent>): void {
     this.table._cdkTable.syncRows(event.type, event.rowIndex);
   }
 }
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: 'pbl-ngrid[rowClick], pbl-ngrid[rowDblClick], pbl-ngrid[rowEnter], pbl-ngrid[rowLeave], pbl-ngrid[cellClick], pbl-ngrid[cellDblClick], pbl-ngrid[cellEnter], pbl-ngrid[cellLeave]',
+  selector: 'pbl-ngrid[rowClick], pbl-ngrid[rowDblClick], pbl-ngrid[rowEnter], pbl-ngrid[rowLeave], pbl-ngrid[cellClick], pbl-ngrid[cellDblClick], pbl-ngrid[cellEnter], pbl-ngrid[cellLeave], pbl-ngrid[keyDown], pbl-ngrid[keyUp]',
   // tslint:disable-next-line:use-output-property-decorator
-  outputs: [ 'rowClick', 'rowClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellDblClick', 'cellEnter', 'cellLeave' ]
+  outputs: [ 'rowClick', 'rowDblClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellDblClick', 'cellEnter', 'cellLeave', 'keyDown', 'keyUp' ]
 })
 @UnRx()
 export class PblNgridTargetEventsPluginDirective<T> extends PblNgridTargetEventsPlugin<T> implements OnDestroy {

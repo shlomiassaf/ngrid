@@ -48,7 +48,7 @@ const COLUMNS = columnFactory()
 })
 export class SellersDemoComponent {
   dataSource = createDS<Seller>()
-    .onTrigger( () => this.ds.getSellers(0, 1000) )
+    .onTrigger( () => this.ds.getSellers(0, 5000) )
     .create();
 
   columns = COLUMNS.build();

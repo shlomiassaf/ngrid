@@ -2,6 +2,7 @@
            blockUi
            matSort vScrollFixed
            cellTooltip
+           focusMode="cell"
            matCheckboxSelection="selection"
            [stickyHeader]="['table']"
            [dataSource]="dataSource"

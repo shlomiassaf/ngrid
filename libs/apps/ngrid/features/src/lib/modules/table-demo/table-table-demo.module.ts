@@ -24,6 +24,7 @@ import { PblNgridStickyModule } from '@pebula/ngrid/sticky';
 import { PblNgridMaterialModule } from '@pebula/ngrid-material';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
+import { FocusAndSelectionGridExampleComponent } from './focus-and-selection/focus-and-selection.component';
 import { ReuseGridExampleComponent } from './reuse/reuse.component';
 import { RowHeightGridExampleComponent } from './row-height/row-height.component';
 import { NoDataGridExampleComponent } from './no-data';
@@ -45,6 +46,7 @@ const MATERIAL = [
 ];
 
 const DECLARATION = [
+  FocusAndSelectionGridExampleComponent,
   ReuseGridExampleComponent,
   RowHeightGridExampleComponent,
   NoDataGridExampleComponent,
@@ -53,6 +55,7 @@ const DECLARATION = [
 ];
 
 const ROUTES = [
+  { path: 'focus-and-selection', component: FocusAndSelectionGridExampleComponent, data: { title: 'Focus & Selection' } },
   { path: 'reuse', component: ReuseGridExampleComponent, data: { title: 'Re-Use' } },
   { path: 'row-height', component: RowHeightGridExampleComponent, data: { title: 'Row Height' } },
   { path: 'no-data', component: NoDataGridExampleComponent, data: { title: 'No Date' } },
@@ -81,6 +84,8 @@ const ROUTES = [
 export class TableTableDemoModule {
   constructor(registry: ExampleGroupRegistryService, config: PblNgridConfigService) {
     config.set('cellTooltip', { autoSetAll: true });
+    config.set('targetEvents', { autoEnable: true });
+
     registry.registerSubGroupRoutes('table', ROUTES);
   }
 }
