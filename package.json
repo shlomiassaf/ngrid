@@ -24,7 +24,8 @@
     "dep-graph": "./node_modules/.bin/nx dep-graph",
     "help": "./node_modules/.bin/nx help",
     "affected:libs": "./node_modules/.bin/nx affected:libs",
-    "affected": "./node_modules/.bin/nx affected"
+    "affected": "./node_modules/.bin/nx affected",
+    "gh-pages": "./tools/scripts/gh-pages.sh"
   },
   "private": true,
   "dependencies": {
