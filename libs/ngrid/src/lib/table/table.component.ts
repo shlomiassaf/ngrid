@@ -837,14 +837,19 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     if (force === false) {
       return;
     }
-    if (this._dataSource && (this._dataSource.renderLength === 0 || force === true)) {
+
+    const noData = this._dataSource && this._dataSource.renderLength === 0;
+    if (noData) {
       this.addClass('pbl-ngrid-empty');
+    } else {
+      this.removeClass('pbl-ngrid-empty');
+    }
+
+    if (noData || force === true) {
       const noDataTemplate = this.registry.getSingle('noData');
       if (noDataTemplate) {
         this._noDateEmbeddedVRef = this.createView('beforeContent', noDataTemplate.tRef, { $implicit: this }, 0);
       }
-    } else {
-      this.removeClass('pbl-ngrid-empty');
     }
   }
 
