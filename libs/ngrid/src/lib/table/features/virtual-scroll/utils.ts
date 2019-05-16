@@ -43,7 +43,7 @@ export function updateStickyRows(offset: number, rows: HTMLElement[], stickyStat
   if (coeff === 1) {
     rows = rows.slice().reverse();
   }
-  for (const i in rows) {
+  for (let i = 0; i < rows.length; i++) {
     if (stickyState[i]) {
       const row = rows[i];
       row.style[type] = `${coeff * (offset + (coeff * agg))}px`;

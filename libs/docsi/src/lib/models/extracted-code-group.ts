@@ -36,7 +36,7 @@ export class ExtractedCodeGroup {
     const clone = this.clone();
     const queryKeys = [];
     clone.code = clone.code.filter( v => {
-      for (let i in query) { // tslint:disable-line
+      for (let i = 0; i < query.length; i++) {
         const keys = queryKeys[i] || (queryKeys[i] = Object.keys(query[i]));
         if (matchCodeQuery(query[i], v, keys)) {
           return true;
