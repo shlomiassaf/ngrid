@@ -6,6 +6,7 @@
 
   $border-color: map-get($tableTheme, border-color);
   $space-fill-background: map-get($tableTheme, space-fill-background);
+  $cell-focus-color: map-get($tableTheme, cell-focus-color);
 
   .pbl-ngrid-scroll-container {
     .pbl-ngrid-space-fill {
@@ -39,6 +40,16 @@
 
   .pbl-ngrid-column-resizer-handle {
     background: $border-color;
+  }
+
+  .pbl-ngrid-cell {
+    &.pbl-ngrid-cell-focused {
+      outline: 1px solid $cell-focus-color;
+      // box-shadow: inset 0px 0px 0px 1px $cell-focus-color;
+    }
+    &.pbl-ngrid-cell-selected:not(.pbl-ngrid-cell-focused) {
+      background-color: transparentize($cell-focus-color, 0.75);
+    }
   }
 
   @include pbl-ngrid-drag-plugin-theme($tableTheme);

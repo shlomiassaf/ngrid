@@ -6,7 +6,7 @@ Let's start with a simple example:
 
 <docsi-mat-example-with-source title="Simple cell edit" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
-  <pbl-ngrid #grid1 [dataSource]="ds1" [columns]="columns1">
+  <pbl-ngrid #grid1 [dataSource]="ds1" [columns]="columns1" [hideColumns]="hideColumns">
     <div *pblNgridCellDef="'__isFirstRender'; let ctx">
       {{!!ctx.rowContext.firstRender}}
     </div>

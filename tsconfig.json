@@ -18,63 +18,18 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@pebula/docsi": [
-        "libs/docsi/src/index.ts"
-      ],
-      "@pebula/docsi/webpack": [
-        "libs/docsi/webpack/src/index.ts"
-      ],
-      "@pebula/docsi/toc": [
-        "libs/docsi/toc/src/index.ts"
-      ],
-      "@pebula/docsi/material-suite": [
-        "libs/docsi/material-suite/src/index.ts"
-      ],
       "@pebula/apps/*": [
         "libs/apps/*",
         "libs/apps/*/src/index.ts"
       ],
-      "@pebula/ngrid*": [
-        "libs/ngrid/src*",
-        "libs/ngrid/src/index.ts"
+      "@pebula/ngrid/lib/*": [
+        "libs/ngrid/src/lib/*"
       ],
-      "@pebula/ngrid/sticky": [
-        "libs/ngrid/sticky/src/index.ts"
-      ],
-      "@pebula/ngrid/detail-row": [
-        "libs/ngrid/detail-row/src/index.ts"
-      ],
-      "@pebula/ngrid/block-ui": [
-        "libs/ngrid/block-ui/src/index.ts"
-      ],
-      "@pebula/ngrid/transpose": [
-        "libs/ngrid/transpose/src/index.ts"
-      ],
-      "@pebula/ngrid/target-events": [
-        "libs/ngrid/target-events/src/index.ts"
-      ],
-      "@pebula/ngrid/drag": [
-        "libs/ngrid/drag/src/index.ts"
-      ],
-      "@pebula/ngrid-material": [
-        "libs/ngrid-material/src/index.ts"
-      ],
-      "@pebula/ngrid-material/selection-column": [
-        "libs/ngrid-material/selection-column/src/index.ts"
-      ],
-      "@pebula/ngrid-material/paginator": [
-        "libs/ngrid-material/paginator/src/index.ts"
-      ],
-      "@pebula/ngrid-material/sort": [
-        "libs/ngrid-material/sort/src/index.ts"
-      ],
-      "@pebula/ngrid-material/cell-tooltip": [
-        "libs/ngrid-material/cell-tooltip/src/index.ts"
-      ],
-      "@pebula/utils": [
-        "libs/utils/src/index.ts"
+      "@pebula/ngrid-material/lib/*": [
+        "libs/ngrid-material/src/lib/*"
       ],
       "@pebula/*": [
+        "libs/*/src/index.ts",
         "libs/*"
       ]
     }

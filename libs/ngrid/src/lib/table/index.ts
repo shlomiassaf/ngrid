@@ -22,11 +22,16 @@ export {
   columnFactory
 } from './columns/index';
 
-export { PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext, PblNgridContextApi } from './context/index';
+export {
+  PblNgridFocusChangedEvent, PblNgridSelectionChangedEvent,
+  PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext,
+  PblNgridContextApi,
+  PblRowContext,
+  CellReference, GridDataPoint,
+ } from './context/index';
 
 export { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 
-export * from './events';
 export { PblNgridComponent } from './table.component';
 export { PblNgridRegistryService } from './services/table-registry.service';
 export { AutoSizeToFitOptions, ColumnApi } from './column-api';

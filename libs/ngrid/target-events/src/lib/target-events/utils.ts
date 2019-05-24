@@ -1,5 +1,14 @@
 import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
-import { PblNgridMatrixRow } from './events';
+import { PblNgridContextApi, GridDataPoint } from '@pebula/ngrid';
+import { PblNgridMatrixRow, PblNgridRowEvent, PblNgridCellEvent, PblNgridDataCellEvent } from './events';
+
+export function isCellEvent<T, TEvent extends Event = MouseEvent | KeyboardEvent>(event: PblNgridRowEvent<T> | PblNgridCellEvent<T, TEvent>): event is PblNgridCellEvent<T, TEvent> {
+  return !!(event as  PblNgridCellEvent<T>).cellTarget;
+}
+
+export function isDataCellEvent<T, TEvent extends Event = MouseEvent | KeyboardEvent>(event: PblNgridRowEvent<T> | PblNgridCellEvent<T, TEvent>): event is PblNgridDataCellEvent<T, TEvent> {
+  return isCellEvent(event) && !!(event as  PblNgridDataCellEvent<T, TEvent>).context;
+}
 
 /**
  * Returns true if the element is a row element (`pbl-ngrid-row`, `cdk-row`).
@@ -33,7 +42,7 @@ export function findParentCell(element: HTMLElement): HTMLElement | undefined {
 /**
  * Returns the position (index) of the cell (element) among it's siblings.
  */
-export function findCellIndex(cell: Element): number {
+export function findCellRenderIndex(cell: Element): number {
   let colIndex = 0;
   while (cell = cell.previousElementSibling) {
     colIndex++;
@@ -100,4 +109,42 @@ export function matrixRowFromRow(row: Element,
         rowIndex,
       } as PblNgridMatrixRow<'header' | 'footer', 'meta'>;
   }
+}
+
+/**
+ * Given a list of cells stacked vertically (yAxis) and a list of cells stacked horizontally (xAxis) return all the cells inside (without the provided axis cells).
+ *
+ * In the following example, all [Yn] cells are provided in the yAxis param and all [Xn] cell in the xAxis params, the returned value will be an array
+ * with all cells marked with Z.
+ *    Y5  Z  Z  Z
+ *    Y4  Z  Z  Z
+ *    Y3  Z  Z  Z
+ *    Y2  Z  Z  Z
+ *    XY1 X2 X3 X4
+ * @param contextApi
+ * @param xAxis
+ * @param yAxis
+ */
+export function getInnerCellsInRect(contextApi: PblNgridContextApi<any>, xAxis: GridDataPoint[], yAxis: GridDataPoint[]): GridDataPoint[] {
+  const spaceInside: GridDataPoint[] = [ ];
+  for (const vCell of yAxis) {
+    for (const hCell of xAxis) {
+      const vhContext = contextApi.findRowInCache(vCell.rowIdent).cells[hCell.colIndex];
+      if (vhContext) {
+        spaceInside.push({ rowIdent: vCell.rowIdent, colIndex: hCell.colIndex });
+      }
+    }
+  }
+  return spaceInside;
+}
+
+export function rangeBetween(n1: number, n2: number): number[] {
+  const min = Math.min(n1, n2);
+  const max = min === n1 ? n2 : n1;
+
+  const result: number[] = [];
+  for (let i = min + 1; i < max; i++) {
+    result.push(i);
+  }
+  return result;
 }

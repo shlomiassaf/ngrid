@@ -3,9 +3,16 @@ export {
   PblNgridDataMatrixRow,
   PblNgridMatrixPoint,
   PblNgridDataMatrixPoint,
+  PblNgridMetaCellEvent,
+  PblNgridDataCellEvent,
   PblNgridCellEvent,
   PblNgridRowEvent,
 } from './lib/target-events/events';
+
+export {
+  isCellEvent,
+  isDataCellEvent,
+} from './lib/target-events/utils';
 
 export { PblNgridTargetEventsPlugin } from './lib/target-events/target-events-plugin';
 

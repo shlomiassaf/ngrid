@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
 
 import { PblCdkTableComponent } from '../table';
-import { ContextApi } from '../table/context/context';
+import { ContextApi } from '../table/context/api';
 import { PblNgridComponent } from '../table/table.component';
 import { PblColumnStore } from '../table/columns/column-store';
 import { DynamicColumnWidthLogic } from '../table/col-width-logic/dynamic-column-width';

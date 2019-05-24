@@ -76,8 +76,17 @@ export class ColumnApi<T> {
   *
   * The render index represents the current location of the column in the group of visible columns.
   */
-  renderIndexOf(column: PblColumn): number {
-    return this.store.columns.indexOf(column);
+  renderIndexOf(column: string | PblColumn): number {
+    const c = typeof column === 'string' ? this.findColumn(column) : column;
+    return this.store.columns.indexOf(c);
+  }
+
+  /**
+   * Returns the index of a column or -1 if not found.
+   */
+  indexOf(column: string | PblColumn): number {
+    const c = typeof column === 'string' ? this.findColumn(column) : column;
+    return this.store.allColumns.indexOf(c);
   }
 
   /**

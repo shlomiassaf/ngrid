@@ -12,6 +12,8 @@ import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
 })
 export class CellEditGridExampleComponent {
 
+  hideColumns = ['gender'];
+
   /* @pebula-ignore:ex-2 ex-3 */
   columns1 = columnFactory()
     .table(
@@ -59,8 +61,7 @@ export class CellEditGridExampleComponent {
 
   update(grid: PblNgridComponent): void {
     // This is how we get the render position of a column:
-    const nameColumn = grid.columnApi.findColumn('name');
-    const nameColumnIndex = grid.columnApi.renderIndexOf(nameColumn);
+    const nameColumnIndex = grid.columnApi.indexOf('name');
 
     // We could also show a list of which row to apply it on instead of a fixed number
     // by iterating on `grid.ds.renderLength`
