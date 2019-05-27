@@ -49,7 +49,9 @@ import {
 import { ColumnApi, AutoSizeToFitOptions } from './column-api';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblNgridMetaRowService } from './meta-rows/index';
+
 import { bindToDataSource } from './bind-to-datasource';
+import './bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
 
 export function internalApiFactory(table: { _extApi: PblNgridExtensionApi; }) { return table._extApi; }
 export function pluginControllerFactory(table: { _plugin: PblNgridPluginContext; }) { return table._plugin.controller; }
@@ -478,12 +480,19 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
           value.onError.pipe(UnRx(this, value)).subscribe(console.error.bind(console));
         }
 
+        // We register to this event because it fires before the entire data-changing process starts.
+        // This is required because `onRenderDataChanging` is fired async, just before the data is emitted.
+        // Its not enough to clear the context when `setDataSource` is called, we also need to handle `refresh` calls which will not
+        // trigger this method.
+        value.onSourceChanging.pipe(UnRx(this, value)).subscribe( () => this._extApi.contextApi.clear() );
+
         // Run CD, scheduled as a micro-task, after each rendering
         value.onRenderDataChanging
           .pipe(
             filter( ({event}) => !event.isInitial && (event.pagination.changed || event.sort.changed || event.filter.changed)),
             // Context between the operations are not supported at the moment
             // Event for client side operations...
+            // TODO: can we remove this? we clear the context with `onSourceChanging`
             tap( () => !this.identityProp && this._extApi.contextApi.clear() ),
             switchMap( () => value.onRenderedDataChanged.pipe(take(1), mapTo(this.ds.renderLength)) ),
             observeOn(asapScheduler),
