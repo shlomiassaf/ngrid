@@ -56,7 +56,7 @@
         <pbl-ngrid-header-cell *cdkHeaderCellDef [observeSize]="c"></pbl-ngrid-header-cell>
         <!-- RECORD CELL DEF -->
         <pbl-ngrid-cell #cell="pblNgridCell" *cdkCellDef="let row; pblRowContext as pblRowContext" [rowCtx]="pblRowContext" [attr.tabindex]="cellFocus" [attr.id]="c.id">
-            <ng-container *ngTemplateOutlet="cell.cellCtx?.editing ? c.editorTpl : c.cellTpl; context: cell.cellCtx"></ng-container>
+          <ng-container *ngTemplateOutlet="cell.cellCtx?.editing ? c.editorTpl : c.cellTpl; context: cell.cellCtx"></ng-container>
         </pbl-ngrid-cell>
 
         <!-- TABLE FOOTER CELL DEF -->

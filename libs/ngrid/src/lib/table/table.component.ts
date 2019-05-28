@@ -534,7 +534,9 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
             } else {
               // TODO: When viewport is disabled, we can skip the call to measureRenderedContentSize() and let the browser
               // do the job by setting `contain: unset` in `pbl-cdk-virtual-scroll-viewport`
-              el.style.minHeight = this.viewport.enabled ? null : this.viewport.measureRenderedContentSize() + 'px';
+              // el.style.minHeight = this.viewport.enabled ? null : this.viewport.measureRenderedContentSize() + 'px';
+              el.style.minHeight = null;
+              el.style.contain = this.viewport.enabled ? null : 'unset';
             }
           });
       }
@@ -546,6 +548,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    */
   invalidateColumns(): void {
     const rebuildRows = this._store.allColumns.length > 0;
+    this._extApi.contextApi.clear();
     this._store.invalidate(this.columns);
     this.attachCustomCellTemplates();
     this.attachCustomHeaderCellTemplates();
