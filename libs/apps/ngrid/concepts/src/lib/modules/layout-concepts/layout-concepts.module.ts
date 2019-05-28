@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -13,9 +14,11 @@ import { PblNgridDragModule } from '@pebula/ngrid/drag';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
 import { LayoutIntroductionGridExampleComponent } from './layout-introduction/layout-introduction.component';
+import { LayoutGridHeightGridExampleComponent } from './layout-grid-height/layout-grid-height.component';
 
 
 const MATERIAL = [
+  MatButtonModule,
   MatCheckboxModule,
   MatButtonToggleModule,
   MatFormFieldModule,
@@ -24,10 +27,12 @@ const MATERIAL = [
 
 const DECLARATION = [
   LayoutIntroductionGridExampleComponent,
+  LayoutGridHeightGridExampleComponent,
 ];
 
 const ROUTES = [
   { path: 'introduction', component: LayoutIntroductionGridExampleComponent, data: { title: 'Introduction' } },
+  { path: 'height-and-scrolling', component: LayoutGridHeightGridExampleComponent, data: { title: 'Height & Scrolling' } },
 ];
 
 @NgModule({

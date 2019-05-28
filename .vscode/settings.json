@@ -16,5 +16,6 @@
     "pebula",
     "quickthrough",
     "sortables"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

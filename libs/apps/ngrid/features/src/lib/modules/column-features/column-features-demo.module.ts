@@ -18,6 +18,7 @@ import { ColumnGroupGridExampleComponent } from './column-group/column-group.com
 import { CellEditGridExampleComponent } from './cell-edit/cell-edit.component';
 import { ColumnReorderGridExampleComponent } from './column-reorder/column-reorder.component';
 import { ColumnResizingGridExampleComponent } from './column-resizing/column-resizing.component';
+import { SwitchingColumnDefinitionsGridExampleComponent } from './switching-column-definitions/switching-column-definitions.component';
 
 const MATERIAL = [
   MatButtonToggleModule,
@@ -32,7 +33,8 @@ const DECLARATION = [
   ColumnGroupGridExampleComponent,
   CellEditGridExampleComponent,
   ColumnReorderGridExampleComponent,
-  ColumnResizingGridExampleComponent
+  ColumnResizingGridExampleComponent,
+  SwitchingColumnDefinitionsGridExampleComponent,
 ];
 
 const ROUTES = [
@@ -42,6 +44,7 @@ const ROUTES = [
   { path: 'cell-edit', component: CellEditGridExampleComponent, data: { title: 'Cell Edit' } },
   { path: 'column-reorder', component: ColumnReorderGridExampleComponent, data: { title: 'Column Reorder' } },
   { path: 'column-resizing', component: ColumnResizingGridExampleComponent, data: { title: 'Column Resizing' } },
+  { path: 'switching-column-definitions', component: SwitchingColumnDefinitionsGridExampleComponent, data: { title: 'Switching Column Definitions' } },
 ];
 
 @NgModule({
