@@ -58,7 +58,7 @@ const ROUTES = [
   { path: 'focus-and-selection', component: FocusAndSelectionGridExampleComponent, data: { title: 'Focus & Selection' } },
   { path: 'reuse', component: ReuseGridExampleComponent, data: { title: 'Re-Use' } },
   { path: 'row-height', component: RowHeightGridExampleComponent, data: { title: 'Row Height' } },
-  { path: 'no-data', component: NoDataGridExampleComponent, data: { title: 'No Date' } },
+  { path: 'no-data', component: NoDataGridExampleComponent, data: { title: 'No Data' } },
   { path: 'virtual-scroll', component: VirtualScrollGridExampleComponent, data: { title: 'Virtual Scroll' } },
   { path: 'filler', component: FillerGridExampleComponent, data: { title: 'Filler' } },
 ];
