@@ -200,7 +200,7 @@ export class PblDataSourceAdapter<T = any, TData = any> {
 
           let data: T[] = this._lastSortedSource;
 
-          if (withChanges.filter) {
+          if (withChanges.filter || (event.filter.curr && event.filter.curr.filter)) {
             data = this.applyFilter(data, event.filter.curr || event.filter.prev);
           }
 
