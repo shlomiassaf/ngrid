@@ -21,7 +21,7 @@ import {
   ViewContainerRef,
   EmbeddedViewRef,
   NgZone,
-  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck,
+  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck, Attribute,
 } from '@angular/core';
 
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
@@ -310,7 +310,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
               private config: PblNgridConfigService,
-              public registry: PblNgridRegistryService) {
+              public registry: PblNgridRegistryService,
+              @Attribute('id') public readonly id: string) {
     const tableConfig = config.get('table');
     this.boxSpaceModel = tableConfig.boxSpaceModel;
     this.showHeader = tableConfig.showHeader;

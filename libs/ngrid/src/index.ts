@@ -38,6 +38,7 @@ export {
   PblNgridNoDataRefDirective,
   PblColumnTypeDefinition, PblColumnTypeDefinitionDataMap,
   PblColumnDefinition,
+  PblMetaColumnDefinition,
   PblColumnGroupDefinition,
   PblColumnSet, PblMetaRowDefinitions,
   PblNgridColumnSet, PblNgridColumnDefinitionSet,

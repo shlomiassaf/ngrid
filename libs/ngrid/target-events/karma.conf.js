@@ -10,7 +10,7 @@ module.exports = function(config) {
     ...baseConfig,
     coverageIstanbulReporter: {
       ...baseConfig.coverageIstanbulReporter,
-      dir: join(__dirname, '../../../coverage/libs/table/target-events')
+      dir: join(__dirname, '../../../coverage/libs/ngrid/target-events')
     }
   });
 };
