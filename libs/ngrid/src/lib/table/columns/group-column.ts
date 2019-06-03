@@ -6,7 +6,7 @@ import { PblColumn } from './column';
 const PBL_NGRID_COLUMN_GROUP_MARK = Symbol('PblColumnGroup');
 const CLONE_PROPERTIES: Array<keyof PblColumnGroup> = [];
 
-function isPblColumnGroup(def: PblColumnGroupDefinition): def is PblColumnGroup {
+export function isPblColumnGroup(def: PblColumnGroupDefinition): def is PblColumnGroup {
   return def instanceof PblColumnGroup || def[PBL_NGRID_COLUMN_GROUP_MARK] === true;
 }
 

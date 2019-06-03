@@ -1,19 +1,21 @@
+// for type info only, should work in published pacakge
+import { PblBaseColumnDefinition } from '@pebula/ngrid/lib/table/columns/types';
+
 import {
-  PblBaseColumnDefinition,
   PblMetaColumnDefinition,
   PblColumnGroupDefinition,
   PblColumnDefinition,
   PblMetaRowDefinitions,
   PblColumnSet,
   PblNgridColumnDefinitionSet,
- } from '../../../columns';
+ } from '@pebula/ngrid';
 
-import { PickPNP } from './utils';
+ import { PickPNP } from '../../utils';
 
 export interface PblNgridBaseColumnState extends
   PickPNP <
     PblBaseColumnDefinition,
-    'id' | 'label' | 'css' |'type' | 'width' | 'minWidth' | 'maxWidth',
+    'id' | 'label' | 'css' | 'type' | 'width' | 'minWidth' | 'maxWidth',
     never
   > { }
 

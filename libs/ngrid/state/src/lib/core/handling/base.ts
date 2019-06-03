@@ -1,23 +1,5 @@
-import { PblNgridComponent, PblNgridExtensionApi } from '@pebula/ngrid';
-import { StateChunks } from '../state-model';
+import { StateChunks, PblNgridStateChunkContext } from '../state-model';
 import { stateVisor } from '../state-visor';
-
-export interface PblNgridStateOptions {
-  excludeKeys?: string[];
-}
-
-export interface PblNgridStateRestoreOptions extends PblNgridStateOptions {
-  strategy: 'overwrite' | 'merge';
-}
-
-export interface PblNgridStateChunkSectionContext {
-  grid: PblNgridComponent;
-  extApi: PblNgridExtensionApi;
-}
-
-export interface PblNgridStateChunkContext<T extends keyof StateChunks> extends PblNgridStateChunkSectionContext {
-  source: StateChunks[T]['value'];
-}
 
 export class PblNgridStateChunkHandlerHost<T extends keyof StateChunks, Z extends keyof StateChunks[T]['state'] = keyof StateChunks[T]['state']> {
   private keys = new Set<Z>();
@@ -43,7 +25,7 @@ export class PblNgridStateChunkHandlerHost<T extends keyof StateChunks, Z extend
 
   register(): void {
     if (this.keys.size === 0) {
-      throw new Error('Invalid state chunk handler, now keys defined.');
+      throw new Error('Invalid state chunk handler, no keys defined.');
     }
     if (!this.sFn) {
       throw new Error('Invalid state chunk handler, missing serialize handler.');

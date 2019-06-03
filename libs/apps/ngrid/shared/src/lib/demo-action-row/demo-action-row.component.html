@@ -8,7 +8,7 @@
                     matTooltip="The estimated frame rate when long-scrolling is performed (500ms intervals, starting after the first 500 ms). When not scrolling, shows the last known frame rate">
             info
           </mat-icon>:
-          <span *ngIf="table.viewport.scrollFrameRate | async as frameRate">~{{ frameRate | number:'1.0-2' }}</span>
+          <span *ngIf="grid.viewport.scrollFrameRate | async as frameRate">~{{ frameRate | number:'1.0-2' }}</span>
       </p>
       <mat-form-field *ngIf="filter" appearance="outline" class="search-form-field">
         <mat-label>Filter</mat-label>
@@ -24,22 +24,22 @@
       </button>
 
       <mat-menu #sizeMenu="matMenu">
-        <button mat-menu-item (click)="table.invalidateColumns()">
+        <button mat-menu-item (click)="grid.invalidateColumns()">
           <mat-icon>restore</mat-icon>
           <span>Restore Columns</span>
         </button>
         <button mat-menu-item matTooltip="Will fit to content setting new size values in the same unit. (px, %)" matTooltipClass="pbl-large-tooltip"
-                              (click)="table.autoSizeColumnToFit(autoSizeColumnToFitOptions)">
+                              (click)="grid.autoSizeColumnToFit(autoSizeColumnToFitOptions)">
           <mat-icon class="pbl-unicode">↹</mat-icon>
           <span>Fit Columns To Content</span>
         </button>
         <button mat-menu-item
                 matTooltip="Will fit to content and force all column to be in %, resizing the browser will not result in a horizontal scroll bar" matTooltipClass="pbl-large-tooltip"
-                (click)="table.autoSizeColumnToFit(autoSizeColumnToFitOptionsForever)">
+                (click)="grid.autoSizeColumnToFit(autoSizeColumnToFitOptionsForever)">
           <mat-icon class="pbl-unicode">↹</mat-icon>
           <span>Fit Columns To Content (%)</span>
         </button>
-        <button mat-menu-item (click)="table.columnApi.autoSizeColumns()">
+        <button mat-menu-item (click)="grid.columnApi.autoSizeColumns()">
           <mat-icon class="pbl-unicode">⇥</mat-icon>
           <span>Auto Size Columns</span>
         </button>
@@ -47,8 +47,14 @@
 
       <mat-menu #moreMenu="matMenu">
         <div mat-menu-item role="menuitemcheckbox" (click)="onFpsToggle($event, moreMenuTrigger)">
-            <mat-checkbox [checked]="showFps">Scroll FPS</mat-checkbox>
+          <mat-checkbox [checked]="showFps">Scroll FPS</mat-checkbox>
         </div>
+        <button *ngIf="grid.id" mat-menu-item [matMenuTriggerFor]="stateMenu">State</button>
+      </mat-menu>
+
+      <mat-menu #stateMenu="matMenu">
+        <button mat-menu-item (click)="saveState()">Save</button>
+        <button [disabled]="!hasState" mat-menu-item (click)="restoreState()">Restore</button>
       </mat-menu>
     </div>
   </div>

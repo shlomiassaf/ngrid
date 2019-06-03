@@ -3,7 +3,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatMenuTrigger } from '@angular/material/menu';
 
 import { PblNgridComponent, AutoSizeToFitOptions } from '@pebula/ngrid';
-
+import { hasState, saveState, loadState } from '@pebula/ngrid/state';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -37,25 +37,28 @@ export class DemoActionRowComponent implements AfterViewInit {
     this._showFps = coerceBooleanProperty(value);
   }
 
+  hasState = false;
+
   private _filter = false;
   private _showFps = false;
 
-  constructor(public table: PblNgridComponent<any>) { }
+  constructor(public grid: PblNgridComponent<any>) { }
 
   _refresh(): void {
     if (this.refresh.observers.length > 0) {
       this.refresh.emit();
     } else {
-      this.table.ds.refresh();
+      this.grid.ds.refresh();
     }
   }
 
   ngAfterViewInit(): void {
-    this.table.createView('beforeTable', this.actionRow);
+    this.grid.createView('beforeTable', this.actionRow);
+    hasState(this.grid).then( hasState => this.hasState = hasState );
   }
 
   actionRowFilter(filterValue: string) {
-    this.table.ds.setFilter(filterValue.trim(), this.table.columnApi.visibleColumns);
+    this.grid.ds.setFilter(filterValue.trim(), this.grid.columnApi.visibleColumns);
   }
 
   onFpsToggle(event: MouseEvent, moreMenuTrigger: MatMenuTrigger): void {
@@ -63,5 +66,14 @@ export class DemoActionRowComponent implements AfterViewInit {
     event.preventDefault();
     event.stopPropagation();
     moreMenuTrigger.closeMenu();
+  }
+
+  saveState(): void {
+    saveState(this.grid);
+    this.hasState = true;
+  }
+
+  restoreState(): void {
+    loadState(this.grid);
   }
 }

@@ -48,18 +48,18 @@ export class PblNgridPluginController<T = any> {
 
   readonly extApi: PblNgridExtensionApi
   readonly events: Observable<PblNgridEvents>;
-  private readonly table: PblNgridComponent<T>
+  private readonly grid: PblNgridComponent<T>
   private readonly plugins = new Map<keyof PblNgridPluginExtension, PblNgridPlugin>();
 
   constructor(private context: PblNgridPluginContext) {
-    this.table = context.table;
+    this.grid = context.table;
     this.extApi = context.extApi;
     this.events = context.events;
-    PblNgridPluginController.created$.next({ table: this.table, controller: this });
+    PblNgridPluginController.created$.next({ table: this.grid, controller: this });
   }
 
-  static find<T = any>(table: PblNgridComponent<T>): PblNgridPluginController<T> | undefined {
-    const context = TABLE_PLUGIN_CONTEXT.get(table);
+  static find<T = any>(grid: PblNgridComponent<T>): PblNgridPluginController<T> | undefined {
+    const context = TABLE_PLUGIN_CONTEXT.get(grid);
     if (context) {
       return context.controller;
     }
@@ -84,7 +84,7 @@ export class PblNgridPluginController<T = any> {
       throw new Error(`Plugin ${name} is not registered for this table.`);
     }
     this.plugins.set(name, plugin);
-    return (tbl: PblNgridComponent<any>) => this.table === tbl && this.plugins.delete(name);
+    return (tbl: PblNgridComponent<any>) => this.grid === tbl && this.plugins.delete(name);
   }
 
   createPlugin<P extends (keyof PblNgridPluginExtensionFactories & keyof PblNgridPluginExtension)>(name: P): PblNgridPluginExtension[P] {
@@ -98,6 +98,6 @@ export class PblNgridPluginController<T = any> {
     } else if (typeof metadata.target[methodName] !== 'function') {
       throw new Error(`Invalid plugin configuration for ${name}, factory metadata does not point to a function.`);
     }
-    return metadata.target[methodName](this.table, this.context.injector);
+    return metadata.target[methodName](this.grid, this.context.injector);
   }
 }

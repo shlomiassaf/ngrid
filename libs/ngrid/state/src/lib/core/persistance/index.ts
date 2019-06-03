@@ -1,2 +1,1 @@
-export { PersistAdapter } from './base';
-export { LocalStoragePersistAdapter } from './local-storage';
+export { PblNgridLocalStoragePersistAdapter } from './local-storage';

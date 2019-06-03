@@ -19,7 +19,8 @@ export {
   PblColumnGroup,
   COLUMN,
   PblColumnFactory,
-  columnFactory
+  columnFactory,
+  isPblColumn, isPblMetaColumn, isPblColumnGroup,
 } from './columns/index';
 
 export {

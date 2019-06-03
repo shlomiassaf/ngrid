@@ -8,7 +8,7 @@ import { parseStyleWidth, initDefinitions } from './utils';
 const PBL_NGRID_META_COLUMN_MARK = Symbol('PblMetaColumn');
 const CLONE_PROPERTIES: Array<keyof PblMetaColumn> = ['kind', 'rowIndex'];
 
-function isPblMetaColumn(def: PblMetaColumnDefinition): def is PblMetaColumn {
+export function isPblMetaColumn(def: PblMetaColumnDefinition): def is PblMetaColumn {
   return def instanceof PblMetaColumn || def[PBL_NGRID_META_COLUMN_MARK] === true;
 }
 

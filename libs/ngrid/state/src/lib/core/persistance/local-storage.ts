@@ -1,14 +1,18 @@
-import { PblNgridGlobalState } from '../state-model';
-import { PersistAdapter } from '../persist';
+import { PblNgridGlobalState, PersistAdapter } from '../state-model';
 
-export class LocalStoragePersistAdapter implements PersistAdapter {
+export class PblNgridLocalStoragePersistAdapter implements PersistAdapter {
   private static globalStateKey: string = 'pebulaNgridState';
 
   save(id: string, state: PblNgridGlobalState): Promise<void> {
     try {
-      const globalState: any = localStorage.getItem(LocalStoragePersistAdapter.globalStateKey) || {};
-      globalState[id] = JSON.stringify(state);
-      localStorage.setItem(LocalStoragePersistAdapter.globalStateKey, globalState);
+      const store = this.loadGlobalStateStore();
+      store[id] = state;
+      if (!state.__metadata__) {
+        state.__metadata__ = {} as any;
+      }
+      state.__metadata__.updatedAt = new Date().toISOString();
+
+      this.saveGlobalStateStore(store);
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);
@@ -16,8 +20,19 @@ export class LocalStoragePersistAdapter implements PersistAdapter {
   }
 
   load(id: string): Promise<PblNgridGlobalState> {
-    const raw = localStorage.getItem(LocalStoragePersistAdapter.globalStateKey);
-    const globalState: any = raw ? JSON.parse(raw) : {};
-    return Promise.resolve(globalState[id] || {});
+    return Promise.resolve(this.loadGlobalStateStore()[id] || {} as any);
+  }
+
+  exists(id: string): Promise<boolean> {
+    return Promise.resolve(!!this.loadGlobalStateStore()[id]);
+  }
+
+  private loadGlobalStateStore(): { [id: string]: PblNgridGlobalState } {
+    const raw = localStorage.getItem(PblNgridLocalStoragePersistAdapter.globalStateKey);
+    return raw ? JSON.parse(raw) : {};
+  }
+
+  private saveGlobalStateStore(store: { [id: string]: PblNgridGlobalState }): void {
+    localStorage.setItem(PblNgridLocalStoragePersistAdapter.globalStateKey, JSON.stringify(store));
   }
 }

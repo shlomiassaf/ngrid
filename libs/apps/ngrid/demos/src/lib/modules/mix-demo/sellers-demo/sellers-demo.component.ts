@@ -39,6 +39,14 @@ const COLUMNS = columnFactory()
   .header(
     { rowClassName: 'pbl-groupby-row' },
     { id: 'pbl-groupby-row', type: 'pbl-groupby-row', label: ' ' },
+  )
+  .headerGroup(
+    { type: 'fixed' },
+    {
+      prop: 'name',
+      span: 3,
+      label: 'Marketing'
+    }
   );
 
 @Component({
@@ -48,7 +56,7 @@ const COLUMNS = columnFactory()
 })
 export class SellersDemoComponent {
   dataSource = createDS<Seller>()
-    .onTrigger( () => this.ds.getSellers(0, 5000) )
+    .onTrigger( () => this.ds.getSellers(0, 1000) )
     .create();
 
   columns = COLUMNS.build();
