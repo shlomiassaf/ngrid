@@ -1,5 +1,5 @@
 <pbl-ngrid id="sellers"
-           identityProp="id" rowReorder columnReorder
+           identityProp="id" statePlugin rowReorder columnReorder
            blockUi
            matSort vScrollFixed
            cellTooltip

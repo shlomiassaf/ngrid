@@ -438,10 +438,19 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   }
 
   ngOnDestroy(): void {
-    this._plugin.emitEvent({ kind: 'onDestroy' });
-    this._plugin.destroy();
-    if (this._viewport) {
-      this._cdkTable.detachViewPort();
+    const destroy = () => {
+      this._plugin.destroy();
+      if (this._viewport) {
+        this._cdkTable.detachViewPort();
+      }
+    };
+
+    let p: Promise<void>;
+    this._plugin.emitEvent({ kind: 'onDestroy', wait: (_p: Promise<void>) => p = _p });
+    if (p) {
+      p.then(destroy).catch(destroy);
+    } else {
+      destroy();
     }
   }
 

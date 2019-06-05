@@ -1,6 +1,7 @@
 import { PblColumn } from '@pebula/ngrid';
 import { createStateChunkHandler } from '../../handling';
 import { stateVisor } from '../../state-visor';
+import { PblNgridStateLoadOptions } from '../../state-model';
 
 stateVisor.registerRootChunkSection(
   'visibleColumnIds',
@@ -39,7 +40,7 @@ createStateChunkHandler('visibleColumnIds')
     // With this revert/redo of the last move we just trigger a redraw.
     if (lastMove) {
       grid.columnApi.moveColumn(lastMove[1], lastMove[0], true);
-      grid.columnApi.moveColumn(lastMove[0], lastMove[1]);
+      grid.columnApi.moveColumn(lastMove[0], lastMove[1], (ctx.options as PblNgridStateLoadOptions).avoidRedraw);
     }
   })
   .register();

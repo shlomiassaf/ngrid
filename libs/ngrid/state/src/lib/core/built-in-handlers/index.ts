@@ -31,7 +31,7 @@ export interface PblNgridBuiltInGlobalState {
 export interface BuiltInRootStateChunks {
   grid: StateChunkItem<PblNgridSurfaceState, PblNgridComponent>;
   columns: StateChunkItem<C.PblNgridColumnDefinitionSetState, PblNgridColumnDefinitionSet>;
-  visibleColumnIds: StateChunkItem<Pick<PblNgridGlobalState, 'visibleColumnIds'>, ColumnApi<any>>;
+  visibleColumnIds: StateChunkItem<Pick<PblNgridGlobalState, 'visibleColumnIds'>, ColumnApi<any>, any, true>;
 }
 
 export interface BuiltInStateChunks {
@@ -40,7 +40,7 @@ export interface BuiltInStateChunks {
   dataColumn: StateChunkItem<C.PblNgridColumnState, PblColumnDefinition | PblColumn, DataColumnBuiltInStateChunkExtraData>;
   metaRow: StateChunkItem<C.PblNgridMetaRowSetState<C.PblNgridMetaColumnState>, PblColumnSet<PblMetaColumnDefinition | PblMetaColumn>>;
   metaGroupRow: StateChunkItem<C.PblNgridMetaRowSetState<C.PblNgridGroupColumnState>, PblColumnSet<PblColumnGroupDefinition | PblColumnGroup>>;
-  dataMetaRow: StateChunkItem<C.PblNgridMetaRowState, PblMetaRowDefinitions, { kind: 'header' | 'footer' }>;
+  dataMetaRow: StateChunkItem<C.PblNgridMetaRowState, PblMetaRowDefinitions, { kind: 'header' | 'footer'; active?: PblMetaRowDefinitions; }>;
 }
 
 export interface DataColumnBuiltInStateChunkExtraData {

@@ -24,7 +24,8 @@ export class PblNgridLocalStoragePersistAdapter implements PersistAdapter {
   }
 
   exists(id: string): Promise<boolean> {
-    return Promise.resolve(!!this.loadGlobalStateStore()[id]);
+    const store = this.loadGlobalStateStore() || {};
+    return Promise.resolve(id in store);
   }
 
   private loadGlobalStateStore(): { [id: string]: PblNgridGlobalState } {

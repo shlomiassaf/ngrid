@@ -8,8 +8,10 @@ import {
   PblNgridStateOptions,
   PblNgridStateLoadOptions,
 } from './state-model';
+import { PblNgridStateChunkHandlerDefinition } from './handling/base';
 import { stateVisor, PblNgridStateChunkSectionConfig } from './state-visor';
 import { PblNgridLocalStoragePersistAdapter } from './persistance/local-storage';
+import { PblNgridIdAttributeIdentResolver } from './identification/index';
 
 function createChunkSectionContext(grid: PblNgridComponent, options: PblNgridStateOptions | PblNgridStateLoadOptions): PblNgridStateChunkSectionContext {
   return { grid, extApi: getExtApi(grid), options };
@@ -25,73 +27,134 @@ function createChunkContext<T extends keyof RootStateChunks>(sectionContext: Pbl
       const childContext = { ...sectionContext, source, data };
       const defs = stateVisor.getDefinitionsForSection(childChunkId);
 
-      if (mode === 'serialize') {
-        for (const def of defs) {
-          for (const key of def.keys) {
-            state[key] = def.serialize(key, childContext);
-          }
-        }
-      } else {
-        for (const def of defs) {
-          for (const key of def.keys) {
-            def.deserialize(key, state[key], childContext);
-          }
-        }
+      const action = mode === 'serialize' ? serialize : deserialize;
+      for (const def of defs) {
+        action(def, state, childContext);
       }
     }
   }
+}
+
+function resolveId(grid: PblNgridComponent, options?: PblNgridStateOptions): string {
+  const id = options.identResolver.resolveId(createChunkSectionContext(grid, options));
+  if (!id) {
+    throw new Error('Could not resolve a unique id for an ngrid instance, state is disabled');
+  }
+  return id;
 }
 
 export function hasState(grid: PblNgridComponent, options?: PblNgridStateOptions): Promise<boolean> {
-  options = normalizeOptions('save', options);
-  const id = grid.id;
-  return options.adapter.exists(id);
+  return Promise.resolve()
+    .then( () => {
+      options = normalizeOptions('save', options);
+      const id = resolveId(grid, options);
+      return options.persistenceAdapter.exists(id);
+    });
 }
 
 export function saveState(grid: PblNgridComponent, options?: PblNgridStateOptions): Promise<void> {
-  options = normalizeOptions('save', options);
-  const id = grid.id;
-  const state: PblNgridGlobalState = {} as any;
-  const context = createChunkSectionContext(grid, options);
-
-  for (const [chunkId, chunkConfig] of stateVisor.getRootSections()) {
-    const sectionState = chunkConfig.stateMatcher(state);
-    const chunkContext = createChunkContext(context, chunkConfig, 'serialize');
-
-    const defs = stateVisor.getDefinitionsForSection(chunkId);
-    for (const def of defs) {
-      for (const key of def.keys) {
-        sectionState[key] = def.serialize(key, chunkContext);
-      }
-    }
-  }
-
-  return options.adapter.save(id, state);
-}
-
-export function loadState(grid: PblNgridComponent, options?: PblNgridStateLoadOptions): Promise<PblNgridGlobalState> {
-  options = normalizeOptions('load', options);
-  const extApi = getExtApi(grid);
-  const id = grid.id;
-
-  return options.adapter.load(id)
-    .then( state => {
+  return Promise.resolve()
+    .then( () => {
+      options = normalizeOptions('save', options);
+      const id = resolveId(grid, options);
+      const state: PblNgridGlobalState = {} as any;
       const context = createChunkSectionContext(grid, options);
 
       for (const [chunkId, chunkConfig] of stateVisor.getRootSections()) {
-        const sectionState = chunkConfig.stateMatcher(state);
-        const chunkContext = createChunkContext(context, chunkConfig, 'deserialize');
+        const keyPredicate = stateKeyPredicateFactory(chunkId, options, true);
 
-        const defs = stateVisor.getDefinitionsForSection(chunkId);
-        for (const def of defs) {
-          for (const key of def.keys) {
-            def.deserialize(key, sectionState[key], chunkContext);
+        if (!keyPredicate || keyPredicate(chunkId)) {
+          const sectionState = chunkConfig.stateMatcher(state);
+          const chunkContext = createChunkContext(context, chunkConfig, 'serialize');
+
+          const defs = stateVisor.getDefinitionsForSection(chunkId);
+          for (const def of defs) {
+            serialize(def, sectionState, chunkContext);
           }
         }
       }
 
-      return state;
+      return options.persistenceAdapter.save(id, state);
     });
+}
+
+export function loadState(grid: PblNgridComponent, options?: PblNgridStateLoadOptions): Promise<PblNgridGlobalState> {
+  return Promise.resolve()
+    .then( () => {
+      options = normalizeOptions('load', options);
+      const id = resolveId(grid, options);
+      return options.persistenceAdapter.load(id)
+        .then( state => {
+          const context = createChunkSectionContext(grid, options);
+
+          for (const [chunkId, chunkConfig] of stateVisor.getRootSections()) {
+            const keyPredicate = stateKeyPredicateFactory(chunkId, options, true);
+
+            if (!keyPredicate || keyPredicate(chunkId)) {
+              const sectionState = chunkConfig.stateMatcher(state);
+              const chunkContext = createChunkContext(context, chunkConfig, 'deserialize');
+
+              const defs = stateVisor.getDefinitionsForSection(chunkId);
+              for (const def of defs) {
+                deserialize(def, sectionState, chunkContext);
+              }
+            }
+          }
+
+          return state;
+        });
+    });
+}
+
+function stateKeyPredicateFactory(chunkId: keyof StateChunks, options: PblNgridStateOptions, rootPredicate = false): ((key: string) => boolean) | undefined {
+  // TODO: chunkId ans options include/exclude combination does not change
+  // we need to cache it... e.g. each column def will create a new predicate if we don't cache.
+  const filter = options.include || options.exclude;
+  if (filter) {
+    // -1: Exclude, 1: Include
+    const mode: -1 | 1 = filter === options.include ? 1 : -1;
+    const chunkFilter: boolean | string[] = filter[chunkId];
+    if (typeof chunkFilter === 'boolean') {
+      return mode === 1
+        ? (key: string) => chunkFilter
+        : (key: string) => !chunkFilter
+      ;
+    } else if (Array.isArray(chunkFilter)) {
+      if (rootPredicate) {
+        // root predicate is for RootStateChunks and when set to true
+        // the key itself has no impact on the predicate. If the filter is boolean nothing changes
+        // but if it's an array, the array is ignored and considered as true ignoring the key because a key does not existing when checking the root
+        return k => true;
+      } else {
+        return mode === 1
+          ? (key: string) => chunkFilter.indexOf(key) > -1
+          : (key: string) => chunkFilter.indexOf(key) === -1
+        ;
+      }
+    } else if (mode === 1) {
+      return (key: string) => false
+    }
+  }
+}
+
+function serialize(def: PblNgridStateChunkHandlerDefinition<any>, state: any, ctx: PblNgridStateChunkContext<any>): void {
+  const keyPredicate = stateKeyPredicateFactory(def.chunkId, ctx.options);
+  for (const key of def.keys) {
+    if (!keyPredicate || keyPredicate(key as string)) {
+      state[key] = def.serialize(key, ctx);
+    }
+  }
+}
+
+function deserialize(def: PblNgridStateChunkHandlerDefinition<any>, state: any, ctx: PblNgridStateChunkContext<any>): void {
+  const keyPredicate = stateKeyPredicateFactory(def.chunkId, ctx.options);
+  for (const key of def.keys) {
+    if (key in state) {
+      if (!keyPredicate || keyPredicate(key as string)) {
+        def.deserialize(key, state[key], ctx);
+      }
+    }
+  }
 }
 
 function normalizeOptions(mode: 'save', options?: PblNgridStateOptions): PblNgridStateOptions;
@@ -101,8 +164,11 @@ function normalizeOptions(mode: 'save' | 'load', options?: PblNgridStateOptions 
     options = {} as any;
   }
 
-  if (!options.adapter) {
-    options.adapter = new PblNgridLocalStoragePersistAdapter();
+  if (!options.persistenceAdapter) {
+    options.persistenceAdapter = new PblNgridLocalStoragePersistAdapter();
+  }
+  if (!options.identResolver) {
+    options.identResolver = new PblNgridIdAttributeIdentResolver();
   }
 
   if (mode === 'load') {

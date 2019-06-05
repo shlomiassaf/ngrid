@@ -13,6 +13,7 @@
     "cacheable",
     "coeff",
     "deserialize",
+    "deserializing",
     "mdast",
     "pebula",
     "quickthrough",

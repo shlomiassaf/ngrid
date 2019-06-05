@@ -1,2 +1,3 @@
 export * from './lib/core/index';
-export { PblNgridStateModule } from './lib/ngrid-state.module';
+export * from './lib/presets';
+export { PblNgridStatePluginModule } from './lib/ngrid-state.module';

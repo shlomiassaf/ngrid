@@ -1,7 +1,7 @@
 import { PblNgridColumnDefinitionSet, PblNgridColumnSet } from './types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';
-import { PblColumnSet, PblMetaRowDefinitions } from './types';
+import { PblColumnSet, PblMetaRowDefinitions, PblMetaColumnDefinition, PblColumnGroupDefinition } from './types';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 import { resetColumnWidths } from '../utils/helpers';
@@ -16,7 +16,7 @@ export interface PblMetaColumnStore {
 }
 
 export interface PblColumnStoreMetaRow {
-  rowDef: PblMetaRowDefinitions,
+  rowDef: PblColumnSet<PblMetaColumnDefinition | PblColumnGroupDefinition>,
   keys: string[];
   isGroup?: boolean;
 }

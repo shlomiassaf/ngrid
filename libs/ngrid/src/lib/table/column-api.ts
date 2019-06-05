@@ -223,13 +223,13 @@ export class ColumnApi<T> {
    * The new location of the anchor column will be it's original location plus or minus 1, depending on the delta between
    * the columns. If the origin of the `column` is before the `anchor` then the anchor's new position is minus one, otherwise plus 1.
    */
-  moveColumn(column: PblColumn, anchor: PblColumn, skipRedraw?: true): boolean;
+  moveColumn(column: PblColumn, anchor: PblColumn, skipRedraw?: boolean): boolean;
     /**
    * Move the provided `column` to the position of the column at `renderColumnIndex`.
    * `renderColumnIndex` must be a visible column (i.e. not hidden)
    */
-  moveColumn(column: PblColumn, renderColumnIndex: number, skipRedraw?: true): boolean; // tslint:disable-line:unified-signatures
-  moveColumn(column: PblColumn, anchor: PblColumn | number, skipRedraw?: true): boolean {
+  moveColumn(column: PblColumn, renderColumnIndex: number, skipRedraw?: boolean): boolean; // tslint:disable-line:unified-signatures
+  moveColumn(column: PblColumn, anchor: PblColumn | number, skipRedraw?: boolean): boolean {
     if (anchor instanceof PblColumn) {
       const result = column === anchor ? false : this.store.moveColumn(column, anchor);
       if (result && skipRedraw !== true) {
@@ -245,7 +245,7 @@ export class ColumnApi<T> {
   /**
    * Swap positions between 2 existing columns.
    */
-  swapColumns(col1: PblColumn, col2: PblColumn, skipRedraw?: true): boolean {
+  swapColumns(col1: PblColumn, col2: PblColumn, skipRedraw?: boolean): boolean {
     const result = this.store.swapColumns(col1, col2);
     if (result && skipRedraw !== true) {
       this.afterColumnPositionChange();
