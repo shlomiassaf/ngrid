@@ -1,6 +1,6 @@
-import { PblNgridGlobalState, PersistAdapter } from '../state-model';
+import { PblNgridGlobalState, PblNgridPersistAdapter } from '../models/index';
 
-export class PblNgridLocalStoragePersistAdapter implements PersistAdapter {
+export class PblNgridLocalStoragePersistAdapter implements PblNgridPersistAdapter {
   private static globalStateKey: string = 'pebulaNgridState';
 
   save(id: string, state: PblNgridGlobalState): Promise<void> {

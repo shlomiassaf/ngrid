@@ -1,4 +1,4 @@
-import { PblNgridIdentResolver, PblNgridIdentResolverContext } from '../state-model';
+import { PblNgridIdentResolver, PblNgridIdentResolverContext } from '../models/index';
 
 export class PblNgridIdAttributeIdentResolver implements PblNgridIdentResolver {
   resolveId(ctx: PblNgridIdentResolverContext): string | undefined {

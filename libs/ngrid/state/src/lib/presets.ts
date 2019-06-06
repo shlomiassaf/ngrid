@@ -1,4 +1,4 @@
-import { StateChunkKeyFilter } from './core/state-model';
+import { StateChunkKeyFilter } from './core/models/index';
 
 export function includeDynamicUIState(): StateChunkKeyFilter {
   const x: StateChunkKeyFilter = {
@@ -7,7 +7,7 @@ export function includeDynamicUIState(): StateChunkKeyFilter {
       'showFooter',
       'showHeader',
     ],
-    visibleColumnIds: true,
+    columnOrder: true,
     columns: [ 'table' ],
     dataColumn: [
       'id',

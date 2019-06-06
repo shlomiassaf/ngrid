@@ -1,4 +1,4 @@
-import { PblNgridGlobalState, StateChunks, RootStateChunks, PblNgridStateChunkSectionContext } from './state-model';
+import { PblNgridGlobalState, StateChunks, RootStateChunks, PblNgridStateChunkSectionContext } from './models/index';
 import { PblNgridStateChunkHandlerDefinition } from './handling';
 
 export interface PblNgridStateChunkSectionConfig<T extends keyof RootStateChunks = keyof RootStateChunks> {

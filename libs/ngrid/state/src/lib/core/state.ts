@@ -7,7 +7,7 @@ import {
   PblNgridGlobalState,
   PblNgridStateOptions,
   PblNgridStateLoadOptions,
-} from './state-model';
+} from './models/index';
 import { PblNgridStateChunkHandlerDefinition } from './handling/base';
 import { stateVisor, PblNgridStateChunkSectionConfig } from './state-visor';
 import { PblNgridLocalStoragePersistAdapter } from './persistance/local-storage';

@@ -1,4 +1,4 @@
-import { StateChunks, PblNgridStateChunkContext } from '../state-model';
+import { StateChunks, PblNgridStateChunkContext } from '../models/index';
 import { stateVisor } from '../state-visor';
 
 export class PblNgridStateChunkHandlerHost<T extends keyof StateChunks, Z extends keyof StateChunks[T]['state'] = keyof StateChunks[T]['state']> {

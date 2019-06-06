@@ -4,7 +4,7 @@ export { StateVisor, stateVisor } from './state-visor';
 
 export { PblNgridLocalStoragePersistAdapter } from './persistance/index';
 
-export * from './state-model';
+export * from './models/index';
 
 export { createStateChunkHandler, PblNgridStateChunkHandlerDefinition } from './handling/index';
 

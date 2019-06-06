@@ -1,36 +1,37 @@
 import { PblColumn } from '@pebula/ngrid';
 import { createStateChunkHandler } from '../../handling';
 import { stateVisor } from '../../state-visor';
-import { PblNgridStateLoadOptions } from '../../state-model';
+import { PblNgridStateLoadOptions } from '../../models/index';
 
 stateVisor.registerRootChunkSection(
-  'visibleColumnIds',
+  'columnOrder',
   {
     sourceMatcher: ctx => ctx.grid.columnApi,
     stateMatcher: state => {
-      if (!state.visibleColumnIds) {
-        state.visibleColumnIds = [];
+      if (!state.columnOrder) {
+        state.columnOrder = [];
       }
       return state;
     }
   }
 );
 
-createStateChunkHandler('visibleColumnIds')
-  .handleKeys('visibleColumnIds')
-  .serialize( (key, ctx) => ctx.source[key].slice() )
-  .deserialize( (key, visibleColumnIds, ctx) => {
+createStateChunkHandler('columnOrder')
+  .handleKeys('columnOrder')
+  .serialize( (key, ctx) => ctx.source.visibleColumnIds.slice() )
+  .deserialize( (key, columnOrder, ctx) => {
     const { extApi, grid } = ctx;
     let lastMove: [PblColumn, PblColumn];
 
-    if (visibleColumnIds && visibleColumnIds.length === grid.columnApi.visibleColumnIds.length) {
-      for (let i = 0, len = visibleColumnIds.length; i < len; i++) {
-        if (visibleColumnIds[i] !== grid.columnApi.visibleColumnIds[i]) {
-          const column = grid.columnApi.findColumn(visibleColumnIds[i]);
+    const { visibleColumnIds } = grid.columnApi;
+    if (columnOrder && columnOrder.length === visibleColumnIds.length) {
+      for (let i = 0, len = columnOrder.length; i < len; i++) {
+        if (columnOrder[i] !== visibleColumnIds[i]) {
+          const column = grid.columnApi.findColumn(columnOrder[i]);
           if (!column) {
             return;
           }
-          const anchor = grid.columnApi.findColumn(grid.columnApi.visibleColumnIds[i]);
+          const anchor = grid.columnApi.findColumn(visibleColumnIds[i]);
           lastMove = [column, anchor];
           grid.columnApi.moveColumn(column, anchor, true);
           extApi.columnStore.updateGroups();
