@@ -251,8 +251,6 @@ export class PblNgridTargetEventsPlugin<T = any> {
           filter( result => !!result ),
         )
         .subscribe( result => {
-          result.event.source.stopPropagation();
-          result.event.source.preventDefault();
           const { cellEvent, rowEvent } = splitProcessedEvent<TEvent>(result);
           emitter.emit(cellEvent || rowEvent);
           this.syncRow(cellEvent || rowEvent);

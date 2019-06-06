@@ -25,6 +25,10 @@ export function handleFocusAndSelection(targetEvents: PblNgridTargetEventsPlugin
       filter(isCellFocusMode),
       filter(isDataCellEvent),
       filter(isMainMouseButtonClick),
+      tap( event => {
+        event.source.stopPropagation();
+        event.source.preventDefault();
+      }),
       tap(handlers.handleMouseDown), // handle mouse down focus
       switchMap( () => targetEvents.cellEnter.pipe(takeUntil(targetEvents.mouseUp)) ),
       filter(isDataCellEvent),
