@@ -438,7 +438,15 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     return index;
   }
 
-  setSort(columnOrSortAlias: PblColumn | string, sort: PblNgridSortDefinition, skipUpdate = false): void {
+  /** Clear the current sort */
+  setSort(skipUpdate?: boolean): void;
+  setSort(columnOrSortAlias: PblColumn | string, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
+  setSort(columnOrSortAlias?: PblColumn | string | boolean, sort?: PblNgridSortDefinition, skipUpdate = false): void {
+    if (!columnOrSortAlias || typeof columnOrSortAlias === 'boolean') {
+      this.ds.setSort(!!columnOrSortAlias);
+      return;
+    }
+
     let column: PblColumn;
     if (typeof columnOrSortAlias === 'string') {
       column = this._store.columns.find( c => c.sortAlias ? c.sortAlias === columnOrSortAlias : (c.sort && c.id === columnOrSortAlias) );

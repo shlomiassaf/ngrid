@@ -181,8 +181,14 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
    * @param skipUpdate When true will not update the datasource, use this when the data comes sorted and you want to sync the definitions with the current data set.
    * default to false.
    */
-  setSort(column: PblColumn, sort: PblNgridSortDefinition, skipUpdate = false): void {
-    this._sort$.next({ column, sort, skipUpdate });
+  setSort(skipUpdate?: boolean): void;
+  setSort(column: PblColumn, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
+  setSort(column?: PblColumn | boolean, sort?: PblNgridSortDefinition, skipUpdate = false): void {
+    if (!column || typeof column === 'boolean') {
+      this._sort$.next({ column: null, sort: {}, skipUpdate: !!column });
+    } else {
+      this._sort$.next({ column, sort, skipUpdate });
+    }
   }
 
   dispose(): void {

@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./column-sorting.component.md" ],
+  "codeRef": [
+    {
+      "file": "./column-sorting.component.ts",
+      "section": ["ex-1"]
+    },
+    {
+      "file": "./column-sorting.component.md",
+      "lang": "html",
+      "section": ["ex-1"]
+    }
+  ]
+}

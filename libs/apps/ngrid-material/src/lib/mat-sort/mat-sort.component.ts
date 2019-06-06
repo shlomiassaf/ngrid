@@ -1,6 +1,5 @@
 /* @pebula-example:ex-1 */
 /* @pebula-example:ex-2 */
-/* @pebula-example:ex-3 */
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 import { columnFactory, createDS, PblColumn } from '@pebula/ngrid';
@@ -51,6 +50,5 @@ export class MatSortGridExampleComponent {
     return matSort.sort.active === column.id && !!matSort.sort.direction;
   }
 }
-/* @pebula-example:ex-3 */
 /* @pebula-example:ex-1 */
 /* @pebula-example:ex-2 */

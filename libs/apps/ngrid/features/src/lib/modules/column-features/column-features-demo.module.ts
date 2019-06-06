@@ -17,6 +17,7 @@ import { ColumnWidthGridExampleComponent } from './column-width/column-width.com
 import { ColumnGroupGridExampleComponent } from './column-group/column-group.component';
 import { CellEditGridExampleComponent } from './cell-edit/cell-edit.component';
 import { ColumnReorderGridExampleComponent } from './column-reorder/column-reorder.component';
+import { ColumnSortingGridExampleComponent } from './column-sorting/column-sorting.component';
 import { ColumnResizingGridExampleComponent } from './column-resizing/column-resizing.component';
 import { SwitchingColumnDefinitionsGridExampleComponent } from './switching-column-definitions/switching-column-definitions.component';
 
@@ -34,6 +35,7 @@ const DECLARATION = [
   CellEditGridExampleComponent,
   ColumnReorderGridExampleComponent,
   ColumnResizingGridExampleComponent,
+  ColumnSortingGridExampleComponent,
   SwitchingColumnDefinitionsGridExampleComponent,
 ];
 
@@ -44,6 +46,7 @@ const ROUTES = [
   { path: 'cell-edit', component: CellEditGridExampleComponent, data: { title: 'Cell Edit' } },
   { path: 'column-reorder', component: ColumnReorderGridExampleComponent, data: { title: 'Column Reorder' } },
   { path: 'column-resizing', component: ColumnResizingGridExampleComponent, data: { title: 'Column Resizing' } },
+  { path: 'column-sorting', component: ColumnSortingGridExampleComponent, data: { title: 'Column Sorting' } },
   { path: 'switching-column-definitions', component: SwitchingColumnDefinitionsGridExampleComponent, data: { title: 'Switching Column Definitions' } },
 ];
 
