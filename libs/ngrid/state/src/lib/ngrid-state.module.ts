@@ -35,7 +35,11 @@ export class PblNgridStatePluginModule {
           .subscribe( evt => {
             if (evt.kind === 'onInit') {
               if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
-                pluginCtrl.createPlugin(PLUGIN_KEY);
+                const instance = pluginCtrl.createPlugin(PLUGIN_KEY);
+                if (targetEventsConfig.autoEnableOptions) {
+                  instance.loadOptions = targetEventsConfig.autoEnableOptions.loadOptions;
+                  instance.saveOptions = targetEventsConfig.autoEnableOptions.saveOptions;
+                }
               }
               subscription.unsubscribe();
               subscription = undefined;

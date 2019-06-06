@@ -4,9 +4,9 @@ import { createStateChunkHandler } from '../../handling';
 /* ====================================================================================================================================================== */
 
 createStateChunkHandler('dataColumn')
+  .requiredKeys('id', 'prop')
   .handleKeys(
-    'id', 'label', 'css', 'type', 'width', 'minWidth', 'maxWidth',        // PblNgridBaseColumnState (all optional)
-    'prop',                                                               // Required
+    'label', 'css', 'type', 'width', 'minWidth', 'maxWidth',              // PblNgridBaseColumnState (all optional)
     'headerType', 'footerType', 'sort', 'sortAlias', 'editable', 'pin'    // All Optional
   )
   .serialize( (key, ctx) => {
@@ -116,9 +116,9 @@ createStateChunkHandler('metaGroupRow')
 /* ====================================================================================================================================================== */
 
 createStateChunkHandler('metaColumn')
+  .requiredKeys('kind', 'rowIndex')
   .handleKeys(
     'id', 'label', 'css', 'type', 'width', 'minWidth', 'maxWidth',        // PblNgridBaseColumnState (all optional)
-    'kind', 'rowIndex',                                                   // Required
   )
   .serialize( (key, ctx) => {
     return ctx.source[key];
@@ -131,9 +131,9 @@ createStateChunkHandler('metaColumn')
 /* ====================================================================================================================================================== */
 
 createStateChunkHandler('metaGroupColumn')
+  .requiredKeys('prop', 'rowIndex', 'span')
   .handleKeys(
     'id', 'label', 'css', 'type', 'width', 'minWidth', 'maxWidth',        // PblNgridBaseColumnState (all optional)
-    'prop', 'rowIndex', 'span',                                           // Required
   )
   .serialize( (key, ctx) => {
     return ctx.source[key];
