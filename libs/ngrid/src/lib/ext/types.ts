@@ -20,6 +20,7 @@ export interface PblNgridOnInvalidateHeadersEvent {
 
 export interface PblNgridOnDestroyEvent {
   kind: 'onDestroy';
+  wait(p: Promise<void>): void;
 }
 
 export interface PblNgridOnDataSourceEvent {

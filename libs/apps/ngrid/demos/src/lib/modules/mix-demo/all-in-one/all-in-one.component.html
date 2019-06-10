@@ -1,25 +1,26 @@
 <div fxLayout="column" style="height: 100%">
   <p>This demo is using header rows of type "fixed", "row" and "sticky" together, which is not recommended. Unless you're using Chrome / FireFox, expect quirks.</p>
-  <pbl-ngrid #pblTbl
-            identityProp="id"
-            rowReorder columnReorder
-            blockUi
-            matSort vScrollFixed="48"
-            cellTooltip
-            [hideColumns]="hideColumns"
-            matCheckboxSelection="selection"
-            [transpose]="toggleTranspose"
-            [usePagination]="usePagination"
-            focusMode="row"
-            [boxSpaceModel]="boxSpaceModel"
-            [detailRow]="detailRowPredicate" [singleDetailRow]="singleDetailRow"
-            [showHeader]="showHeader"
-            [showFooter]="showFooter"
-            [dataSource]="dataSource"
-            [columns]="columns"
-            (cellClick)="$event.context && $event.context.startEdit()"
-            style="height: 100%; width: 100%;"
-            class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
+  <pbl-ngrid id="allInOne" persistState
+             #pblTbl
+             identityProp="id"
+             rowReorder columnReorder
+             blockUi
+             matSort vScrollFixed="48"
+             cellTooltip
+             [hideColumns]="hideColumns"
+             matCheckboxSelection="selection"
+             [transpose]="toggleTranspose"
+             [usePagination]="usePagination"
+             focusMode="row"
+             [boxSpaceModel]="boxSpaceModel"
+             [detailRow]="detailRowPredicate" [singleDetailRow]="singleDetailRow"
+             [showHeader]="showHeader"
+             [showFooter]="showFooter"
+             [dataSource]="dataSource"
+             [columns]="columns"
+             (cellClick)="$event.context && $event.context.startEdit()"
+             style="height: 100%; width: 100%;"
+             class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
     <pbl-demo-action-row filter label="Demo #1"></pbl-demo-action-row>
     <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS PBL-NGRID -->
     <div *pblNgridBlockUiDef class="pbl-ngrid-ui-block">

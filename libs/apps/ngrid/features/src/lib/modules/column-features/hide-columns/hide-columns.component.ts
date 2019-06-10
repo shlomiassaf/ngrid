@@ -1,6 +1,5 @@
 /* @pebula-example:ex-1 */
 /* @pebula-example:ex-2 */
-/* @pebula-example:ex-3 */
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
@@ -74,6 +73,5 @@ export class HideColumnsGridExampleComponent {
     }
   }
 }
-/* @pebula-example:ex-3 */
 /* @pebula-example:ex-2 */
 /* @pebula-example:ex-1 */

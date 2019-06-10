@@ -1,3 +1,5 @@
+import { isPblColumn, isPblMetaColumn, isPblColumnGroup } from './lib/table/index';
+
 export {
   PblNgridPaginatorKind,
   PblPaginator,
@@ -38,6 +40,7 @@ export {
   PblNgridNoDataRefDirective,
   PblColumnTypeDefinition, PblColumnTypeDefinitionDataMap,
   PblColumnDefinition,
+  PblMetaColumnDefinition,
   PblColumnGroupDefinition,
   PblColumnSet, PblMetaRowDefinitions,
   PblNgridColumnSet, PblNgridColumnDefinitionSet,
@@ -62,5 +65,11 @@ export {
 export { EXT_API_TOKEN, PblNgridExtensionApi } from './lib/ext/table-ext-api';
 export { TablePlugin, TablePluginMetadata } from './lib/ext/table-plugin';
 export { PblNgridPluginController } from './lib/ext/plugin-control';
+
+export const utils = {
+  isPblColumn,
+  isPblMetaColumn,
+  isPblColumnGroup,
+};
 
 export { PblNgridModule, provideCommon } from './lib/table.module';

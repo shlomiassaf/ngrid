@@ -327,7 +327,7 @@ export class PblColumn implements PblColumnDefinition {
       return gCurr;
     }
 
-    // STATE: The group exists in one of the columns BUT NOT in the last column (a slave split)
+    // STATE: The group exists in one of the columns BUT NOT in the LAST COLUMN (i.e: Its a slave split)
     if (groupExists) {
       // If the previous sibling group is a slave and this group is the origin of the slave, convert this group to the slave.
       if (gPrev && gCurr === gPrev.slaveOf) {
@@ -344,7 +344,10 @@ export class PblColumn implements PblColumnDefinition {
       // we want to group them together, although they are not related, because they both have identical headers (empty header).
       // Note that we still create the salve, we just don't use it.
       if (gCurr.placeholder) {
-        const groupWithPlaceholder = gPrev && gPrev.placeholder ? gPrev : gNext && gNext.placeholder ? gNext : undefined;
+        const prevPH = gPrev && gPrev.placeholder;
+        const nextPH = gNext && gNext.slaveOf && gNext.placeholder;
+        const groupWithPlaceholder = prevPH ? gPrev : nextPH ? gNext : undefined;
+        // const groupWithPlaceholder = prevPH && gPrev;
         if (groupWithPlaceholder) {
           return groupWithPlaceholder;
         }
@@ -353,12 +356,19 @@ export class PblColumn implements PblColumnDefinition {
       return g;
     }
     // STATE: The group IS a slave and it is set AFTER an item that belongs to the group it is slave of.
-    else if (gCurr.slaveOf && gCurr.slaveOf === gPrev) {
-      return gCurr.slaveOf;
+    else if (gCurr.slaveOf && gPrev) {
+      if (gCurr.slaveOf === gPrev) {
+        return gCurr.slaveOf;
+      }
+      if (gCurr.slaveOf === gPrev.slaveOf) {
+        return gPrev;
+      }
     }
     // STATE: The group IS a slave and it is set BEFORE an item that belongs to the group it is slave of.
-    else if (gCurr.slaveOf && gCurr.slaveOf === gNext) {
-      return gCurr.slaveOf;
+    else if (gCurr.slaveOf && gNext) {
+      if (gCurr.slaveOf === gNext) {
+        return gCurr.slaveOf;
+      }
     }
     return gCurr;
   }

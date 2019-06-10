@@ -1,7 +1,7 @@
 import { PblNgridColumnDefinitionSet, PblNgridColumnSet } from './types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';
-import { PblColumnSet, PblMetaRowDefinitions } from './types';
+import { PblColumnSet, PblMetaRowDefinitions, PblMetaColumnDefinition, PblColumnGroupDefinition } from './types';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 import { resetColumnWidths } from '../utils/helpers';
@@ -16,7 +16,7 @@ export interface PblMetaColumnStore {
 }
 
 export interface PblColumnStoreMetaRow {
-  rowDef: PblMetaRowDefinitions,
+  rowDef: PblColumnSet<PblMetaColumnDefinition | PblColumnGroupDefinition>,
   keys: string[];
   isGroup?: boolean;
 }
@@ -218,6 +218,7 @@ export class PblColumnStore {
     for (let tIndex = 0; tIndex < this.columns.length; tIndex++) {
       const columns = [this.columns[tIndex - 1], this.columns[tIndex], this.columns[tIndex + 1]];
       const columnGroups = columns.map( c => c ? c.getGroupOfRow(columnSet.rowIndex) : undefined );
+      // true when the group exists in one of the columns BUT NOT in the LAST COLUMN (i.e: Its a slave split)
       const groupExists = groups.lastIndexOf(columnGroups[1]) !== -1;
 
       const column = columns[1];

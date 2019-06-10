@@ -1,4 +1,5 @@
-<pbl-ngrid identityProp="id" rowReorder columnReorder
+<pbl-ngrid id="sellers"
+           identityProp="id" persistState rowReorder columnReorder
            blockUi
            matSort vScrollFixed
            cellTooltip

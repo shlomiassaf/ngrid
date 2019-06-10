@@ -4,7 +4,6 @@ import { MatMenuTrigger } from '@angular/material/menu';
 
 import { PblNgridComponent, AutoSizeToFitOptions } from '@pebula/ngrid';
 
-
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'pbl-demo-action-row',
@@ -37,25 +36,27 @@ export class DemoActionRowComponent implements AfterViewInit {
     this._showFps = coerceBooleanProperty(value);
   }
 
+  hasState = false;
+
   private _filter = false;
   private _showFps = false;
 
-  constructor(public table: PblNgridComponent<any>) { }
+  constructor(public grid: PblNgridComponent<any>) { }
 
   _refresh(): void {
     if (this.refresh.observers.length > 0) {
       this.refresh.emit();
     } else {
-      this.table.ds.refresh();
+      this.grid.ds.refresh();
     }
   }
 
   ngAfterViewInit(): void {
-    this.table.createView('beforeTable', this.actionRow);
+    this.grid.createView('beforeTable', this.actionRow);
   }
 
   actionRowFilter(filterValue: string) {
-    this.table.ds.setFilter(filterValue.trim(), this.table.columnApi.visibleColumns);
+    this.grid.ds.setFilter(filterValue.trim(), this.grid.columnApi.visibleColumns);
   }
 
   onFpsToggle(event: MouseEvent, moreMenuTrigger: MatMenuTrigger): void {
@@ -64,4 +65,5 @@ export class DemoActionRowComponent implements AfterViewInit {
     event.stopPropagation();
     moreMenuTrigger.closeMenu();
   }
+
 }

@@ -10,6 +10,7 @@ import { MatNativeDateModule } from '@angular/material';
 import { PblNgridModule, PblNgridRegistryService } from '@pebula/ngrid';
 import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 import { PblNgridDragModule } from '@pebula/ngrid/drag';
+import { PblNgridStatePluginModule } from '@pebula/ngrid/state';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
 import { HideColumnsGridExampleComponent } from './hide-columns/hide-columns.component';
@@ -59,6 +60,7 @@ const ROUTES = [
     PblNgridModule,
     PblNgridTargetEventsModule,
     PblNgridDragModule.withDefaultTemplates(),
+    PblNgridStatePluginModule,
   ],
   providers: [ PblNgridRegistryService ],
 })

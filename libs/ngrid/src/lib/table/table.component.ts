@@ -21,7 +21,7 @@ import {
   ViewContainerRef,
   EmbeddedViewRef,
   NgZone,
-  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck,
+  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck, Attribute,
 } from '@angular/core';
 
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
@@ -310,7 +310,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
               private config: PblNgridConfigService,
-              public registry: PblNgridRegistryService) {
+              public registry: PblNgridRegistryService,
+              @Attribute('id') public readonly id: string) {
     const tableConfig = config.get('table');
     this.boxSpaceModel = tableConfig.boxSpaceModel;
     this.showHeader = tableConfig.showHeader;
@@ -437,10 +438,19 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   }
 
   ngOnDestroy(): void {
-    this._plugin.emitEvent({ kind: 'onDestroy' });
-    this._plugin.destroy();
-    if (this._viewport) {
-      this._cdkTable.detachViewPort();
+    const destroy = () => {
+      this._plugin.destroy();
+      if (this._viewport) {
+        this._cdkTable.detachViewPort();
+      }
+    };
+
+    let p: Promise<void>;
+    this._plugin.emitEvent({ kind: 'onDestroy', wait: (_p: Promise<void>) => p = _p });
+    if (p) {
+      p.then(destroy).catch(destroy);
+    } else {
+      destroy();
     }
   }
 

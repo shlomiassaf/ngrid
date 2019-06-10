@@ -10,11 +10,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { PblNgridModule, PblNgridRegistryService } from '@pebula/ngrid';
 import { PblNgridDragModule } from '@pebula/ngrid/drag';
 import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
+import { PblNgridStatePluginModule } from '@pebula/ngrid/state';
 import { PblNgridTransposeModule } from '@pebula/ngrid/transpose';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridDetailRowModule } from '@pebula/ngrid/detail-row';
@@ -26,6 +28,7 @@ import { BlockUiGridExampleComponent } from './block-ui';
 import { TransposeGridExampleComponent } from './transpose/transpose.component';
 import { DetailRowExampleComponent } from './detail-row/detail-row.component';
 import { TargetEventsGridExampleComponent } from './target-events/target-events.component';
+import { StatePersistenceGridExampleComponent } from './state-persistence/state-persistence.component'
 
 const MATERIAL = [
   MatProgressSpinnerModule,
@@ -37,6 +40,7 @@ const MATERIAL = [
   MatRadioModule,
   MatFormFieldModule,
   MatSlideToggleModule,
+  MatSliderModule,
   MatButtonToggleModule,
 ];
 
@@ -45,10 +49,12 @@ const DECLARATION = [
   TransposeGridExampleComponent,
   DetailRowExampleComponent,
   TargetEventsGridExampleComponent,
+  StatePersistenceGridExampleComponent,
 ];
 
 const ROUTES = [
   { path: 'target-events', component: TargetEventsGridExampleComponent, data: { title: 'Target Events' } },
+  { path: 'state-persistence', component: StatePersistenceGridExampleComponent, data: { title: 'State Persistence' } },
   { path: 'block-ui', component: BlockUiGridExampleComponent, data: { title: 'Block UI' } },
   { path: 'transpose', component: TransposeGridExampleComponent, data: { title: 'Transpose' } },
   { path: 'detail-row', component: DetailRowExampleComponent, data: { title: 'Detail Row' } },
@@ -62,6 +68,7 @@ const ROUTES = [
     MATERIAL, MatRippleModule,
     PblNgridModule,
     PblNgridDragModule,
+    PblNgridStatePluginModule,
     PblNgridTargetEventsModule,
     PblNgridBlockUiModule,
     PblNgridTransposeModule,

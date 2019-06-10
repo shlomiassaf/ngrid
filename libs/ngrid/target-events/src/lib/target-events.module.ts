@@ -12,29 +12,29 @@ import { PblNgridCellEditDirective } from './target-events/cell-edit.directive';
   exports: [ PblNgridTargetEventsPluginDirective, PblNgridCellEditDirective  ]
 })
 export class PblNgridTargetEventsModule {
-    constructor(@Optional() @SkipSelf() parentModule: PblNgridTargetEventsModule,
-                configService: PblNgridConfigService) {
+  constructor(@Optional() @SkipSelf() parentModule: PblNgridTargetEventsModule,
+              configService: PblNgridConfigService) {
 
-    if (parentModule) {
-      return;
-    }
+  if (parentModule) {
+    return;
+  }
 
-    PblNgridPluginController.created
-      .subscribe( event => {
-        const targetEventsConfig = configService.get(PLUGIN_KEY);
-        if (targetEventsConfig && targetEventsConfig.autoEnable === true) {
-          const pluginCtrl = event.controller;
-          let subscription = pluginCtrl.events
-            .subscribe( evt => {
-              if (evt.kind === 'onInit') {
-                if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
-                  pluginCtrl.createPlugin(PLUGIN_KEY);
-                }
-                subscription.unsubscribe();
-                subscription = undefined;
+  PblNgridPluginController.created
+    .subscribe( event => {
+      const targetEventsConfig = configService.get(PLUGIN_KEY);
+      if (targetEventsConfig && targetEventsConfig.autoEnable === true) {
+        const pluginCtrl = event.controller;
+        let subscription = pluginCtrl.events
+          .subscribe( evt => {
+            if (evt.kind === 'onInit') {
+              if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
+                pluginCtrl.createPlugin(PLUGIN_KEY);
               }
-            });
-        }
-      });
+              subscription.unsubscribe();
+              subscription = undefined;
+            }
+          });
+      }
+    });
   }
 }

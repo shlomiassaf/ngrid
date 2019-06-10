@@ -10,7 +10,7 @@ module.exports = function(config) {
     ...baseConfig,
     coverageIstanbulReporter: {
       ...baseConfig.coverageIstanbulReporter,
-      dir: join(__dirname, '../../../coverage/libs/table/block-ui')
+      dir: join(__dirname, '../../../coverage/libs/ngrid/block-ui')
     }
   });
 };
