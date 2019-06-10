@@ -134,6 +134,15 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   _showFooter: boolean;
 
   /**
+   * When true, the filler is disabled.
+   */
+  @Input() get noFiller(): boolean { return this._noFiller; };
+  set noFiller(value: boolean) {
+    this._noFiller = coerceBooleanProperty(value);
+  }
+  _noFiller: boolean;
+
+  /**
    * Set's the behavior of the table when tabbing.
    * The default behavior is none (rows and cells are not focusable)
    *
@@ -306,6 +315,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this.boxSpaceModel = tableConfig.boxSpaceModel;
     this.showHeader = tableConfig.showHeader;
     this.showFooter = tableConfig.showFooter;
+    this.noFiller = tableConfig.noFiller;
 
     this.initExtApi();
     this.columnApi = new ColumnApi<T>(this, this._store, this._extApi);

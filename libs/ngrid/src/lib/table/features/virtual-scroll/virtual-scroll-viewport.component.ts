@@ -256,10 +256,14 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   private updateFiller(): void {
     this.measureRenderedContentSize();
-    this.pblFillerHeight = this.getViewportSize() >= this.ngeRenderedContentSize ?
-      `calc(100% - ${this.ngeRenderedContentSize}px)`
-      : undefined
-    ;
+    if (this.table.noFiller) {
+      this.pblFillerHeight = undefined;
+    } else {
+      this.pblFillerHeight = this.getViewportSize() >= this.ngeRenderedContentSize ?
+        `calc(100% - ${this.ngeRenderedContentSize}px)`
+        : undefined
+      ;
+    }
   }
 
   onSourceLengthChange(prev: number, curr: number): void {

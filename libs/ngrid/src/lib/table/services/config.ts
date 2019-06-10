@@ -6,6 +6,7 @@ export interface PblNgridConfig {
   table?: {
     showHeader?: boolean;
     showFooter?: boolean;
+    noFiller?: boolean;
     boxSpaceModel?: 'padding' | 'margin';
   }
 }
@@ -13,6 +14,7 @@ export interface PblNgridConfig {
 const DEFAULT_TABLE_CONFIG: PblNgridConfig['table'] = {
   showHeader: true,
   showFooter: false,
+  noFiller: false,
   boxSpaceModel: 'padding',
 };
 
