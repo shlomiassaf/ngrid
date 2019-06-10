@@ -9,7 +9,7 @@ import { UnRx } from '@pebula/utils';
 
 import { PblColumn } from '../table/columns';
 import { PblNgridPaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPaginator } from '../paginator';
-import { DataSourceFilter, DataSourceFilterToken, PblNgridSortDefinition, PblNgridDataSourceSortChange } from './types';
+import { DataSourcePredicate, DataSourceFilter, DataSourceFilterToken, PblNgridSortDefinition, PblNgridDataSourceSortChange } from './types';
 import { createFilter } from './filtering';
 import { PblDataSourceAdapter } from './data-source-adapter';
 import { PblDataSourceTriggerCache, PblDataSourceTriggerChangedEvent } from './data-source-adapter.types';
@@ -167,11 +167,40 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
     }
   }
 
-  setFilter(value: DataSourceFilterToken, columns: PblColumn[]): void {
-    if (!columns || columns.length === 0) {
-      throw new Error('Invalid filter definitions, columns are mandatory.');
+  /**
+   * Clear the filter definition for the current data set.
+   */
+  setFilter(): void;
+  /**
+   * Set the filter definition for the current data set using a function predicate
+   */
+  setFilter(value: DataSourcePredicate, columns?: PblColumn[]): void;
+  /**
+   * Set the filter definition for the current data set using a value to compare with and a list of columns.
+   */
+  setFilter(value: any, columns: PblColumn[]): void;
+  setFilter(value?: DataSourceFilterToken, columns?: PblColumn[]): void {
+    if (value && typeof value !== 'function' && (!columns || columns.length === 0)) {
+      throw new Error('Invalid filter definitions, columns are mandatory when using a single value input.');
     }
-    this._filter$.next(createFilter(value, columns));
+    this._filter$.next(createFilter(value, columns || []));
+  }
+
+  /**
+   * Refresh the filters result.
+   *
+   * Note that this should only be used when using a predicate function filter and not the simple value filter.
+   * In general the filter is refreshed every time it is set and each time the data is updated so manually refreshing a value filter
+   * has no impact.
+   *
+   * For custom predicate function filters this might be useful.
+   *
+   */
+  syncFilter(): void {
+    const currentFilter = this._adapter.clearCache('filter');
+    if (currentFilter) {
+      this.setFilter(currentFilter.filter, currentFilter.columns);
+    }
   }
 
   /**

@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./multi-column-filter.component.md" ],
+  "codeRef": [
+    {
+      "file": "./multi-column-filter.component.ts",
+      "section": ["ex-1"]
+    },
+    {
+      "file": "./multi-column-filter.component.md",
+      "lang": "html",
+      "section": ["ex-1"]
+    }
+  ]
+}

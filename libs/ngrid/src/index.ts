@@ -15,6 +15,7 @@ export {
   PblDataSource, PblDataSourceOptions,
   PblNgridSortInstructions, PblNgridSortDefinition, PblNgridSorter, applySort,
   PblDataSourceFactory, createDS, DataSourceOf,
+  DataSourceFilterToken,
 } from './lib/data-source/index';
 
 export {

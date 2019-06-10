@@ -32,7 +32,7 @@ import { UnRx } from '@pebula/utils';
 import { EXT_API_TOKEN, PblNgridExtensionApi } from '../ext/table-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
 import { PblNgridPaginatorKind } from '../paginator';
-import { PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS } from '../data-source/index';
+import { DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
 import { findCellDef } from './directives/cell-def';

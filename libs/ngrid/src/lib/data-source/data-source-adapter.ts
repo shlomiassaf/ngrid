@@ -96,6 +96,20 @@ export class PblDataSourceAdapter<T = any, TData = any> {
     this._refresh$.next({ data });
   }
 
+  /**
+   * Clears the cache from any existing datasource trigger such as filter, sort etc.
+   * @returns The cached value or null if not there.
+   */
+  clearCache<P extends keyof PblDataSourceTriggerCache>(cacheKey: P): PblDataSourceTriggerCache<TData>[P] | null {
+    if (cacheKey in this.cache) {
+      const prev = this.cache[cacheKey];
+      this.cache[cacheKey] = DEFAULT_INITIAL_CACHE_STATE[cacheKey];
+      return prev;
+    } else {
+      return null;
+    }
+  }
+
   setPaginator(paginator: PblPaginator<any> | undefined): void {
     this.paginator = paginator;
   }
