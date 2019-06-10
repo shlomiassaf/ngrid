@@ -31,8 +31,3 @@
   <!--@pebula-example:ex-2-->
 </docsi-mat-example-with-source>
 
-<docsi-mat-example-with-source title="Hide Columns" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@pebula-example:ex-3-->
-  3
-  <!--@pebula-example:ex-3-->
-</docsi-mat-example-with-source>

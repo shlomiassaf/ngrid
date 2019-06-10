@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./state-persistence.component.md" ],
+  "codeRef": [
+    {
+      "file": "./state-persistence.component.ts",
+      "section": ["ex-1"]
+    },
+    {
+      "file": "./state-persistence.component.md",
+      "lang": "html",
+      "section": ["ex-1"]
+    }
+  ]
+}

@@ -1,4 +1,5 @@
-import { filter, take, skip, debounceTime } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { map, mapTo, filter, take, skip, debounceTime } from 'rxjs/operators';
 import { Directive, OnDestroy, Injector, Input } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
@@ -31,6 +32,12 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
+interface InternalStatePluginEvents {
+  phase: 'load' | 'save';
+  position: 'before' | 'after';
+  error?: Error;
+}
+
 export const PLUGIN_KEY: 'state' = 'state';
 
 @TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
@@ -40,10 +47,19 @@ export class PblNgridStatePlugin {
   loadOptions?: PblNgridStateLoadOptions;
   saveOptions?: PblNgridStateSaveOptions;
 
+  afterLoadState: Observable<void>;
+  afterSaveState: Observable<void>;
+  onError: Observable<{ phase: 'save' | 'load'; error: Error; }>;
+
   private _removePlugin: (table: PblNgridComponent<any>) => void;
+  private _events = new Subject<InternalStatePluginEvents>();
 
   constructor(public grid: PblNgridComponent<any>, protected injector: Injector, protected pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
+
+    this.afterLoadState = this._events.pipe(filter( e => e.phase === 'load' && e.position === 'after'), mapTo(undefined) );
+    this.afterSaveState = this._events.pipe(filter( e => e.phase === 'save' && e.position === 'after'), mapTo(undefined) );
+    this.onError = this._events.pipe(filter( e => !!e.error ), map( e => ({ phase: e.phase, error: e.error })) );
 
     pluginCtrl.events
       .pipe(
@@ -55,7 +71,7 @@ export class PblNgridStatePlugin {
         hasState(grid, initialLoadOptions)
           .then( value => {
             if (value) {
-              return loadState(grid, initialLoadOptions);
+              return this._load(initialLoadOptions);
             }
           })
           .then( () => {
@@ -73,6 +89,7 @@ export class PblNgridStatePlugin {
       .subscribe( event => {
         if (event.kind === 'onDestroy') {
           event.wait(this.save());
+          this._events.complete();
         }
       });
   }
@@ -83,20 +100,30 @@ export class PblNgridStatePlugin {
   }
 
   load(): Promise<void> {
-    return loadState(this.grid, this.loadOptions).then( () => {} );
+    return this._load(this.loadOptions);
   }
 
   save(): Promise<void> {
-    return saveState(this.grid, this.saveOptions);
+    return saveState(this.grid, this.saveOptions)
+      .then( () => this._events.next({phase: 'save', position: 'after'}) )
+      .catch( error => this._events.next({phase: 'save', position: 'after', error }) );
   }
 
   destroy(): void {
     this._removePlugin(this.grid);
   }
+
+  private _load(loadOptions: PblNgridStateLoadOptions): Promise<void> {
+    return loadState(this.grid, loadOptions)
+      .then( () => this._events.next({phase: 'load', position: 'after'}) )
+      .catch( error => this._events.next({phase: 'load', position: 'after', error }) );
+  }
+
 }
 
 @Directive({
   selector: 'pbl-ngrid[persistState]', // tslint:disable-line:directive-selector
+  outputs: ['afterLoadState', 'afterSaveState', 'onError'],
 })
 @UnRx()
 export class PblNgridStatePluginDirective extends PblNgridStatePlugin implements OnDestroy {

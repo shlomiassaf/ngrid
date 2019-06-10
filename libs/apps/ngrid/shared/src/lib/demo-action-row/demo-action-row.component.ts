@@ -3,7 +3,6 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatMenuTrigger } from '@angular/material/menu';
 
 import { PblNgridComponent, AutoSizeToFitOptions } from '@pebula/ngrid';
-import { hasState, saveState, loadState } from '@pebula/ngrid/state';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -54,7 +53,6 @@ export class DemoActionRowComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.grid.createView('beforeTable', this.actionRow);
-    hasState(this.grid).then( hasState => this.hasState = hasState );
   }
 
   actionRowFilter(filterValue: string) {
@@ -68,12 +66,4 @@ export class DemoActionRowComponent implements AfterViewInit {
     moreMenuTrigger.closeMenu();
   }
 
-  saveState(): void {
-    saveState(this.grid);
-    this.hasState = true;
-  }
-
-  restoreState(): void {
-    loadState(this.grid);
-  }
 }

@@ -1,5 +1,5 @@
 import { PblNgridComponent } from '@pebula/ngrid';
-import { PblNgridGlobalState, PblNgridStateOptions, PblNgridStateLoadOptions } from './models/index';
+import { PblNgridGlobalState, PblNgridStateOptions, PblNgridStateSaveOptions, PblNgridStateLoadOptions } from './models/index';
 import { stateVisor } from './state-visor';
 import * as U from './utils';
 
@@ -12,7 +12,7 @@ export function hasState(grid: PblNgridComponent, options?: PblNgridStateOptions
     });
 }
 
-export function saveState(grid: PblNgridComponent, options?: PblNgridStateOptions): Promise<void> {
+export function saveState(grid: PblNgridComponent, options?: PblNgridStateSaveOptions): Promise<void> {
   return Promise.resolve()
     .then( () => {
       options = U.normalizeOptions('save', options);
