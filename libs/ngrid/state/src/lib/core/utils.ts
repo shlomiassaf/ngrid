@@ -1,4 +1,4 @@
-import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblNgridExtensionApi } from '@pebula/ngrid';
 import {
   RootStateChunks,
   StateChunks,
@@ -70,7 +70,7 @@ export function normalizeOptions(mode: 'save' | 'load', options?: PblNgridStateO
   return options;
 }
 
-export function getExtApi(grid: PblNgridComponent) {
+export function getExtApi(grid: PblNgridComponent): PblNgridExtensionApi {
   const controller = PblNgridPluginController.find(grid);
   if (controller) {
     return controller.extApi;
