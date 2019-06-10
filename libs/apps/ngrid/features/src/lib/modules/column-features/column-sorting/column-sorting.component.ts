@@ -1,6 +1,6 @@
 /* @pebula-example:ex-1 */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { createDS, columnFactory, PblColumn, PblNgridSortInstructions } from '@pebula/ngrid';
+import { createDS, columnFactory, PblNgridSortOrder } from '@pebula/ngrid';
 import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
 
 const COLUMNS = columnFactory()
@@ -29,9 +29,30 @@ export class ColumnSortingGridExampleComponent {
     this.ds.setSort();
   }
 
-  toggleActive(columnId: string, state: boolean): void {
-    this.ds.hostGrid.setSort(columnId, { order: state ? 'asc' : undefined });
+  toggleActive(columnId: string): void {
+    const currentSort = this.ds.sort;
+    let order: PblNgridSortOrder = 'asc';
+    if (currentSort && currentSort.column && currentSort.column.id === columnId) {
+      order = currentSort.sort && currentSort.sort.order as any;
+      if (order === 'asc') {
+        order = 'desc';
+      } else if (order === 'desc') {
+        this.clear();
+        return;
+      } else {
+        order = 'asc';
+      }
+    }
+    this.ds.hostGrid.setSort(columnId, { order });
   }
 
+  getNextDirection(key: string): string {
+    const sort = this.ds.sort;
+    if (!sort.column || sort.column.id !== key) {
+      return 'asc';
+    } else {
+      return sort.sort.order === 'asc' ? 'desc' : 'clear';
+    }
+  }
 }
 /* @pebula-example:ex-1 */

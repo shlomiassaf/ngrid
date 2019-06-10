@@ -43,11 +43,12 @@ In the datasource we define the current sorted column, the direction of the sort
   <!--@pebula-example:ex-1-->
   <pbl-ngrid blockUi [dataSource]="ds" [columns]="columns"></pbl-ngrid>
 
-  <button (click)="toggleActive('id', 'asc')">id</button>
-  <button (click)="toggleActive('name', 'asc')">name</button>
-  <button (click)="toggleActive('gender', 'asc')">gender</button>
-  <button (click)="toggleActive('birthdate', 'asc')">birthdate</button>
-  <button (click)="clear()">Clear</button>
+  <div fxLayout="row" fxLayoutGap="16px" style="padding: 8px">
+    <button *ngFor="let key of ['id', 'name', 'gender', 'birthdate']"
+            fxFlex="noshrink" mat-stroked-button color="primary" (click)="toggleActive(key)">{{ key }} [{{ getNextDirection(key) }}]</button>
+    <div fxFlex="*"></div>
+    <button fxFlex="noshrink" mat-stroked-button color="accent" (click)="clear()">Clear</button>
+  </div>
   <!--@pebula-example:ex-1-->
 </docsi-mat-example-with-source>
 

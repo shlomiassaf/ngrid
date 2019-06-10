@@ -13,7 +13,7 @@ export {
   PblDataSourceTriggerChangedEvent,
   PblDataSourceAdapter,
   PblDataSource, PblDataSourceOptions,
-  PblNgridSortInstructions, PblNgridSortDefinition, PblNgridSorter, applySort,
+  PblNgridSortInstructions, PblNgridSortDefinition, PblNgridSorter, applySort, PblNgridSortOrder,
   PblDataSourceFactory, createDS, DataSourceOf,
   DataSourceFilterToken,
 } from './lib/data-source/index';

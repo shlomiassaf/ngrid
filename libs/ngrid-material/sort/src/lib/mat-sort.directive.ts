@@ -1,5 +1,5 @@
 import { Directive, OnDestroy } from '@angular/core';
-import { Sort, MatSort, MatSortHeader } from '@angular/material/sort';
+import { Sort, MatSort, MatSortHeader, SortDirection } from '@angular/material/sort';
 
 import { UnRx } from '@pebula/utils';
 import { PblNgridComponent, PblNgridPluginController, TablePlugin, PblNgridSortDefinition } from '@pebula/ngrid';
@@ -54,6 +54,18 @@ export class PblNgridMatSortDirective implements OnDestroy {
                   origin = 'ds';
                   this.sort.active = undefined;
                   sortable.start = _sort.order || 'asc';
+                  sortable._handleClick();
+                }
+              } else if (this.sort.active) { // clear mode (hit from code, not click).
+                const sortable: MatSortHeader = this.sort.sortables.get(this.sort.active) as any;
+                if (sortable ) {
+                  if (!sortable.disableClear) {
+                    let nextSortDir: SortDirection;
+                    while (nextSortDir = this.sort.getNextSortDirection(sortable)) {
+                      this.sort.direction = nextSortDir;
+                    }
+                  }
+                  origin = 'ds';
                   sortable._handleClick();
                 }
               }
