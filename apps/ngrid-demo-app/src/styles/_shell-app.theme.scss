@@ -25,7 +25,7 @@ $pbl-shell-accent:  mat-palette($mat-light-green);
     foreground: map-merge($mat-light-theme-foreground, $pbl-default-light-theme-foreground)
   ));
 
-  @return $pbl-shell-theme;
+  @return pbl-light-theme($pbl-shell-theme);
 }
 
 @function pbl-default-dark-theme() {
@@ -45,10 +45,11 @@ $pbl-shell-accent:  mat-palette($mat-light-green);
     foreground: map-merge($mat-dark-theme-foreground, $pbl-default-dark-theme-foreground)
   ));
 
-  @return $pbl-shell-theme;
+  @return pbl-dark-theme($pbl-shell-theme);
+
 }
 
-@function pbl-typography-config() {
+@function shell-typography-config() {
   @return mat-typography-config(
     $display-3:     mat-typography-level(56px, 56px, 300),
     $display-2:     mat-typography-level(45px, 48px, 300),

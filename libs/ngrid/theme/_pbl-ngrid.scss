@@ -1,12 +1,19 @@
-@import './_pbl-cdk-table.component-theme';
+@import './_pbl-cdk-table';
 @import './plugins/drag.plugin';
 
-@mixin pbl-ngrid-theme($tableTheme) {
-  @include pbl-cdk-table-theme($tableTheme);
+@mixin pbl-ngrid-theme($theme) {
+  @include _pbl-cdk-table-theme($theme);
+  @include pbl-ngrid-spacing($theme);
 
-  $border-color: map-get($tableTheme, border-color);
-  $space-fill-background: map-get($tableTheme, space-fill-background);
-  $cell-focus-color: map-get($tableTheme, cell-focus-color);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $space-fill-background: map-get($background, grid-space-fill-color);
+  $border-color: map-get($foreground, ngrid-border-color);
+  $cell-focus-color: map-get($foreground, ngrid-cell-focus-color);
 
   .pbl-ngrid-scroll-container {
     .pbl-ngrid-space-fill {
@@ -52,10 +59,11 @@
     }
   }
 
-  @include pbl-ngrid-drag-plugin-theme($tableTheme);
+  @include pbl-ngrid-drag-plugin-theme($theme);
 }
 
-@mixin pbl-ngrid-spacing($spacingTheme) {
+@mixin pbl-ngrid-spacing($theme) {
+  $spacingTheme: map-get($theme, spacing);
 
   $header-row-height: map-get($spacingTheme, header-row-height);
   $row-height: map-get($spacingTheme, row-height);
@@ -152,6 +160,19 @@
 
 }
 
-@mixin pbl-ngrid-typography($config) {
-  @include pbl-cdk-table-typography($config);
+@mixin pbl-ngrid-typography($config: null) {
+  @if $config == null {
+    $config: pbl-typography-config();
+  }
+
+  @include _pbl-cdk-table-typography($config);
+
+  .pbl-ngrid-header-cell {
+    font-size: pbl-font-size($config, caption);
+    font-weight: pbl-font-weight($config, body-2);
+  }
+
+  .pbl-ngrid-cell, .pbl-ngrid-footer-cell {
+    font-size: pbl-font-size($config, body-1);
+  }
 }

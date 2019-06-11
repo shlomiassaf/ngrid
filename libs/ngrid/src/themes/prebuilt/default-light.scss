@@ -1,0 +1,9 @@
+@import '../../../theming';
+
+$pbl-ngrid-theme: pbl-light-theme($pbl-blue);
+
+// Include all theme styles for the components.
+@include pbl-ngrid-typography();
+
+// Include the default theme styles.
+@include pbl-ngrid-theme($pbl-ngrid-theme);
