@@ -59,10 +59,13 @@ function checkGroupLockConstraint(this: PblColumn, column: PblColumn): boolean {
   return true;
 }
 
-PblColumn.extendProperty('reorder');
-PblColumn.extendProperty('wontBudge');
-PblColumn.prototype.checkGroupLockConstraint = function (this: PblColumn, column: PblColumn): boolean {
-  return checkGroupLockConstraint.call(this, column) && checkGroupLockConstraint.call(column, this);
-}
+// We trick the tree-shaker with an IIFE so it will not remove the function call expression
+PblColumn.prototype.checkGroupLockConstraint =  (function() {
+  PblColumn.extendProperty('reorder');
+  PblColumn.extendProperty('wontBudge');
+  PblColumnGroup.extendProperty('lockColumns');
 
-PblColumnGroup.extendProperty('lockColumns');
+  return function (this: PblColumn, column: PblColumn): boolean {
+    return checkGroupLockConstraint.call(this, column) && checkGroupLockConstraint.call(column, this);
+  };
+})();

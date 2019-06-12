@@ -5,7 +5,12 @@ import { UnRx } from '@pebula/utils';
 import { PblColumn, PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 import { PblNgridTargetEventsPlugin } from './target-events-plugin';
 
-PblColumn.extendProperty('editable');
+// We trick the tree-shaker with an IIFE so it will not remove the function call expression
+PblColumn.prototype.updateWidth = (function() {
+  PblColumn.extendProperty('editable');
+  return PblColumn.prototype.updateWidth;
+})();
+
 
 @Directive({
   // tslint:disable-next-line:directive-selector
