@@ -31,8 +31,8 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
 
   _draggables: QueryList<CdkDrag>;
 
-  private originalElement: ElementRef<HTMLElement>;
-  private _draggablesSet = new Set<CdkDrag>();
+  /* private */ originalElement: ElementRef<HTMLElement>;
+  /* private */ _draggablesSet = new Set<CdkDrag>();
 
   ngOnInit(): void {
     if (this.pblDropListRef instanceof PblDropListRef === false) {
@@ -56,7 +56,7 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
     return result;
   }
 
-  protected beforeStarted(): void {
+  /* protected */ beforeStarted(): void {
     // This is a workaround for https://github.com/angular/material2/pull/14153
     // Working around the missing capability for selecting a container element that is not the drop container host.
     if (!this.originalElement) {
@@ -112,8 +112,8 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
     }
   }
 
-  private _rootClass: string;
-  private _hostNotRoot = false;
+  /* private */ _rootClass: string;
+  /* private */ _hostNotRoot = false;
 
   ngOnInit(): void {
     if (this.pblDragRef instanceof PblDragRef === false) {
@@ -149,14 +149,14 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
       }
     });
 
-    super.ngAfterViewInit();
+    /* super.ngAfterViewInit(); */
   }
 
   ngOnDestroy(): void {
     if (this.cdkDropList) {
       this.cdkDropList.removeDrag(this);
     }
-    super.ngOnDestroy();
+    /* super.ngOnDestroy(); */
   }
 }
 
