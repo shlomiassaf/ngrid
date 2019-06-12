@@ -8,8 +8,6 @@
 
 - API reference document
 
-- Add pre-built (compiled) css theme file to the release
-
 - `@pebula/ngrid-material`
   - Complete cell **view** templates to all types
   - Add cell **edit** templates to all types
