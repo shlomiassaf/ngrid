@@ -14,6 +14,7 @@ const ROUTES = [
   { path: '', loadChildren: './modules/layout-concepts/layout-concepts.module#LayoutConceptsModule' },
   { path: '', loadChildren: './modules/datasource-concepts/datasource-concepts.module#DatasourceConceptsModule' },
   { path: '', loadChildren: './modules/column-concepts/column-concepts.module#ColumnConceptsModule' },
+  { path: '', loadChildren: './modules/theming-concepts/theming-concepts.module#ThemingConceptsModule' },
 ];
 
 
@@ -32,11 +33,13 @@ export class ConceptsModule {
     registry.registerGroup({ id: 'layout', title: 'Layout' });
     registry.registerGroup({ id: 'datasource', title: 'Data Source' });
     registry.registerGroup({ id: 'columns', title: 'Columns' });
+    registry.registerGroup({ id: 'theming', title: 'Theming' });
   }
 }
 
 declare module '@pebula/apps/ngrid/shared/src/lib/example-group/example-group-registry.service' {
   interface ExampleGroupMap {
+    theming: ExampleGroupMetadata;
     layout: ExampleGroupMetadata;
     columns: ExampleGroupMetadata;
     datasource: ExampleGroupMetadata;
