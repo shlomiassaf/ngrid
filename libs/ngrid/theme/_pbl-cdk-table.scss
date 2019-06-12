@@ -1,0 +1,62 @@
+// BASED ON:
+// https://github.com/angular/material2/blob/edbbc1bd7299df96a2f9c4200c3832d433f9cf5c/src/lib/table/_table-theme.scss
+
+// Because `@pebula/ngrid` depends on the `@angular/cdk` and because all SCSS theme tools are in `@angular/material` we
+// must hard-copy some of them so that `@pebula/ngrid` does not require `@angular/material`
+@import './_material-theme-tools/typography';
+@import './_material-theme-tools/theming';
+@import './utils';
+
+@mixin _pbl-cdk-table-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $row-background: map-get($background, ngrid-row-color);
+  $border-color: map-get($foreground, ngrid-border-color);
+  $header-cell-color: map-get($foreground, ngrid-header-cell-color);
+  $cell-color: map-get($foreground, ngrid-cell-color);
+  $footer-cell-color: map-get($foreground, ngrid-footer-cell-color);
+
+  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+    position: relative;
+  }
+
+  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row,
+  .pbl-ngrid-header-cell, .pbl-ngrid-cell, .pbl-ngrid-footer-cell {
+    border-color: $border-color;
+  }
+
+  // border of "padding" cell box model (not .pbl-ngrid-margin-cell-box-model)
+  .pbl-ngrid-header-cell.pbl-header-group-cell:before {
+    border-color: $border-color;
+  }
+
+  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+    background: $row-background;
+  }
+
+  .pbl-ngrid-header-cell {
+    color: $header-cell-color;
+  }
+
+  .pbl-ngrid-cell {
+    color: $cell-color;
+  }
+
+  .pbl-ngrid-footer-cell {
+    color: $footer-cell-color;
+  }
+}
+
+@mixin _pbl-cdk-table-typography($config: null) {
+  @if $config == null {
+    $config: pbl-typography-config();
+  }
+
+  .pbl-cdk-table {
+    font-family: pbl-font-family($config);
+  }
+}

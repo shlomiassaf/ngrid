@@ -1,0 +1,142 @@
+@import './palette';
+
+
+// For a given hue in a palette, return the contrast color from the map of contrast palettes.
+// @param $color-map
+// @param $hue
+@function pbl-contrast($palette, $hue) {
+  @return map-get(map-get($palette, contrast), $hue);
+}
+
+
+// Creates a map of hues to colors for a theme. This is used to define a theme palette in terms
+// of the Material Design hues.
+// @param $color-map
+// @param $primary
+// @param $lighter
+@function pbl-palette($base-palette, $default: 500, $lighter: 100, $darker: 700, $text: $default) {
+  $result: map_merge($base-palette, (
+    default: map-get($base-palette, $default),
+    lighter: map-get($base-palette, $lighter),
+    darker: map-get($base-palette, $darker),
+    text: map-get($base-palette, $text),
+
+    default-contrast: pbl-contrast($base-palette, $default),
+    lighter-contrast: pbl-contrast($base-palette, $lighter),
+    darker-contrast: pbl-contrast($base-palette, $darker)
+  ));
+
+  // For each hue in the palette, add a "-contrast" color to the map.
+  @each $hue, $color in $base-palette {
+    $result: map_merge($result, (
+      '#{$hue}-contrast': pbl-contrast($base-palette, $hue)
+    ));
+  }
+
+  @return $result;
+}
+
+
+// Gets a color from a theme palette (the output of pbl-palette).
+// The hue can be one of the standard values (500, A400, etc.), one of the three pre-configured
+// hues (default, lighter, darker), or any of the aforementioned prefixed with "-contrast".
+//
+// @param $color-map The theme palette (output of pbl-palette).
+// @param $hue The hue from the palette to use. If this is a value between 0 and 1, it will
+//     be treated as opacity.
+// @param $opacity The alpha channel value for the color.
+@function pbl-color($palette, $hue: default, $opacity: null) {
+  // If hueKey is a number between zero and one, then it actually contains an
+  // opacity value, so recall this function with the default hue and that given opacity.
+  @if type-of($hue) == number and $hue >= 0 and $hue <= 1 {
+    @return pbl-color($palette, default, $hue);
+  }
+
+  $color: map-get($palette, $hue);
+
+  @if (type-of($color) != color) {
+    // If the $color resolved to something different from a color (e.g. a CSS variable),
+    // we can't apply the opacity anyway so we return the value as is, otherwise Sass can
+    // throw an error or output something invalid.
+    @return $color;
+  }
+
+  @return rgba($color, if($opacity == null, opacity($color), $opacity));
+}
+
+
+// Creates a container object for a light theme to be given to individual component theme mixins.
+@function pbl-light-theme($primaryOrTheme, $accent: pbl-palette($pbl-blue), $warn: pbl-palette($pbl-blue)) {
+  $primary: null;
+
+  @if map-has-key($primaryOrTheme, primary) {
+    $primary: map-get($primaryOrTheme, primary);
+    $accent: map-get($primaryOrTheme, accent);
+    $warn: map-get($primaryOrTheme, warn);
+  } @else {
+    $primary: $primaryOrTheme;
+  }
+
+  $pbl-updated-theme-background: (
+  );
+
+  $pbl-updated-theme-foreground: (
+    ngrid-cell-focus-color: pbl-color($primary)
+  );
+
+  $foreground: map-merge($pbl-light-theme-foreground, $pbl-updated-theme-foreground);
+  $background: map-merge($pbl-light-theme-background, $pbl-updated-theme-background);
+
+  @if map-has-key($primaryOrTheme, primary) {
+    $foreground: map-merge($foreground, map-get($primaryOrTheme, foreground));
+    $background: map-merge($background, map-get($primaryOrTheme, background));
+  }
+
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: false,
+    foreground: $foreground,
+    background: $background,
+    spacing: $pbl-spacing-theme-default,
+  );
+}
+
+// Creates a container object for a dark theme to be given to individual component theme mixins.
+@function pbl-dark-theme($primaryOrTheme, $accent: pbl-palette($pbl-blue), $warn: pbl-palette($pbl-blue)) {
+  $primary: null;
+
+  @if map-has-key($primaryOrTheme, primary) {
+    $primary: map-get($primaryOrTheme, primary);
+    $accent: map-get($primaryOrTheme, accent);
+    $warn: map-get($primaryOrTheme, warn);
+  } @else {
+    $primary: $primaryOrTheme;
+  }
+
+  $pbl-updated-theme-background: (
+  );
+
+  $pbl-updated-theme-foreground: (
+    ngrid-cell-focus-color: pbl-color($primary)
+  );
+
+  $foreground: map-merge($pbl-dark-theme-foreground, $pbl-updated-theme-foreground);
+  $background: map-merge($pbl-dark-theme-background, $pbl-updated-theme-background);
+
+  @if map-has-key($primaryOrTheme, primary) {
+    $foreground: map-merge($foreground, map-get($primaryOrTheme, foreground));
+    $background: map-merge($background, map-get($primaryOrTheme, background));
+  }
+
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: true,
+    foreground: $foreground,
+    background: $background,
+    spacing: $pbl-spacing-theme-default,
+  );
+}

@@ -164,16 +164,24 @@
                       "glob": "README.Md",
                       "input": ".",
                       "output": "dist/@pebula/ngrid"
-                    },
+                    }
+                  ]
+                },
+                "sassBundle": {
+                  "entries": [
                     {
                       "glob": "_theming.scss",
                       "input": "libs/ngrid",
                       "output": "dist/@pebula/ngrid"
-                    },
+                    }
+                  ]
+                },
+                "sassCompile": {
+                  "entries": [
                     {
-                      "glob": "**/*.scss",
-                      "input": "libs/ngrid/theme",
-                      "output": "dist/@pebula/ngrid/theme"
+                      "glob": "*.scss",
+                      "input": "libs/ngrid/src/themes/prebuilt",
+                      "output": "dist/@pebula/ngrid/themes"
                     }
                   ]
                 }
@@ -233,16 +241,15 @@
                       "glob": "README.md",
                       "input": ".",
                       "output": "dist/@pebula/ngrid-material"
-                    },
+                    }
+                  ]
+                },
+                "sassCompile": {
+                  "entries": [
                     {
-                      "glob": "_theming.scss",
-                      "input": "libs/ngrid-material",
-                      "output": "dist/@pebula/ngrid-material"
-                    },
-                    {
-                      "glob": "**/*.scss",
-                      "input": "libs/ngrid-material/theme",
-                      "output": "dist/@pebula/ngrid-material/theme"
+                      "glob": "*.scss",
+                      "input": "libs/ngrid-material/src/themes/prebuilt",
+                      "output": "dist/@pebula/ngrid-material/themes"
                     }
                   ]
                 }

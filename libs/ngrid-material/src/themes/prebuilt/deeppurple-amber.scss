@@ -1,0 +1,15 @@
+@import '~@angular/material/theming';
+@import '../../../../ngrid/theming';
+
+// Define a theme.
+$primary: mat-palette($mat-deep-purple);
+$accent:  mat-palette($mat-amber, A200, A100, A400);
+
+$theme: mat-light-theme($primary, $accent);
+$pbl-ngrid-theme: pbl-light-theme($theme);
+
+// Include all theme styles for the components.
+@include pbl-ngrid-typography();
+
+// Include the default theme styles.
+@include pbl-ngrid-theme($pbl-ngrid-theme);
