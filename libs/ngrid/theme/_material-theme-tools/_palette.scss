@@ -76,14 +76,14 @@ $pbl-grey: (
 );
 
 $pbl-light-theme-background: (
-  ngrid-space-fill-color: map_get($mat-grey, 50),
+  ngrid-space-fill-color: map_get($pbl-grey, 50),
   ngrid-row-color: white,
 );
 
 // Background palette for dark themes.
 $pbl-dark-theme-background: (
   ngrid-space-fill-color: #303030,
-  ngrid-row-color: map_get($mat-grey, 800),
+  ngrid-row-color: map_get($pbl-grey, 800),
 );
 
 // Foreground palette for light themes.

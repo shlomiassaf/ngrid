@@ -81,7 +81,7 @@
   );
 
   $pbl-updated-theme-foreground: (
-    ngrid-cell-focus-color: mat-color($primary)
+    ngrid-cell-focus-color: pbl-color($primary)
   );
 
   $foreground: map-merge($pbl-light-theme-foreground, $pbl-updated-theme-foreground);
@@ -119,7 +119,7 @@
   );
 
   $pbl-updated-theme-foreground: (
-    ngrid-cell-focus-color: mat-color($primary)
+    ngrid-cell-focus-color: pbl-color($primary)
   );
 
   $foreground: map-merge($pbl-dark-theme-foreground, $pbl-updated-theme-foreground);
