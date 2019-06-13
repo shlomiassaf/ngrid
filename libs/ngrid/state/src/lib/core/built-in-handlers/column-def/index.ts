@@ -3,7 +3,7 @@ import { createStateChunkHandler } from '../../handling';
 import { stateVisor } from '../../state-visor';
 import { StateChunks, PblNgridStateChunkContext } from '../../models/index';
 import { PblNgridMetaRowSetState, PblNgridMetaColumnState, PblNgridGroupColumnState, PblNgridColumnDefinitionSetState } from './model';
-
+import { registerColumnDefChildHandlers } from './children';
 
 function runChildChunksForRowMetaColumns<TCol, TChild extends keyof StateChunks>(childChunkId: TChild, ctx: PblNgridStateChunkContext<"columns">, columns: TCol[]) {
   const stateColumns = [];
@@ -55,97 +55,99 @@ function runChildChunksForRowDataColumns(mode: 's' | 'd', state: PblNgridColumnD
   }
 }
 
-stateVisor.registerRootChunkSection(
-  'columns',
-  {
-    sourceMatcher: ctx => ctx.grid.columns,
-    stateMatcher: state => state.columns || (state.columns = {
-      table: {
-        cols: [],
-      },
-      header: [],
-      footer: [],
-      headerGroup: [],
-    })
-  }
-);
-
-createStateChunkHandler('columns')
-  .handleKeys('table', 'header', 'headerGroup', 'footer')
-  .serialize( (key, ctx) => {
-    switch (key) {
-      case 'table':
-        const state: PblNgridColumnDefinitionSetState['table'] = { cols: [] };
-        runChildChunkForDataMetaRows('s', state, ctx);
-        runChildChunksForRowDataColumns('s', state, ctx);
-        return state;
-      case 'header':
-      case 'footer':
-        const source = ctx.source[key];
-        if (source && source.length > 0) {
-          const rows = [];
-          for (const row of source) {
-            const active = ctx.extApi.columnStore.metaColumnIds[key].find( r => !r.isGroup && r.rowDef.rowIndex === row.rowIndex );
-            const r: PblNgridMetaRowSetState<PblNgridMetaColumnState> = {} as any;
-            ctx.runChildChunk('metaRow', r, row);
-            r.cols = runChildChunksForRowMetaColumns('metaColumn', ctx, row.cols);
-            rows.push(r);
-          }
-          return rows;
-        }
-        break;
-      case 'headerGroup':
-        const headerGroupSource = ctx.source.headerGroup;
-        if (headerGroupSource && headerGroupSource.length > 0) {
-          const rows = [];
-          for (const row of headerGroupSource) {
-            const active = ctx.extApi.columnStore.metaColumnIds.header.find( r => !r.isGroup && r.rowDef.rowIndex === row.rowIndex );
-            const r: PblNgridMetaRowSetState<PblNgridGroupColumnState> = {} as any;
-            ctx.runChildChunk('metaGroupRow', r, row);
-            r.cols = runChildChunksForRowMetaColumns('metaColumn', ctx, row.cols);
-            rows.push(r);
-          }
-          return rows;
-        }
-        break;
+export function registerColumnDefHandlers() {
+  stateVisor.registerRootChunkSection(
+    'columns',
+    {
+      sourceMatcher: ctx => ctx.grid.columns,
+      stateMatcher: state => state.columns || (state.columns = {
+        table: {
+          cols: [],
+        },
+        header: [],
+        footer: [],
+        headerGroup: [],
+      })
     }
-  })
-  .deserialize( (key, stateValue, ctx) => {
-    switch (key) {
-      case 'table':
-        const state = stateValue as PblNgridColumnDefinitionSetState['table'];
-        runChildChunkForDataMetaRows('d', state, ctx);
-        runChildChunksForRowDataColumns('d', state, ctx);
-        break;
-      case 'header':
-      case 'footer':
-        const source = ctx.source[key];
-        const metaRowsState = stateValue as PblNgridColumnDefinitionSetState['header'];
-        if (metaRowsState && metaRowsState.length > 0) {
-          for (const rowState of metaRowsState) {
-            const row = source.find( r => r.rowIndex === rowState.rowIndex );
-            if (row) {
-              const active = ctx.extApi.columnStore.metaColumnIds[key].find( r => !r.isGroup && r.rowDef.rowIndex === rowState.rowIndex );
-              ctx.runChildChunk('metaRow', rowState, row);
-              for (const colState of rowState.cols) {
-                const col = row.cols.find( r => r.id === colState.id);
-                if (col) {
-                  const activeColStore = ctx.extApi.columnStore.find(colState.id);
-                  const activeCol = activeColStore && activeColStore.header;
-                  ctx.runChildChunk('metaColumn', colState, col);
+  );
+
+  createStateChunkHandler('columns')
+    .handleKeys('table', 'header', 'headerGroup', 'footer')
+    .serialize( (key, ctx) => {
+      switch (key) {
+        case 'table':
+          const state: PblNgridColumnDefinitionSetState['table'] = { cols: [] };
+          runChildChunkForDataMetaRows('s', state, ctx);
+          runChildChunksForRowDataColumns('s', state, ctx);
+          return state;
+        case 'header':
+        case 'footer':
+          const source = ctx.source[key];
+          if (source && source.length > 0) {
+            const rows = [];
+            for (const row of source) {
+              const active = ctx.extApi.columnStore.metaColumnIds[key].find( r => !r.isGroup && r.rowDef.rowIndex === row.rowIndex );
+              const r: PblNgridMetaRowSetState<PblNgridMetaColumnState> = {} as any;
+              ctx.runChildChunk('metaRow', r, row);
+              r.cols = runChildChunksForRowMetaColumns('metaColumn', ctx, row.cols);
+              rows.push(r);
+            }
+            return rows;
+          }
+          break;
+        case 'headerGroup':
+          const headerGroupSource = ctx.source.headerGroup;
+          if (headerGroupSource && headerGroupSource.length > 0) {
+            const rows = [];
+            for (const row of headerGroupSource) {
+              const active = ctx.extApi.columnStore.metaColumnIds.header.find( r => !r.isGroup && r.rowDef.rowIndex === row.rowIndex );
+              const r: PblNgridMetaRowSetState<PblNgridGroupColumnState> = {} as any;
+              ctx.runChildChunk('metaGroupRow', r, row);
+              r.cols = runChildChunksForRowMetaColumns('metaColumn', ctx, row.cols);
+              rows.push(r);
+            }
+            return rows;
+          }
+          break;
+      }
+    })
+    .deserialize( (key, stateValue, ctx) => {
+      switch (key) {
+        case 'table':
+          const state = stateValue as PblNgridColumnDefinitionSetState['table'];
+          runChildChunkForDataMetaRows('d', state, ctx);
+          runChildChunksForRowDataColumns('d', state, ctx);
+          break;
+        case 'header':
+        case 'footer':
+          const source = ctx.source[key];
+          const metaRowsState = stateValue as PblNgridColumnDefinitionSetState['header'];
+          if (metaRowsState && metaRowsState.length > 0) {
+            for (const rowState of metaRowsState) {
+              const row = source.find( r => r.rowIndex === rowState.rowIndex );
+              if (row) {
+                const active = ctx.extApi.columnStore.metaColumnIds[key].find( r => !r.isGroup && r.rowDef.rowIndex === rowState.rowIndex );
+                ctx.runChildChunk('metaRow', rowState, row);
+                for (const colState of rowState.cols) {
+                  const col = row.cols.find( r => r.id === colState.id);
+                  if (col) {
+                    const activeColStore = ctx.extApi.columnStore.find(colState.id);
+                    const activeCol = activeColStore && activeColStore.header;
+                    ctx.runChildChunk('metaColumn', colState, col);
+                  }
                 }
               }
             }
           }
-        }
-        break;
-      case 'headerGroup':
-        break;
-    }
-  })
-  .register();
+          break;
+        case 'headerGroup':
+          break;
+      }
+    })
+    .register();
 
-import './children';
+    registerColumnDefChildHandlers();
+}
 
 export {
   PblNgridMetaColumnState,

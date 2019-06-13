@@ -1,10 +1,12 @@
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, from } from 'rxjs';
 import { map, mapTo, filter, take, skip, debounceTime } from 'rxjs/operators';
 import { Directive, OnDestroy, Injector, Input } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
 import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/ngrid';
 import { hasState, saveState, loadState, PblNgridStateLoadOptions, PblNgridStateSaveOptions } from './core/index';
+import { registerBuiltInHandlers } from './core/built-in-handlers/_register';
+
 import { userSessionPref } from './presets';
 
 declare module '@pebula/ngrid/lib/table/services/config' {
@@ -40,7 +42,7 @@ interface InternalStatePluginEvents {
 
 export const PLUGIN_KEY: 'state' = 'state';
 
-@TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
+@TablePlugin({ id: PLUGIN_KEY, factory: 'create', runOnce: registerBuiltInHandlers })
 @UnRx()
 export class PblNgridStatePlugin {
 

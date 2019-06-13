@@ -10,18 +10,20 @@ export interface PblNgridSurfaceState extends
     never
   > { }
 
-stateVisor.registerRootChunkSection(
-  'grid',
-  {
-    sourceMatcher: ctx => ctx.grid,
-    stateMatcher: state => state.grid || (state.grid = {} as any)
-  }
-);
+export function registerGridHandlers() {
+  stateVisor.registerRootChunkSection(
+    'grid',
+    {
+      sourceMatcher: ctx => ctx.grid,
+      stateMatcher: state => state.grid || (state.grid = {} as any)
+    }
+  );
 
-createStateChunkHandler('grid')
-  .handleKeys('showHeader', 'showFooter', 'focusMode', 'identityProp', 'usePagination', 'hideColumns', 'fallbackMinHeight')
-  .serialize( (key, ctx) => ctx.source[key] )
-  .deserialize( (key, stateValue, ctx) => {
-    ctx.source[key] = stateValue
-  })
-  .register();
+  createStateChunkHandler('grid')
+    .handleKeys('showHeader', 'showFooter', 'focusMode', 'identityProp', 'usePagination', 'hideColumns', 'fallbackMinHeight')
+    .serialize( (key, ctx) => ctx.source[key] )
+    .deserialize( (key, stateValue, ctx) => {
+      ctx.source[key] = stateValue
+    })
+    .register();
+}

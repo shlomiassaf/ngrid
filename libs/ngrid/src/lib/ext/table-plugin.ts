@@ -9,9 +9,13 @@ export interface TablePluginMetadata<P extends keyof PblNgridPluginExtension = k
     ? PblNgridPluginExtensionFactories[P]
     : never
   ;
+  runOnce?: () => void;
 }
 
 export function TablePlugin(metadata: TablePluginMetadata) {
+  if (metadata.runOnce) {
+    metadata.runOnce();
+  }
   return target => {
     PLUGIN_STORE.set(metadata.id, { ...metadata, target });
   }

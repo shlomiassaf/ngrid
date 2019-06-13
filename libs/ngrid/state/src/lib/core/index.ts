@@ -1,5 +1,3 @@
-import './built-in-handlers/index';
-
 export { StateVisor, stateVisor } from './state-visor';
 
 export { PblNgridLocalStoragePersistAdapter } from './persistance/index';

@@ -13,13 +13,8 @@ import { PblNgridGlobalState, StateChunkItem } from '../models/index';
 import * as C from './column-def/index';
 import { PblNgridSurfaceState } from './grid-primitives/index';
 
-import './grid-primitives/index';
 export * from './grid-primitives/index';
-
-import './column-def/index';
 export * from './column-def/index';
-
-import './column-order/index';
 export * from './column-order/index';
 
 export interface PblNgridBuiltInGlobalState {
