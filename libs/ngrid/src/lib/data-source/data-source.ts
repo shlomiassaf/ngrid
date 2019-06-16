@@ -12,7 +12,7 @@ import { PblNgridPaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPagina
 import { DataSourcePredicate, DataSourceFilter, DataSourceFilterToken, PblNgridSortDefinition, PblNgridDataSourceSortChange } from './types';
 import { createFilter } from './filtering';
 import { PblDataSourceAdapter } from './data-source-adapter';
-import { PblDataSourceTriggerCache, PblDataSourceTriggerChangedEvent } from './data-source-adapter.types';
+import { PblDataSourceTriggerCache, PblDataSourceTriggerChangedEvent, PblDataSourceAdapterProcessedResult } from './data-source-adapter.types';
 
 export type DataSourceOf<T> = T[] | Promise<T[]> | Observable<T[]>;
 
@@ -56,11 +56,43 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
   }
 
   /**
-   * Notification stream for source changes.
+   * An observable that emit events when an new incoming source is expected, before calling the trigger handler to get the new source.
+   * This even is usually followed by the `onSourceChanged` event but not always. This is because the trigger handler
+   * can cancel the operation (when it returns false) which means an `onSourceChanged` event will not fire.
+   *
+   * Emissions occur when the trigger handler is invoked and also when the trigger handler returned an observable and the observable emits.
+   *
+   * > Note that a micro-task delays is applied between the `onSourceChanging` subsequent `onSourceChanged` event (when emitted).
+   */
+  readonly onSourceChanging: Observable<void>;
+  /**
+   * An observable that emit events when a new source has been received from the trigger handler but before any processing is applied.
+   * Emissions occur when the trigger handler is invoked and also when the trigger handler returned an observable and the observable emits.
+   *
+   * Examples: Calling `refresh()`, filter / sort / pagination events.
+   *
+   * > Note that the `onSourceChanged` fired before the data is rendered ane before any client-side filter/sort/pagination are applied.
+   * It only indicates that the source data-set is now updated and the grid is about to apply logic on the data-set and then render it.
    */
   readonly onSourceChanged: Observable<void>;
-  get onSourceChanging(): Observable<void> { return this._adapter.onSourceChanging; }
+  /**
+   * An observable that emit events when new source has been received from the trigger handler and after it was processed.
+   * Emissions will occur after `onSourceChanged` event has been fired.
+   *
+   * The main difference between `onSourceChanged` and `onRenderDataChanging` is local processing performed in the datasource.
+   * These are usually client-side operations like filter/sort/pagination. If all of these events are handled manually (custom)
+   * in the trigger handler then `onSourceChanged` and `onRenderDataChanging` have no difference.
+   *
+   * > Note that `onRenderDataChanging` and `onRenderedDataChanged` are not closely related as `onRenderedDataChanged` fires at
+   * a much more rapid pace (virtual scroll). The name `onRenderDataChanging` might change in the future.
+   */
   readonly onRenderDataChanging: Observable<{ event: PblDataSourceTriggerChangedEvent<TData>, data: T[] }>;
+  /**
+   * An observable that emit events when the grid is about to render data.
+   * The rendered data is updated when the source changed or when the grid is in virtual scroll mode and the user is scrolling.
+   *
+   * Each emission reflects a change in the data that the grid is rendering.
+   */
   readonly onRenderedDataChanged: Observable<void>;
   readonly onError: Observable<Error>;
   /**
@@ -92,28 +124,39 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
     }
   }
 
-  get sort(): PblNgridDataSourceSortChange { return this._sort$.value; }
-
+  // TODO(1.0.0): remove
+  /** @deprecated BREAKING CHANGE: removed in 1.0.0 - Use renderedData instead. */
+  get renderedRows(): T[] { return this._renderData$.value || []; }
   /** Returns the starting index of the rendered data */
   get renderStart(): number { return this._lastRange ? this._lastRange.start : 0; }
-
-  get renderedData(): T[] { return this._renderData$.value; }
+  get renderLength(): number { return this._renderData$.value.length; }
+  get renderedData(): T[] { return this._renderData$.value || []; }
+  /**
+   * The `source` with sorting applied.
+   * Valid only when sorting is performed client-side.
+   *
+   * To get real-time notifications use `onRenderDataChanging`.
+   * The sorted data is updated just before `onRenderDataChanging` fire.
+   */
+  get sortedData(): T[] { return (this._lastAdapterEvent && this._lastAdapterEvent.sorted) || []; };
+  /**
+   * The `source` with filtering applied.
+   * Valid only when filtering is performed client-side.
+   * If sorting is applied as well, the filtered results are also sorted.
+   *
+   * To get real-time notifications use `onRenderDataChanging`.
+   * The filtered data is updated just before `onRenderDataChanging` fire.
+   */
+  get filteredData(): T[] { return (this._lastAdapterEvent && this._lastAdapterEvent.filtered) || []; };
 
   get filter(): DataSourceFilter { return this._filter$.value; }
-
-  get length(): number { return this.source.length; }
-
-  get renderLength(): number { return this._renderData$.value.length; }
-
-  get source(): T[] { return this._source || []; }
-
+  get sort(): PblNgridDataSourceSortChange { return this._sort$.value; }
   get paginator(): PblPaginator<any> { return this._paginator; }
 
-  get renderedRows(): T[] { return this._renderData$.value || []; }
+  get length(): number { return this.source.length; }
+  get source(): T[] { return this._source || []; }
 
-  /**
-   * Represents selected items on the data source.
-   */
+  /** Represents selected items on the data source. */
   get selection(): SelectionModel<T> { return this._selection; }
 
   protected readonly _selection = new SelectionModel<T>(true, []);
@@ -133,6 +176,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
   private _tableConnected: boolean;
   private _lastRefresh: TData;
   private _lastRange: ListRange;
+  private _lastAdapterEvent: PblDataSourceAdapterProcessedResult<T, TData>;
 
   constructor(adapter: PblDataSourceAdapter<T, TData>, options?: PblDataSourceOptions) {
     super();
@@ -140,10 +184,11 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
 
     this.adapter = adapter;
 
+    this.onSourceChanging = this._adapter.onSourceChanging;
     // emit source changed event every time adapter gets new data
     this.onSourceChanged = this.adapter.onSourceChanged
     .pipe(
-      observeOn(asapScheduler, 0), // emit on the end of the current turn (microtask) to ensure `onSourceChanged` emission in `_updateProcessingLogic` run's first.
+      observeOn(asapScheduler, 0), // emit on the end of the current turn (micro-task) to ensure `onSourceChanged` emission in `_updateProcessingLogic` run's first.
       mapTo(undefined)
     );
     this.onRenderDataChanging = this._onRenderDataChanging.asObservable();
@@ -172,11 +217,18 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
    */
   setFilter(): void;
   /**
-   * Set the filter definition for the current data set using a function predicate
+   * Set the filter definition for the current data set using a function predicate.
+   *
+   * > Note that when using a custom predicate function all logic is passed to the predicate and the datasource / grid does not handle the filtering process.
+   * This means that any column specific filter, set in the column definitions is ignored, if you want to take these filters into consideration
+   * use the column instance provided to identify and use these filters (the `filter` property in `PblColumn`).
    */
   setFilter(value: DataSourcePredicate, columns?: PblColumn[]): void;
   /**
-   * Set the filter definition for the current data set using a value to compare with and a list of columns.
+   * Set the filter definition for the current data set using a value to compare with and a list of columns with the values to compare to.
+   *
+   * When a column instance has a specific predicate set (`PblColumn.filter`) then it will be used, otherwise
+   * the `genericColumnPredicate` will be used.
    */
   setFilter(value: any, columns: PblColumn[]): void;
   setFilter(value?: DataSourceFilterToken, columns?: PblColumn[]): void {
@@ -204,13 +256,18 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
   }
 
   /**
+   * Clear the current sort definitions.
+   * @param skipUpdate When true will not update the datasource, use this when the data comes sorted and you want to sync the definitions with the current data set.
+   * default to false.
+   */
+  setSort(skipUpdate?: boolean): void;
+  /**
    * Set the sorting definition for the current data set.
    * @param column
    * @param sort
    * @param skipUpdate When true will not update the datasource, use this when the data comes sorted and you want to sync the definitions with the current data set.
    * default to false.
    */
-  setSort(skipUpdate?: boolean): void;
   setSort(column: PblColumn, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
   setSort(column?: PblColumn | boolean, sort?: PblNgridSortDefinition, skipUpdate = false): void {
     if (!column || typeof column === 'boolean') {
@@ -312,7 +369,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
         tap( result => {
           lastEmittedSource = result.data;
           skipViewChange = true;
-          this._onRenderDataChanging.next(result);
+          this._onRenderDataChanging.next(this._lastAdapterEvent = result);
         })
       )
       .subscribe(

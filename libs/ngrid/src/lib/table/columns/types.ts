@@ -1,8 +1,4 @@
-import { TemplateRef } from '@angular/core';
-import { RowContext } from '@angular/cdk/table';
-
-import { PblNgridComponent } from '../table.component';
-import { PblNgridSorter } from '../../data-source/types';
+import { DataSourceColumnPredicate, PblNgridSorter } from '../../data-source/types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
@@ -155,6 +151,14 @@ export interface PblColumnDefinition extends PblBaseColumnDefinition {
   sort?: boolean | PblNgridSorter;
 
   /**
+   * A custom predicate function to filter rows using the current column.
+   *
+   * Valid only when filtering by value.
+   * See `PblDataSource.setFilter` for more information.
+   */
+  filter?: DataSourceColumnPredicate;
+
+  /**
    * Indicates if the table is editable or not.
    * Note that an editable also requires an edit template to qualify as editable, this flag alone is not enough.
    */
@@ -162,12 +166,16 @@ export interface PblColumnDefinition extends PblBaseColumnDefinition {
 
   pin?: 'start' | 'end';
 
-  /**
-   * An alias used to identify the sort column.
-   * Useful when the server provides sort metadata that does not have a 1:1 match with the column names.
-   * e.g. Deep path props
-   */
+  // TODO(1.0.0): remove
+  /** @deprecated BREAKING CHANGE 1.0.0 - Use `alias` instead. */
   sortAlias?: string;
+
+  /**
+   * An alias used to identify the column.
+   * Useful when the server provides sort/filter metadata that does not have a 1:1 match with the column names.
+   * e.g. Deep path props, property name convention mismatch, etc...
+   */
+  alias?: string;
 
   /**
    * Optional transformer that control the value output from the combination of a column and a row.

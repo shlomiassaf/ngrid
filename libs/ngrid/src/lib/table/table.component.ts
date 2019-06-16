@@ -32,7 +32,7 @@ import { UnRx } from '@pebula/utils';
 import { EXT_API_TOKEN, PblNgridExtensionApi } from '../ext/table-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
 import { PblNgridPaginatorKind } from '../paginator';
-import { DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS } from '../data-source/index';
+import { DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
 import { findCellDef } from './directives/cell-def';
@@ -458,8 +458,24 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     return index;
   }
 
-  /** Clear the current sort */
+  /**
+   * Clear the current sort definitions.
+   * This method is a proxy to `PblDataSource.setSort`, For more information see `PblDataSource.setSort`
+   *
+   * @param skipUpdate When true will not update the datasource, use this when the data comes sorted and you want to sync the definitions with the current data set.
+   * default to false.
+   */
   setSort(skipUpdate?: boolean): void;
+  /**
+   * Set the sorting definition for the current data set.
+   *
+   * This method is a proxy to `PblDataSource.setSort` with the added sugar of providing column by string that match the `id` or `sortAlias` properties.
+   * For more information see `PblDataSource.setSort`
+   *
+   * @param columnOrSortAlias A column instance or a string matching `PblColumn.sortAlias` or `PblColumn.id`.
+   * @param skipUpdate When true will not update the datasource, use this when the data comes sorted and you want to sync the definitions with the current data set.
+   * default to false.
+   */
   setSort(columnOrSortAlias: PblColumn | string, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
   setSort(columnOrSortAlias?: PblColumn | string | boolean, sort?: PblNgridSortDefinition, skipUpdate = false): void {
     if (!columnOrSortAlias || typeof columnOrSortAlias === 'boolean') {
@@ -469,15 +485,57 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
     let column: PblColumn;
     if (typeof columnOrSortAlias === 'string') {
-      column = this._store.columns.find( c => c.sortAlias ? c.sortAlias === columnOrSortAlias : (c.sort && c.id === columnOrSortAlias) );
+      column = this._store.columns.find( c => c.alias ? c.alias === columnOrSortAlias : (c.sort && c.id === columnOrSortAlias) );
       if (!column && isDevMode()) {
-        console.warn(`Could not find column with sort alias "${columnOrSortAlias}`);
+        console.warn(`Could not find column with alias "${columnOrSortAlias}".`);
         return;
       }
     } else {
       column = columnOrSortAlias;
     }
     this.ds.setSort(column, sort, skipUpdate);
+  }
+
+  /**
+   * Clear the filter definition for the current data set.
+   *
+   * This method is a proxy to `PblDataSource.setFilter`, For more information see `PblDataSource.setFilter`.
+   */
+  setFilter(): void;
+  /**
+   * Set the filter definition for the current data set using a function predicate.
+   *
+  * This method is a proxy to `PblDataSource.setFilter` with the added sugar of providing column by string that match the `id` property.
+   * For more information see `PblDataSource.setFilter`
+   */
+  setFilter(value: DataSourcePredicate, columns?: PblColumn[] | string[]): void;
+  /**
+   * Set the filter definition for the current data set using a value to compare with and a list of columns with the values to compare to.
+   *
+   * This method is a proxy to `PblDataSource.setFilter` with the added sugar of providing column by string that match the `id` property.
+   * For more information see `PblDataSource.setFilter`
+   */
+  setFilter(value: any, columns: PblColumn[] | string[]): void;
+  setFilter(value?: DataSourceFilterToken, columns?: PblColumn[] | string[]): void {
+    if (arguments.length > 0) {
+      let columnInstances: PblColumn[];
+      if (Array.isArray(columns) && typeof columns[0] === 'string') {
+        columnInstances = [];
+        for (const colId of columns) {
+          const column = this._store.columns.find( c => c.alias ? c.alias === colId : (c.id === colId) );
+          if (!column && isDevMode()) {
+            console.warn(`Could not find column with alias ${colId} "${colId}".`);
+            return;
+          }
+          columnInstances.push(column);
+        }
+      } else {
+        columnInstances = columns as any;
+      }
+      this.ds.setFilter(value, columnInstances);
+    } else {
+      this.ds.setFilter();
+    }
   }
 
   setDataSource(value: PblDataSource<T>): void {

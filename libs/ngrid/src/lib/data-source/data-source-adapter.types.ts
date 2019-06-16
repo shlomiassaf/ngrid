@@ -69,3 +69,10 @@ export interface PblDataSourceTriggerChangedEvent<T = any> {
 export type TriggerChangedEventResponse<T = any, TDate = any> = { event: PblDataSourceTriggerChangedEvent<TDate>; data: T[] };
 
 export type TriggerChangedEventFor<P extends keyof PblDataSourceTriggerCache> = P extends keyof PblDataSourceTriggerChangedEvent ? PblDataSourceTriggerChangedEvent[P] :  PblDataSourceTriggerChange<PblDataSourceTriggerCache[P]>;
+
+export interface PblDataSourceAdapterProcessedResult<T = any, TData = any>  {
+  event: PblDataSourceTriggerChangedEvent<TData>;
+  data: T[];
+  sorted?: T[];
+  filtered?: T[];
+}

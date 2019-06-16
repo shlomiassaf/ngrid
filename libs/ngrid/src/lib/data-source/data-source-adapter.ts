@@ -14,6 +14,7 @@ import {
   PblDataSourceTriggerCache,
   PblDataSourceTriggerChangedEvent,
   TriggerChangedEventFor,
+  PblDataSourceAdapterProcessedResult,
 } from './data-source-adapter.types';
 
 import { createChangeContainer, fromRefreshDataWrapper, EMPTY } from './data-source-adapter.helpers';
@@ -38,6 +39,7 @@ export class PblDataSourceAdapter<T = any, TData = any> {
   private _refresh$: Subject<RefreshDataWrapper<TData>>;
   private _lastSource: T[];
   private _lastSortedSource: T[];
+  private _lastFilteredSource: T[];
 
   /**
    * A Data Source adapter contains flow logic for the datasource and subsequent emissions of datasource instances.
@@ -117,7 +119,7 @@ export class PblDataSourceAdapter<T = any, TData = any> {
   updateProcessingLogic(filter$: Observable<DataSourceFilter>,
                         sort$: Observable<PblNgridDataSourceSortChange & { skipUpdate: boolean }>,
                         pagination$: Observable<PblPaginatorChangeEvent>,
-                        initialState: Partial<PblDataSourceTriggerCache<TData>> = {}): Observable<{ event: PblDataSourceTriggerChangedEvent<TData>, data: T[] }> {
+                        initialState: Partial<PblDataSourceTriggerCache<TData>> = {}): Observable<PblDataSourceAdapterProcessedResult<T, TData>> {
     let updates = -1;
     const changedFilter = e => updates === -1 || e.changed;
     const skipUpdate = (o: PblNgridDataSourceSortChange & { skipUpdate: boolean }) => o.skipUpdate !== true;
@@ -144,7 +146,7 @@ export class PblDataSourceAdapter<T = any, TData = any> {
       .pipe(
         // Defer to next loop cycle, until no more incoming.
         // We use an async schedular here (instead of asapSchedular) because we want to have the largest debounce window without compromising integrity
-        // With an async schedular we know we will run after all microtasks but before "real" async operations.
+        // With an async schedular we know we will run after all micro-tasks but before "real" async operations.
         debounceTime(0),
         switchMap( ([filter, sort, pagination, data ]) => {
           updates++; // if first, will be 0 now (starts from -1).
@@ -198,6 +200,18 @@ export class PblDataSourceAdapter<T = any, TData = any> {
               // When user is NOT sorting (we sort locally) AND the data has changed we need to apply sorting on it
               // this might already be true (if sorting was the trigger)...
               withChanges.sort = true;
+
+              // because we sort and then filter, filtering updates are also triggered by sort updated
+              withChanges.filter = true;
+            }
+
+            if (config.filter) {
+              // When the user is filtering (i.e. server filtering), the last filter cached is always the last source we get from the user.
+              this._lastFilteredSource = this._lastSource;
+            } else {
+              // When user is NOT filtering (we filter locally) AND the data has changed we need to apply filtering on it
+              // this might already be true (if filtering was the trigger)...
+              withChanges.filter = true;
             }
           }
 
@@ -206,7 +220,7 @@ export class PblDataSourceAdapter<T = any, TData = any> {
             withChanges.pagination = true;
           }
 
-          // Now, apply sort, filter, pagination -> ORDER MATTERS!
+          // Now, apply: sort --> filter --> pagination     ( ORDER MATTERS!!! )
 
           if (withChanges.sort) {
             this._lastSortedSource = this.applySort(this._lastSource, event.sort.curr || event.sort.prev);
@@ -214,8 +228,10 @@ export class PblDataSourceAdapter<T = any, TData = any> {
 
           let data: T[] = this._lastSortedSource;
 
+          // we check if filter was asked, but also if we have a filter we re-run
+          // Only sorting is cached at this point filtering is always calculated
           if (withChanges.filter || (event.filter.curr && event.filter.curr.filter)) {
-            data = this.applyFilter(data, event.filter.curr || event.filter.prev);
+            data = this._lastFilteredSource = this.applyFilter(data, event.filter.curr || event.filter.prev);
           }
 
           if (withChanges.pagination) {
@@ -239,7 +255,12 @@ export class PblDataSourceAdapter<T = any, TData = any> {
           }
           event.pagination.page.changed = event.pagination.perPage.changed = false;
 
-          return { event: clonedEvent, data };
+          return {
+            event: clonedEvent,
+            data,
+            sorted: this._lastSortedSource,
+            filtered: this._lastFilteredSource,
+          };
         })
       );
   }
@@ -273,10 +294,15 @@ export class PblDataSourceAdapter<T = any, TData = any> {
     }
   }
 
+  /* Note:  Currently this is only used in the constructor.
+            However, if called elsewhere (i.e. if we can re-init the adapter) we need to track all code that is using
+            `onSourceChanged` and or `onSourceChanging` and make it support the replacement of the observable.
+            Because the API is public it will probably won't work so the best solution might be to switch
+            `onSourceChanged` and `onSourceChanging` to subjects that are alive always and emit them internally in this class. */
   private initStreams(): void {
     this._onSourceChange$ = new Subject<T[]>();
-    this.onSourceChanged =  this._onSourceChange$.pipe(filter( d => d !== SOURCE_CHANGING_TOKEN ));
-    this.onSourceChanging =  this._onSourceChange$.pipe(filter( d => d === SOURCE_CHANGING_TOKEN ));
+    this.onSourceChanged = this._onSourceChange$.pipe(filter( d => d !== SOURCE_CHANGING_TOKEN ));
+    this.onSourceChanging = this._onSourceChange$.pipe(filter( d => d === SOURCE_CHANGING_TOKEN ));
     this._refresh$ = new Subject<RefreshDataWrapper<TData>>();
     this._lastSource = undefined;
   }
@@ -315,7 +341,7 @@ export class PblDataSourceAdapter<T = any, TData = any> {
     ;
 
     return obs.pipe(
-      // run as a microtask
+      // run as a micro-task
       observeOn(asapScheduler, 0),
       map( data => Array.isArray(data) ? data : [] ),
       tap( data => this._onSourceChange$.next(data) )
