@@ -1,6 +1,6 @@
 import { TemplateRef } from '@angular/core';
 
-import { PblNgridSorter } from '../../data-source/types';
+import { DataSourceColumnPredicate, PblNgridSorter } from '../../data-source/types';
 import { PblNgridColumnDef } from '../directives';
 import { deepPathGet, deepPathSet } from '../utils';
 import { PblColumnSizeInfo } from '../types';
@@ -10,7 +10,7 @@ import { initDefinitions, parseStyleWidth } from './utils';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 
 const PBL_NGRID_COLUMN_MARK = Symbol('PblColumn');
-const CLONE_PROPERTIES: Array<keyof PblColumn> = ['transform', 'sort', 'sortAlias', 'headerType', 'footerType', 'pin'];
+const CLONE_PROPERTIES: Array<keyof PblColumn> = ['transform', 'filter', 'sort', 'alias', 'headerType', 'footerType', 'pin'];
 
 export function isPblColumn(def: any): def is PblColumn {
   return def instanceof PblColumn || def[PBL_NGRID_COLUMN_MARK] === true;
@@ -90,6 +90,14 @@ export class PblColumn implements PblColumnDefinition {
   sort?: boolean | PblNgridSorter;
 
   /**
+   * A custom predicate function to filter rows using the current column.
+   *
+   * Valid only when filtering by value.
+   * See `PblDataSource.setFilter` for more information.
+   */
+  filter?: DataSourceColumnPredicate;
+
+  /**
    * Marks the table as editable. An editable column also requires an edit template to qualify as editable, this flag alone is not enough.
    *
    * Note that this flag only effect the CSS class added to the cell.
@@ -98,12 +106,17 @@ export class PblColumn implements PblColumnDefinition {
 
   pin: 'start' | 'end' | undefined;
 
-    /**
-   * An alias used to identify the sort column.
-   * Useful when the server provides sort metadata that does not have a 1:1 match with the column names.
-   * e.g. Deep path props
+  // TODO(1.0.0): remove
+  /** @deprecated BREAKING CHANGE 1.0.0 - Use `alias` instead. */
+  get sortAlias(): string | undefined { return this.alias; }
+  set sortAlias(value: string) { this.alias = value; }
+
+  /**
+   * An alias used to identify the column.
+   * Useful when the server provides sort/filter metadata that does not have a 1:1 match with the column names.
+   * e.g. Deep path props, property name convention mismatch, etc...
    */
-  sortAlias?: string;
+  alias?: string;
 
   /**
    * Optional transformer that control the value output from the combination of a column and a row.

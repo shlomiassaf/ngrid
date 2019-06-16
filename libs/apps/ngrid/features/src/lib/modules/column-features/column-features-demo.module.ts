@@ -17,8 +17,9 @@ import { HideColumnsGridExampleComponent } from './hide-columns/hide-columns.com
 import { ColumnWidthGridExampleComponent } from './column-width/column-width.component';
 import { ColumnGroupGridExampleComponent } from './column-group/column-group.component';
 import { CellEditGridExampleComponent } from './cell-edit/cell-edit.component';
-import { ColumnReorderGridExampleComponent } from './column-reorder/column-reorder.component';
+import { ColumnFilteringGridExampleComponent } from './column-filtering/column-filtering.component';
 import { ColumnSortingGridExampleComponent } from './column-sorting/column-sorting.component';
+import { ColumnReorderGridExampleComponent } from './column-reorder/column-reorder.component';
 import { ColumnResizingGridExampleComponent } from './column-resizing/column-resizing.component';
 import { SwitchingColumnDefinitionsGridExampleComponent } from './switching-column-definitions/switching-column-definitions.component';
 
@@ -36,6 +37,7 @@ const DECLARATION = [
   CellEditGridExampleComponent,
   ColumnReorderGridExampleComponent,
   ColumnResizingGridExampleComponent,
+  ColumnFilteringGridExampleComponent,
   ColumnSortingGridExampleComponent,
   SwitchingColumnDefinitionsGridExampleComponent,
 ];
@@ -44,10 +46,11 @@ const ROUTES = [
   { path: 'hide-columns', component: HideColumnsGridExampleComponent, data: { title: 'Hide Columns' } },
   { path: 'column-width', component: ColumnWidthGridExampleComponent, data: { title: 'Column Width' } },
   { path: 'column-group', component: ColumnGroupGridExampleComponent, data: { title: 'Column Group' } },
+  { path: 'column-filtering', component: ColumnFilteringGridExampleComponent, data: { title: 'Column Filtering' } },
+  { path: 'column-sorting', component: ColumnSortingGridExampleComponent, data: { title: 'Column Sorting' } },
   { path: 'cell-edit', component: CellEditGridExampleComponent, data: { title: 'Cell Edit' } },
   { path: 'column-reorder', component: ColumnReorderGridExampleComponent, data: { title: 'Column Reorder' } },
   { path: 'column-resizing', component: ColumnResizingGridExampleComponent, data: { title: 'Column Resizing' } },
-  { path: 'column-sorting', component: ColumnSortingGridExampleComponent, data: { title: 'Column Sorting' } },
   { path: 'switching-column-definitions', component: SwitchingColumnDefinitionsGridExampleComponent, data: { title: 'Switching Column Definitions' } },
 ];
 
