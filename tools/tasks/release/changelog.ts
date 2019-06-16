@@ -104,7 +104,7 @@ function createChangelogWriterOptions(changelogPath: string) {
 
 /** Entry-point for generating the changelog when called through the CLI. */
 if (require.main === module) {
-  promptAndGenerateChangelog(join(__dirname, '../../CHANGELOG.md')).then(() => {
+  promptAndGenerateChangelog(join(__dirname, '../../../CHANGELOG.md')).then(() => {
     console.log(green('  ✓   Successfully updated the changelog.'));
   });
 }
