@@ -68,7 +68,7 @@ const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRe
   encapsulation: ViewEncapsulation.None,
 })
 export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements DoCheck, AfterViewInit {
-  @ViewChild('vcRef', { read: ViewContainerRef }) vcRef: ViewContainerRef;
+  @ViewChild('vcRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
 
   private el: HTMLElement;
 

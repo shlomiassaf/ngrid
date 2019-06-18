@@ -10,7 +10,7 @@ const DECLARATION = [
 ];
 
 const ROUTES = [
-  { path: '', loadChildren: '@pebula/apps/ngrid-material#NgridMaterialDemoModule' },
+  { path: '', loadChildren: () => import('@pebula/apps/ngrid-material').then(m => m.NgridMaterialDemoModule) },
 ];
 
 @NgModule({

@@ -34,11 +34,11 @@ import { AppComponent } from './app.component';
     MatMenuModule,
     RouterModule.forRoot(
       [
-        { path: '', loadChildren: '@pebula/apps/ngrid/demos#DemosModule' },
-        { path: 'concepts', loadChildren: '@pebula/apps/ngrid/concepts#ConceptsModule' },
-        { path: 'features', loadChildren: '@pebula/apps/ngrid/features#FeaturesModule' },
-        { path: 'extensions', loadChildren: '@pebula/apps/ngrid/extensions#ExtensionsModule' },
-        { path: 'stories', loadChildren: '@pebula/apps/ngrid/stories#StoriesModule' },
+        { path: '', loadChildren: () => import('@pebula/apps/ngrid/demos').then(m => m.DemosModule) },
+        { path: 'concepts', loadChildren: () => import('@pebula/apps/ngrid/concepts').then(m => m.ConceptsModule) },
+        { path: 'features', loadChildren: () => import('@pebula/apps/ngrid/features').then(m => m.FeaturesModule) },
+        { path: 'extensions', loadChildren: () => import('@pebula/apps/ngrid/extensions').then(m => m.ExtensionsModule) },
+        { path: 'stories', loadChildren: () => import('@pebula/apps/ngrid/stories').then(m => m.StoriesModule) },
       ],
       {
         useHash: true,

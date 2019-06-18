@@ -69,9 +69,9 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
     }
   }
 
-  @ViewChild(PblNgridHeaderCellDefDirective) headerDef: PblNgridHeaderCellDefDirective<any>;
-  @ViewChild(PblNgridCellDefDirective) cellDef: PblNgridCellDefDirective<any>;
-  @ViewChild(PblNgridFooterCellDefDirective) footerDef: PblNgridFooterCellDefDirective<any>;
+  @ViewChild(PblNgridHeaderCellDefDirective, { static: true }) headerDef: PblNgridHeaderCellDefDirective<any>;
+  @ViewChild(PblNgridCellDefDirective, { static: true }) cellDef: PblNgridCellDefDirective<any>;
+  @ViewChild(PblNgridFooterCellDefDirective, { static: true }) footerDef: PblNgridFooterCellDefDirective<any>;
 
   allSelected = false;
   length: number;

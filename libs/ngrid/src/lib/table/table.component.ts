@@ -268,13 +268,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   private _fallbackMinHeight = 0;
   private _dataSource: PblDataSource<T>;
 
-  @ViewChild('beforeTable', { read: ViewContainerRef}) _vcRefBeforeTable: ViewContainerRef;
-  @ViewChild('beforeContent', { read: ViewContainerRef}) _vcRefBeforeContent: ViewContainerRef;
-  @ViewChild('afterContent', { read: ViewContainerRef}) _vcRefAfterContent: ViewContainerRef;
-  @ViewChild('fbTableCell', { read: TemplateRef}) _fbTableCell: TemplateRef<PblNgridCellContext<T>>;
-  @ViewChild('fbHeaderCell', { read: TemplateRef}) _fbHeaderCell: TemplateRef<PblNgridMetaCellContext<T>>;
-  @ViewChild('fbFooterCell', { read: TemplateRef}) _fbFooterCell: TemplateRef<PblNgridMetaCellContext<T>>;
-  @ViewChild(CdkRowDef) _tableRowDef: CdkRowDef<T>;
+  @ViewChild('beforeTable', { read: ViewContainerRef, static: true }) _vcRefBeforeTable: ViewContainerRef;
+  @ViewChild('beforeContent', { read: ViewContainerRef, static: true }) _vcRefBeforeContent: ViewContainerRef;
+  @ViewChild('afterContent', { read: ViewContainerRef, static: true }) _vcRefAfterContent: ViewContainerRef;
+  @ViewChild('fbTableCell', { read: TemplateRef, static: true }) _fbTableCell: TemplateRef<PblNgridCellContext<T>>;
+  @ViewChild('fbHeaderCell', { read: TemplateRef, static: true }) _fbHeaderCell: TemplateRef<PblNgridMetaCellContext<T>>;
+  @ViewChild('fbFooterCell', { read: TemplateRef, static: true }) _fbFooterCell: TemplateRef<PblNgridMetaCellContext<T>>;
+  @ViewChild(CdkRowDef, { static: true }) _tableRowDef: CdkRowDef<T>;
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
 

@@ -1,14 +1,15 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "downlevelIteration": true,
     "importHelpers": true,
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
-    "module": "es2015",
+    "target": "es2015",
+    "module": "esnext",
     "typeRoots": [
       "node_modules/@types"
     ],

@@ -20,7 +20,7 @@ export class DemoActionRowComponent implements AfterViewInit {
 
   @Output() refresh = new EventEmitter<void>();
 
-  @ViewChild('actionRow', { read: TemplateRef }) actionRow: TemplateRef<any>;
+  @ViewChild('actionRow', { read: TemplateRef, static: true }) actionRow: TemplateRef<any>;
 
   autoSizeColumnToFitOptions: AutoSizeToFitOptions = {
     columnBehavior: (column) => {

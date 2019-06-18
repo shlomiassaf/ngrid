@@ -61,7 +61,7 @@ export class SellersDemoComponent {
 
   columns = COLUMNS.build();
 
-  @ViewChild(PblNgridComponent) table: PblNgridComponent<Seller>;
+  @ViewChild(PblNgridComponent, { static: true }) table: PblNgridComponent<Seller>;
 
   constructor(private ds: DemoDataSource) {
     ds.getCountries().then( c => COUNTRY_GETTER.data = c );

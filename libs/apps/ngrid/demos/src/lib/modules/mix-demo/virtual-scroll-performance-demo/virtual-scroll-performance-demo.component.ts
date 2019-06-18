@@ -81,7 +81,7 @@ export class VirtualScrollPerformanceDemoGridExampleComponent {
   showTable = true;
   hideColumns: string[] = [];
 
-  @ViewChild(PblNgridComponent) pblTable: PblNgridComponent<any>;
+  @ViewChild(PblNgridComponent, { static: false }) pblTable: PblNgridComponent<any>;
 
   constructor(private datasource: DemoDataSource, private cdr: ChangeDetectorRef) {
     datasource.getCountries().then( c => COUNTRY_GETTER.data = c );
