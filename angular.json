@@ -15,7 +15,7 @@
       },
       "architect": {
         "build": {
-          "builder": "ngx-build-plus:build",
+          "builder": "ngx-build-plus:browser",
           "options": {
             "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin",
             "outputPath": "dist/apps/ngrid-demo-app",
