@@ -6,7 +6,6 @@ import {
   ElementRef,
   OnDestroy,
   Optional,
-  Inject,
   SkipSelf,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
@@ -17,9 +16,7 @@ import {
   CdkDropListGroup,
   CdkDropList,
   CdkDrag,
-  DragDropRegistry,
   CDK_DROP_LIST,
-  DragRef, DropListRef
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, PblNgridPluginController, PblColumn } from '@pebula/ngrid';
@@ -53,13 +50,11 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
   constructor(public table: PblNgridComponent<T>,
               pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
-              dragDropRegistry: DragDropRegistry<DragRef, DropListRef<T>>,
+              dragDrop: DragDrop,
               changeDetectorRef: ChangeDetectorRef,
               @Optional() dir?: Directionality,
-              @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>,
-              @Optional() @Inject(DOCUMENT) _document?: any,
-              dragDrop?: DragDrop) {
-    super(element, dragDropRegistry as any, changeDetectorRef, dir, group, _document, dragDrop);
+              @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>) {
+    super(element, dragDrop, changeDetectorRef, dir, group);
     const reorder = pluginCtrl.getPlugin('columnReorder');
     reorder.connectedTo = this.id;
 

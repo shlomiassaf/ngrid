@@ -3,7 +3,7 @@ import { Component, ViewEncapsulation, ChangeDetectorRef, ViewChild } from '@ang
 import { UnRx } from '@pebula/utils';
 import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
 import {  Customer, DemoDataSource } from '@pebula/apps/ngrid/shared';
-import { MatRadioChange } from '@angular/material';
+import { MatRadioChange } from '@angular/material/radio';
 
 const COUNTRY_GETTER = {
   currency: row => COUNTRY_GETTER.data.countries[row.country].currencies[0],

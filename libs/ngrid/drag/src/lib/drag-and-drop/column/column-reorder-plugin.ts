@@ -105,13 +105,11 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
   constructor(public table: PblNgridComponent<T>,
               pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
-              dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
+              dragDrop: DragDrop,
               changeDetectorRef: ChangeDetectorRef,
               @Optional() dir?: Directionality,
-              @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>,
-              @Optional() @Inject(DOCUMENT) _document?: any,
-              dragDrop?: DragDrop) {
-    super(element, dragDropRegistry as any, changeDetectorRef, dir, group, _document, dragDrop);
+              @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>) {
+    super(element, dragDrop, changeDetectorRef, dir, group);
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     this.directContainerElement = '.pbl-ngrid-header-row-main';
@@ -275,26 +273,24 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
   // CTOR IS REQUIRED OR IT WONT WORK IN AOT
   // TODO: Try to remove when supporting IVY
   constructor(element: ElementRef<HTMLElement>,
-            @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() dropContainer: CdkDropList,
-            @Inject(DOCUMENT) _document: any,
-            _ngZone: NgZone,
-            _viewContainerRef: ViewContainerRef,
-            viewportRuler: ViewportRuler,
-            dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
-            @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
-            _dir: Directionality,
-            dragDrop?: DragDrop,) {
+              @Inject(CDK_DROP_LIST) @SkipSelf() dropContainer: CdkDropList,
+              @Inject(DOCUMENT) _document: any,
+              _ngZone: NgZone,
+              _viewContainerRef: ViewContainerRef,
+              @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
+              _dir: Directionality,
+              dragDrop: DragDrop,
+              _changeDetectorRef: ChangeDetectorRef,) {
     super(
       element,
       dropContainer,
       _document,
       _ngZone,
       _viewContainerRef,
-      viewportRuler,
-      dragDropRegistry,
       config,
       _dir,
       dragDrop,
+      _changeDetectorRef,
     );
   }
 
