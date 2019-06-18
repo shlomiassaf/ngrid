@@ -62,15 +62,24 @@ function applyLoaders(webpackConfig: Configuration) {
     },
     {
       test: [ /\.html$/ ],
-      include: HTML_MARKDOWN_TRANSFORM_LOADER_INCLUDE,
-      exclude: HTML_MARKDOWN_TRANSFORM_LOADER_EXCLUDE,
-      use: [
+      rules: [
         {
-          loader: "docsi/webpack",
-          options: {
-            highlight: 'prismjs',
-          }
-        }
+          use: [
+            'html-loader',
+          ]
+        },
+        {
+          include: HTML_MARKDOWN_TRANSFORM_LOADER_INCLUDE,
+          exclude: HTML_MARKDOWN_TRANSFORM_LOADER_EXCLUDE,
+          use: [
+            {
+              loader: "docsi/webpack",
+              options: {
+                highlight: 'prismjs',
+              }
+            }
+          ]
+        },
       ]
     },
   );
@@ -93,7 +102,9 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   const idx = webpackConfig.plugins.findIndex( p => p instanceof AngularCompilerPlugin );
   webpackConfig.plugins.splice(idx + 1, 0, ...plugins);
 
-  (webpackConfig.plugins[idx] as any)._options.directTemplateLoading = false;
+  const oldOptions = (webpackConfig.plugins[idx] as any)._options;
+  oldOptions.directTemplateLoading = false;
+  webpackConfig.plugins[idx] = new AngularCompilerPlugin(oldOptions);
 
   webpackConfig.plugins.push(new DocsiMetadataFileEmitterWebpackPlugin());
   webpackConfig.plugins.push(new DocsiSourceCodeRefWebpackPlugin());
