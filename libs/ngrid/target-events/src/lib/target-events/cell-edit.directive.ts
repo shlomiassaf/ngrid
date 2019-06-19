@@ -2,15 +2,8 @@ import { Directive, Input, Injector } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { UnRx } from '@pebula/utils';
-import { PblColumn, PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 import { PblNgridTargetEventsPlugin } from './target-events-plugin';
-
-// We trick the tree-shaker with an IIFE so it will not remove the function call expression
-PblColumn.prototype.updateWidth = (function() {
-  PblColumn.extendProperty('editable');
-  return PblColumn.prototype.updateWidth;
-})();
-
 
 @Directive({
   // tslint:disable-next-line:directive-selector

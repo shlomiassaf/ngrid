@@ -29,22 +29,20 @@ async function sassBundleTask(context: EntryPointTaskContext) {
     return;
   }
 
-  const { builderContext, builderConfig } = globalContext;
-  const root = builderContext.workspace.root;
-  const projectRoot = resolve(root, builderConfig.root);
-  const host = new virtualFs.AliasHost(builderContext.host as virtualFs.Host<FS.Stats>);
+  const { builderContext, workspace, root, projectRoot, sourceRoot, options } = globalContext;
+  const host = new virtualFs.AliasHost(workspace.host as virtualFs.Host<FS.Stats>);
   const syncHost = new virtualFs.SyncDelegateHost<FS.Stats>(host);
 
-  if (!builderConfig.options.tasks.data.sassBundle) {
+  if (!options.tasks.data.sassBundle) {
     return;
   }
 
   const assets = normalizeAssetPatterns(
-    builderConfig.options.tasks.data.sassBundle.entries,
+    options.tasks.data.sassBundle.entries,
     syncHost,
     root,
     projectRoot,
-    builderConfig.sourceRoot,
+    sourceRoot,
   );
 
   const copyPatterns = buildCopyPatterns(root, assets);
@@ -90,22 +88,20 @@ async function sassCompileTask(context: EntryPointTaskContext) {
     return;
   }
 
-  const { builderContext, builderConfig } = globalContext;
-  const root = builderContext.workspace.root;
-  const projectRoot = resolve(root, builderConfig.root);
-  const host = new virtualFs.AliasHost(builderContext.host as virtualFs.Host<FS.Stats>);
+  const { builderContext, workspace, root, projectRoot, sourceRoot, options } = globalContext;
+  const host = new virtualFs.AliasHost(workspace.host as virtualFs.Host<FS.Stats>);
   const syncHost = new virtualFs.SyncDelegateHost<FS.Stats>(host);
 
-  if (!builderConfig.options.tasks.data.sassCompile) {
+  if (!options.tasks.data.sassCompile) {
     return;
   }
 
   const assets = normalizeAssetPatterns(
-    builderConfig.options.tasks.data.sassCompile.entries,
+    options.tasks.data.sassCompile.entries,
     syncHost,
     root,
     projectRoot,
-    builderConfig.sourceRoot,
+    sourceRoot,
   );
 
   const copyPatterns = buildCopyPatterns(root, assets);

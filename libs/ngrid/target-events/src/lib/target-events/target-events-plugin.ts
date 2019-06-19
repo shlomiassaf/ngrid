@@ -3,7 +3,7 @@ import { bufferWhen, debounce, map, filter, takeUntil } from 'rxjs/operators';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblColumn, TablePlugin } from '@pebula/ngrid';
 
 import * as Events from './events';
 import { matrixRowFromRow, isRowContainer, findCellRenderIndex, findParentCell } from './utils';
@@ -42,7 +42,11 @@ function findEventSource(source: Event): { type: 'row' | 'cell', target: HTMLEle
   }
 }
 
-@TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
+export function runOnce(): void {
+  PblColumn.extendProperty('editable');
+}
+
+@TablePlugin({ id: PLUGIN_KEY, factory: 'create', runOnce })
 export class PblNgridTargetEventsPlugin<T = any> {
   rowClick = new EventEmitter<Events.PblNgridRowEvent<T>>();
   rowDblClick = new EventEmitter<Events.PblNgridRowEvent<T>>();

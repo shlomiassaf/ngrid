@@ -147,7 +147,6 @@ export class PblTokenPaginator implements PblPaginator<string> {
     } else {
       this.queuedChanges = changes;
       setTimeout(() => {
-        const c = this.queuedChanges;
         this.queuedChanges = undefined;
         this.onChange$.next(changes);
       });
@@ -282,7 +281,6 @@ export class PblPagingPaginator implements PblPaginator<number> {
     } else {
       this.queuedChanges = changes;
       setTimeout(() => {
-        const c = this.queuedChanges;
         this.queuedChanges = undefined;
         this.onChange$.next(changes);
       });

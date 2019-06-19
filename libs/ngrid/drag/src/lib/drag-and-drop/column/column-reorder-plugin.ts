@@ -1,5 +1,4 @@
-  // tslint:disable:no-output-rename
-
+// tslint:disable:no-output-rename
 import { BehaviorSubject } from 'rxjs';
 
 import {
@@ -23,25 +22,22 @@ import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   DragDrop,
-  DragDropRegistry,
   CdkDrag,
   CdkDragDrop,
   CDK_DROP_LIST,
   DragRef,
-  DropListRef,
   CdkDropListGroup,
   CdkDropList,
   CDK_DRAG_CONFIG,
   DragRefConfig,
 } from '@angular/cdk/drag-drop';
-import { ViewportRuler } from '@angular/cdk/scrolling';
 
 import { PblNgridComponent, TablePlugin, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
 import { CdkLazyDropList, CdkLazyDrag } from '../core';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblDragRef } from '../core/drag-ref';
+import { extendGrid } from './extend-grid';
 
-import './extend-table';
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
     columnReorder?: PblNgridColumnReorderPluginDirective;
@@ -52,7 +48,7 @@ export const PLUGIN_KEY: 'columnReorder' = 'columnReorder';
 
 let _uniqueIdCounter = 0;
 
-@TablePlugin({ id: PLUGIN_KEY })
+@TablePlugin({ id: PLUGIN_KEY, runOnce: extendGrid })
 @Directive({
   selector: 'pbl-ngrid[columnReorder]',
   exportAs: 'pblNgridColumnReorder',
