@@ -2,6 +2,7 @@
 // tslint:disable:directive-selector
 import { first } from 'rxjs/operators';
 import {
+  OnInit,
   AfterViewInit,
   Component,
   Directive,
@@ -63,14 +64,17 @@ const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRe
     class: 'pbl-ngrid-header-cell',
     role: 'columnheader',
   },
+  exportAs: 'ngridHeaderCell',
   template: `<ng-container #vcRef></ng-container>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements DoCheck, AfterViewInit {
+export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements DoCheck, OnInit, AfterViewInit {
   @ViewChild('vcRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
 
   private el: HTMLElement;
+
+  cellCtx: PblNgridDataHeaderExtensionContext | MetaCellContext;
 
   constructor(public readonly columnDef: PblNgridColumnDef<T>,
               public readonly table: PblNgridComponent<any>,
@@ -88,13 +92,22 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
     }
   }
 
+  ngOnInit(): void {
+    const col: COLUMN = this.columnDef.column;
+    if (col instanceof PblColumn) {
+      this.cellCtx = new PblNgridDataHeaderExtensionContext(this as PblNgridHeaderCellComponent<PblColumn>, this.vcRef.injector);
+    } else {
+      this.cellCtx = new MetaCellContext(col, this.table);
+    }
+  }
+
   ngAfterViewInit(): void {
     const col: COLUMN = this.columnDef.column;
     const { vcRef } = this;
     let view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblMetaColumn | PblColumn>>;
 
     if (col instanceof PblColumn) {
-      const context = new PblNgridDataHeaderExtensionContext(this as PblNgridHeaderCellComponent<PblColumn>, vcRef.injector);
+      const context = this.cellCtx as PblNgridDataHeaderExtensionContext;
       view = vcRef.createEmbeddedView(col.headerCellTpl, context);
       this.zone.onStable
         .pipe(first())
@@ -107,7 +120,7 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
           }
         });
     } else {
-      view = vcRef.createEmbeddedView(col.template, new MetaCellContext(col, this.table));
+      view = vcRef.createEmbeddedView(col.template, this.cellCtx);
     }
 
     view.detectChanges();
@@ -195,7 +208,6 @@ export class PblNgridCellDirective extends CdkCell implements DoCheck {
   @Input() set rowCtx(value: PblRowContext<any>) {
     if (value !== this._rowCtx) {
       this._rowCtx = value;
-      this.cellCtx = value ? value.cell(this.colIndex) : undefined;
       this.ngDoCheck();
     }
   }
@@ -254,11 +266,13 @@ export class PblNgridCellDirective extends CdkCell implements DoCheck {
     'class': 'pbl-ngrid-footer-cell',
     'role': 'gridcell',
   },
+  exportAs: 'ngridFooterCell',
  })
-export class PblNgridFooterCellDirective extends CdkFooterCell implements DoCheck {
+export class PblNgridFooterCellDirective extends CdkFooterCell implements DoCheck, OnInit {
   private el: HTMLElement;
+  cellCtx: MetaCellContext;
 
-  constructor(private columnDef: PblNgridColumnDef, elementRef: ElementRef) {
+  constructor(private columnDef: PblNgridColumnDef<PblMetaColumn | PblColumnGroup>, public table: PblNgridComponent, elementRef: ElementRef) {
     super(columnDef, elementRef);
     this.el = elementRef.nativeElement;
     const column = columnDef.column;
@@ -271,5 +285,9 @@ export class PblNgridFooterCellDirective extends CdkFooterCell implements DoChec
     if (this.columnDef.isDirty) {
       this.columnDef.applyWidth(this.el);
     }
+  }
+
+  ngOnInit(): void {
+    this.cellCtx = new MetaCellContext(this.columnDef.column, this.table);
   }
 }

@@ -21,7 +21,7 @@ import {
   PblNgridCellDirective,
   PblNgridFooterCellDirective,
 
-  ParentNgStyleDirective, ParentNgClassDirective,
+  PblNgridCellStyling,
   PblNgridOuterSectionDirective,
   PblNgridNoDataRefDirective,
   PblNgridPaginatorRefDirective,
@@ -33,7 +33,6 @@ import {
 
   PblNgridConfigService,
 } from './table/index';
-import { TableMetaCellContextPipe } from './table/pipes/table-cell-context.pipe';
 
 export const COMMON_TABLE_TEMPLATE_INIT = new InjectionToken('COMMON TABLE TEMPLATE INIT');
 
@@ -64,7 +63,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblCdkTableComponent,
     PblNgridColumnDef,
     PblNgridRowComponent,
-    ParentNgStyleDirective, ParentNgClassDirective,
+    PblNgridCellStyling,
     PblNgridOuterSectionDirective,
     PblNgridNoDataRefDirective,
     PblNgridPaginatorRefDirective,
@@ -81,11 +80,10 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridCellEditAutoFocusDirective,
 
     PblNgridComponent,
-    TableMetaCellContextPipe
   ],
   exports: [
     PblNgridRowComponent,
-    ParentNgStyleDirective, ParentNgClassDirective,
+    PblNgridCellStyling,
     PblNgridOuterSectionDirective,
     PblNgridNoDataRefDirective,
     PblNgridPaginatorRefDirective,

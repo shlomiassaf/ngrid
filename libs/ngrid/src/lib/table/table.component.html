@@ -38,13 +38,13 @@
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
       <ng-container *ngFor="let meta of metaColumns">
         <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [pblNgridColumnDef]="c">
-          <pbl-ngrid-header-cell *cdkHeaderCellDef>
-            <ng-container *ngTemplateOutlet="c.template; context: (c | tableMetaCellContext:self)"></ng-container>
+          <pbl-ngrid-header-cell #hCell="ngridHeaderCell" *cdkHeaderCellDef>
+            <ng-container *ngTemplateOutlet="c.template; context: hCell.cellCtx"></ng-container>
           </pbl-ngrid-header-cell>
         </ng-container>
         <ng-container *ngIf="meta.footer as c" [pblNgridColumnDef]="c">
-          <pbl-ngrid-footer-cell *cdkFooterCellDef>
-            <ng-container *ngTemplateOutlet="c.template; context: (c | tableMetaCellContext:self)"></ng-container>
+          <pbl-ngrid-footer-cell #fCell="ngridFooterCell" *cdkFooterCellDef>
+            <ng-container *ngTemplateOutlet="c.template; context: fCell.cellCtx"></ng-container>
           </pbl-ngrid-footer-cell>
         </ng-container>
       </ng-container>
@@ -53,15 +53,16 @@
        <!-- HEADER-RECORD-FOOTER CELL DEF -->
       <ng-container *ngFor="let c of columnApi.visibleColumns;" [pblNgridColumnDef]="c">
         <!-- TABLE HEADER CELL DEF -->
-        <pbl-ngrid-header-cell *cdkHeaderCellDef [observeSize]="c"></pbl-ngrid-header-cell>
+        <pbl-ngrid-header-cell #hCell="ngridHeaderCell" *cdkHeaderCellDef="let row" [observeSize]="c"></pbl-ngrid-header-cell>
         <!-- RECORD CELL DEF -->
-        <pbl-ngrid-cell #cell="pblNgridCell" *cdkCellDef="let row; pblRowContext as pblRowContext" [rowCtx]="pblRowContext" [attr.tabindex]="cellFocus" [attr.id]="c.id">
+        <pbl-ngrid-cell #cell="pblNgridCell" *cdkCellDef="let row; pblRowContext as pblRowContext"
+                        [rowCtx]="pblRowContext" [attr.tabindex]="cellFocus" [attr.id]="c.id">
           <ng-container *ngTemplateOutlet="cell.cellCtx?.editing ? c.editorTpl : c.cellTpl; context: cell.cellCtx"></ng-container>
         </pbl-ngrid-cell>
 
         <!-- TABLE FOOTER CELL DEF -->
-        <pbl-ngrid-footer-cell *cdkFooterCellDef>
-          <ng-container *ngTemplateOutlet="c.footerCellTpl; context: (c | tableMetaCellContext:self)"></ng-container>
+        <pbl-ngrid-footer-cell #fCell="ngridFooterCell" *cdkFooterCellDef>
+          <ng-container *ngTemplateOutlet="c.footerCellTpl; context: fCell.cellCtx"></ng-container>
         </pbl-ngrid-footer-cell>
       </ng-container>
       <!-- HEADER-RECORD-FOOTER CELL DEF -->

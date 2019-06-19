@@ -7,12 +7,14 @@ export interface PblNgridStateChunkSectionConfig<T extends keyof RootStateChunks
 }
 
 export class StateVisor<T extends keyof StateChunks = keyof StateChunks> {
+  private static _instance: StateVisor;
+
   private rootChunkSections = new Map<keyof RootStateChunks, PblNgridStateChunkSectionConfig<keyof RootStateChunks>>();
   private chunkHandlers = new Map<T, PblNgridStateChunkHandlerDefinition<T>[]>();
 
   private constructor() { }
 
-  static get(): StateVisor { return stateVisor || new StateVisor(); }
+  static get(): StateVisor { return StateVisor._instance || (StateVisor._instance = new StateVisor()); }
 
   registerRootChunkSection<Z extends keyof RootStateChunks>(chunkId: Z, config: PblNgridStateChunkSectionConfig<Z>): void {
     if (!this.rootChunkSections.has(chunkId)) {

@@ -140,7 +140,7 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
   // CTOR IS REQUIRED OR IT WONT WORK IN AOT
   // TODO: Try to remove when supporting IVY
   constructor(element: ElementRef<HTMLElement>,
-              @Inject(CDK_DROP_LIST) @SkipSelf() dropContainer: CdkDropList,
+              @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() dropContainer: CdkDropList,
               @Inject(DOCUMENT) _document: any,
               _ngZone: NgZone,
               _viewContainerRef: ViewContainerRef,

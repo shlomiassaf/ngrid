@@ -37,7 +37,7 @@ export {
   PblNgridCellDefDirective,
   PblNgridHeaderCellDefDirective,
   PblNgridFooterCellDefDirective,
-  ParentNgStyleDirective, ParentNgClassDirective,
+  PblNgridCellStyling,
   PblNgridNoDataRefDirective,
   PblColumnTypeDefinition, PblColumnTypeDefinitionDataMap,
   PblColumnDefinition,
