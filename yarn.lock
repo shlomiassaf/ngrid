@@ -8686,9 +8686,9 @@ next-tick@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
-ng-cli-packagr-tasks@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/ng-cli-packagr-tasks/-/ng-cli-packagr-tasks-3.0.0.tgz#a7425637aa8e7f5bb55267d68d3ae7c73f4f0030"
+ng-cli-packagr-tasks@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ng-cli-packagr-tasks/-/ng-cli-packagr-tasks-4.0.0.tgz#3576afa5b6ac9069f2341c09730f162106ea95f9"
 
 ng-packagr@^5.1.0:
   version "5.3.0"
