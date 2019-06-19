@@ -122,6 +122,10 @@ $anti-pattern: $brightred;
         padding-left: 36px;
       }
 
+      &.docsi-toc-level-4 {
+        padding-left: 48px;
+      }
+
       a {
         color: lighten($darkgray, 10);
         display:table-cell;

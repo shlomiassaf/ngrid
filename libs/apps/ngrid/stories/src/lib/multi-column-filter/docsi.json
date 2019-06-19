@@ -3,6 +3,7 @@
   "codeRef": [
     {
       "file": "./multi-column-filter.component.ts",
+      "lang": "ts",
       "section": ["ex-1"]
     },
     {

@@ -14,7 +14,7 @@
 $font-family: map-get($typography-config, font-family);
 
 .markdown-body {
-  @include mat-typography-level-to-styles((body-1: mat-typography-level(16px, 28px, 400, $font-family)), body-1);
+  @include mat-typography-level-to-styles((body-1: mat-typography-level(14px, 24px, 400, $font-family)), body-1);
 
   &.overflow-container {
     height: 100%;
@@ -28,6 +28,14 @@ $font-family: map-get($typography-config, font-family);
       width: 100%;
       overflow: auto;
       box-sizing: border-box;
+    }
+  }
+
+  p {
+    margin: 16px 0 0;
+
+    & + ul, & + ol {
+      margin-top: 4px;
     }
   }
 

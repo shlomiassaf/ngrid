@@ -57,7 +57,12 @@ export class SourceCodeComponent implements OnChanges {
     }
 
     this.multi = this.code.length > 0;
-    this.cdr.markForCheck();
-    this.cdr.detectChanges();
+
+    // we need timeout because ngOnChanges call's this method
+    // and on the initial change the instance is still not set (of the component) so we get an error.
+    setTimeout(() => {
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
+    }, 16);
   }
 }

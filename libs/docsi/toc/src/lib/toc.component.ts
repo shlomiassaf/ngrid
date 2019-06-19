@@ -75,6 +75,7 @@ export class TocComponent implements OnDestroy {
   private _activeLinkSubscription: Subscription;
 
   constructor(router: Router, private cdr: ChangeDetectorRef) {
+    this.rootUrl = router.url.split('#')[0];
     this._routeSubscription = router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(event => (this.rootUrl = router.url.split('#')[0]));
