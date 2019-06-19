@@ -4,6 +4,11 @@ Enterprise grade grid for angular, based on the foundations of `@angular/cdk`.
 
 <pbl-sellers-demo></pbl-sellers-demo>
 
+<div>
+Angular: {{ ngVersion }}
+NGrid: {{ ngridVersion }}
+</div>
+
 Also see:
 
 - [Starter @ GitHub](https://github.com/shlomiassaf/ngrid-material-starter)

@@ -1,5 +1,6 @@
+import * as FS from 'fs';
 import * as Path from 'path';
-import { Configuration } from 'webpack';
+import { Configuration, DefinePlugin } from 'webpack';
 import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin } from '@pebula/docsi/webpack';
 import { ServiceWorkerTsPlugin } from '../../tools/service-worker-ts-plugin';
 
@@ -108,6 +109,14 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
 
   webpackConfig.plugins.push(new DocsiMetadataFileEmitterWebpackPlugin());
   webpackConfig.plugins.push(new DocsiSourceCodeRefWebpackPlugin());
+
+  const angular = require('@angular/core/package.json');
+  const ngrid = require(Path.join(process.cwd(), `libs/ngrid/package.json`));
+  const definePlugin = new DefinePlugin({
+    ANGULAR_VERSION: JSON.stringify(angular.version),
+    NGRID_VERSION: JSON.stringify(ngrid.version),
+  });
+  webpackConfig.plugins.push(definePlugin);
 
   return webpackConfig;
 }
