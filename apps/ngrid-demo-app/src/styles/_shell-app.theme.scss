@@ -11,7 +11,7 @@ $pbl-shell-accent:  mat-palette($mat-light-green);
     background: $background-background,
   );
 
-  $foreground-text: #4A4A4A;
+  $foreground-text: #444;
 
   $pbl-default-light-theme-foreground: (
     text: $foreground-text,
@@ -59,7 +59,7 @@ $pbl-shell-accent:  mat-palette($mat-light-green);
     $subheading-2:  mat-typography-level(16px, 28px, 400),
     $subheading-1:  mat-typography-level(15px, 24px, 400),
     $body-2:        mat-typography-level(16px, 24px, 500),
-    $body-1:        mat-typography-level(16px, 20px, 400),
+    $body-1:        mat-typography-level(14px, 24px, 400),
     $caption:       mat-typography-level(14px, 20px, 400),
   );
 }
@@ -81,9 +81,12 @@ $pbl-shell-accent:  mat-palette($mat-light-green);
     color: mat-color($foreground, text-header);
   }
 
-  .mat-body p, .mat-body-1 p, .mat-typography p {
-    margin: 24px 0;
-    line-height: 32px;
+  .mat-body p,
+  .mat-body-1 p,
+  .mat-typography p,
+  a, input, li, ol, p, ul {
+    letter-spacing: .3px;
+    color: mat-color($foreground, text);
   }
 
   // TOOLTIP

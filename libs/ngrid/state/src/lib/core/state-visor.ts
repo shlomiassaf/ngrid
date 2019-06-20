@@ -1,18 +1,21 @@
 import { PblNgridGlobalState, StateChunks, RootStateChunks, PblNgridStateChunkSectionContext } from './models/index';
 import { PblNgridStateChunkHandlerDefinition } from './handling';
 
+export let _instance: StateVisor;
+
 export interface PblNgridStateChunkSectionConfig<T extends keyof RootStateChunks = keyof RootStateChunks> {
   stateMatcher: (state: PblNgridGlobalState) => RootStateChunks[T]['state'];
   sourceMatcher: (context: PblNgridStateChunkSectionContext) => RootStateChunks[T]['value'];
 }
 
 export class StateVisor<T extends keyof StateChunks = keyof StateChunks> {
+
   private rootChunkSections = new Map<keyof RootStateChunks, PblNgridStateChunkSectionConfig<keyof RootStateChunks>>();
   private chunkHandlers = new Map<T, PblNgridStateChunkHandlerDefinition<T>[]>();
 
   private constructor() { }
 
-  static get(): StateVisor { return stateVisor || new StateVisor(); }
+  static get(): StateVisor { return _instance || (_instance = new StateVisor()); }
 
   registerRootChunkSection<Z extends keyof RootStateChunks>(chunkId: Z, config: PblNgridStateChunkSectionConfig<Z>): void {
     if (!this.rootChunkSections.has(chunkId)) {

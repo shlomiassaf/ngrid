@@ -1,5 +1,5 @@
 import { Observable, Subscription, BehaviorSubject, fromEvent } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 import { AfterContentInit, Directive, ElementRef, Input, OnDestroy, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -100,6 +100,7 @@ export class TocAreaDirective implements AfterContentInit, OnDestroy {
    */
   @Input() selector: string;
 
+  readonly hasLinks: Observable<boolean>;
   readonly linksChanged: Observable<TocHeadDirective[]>;
   readonly activeLinkChanged: Observable<TocHeadDirective | undefined>;
 
@@ -134,6 +135,10 @@ export class TocAreaDirective implements AfterContentInit, OnDestroy {
     this._linksChanged$ = new BehaviorSubject<TocHeadDirective[]>(this.links);
     this.linksChanged = this._linksChanged$.asObservable();
     this.activeLinkChanged = this._activeLink$.asObservable();
+    this.hasLinks = this._linksChanged$.pipe(
+      map( links => links.length > 1 ),
+      distinctUntilChanged(),
+    );
 
     if (route) {
       this._fragmentSubscription = route.fragment.subscribe(fragment => {
@@ -214,6 +219,8 @@ export class TocAreaDirective implements AfterContentInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this._linksChanged$.complete();
+    this._activeLink$.complete();
     if (this._fragmentSubscription) {
       this._fragmentSubscription.unsubscribe();
     }

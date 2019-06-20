@@ -1,28 +1,27 @@
 // tslint:disable:no-output-rename
 
 import {
+  Inject,
   ChangeDetectorRef,
   Directive,
   ElementRef,
   OnDestroy,
   Optional,
-  Inject,
   SkipSelf,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-
 import { Directionality } from '@angular/cdk/bidi';
 import {
   DragDrop,
   CdkDropListGroup,
   CdkDropList,
   CdkDrag,
-  DragDropRegistry,
   CDK_DROP_LIST,
-  DragRef, DropListRef
+  DragDropRegistry,
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, PblNgridPluginController, PblColumn } from '@pebula/ngrid';
+import { cdkDropList } from '../v7-compat';
 import { CdkLazyDropList } from '../core/lazy-drag-drop';
 import { PblDragRef } from '../core/drag-ref';
 import { PblDropListRef } from '../core/drop-list-ref';
@@ -53,13 +52,14 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
   constructor(public table: PblNgridComponent<T>,
               pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
-              dragDropRegistry: DragDropRegistry<DragRef, DropListRef<T>>,
+              dragDrop: DragDrop,
               changeDetectorRef: ChangeDetectorRef,
               @Optional() dir?: Directionality,
               @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>,
-              @Optional() @Inject(DOCUMENT) _document?: any,
-              dragDrop?: DragDrop) {
-    super(element, dragDropRegistry as any, changeDetectorRef, dir, group, _document, dragDrop);
+              @Optional() dragDropRegistry?: DragDropRegistry<any, any>, // for v7 compat
+              @Optional() @Inject(DOCUMENT) _document?: any,) {
+    super(...cdkDropList(element, dragDrop, changeDetectorRef, dir, group, dragDropRegistry, _document));
+    // super(element, dragDrop, changeDetectorRef, dir, group);
     const reorder = pluginCtrl.getPlugin('columnReorder');
     reorder.connectedTo = this.id;
 

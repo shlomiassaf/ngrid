@@ -5,9 +5,8 @@ import { PblColumn } from '../columns/column';
 import { PblMetaColumn } from '../columns/meta-column';
 import { PblRowContext } from './row';
 
-export class MetaCellContext<T, TCol extends PblMetaColumn | PblColumn = PblMetaColumn> implements PblNgridMetaCellContext<T, TCol> {
+export class MetaCellContext<T = any, TCol extends PblMetaColumn | PblColumn = PblMetaColumn> implements PblNgridMetaCellContext<T, TCol> {
   get $implicit(): MetaCellContext<T, TCol> { return this; }
-
   constructor(public col: TCol, public table: PblNgridComponent<any>) {}
 }
 

@@ -1,6 +1,6 @@
 # Multi Column Filter
 
-<docsi-mat-example-with-source title="Action Row" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
+<docsi-mat-example-with-source title="Multi Column Filter" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
   <div fxLayout="row" fxLayoutGap="16px" style="padding: 8px">
     <mat-form-field  appearance="outline">

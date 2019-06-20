@@ -126,7 +126,7 @@ export class AllInOneGridExampleComponent {
   enableRowSelection = true;
   singleDetailRow = false;
 
-  @ViewChild(PblNgridComponent) pblTable: PblNgridComponent<any>;
+  @ViewChild(PblNgridComponent, { static: true }) pblTable: PblNgridComponent<any>;
 
   setStickyRow = setStickyRow;
   setStickyColumns = setStickyColumns;

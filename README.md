@@ -4,6 +4,19 @@ A grid based on `@angular/cdk`.
 
 The grid is still in early development, API is solid but might change.
 
+## Angular 7 vs Angular 8
+
+If you're using angular 8 download the latest package (any version will work)
+
+If you're using angular 7 download version `1.0.0-alpha.23` and below. From `1.0.0-alpha.24` only angular 8 is supported.
+
+Once the library is compiled with the v8 angular compiler it will not work in angular v7 and below [read here why](https://github.com/angular/angular/issues/30413).
+
+### Will v7 get support ?
+
+It is theoretically possible to support angular 7 as well, it will require 2 distinct versions 1 for v8 and one for v7.  
+It will require 2 compilations, one with angular v8, then uninstall it and install v7 and run the compilation again.
+
 ---
 
 ### If you like this product and want to help, WELCOME

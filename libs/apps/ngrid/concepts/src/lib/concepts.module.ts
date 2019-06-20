@@ -11,10 +11,10 @@ const TABLE_EXAMPLES = [
 ];
 
 const ROUTES = [
-  { path: '', loadChildren: './modules/layout-concepts/layout-concepts.module#LayoutConceptsModule' },
-  { path: '', loadChildren: './modules/datasource-concepts/datasource-concepts.module#DatasourceConceptsModule' },
-  { path: '', loadChildren: './modules/column-concepts/column-concepts.module#ColumnConceptsModule' },
-  { path: '', loadChildren: './modules/theming-concepts/theming-concepts.module#ThemingConceptsModule' },
+  { path: '', loadChildren: () => import('./modules/layout-concepts/layout-concepts.module').then(m => m.LayoutConceptsModule) },
+  { path: '', loadChildren: () => import('./modules/datasource-concepts/datasource-concepts.module').then(m => m.DatasourceConceptsModule) },
+  { path: '', loadChildren: () => import('./modules/column-concepts/column-concepts.module').then(m => m.ColumnConceptsModule) },
+  { path: '', loadChildren: () => import('./modules/theming-concepts/theming-concepts.module').then(m => m.ThemingConceptsModule) },
 ];
 
 

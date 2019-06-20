@@ -17,7 +17,7 @@ export class TableActionRowComponent implements AfterViewInit {
 
   @Input() label: string;
 
-  @ViewChild('actionRow', { read: TemplateRef }) actionRow: TemplateRef<any>;
+  @ViewChild('actionRow', { read: TemplateRef, static: true }) actionRow: TemplateRef<any>;
 
   private _filter = false;
 

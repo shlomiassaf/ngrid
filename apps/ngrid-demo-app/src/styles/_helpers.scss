@@ -1,0 +1,11 @@
+/// Assign to the LAST child of a flex COLUMN parent when you want it (child) to expand until the end without overflowing
+.pbl-flex-column-fill {
+  flex: 1 1 100%;
+  display: flex;
+  min-height: 0px;
+}
+/// Assign to the LAST child of a flex ROW parent when you want it (child) to expand until the end without overflowing
+.pbl-flex-row-fill {
+  flex: 1 1 100%;
+  min-width: 0px;
+}

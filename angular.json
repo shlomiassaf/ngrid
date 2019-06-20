@@ -15,10 +15,9 @@
       },
       "architect": {
         "build": {
-          "builder": "ng-cli-ext:build",
+          "builder": "ngx-build-plus:build",
           "options": {
-            "extraWebpackConfig": "webpack.config.ts",
-            "tsConfigForExtraWebpackConfig": "tsconfig.es6.json",
+            "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin",
             "outputPath": "dist/apps/ngrid-demo-app",
             "index": "apps/ngrid-demo-app/src/index.html",
             "main": "apps/ngrid-demo-app/src/main.ts",
@@ -61,12 +60,11 @@
           }
         },
         "serve": {
-          "builder": "ng-cli-ext:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "options": {
             "browserTarget": "ngrid-demo-app:build",
-            "extraWebpackConfig": "webpack.config.ts",
-            "tsConfigForExtraWebpackConfig": "apps/demo-app/tsconfig.es6.json",
-            "port": 4201
+            "port": 4201,
+            "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin"
           },
           "configurations": {
             "production": {
@@ -81,7 +79,7 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "ngx-build-plus:karma",
           "options": {
             "main": "apps/ngrid-demo-app/src/test.ts",
             "polyfills": "apps/ngrid-demo-app/src/polyfills.ts",

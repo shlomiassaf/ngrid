@@ -173,14 +173,13 @@ We've seen that the data column (from here on just column), represent a property
 
 Let's take a look again, this time we enable both header and footer rows and use a collection with 3 `Person` instances:
 
-<div fxLayout>
+<div fxLayout fxLayoutGap="24px" style="width: 100%; overflow: none">
   <pbl-ngrid fxFlex="208px" style="height: 260px" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel2" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
-    <div *pblNgridHeaderCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data highlight-data-header">DATA ROW (HEADER)</div>
-    <div *pblNgridCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW</div>
-    <div *pblNgridFooterCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data highlight-data-footer">DATA ROW (FOOTER)</div>
+    <div *pblNgridHeaderCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data highlight-data-header">DATA ROW (HEADER)</div>
+    <div *pblNgridCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data">DATA ROW</div>
+    <div *pblNgridFooterCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data highlight-data-footer">DATA ROW (FOOTER)</div>
   </pbl-ngrid>
-  <div fxFlex="24px"></div>
-  <pbl-ngrid fxFlex="*" style="height: 260px" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
+  <pbl-ngrid style="height: 260px" class="pbl-flex-row-fill pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel">
     <div *pblNgridHeaderCellDef="'*'; col as col" style="text-decoration: underline">{{ col.label | uppercase }}</div>
     <div *pblNgridCellDef="'*'; value as value">-> {{value}} <-</div>
     <div *pblNgridFooterCellDef="'*'; col as col">({{ col.label }})</div>
@@ -265,14 +264,14 @@ A table without meta columns. Each data column (id, name, gender, email) is defi
 
 <div fxLayout>
   <pbl-ngrid fxFlex="208px" style="height: 400px" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta2" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
-    <div *pblNgridHeaderCellTypeDef="'metaRow'; col as col" parentNgClass="column-model-demo-highlight-header">META ROW ({{ col.label }})</div>
-    <div *pblNgridHeaderCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW (HEADER)</div>
-    <div *pblNgridCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW</div>
-    <div *pblNgridFooterCellTypeDef="'dataRow'" parentNgClass="column-model-demo-highlight-data">DATA ROW (FOOTER)</div>
-    <div *pblNgridFooterCellTypeDef="'metaRow'; col as col" parentNgClass="column-model-demo-highlight-footer">META ROW ({{ col.label }})</div>
+    <div *pblNgridHeaderCellTypeDef="'metaRow'; let ctx; col as col" ngridCellClass="column-model-demo-highlight-header">META ROW ({{ col.label }})</div>
+    <div *pblNgridHeaderCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data">DATA ROW (HEADER)</div>
+    <div *pblNgridCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data">DATA ROW</div>
+    <div *pblNgridFooterCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data">DATA ROW (FOOTER)</div>
+    <div *pblNgridFooterCellTypeDef="'metaRow'; let ctx; col as col" ngridCellClass="column-model-demo-highlight-footer">META ROW ({{ col.label }})</div>
   </pbl-ngrid>
   <div fxFlex="24px"></div>
-  <pbl-ngrid fxFlex="*" style="height: 400px" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis"></pbl-ngrid>
+  <pbl-ngrid style="height: 400px" class="pbl-flex-row-fill pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta"></pbl-ngrid>
 </div>
 
 In this example, several meta columns are defined - spread across 3 rows.

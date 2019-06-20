@@ -13,8 +13,6 @@ declare module '@pebula/ngrid/lib/table/columns/types' {
   }
 }
 
-// We trick the tree-shaker with an IIFE so it will not remove the function call expression
-PblColumn.prototype.updateWidth = (function() {
+export function extendGrid(): void {
   PblColumn.extendProperty('resize');
-  return PblColumn.prototype.updateWidth;
-})();
+}

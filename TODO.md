@@ -4,8 +4,6 @@
 
 - **DOCUMENTATION** - Update / Add documentation where needed
 
-- Support Angular 8 (when released)
-
 - API reference document
 
 - `@pebula/ngrid-material`

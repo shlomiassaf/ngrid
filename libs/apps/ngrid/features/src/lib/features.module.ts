@@ -11,10 +11,10 @@ const TABLE_EXAMPLES = [
 ];
 
 const ROUTES = [
-  { path: '', loadChildren: './modules/table-demo/table-table-demo.module#TableTableDemoModule' },
-  { path: '', loadChildren: './modules/column-features/column-features-demo.module#ColumnFeaturesDemoModule' },
-  { path: '', loadChildren: './modules/plugins-demo/table-plugins-demo.module#TablePluginsDemoModule' },
-  { path: '', loadChildren: './modules/sticky-plugin-demo/table-sticky-plugin-demo.module#TableStickyPluginDemoModule' },
+  { path: '', loadChildren: () => import('./modules/table-demo/table-table-demo.module').then(m => m.TableTableDemoModule) },
+  { path: '', loadChildren: () => import('./modules/column-features/column-features-demo.module').then(m => m.ColumnFeaturesDemoModule) },
+  { path: '', loadChildren: () => import('./modules/plugins-demo/table-plugins-demo.module').then(m => m.TablePluginsDemoModule) },
+  { path: '', loadChildren: () => import('./modules/sticky-plugin-demo/table-sticky-plugin-demo.module').then(m => m.TableStickyPluginDemoModule) },
 ];
 
 @NgModule({

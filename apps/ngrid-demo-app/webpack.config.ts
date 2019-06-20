@@ -1,5 +1,6 @@
+import * as FS from 'fs';
 import * as Path from 'path';
-import { Configuration } from 'webpack';
+import { Configuration, DefinePlugin } from 'webpack';
 import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin } from '@pebula/docsi/webpack';
 import { ServiceWorkerTsPlugin } from '../../tools/service-worker-ts-plugin';
 
@@ -62,15 +63,24 @@ function applyLoaders(webpackConfig: Configuration) {
     },
     {
       test: [ /\.html$/ ],
-      include: HTML_MARKDOWN_TRANSFORM_LOADER_INCLUDE,
-      exclude: HTML_MARKDOWN_TRANSFORM_LOADER_EXCLUDE,
-      use: [
+      rules: [
         {
-          loader: "docsi/webpack",
-          options: {
-            highlight: 'prismjs',
-          }
-        }
+          use: [
+            'html-loader',
+          ]
+        },
+        {
+          include: HTML_MARKDOWN_TRANSFORM_LOADER_INCLUDE,
+          exclude: HTML_MARKDOWN_TRANSFORM_LOADER_EXCLUDE,
+          use: [
+            {
+              loader: "docsi/webpack",
+              options: {
+                highlight: 'prismjs',
+              }
+            }
+          ]
+        },
       ]
     },
   );
@@ -93,10 +103,20 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   const idx = webpackConfig.plugins.findIndex( p => p instanceof AngularCompilerPlugin );
   webpackConfig.plugins.splice(idx + 1, 0, ...plugins);
 
-  (webpackConfig.plugins[idx] as any)._options.directTemplateLoading = false;
+  const oldOptions = (webpackConfig.plugins[idx] as any)._options;
+  oldOptions.directTemplateLoading = false;
+  webpackConfig.plugins[idx] = new AngularCompilerPlugin(oldOptions);
 
   webpackConfig.plugins.push(new DocsiMetadataFileEmitterWebpackPlugin());
   webpackConfig.plugins.push(new DocsiSourceCodeRefWebpackPlugin());
+
+  const angular = require('@angular/core/package.json');
+  const ngrid = require(Path.join(process.cwd(), `libs/ngrid/package.json`));
+  const definePlugin = new DefinePlugin({
+    ANGULAR_VERSION: JSON.stringify(angular.version),
+    NGRID_VERSION: JSON.stringify(ngrid.version),
+  });
+  webpackConfig.plugins.push(definePlugin);
 
   return webpackConfig;
 }

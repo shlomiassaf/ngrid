@@ -61,8 +61,8 @@
     <div *pblNgridCellDef="'name'; value as value;"><b>{{value}}</b></div>
     <div *pblNgridCellTypeDef="'currencyFn'; value as value; col as col; row as row">{{value | currency:col.type?.data.currency(row):'symbol':'1.0-2'}}</div>
     <div *pblNgridCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
-    <div *pblNgridCellDef="'balance'; value as value;" [parentNgClass]="{ 'balance-negative': value < 0, 'balance-positive': value > 0 }">{{ value | number:'1.0-0'}}</div>
-    <div *pblNgridCellDef="'settings.background'; value as value;" [parentNgStyle]="{ backgroundColor: value }"><b>{{value}}</b></div>
+    <div *pblNgridCellDef="'balance'; let ctx; value as value;" [ngridCellClass]="{ 'balance-negative': value < 0, 'balance-positive': value > 0 }">{{ ctx.value | number:'1.0-0'}}</div>
+    <div *pblNgridCellDef="'settings.background'; let ctx;" [ngridCellStyle]="{ backgroundColor: ctx.value }"><b>{{ctx.value}}</b></div>
     <div *pblNgridCellDef="'settings.avatar'; value as value;"><img [src]="value" height="40px" /></div>
     <!-- SPECIFIC DEFAULT CELL TEMPLATE DEFINITION-->
 

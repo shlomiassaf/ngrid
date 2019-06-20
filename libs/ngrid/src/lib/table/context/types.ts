@@ -46,7 +46,7 @@ export interface PblNgridSelectionChangedEvent {
   removed: GridDataPoint[];
 }
 
-export interface PblNgridMetaCellContext<T, TCol extends PblMetaColumn | PblColumn = PblMetaColumn | PblColumn> {
+export interface PblNgridMetaCellContext<T = any, TCol extends PblMetaColumn | PblColumn = PblMetaColumn | PblColumn> {
   $implicit: PblNgridMetaCellContext<T>;
   col: TCol;
   table: PblNgridComponent<T>;

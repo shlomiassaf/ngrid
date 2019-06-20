@@ -65,7 +65,10 @@ export abstract class PblNgridBaseCellDef<Z> implements OnInit, OnDestroy, PblNg
  */
 @Directive({
   selector: '[pblNgridHeaderCellDef], [pblNgridHeaderCellTypeDef]',
-  inputs: [ 'name:pblNgridHeaderCellDef', 'type:pblNgridHeaderCellTypeDef' ]
+  inputs: [
+    'name:pblNgridHeaderCellDef',
+    'type:pblNgridHeaderCellTypeDef',
+  ]
 })
 export class PblNgridHeaderCellDefDirective<T> extends PblNgridBaseCellDef<PblNgridMetaCellContext<T>> {
   constructor(tRef: TemplateRef<PblNgridMetaCellContext<T>>, registry: PblNgridRegistryService) { super(tRef, registry); }
@@ -87,7 +90,10 @@ export class PblNgridHeaderCellDefDirective<T> extends PblNgridBaseCellDef<PblNg
  */
 @Directive({
   selector: '[pblNgridCellDef], [pblNgridCellTypeDef]',
-  inputs: [ 'name:pblNgridCellDef', 'type:pblNgridCellTypeDef' ]
+  inputs: [
+    'name:pblNgridCellDef',
+    'type:pblNgridCellTypeDef',
+  ]
 })
 export class PblNgridCellDefDirective<T, P extends keyof PblColumnTypeDefinitionDataMap = any> extends PblNgridBaseCellDef<PblNgridCellContext<T, P>> {
   type: P;
@@ -96,7 +102,10 @@ export class PblNgridCellDefDirective<T, P extends keyof PblColumnTypeDefinition
 
 @Directive({
   selector: '[pblNgridCellEditorDef], [pblNgridCellEditorTypeDef]',
-  inputs: [ 'name:pblNgridCellEditorDef', 'type:pblNgridCellEditorTypeDef' ]
+  inputs: [
+    'name:pblNgridCellEditorDef',
+    'type:pblNgridCellEditorTypeDef',
+  ]
 })
 export class PblNgridEditorCellDefDirective<T, P extends keyof PblColumnTypeDefinitionDataMap = any> extends PblNgridBaseCellDef<PblNgridCellContext<T, P>> {
   type: P;
@@ -105,7 +114,10 @@ export class PblNgridEditorCellDefDirective<T, P extends keyof PblColumnTypeDefi
 
 @Directive({
   selector: '[pblNgridFooterCellDef], [pblNgridFooterCellTypeDef]',
-  inputs: [ 'name:pblNgridFooterCellDef', 'type:pblNgridFooterCellTypeDef' ]
+  inputs: [
+    'name:pblNgridFooterCellDef',
+    'type:pblNgridFooterCellTypeDef',
+  ]
 })
 export class PblNgridFooterCellDefDirective<T> extends PblNgridBaseCellDef<PblNgridMetaCellContext<T>> {
   constructor(tRef: TemplateRef<PblNgridMetaCellContext<T>>, registry: PblNgridRegistryService) { super(tRef, registry); }

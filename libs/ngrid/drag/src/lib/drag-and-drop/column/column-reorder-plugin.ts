@@ -1,5 +1,4 @@
-  // tslint:disable:no-output-rename
-
+// tslint:disable:no-output-rename
 import { BehaviorSubject } from 'rxjs';
 
 import {
@@ -23,25 +22,25 @@ import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   DragDrop,
-  DragDropRegistry,
   CdkDrag,
   CdkDragDrop,
   CDK_DROP_LIST,
   DragRef,
-  DropListRef,
   CdkDropListGroup,
   CdkDropList,
   CDK_DRAG_CONFIG,
   DragRefConfig,
+  DragDropRegistry,
 } from '@angular/cdk/drag-drop';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
 import { PblNgridComponent, TablePlugin, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
+import { cdkDropList, cdkDrag } from '../v7-compat';
 import { CdkLazyDropList, CdkLazyDrag } from '../core';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblDragRef } from '../core/drag-ref';
+import { extendGrid } from './extend-grid';
 
-import './extend-table';
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
     columnReorder?: PblNgridColumnReorderPluginDirective;
@@ -52,7 +51,7 @@ export const PLUGIN_KEY: 'columnReorder' = 'columnReorder';
 
 let _uniqueIdCounter = 0;
 
-@TablePlugin({ id: PLUGIN_KEY })
+@TablePlugin({ id: PLUGIN_KEY, runOnce: extendGrid })
 @Directive({
   selector: 'pbl-ngrid[columnReorder]',
   exportAs: 'pblNgridColumnReorder',
@@ -105,13 +104,14 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
   constructor(public table: PblNgridComponent<T>,
               pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
-              dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
+              dragDrop: DragDrop,
               changeDetectorRef: ChangeDetectorRef,
               @Optional() dir?: Directionality,
               @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>,
-              @Optional() @Inject(DOCUMENT) _document?: any,
-              dragDrop?: DragDrop) {
-    super(element, dragDropRegistry as any, changeDetectorRef, dir, group, _document, dragDrop);
+              @Optional() dragDropRegistry?: DragDropRegistry<any, any>, // for v7 compat
+              @Optional() @Inject(DOCUMENT) _document?: any) {
+    super(...cdkDropList(element, dragDrop, changeDetectorRef, dir, group, dragDropRegistry, _document));
+     // super(element, dragDrop, changeDetectorRef, dir, group);
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     this.directContainerElement = '.pbl-ngrid-header-row-main';
@@ -275,27 +275,29 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
   // CTOR IS REQUIRED OR IT WONT WORK IN AOT
   // TODO: Try to remove when supporting IVY
   constructor(element: ElementRef<HTMLElement>,
-            @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() dropContainer: CdkDropList,
-            @Inject(DOCUMENT) _document: any,
-            _ngZone: NgZone,
-            _viewContainerRef: ViewContainerRef,
-            viewportRuler: ViewportRuler,
-            dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
-            @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
-            _dir: Directionality,
-            dragDrop?: DragDrop,) {
-    super(
-      element,
-      dropContainer,
-      _document,
-      _ngZone,
-      _viewContainerRef,
-      viewportRuler,
-      dragDropRegistry,
-      config,
-      _dir,
-      dragDrop,
-    );
+              @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() dropContainer: CdkDropList,
+              @Inject(DOCUMENT) _document: any,
+              _ngZone: NgZone,
+              _viewContainerRef: ViewContainerRef,
+              @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
+              _dir: Directionality,
+              dragDrop: DragDrop,
+              _changeDetectorRef: ChangeDetectorRef,
+
+              @Optional() viewportRuler: ViewportRuler, // for v7 compat
+              @Optional() dragDropRegistry: DragDropRegistry<any, any>,) {
+    super(...cdkDrag(element, dropContainer, _document, _ngZone, _viewContainerRef, config, _dir, dragDrop, _changeDetectorRef, viewportRuler, dragDropRegistry));
+    // super(
+    //   element,
+    //   dropContainer,
+    //   _document,
+    //   _ngZone,
+    //   _viewContainerRef,
+    //   config,
+    //   _dir,
+    //   dragDrop,
+    //   _changeDetectorRef,
+    // );
   }
 
   /* CdkLazyDrag start */

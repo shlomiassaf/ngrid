@@ -1,5 +1,5 @@
 <div>
-  <mat-tab-group *ngIf="multi">
+  <mat-tab-group *ngIf="code && multi">
     <ng-container *ngFor="let c of code">
       <mat-tab *ngIf="c.code">
         <ng-template mat-tab-label>

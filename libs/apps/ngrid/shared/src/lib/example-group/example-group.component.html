@@ -1,9 +1,6 @@
-<div class="example-group-container" fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px" #el>
-  <div fxFlex="15%" class="example-sticky-container">
+<div class="example-group-container" fxLayout="row" fxLayoutAlign="space-between start" #el>
+  <div fxFlex="0 0 260px" class="example-sticky-container">
     <mat-nav-list>
-      <mat-list-item *ngIf="rootLink" [routerLink]="['./']">
-        <a matLine>{{ rootLink }}</a>
-      </mat-list-item>
       <ng-container *ngFor="let g of registry.groups | async">
         <h3 mat-subheader *ngIf="g.title">{{ g.title }}</h3>
         <mat-list-item *ngFor="let ex of g.examples" [routerLink]="ex.routerLink">
@@ -12,11 +9,11 @@
       </ng-container>
     </mat-nav-list>
   </div>
-  <div class="example-container" [class.example-container-has-toc]="!hideToc" docsiTocArea #tocArea="docsiTocArea" [scrollContainer]="el">
+  <div fxFlex="*" class="example-container" docsiTocArea #tocArea="docsiTocArea" [scrollContainer]="el">
     <router-outlet #outlet="outlet"></router-outlet>
     <ng-content *ngIf="!outlet.isActivated"></ng-content>
   </div>
-  <div *ngIf="!hideToc" fxFlex="15%" class="example-sticky-container example-toc-container">
+  <div *ngIf="tocArea.hasLinks | async" fxFlex="0 0 18%" class="example-sticky-container example-toc-container">
     <docsi-toc [tocArea]="tocArea">
       <a *docsiTocLinkTemplate="let ctx;"
          [routerLink]="[ctx.rootUrl]"
