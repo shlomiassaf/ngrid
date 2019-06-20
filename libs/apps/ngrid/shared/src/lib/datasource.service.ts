@@ -1,5 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Injectable } from '@angular/core';
 import * as countryData from 'country-data';
 import {
   postError,
@@ -22,75 +21,16 @@ interface IncomingServerMessageEvent<T extends keyof ServerProtocol = keyof Serv
   };
 }
 
-@Injectable({ providedIn: 'root' })
-export class DemoDataSource {
+class WorkerStoreAdapter {
   ready: Promise<void>;
 
-  private customers: Customer[] = [];
-  private persons: Person[] = [];
-  private sellers: Seller[] = [];
-  private countries: any = countryData;
-  private controller: ServiceWorker;
+  private worker: Worker;
   private messageEventListener = (event: IncomingServerMessageEvent) => this.onMessage(event);
 
-  constructor(@Inject(DOCUMENT) document: Document) {
-    const skipUpdate = false;
-    if ('serviceWorker' in navigator &&  (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
-      const src = document.currentScript ? document.currentScript.getAttribute('src') : '';
-      const srcParts = src.split('/');
-      srcParts.pop();
-      srcParts.push('sw.js');
-      this.ready = navigator.serviceWorker.register((srcParts.length > 1 ? '/' : '') + srcParts.join('/'))
-        .then( () => {
-           // controller may be set when sw is ready
-          const hasController = !!navigator.serviceWorker.controller;
-          return navigator.serviceWorker.ready
-            .then( () => navigator.serviceWorker.getRegistration() )
-            .then ( registration => {
-              if (!registration) {
-                throw new Error('no active service worker registration is found');
-              }
-              if (!skipUpdate && hasController) {
-                return registration.update()
-                  .then( () => {
-                    const newWorker = registration.installing || registration.waiting;
-
-                    if (newWorker) {
-                      // wait until worker is activated
-                      return eventWaitUntil(newWorker, 'statechange', () => newWorker.state === 'activated')
-                        .then( () => registration );
-                    }
-                    return registration;
-                  });
-              } else {
-                return registration;
-              }
-            })
-            .then ( registration => {
-              const controller = registration.active;
-
-              if (!controller) {
-                throw new Error('no active service worker registration is found');
-              }
-
-              // uncontrolled
-              // possibly a newly install
-              // if (!navigator.serviceWorker.controller) {
-              //   await sendMessageRequest(controller, {
-              //     action: ACTION.REQUEST_CLAIM,
-              //   });
-              // }
-
-              // await sendMessageRequest(controller, {
-              //   action: ACTION.PING,
-              // });
-
-
-              this.controller = registration.active;
-              this.controller.addEventListener('message', this.messageEventListener );
-            })
-        });
-    }
+  constructor() {
+    const worker = this.worker = new Worker('./datasource.worker', { type: 'module' });
+    this.ready = eventWaitUntil(worker, 'message', msg => msg === 'ready')
+      .then( () => this.worker.addEventListener('message', this.messageEventListener ) );
   }
 
   reset(...collections: Array<DATA_TYPES>): void {
@@ -109,13 +49,8 @@ export class DemoDataSource {
     return this.sendAction('getSellers', { delay, limit }).then( response => response.data );
   }
 
-
-  getCountries() {
-    return Promise.resolve(this.countries);
-  }
-
   dispose(): void {
-    this.controller.removeEventListener('message', this.messageEventListener);
+    this.worker.removeEventListener('message', this.messageEventListener);
   }
 
   private onMessage(event: IncomingServerMessageEvent): void {
@@ -142,10 +77,58 @@ export class DemoDataSource {
     data: ClientRequest<T>,
     timeout?: number): Promise<ClientPostMessageEvent<T>> {
     const message = { action, data };
-    return this.controller
-      ? sendMessageRequest<T>(this.controller, message, timeout)
+    return this.worker
+      ? sendMessageRequest<T>(this.worker, message, timeout)
       : this.ready.then( () => this.sendAction(action, data, timeout) );
   }
+}
+
+class WindowStoreAdapter {
+  ready: Promise<void>;
+  private store: import('./datastore/datastore').DataStore;
+
+  constructor() {
+    this.ready = import('./datastore/datastore')
+      .then( datastore => {
+        this.store = new  datastore.DataStore();
+      });
+  }
+
+  reset(...collections: Array<DATA_TYPES>): void { this.store.reset(...collections); }
+  getCustomers(delay = 1000, limit = 500): Promise<Customer[]> { return this.store.getCustomers(delay, limit); }
+  getPeople(delay = 1000, limit = 500): Promise<Person[]> { return this.store.getPeople(delay, limit); }
+  getSellers(delay = 1000, limit = 500): Promise<Seller[]> { return this.store.getSellers(delay, limit); }
+
+  dispose(): void { }
+}
+
+@Injectable({ providedIn: 'root' })
+export class DemoDataSource {
+  ready: Promise<void>;
+
+  private countries: any = countryData;
+  private adapter: WorkerStoreAdapter | WindowStoreAdapter;
+
+  constructor() {
+    if (typeof Worker !== 'undefined') {
+      this.adapter = new WorkerStoreAdapter();
+    } else {
+      this.adapter = new WindowStoreAdapter();
+    }
+    this.ready = this.adapter.ready;
+  }
+
+  reset(...collections: Array<DATA_TYPES>): void { this.adapter.reset(...collections); }
+
+  getCustomers(delay = 1000, limit = 500): Promise<Customer[]> { return this.adapter.getCustomers(delay, limit); }
+
+  getPeople(delay = 1000, limit = 500): Promise<Person[]> { return this.adapter.getPeople(delay, limit); }
+
+  getSellers(delay = 1000, limit = 500): Promise<Seller[]> { return this.adapter.getSellers(delay, limit); }
+
+  getCountries() { return Promise.resolve(this.countries); }
+
+  dispose(): void { this.adapter.dispose(); }
 }
 
 /**

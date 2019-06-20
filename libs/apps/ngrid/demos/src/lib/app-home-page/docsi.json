@@ -1,7 +1,6 @@
 {
   "mdTemplate": [
     "./app-home-page.component.md",
-    "./sw-note.md",
     "../../../../../../../TODO.md"
   ]
 }

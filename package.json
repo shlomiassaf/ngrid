@@ -130,7 +130,6 @@
     "scss-bundle": "^2.5.1",
     "semantic-release": "^15.13.12",
     "semantic-release-monorepo": "^6.1.1",
-    "serviceworker-webpack-plugin": "^1.0.1",
     "toposort": "^2.0.2",
     "ts-loader": "^5.3.3",
     "ts-node": "~7.0.0",

@@ -17,6 +17,15 @@ Once the library is compiled with the v8 angular compiler it will not work in an
 It is theoretically possible to support angular 7 as well, it will require 2 distinct versions 1 for v8 and one for v7.  
 It will require 2 compilations, one with angular v8, then uninstall it and install v7 and run the compilation again.
 
+This is not trivial, the compiler has changed but also other parts like the cli with it's new Builders API.  
+
+This will require updating the relevant build script to support dual mode as well as installing build packages that relay on the cli (ng-cli-packagr-tasks)
+
+- Update angular/cdk/material/other packages that are built with v8 compiler to their v7 equivalent
+- Update scss-bundler/compiler tool script to use v7 Architect API
+
+Since `@angular/material` does not support backwards I don't see any reason to do that...
+
 ---
 
 ### If you like this product and want to help, WELCOME

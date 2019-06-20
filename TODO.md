@@ -34,7 +34,7 @@
   - Implement Auto injected versions (package.json) and smart inter-dependencies between the built packages
 
   - Demo
-    - Show in UX when service worker is building DB
+    - Show in UX when worker is building DB
     - Add more stories to the **storied** section
     - Complete the **concepts** section ( see the TODO  at the end of the concepts welcome page)
     - Improve / Add demos for specific features

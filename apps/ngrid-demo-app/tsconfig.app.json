@@ -6,7 +6,8 @@
   },
   "exclude": [
     "test.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "../../libs/apps/ngrid/**/*.worker.ts"
   ],
   "include": [
     "**/*.ts",

@@ -1,4 +1,3 @@
-/// <reference path="./service-worker" />
 import { Customer, Person, Seller } from './models';
 
 export type DATA_TYPES = 'customers' | 'people' | 'sellers';

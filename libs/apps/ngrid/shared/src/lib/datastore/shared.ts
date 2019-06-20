@@ -20,19 +20,19 @@ export type ClientPostMessageEvent<T extends keyof ClientProtocol = keyof Client
 export type ServerPostMessageEvent<T extends keyof ServerProtocol = keyof ServerProtocol>
   = MessageResponse<ServerProtocol[T]['request'], ServerProtocol[T]['response']>;
 
-export class ServiceWorkerMessageError<T> extends Error {
-  name = 'ServiceWorkerMessageError';
-  remoteError?: ServiceWorkerRemoteError;
+export class WorkerMessageError<T> extends Error {
+  name = 'WorkerMessageError';
+  remoteError?: WorkerRemoteError;
   request: T;
 
   private constructor() {
     super();
   }
 
-  static create<T>(request: T, message: string, remoteError?: any): ServiceWorkerMessageError<T> {
+  static create<T>(request: T, message: string, remoteError?: any): WorkerMessageError<T> {
     // tslint:disable-next-line:no-use-before-declare
-    const err = new ServiceWorkerMessageError<T>();
-    Object.setPrototypeOf(err, ServiceWorkerMessageError.prototype);
+    const err = new WorkerMessageError<T>();
+    Object.setPrototypeOf(err, WorkerMessageError.prototype);
     err.request = request;
     if (remoteError) {
       err.remoteError = remoteError;
@@ -47,18 +47,18 @@ export class ServiceWorkerMessageError<T> extends Error {
   }
 }
 
-export interface ServiceWorkerRemoteError {
+export interface WorkerRemoteError {
   name: string;
   message: string;
   stack?: any;
 }
 
-export function postError(error: Error, withStack: boolean = true): { error: ServiceWorkerRemoteError } {
+export function postError(error: Error, withStack: boolean = true): { error: WorkerRemoteError } {
   const e = {
     error: {
       name: error.name,
       message: error.message
-    } as ServiceWorkerRemoteError
+    } as WorkerRemoteError
   };
   if (withStack) {
     e.error.stack = error.stack;
@@ -67,17 +67,17 @@ export function postError(error: Error, withStack: boolean = true): { error: Ser
 }
 
 export function sendMessageRequest<T extends keyof ServerProtocol>(
-  target: Window | ServiceWorker | Client,
+  target: Worker,
   message: { action: T, data: ServerRequest<T> },
   timeout?: number
 ): Promise<ServerPostMessageEvent<T>>;
 export function sendMessageRequest<T extends keyof ClientProtocol>(
-  target: Window | ServiceWorker | Client,
+  target:  Worker,
   message: { action: T, data: ClientRequest<T> },
   timeout?: number
 ): Promise<ClientPostMessageEvent<T>>;
 export function sendMessageRequest<T extends keyof (ServerProtocol | ClientProtocol)>(
-  target: Window | ServiceWorker | Client,
+  target:  Worker,
   message: { action: T, data: ClientRequest<T> | ServerRequest<T> },
   timeout = 3 * 1e3
 ): Promise<ClientPostMessageEvent<T> | ServerPostMessageEvent<T>> {
@@ -86,7 +86,7 @@ export function sendMessageRequest<T extends keyof (ServerProtocol | ClientProto
 
   return new Promise((resolve, reject) => {
     const timer = isFinite(timeout) && setTimeout(() => {
-      reject(ServiceWorkerMessageError.create(message.data, `Service worker message timeout.`));
+      reject(WorkerMessageError.create(message.data, `Worker message timeout.`));
     }, timeout);
 
     port1.onmessage = ({ data }) => {
@@ -100,18 +100,12 @@ export function sendMessageRequest<T extends keyof (ServerProtocol | ClientProto
       port2.close();
 
       if (data && data.error) {
-        reject(ServiceWorkerMessageError.create(message, `Service worker remote error.`, data.error));
+        reject(WorkerMessageError.create(message, `Worker remote error.`, data.error));
       } else {
         resolve({ data, request: <any> message.data });
       }
     };
 
-    if (target === self.window) {
-      // posting message to self => legacy mode
-      // add `origin` param to `window.postMessage(message, targetOrigin, [transfer])`
-      target.postMessage(message, '*', [ port2 ]);
-    } else {
-      (target as ServiceWorker).postMessage(message, [ port2 ]);
-    }
+    target.postMessage(message, [ port2 ]);
   });
 }

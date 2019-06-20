@@ -1,30 +1,13 @@
 import * as Faker from 'faker';
-import {
-  postError,
-  sendMessageRequest,
-  ServerProtocol,
-  ServerRequest,
-  ServerResponse,
-  ClientProtocol,
-  ClientRequest,
-  ServerPostMessageEvent
-} from './shared';
 import { Customer, Person, Seller } from './models';
 import { DATA_TYPES } from './protocols';
-
-export interface IncomingClientMessageEvent<T extends keyof ClientProtocol = keyof ClientProtocol> extends MessageEvent {
-  data: {
-    action: T;
-    data: ClientRequest<T>
-  };
-}
 
 function getFaker(): Promise<typeof Faker> {
   // return import('faker');
   return Promise.resolve(Faker)
 }
 
-export class DatasourceStore {
+export class DataStore {
 
   private customers: Customer[] = [];
   private persons: Person[] = [];
@@ -137,76 +120,9 @@ export class DatasourceStore {
       });
   }
 
-  onMessage(event: IncomingClientMessageEvent): void {
-    const { data, ports } = event;
-
-    if ( !data || !ports || !ports.length ) {
-      return;
-    }
-
-    const port = ports[ 0 ];
-
-    const d = data.data;
-    let p: Promise<any>;
-    switch (data.action) {
-      case 'reset':
-        this.reset(...d.type)
-        break;
-      case 'getCustomers':
-        p = this.getCustomers(d.delay, d.limit);
-        break;
-      case 'getPeople':
-        p = this.getPeople(d.delay, d.limit);
-        break;
-      case 'getSellers':
-        p = this.getSellers(d.delay, d.limit);
-        break;
-    }
-    if (p) {
-      p.then(response => port.postMessage(response))
-          .catch(err => port.postMessage(postError(err)));
-    }
-  }
-
-
   private wait(time: number): Promise<void> {
     return new Promise( resolve => {
       setTimeout(resolve, time);
     });
   }
 }
-
-const DEBUG = true;
-const serviceWorker: ServiceWorkerGlobalScope = self as any;
-const store = new DatasourceStore();
-
-// When the service worker is first added to a computer.
-serviceWorker.addEventListener('install', event => {
-   // Perform install steps.
-  if (DEBUG) {
-    console.log('[SW] Install event')
-  }
-  event.waitUntil(Promise.resolve())
-})
-
-// After the install event.
-serviceWorker.addEventListener('activate', event => {
-  if (DEBUG) {
-    console.log('[SW] Activate event')
-  }
-  // Clean the caches
-  event.waitUntil(Promise.resolve());
-})
-
-serviceWorker.addEventListener('message', event => {
-  switch (event.data.action) {
-    case 'skipWaiting':
-      if (serviceWorker.skipWaiting) {
-        serviceWorker.skipWaiting();
-        serviceWorker.clients.claim();
-      }
-      break
-    default:
-      store.onMessage(event);
-  }
-});
