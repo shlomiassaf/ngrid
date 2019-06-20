@@ -1,3 +1,18 @@
+# 1.0.0-alpha.24 (2019-06-20)
+
+This release supports Angular V8. (not backward compatible with v7)
+
+### Code Refactoring
+
+* **ngrid:** new design cell style control ([b1a3e4b](https://github.com/shlomiassaf/ngrid/commit/b1a3e4b))
+
+
+### BREAKING CHANGES
+
+* **ngrid:** Beacuse angular 8 has a new implementation for `ngStyle` and `ngClass` a new directive is needed which replaces `parentNgStyle` and `parentNgClass` that are not longer used, use `ngridCellClass` and `ngridCellStyle` instead.
+
+
+
 # 1.0.0-alpha.20 (2019-06-12)
 
 ### feat
