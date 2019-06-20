@@ -21,12 +21,12 @@ import {
   DragDropRegistry,
   CdkDrag,
   CDK_DROP_LIST,
-  DragRef, DropListRef,
   CDK_DRAG_CONFIG, DragRefConfig
 } from '@angular/cdk/drag-drop';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
 import { PblNgridComponent, TablePlugin, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
+import { cdkDropList, cdkDrag } from '../v7-compat';
 import { CdkLazyDropList, CdkLazyDrag } from '../core/lazy-drag-drop';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblDragRef } from '../core/drag-ref';
@@ -79,8 +79,11 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
               dragDrop: DragDrop,
               changeDetectorRef: ChangeDetectorRef,
               @Optional() dir?: Directionality,
-              @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>,) {
-    super(element, dragDrop, changeDetectorRef, dir, group);
+              @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>,
+              @Optional() dragDropRegistry?: DragDropRegistry<any, any>, // for v7 compat
+              @Optional() @Inject(DOCUMENT) _document?: any) {
+    super(...cdkDropList(element, dragDrop, changeDetectorRef, dir, group, dragDropRegistry, _document));
+    // super(element, dragDrop, changeDetectorRef, dir, group);
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     this.dropped.subscribe( event => {
       this.table.contextApi.clear();
@@ -147,18 +150,22 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
               @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
               _dir: Directionality,
               dragDrop: DragDrop,
-              _changeDetectorRef: ChangeDetectorRef,) {
-    super(
-      element,
-      dropContainer,
-      _document,
-      _ngZone,
-      _viewContainerRef,
-      config,
-      _dir,
-      dragDrop,
-      _changeDetectorRef,
-    );
+              _changeDetectorRef: ChangeDetectorRef,
+
+              @Optional() viewportRuler: ViewportRuler, // for v7 compat
+              @Optional() dragDropRegistry: DragDropRegistry<any, any>,) {
+    super(...cdkDrag(element, dropContainer, _document, _ngZone, _viewContainerRef, config, _dir, dragDrop, _changeDetectorRef, viewportRuler, dragDropRegistry));
+    // super(
+    //   element,
+    //   dropContainer,
+    //   _document,
+    //   _ngZone,
+    //   _viewContainerRef,
+    //   config,
+    //   _dir,
+    //   dragDrop,
+    //   _changeDetectorRef,
+    // );
   }
 
   /* CdkLazyDrag start */
