@@ -43,6 +43,11 @@ You can also concatenate the file with the rest of your application's css.
 
 When you want more customization than a pre-built theme offers, you can create your own theme file.
 
+There are 2 configurable theme sections:
+
+- Color & Spacing Palette
+- Typography
+
 **ngrid** adopts the same system used by angular material to define and manage themes.
 
 ---
@@ -100,6 +105,82 @@ I> A color schema is a set of color definitions, a main color and additional var
 
 You can define your own color schemas, for inspiration take a look at the schemas defined in the <a href="https://github.com/angular/components/blob/8139358926b9d486b7f271778752fd73b50970af/src/material/core/theming/_palette.scss#L39" target="_blank">angular material project</a>.
 To learn more about the color system visit the <a href="https://material.io/design/color" target="_blank">material design docs</a>
+
+### Spacing
+
+Spacing is visually similar to padding but it is defined differently.
+
+This is the default spacing setup defined when you call `pbl-light-theme` or `pbl-dark-theme`:
+
+```scss
+$pbl-spacing-theme-default: (
+  header-row-height: 56px,
+  row-height: 48px,
+  footer-row-height: 48px,
+  row-spacing: 24px,
+  cell-spacing: 12px,
+);
+```
+
+- **header-row-height**: The minium height of header rows
+- **row-height**: The minium height of grid data rows
+- **footer-row-height**: The minium height of footer rows
+- **row-spacing**: The horizontal padding (left/right) of a row
+- **cell-spacing**: The horizontal padding (left) of a cell
+
+There is another default spacing theme called `$pbl-spacing-theme-narrow`:
+
+```scss
+$pbl-spacing-theme-default: (
+  header-row-height: 32px,
+  row-height: 26px,
+  footer-row-height: 32px,
+  row-spacing: 24px,
+  cell-spacing: 12px,
+);
+```
+
+#### Overriding the default spacing
+
+```scss
+@import '~@pebula/ngrid/theming';
+
+$ngrid-palette: pbl-palette($pbl-blue);
+$pbl-ngrid-theme: pbl-dark-theme($ngrid-palette);
+
+// After the theme is defined but before it is included (rendered)
+$narrow-spacing: ( spacing: $pbl-spacing-theme-narrow );
+$pbl-ngrid-theme: map-merge($pbl-ngrid-theme, $narrow-spacing);
+
+@include pbl-ngrid-typography();
+@include pbl-ngrid-theme($pbl-ngrid-theme);
+```
+
+W> Make sure you update the theme variable before including `pbl-ngrid-theme`.
+
+#### Multiple Spacings
+
+For multiple spacing definitions we need custom classes with specific spacing values.
+
+For this we use the mixin `pbl-ngrid-spacing` that only renders the CSS code related to spacing
+
+```scss
+@import '~@pebula/ngrid/theming';
+
+$ngrid-palette: pbl-palette($pbl-blue);
+$pbl-ngrid-theme: pbl-dark-theme($ngrid-palette);
+
+@include pbl-ngrid-typography();
+@include pbl-ngrid-theme($pbl-ngrid-theme);
+
+// After the theme is included (rendered):
+$narrow-spacing: ( spacing: $pbl-spacing-theme-narrow );
+pbl-ngrid.slim {
+  @include pbl-ngrid-spacing(map-merge($pbl-shell-theme, $narrow-spacing));
+}
+```
+
+Now we can use `<pbl-ngrid class="slim"></pbl-ngrid>` for a slim grid.
 
 ## Typography
 
