@@ -633,6 +633,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    * Invalidates the header, including a full rebuild of column headers
    */
   invalidateColumns(): void {
+    this._plugin.emitEvent({ kind: 'beforeInvalidateHeaders' });
+
     const rebuildRows = this._store.allColumns.length > 0;
     this._extApi.contextApi.clear();
     this._store.invalidate(this.columns);

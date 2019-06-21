@@ -18,6 +18,10 @@ export interface PblNgridOnInvalidateHeadersEvent {
   kind: 'onInvalidateHeaders';
 }
 
+export interface PblNgridBeforeInvalidateHeadersEvent {
+  kind: 'beforeInvalidateHeaders';
+}
+
 export interface PblNgridOnDestroyEvent {
   kind: 'onDestroy';
   wait(p: Promise<void>): void;
@@ -32,6 +36,7 @@ export interface PblNgridOnDataSourceEvent {
 export type PblNgridEvents =
   | PblNgridOnInitEvent
   | PblNgridOnResizeRowEvent
+  | PblNgridBeforeInvalidateHeadersEvent
   | PblNgridOnInvalidateHeadersEvent
   | PblNgridOnDataSourceEvent
   | PblNgridOnDestroyEvent;
