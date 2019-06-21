@@ -640,14 +640,15 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this._store.invalidate(this.columns);
     this.attachCustomCellTemplates();
     this.attachCustomHeaderCellTemplates();
-    this.cdr.markForCheck();
+    this._cdkTable.clearHeaderRowDefs();
+    this._cdkTable.clearFooterRowDefs();
+    // this.cdr.markForCheck();
     this.cdr.detectChanges();
 
     // after invalidating the headers we now have optional header/headerGroups/footer rows added
     // we need to update the template with this data which will create new rows (header/footer)
     this.resetHeaderRowDefs();
     this.resetFooterRowDefs();
-
     this.cdr.markForCheck();
 
     /*  Now we will force clearing all data rows and creating them back again if this is not the first time we invalidate the columns...
