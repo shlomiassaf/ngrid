@@ -23,6 +23,7 @@ import {
 
   PblNgridCellStyling,
   PblNgridOuterSectionDirective,
+  PblNgridHeaderExtensionRefDirective,
   PblNgridNoDataRefDirective,
   PblNgridPaginatorRefDirective,
 
@@ -65,6 +66,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridRowComponent,
     PblNgridCellStyling,
     PblNgridOuterSectionDirective,
+    PblNgridHeaderExtensionRefDirective,
     PblNgridNoDataRefDirective,
     PblNgridPaginatorRefDirective,
     PblNgridHeaderCellDefDirective,
@@ -85,6 +87,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridRowComponent,
     PblNgridCellStyling,
     PblNgridOuterSectionDirective,
+    PblNgridHeaderExtensionRefDirective,
     PblNgridNoDataRefDirective,
     PblNgridPaginatorRefDirective,
     PblNgridHeaderCellDefDirective,

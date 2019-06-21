@@ -1,6 +1,6 @@
 // tslint:disable:use-host-property-decorator
 
-import { Directive, TemplateRef, OnInit, OnDestroy, ComponentFactory, ComponentRef, Injector } from '@angular/core';
+import { Directive, TemplateRef, OnInit, OnDestroy, ComponentFactory, ComponentRef, Injector, Input } from '@angular/core';
 
 import { PblColumn } from '../columns/column';
 import { PblNgridComponent } from '../table.component';
@@ -62,6 +62,56 @@ export class PblNgridDataHeaderExtensionContext<T = any> extends MetaCellContext
 
 export interface PblNgridDataHeaderExtensionRef<T = any> {
   shouldRender?(context: PblNgridDataHeaderExtensionContext<T>): boolean;
+}
+
+
+/**
+ * A generic, multi-purpose template reference for data header extensions.
+ * The template's context is `PblNgridDataHeaderExtensionContext`:
+ *
+ * ```ts
+ * interface PblNgridDataHeaderExtensionContext {
+ *   col: PblMetaColumn;
+ *   table: PblNgridComponent<any>;
+ *   injector: Injector;
+ * }
+ * ```
+ *
+ * By default it will render if registered but it is possible to provide a predicate to conditionally load it.
+ *
+ * ```html
+ * <div *pblNgridHeaderExtensionRef="let ctx"></div>
+ * ````
+ *
+ * Or with a `shouldRender` predicate:
+ *
+ * ```html
+ * <div *pblNgridHeaderExtensionRef="shouldRender; let ctx"></div>
+ * ```
+ *
+ * And in the component the template is defined on:
+ *
+ * ```ts
+ * class MyComponent {
+ *
+ *   shouldRender = (context: PblNgridDataHeaderExtensionContext) => {
+ *     // Some code returning true or false
+ *   }
+ * }
+ * ```
+ *
+ * Note that the `shouldRender` predicate is run once when the header initialize.
+ */
+@Directive({ selector: '[pblNgridHeaderExtensionRef]' })
+export class PblNgridHeaderExtensionRefDirective extends PblNgridMultiTemplateRegistry<PblNgridDataHeaderExtensionContext, 'dataHeaderExtensions'> implements PblNgridDataHeaderExtensionRef {
+  private static _id = 0;
+
+  readonly name: string = 'genericHeaderExtension-' + PblNgridHeaderExtensionRefDirective._id++;
+  readonly kind: 'dataHeaderExtensions' = 'dataHeaderExtensions';
+
+  @Input('pblNgridHeaderExtensionRef') shouldRender?: (context: PblNgridDataHeaderExtensionContext) => boolean;
+
+  constructor(tRef: TemplateRef<PblNgridDataHeaderExtensionContext>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
 
 /**
