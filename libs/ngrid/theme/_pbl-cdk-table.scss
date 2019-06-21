@@ -20,10 +20,6 @@
   $cell-color: map-get($foreground, ngrid-cell-color);
   $footer-cell-color: map-get($foreground, ngrid-footer-cell-color);
 
-  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
-    position: relative;
-  }
-
   .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row,
   .pbl-ngrid-header-cell, .pbl-ngrid-cell, .pbl-ngrid-footer-cell {
     border-color: $border-color;

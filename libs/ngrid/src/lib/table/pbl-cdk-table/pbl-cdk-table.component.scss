@@ -1,5 +1,9 @@
 @import './pbl-cdk-table.component.from-material';
 
+.pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+  position: relative;
+}
+
 /* MULTI COLUMN AND COLUMN SPAN */
 .pbl-ngrid-header-cell.pbl-header-group-cell {
   display: flex;
