@@ -52,14 +52,6 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.pbl-ngrid-column-resizer-handle {
-  position: absolute;
-  right: 0%;
-  height: 70%;
-  width: 1px;
-  transform: translateY(30%);
-}
-
 .pbl-ngrid-column-type-progressBar.pbl-ngrid-cell {
   position: relative;
   > div {
