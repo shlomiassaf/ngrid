@@ -72,9 +72,12 @@ export class PblNgridCellStyling {
 
   ngAfterViewInit(): void {
     this._parent = this.elRef.nativeElement.parentElement;
+    this.updateParent();
   }
 
-  ngDoCheck(): void {
+  ngDoCheck(): void { this,this.updateParent(); }
+
+  private updateParent(): void {
     if (this._parent) {
       if (this._styleDiffer && this._styleDiffer.hasValueChanged()) {
         const lastStyle = this._lastStyle;
