@@ -64,7 +64,7 @@
       display: block;
       position: absolute;
       top: 0;
-      left: 0.5px;
+      left: 0;
       height: 100%;
       border-right: 1px solid $border-color;
     }
@@ -78,19 +78,19 @@
       display: block;
       position: absolute;
       top: 0;
-      right: -1.5px;
+      right: -1px;
       height: 100%;
       border-right: 1px solid $border-color;
     }
   }
 
-  .pbl-ngrid-cell.pbl-ngrid-sticky-end:not(.pbl-ngrid-cell-focused):before {
+  .pbl-ngrid-cell.pbl-ngrid-sticky-end:before {
     transition: all 250ms ease-in;
     content: '';
     display: block;
     position: absolute;
     top: 0;
-    left: 0.5px;
+    left: 0;
     height: 100%;
     border-right: 1px solid $border-color;
   }
