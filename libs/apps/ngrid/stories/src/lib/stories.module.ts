@@ -11,6 +11,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { PblNgridModule, PblNgridRegistryService } from '@pebula/ngrid';
 import { PblNgridDragModule } from '@pebula/ngrid/drag';
@@ -26,6 +27,7 @@ import { StoriesHomePageComponent } from './components';
 import { ActionRowStoryGridExampleComponent } from './action-row/action-row.component';
 import { TableActionRowComponent } from './action-row/table-action-row/table-action-row.component';
 import { MultiColumnFilterGridExampleComponent } from './multi-column-filter/multi-column-filter.component';
+import { ColumnHeaderMenuGridExampleComponent } from './column-header-menu/column-header-menu.component';
 
 const MATERIAL = [
   MatProgressSpinnerModule,
@@ -38,6 +40,7 @@ const MATERIAL = [
   MatFormFieldModule,
   MatSlideToggleModule,
   MatButtonToggleModule,
+  MatMenuModule,
 ];
 
 const DECLARATION = [
@@ -45,11 +48,13 @@ const DECLARATION = [
   ActionRowStoryGridExampleComponent,
   TableActionRowComponent,
   MultiColumnFilterGridExampleComponent,
+  ColumnHeaderMenuGridExampleComponent,
 ];
 
 const ROUTES = [
   { path: 'action-row', component: ActionRowStoryGridExampleComponent, data: { title: 'Action Row' } },
   { path: 'multi-column-filter', component: MultiColumnFilterGridExampleComponent, data: { title: 'Multi-Column Filter' } },
+  { path: 'column-header-menu', component: ColumnHeaderMenuGridExampleComponent, data: { title: 'Column Header Menu' } },
 ];
 
 @NgModule({
