@@ -29,8 +29,8 @@ export class ExampleGroupComponent {
         )
         .subscribe( groups => {
           const last = this.route.snapshot.pathFromRoot.pop();
-          const path = last.firstChild.routeConfig.path;
-          const example = groups[0].examples.find( e => e.id === path);
+          const path = last.firstChild && last.firstChild.routeConfig.path;
+          const example = path && groups[0].examples.find( e => e.id === path);
           if (!example) {
             const group = groups[0].examples[0];
             this.router.navigate(group.routerLink, { relativeTo: this.route });
