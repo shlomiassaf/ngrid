@@ -42,7 +42,6 @@ import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll
   styleUrls: ['./pbl-cdk-table.component.scss'],
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'pbl-cdk-table',
-    '[class.pbl-ngrid-margin-cell-box-model]': `isMarginSpace`
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,8 +62,6 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     this._minWidth = value || null;
     this._element.style.minWidth = value ? value + 'px' : null;
   }
-
-  get isMarginSpace(): boolean { return this.table.boxSpaceModel === 'margin'; }
 
   private _minWidth: number | null = null;
   private onRenderRows$: Subject<DataRowOutlet>;

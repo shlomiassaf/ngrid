@@ -27,11 +27,5 @@
   cursor: text;
 }
 
-.pbl-cdk-table.pbl-ngrid-margin-cell-box-model .pbl-ngrid-header-cell.pbl-header-group-cell {
-  &:not(:last-child) {
-    border-right-width: 1px;
-    border-right-style: solid;
-  }
-}
 /* MULTI COLUMN AND COLUMN SPAN */
 

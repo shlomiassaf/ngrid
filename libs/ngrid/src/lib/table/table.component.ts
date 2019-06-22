@@ -40,12 +40,7 @@ import { PblColumn, PblColumnStore, PblMetaColumnStore, PblNgridColumnSet, PblNg
 import { PblNgridCellContext, PblNgridMetaCellContext, ContextApi, PblNgridContextApi } from './context/index';
 import { PblNgridRegistryService } from './services/table-registry.service';
 import { PblNgridConfigService } from './services/config';
-import {
-  DynamicColumnWidthLogic,
-  BoxModelSpaceStrategy,
-  DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY,
-  DYNAMIC_MARGIN_BOX_MODEL_SPACE_STRATEGY
-} from './col-width-logic/dynamic-column-width';
+import { DynamicColumnWidthLogic, DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY } from './col-width-logic/dynamic-column-width';
 import { ColumnApi, AutoSizeToFitOptions } from './column-api';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblNgridMetaRowService } from './meta-rows/index';
@@ -84,34 +79,6 @@ export function metaRowServiceFactory(table: { _extApi: PblNgridExtensionApi; })
 })
 @UnRx()
 export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
-  readonly self = this;
-
-  /**
-   * Set's the margin cell indentation strategy.
-   * Margin cell indentation strategy apply margin to cells instead of paddings and defines all cell box-sizing to border-box.
-   *
-   * When not set (default) the table will use a padding cell indentation strategy.
-   * Padding cell indentation strategy apply padding to cells and defines all cell box-sizing to content-box.
-   */
-  @Input() get boxSpaceModel(): 'padding' | 'margin' { return this._boxSpaceModel; };
-  set boxSpaceModel(value: 'padding' | 'margin') {
-    if (this._boxSpaceModel !== value) {
-      this._boxSpaceModel = value;
-      this._cellWidthLogic = value === 'margin'
-        ? DYNAMIC_MARGIN_BOX_MODEL_SPACE_STRATEGY
-        : DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY
-      ;
-      if (this.isInit) {
-        // The UI changes are applied by toggle the `pbl-ngrid-margin-cell-box-model` CSS class.
-        // This is managed through binding in `PblCdkTableComponent`.
-        // After this change we need to measure the cell's width again so we trigger a resizeRows call.
-        // We must run it deferred to allow binding to commit.
-        this.ngZone.onStable.pipe(take(1)).subscribe( () => this.resizeColumns() );
-      }
-    }
-  }
-  private _boxSpaceModel: 'padding' | 'margin';
-  private _cellWidthLogic: BoxModelSpaceStrategy;
 
   /**
    * Show/Hide the header row.
@@ -313,7 +280,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               public registry: PblNgridRegistryService,
               @Attribute('id') public readonly id: string) {
     const tableConfig = config.get('table');
-    this.boxSpaceModel = tableConfig.boxSpaceModel;
     this.showHeader = tableConfig.showHeader;
     this.showFooter = tableConfig.showFooter;
     this.noFiller = tableConfig.noFiller;
@@ -942,7 +908,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       columnStore: this._store,
       setViewport: (viewport) => this._viewport = viewport,
       dynamicColumnWidthFactory: (): DynamicColumnWidthLogic => {
-        return new DynamicColumnWidthLogic(this._cellWidthLogic);
+        return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY);
       }
     };
     this._extApi = extApi;

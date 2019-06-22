@@ -12,7 +12,6 @@
              [transpose]="toggleTranspose"
              [usePagination]="usePagination"
              focusMode="row"
-             [boxSpaceModel]="boxSpaceModel"
              [detailRow]="detailRowPredicate" [singleDetailRow]="singleDetailRow"
              [showHeader]="showHeader"
              [showFooter]="showFooter"
@@ -111,7 +110,6 @@
       <div class="example-feature-action" fxFlex fxLayout="column">
         <mat-slide-toggle (change)="usePagination = $event.checked ? 'pageNumber' : false" [checked]="usePagination">Show Paginator</mat-slide-toggle>
         <mat-slide-toggle (change)="toggleTranspose = $event.checked" [checked]="toggleTranspose">Transpose</mat-slide-toggle>
-        <mat-slide-toggle (change)="boxSpaceModel = $event.checked ? 'margin' : 'padding'" [checked]="boxSpaceModel === 'margin'">Margin Box Space Model</mat-slide-toggle>
         <mat-slide-toggle (change)="showHeader = $event.checked" [checked]="showHeader">Show Header</mat-slide-toggle>
         <mat-slide-toggle (change)="showFooter = $event.checked" [checked]="showFooter">Show Footer</mat-slide-toggle>
       </div>

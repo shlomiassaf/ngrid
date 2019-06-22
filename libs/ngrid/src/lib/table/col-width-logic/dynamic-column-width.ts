@@ -101,20 +101,6 @@ export class DynamicColumnWidthLogic {
 
 }
 
-export const DYNAMIC_MARGIN_BOX_MODEL_SPACE_STRATEGY: BoxModelSpaceStrategy = {
-  cell(col: PblColumnSizeInfo): number {
-    const style = col.style;
-    return parseInt(style.marginLeft) + parseInt(style.marginRight)
-  },
-  groupCell(col: PblColumnSizeInfo): number {
-    return this.cell(col);
-  },
-  group(cols: PblColumnSizeInfo[]): number {
-    const len = cols.length;
-    return len > 0 ? parseInt(cols[0].style.marginLeft) + parseInt(cols[len - 1].style.marginRight) : 0;
-  }
-};
-
 export const DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY: BoxModelSpaceStrategy = {
   cell(col: PblColumnSizeInfo): number {
     const style = col.style;

@@ -122,7 +122,6 @@ export class AllInOneGridExampleComponent {
   showHeader = true;
   hideColumns: string[] = [];
   toggleTranspose = false;
-  boxSpaceModel: 'padding' | 'margin' = 'padding';
   enableRowSelection = true;
   singleDetailRow = false;
 

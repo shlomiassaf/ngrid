@@ -7,7 +7,6 @@ export interface PblNgridConfig {
     showHeader?: boolean;
     showFooter?: boolean;
     noFiller?: boolean;
-    boxSpaceModel?: 'padding' | 'margin';
   }
 }
 
@@ -15,7 +14,6 @@ const DEFAULT_TABLE_CONFIG: PblNgridConfig['table'] = {
   showHeader: true,
   showFooter: false,
   noFiller: false,
-  boxSpaceModel: 'padding',
 };
 
 export const PEB_NGRID_CONFIG = new InjectionToken<PblNgridConfig>('PEB_NGRID_CONFIG');

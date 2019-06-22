@@ -5,13 +5,6 @@ import { PblColumnStore } from './columns/column-store';
 
 export interface AutoSizeToFitOptions {
   /**
-   * When true will not take into account box model gaps (padding/margin) when calculating the widths.
-   *
-   * Enabling might yield unexpected results.
-   */
-  ignoreBoxModel?: boolean;
-
-  /**
    * When `px` will force all columns width to be in fixed pixels
    * When `%` will force all column width to be in %
    * otherwise (default) the width will be set in the same format it was originally set.
@@ -157,10 +150,7 @@ export class ColumnApi<T> {
       const instructions = columnBehavior(column) || options;
 
       overflowTotalWidth += widthBreakout.content;
-
-      if (!options.ignoreBoxModel) {
-        totalWidth -= widthBreakout.nonContent;
-      }
+      totalWidth -= widthBreakout.nonContent;
 
       if (instructions.keepMinWidth && column.minWidth) {
         totalMinWidth += column.minWidth;
