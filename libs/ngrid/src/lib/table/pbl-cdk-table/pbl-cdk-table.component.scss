@@ -14,8 +14,8 @@
   }
 }
 
-.pbl-ngrid-header-cell {
-  position: relative; // We need this for column-resize feature
+.pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
+  position: relative;
 }
 
 .pbl-ngrid-cell {
@@ -25,21 +25,6 @@
 
 .pbl-ngrid-editable-cell {
   cursor: text;
-}
-
-.pbl-cdk-table:not(.pbl-ngrid-margin-cell-box-model) .pbl-ngrid-header-cell.pbl-header-group-cell {
-  position: relative;
-
-  &:not(:first-child):before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    border-left-width: 1px;
-    border-left-style: solid;
-  }
 }
 
 .pbl-cdk-table.pbl-ngrid-margin-cell-box-model .pbl-ngrid-header-cell.pbl-header-group-cell {

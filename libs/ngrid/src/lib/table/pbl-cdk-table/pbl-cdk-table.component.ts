@@ -24,8 +24,9 @@ import { Directionality } from '@angular/cdk/bidi';
 
 import { PblNgridComponent } from '../table.component';
 import { PblNgridExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
+import { PblNgridColumnDef } from '../directives/column-def';
 import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
-import { PblCdkVirtualScrollViewportComponent } from '../features/virtual-scroll/virtual-scroll-viewport.component';
+
 
 /**
  * Wrapper for the CdkTable that extends it's functionality to support various table features.
@@ -57,16 +58,19 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     return this.onRenderRows$.asObservable();
   }
 
-  get minWidth(): string | null { return this._minWidth; }
-  set minWidth(value: string | null) {
-    this._element.style.minWidth = this._minWidth = value || null;
+  get minWidth(): number | null { return this._minWidth; }
+  set minWidth(value: number | null) {
+    this._minWidth = value || null;
+    this._element.style.minWidth = value ? value + 'px' : null;
   }
 
   get isMarginSpace(): boolean { return this.table.boxSpaceModel === 'margin'; }
 
-  private _minWidth: string | null = null;
-
+  private _minWidth: number | null = null;
   private onRenderRows$: Subject<DataRowOutlet>;
+  private _lastSticky: PblNgridColumnDef;
+  private _lastStickyEnd: PblNgridColumnDef;
+  private _isStickyPending: boolean;
 
   constructor(_differs: IterableDiffers,
               _changeDetectorRef: ChangeDetectorRef,
@@ -81,6 +85,34 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     super(_differs, _changeDetectorRef, _elementRef, role, _dir, document, platform);
     this.table._cdkTable = this;
     this.trackBy = this.table.trackBy;
+
+    extApi.events.subscribe( e => {
+      if (e.kind === 'beforeInvalidateHeaders') {
+        if (this._lastSticky) {
+          this._lastSticky.queryCellElements('header', 'table', 'footer')
+            .forEach( el => el.classList.remove('pbl-ngrid-sticky-start'));
+          this._lastSticky = undefined;
+        }
+        if (this._lastStickyEnd) {
+          this._lastStickyEnd.queryCellElements('header', 'table', 'footer')
+            .forEach( el => el.classList.remove('pbl-ngrid-sticky-end'));
+          this._lastStickyEnd = undefined;
+        }
+      }
+    });
+  }
+
+  updateStickyColumnStyles() {
+    if (this._isStickyPending) {
+      return;
+    }
+
+    this._isStickyPending = true;
+    Promise.resolve()
+      .then( () => {
+        this._isStickyPending = false;
+        this._updateStickyColumnStyles();
+      });
   }
 
   ngOnDestroy(): void {
@@ -226,5 +258,46 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     } catch (ex) {
       this.multiTemplateDataRows = this.multiTemplateDataRows;
     }
+  }
+
+  private _updateStickyColumnStyles() {
+    const columns = this.table.columnApi.visibleColumns;
+    let sticky: PblNgridColumnDef, stickyEnd: PblNgridColumnDef;
+
+    for (let i = 0, len = columns.length; i < len; i++) {
+      if (columns[i].columnDef && columns[i].columnDef.sticky) {
+        sticky = columns[i].columnDef;
+      }
+    }
+
+    for (let i = columns.length - 1; i > -1; i--) {
+      if (columns[i].columnDef && columns[i].columnDef.stickyEnd) {
+        stickyEnd = columns[i].columnDef;
+      }
+    }
+
+    if (this._lastSticky) {
+      this._lastSticky.queryCellElements('header', 'table', 'footer')
+        .forEach( el => el.classList.remove('pbl-ngrid-sticky-start'));
+    }
+
+    if (sticky) {
+      sticky.queryCellElements('header', 'table', 'footer')
+        .forEach( el => el.classList.add('pbl-ngrid-sticky-start'));
+    }
+    this._lastSticky = sticky;
+
+    if (this._lastStickyEnd) {
+      this._lastStickyEnd.queryCellElements('header', 'table', 'footer')
+        .forEach( el => el.classList.remove('pbl-ngrid-sticky-end'));
+    }
+
+    if (stickyEnd) {
+      stickyEnd.queryCellElements('header', 'table', 'footer')
+        .forEach( el => el.classList.add('pbl-ngrid-sticky-end'));
+    }
+    this._lastStickyEnd = stickyEnd;
+
+    super.updateStickyColumnStyles();
   }
 }

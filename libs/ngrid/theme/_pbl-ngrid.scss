@@ -11,6 +11,7 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
+  $border-color: map-get($foreground, ngrid-border-color);
   $space-fill-background: map-get($background, grid-space-fill-color);
   $border-color: map-get($foreground, ngrid-border-color);
   $cell-focus-color: map-get($foreground, ngrid-cell-focus-color);
@@ -45,18 +46,53 @@
     }
   }
 
-  .pbl-ngrid-column-resizer-handle {
-    background: $border-color;
-  }
-
   .pbl-ngrid-cell {
     &.pbl-ngrid-cell-focused {
-      outline: 1px solid $cell-focus-color;
+      // outline: 1px solid $cell-focus-color;
+      box-shadow: inset 0px 0px 0px 1px $cell-focus-color;
       // box-shadow: inset 0px 0px 0px 1px $cell-focus-color;
     }
     &.pbl-ngrid-cell-selected:not(.pbl-ngrid-cell-focused) {
       background-color: transparentize($cell-focus-color, 0.75);
     }
+  }
+
+  .pbl-ngrid-header-cell:not(:first-child), .pbl-ngrid-footer-cell:not(:last-child) {
+    &:before {
+      transition: all 250ms ease-in;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0.5px;
+      height: 100%;
+      border-right: 1px solid $border-color;
+    }
+  }
+
+  .pbl-ngrid-cell.pbl-ngrid-sticky-start {
+    overflow: visible;
+    &:after {
+      transition: all 250ms ease-in;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: -1.5px;
+      height: 100%;
+      border-right: 1px solid $border-color;
+    }
+  }
+
+  .pbl-ngrid-cell.pbl-ngrid-sticky-end:not(.pbl-ngrid-cell-focused):before {
+    transition: all 250ms ease-in;
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0.5px;
+    height: 100%;
+    border-right: 1px solid $border-color;
   }
 
   @include pbl-ngrid-drag-plugin-theme($theme);

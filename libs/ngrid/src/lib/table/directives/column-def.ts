@@ -219,6 +219,21 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
     }
   }
 
+  updatePin(pin?: 'start' | 'end'): void {
+    this.sticky = this.stickyEnd = false;
+    switch(pin) {
+      case 'start':
+        this.sticky = true;
+        break;
+      case 'end':
+        this.stickyEnd = true;
+        break;
+    }
+    if (this.table.isInit) {
+      this.table._cdkTable.updateStickyColumnStyles();
+    }
+  }
+
   private attach(column: T): void {
     if (this._column !== column) {
       this.detach();
@@ -228,14 +243,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
         this.name = column.id.replace(/ /g, '_');
 
         if (isPblColumn(column)) {
-          this.sticky = this.stickyEnd = false;
-          switch(column.pin) {
-            case 'start':
-              this.sticky = true;
-              break;
-            case 'end':
-              this.stickyEnd = true;
-          }
+          this.updatePin(column.pin);
         }
       }
 

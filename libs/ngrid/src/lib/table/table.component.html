@@ -94,8 +94,8 @@
 
        Implementation is in the virtual scroll viewport (more precisely in `PblVirtualScrollForOf`)
   -->
-  <div #stickyRowHeaderContainer class="pbl-ngrid-sticky-row-scroll-container"><div [style.min-width]="_cdkTable?.minWidth"></div></div> <!-- HEADERS -->
-  <div #stickyRowFooterContainer class="pbl-ngrid-sticky-row-scroll-container"><div [style.min-width]="_cdkTable?.minWidth"></div></div> <!-- FOOTERS -->
+  <div #stickyRowHeaderContainer class="pbl-ngrid-sticky-row-scroll-container"><div [style.minWidth.px]="_cdkTable?.minWidth"></div></div> <!-- HEADERS -->
+  <div #stickyRowFooterContainer class="pbl-ngrid-sticky-row-scroll-container"><div [style.minWidth.px]="_cdkTable?.minWidth"></div></div> <!-- FOOTERS -->
 </div>
 
 <ng-template #fbTableCell let-value="value"><div>{{value}}</div></ng-template>

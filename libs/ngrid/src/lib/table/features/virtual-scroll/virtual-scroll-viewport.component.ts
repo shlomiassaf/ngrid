@@ -82,7 +82,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
    */
   readonly offsetChange: Observable<number>;
 
-  @Input() minWidth: string;
+  @Input() minWidth: number;
 
   @Input() stickyRowHeaderContainer: HTMLElement;
   @Input() stickyRowFooterContainer: HTMLElement;

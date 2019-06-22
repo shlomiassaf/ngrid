@@ -92,6 +92,8 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
     // their original DOM position and then they get transferred to the portal.
     this._rootElementInitSubscription = this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
       const rootElement = this._rootElement = this._getRootElement();
+      const cell = rootElement.parentElement;
+      cell.classList.add('pbl-ngrid-column-resize');
       rootElement.addEventListener('mousedown', this._pointerDown, activeEventListenerOptions);
       rootElement.addEventListener('touchstart', this._pointerDown, passiveEventListenerOptions);
       toggleNativeDragInteractions(rootElement , false);

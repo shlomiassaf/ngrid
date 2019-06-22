@@ -4,7 +4,7 @@
   Wrap the rendered content in an element that will be used to offset it based on the scroll
   position.
 -->
-<div #contentWrapper [class.cdk-virtual-scroll-content-wrapper]="enabled" style="width: 100%" [style.minWidth]="minWidth">
+<div #contentWrapper [class.cdk-virtual-scroll-content-wrapper]="enabled" style="width: 100%" [style.minWidth.px]="minWidth">
   <ng-content></ng-content>
 </div>
 
@@ -15,6 +15,6 @@
 <div class="cdk-virtual-scroll-spacer" [style.transform]="_totalContentSizeTransform"></div>
 <div *ngIf="pblFillerHeight"
     class="pbl-ngrid-space-fill"
-    [style.minWidth]="minWidth"
+    [style.minWidth.px]="minWidth"
     [style.top.px]="ngeRenderedContentSize"
     [style.height]="pblFillerHeight"></div>

@@ -7,11 +7,11 @@ import { PblNgridMetaRowService } from './meta-row.service';
 
 @Component({
   selector: 'div[pbl-ngrid-fixed-meta-row-container]',
-  template: `<div class="pbl-cdk-table" [style.min-width]="_minWidth"></div>`,
+  template: `<div class="pbl-cdk-table"></div>`,
   host: { // tslint:disable-line:use-host-property-decorator
     style: 'flex: 0 0 auto; overflow: hidden;',
-    '[style.width]': '_innerWidth'
-  }
+    '[style.width.px]': '_innerWidth',
+  },
 })
 @UnRx()
 export class PblNgridMetaRowContainerComponent {
@@ -26,8 +26,8 @@ export class PblNgridMetaRowContainerComponent {
    * The inner width of the table, the viewport width of a row.
    * The width of the table minus scroll bar.
    */
-  _innerWidth: string;
-  _minWidth: string;
+  _innerWidth: number;
+  _minWidth: number;
 
   private _type: 'header' | 'footer';
   private defs: Array<{ index: number; rowDef: PblMetaRowDefinitions }>;
@@ -40,7 +40,7 @@ export class PblNgridMetaRowContainerComponent {
       .pipe(UnRx(this))
       .subscribe( event => {
         if (event.kind === 'onResizeRow') {
-          this._innerWidth = `${this.metaRows.extApi.table.viewport.innerWidth}px`;
+          this._innerWidth = this.metaRows.extApi.table.viewport.innerWidth;
           this._minWidth = this.metaRows.extApi.cdkTable.minWidth;
         }
       });
@@ -64,7 +64,7 @@ export class PblNgridMetaRowContainerComponent {
     this.metaRows.extApi.cdkTable.onRenderRows
       .pipe(UnRx(this))
       .subscribe( () => {
-        this._innerWidth = `${this.metaRows.extApi.table.viewport.innerWidth}px`;
+        this._innerWidth = this.metaRows.extApi.table.viewport.innerWidth;
       });
   }
 

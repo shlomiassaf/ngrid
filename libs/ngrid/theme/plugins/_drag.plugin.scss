@@ -1,5 +1,49 @@
 
-@mixin pbl-ngrid-drag-plugin-theme($tableTheme) {
+@mixin pbl-ngrid-drag-plugin-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $border-color: map-get($foreground, ngrid-border-color);
+
+  .pbl-ngrid-header-cell.pbl-ngrid-column-resize {
+    &:after {
+      transition: all 250ms ease-in;
+      content: ' ';
+      display: block;
+      position: absolute;
+      top: calc(50% - 8px);
+      height: 16px;
+      right: 0;
+      border-right: 0px solid darken($border-color, 25%);
+    }
+}
+
+  pbl-ngrid:not(.pbl-ngrid-column-list-dragging) .pbl-ngrid-header-row-main:hover .pbl-ngrid-header-cell.pbl-ngrid-column-resize {
+    &:after {
+      right: 2px;
+      border-right-width: 2px;
+    }
+    &:last-child {
+      &:after {
+        right: 0px;
+        width: 3px;
+        border-left: 2px solid darken($border-color, 25%);
+      }
+    }
+
+    & + .pbl-ngrid-header-cell {
+      box-shadow: none;
+      &:before {
+        top: calc(50% - 8px);
+        height: 16px;
+        border-right: 2px solid darken($border-color, 25%);
+      }
+    }
+  }
+
   .cdk-drag-animating {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
@@ -26,9 +70,12 @@
         bottom: 0;
         left: 0;
         right: 0;
+        height: auto;
+        border-color: $border-color;
         border-width: 2px;
         border-style: dashed;
       }
+
     }
   }
 }

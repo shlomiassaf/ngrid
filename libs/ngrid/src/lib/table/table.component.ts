@@ -756,7 +756,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       // We calculate the total minimum width of the table
       // We do it once, to set the minimum width based on the initial setup.
       // Note that we don't apply strategy here, we want the entire length of the table!
-      this._cdkTable.minWidth = `${rowWidth.minimumRowWidth}px`;
+      this._cdkTable.minWidth = rowWidth.minimumRowWidth;
     }
 
     this.ngZone.run( () => {

@@ -84,9 +84,6 @@ export class PblMetaColumn implements PblMetaColumnDefinition {
 
   get parsedWidth(): { value: number; type: 'px' | '%' } | undefined { return this._parsedWidth; }
 
-  stickyStart: boolean;
-  stickyEnd: boolean;
-
   /**
    * Used by pbl-ngrid to apply a custom header/footer cell template, or the default when not set.
    * @internal
