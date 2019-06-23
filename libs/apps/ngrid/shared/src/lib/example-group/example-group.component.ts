@@ -24,12 +24,17 @@ export class ExampleGroupComponent {
 
       this.registry.groups
         .pipe(
-          map( groups => groups[0].examples[0] ),
-          filter( e => !!e ),
+          filter( groups => !!groups[0].examples[0] ),
           first(),
         )
-        .subscribe( filter => {
-          this.router.navigate(filter.routerLink, { relativeTo: this.route });
+        .subscribe( groups => {
+          const last = this.route.snapshot.pathFromRoot.pop();
+          const path = last.firstChild && last.firstChild.routeConfig.path;
+          const example = path && groups[0].examples.find( e => e.id === path);
+          if (!example) {
+            const group = groups[0].examples[0];
+            this.router.navigate(group.routerLink, { relativeTo: this.route });
+          }
         });
     }
   }

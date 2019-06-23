@@ -7,7 +7,7 @@ import { PblNgridMetaRowService } from './meta-row.service';
 
 @Component({
   selector: 'div[pbl-ngrid-fixed-meta-row-container]',
-  template: `<div class="pbl-cdk-table"></div>`,
+  template: `<div class="pbl-cdk-table" [style.width.px]="_width"></div>`,
   host: { // tslint:disable-line:use-host-property-decorator
     style: 'flex: 0 0 auto; overflow: hidden;',
     '[style.width.px]': '_innerWidth',
@@ -28,6 +28,7 @@ export class PblNgridMetaRowContainerComponent {
    */
   _innerWidth: number;
   _minWidth: number;
+  _width: number;
 
   private _type: 'header' | 'footer';
   private defs: Array<{ index: number; rowDef: PblMetaRowDefinitions }>;
@@ -42,6 +43,7 @@ export class PblNgridMetaRowContainerComponent {
         if (event.kind === 'onResizeRow') {
           this._innerWidth = this.metaRows.extApi.table.viewport.innerWidth;
           this._minWidth = this.metaRows.extApi.cdkTable.minWidth;
+          this._width = Math.max(this._innerWidth, this._minWidth);
         }
       });
   }
@@ -65,6 +67,7 @@ export class PblNgridMetaRowContainerComponent {
       .pipe(UnRx(this))
       .subscribe( () => {
         this._innerWidth = this.metaRows.extApi.table.viewport.innerWidth;
+        this._width = Math.max(this._innerWidth, this._minWidth);
       });
   }
 
