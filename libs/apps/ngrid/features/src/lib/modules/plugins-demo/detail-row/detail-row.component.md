@@ -4,6 +4,8 @@ I> Requires `@pebula/ngrid/target-event` plugin
 
 W> Currently not compatible with virtual scroll, make sure virtual scroll is not enabling on the table when detail rows are used
 
+<pbl-ngrid-row *pblNgridDetailRowParentRef="let row; gridInstance as gridInstance" [grid]="gridInstance" [detailRow]="row" matRipple></pbl-ngrid-row>
+
 <docsi-mat-example-with-source title="Detail Row" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
   <!--@pebula-example:ex-1-->
   <pbl-ngrid blockUi [dataSource]="ds1" [columns]="columns1" detailRow vScrollNone>
@@ -26,7 +28,6 @@ W> Currently not compatible with virtual scroll, make sure virtual scroll is not
         <pre>{{row | json}}</pre>
       </div>
     </div>
-    <pbl-ngrid-row *pblNgridDetailRowParentRef="let row; table as table" [detailRow]="row" matRipple></pbl-ngrid-row>
     <div *pblNgridCellTypeDef="'detailRowHandle'" class="detail-row-handle">⊞</div>
   </pbl-ngrid>
   <!--@pebula-example:ex-2-->

@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./detail-row.component.md" ],
+  "codeRef": [
+    {
+      "file": "./detail-row.component.ts",
+      "section": ["ex-1", "ex-2", "ex-3", "ex-4"]
+    },
+    {
+      "file": "./detail-row.component.md",
+      "lang": "html",
+      "section": ["ex-1", "ex-2", "ex-3", "ex-4"]
+    }
+  ]
+}

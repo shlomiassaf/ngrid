@@ -58,6 +58,6 @@ export class PblNgridDetailRowParentRefDirective<T> extends CdkRowDef<T> impleme
  */
 @Component({
   selector: 'pbl-ngrid-default-detail-row-parent',
-  template: `<pbl-ngrid-row *pblNgridDetailRowParentRef="let row; table as table" [detailRow]="row"></pbl-ngrid-row>`,
+  template: `<pbl-ngrid-row *pblNgridDetailRowParentRef="let row; gridInstance as gridInstance" [grid]="gridInstance" [detailRow]="row"></pbl-ngrid-row>`,
 })
 export class PblNgridDefaultDetailRowParentComponent { }

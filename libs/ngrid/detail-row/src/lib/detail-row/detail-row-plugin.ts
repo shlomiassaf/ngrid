@@ -227,7 +227,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
 
     //   2. re-render all rows.
     // The logic for re-rendering all rows is handled in `CdkTable._forceRenderDataRows()` which is a private method.
-    // This is a workaround, assignin to `multiTemplateDataRows` will invoke the setter which
+    // This is a workaround, assigning to `multiTemplateDataRows` will invoke the setter which
     // also calls `CdkTable._forceRenderDataRows()`
     // TODO: This is risky, the setter logic might change.
     // for example, if material will chack for change in `multiTemplateDataRows` setter from previous value...

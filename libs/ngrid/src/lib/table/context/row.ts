@@ -33,6 +33,8 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   /** True if this cell is contained in a row with an odd-numbered index. */
   odd?: boolean;
 
+  gridInstance: PblNgridComponent<T>;
+
   firstRender: boolean;
   outOfView: boolean;
   readonly table: PblNgridComponent<T>;

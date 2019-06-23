@@ -13,9 +13,10 @@ import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
 import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN } from '@pebula/ngrid';
+import { PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN } from '@pebula/ngrid';
 
 import { PblNgridDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
+
 
 @Component({
   selector: 'pbl-ngrid-row[detailRow]',
@@ -41,10 +42,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     return this.opened;
   }
 
-  @Input('detailRow') get detailRow(): any { return this.context.$implicit; };
-  set detailRow(value: any) { this.row = value; };
-
-  table: PblNgridComponent<any>;
+  @Input('detailRow') set row(value: any) { this.updateRow(); }
 
   private get _element(): HTMLElement { return this.el.nativeElement; }
   private opened = false;
@@ -55,15 +53,14 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   }
 
   ngOnInit(): void {
-    this.table = this.context.table;
-    const controller = PblNgridPluginController.find(this.table);
+    const controller = PblNgridPluginController.find(this.extApi.table);
     this.plugin = controller.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
     const tradeEvents = controller.getPlugin('targetEvents');
     tradeEvents.cellClick
       .pipe(UnRx(this))
       .subscribe( event => {
-        if (event.type === 'data' && event.row === this.detailRow) {
+        if (event.type === 'data' && event.row === this.context.$implicit) {
           const { excludeToggleFrom } = this.plugin;
           if (!excludeToggleFrom || !excludeToggleFrom.some( c => event.column.id === c )) {
             this.toggle();
@@ -74,7 +71,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     tradeEvents.rowClick
       .pipe(UnRx(this))
       .subscribe( event => {
-        if (!event.root && event.type === 'data' && event.row === this.detailRow) {
+        if (!event.root && event.type === 'data' && event.row === this.context.$implicit) {
           this.toggle();
         }
       });
@@ -99,7 +96,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
       }
 
       const event = Object.create(this);
-      Object.defineProperty(event, 'row', { value: this.detailRow });
+      Object.defineProperty(event, 'row', { value: this.context.$implicit });
       this.plugin.detailRowToggled(event);
     }
   }
@@ -120,7 +117,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
 
   private render(): void {
     this.vcRef.clear();
-    if (this.detailRow) {
+    if (this.context.$implicit) {
       const detailRowDef = this.context.table.registry.getSingle('detailRow');
       if ( detailRowDef ) {
         this.vcRef.createEmbeddedView(detailRowDef.tRef, this.context);
