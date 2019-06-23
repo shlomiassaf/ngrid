@@ -5,6 +5,12 @@ import { PblNgridComponent } from '../table.component';
 import { PblColumnTypeDefinitionDataMap, PblMetaColumn, PblColumn } from '../columns';
 import { PblRowContext } from './row';
 
+declare module '@angular/cdk/table/typings/table.d' {
+  interface RowContext<T> {
+    gridInstance: PblNgridComponent<T>;
+  }
+}
+
 export interface CellContextState<T = any> {
   editing: boolean;
   focused: boolean;

@@ -19,14 +19,13 @@ import {
 import { DOCUMENT } from '@angular/common';
 
 import { Platform } from '@angular/cdk/platform';
-import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef } from '@angular/cdk/table';
+import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef, RowContext } from '@angular/cdk/table';
 import { Directionality } from '@angular/cdk/bidi';
 
 import { PblNgridComponent } from '../table.component';
 import { PblNgridExtensionApi, EXT_API_TOKEN } from '../../ext/table-ext-api';
 import { PblNgridColumnDef } from '../directives/column-def';
 import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
-
 
 /**
  * Wrapper for the CdkTable that extends it's functionality to support various table features.
@@ -196,6 +195,18 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
 
   renderRows(): void {
     super.renderRows();
+
+    // The problem of inheritance right at your face
+    // Because material does not allow us to control the context generation for a row we need to get clever.
+    // https://github.com/angular/components/issues/14199
+    // TODO: If they do allow controlling context generation, remove this and apply their solution.
+    const viewContainer = this._rowOutlet.viewContainer;
+    for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
+      const viewRef = viewContainer.get(renderIndex) as EmbeddedViewRef<RowContext<T>>;
+      const context = viewRef.context;
+      context.gridInstance = this.table;
+    }
+
     if (this.onRenderRows$) {
       this.onRenderRows$.next(this._rowOutlet);
     }
