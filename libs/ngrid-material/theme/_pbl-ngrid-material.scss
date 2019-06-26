@@ -1,0 +1,6 @@
+@import '../context-menu/src/theme';
+
+@mixin pbl-ngrid-material-theme($theme) {
+  @include pbl-ngrid-theme($theme);
+  @include pbl-ngrid-material-context-menu-theme($theme);
+}

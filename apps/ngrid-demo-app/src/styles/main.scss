@@ -9,7 +9,8 @@ $typography-config: shell-typography-config();
 @include angular-material-theme($pbl-shell-theme);
 @include pbl-shell-app-theme($pbl-shell-theme, $typography-config);
 
-@include pbl-ngrid-theme($pbl-shell-theme);
+// @include pbl-ngrid-theme($pbl-shell-theme);
+@include pbl-ngrid-material-theme($pbl-shell-theme);
 
 $narrow-spacing: ( spacing: $pbl-spacing-theme-narrow );
 pbl-ngrid.slim {

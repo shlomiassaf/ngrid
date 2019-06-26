@@ -65,10 +65,6 @@ export interface PblColumnDefinition extends PblBaseColumnDefinition {
    * See `PblDataSource.setFilter` for more information.
    */
   filter?: DataSourceColumnPredicate;
-  /**
-   * Additional data to be used by the filter
-   */
-  filterData?: any;
   // ...
 }
 ```

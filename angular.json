@@ -244,6 +244,15 @@
                     }
                   ]
                 },
+                "sassBundle": {
+                  "entries": [
+                    {
+                      "glob": "_theming.scss",
+                      "input": "libs/ngrid-material",
+                      "output": "dist/@pebula/ngrid-material"
+                    }
+                  ]
+                },
                 "sassCompile": {
                   "entries": [
                     {

@@ -1,5 +1,5 @@
 @import '~@angular/material/theming';
-@import '../../../../ngrid/theming';
+@import '../../../theming';
 
 // Define a theme.
 $primary: mat-palette($mat-purple, 700, 500, 800);
@@ -12,4 +12,4 @@ $pbl-ngrid-theme: pbl-dark-theme($theme);
 @include pbl-ngrid-typography();
 
 // Include the default theme styles.
-@include pbl-ngrid-theme($pbl-ngrid-theme);
+@include pbl-ngrid-material-theme($pbl-ngrid-theme);
