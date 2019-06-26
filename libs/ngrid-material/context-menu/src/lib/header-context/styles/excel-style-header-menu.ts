@@ -1,0 +1,73 @@
+import { Component, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { MatMenu } from '@angular/material/menu';
+
+import { PblNgridComponent, PblColumn, PblNgridDataHeaderExtensionContext } from '@pebula/ngrid';
+import { PblNgridOverlayPanelRef } from '@pebula/ngrid/overlay-panel';
+
+@Component({
+  selector: 'mat-excel-style-header-menu',
+  templateUrl: `./excel-style-header-menu.html`,
+  styleUrls: [ `./excel-style-header-menu.scss` ],
+  encapsulation: ViewEncapsulation.None,
+})
+export class MatExcelStyleHeaderMenu {
+  column: PblColumn;
+  grid: PblNgridComponent
+
+  @ViewChild('columnMenu', { read: MatMenu, static: true }) matMenu: MatMenu;
+
+  currentSort: 'asc' | 'desc' | undefined;
+  currentPin: 'start' | 'end' | undefined;
+
+  constructor(private ref: PblNgridOverlayPanelRef<PblNgridDataHeaderExtensionContext>, private vcRef: ViewContainerRef) {
+    this.column = ref.data.col;
+    this.grid = ref.data.table;
+
+    if (this.grid.ds.sort.column === this.column) {
+      this.currentSort = this.grid.ds.sort.sort.order;
+    }
+    this.currentPin = this.column.columnDef.sticky ? 'start' : this.column.columnDef.stickyEnd ? 'end' : undefined;
+  }
+
+  ngAfterViewInit() {
+    this.matMenu.closed.subscribe( reason => {
+      this.ref.close();
+    });
+
+    const view = this.vcRef.createEmbeddedView(this.matMenu.templateRef);
+    this.matMenu.setElevation(0);
+    this.matMenu.focusFirstItem('program');
+    this.matMenu._resetAnimation();
+    view.markForCheck();
+    view.detectChanges();
+    this.matMenu._startAnimation();
+  }
+
+  hide(): void {
+    const hidden: string[] = [this.column.id];
+
+    for (const col of this.grid.columnApi.columns) {
+      if (col.hidden) {
+        hidden.push(col.id);
+      }
+    }
+
+    this.grid.hideColumns = hidden;
+  }
+
+  onSortToggle(sort: 'asc' | 'desc'): void {
+    if (this.currentSort === sort) {
+      this.grid.ds.setSort();
+    } else {
+      this.grid.ds.setSort(this.column, { order: sort });
+    }
+  }
+
+  onPinToggle(pin: 'start' | 'end'): void {
+    if (this.currentPin === pin) {
+      this.column.columnDef.updatePin()
+    } else {
+      this.column.columnDef.updatePin(pin)
+    }
+  }
+}

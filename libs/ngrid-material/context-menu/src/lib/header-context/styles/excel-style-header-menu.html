@@ -1,0 +1,35 @@
+<mat-menu #columnMenu="matMenu" class="pbl-mat-menu-panel">
+
+  <button *ngIf="column.sort" mat-menu-item [matMenuTriggerFor]="sortMenu">
+    <mat-icon>sort</mat-icon>Sort
+  </button>
+  <button mat-menu-item [matMenuTriggerFor]="pinMenu">
+    <mat-icon>place</mat-icon>Pin
+  </button>
+  <button mat-menu-item (click)="grid.columnApi.autoSizeColumn(column)">
+    <mat-icon>keyboard_tab</mat-icon>Auto Fit
+  </button>
+  <button mat-menu-item (click)="hide()">
+    <mat-icon>visibility_off</mat-icon>Hide Column
+  </button>
+
+  <mat-menu #sortMenu="matMenu">
+    <button mat-menu-item (click)="onSortToggle('asc')" [class.menu-item-selected]="currentSort === 'asc' ? 'primary' : ''">
+      <mat-icon>arrow_upward</mat-icon>
+      <span>Ascending</span>
+    </button>
+    <button mat-menu-item (click)="onSortToggle('desc')" [class.menu-item-selected]="currentSort === 'desc' ? 'primary' : ''">
+      <mat-icon>arrow_downward</mat-icon>
+      <span>Descending</span>
+    </button>
+  </mat-menu>
+
+  <mat-menu #pinMenu="matMenu">
+    <button mat-menu-item (click)="onPinToggle('start')" [class.menu-item-selected]="currentPin === 'start' ? 'primary' : ''">
+      <span>Start</span>
+    </button>
+    <button mat-menu-item (click)="onPinToggle('end')" [class.menu-item-selected]="currentPin === 'end' ? 'primary' : ''">
+      <span>End</span>
+    </button>
+  </mat-menu>
+</mat-menu>
