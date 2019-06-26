@@ -14,22 +14,34 @@
   </button>
 
   <mat-menu #sortMenu="matMenu">
-    <button mat-menu-item (click)="onSortToggle('asc')" [class.menu-item-selected]="currentSort === 'asc' ? 'primary' : ''">
-      <mat-icon>arrow_upward</mat-icon>
+    <button mat-menu-item (click)="onSortToggle('asc')" [class.menu-item-selected]="currentSort === 'asc'">
+      <mat-icon [color]="currentSort === 'asc' ? 'primary' : ''">arrow_upward</mat-icon>
       <span>Ascending</span>
     </button>
-    <button mat-menu-item (click)="onSortToggle('desc')" [class.menu-item-selected]="currentSort === 'desc' ? 'primary' : ''">
-      <mat-icon>arrow_downward</mat-icon>
+    <button mat-menu-item (click)="onSortToggle('desc')" [class.menu-item-selected]="currentSort === 'desc'">
+      <mat-icon [color]="currentSort === 'desc' ? 'primary' : ''">arrow_downward</mat-icon>
       <span>Descending</span>
     </button>
   </mat-menu>
 
   <mat-menu #pinMenu="matMenu">
-    <button mat-menu-item (click)="onPinToggle('start')" [class.menu-item-selected]="currentPin === 'start' ? 'primary' : ''">
+    <button mat-menu-item (click)="onPinToggle('start')" [class.menu-item-selected]="currentPin === 'start'">
       <span>Start</span>
     </button>
-    <button mat-menu-item (click)="onPinToggle('end')" [class.menu-item-selected]="currentPin === 'end' ? 'primary' : ''">
+    <button mat-menu-item (click)="onPinToggle('end')" [class.menu-item-selected]="currentPin === 'end'">
       <span>End</span>
     </button>
   </mat-menu>
+
+  <div class="mat-menu-item pbl-mat-menu-row" (click)="clickTrap($event)">
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input matInput (keyup)="filterColumn($event.target.value)" [value]="currentFilter">
+      <mat-icon matPrefix>search</mat-icon>
+      <button mat-button [style.visibility]="currentFilter ? 'visible' : 'hidden'" matSuffix mat-icon-button aria-label="Clear"
+              (click)="filterColumn('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
 </mat-menu>

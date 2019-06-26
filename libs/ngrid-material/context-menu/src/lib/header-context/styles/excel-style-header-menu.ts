@@ -18,6 +18,7 @@ export class MatExcelStyleHeaderMenu {
 
   currentSort: 'asc' | 'desc' | undefined;
   currentPin: 'start' | 'end' | undefined;
+  currentFilter: any = '';
 
   constructor(private ref: PblNgridOverlayPanelRef<PblNgridDataHeaderExtensionContext>, private vcRef: ViewContainerRef) {
     this.column = ref.data.col;
@@ -27,6 +28,10 @@ export class MatExcelStyleHeaderMenu {
       this.currentSort = this.grid.ds.sort.sort.order;
     }
     this.currentPin = this.column.columnDef.sticky ? 'start' : this.column.columnDef.stickyEnd ? 'end' : undefined;
+    const dsFilter = this.grid.ds.filter;
+    if (dsFilter && dsFilter.type === 'value' && dsFilter.columns && dsFilter.columns.indexOf(this.column) >= 0) {
+      this.currentFilter = dsFilter.filter;
+    }
   }
 
   ngAfterViewInit() {
@@ -69,5 +74,20 @@ export class MatExcelStyleHeaderMenu {
     } else {
       this.column.columnDef.updatePin(pin)
     }
+  }
+
+
+  filterColumn(filterValue: string) {
+    this.currentFilter = filterValue;
+    if (!filterValue) {
+      this.grid.setFilter();
+    } else {
+      this.grid.setFilter(filterValue.trim(), [ this.column ]);
+    }
+  }
+
+  clickTrap(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
   }
 }
