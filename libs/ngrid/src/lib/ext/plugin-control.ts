@@ -46,6 +46,8 @@ export class PblNgridPluginController<T = any> {
   private static readonly created$ = new Subject<{ table: PblNgridComponent<any>, controller: PblNgridPluginController<any> }>();
   static readonly created = PblNgridPluginController.created$.asObservable();
 
+  get injector(): Injector { return this.context.injector; }
+
   readonly extApi: PblNgridExtensionApi
   readonly events: Observable<PblNgridEvents>;
   private readonly grid: PblNgridComponent<T>
