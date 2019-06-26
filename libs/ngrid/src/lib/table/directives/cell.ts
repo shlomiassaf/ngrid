@@ -140,18 +140,15 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
     let extensions = lastDataHeaderExtensions.get(this.table);
     if (!extensions) {
       const dataHeaderExtensions = new Map<string, any>();
-      let registry = this.table.registry;
-      while (registry) {
-        const values = registry.getMulti('dataHeaderExtensions');
-        if (values) {
-          for (const value of values) {
-            if (!dataHeaderExtensions.has(value.name)) {
-              dataHeaderExtensions.set(value.name, value);
-            }
+
+      this.table.registry.forMulti('dataHeaderExtensions', values => {
+        for (const value of values) {
+          if (!dataHeaderExtensions.has(value.name)) {
+            dataHeaderExtensions.set(value.name, value);
           }
         }
-        registry = registry.parent;
-      }
+      });
+
       extensions = Array.from(dataHeaderExtensions.values());
       lastDataHeaderExtensions.set(this.table, extensions);
       // destroy it on the next turn, we know all cells will render on the same turn.

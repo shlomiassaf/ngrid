@@ -162,6 +162,34 @@ export class PblNgridRegistryService implements OnDestroy {
     }
   }
 
+  /**
+   * Iterate over all multi-registry value of the provided `kind` ascending order, starting from the last ancestor (this registry) up to
+   * the root parent.
+   *
+   * Each time a collection for the `kind` is found the handler is invoked and then repeating the process on the parent.
+   * If the `kind` does not exist the handler is not called moving on to the next parent.
+   *
+   * To bail out (stop the process and don't iterate to the next parent), return true from the handler.
+   *
+   * @returns The number of times that handler was invoked, i.e 0 means no matches.
+   */
+  forMulti<T extends keyof PblNgridMultiRegistryMap>(kind: T,
+                                                     handler: ( (values: Array<PblNgridMultiRegistryMap[T]>) => boolean | void)): number {
+    let registry: PblNgridRegistryService = this;
+    let hasSome = 0;
+    while (registry) {
+      const values = registry.getMulti(kind);
+      if (values) {
+        hasSome++;
+        if (handler(values) === true) {
+          return;
+        }
+      }
+      registry = registry.parent;
+    }
+    return hasSome;
+  }
+
   ngOnDestroy(): void {
     this.changes$.complete();
   }

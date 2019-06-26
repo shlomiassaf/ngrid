@@ -88,7 +88,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   set showHeader(value: boolean) {
     this._showHeader = coerceBooleanProperty(value);
   }
-  _showHeader = true;
+  _showHeader: boolean;
 
   /**
    * Show/Hide the footer row.
