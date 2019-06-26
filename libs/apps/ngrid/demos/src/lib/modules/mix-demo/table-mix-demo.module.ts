@@ -23,6 +23,7 @@ import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridDetailRowModule } from '@pebula/ngrid/detail-row';
 import { PblNgridStickyModule } from '@pebula/ngrid/sticky';
 import { PblNgridStatePluginModule } from '@pebula/ngrid/state';
+import { PblNgridOverlayPanelModule } from '@pebula/ngrid/overlay-panel';
 
 import { PblNgridMaterialModule } from '@pebula/ngrid-material';
 
@@ -70,6 +71,7 @@ const DECLARATION = [
     PblNgridStickyModule,
     PblNgridStatePluginModule,
     PblNgridMaterialModule,
+    PblNgridOverlayPanelModule,
   ],
   exports: [ SellersDemoComponent, AllInOneGridExampleComponent, VirtualScrollPerformanceDemoGridExampleComponent ], // we need this for detail-row
 })

@@ -71,6 +71,7 @@ export class SellersDemoComponent {
     this.ds.reset('sellers');
     this.table.ds.refresh();
   }
+
   dropped(e) {
     console.log(e);
   }
