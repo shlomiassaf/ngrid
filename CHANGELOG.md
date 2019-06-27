@@ -1,3 +1,13 @@
+# 1.0.0-alpha.26 (2019-06-27)
+
+
+### Bug Fixes
+
+* **ngrid-material/context-menu:** lower trigger z-index ([4e1fb92](https://github.com/shlomiassaf/ngrid/commit/4e1fb92))
+* **ngrid/detail-row:** dont access extApi to get grid ([d9ea126](https://github.com/shlomiassaf/ngrid/commit/d9ea126))
+
+
+
 # 1.0.0-alpha.25 (2019-06-27)
 
 
