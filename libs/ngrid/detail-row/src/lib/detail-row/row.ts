@@ -13,10 +13,9 @@ import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
 import { UnRx } from '@pebula/utils';
-import { PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN } from '@pebula/ngrid';
 
 import { PblNgridDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
-
 
 @Component({
   selector: 'pbl-ngrid-row[detailRow]',
@@ -24,7 +23,7 @@ import { PblNgridDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugi
   host: { // tslint:disable-line:use-host-property-decorator
     class: 'pbl-ngrid-row pbl-row-detail-parent',
     role: 'row',
-    '[attr.tabindex]': 'table?.rowFocus',
+    '[attr.tabindex]': 'grid?.rowFocus',
     '(keydown)': 'handleKeydown($event)'
   },
   template: CDK_ROW_TEMPLATE,
@@ -44,12 +43,17 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
 
   @Input('detailRow') set row(value: any) { this.updateRow(); }
 
+  grid: PblNgridComponent;
+
   private get _element(): HTMLElement { return this.el.nativeElement; }
   private opened = false;
   private plugin: PblNgridDetailRowPluginDirective<any>;
 
-  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: PblNgridExtensionApi<any>, el: ElementRef<HTMLElement>, private vcRef: ViewContainerRef) {
+  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: PblNgridExtensionApi<any>,
+              el: ElementRef<HTMLElement>,
+              private vcRef: ViewContainerRef) {
     super(extApi, el);
+    this.grid = extApi.table;
   }
 
   ngOnInit(): void {
