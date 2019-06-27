@@ -1,3 +1,35 @@
+# 1.0.0-alpha.25 (2019-06-27)
+
+
+### Bug Fixes
+
+* **ngrid:** can not invalidate column if split header group exist ([7db5a39](https://github.com/shlomiassaf/ngrid/commit/7db5a39))
+* **ngrid:** fixed row container should show all content ([5dec91b](https://github.com/shlomiassaf/ngrid/commit/5dec91b))
+* **ngrid:** fixed virtual scroll wrong offset on filter ([56ff95f](https://github.com/shlomiassaf/ngrid/commit/56ff95f)), closes [#11](https://github.com/shlomiassaf/ngrid/issues/11)
+* **ngrid:** parent cell-syle update on initial load ([bfc2251](https://github.com/shlomiassaf/ngrid/commit/bfc2251))
+* **ngrid/detail-row:** detail row template outside grid scope ([c6ca3e5](https://github.com/shlomiassaf/ngrid/commit/c6ca3e5)), closes [#1](https://github.com/shlomiassaf/ngrid/issues/1)
+
+
+### Code Refactoring
+
+* **ngrid:** remove multi box-model support ([6bf2544](https://github.com/shlomiassaf/ngrid/commit/6bf2544))
+
+
+### Features
+
+* **ngrid:** add new event - beforeInvalidateHeaders ([ecab8d1](https://github.com/shlomiassaf/ngrid/commit/ecab8d1))
+* **ngrid:** allow ad-hoc generic header extensions via templates ([b224c95](https://github.com/shlomiassaf/ngrid/commit/b224c95))
+* **ngrid-material/context-menu:** new plugin for context menus ([4826c72](https://github.com/shlomiassaf/ngrid/commit/4826c72))
+* **ngrid/overlay-panel:** plugin that helps poping up overlay panels ([cedd949](https://github.com/shlomiassaf/ngrid/commit/cedd949))
+
+
+### BREAKING CHANGES
+
+* **ngrid:** `PblNgridComponent.boxSpaceModel` was used to set the box-model strategy of the cells, either margin or padding.
+Padding was the deault, when switching to margin a lot of CSS overwrites were applied and different width logic was used for column calculations. This was the case at the very start but as more and more features were added it got very hard to maintain and only padding strategy was updated and margin was not working properly, especially when used with group headers. For this reason I've decided to deprecate it as it is probably not used by anyone and adds unwanted complaxity. If it will be requried in future versions we can apply it through a plugin.
+
+
+
 # 1.0.0-alpha.24 "angular-eight" (2019-06-20)
 
 ### Code Refactoring
