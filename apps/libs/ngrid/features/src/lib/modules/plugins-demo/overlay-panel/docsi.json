@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./overlay-panel.component.md" ],
+  "codeRef": [
+    {
+      "file": "./overlay-panel.component.ts",
+      "section": ["ex-1"]
+    },
+    {
+      "file": "./overlay-panel.component.md",
+      "lang": "html",
+      "section": ["ex-1"]
+    }
+  ]
+}

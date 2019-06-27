@@ -19,9 +19,13 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "@pebula-internal/*": [
+        "libs-internal/*/src/index.ts",
+        "libs-internal/*"
+      ],
       "@pebula/apps/*": [
-        "libs/apps/*",
-        "libs/apps/*/src/index.ts"
+        "apps/libs/*",
+        "apps/libs/*/src/index.ts"
       ],
       "@pebula/ngrid/lib/*": [
         "libs/ngrid/src/lib/*"

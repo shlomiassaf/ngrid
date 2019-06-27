@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./grid-height.component.md" ],
+  "codeRef": [
+    {
+      "file": "./grid-height.component.ts",
+      "section": []
+    },
+    {
+      "file": "./grid-height.component.md",
+      "lang": "html",
+      "section": []
+    }
+  ]
+}

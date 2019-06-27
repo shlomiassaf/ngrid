@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./grid-layout.component.md" ],
+  "codeRef": [
+    {
+      "file": "./grid-layout.component.ts",
+      "section": []
+    },
+    {
+      "file": "./grid-layout.component.md",
+      "lang": "html",
+      "section": []
+    }
+  ]
+}

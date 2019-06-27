@@ -111,34 +111,6 @@
         }
       }
     },
-    "ngrid-demo-app-e2e": {
-      "root": "apps/ngrid-demo-app-e2e",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "apps/ngrid-demo-app-e2e/protractor.conf.js",
-            "devServerTarget": "ngrid-demo-app:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "ngrid-demo-app:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "apps/ngrid-demo-app-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
     "ngrid": {
       "root": "libs/ngrid",
       "sourceRoot": "libs/ngrid/src",

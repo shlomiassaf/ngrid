@@ -9,6 +9,6 @@
     "types": []
   },
   "include": [
-    "../../libs/apps/ngrid/**/*.worker.ts"
+    "../../apps/libs/ngrid/**/*.worker.ts"
   ]
 }
