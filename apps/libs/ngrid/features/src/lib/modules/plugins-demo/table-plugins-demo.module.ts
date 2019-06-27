@@ -21,6 +21,7 @@ import { PblNgridTransposeModule } from '@pebula/ngrid/transpose';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridDetailRowModule } from '@pebula/ngrid/detail-row';
 import { PblNgridStickyModule } from '@pebula/ngrid/sticky';
+import { PblNgridOverlayPanelModule } from '@pebula/ngrid/overlay-panel';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
 
@@ -77,6 +78,7 @@ const ROUTES = [
     PblNgridTransposeModule,
     PblNgridDetailRowModule,
     PblNgridStickyModule,
+    PblNgridOverlayPanelModule,
   ],
   exports: [ MatRippleModule ], // we need this for detail-row
   providers: [ PblNgridRegistryService ],

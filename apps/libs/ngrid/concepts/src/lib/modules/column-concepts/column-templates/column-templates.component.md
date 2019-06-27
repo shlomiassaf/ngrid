@@ -26,21 +26,6 @@ All templates are stored in a template registry using a unique key that is used 
 
 To find a template for a column the template key must match the column's `id` or `type` based on the kind of the key.
 
-## The Template Registry
-
-The template registry is built from layers of a template registries connected to each other through the Angular dependency injection system.
-
-This hierarchical system is allow us to define cell templates in the application root component, somewhere in a feature module or as a child of the table component.
-
-Every layer is a registry instance with a connection to it's nearest parent. When we query for a template the registry will look
-locally and if not found it will query it's parent.
-
-For every table instance a new registry layer (instance) is created which guarantees a depth of **at least** 2 layers (root -> table).
-
-I> The root registry sits in the root injector.
-
-When the host of the registry is destroyed (e.g. the table component) the registry (and its local templates) is destroyed as well.
-
 ## Registering Templates
 
 There are 4 types of cell templates: header, data, edit and footer.

@@ -19,6 +19,7 @@ import { PblNgridTransposeModule } from '@pebula/ngrid/transpose';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridDetailRowModule } from '@pebula/ngrid/detail-row';
 import { PblNgridStickyModule } from '@pebula/ngrid/sticky';
+import { PblNgridOverlayPanelModule } from '@pebula/ngrid/overlay-panel';
 import { PblNgridMaterialModule } from '@pebula/ngrid-material';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
@@ -27,6 +28,7 @@ import { CellTooltipGridExampleComponent } from './cell-tooltip/cell-tooltip.com
 import { SelectionColumnGridExampleComponent } from './selection-column/selection-column.component';
 import { MatSortGridExampleComponent } from './mat-sort';
 import { PaginatorGridExampleComponent } from './paginator';
+import { ContextMenuGridExampleComponent } from './context-menu/context-menu.component';
 
 const MATERIAL = [
   MatProgressSpinnerModule,
@@ -46,6 +48,7 @@ const DECLARATION = [
   SelectionColumnGridExampleComponent,
   MatSortGridExampleComponent,
   PaginatorGridExampleComponent,
+  ContextMenuGridExampleComponent,
 ];
 
 const ROUTES = [
@@ -53,6 +56,7 @@ const ROUTES = [
   { path: 'selection-column', component: SelectionColumnGridExampleComponent, data: { title: 'Selection Column' } },
   { path: 'mat-sort', component: MatSortGridExampleComponent, data: { title: 'Sorting with mat-sort' } },
   { path: 'pagination', component: PaginatorGridExampleComponent, data: { title: 'Pagination' } },
+  { path: 'context-menu', component: ContextMenuGridExampleComponent, data: { title: 'Context Menu' } },
 ];
 
 @NgModule({
@@ -68,6 +72,7 @@ const ROUTES = [
     PblNgridTransposeModule,
     PblNgridDetailRowModule,
     PblNgridStickyModule,
+    PblNgridOverlayPanelModule,
     PblNgridMaterialModule,
   ],
   exports: [ MatRippleModule ], // we need this for detail-row

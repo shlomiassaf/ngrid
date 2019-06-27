@@ -1,7 +1,7 @@
 /* @pebula-example:ex-1 */
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@pebula/ngrid';
-
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, ViewChild } from '@angular/core';
+import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
+import { PblNgridOverlayPanelFactory } from '@pebula/ngrid/overlay-panel';
 import { Seller, DemoDataSource } from '@pebula/apps/ngrid/shared';
 
 @Component({
@@ -13,7 +13,6 @@ import { Seller, DemoDataSource } from '@pebula/apps/ngrid/shared';
 })
 export class OverlayPanelGridExampleComponent {
 
-
   columns = columnFactory()
     .table(
       { prop: 'id', sort: true, width: '40px', wontBudge: true },
@@ -24,28 +23,25 @@ export class OverlayPanelGridExampleComponent {
     )
     .build();
 
-  ds = createDS<Seller>().onTrigger( () => this.datasource.getSellers(500) ).create();
+  ds = createDS<Seller>().onTrigger( () => this.datasource.getSellers(0, 100) ).create();
 
-  emailWidth = 250;
+  @ViewChild(PblNgridComponent, { static: true }) ngrid: PblNgridComponent;
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DemoDataSource,
+              private overlayPanelFactory: PblNgridOverlayPanelFactory) { }
 
-  afterLoadState(): void {
-    this.emailWidth = this.ds.hostGrid.columnApi.findColumn('email').parsedWidth.value;
-  }
-
-  swapNameAndRating(): void {
-    const grid = this.ds.hostGrid;
-    const name = grid.columnApi.findColumn('name');
-    const rating = grid.columnApi.findColumn('rating');
-    grid.columnApi.swapColumns(name, rating)
-
-  }
-
-  updateEmailWidth(width: number): void {
-    const grid = this.ds.hostGrid;
-    const email = grid.columnApi.findColumn('email');
-    grid.columnApi.resizeColumn(email, `${width}px`);
+  show(): void {
+    const overlayPanel = this.overlayPanelFactory.create(this.ngrid);
+    overlayPanel.openGridCell(
+      'myUniquePanelName',
+      'name',
+      'header',
+      {
+        hasBackdrop: true,
+        xPos: 'after',
+        yPos: 'below',
+      }
+    );
   }
 }
 /* @pebula-example:ex-1 */

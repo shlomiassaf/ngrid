@@ -1,0 +1,14 @@
+{
+  "mdTemplate": [ "./context-menu.component.md" ],
+  "codeRef": [
+    {
+      "file": "./context-menu.component.ts",
+      "section": ["ex-1", "ex-2"]
+    },
+    {
+      "file": "./context-menu.component.md",
+      "lang": "html",
+      "section": ["ex-1", "ex-2"]
+    }
+  ]
+}
