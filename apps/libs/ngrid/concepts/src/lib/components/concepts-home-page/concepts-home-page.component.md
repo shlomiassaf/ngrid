@@ -58,20 +58,7 @@ E> This page is still a WIP, the following is missing:
 
 ## TODO
 
-- Welcome page
-
-- Layout
-  - Refactor the layout section documentation
-  - Better explain the different layout, especially meta row types
-
-- Datasource
-  - Extend about datasource adapters?
-
 - The Registry
-  - What is the registry?
-  - Registry for header / footer cells, table cells, and edit cells.
-  - Single VS Mutli
-  - Registry layers (DI)
   - DataHeaderExtensions
 
 - Plugins
