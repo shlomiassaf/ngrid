@@ -13,7 +13,7 @@ import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
 import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN } from '@pebula/ngrid';
+import { PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN } from '@pebula/ngrid';
 
 import { PblNgridDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
 
@@ -43,8 +43,6 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
 
   @Input('detailRow') set row(value: any) { this.updateRow(); }
 
-  grid: PblNgridComponent;
-
   private get _element(): HTMLElement { return this.el.nativeElement; }
   private opened = false;
   private plugin: PblNgridDetailRowPluginDirective<any>;
@@ -53,7 +51,6 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
               el: ElementRef<HTMLElement>,
               private vcRef: ViewContainerRef) {
     super(extApi, el);
-    this.grid = extApi.table;
   }
 
   ngOnInit(): void {
