@@ -1,0 +1,28 @@
+<div class="example-group-container" fxLayout="row" fxLayoutAlign="space-between start" #el>
+  <div fxFlex="0 0 260px" class="example-sticky-container">
+    <mat-nav-list *ngIf="menu$ | async as navEntry">
+      <ng-container *ngFor="let e of navEntry.children">
+        <h3 mat-subheader *ngIf="e.title">{{ e.title }}</h3>
+        <mat-list-item *ngFor="let c of e.children" [routerLink]="getRouterLink(c.path)">
+          <a matLine>{{ c.title }}</a>
+        </mat-list-item>
+      </ng-container>
+    </mat-nav-list>
+  </div>
+  <div fxFlex="*" class="example-container" docsiTocArea #tocArea="docsiTocArea"
+       [scrollContainer]="el"
+       staticHtmlMode
+       selector="h1, h2, h3, h4">
+    <div class="markdown-body">
+      <pbl-markdown-page-viewer [documentUrl]="documentUrl" (contentRendered)="contentRendered()"></pbl-markdown-page-viewer>
+    </div>
+  </div>
+  <div *ngIf="tocArea.hasLinks | async" fxFlex="0 0 18%" class="example-sticky-container example-toc-container">
+    <docsi-toc [tocArea]="tocArea">
+      <a *docsiTocLinkTemplate="let ctx;"
+         [routerLink]="[ctx.rootUrl]"
+         queryParamsHandling="preserve"
+         [fragment]="ctx.link.id">{{ ctx.link.name }}</a>
+    </docsi-toc>
+  </div>
+</div>

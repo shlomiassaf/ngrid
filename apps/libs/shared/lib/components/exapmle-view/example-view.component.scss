@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  margin: 24px 0;
+}
+
+.section-code-and-component {
+  padding: 32px;
+}
+
+.pbl-code-example {
+  margin: 16px;
+  max-height: 65vh;
+  overflow: auto;
+  pre {
+    padding: 16px;
+  }
+}

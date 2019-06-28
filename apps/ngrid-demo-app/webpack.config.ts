@@ -1,6 +1,13 @@
 import * as Path from 'path';
 import { Configuration, DefinePlugin } from 'webpack';
-import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin } from '@pebula-internal/docsi/webpack';
+import {
+  DocsiMetadataFileEmitterWebpackPlugin,
+  DocsiSourceCodeRefWebpackPlugin,
+ } from '@pebula-internal/docsi/webpack';
+import { PebulaDynamicModuleWebpackPlugin } from '@pebula-internal/webpack-dynamic-module';
+import { MarkdownPagesWebpackPlugin } from '@pebula-internal/webpack-markdown-pages';
+import { MarkdownCodeExamplesWebpackPlugin } from '@pebula-internal/webpack-markdown-code-examples';
+import * as remarkPlugins from '@pebula-internal/docsi/webpack/src/lib/remark/plugins';
 
 // ** CONFIG VALUES **
 const MAIN_APP_LIBRARY_NAME = 'apps/libs/ngrid';
@@ -60,6 +67,35 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
 
   webpackConfig.plugins.push(new DocsiMetadataFileEmitterWebpackPlugin());
   webpackConfig.plugins.push(new DocsiSourceCodeRefWebpackPlugin());
+
+  const remarkSlug = require('remark-slug')
+  const remarkAutolinkHeadings = require('@rigor789/remark-autolink-headings');
+  const remarkAttr = require('remark-attr')
+  const customBlockquotesOptions = { mapping: {
+    'i>': 'info',
+    'I>': 'info icon',
+    'w>': 'warn',
+    'W>': 'warn icon',
+    'e>': 'error',
+    'E>': 'error icon',
+  }};
+
+  const dynamicModule = new PebulaDynamicModuleWebpackPlugin(Path.join(process.cwd(), 'markdown-pages.js'));
+  webpackConfig.plugins.push(dynamicModule);
+  webpackConfig.plugins.push(new MarkdownPagesWebpackPlugin(dynamicModule, {
+    docsPath: 'content/**/*.md',
+    remarkPlugins: [
+      remarkSlug,
+      remarkAutolinkHeadings,
+      remarkPlugins.docsiToc,
+      [remarkAttr, { scope: 'permissive' }],
+      remarkPlugins.gatsbyRemarkPrismJs(),
+      [remarkPlugins.customBlockquotes, customBlockquotesOptions],
+    ],
+  }));
+  webpackConfig.plugins.push(new MarkdownCodeExamplesWebpackPlugin(dynamicModule, {
+    docsPath: '../libs/ngrid-examples/**/*.ts',
+  }));
 
   const angular = require('@angular/core/package.json');
   const ngrid = require(Path.join(process.cwd(), `libs/ngrid/package.json`));

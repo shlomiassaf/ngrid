@@ -44,7 +44,7 @@ export class MarkdownToHtml {
           this.compiler = this.compiler.use(remarkHighlightJs);
           break;
         case 'prismjs':
-          this.compiler = this.compiler.use(plugins.gatsbyRemarkPrismJs);
+          this.compiler = this.compiler.use(plugins.gatsbyRemarkPrismJs(true));
           break;
       }
 

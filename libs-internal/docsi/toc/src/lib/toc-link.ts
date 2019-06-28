@@ -25,9 +25,9 @@ export function createLink(element: HTMLElement): TocLink {
   const tagName = element.tagName.match(/^h(\d)$/i);
   let id: string = element.id;
   if (!id) {
-    const anchor = element.querySelector('a.anchor');
+    const anchor: HTMLAnchorElement = element.querySelector('a.anchor, a');
     if (anchor) {
-      id = anchor.id;
+      id = anchor.id || (anchor.hash ? anchor.hash.replace('#', '') : '');
     }
   }
   return {

@@ -1,0 +1,5 @@
+<pbl-ngrid [dataSource]="dsCustomTrigger" [columns]="columns" usePagination>
+  <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
+                       [table]="table"
+                       [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
+</pbl-ngrid>

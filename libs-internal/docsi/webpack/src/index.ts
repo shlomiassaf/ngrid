@@ -4,7 +4,6 @@ export { ApiReferenceMap } from './lib/api-reference';
 export {
   DocsiMetadata,
   DocsiMetadataFileEmitterWebpackPlugin,
-  DocsiSourceCodeRefWebpackPlugin,
-  DocsiSourceCodeRefWebpackPluginOptions,
-  DocsiApiReferenceWebpackPlugin
+  DocsiSourceCodeRefWebpackPlugin, DocsiSourceCodeRefWebpackPluginOptions,
+  DocsiApiReferenceWebpackPlugin,
 } from './lib/docsi-webpack-plugins';
