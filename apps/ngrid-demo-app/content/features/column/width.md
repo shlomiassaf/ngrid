@@ -1,3 +1,8 @@
+---
+title: Column Width
+path: features/column/column-width
+parent: features/column
+---
 # Column Width
 
 Column width is set though column definition in `PblColumn`.
@@ -54,11 +59,7 @@ If you resize the browser you will see that **name** and **gender** remain fixed
 
 Note that the width for **bio** is not set, the table will assign a width to it.
 
-<docsi-mat-example-with-source title="Column Width" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@pebula-example:ex-1-->
-  <pbl-ngrid [dataSource]="ds1" [columns]="columns1"></pbl-ngrid>
-  <!--@pebula-example:ex-1-->
-</docsi-mat-example-with-source>
+<div pbl-example-view="pbl-column-width-example-component"></div>
 
 Let's review the CSS width assigned to each column:
 
@@ -81,11 +82,7 @@ Because a column width can not be lower then the minimum width, setting a minimu
 For example, if we have 4 columns, each with a minimum width of 300 pixels and our table's width is 1000 pixels we will see a horizontal scroll bar
 because the actual table size is 1200 which is 4 columns X 300px.
 
-<docsi-mat-example-with-source title="Minimum Column Width" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@pebula-example:ex-2-->
-  <pbl-ngrid [dataSource]="ds2" [columns]="columns2"></pbl-ngrid>
-  <!--@pebula-example:ex-2-->
-</docsi-mat-example-with-source>
+<div pbl-example-view="pbl-min-column-width-example-component"></div>
 
 ## Maximum Width
 
@@ -97,8 +94,5 @@ When a column reach it's maximum width it behaves like a column with fixed absol
 In the example below, notice how we set a maximum width to **gender** (50) and **birtdate** (100).
 We did not set any width related option in the remaining columns so they will split the remaining space evenly.
 
-<docsi-mat-example-with-source title="Maximum Column Width" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@pebula-example:ex-3-->
-  <pbl-ngrid [dataSource]="ds3" [columns]="columns3"></pbl-ngrid>
-  <!--@pebula-example:ex-3-->
-</docsi-mat-example-with-source>
+<div pbl-example-view="pbl-max-column-width-example-component"></div>
+

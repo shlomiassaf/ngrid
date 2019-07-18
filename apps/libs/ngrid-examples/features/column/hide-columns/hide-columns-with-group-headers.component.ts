@@ -1,25 +1,10 @@
-/* @pebula-example:ex-1 */
-/* @pebula-example:ex-2 */
-import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
 
 import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
+import { Example } from '@pebula/apps/shared';
 
-const COLUMNS1 = columnFactory()
-  .default({minWidth: 100})
-  .table(
-    { prop: 'id', sort: true, width: '40px' },
-    { prop: 'name', sort: true },
-    { prop: 'gender', width: '50px' },
-    { prop: 'birthdate', type: 'date' },
-    { prop: 'bio' },
-    { prop: 'email', minWidth: 250, width: '250px' },
-    { prop: 'language', headerType: 'language' },
-  )
-  .build();
-
-const COLUMNS2 = columnFactory()
+const COLUMNS = columnFactory()
   .default({minWidth: 100})
   .table(
     { prop: 'id', sort: true, width: '40px' },
@@ -46,21 +31,18 @@ const COLUMNS2 = columnFactory()
   .build();
 
 @Component({
-  selector: 'pbl-hide-columns-grid-example-component',
-  templateUrl: './hide-columns.component.html',
-  styleUrls: ['./hide-columns.component.scss'],
+  selector: 'pbl-hide-columns-with-group-headers-example-component',
+  templateUrl: './hide-columns-with-group-headers.component.html',
+  styleUrls: ['./hide-columns-with-group-headers.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HideColumnsGridExampleComponent {
+@Example('pbl-hide-columns-with-group-headers-example-component', { title: 'Hide Columns with Group Headers' })
+export class HideColumnWithGroupHeadersFeatureExample {
 
-  hideColumns1: string[] = [ 'bio' ];
-  columns1 = COLUMNS1;
-  ds1 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
-
-  hideColumns2: string[] = [];
-  columns2 = COLUMNS2;
-  ds2 = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
+  hideColumns: string[] = [];
+  columns = COLUMNS;
+  ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 15) ).create();
 
   constructor(private datasource: DemoDataSource) { }
 
@@ -73,5 +55,3 @@ export class HideColumnsGridExampleComponent {
     }
   }
 }
-/* @pebula-example:ex-2 */
-/* @pebula-example:ex-1 */

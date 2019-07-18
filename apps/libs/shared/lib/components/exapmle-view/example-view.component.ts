@@ -31,7 +31,6 @@ export class ExampleViewComponent extends MarkdownDynamicComponentPortal impleme
   constructor(private exampleService: MarkdownCodeExamplesService,
               @Inject(EXAMPLE_COMPONENTS_TOKEN) private exampleComponents: {[key: string]: LiveExample} ) {
     super();
-    this.containerClass = 'mat-elevation-z7';
   }
 
   getComponent(selector: string): Type<any> | undefined {
@@ -42,6 +41,9 @@ export class ExampleViewComponent extends MarkdownDynamicComponentPortal impleme
 
   render(): void {
     super.render();
+    if (!this.containerClass) {
+      this.containerClass = 'table-height-300 mat-elevation-z7';
+    }
     this.exampleService.getExample(this.componentName)
       .then( assets => this.sourceCode.next(assets) );
   }

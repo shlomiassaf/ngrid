@@ -15,8 +15,6 @@ import { PblNgridDragModule } from '@pebula/ngrid/drag';
 import { PblNgridStatePluginModule } from '@pebula/ngrid/state';
 
 import { SharedModule, ExampleGroupRegistryService } from '@pebula/apps/ngrid/shared';
-import { HideColumnsGridExampleComponent } from './hide-columns/hide-columns.component';
-import { ColumnWidthGridExampleComponent } from './column-width/column-width.component';
 import { ColumnGroupGridExampleComponent } from './column-group/column-group.component';
 import { CellEditGridExampleComponent } from './cell-edit/cell-edit.component';
 import { ColumnFilteringGridExampleComponent } from './column-filtering/column-filtering.component';
@@ -35,8 +33,6 @@ const MATERIAL = [
 ];
 
 const DECLARATION = [
-  HideColumnsGridExampleComponent,
-  ColumnWidthGridExampleComponent,
   ColumnGroupGridExampleComponent,
   CellEditGridExampleComponent,
   ColumnReorderGridExampleComponent,
@@ -47,8 +43,6 @@ const DECLARATION = [
 ];
 
 const ROUTES = [
-  { path: 'hide-columns', component: HideColumnsGridExampleComponent, data: { title: 'Hide Columns' } },
-  { path: 'column-width', component: ColumnWidthGridExampleComponent, data: { title: 'Column Width' } },
   { path: 'column-group', component: ColumnGroupGridExampleComponent, data: { title: 'Column Group' } },
   { path: 'column-filtering', component: ColumnFilteringGridExampleComponent, data: { title: 'Column Filtering' } },
   { path: 'column-sorting', component: ColumnSortingGridExampleComponent, data: { title: 'Column Sorting' } },

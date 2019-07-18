@@ -13,6 +13,9 @@ import { ManualDatasourceTriggerExampleModule } from './concepts/datasource/manu
 import { ColumnsSimpleModelExampleModule} from './concepts/columns/simple-model/simple-model.module';
 import { ColumnsFactoryExampleModule } from './concepts/columns/factory/factory.module';
 
+import { HideColumnFeatureExampleModule } from './features/column/hide-columns/hide-columns.module';
+import { ColumnWidthFeatureExampleModule } from './features/column/width/column-width.module';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -26,6 +29,9 @@ import { ColumnsFactoryExampleModule } from './concepts/columns/factory/factory.
 
     ColumnsSimpleModelExampleModule,
     ColumnsFactoryExampleModule,
+
+    HideColumnFeatureExampleModule,
+    ColumnWidthFeatureExampleModule,
   ]
 })
 export class ExampleModule { }
