@@ -2,6 +2,7 @@
 title: Column Width
 path: features/column/column-width
 parent: features/column
+ordinal: 1
 ---
 # Column Width
 

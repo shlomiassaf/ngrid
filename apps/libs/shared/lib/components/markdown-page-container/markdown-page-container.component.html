@@ -1,18 +1,15 @@
 <div class="example-group-container" fxLayout="row" fxLayoutAlign="space-between start" #el>
   <div fxFlex="0 0 260px" class="example-sticky-container">
     <mat-nav-list *ngIf="menu$ | async as navEntry">
-      <ng-container *ngFor="let e of navEntry.children">
-        <h3 mat-subheader *ngIf="e.title">{{ e.title }}</h3>
-        <mat-list-item *ngFor="let c of e.children" [routerLink]="getRouterLink(c.path)">
-          <a matLine>{{ c.title }}</a>
-        </mat-list-item>
+      <ng-container *ngFor="let entry of navEntry.children">
+        <ng-container *ngTemplateOutlet="entry.children ? containerEntry : linkEntry; context: { $implicit: entry }"></ng-container>
       </ng-container>
     </mat-nav-list>
   </div>
   <div fxFlex="*" class="example-container" docsiTocArea #tocArea="docsiTocArea"
        [scrollContainer]="el"
        staticHtmlMode
-       selector="h1, h2, h3, h4">
+       selector="h1[id], h2[id], h3[id], h4[id]">
     <div class="markdown-body">
       <pbl-markdown-page-viewer [documentUrl]="documentUrl" (contentRendered)="contentRendered()"></pbl-markdown-page-viewer>
     </div>
@@ -26,3 +23,16 @@
     </docsi-toc>
   </div>
 </div>
+
+<ng-template #containerEntry let-entry>
+  <h3 mat-subheader>{{ entry.title }}</h3>
+  <ng-container *ngFor="let childEntry of entry.children">
+    <ng-container *ngTemplateOutlet="childEntry.children ? containerEntry : linkEntry; context: { $implicit: childEntry }"></ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #linkEntry let-entry>
+  <mat-list-item [routerLink]="getRouterLink(entry.path)">
+    <a matLine>{{ entry.title }}</a>
+  </mat-list-item>
+</ng-template>

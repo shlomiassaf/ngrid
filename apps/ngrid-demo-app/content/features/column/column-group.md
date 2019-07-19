@@ -2,6 +2,7 @@
 title: Column Group
 path: features/column/column-group
 parent: features/column
+ordinal: 2
 ---
 # Column Group
 

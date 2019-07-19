@@ -2,6 +2,7 @@
 title: Column Model
 path: concepts/columns/column-model
 parent: concepts/columns
+ordinal: 1
 ---
 # The Column Model
 

@@ -2,6 +2,7 @@
 title: Quick-through
 path: concepts/datasource/quick-through
 parent: concepts/datasource
+ordinal: 0
 ---
 # Datasource Quickthrough
 

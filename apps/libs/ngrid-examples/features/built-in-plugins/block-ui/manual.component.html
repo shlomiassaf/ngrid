@@ -1,0 +1,11 @@
+<pbl-ngrid #blockUi="blockUi" blockUi="false"
+           [dataSource]="ds"
+           [columns]="columns">
+
+  <!-- Only for the example, on a real app this should be set in a common template component initialized using `PblNgridModule.withCommon` -->
+  <div *pblNgridBlockUiDef class="pbl-ngrid-ui-block">
+    <mat-spinner></mat-spinner>
+  </div>
+
+</pbl-ngrid>
+<button mat-button (click)="blockUi.blockUi = !blockUi.blockUi">Toggle Block UI (plugin instance)</button>

@@ -1,18 +1,21 @@
 import { NgModule } from '@angular/core';
+
 import { PblNgridModule } from '@pebula/ngrid';
+import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { GridFillerExample } from './grid-filler.component';
-
-const COMPONENTS = [ GridFillerExample ];
+import { GridFillerFixedVirtualScrollExample } from './grid-filler-fixed-virtual-scroll.component';
+import { GridFillerDisabledExample } from './grid-filler-disabled.component';
+import { GridFillerNoVirtualScrollExample } from './grid-filler-no-virtual-scroll.component';
 
 @NgModule({
-  declarations: COMPONENTS,
+  declarations: [ GridFillerExample, GridFillerFixedVirtualScrollExample, GridFillerDisabledExample, GridFillerNoVirtualScrollExample ],
   imports: [
     ExampleCommonModule,
-    PblNgridModule,
+    PblNgridModule, PblNgridBlockUiModule,
   ],
-  exports: COMPONENTS,
-  entryComponents: COMPONENTS,
+  exports: [ GridFillerExample, GridFillerFixedVirtualScrollExample, GridFillerDisabledExample, GridFillerNoVirtualScrollExample ],
+  entryComponents: [ GridFillerExample, GridFillerFixedVirtualScrollExample, GridFillerDisabledExample, GridFillerNoVirtualScrollExample ],
 })
 export class GridFillerExampleModule { }

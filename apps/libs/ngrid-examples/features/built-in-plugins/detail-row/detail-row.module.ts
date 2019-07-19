@@ -1,18 +1,26 @@
 import { NgModule } from '@angular/core';
+import { MatRippleModule } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+
 import { PblNgridModule } from '@pebula/ngrid';
+import { PblNgridDetailRowModule } from '@pebula/ngrid/detail-row';
+import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { DetailRowExample } from './detail-row.component';
-
-const COMPONENTS = [ DetailRowExample ];
+import { CustomParentExample } from './custom-parent.component';
+import { SingleAndExcludeModeExample } from './single-and-exclude-mode.component';
+import { PredicateExample } from './predicate.component';
 
 @NgModule({
-  declarations: COMPONENTS,
+  declarations: [ DetailRowExample, CustomParentExample, SingleAndExcludeModeExample, PredicateExample ],
   imports: [
+    MatRippleModule, MatCheckboxModule, MatRadioModule,
     ExampleCommonModule,
-    PblNgridModule,
+    PblNgridModule, PblNgridDetailRowModule, PblNgridBlockUiModule,
   ],
-  exports: COMPONENTS,
-  entryComponents: COMPONENTS,
+  exports: [ DetailRowExample, CustomParentExample, SingleAndExcludeModeExample, PredicateExample ],
+  entryComponents: [ DetailRowExample, CustomParentExample, SingleAndExcludeModeExample, PredicateExample ],
 })
 export class DetailRowExampleModule { }

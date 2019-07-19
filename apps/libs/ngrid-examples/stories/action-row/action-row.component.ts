@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@pebula/ngrid';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
+import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
+
+import { Person, DemoDataSource } from '@pebula/apps/shared-data';
 import { Example } from '@pebula/apps/shared';
 
 @Component({
@@ -14,13 +16,50 @@ import { Example } from '@pebula/apps/shared';
 @Example('pbl-action-row-example', { title: 'Action Row' })
 export class ActionRowExample {
   columns = columnFactory()
+    .default({minWidth: 100})
     .table(
-      { prop: 'name', width: '100px' },
+      { prop: 'id', sort: true, width: '40px' },
+      { prop: 'name', sort: true },
       { prop: 'gender', width: '50px' },
-      { prop: 'birthdate', type: 'date', width: '25%' },
+      { prop: 'birthdate', type: 'date' }
     )
     .build();
-  ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(100, 500) ).create();
+  ds = createDS<Person>()
+    .onTrigger( () => this.datasource.getPeople(500, 500) )
+    .create();
 
   constructor(private datasource: DemoDataSource) { }
+}
+
+@Component({
+  // tslint:disable-next-line:component-selector
+  selector: 'my-grid-action-row',
+  templateUrl: './my-grid-action-row.component.html',
+  styleUrls: [ './my-grid-action-row.component.scss' ],
+  encapsulation: ViewEncapsulation.None,
+})
+export class MyGridActionRowComponent implements AfterViewInit {
+
+  @Input() get filter(): boolean { return this._filter; }
+  set filter(value: boolean) { this._filter = coerceBooleanProperty(value); }
+
+  @Input() label: string;
+
+  @ViewChild('actionRow', { read: TemplateRef, static: true }) actionRow: TemplateRef<any>;
+
+  private _filter = false;
+
+  constructor(public grid: PblNgridComponent<any>) { }
+
+  refresh(): void {
+    this.grid.ds.refresh();
+  }
+
+  ngAfterViewInit(): void {
+    this.grid.createView('beforeTable', this.actionRow);
+  }
+
+  actionRowFilter(filterValue: string) {
+    this.grid.ds.setFilter(filterValue.trim(), this.grid.columnApi.visibleColumns);
+  }
 }

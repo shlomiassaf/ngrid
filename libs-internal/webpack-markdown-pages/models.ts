@@ -3,7 +3,9 @@ export interface PageAttributes {
   path: string;
   tooltip?: string;
   parent?: string;
+  ordinal?: number;
   empty: boolean;
+  type?: 'topMenuSection' | 'index';
 }
 
 export interface ParsedPage {
@@ -28,7 +30,9 @@ export interface PageFileAsset {
 export interface PageAssetNavEntry {
   title: string;
   path: string;
+  type?: PageAttributes['type'];
   tooltip?: string;
+  ordinal?: number;
   children?: PageAssetNavEntry[];
 }
 

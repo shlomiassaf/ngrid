@@ -2,6 +2,7 @@
 title: Column Reorder
 path: features/column/column-reorder
 parent: features/column
+ordinal: 6
 ---
 # Column Reordering
 
@@ -49,13 +50,7 @@ leaving the group of columns between the 2 in the same place.
   swapColumns(col1: PblColumn, col2: PblColumn): boolean;
 ```
 
-<docsi-mat-example-with-source title="Moving with the API" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-1'}]">
-  <!--@pebula-example:ex-1-->
-  <button (click)="move(t)">Move id after gender</button><button (click)="swap(t)">Swap name after birthdate</button>
-  <pbl-ngrid #t [dataSource]="ds1" [columns]="columns1">
-  </pbl-ngrid>
-  <!--@pebula-example:ex-1-->
-</docsi-mat-example-with-source>
+<div pbl-example-view="pbl-moving-with-the-api-example"></div>
 
 ## Using the `drag` plugin
 
@@ -63,13 +58,7 @@ The `drag` plugin add support for column reordering through mouse or touch and t
 
 Let's start with a simple example:
 
-<docsi-mat-example-with-source title="Simple Reordering" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-2'}]">
-  <!--@pebula-example:ex-2-->
-  <pbl-ngrid columnReorder
-             [dataSource]="ds2" [columns]="columns2">
-  </pbl-ngrid>
-  <!--@pebula-example:ex-2-->
-</docsi-mat-example-with-source>
+<div pbl-example-view="pbl-column-reorder-example"></div>
 
 To enable column reordering:
 
@@ -85,13 +74,7 @@ Notice that we allow reordering for columns **name** and **gender**, but as they
 The `reorder` property controls if the column can be dragged or not, nothing more.
 To lock a column for reordering we need to enable the `wontBudge` property.
 
-<docsi-mat-example-with-source title="Locking columns" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-3'}]">
-  <!--@pebula-example:ex-3-->
-  <pbl-ngrid columnReorder
-             [dataSource]="ds3" [columns]="columns3">
-  </pbl-ngrid>
-  <!--@pebula-example:ex-3-->
-</docsi-mat-example-with-source>
+<div pbl-example-view="pbl-locking-columns-example"></div>
 
 We've enabled `wontBudge` in columns **in** and **birthdate**, trying to re-order columns before/after them will not work.  
 Notice that we now enabled `reorder` on **birthdate**, it will be able to reorder itself but will not allow others to reorder it.
@@ -106,13 +89,7 @@ By default, a group has no effect on reordering of columns but it is possible to
 
 To enable group columns lock set the `lockColumns` property on the group definitions to **true**.
 
-<docsi-mat-example-with-source title="Group columns locks" contentClass="table-height-300 mat-elevation-z7" [query]="[{section: 'ex-4'}]">
-  <!--@pebula-example:ex-4-->
-  <pbl-ngrid columnReorder
-             [dataSource]="ds4" [columns]="columns4">
-  </pbl-ngrid>
-  <!--@pebula-example:ex-4-->
-</docsi-mat-example-with-source>
+<div pbl-example-view="pbl-group-columns-lock-example"></div>
 
 When a group is not locked it can split by a re-order of an other column or one of it's own columns. A locked group does not allow it's own columns
 to split, not actively and not passively.
@@ -163,6 +140,3 @@ You can extend `[pblNgridColumnDrag]`, make it a component, add your custom drag
 
 I> The `drag` plugin is using `@angular/cdk/drag` as the low level package for handling drag and drop, you can benefit from other
 features this library offers when building you own custom solution.
-
-
-<div pbl-example-view="pbl-column-reorder-example"></div>

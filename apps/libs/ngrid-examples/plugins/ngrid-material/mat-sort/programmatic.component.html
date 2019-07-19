@@ -1,0 +1,8 @@
+<pbl-ngrid blockUi matSort [dataSource]="ds" [columns]="columns"></pbl-ngrid>
+
+<div fxLayout="row" fxLayoutGap="16px" style="padding: 8px">
+  <button *ngFor="let key of ['id', 'name', 'gender']"
+          fxFlex="noshrink" mat-stroked-button color="primary" (click)="toggleActive(key)">{{ key }} [{{ getNextDirection(key) }}]</button>
+  <div fxFlex="*"></div>
+  <button mat-stroked-button color="accent" (click)="clear()">Clear</button>
+</div>

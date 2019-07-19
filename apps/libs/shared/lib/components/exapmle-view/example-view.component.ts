@@ -6,6 +6,7 @@ import {
   Inject,
   OnDestroy,
 } from '@angular/core';
+import { trigger, transition, animate, style } from '@angular/animations'
 
 import { UnRx } from '@pebula/utils';
 import { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-examples';
@@ -19,14 +20,38 @@ export const EXAMPLE_COMPONENTS_TOKEN = new InjectionToken('EXAMPLE_COMPONENTS')
 @Component({
   selector: 'pbl-example-view',
   templateUrl: './example-view.component.html',
-  styleUrls: ['./example-view.component.scss']
+  styleUrls: ['./example-view.component.scss'],
+  host: {
+    '[class.example-style-flow]': 'exampleStyle === "flow"',
+    '[class.example-style-toolbar]': 'exampleStyle === "toolbar"',
+  },
+  animations: [
+    trigger('slideInOutLeft', [
+      transition(':enter', [
+        style({transform: 'translateX(-100%)'}),
+        animate('200ms ease-in', style({transform: 'translateX(0%)'}))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({transform: 'translateX(-100%)'}))
+      ])
+    ]),
+    trigger('slideInOutRight', [
+      transition(':enter', [
+        style({transform: 'translateX(200%)'}),
+        animate('200ms ease-in', style({transform: 'translateX(0%)'}))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({transform: 'translateX(200%)'}))
+      ])
+    ])
+  ]
 })
 @UnRx()
 export class ExampleViewComponent extends MarkdownDynamicComponentPortal implements OnDestroy {
   exampleData: LiveExample;
   sourceCode = new BehaviorSubject<ExampleFileAsset[]>(null);
-
   viewSourceCode = false;
+  exampleStyle: 'toolbar' | 'flow' = 'toolbar';
 
   constructor(private exampleService: MarkdownCodeExamplesService,
               @Inject(EXAMPLE_COMPONENTS_TOKEN) private exampleComponents: {[key: string]: LiveExample} ) {

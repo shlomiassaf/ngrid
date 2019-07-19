@@ -1,6 +1,7 @@
 ---
 title: Concepts
 path: concepts
+type: topMenuSection
 ---
 # NGrid concepts
 

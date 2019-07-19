@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import { GestureConfig } from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, PreloadAllModules } from '@angular/router';
+
+import { FlexModule } from '@angular/flex-layout/flex';
+import { ExtendedModule } from '@angular/flex-layout/extended';
 import { Angulartics2Module } from 'angulartics2';
 
+import { GestureConfig } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -13,8 +16,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { NxModule } from '@nrwl/nx';
 
-import { PblDemoAppSharedModule, MarkdownPageContainerComponent, EXAMPLE_COMPONENTS, EXAMPLE_COMPONENTS_TOKEN, CONTENT_CHUNKS_COMPONENTS } from '@pebula/apps/shared';
-import { SharedModule } from '@pebula/apps/ngrid/shared';
+import {
+  PblDemoAppSharedModule,
+  MarkdownPageContainerComponent,
+  MarkdownPageViewerComponent,
+  EXAMPLE_COMPONENTS,
+  EXAMPLE_COMPONENTS_TOKEN,
+  CONTENT_CHUNKS_COMPONENTS
+} from '@pebula/apps/shared';
 import { ExampleModule } from '@pebula/apps/ngrid-examples';
 import { AppContentChunksModule, APP_CONTENT_CHUNKS } from '@pebula/apps/app-content-chunks';
 
@@ -33,11 +42,11 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FlexModule, ExtendedModule,
     NxModule.forRoot(),
     PblDemoAppSharedModule,
     ExampleModule,
     AppContentChunksModule,
-    SharedModule,
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
@@ -45,7 +54,24 @@ import { AppComponent } from './app.component';
     MatTooltipModule,
     RouterModule.forRoot(
       [
-        { path: '', loadChildren: () => import('@pebula/apps/ngrid/demos').then(m => m.DemosModule) },
+        {
+          path: '',
+          pathMatch: 'full',
+          component: MarkdownPageViewerComponent,
+          data: { documentUrl: '/' },
+        },
+        {
+          path: 'demos/complex-demo-1',
+          pathMatch: 'full',
+          component: MarkdownPageViewerComponent,
+          data: { documentUrl: '/demos/complex-demo-1' },
+        },
+        {
+          path: 'demos/virtual-scroll-performance',
+          pathMatch: 'full',
+          component: MarkdownPageViewerComponent,
+          data: { documentUrl: '/demos/virtual-scroll-performance' },
+        },
         {
           path: 'content',
           children: [

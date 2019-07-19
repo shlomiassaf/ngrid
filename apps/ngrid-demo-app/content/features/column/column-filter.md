@@ -2,6 +2,7 @@
 title: Column Filter
 path: features/column/column-filter
 parent: features/column
+ordinal: 3
 ---
 # Column Filtering
 

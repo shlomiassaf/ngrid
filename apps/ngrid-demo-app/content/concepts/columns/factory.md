@@ -2,6 +2,7 @@
 title: Column Factory
 path: concepts/columns/factory
 parent: concepts/columns
+ordinal: 2
 ---
 # The Column Factory
 

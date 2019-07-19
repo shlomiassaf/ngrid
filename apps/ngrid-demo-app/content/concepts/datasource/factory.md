@@ -2,6 +2,7 @@
 title: Datasource Factory
 path: concepts/datasource/factory
 parent: concepts/datasource
+ordinal: 2
 ---
 # The Data Source Factory
 

@@ -1,1 +1,9 @@
-<pbl-ngrid [dataSource]="ds" [columns]="columns"></pbl-ngrid>
+<pbl-ngrid usePagination
+           blockUi
+           vScrollNone
+           [dataSource]="ds"
+           [columns]="columns">
+  <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
+                      [table]="table"
+                      [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
+</pbl-ngrid>

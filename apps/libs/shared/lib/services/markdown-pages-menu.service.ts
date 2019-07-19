@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PageNavigationMetadata, PageFileAsset, PageAssetNavEntry } from '@pebula-internal/webpack-markdown-pages';
+import { PageNavigationMetadata, PageAssetNavEntry } from '@pebula-internal/webpack-markdown-pages';
 
 import { MarkdownPagesService } from './markdown-pages.service';
 
@@ -9,8 +9,28 @@ export class MarkdownPagesMenuService {
   get ready(): Promise<MarkdownPagesMenuService> { return this.mdPages.ready.then( () => { return this; }); }
 
   private _cache = new Map<string, NavEntry>();
+  private _ofTypeCache = new Map<PageAssetNavEntry['type'], PageAssetNavEntry[]>();
 
   constructor(private mdPages: MarkdownPagesService) { }
+
+  ofType(type: PageAssetNavEntry['type']): Promise<PageAssetNavEntry[]> {
+    if (this._ofTypeCache.has(type)) {
+      return Promise.resolve(this._ofTypeCache.get(type));
+    }
+
+    return this.mdPages.ready
+      .then( () => {
+        const result: PageAssetNavEntry[] = [];
+        for (const key of Object.keys(this.mdPages.markdownPages.entries)) {
+          const entry = this.mdPages.markdownPages.entries[key];
+          if (entry.type === type) {
+            result.push(entry);
+          }
+        }
+        this._ofTypeCache.set(type, result);
+        return result;
+      });
+  }
 
   getMenu(entry: string): Promise<NavEntry> {
     return this.mdPages.ready

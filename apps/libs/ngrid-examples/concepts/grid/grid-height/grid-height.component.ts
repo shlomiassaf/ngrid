@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
 import { Example } from '@pebula/apps/shared';
-import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
+import { Person, DemoDataSource } from '@pebula/apps/shared-data';
 
 @Component({
   selector: 'pbl-grid-height-grid-example',

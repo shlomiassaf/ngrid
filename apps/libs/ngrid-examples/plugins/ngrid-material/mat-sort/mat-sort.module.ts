@@ -1,18 +1,24 @@
 import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+
 import { PblNgridModule } from '@pebula/ngrid';
+import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
+import { PblNgridMatSortModule } from '@pebula/ngrid-material/sort';
+import { PblNgridPaginatorModule } from '@pebula/ngrid-material/paginator';
 
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { MatSortExample } from './mat-sort.component';
-
-const COMPONENTS = [ MatSortExample ];
+import { ActiveColumnAndDirectionExample } from './active-column-and-direction.component';
+import { ProgrammaticExample } from './programmatic.component';
 
 @NgModule({
-  declarations: COMPONENTS,
+  declarations: [ MatSortExample, ActiveColumnAndDirectionExample, ProgrammaticExample ],
   imports: [
+    MatButtonModule,
     ExampleCommonModule,
-    PblNgridModule,
+    PblNgridModule, PblNgridBlockUiModule, PblNgridPaginatorModule, PblNgridMatSortModule,
   ],
-  exports: COMPONENTS,
-  entryComponents: COMPONENTS,
+  exports: [ MatSortExample, ActiveColumnAndDirectionExample, ProgrammaticExample ],
+  entryComponents: [ MatSortExample, ActiveColumnAndDirectionExample, ProgrammaticExample ],
 })
 export class MatSortExampleModule { }

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
 
-import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
+import { Person } from '@pebula/apps/shared-data';
 import { Example } from '@pebula/apps/shared';
 
 @Component({
@@ -11,16 +11,15 @@ import { Example } from '@pebula/apps/shared';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-@Example('pbl-empty-collection-template-example', { title: 'Empty Collection Template' })
+@Example('pbl-empty-collection-template-example', { title: 'Synchronous (immediate) Empty set' })
 export class EmptyCollectionTemplateExample {
   columns = columnFactory()
+    .default({minWidth: 200})
     .table(
-      { prop: 'name', width: '100px' },
-      { prop: 'gender', width: '50px' },
-      { prop: 'birthdate', type: 'date', width: '25%' },
+      { prop: 'id' },
+      { prop: 'name' },
     )
     .build();
-  ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(100, 500) ).create();
 
-  constructor(private datasource: DemoDataSource) { }
+  ds = createDS<Person>().onTrigger( () => [] ).create();
 }

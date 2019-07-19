@@ -1,1 +1,11 @@
-<pbl-ngrid [dataSource]="ds" [columns]="columns"></pbl-ngrid>
+<!-- This should be declared in a top-level component (e.g. app root) -->
+<pbl-ngrid-row *pblNgridDetailRowParentRef="let row; gridInstance as gridInstance" [grid]="gridInstance" [detailRow]="row" matRipple></pbl-ngrid-row>
+
+<pbl-ngrid blockUi [dataSource]="ds" [columns]="columns" detailRow vScrollNone>
+  <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
+    <div>
+      <h1>Detail Row</h1>
+      <pre>{{row | json}}</pre>
+    </div>
+  </div>
+</pbl-ngrid>

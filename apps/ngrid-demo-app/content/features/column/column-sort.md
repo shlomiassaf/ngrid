@@ -2,6 +2,7 @@
 title: Column Sort
 path: features/column/column-sort
 parent: features/column
+ordinal: 4
 ---
 # Column Sorting
 

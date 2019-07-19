@@ -1,22 +1,12 @@
 import * as Path from 'path';
 import { Configuration, DefinePlugin } from 'webpack';
-import {
-  DocsiMetadataFileEmitterWebpackPlugin,
-  DocsiSourceCodeRefWebpackPlugin,
- } from '@pebula-internal/docsi/webpack';
+
 import { PebulaDynamicModuleWebpackPlugin } from '@pebula-internal/webpack-dynamic-module';
 import { MarkdownPagesWebpackPlugin } from '@pebula-internal/webpack-markdown-pages';
 import { MarkdownCodeExamplesWebpackPlugin } from '@pebula-internal/webpack-markdown-code-examples';
 import * as remarkPlugins from '@pebula-internal/docsi/webpack/src/lib/remark/plugins';
 
 // ** CONFIG VALUES **
-const MAIN_APP_LIBRARY_NAME = 'apps/libs/ngrid';
-const HTML_MARKDOWN_TRANSFORM_LOADER_INCLUDE = [
-  new RegExp(`/${MAIN_APP_LIBRARY_NAME}/`),
-  new RegExp(`/apps/libs/ngrid-material/`),
-];
-const HTML_MARKDOWN_TRANSFORM_LOADER_EXCLUDE = [ new RegExp(`/${MAIN_APP_LIBRARY_NAME}/shared/`) ]
-
 function applyLoaders(webpackConfig: Configuration) {
   // We have custom loaders, for webpack to be aware of them we tell it the directory the are in.
   // make sure that each folder behaves like a node module, that is it has an index file inside root or a package.json pointing to it.
@@ -33,18 +23,6 @@ function applyLoaders(webpackConfig: Configuration) {
         {
           use: [
             'html-loader',
-          ]
-        },
-        {
-          include: HTML_MARKDOWN_TRANSFORM_LOADER_INCLUDE,
-          exclude: HTML_MARKDOWN_TRANSFORM_LOADER_EXCLUDE,
-          use: [
-            {
-              loader: "docsi/webpack",
-              options: {
-                highlight: 'prismjs',
-              }
-            }
           ]
         },
       ]
@@ -64,9 +42,6 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   const oldOptions = (webpackConfig.plugins[idx] as any)._options;
   oldOptions.directTemplateLoading = false;
   webpackConfig.plugins[idx] = new AngularCompilerPlugin(oldOptions);
-
-  webpackConfig.plugins.push(new DocsiMetadataFileEmitterWebpackPlugin());
-  webpackConfig.plugins.push(new DocsiSourceCodeRefWebpackPlugin());
 
   const remarkSlug = require('remark-slug')
   const remarkAutolinkHeadings = require('@rigor789/remark-autolink-headings');

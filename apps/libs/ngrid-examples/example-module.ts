@@ -40,6 +40,10 @@ import { SelectionColumnExampleModule } from './plugins/ngrid-material/selection
 import { MatSortExampleModule } from './plugins/ngrid-material/mat-sort/mat-sort.module';
 import { PaginationExampleModule } from './plugins/ngrid-material/pagination/pagination.module';
 import { ContextMenuExampleModule } from './plugins/ngrid-material/context-menu/context-menu.module';
+import { ColumnResizeExampleModule } from './features/column/column-resize/column-resize.module';
+import { SellerDemoExampleModule } from './demos/seller-demo/seller-demo.module';
+import { VirtualScrollPerformanceDemoExampleModule } from './demos/virtual-scroll-performance-demo/virtual-scroll-performance-demo.module';
+import { ComplexDemo1ExampleModule } from './demos/complex-demo1/complex-demo1.module';
 
 @NgModule({
   imports: [
@@ -83,6 +87,10 @@ import { ContextMenuExampleModule } from './plugins/ngrid-material/context-menu/
     MatSortExampleModule,
     PaginationExampleModule,
     ContextMenuExampleModule,
+    ColumnResizeExampleModule,
+    SellerDemoExampleModule,
+    VirtualScrollPerformanceDemoExampleModule,
+    ComplexDemo1ExampleModule,
   ]
 })
 export class ExampleModule { }

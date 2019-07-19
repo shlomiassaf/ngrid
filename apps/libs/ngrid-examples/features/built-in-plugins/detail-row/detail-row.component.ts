@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
 
-import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
+import { Person, DemoDataSource } from '@pebula/apps/shared-data';
 import { Example } from '@pebula/apps/shared';
 
 @Component({
@@ -14,13 +14,17 @@ import { Example } from '@pebula/apps/shared';
 @Example('pbl-detail-row-example', { title: 'Detail Row' })
 export class DetailRowExample {
   columns = columnFactory()
+    .default({minWidth: 100})
     .table(
-      { prop: 'name', width: '100px' },
+      { prop: 'detailRowHandle', label: ' ', type: 'detailRowHandle', minWidth: 48, maxWidth: 48 },
+      { prop: 'id', sort: true, width: '40px' },
+      { prop: 'name', sort: true },
       { prop: 'gender', width: '50px' },
-      { prop: 'birthdate', type: 'date', width: '25%' },
+      { prop: 'birthdate', type: 'date' }
     )
     .build();
-  ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(100, 500) ).create();
+
+  ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 4) ).create();
 
   constructor(private datasource: DemoDataSource) { }
 }

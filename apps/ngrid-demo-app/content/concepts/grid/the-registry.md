@@ -2,6 +2,7 @@
 title: The Registry
 path: concepts/grid/the-registry
 parent: concepts/grid
+ordinal: 2
 ---
 # The Registry
 

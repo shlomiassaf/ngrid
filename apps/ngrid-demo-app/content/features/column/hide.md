@@ -2,6 +2,7 @@
 title: Hide Columns
 path: features/column/hide-column
 parent: features/column
+ordinal: 0
 ---
 # Hide Columns
 

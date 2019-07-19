@@ -7,8 +7,8 @@ import * as webpack from 'webpack';
 const { util: { createHash } } = webpack as any;
 
 import { DynamicModuleUpdater, PebulaDynamicModuleWebpackPlugin } from '@pebula-internal/webpack-dynamic-module';
-import { ParsedPage, PageNavigationMetadata } from './models';
-import { createPageFileAsset } from './utils';
+import { ParsedPage, PageNavigationMetadata, PageAssetNavEntry } from './models';
+import { createPageFileAsset, sortPageAssetNavEntry } from './utils';
 
 declare module '@pebula-internal/webpack-dynamic-module/plugin' {
   interface DynamicExportedObject {
@@ -108,8 +108,15 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
         },
         outputAssetPath,
       }
+
+      if (obj.attr.type) {
+        obj.postRenderMetadata.navEntry.type = obj.attr.type;
+      }
       if (obj.attr.tooltip) {
         obj.postRenderMetadata.navEntry.tooltip = obj.attr.tooltip;
+      }
+      if (obj.attr.ordinal >= 0) {
+        obj.postRenderMetadata.navEntry.ordinal = obj.attr.ordinal;
       }
     }
 
@@ -165,6 +172,8 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
     if (children.length) {
       compilation.errors.push(new Error(`Could not find a parent/child relationship in ${children.map(c => c.file).join(', ')}`));
     }
+
+    Object.values(navMetadata.entries).forEach(sortPageAssetNavEntry);
 
     const navEntriesSource = JSON.stringify(navMetadata);
     const hash = createHash(hashFunction);

@@ -9,6 +9,6 @@
     "types": []
   },
   "include": [
-    "../../apps/libs/ngrid/**/*.worker.ts"
+    "../libs/shared-data/**/*.worker.ts"
   ]
 }

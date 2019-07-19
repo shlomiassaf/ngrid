@@ -1,1 +1,9 @@
-<pbl-ngrid [dataSource]="ds" [columns]="columns"></pbl-ngrid>
+<div fxLayout="row" fxLayoutGap="16px" style="padding: 8px">
+  <button fxFlex="noshrink" mat-stroked-button color="accent" (click)="show()">Show Panel</button>
+  <div fxFlex="*"></div>
+</div>
+<pbl-ngrid class="pbl-ngrid-cell-ellipsis" [dataSource]="ds" [columns]="columns">
+  <div *pblNgridOverlayPanelDef="'myUniquePanelName'">
+    <h1>I Am a panel</h1>
+  </div>
+</pbl-ngrid>

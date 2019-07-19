@@ -1,6 +1,6 @@
 import { Input, ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
-import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
+import { Person, DemoDataSource } from '@pebula/apps/shared-data';
 
 @Component({
   selector: 'pbl-grid-layout-1',

@@ -1,0 +1,4 @@
+<pbl-ngrid [dataSource]="ds" [columns]="columns" (scrolling)="isScrolling = $event"></pbl-ngrid>
+<h1>Scrolling is <span class="virtual-scroll-css-scrolling-demo-on">ON</span><span class="virtual-scroll-css-scrolling-demo-off">OFF</span> - (CSS)</h1>
+<h1>Scrolling is {{ isScrolling ? 'ON' : 'OFF' }} - (scrolling) event</h1>
+<h1>Last Scrolling Direction: {{ isScrolling === 1 ? 'END' : 'START' }}</h1>

@@ -1,0 +1,9 @@
+<pbl-ngrid blockUi [dataSource]="ds" [columns]="columns" detailRow vScrollNone>
+  <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
+    <div>
+      <h1>Detail Row</h1>
+      <pre>{{row | json}}</pre>
+    </div>
+  </div>
+  <div *pblNgridCellTypeDef="'detailRowHandle'" class="detail-row-handle">⊞</div>
+</pbl-ngrid>

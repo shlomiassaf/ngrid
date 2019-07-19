@@ -2,6 +2,7 @@
 title: Layout
 path: concepts/grid/layout
 parent: concepts/grid
+ordinal: 0
 ---
 # Grid Layout
 

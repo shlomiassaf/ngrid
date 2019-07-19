@@ -1,4 +1,4 @@
-<div fxLayout="column" class="mat-elevation-z3">
+<div *ngIf="exampleStyle === 'toolbar'" fxLayout="column" class="mat-elevation-z3">
   <mat-toolbar color="primary">
     <span class="mat-h3" style="margin: 0" fxFlex="*">{{ exampleData?.title }}</span>
     <button mat-icon-button matTooltip="View Source" (click)="viewSourceCode = !viewSourceCode">
@@ -7,27 +7,42 @@
   </mat-toolbar>
   <div fxLayout="column" class="section-code-and-component">
     <div *ngIf="viewSourceCode">
-      <div>
-        <mat-tab-group *ngIf="sourceCode | async as assets; else noSourceCode">
-          <ng-container *ngFor="let asset of assets">
-            <mat-tab>
-              <ng-template mat-tab-label>
-                <div fxLayout="column" fxLayoutAlign="center center" [matTooltip]="asset.file">
-                  <span>{{asset.file}} [{{asset.lang.toUpperCase()}}]</span>
-                </div>
-              </ng-template>
-              <div [exampleAssetFileView]="asset" class="pbl-code-example"></div>
-            </mat-tab>
-          </ng-container>
-        </mat-tab-group>
-      </div>
-
+      <ng-container *ngTemplateOutlet="sourceCodeTab"></ng-container>
     </div>
     <div [class]="containerClass">
       <ng-template [cdkPortalOutlet]="selectedPortal" (attached)="attached($event)"></ng-template>
     </div>
   </div>
 </div>
+
+<div *ngIf="exampleStyle === 'flow'" class="flow-style-container">
+  <div *ngIf="viewSourceCode" [@slideInOutRight]>
+    <ng-container *ngTemplateOutlet="sourceCodeTab"></ng-container>
+  </div>
+  <div *ngIf="!viewSourceCode" [@slideInOutLeft] class="flow-style-container">
+    <ng-template [cdkPortalOutlet]="selectedPortal" (attached)="attached($event)"></ng-template>
+  </div>
+
+  <div class="flow-style-code-marker" matTooltip="View Source" (click)="viewSourceCode = !viewSourceCode">
+    <div class="flow-style-marker-thumb"></div>
+    <mat-icon>code</mat-icon>
+  </div>
+</div>
+
+<ng-template #sourceCodeTab>
+  <mat-tab-group *ngIf="sourceCode | async as assets; else noSourceCode">
+    <ng-container *ngFor="let asset of assets">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div fxLayout="column" fxLayoutAlign="center center" [matTooltip]="asset.file">
+            <span>{{asset.file}} [{{asset.lang.toUpperCase()}}]</span>
+          </div>
+        </ng-template>
+        <div [exampleAssetFileView]="asset" class="pbl-code-example"></div>
+      </mat-tab>
+    </ng-container>
+  </mat-tab-group>
+</ng-template>
 
 <ng-template #noSourceCode>
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>

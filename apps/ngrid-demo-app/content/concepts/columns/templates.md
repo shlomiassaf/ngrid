@@ -2,6 +2,7 @@
 title: Column Templates
 path: concepts/columns/templates
 parent: concepts/columns
+ordinal: 3
 ---
 # Column Templates
 

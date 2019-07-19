@@ -13,6 +13,7 @@ import {
   NgZone,
   Type,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ComponentPortal, DomPortalHost } from '@angular/cdk/portal';
 
 import { UnRx } from '@pebula/utils';
@@ -38,12 +39,19 @@ export class MarkdownPageViewerComponent implements OnDestroy {
   private _portalHosts: DomPortalHost[] = [];
 
   constructor(private mdPages: MarkdownPagesService,
+              route: ActivatedRoute,
               private _elementRef: ElementRef,
               private _appRef: ApplicationRef,
               private _componentFactoryResolver: ComponentFactoryResolver,
               private _injector: Injector,
               private _viewContainerRef: ViewContainerRef,
-              private _ngZone: NgZone,) {}
+              private _ngZone: NgZone,) {
+    route.data.pipe(UnRx(this)).subscribe( data => {
+      if (data.documentUrl) {
+        this.updateDocument(data.documentUrl);
+      }
+    });
+  }
 
   private updateDocument(url: string) {
     if (!url) {
@@ -54,7 +62,7 @@ export class MarkdownPageViewerComponent implements OnDestroy {
     this.mdPages.getPage(url)
       .then( p => {
         this.page = p;
-        document.title = p.title;
+        document.title = `NGrid: ${p.title}`;
         this._elementRef.nativeElement.innerHTML = p.contents;
 
         this._loadComponents('pbl-example-view', ExampleViewComponent);
@@ -71,10 +79,15 @@ export class MarkdownPageViewerComponent implements OnDestroy {
       const ident = element.getAttribute(componentName);
       const containerClass = element.getAttribute('containerClass');
       const inputs = element.getAttribute('inputs');
+      const exampleStyle = element.getAttribute('exampleStyle');
+
       const portalHost = new DomPortalHost(element, this._componentFactoryResolver, this._appRef, this._injector);
       const cmpPortal = new ComponentPortal(componentClass, this._viewContainerRef);
       const cmpRef = portalHost.attach(cmpPortal);
 
+      if (exampleStyle) {
+        (cmpRef.instance as any).exampleStyle = exampleStyle;
+      }
       if (inputs) {
         try {
           cmpRef.instance.inputParams = JSON.parse(inputs);

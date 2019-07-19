@@ -7,7 +7,5 @@
   },
   "include": [
     "**/*.ts",
-    "../../apps/libs/ngrid/**/ng-lazy-module-index.ts",
-    "../../apps/libs/ngrid-material/**/ng-lazy-module-index.ts"
   ]
 }

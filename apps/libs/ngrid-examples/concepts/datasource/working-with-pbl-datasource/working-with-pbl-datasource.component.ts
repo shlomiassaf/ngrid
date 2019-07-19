@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS } from '@pebula/ngrid';
-import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
+import { Person, DemoDataSource } from '@pebula/apps/shared-data';
 import { Example } from '@pebula/apps/shared';
 
 @Component({

@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
 
-import { Person, DemoDataSource } from '@pebula/apps/ngrid/shared';
+import { Customer, DemoDataSource } from '@pebula/apps/shared-data';
 import { Example } from '@pebula/apps/shared';
+
+const ACCOUNT_BALANCE_TYPE = { name: 'accountBalance', data: { neg: 'rgba(255, 0, 0, 0.33)', pos: 'rgba(0, 128, 0, 0.33)', format: '1.0-2' } };
 
 @Component({
   selector: 'pbl-column-header-menu-example',
@@ -14,13 +16,21 @@ import { Example } from '@pebula/apps/shared';
 @Example('pbl-column-header-menu-example', { title: 'Column Header Menu' })
 export class ColumnHeaderMenuExample {
   columns = columnFactory()
+    .default({ minWidth: 100, resize: true })
     .table(
-      { prop: 'name', width: '100px' },
-      { prop: 'gender', width: '50px' },
-      { prop: 'birthdate', type: 'date', width: '25%' },
+      { prop: 'id', width: '40px' },
+      { prop: 'name', sort: true, reorder: true },
+      { prop: 'jobTitle'  },
+      { prop: 'accountId'  },
+      { prop: 'accountType', reorder: true },
+      { prop: 'primeAccount', type: 'visualBool', width: '24px' },
+      { prop: 'creditScore', type: 'starRatings', width: '50px' },
+      { prop: 'balance', type: ACCOUNT_BALANCE_TYPE, sort: true },
+      ...Array.from(new Array(12)).map( (item, idx) => ({prop: `monthlyBalance.${idx}`, type: ACCOUNT_BALANCE_TYPE, sort: true }) )
     )
     .build();
-  ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(100, 500) ).create();
+
+  ds = createDS<Customer>().onTrigger( () => this.datasource.getCustomers(500) ).create();
 
   constructor(private datasource: DemoDataSource) { }
 }
