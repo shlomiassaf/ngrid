@@ -1,0 +1,8 @@
+<div fxLayout="row" fxLayoutGap="16px" style="padding: 8px">
+  <button fxFlex="noshrink" mat-stroked-button color="primary" (click)="filterBalance(true)">Balance: Negative</button>
+  <button fxFlex="noshrink" mat-stroked-button color="primary" (click)="filterBalance(false)">Balance: Positive</button>
+  <div fxFlex="*"></div>
+  <button fxFlex="noshrink" mat-stroked-button color="primary" (click)="clearFilter()">Clear Filter</button>
+</div>
+<pbl-ngrid blockUi [dataSource]="ds" [columns]="columns"></pbl-ngrid>
+<div>Filtered Rows: {{ ds.filteredData.length }}</div>

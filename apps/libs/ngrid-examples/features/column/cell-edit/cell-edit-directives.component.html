@@ -1,0 +1,11 @@
+<pbl-ngrid cellEditClick
+           [dataSource]="ds" [columns]="columns">
+  <div *pblNgridCellEditorTypeDef="'date'; let ctx">
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" [value]="ctx.value"
+            (dateChange)="ctx.value = $event.value">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker [opened]="true" (closed)="ctx.stopEdit()"></mat-datepicker>
+    </mat-form-field>
+  </div>
+</pbl-ngrid>

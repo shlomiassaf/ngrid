@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PblNgridModule } from '@pebula/ngrid';
 
-import { ExampleCommonModule } from '../../../example-common';
+import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { ColumnsFactoryExample } from './factory.component';
 
 @NgModule({

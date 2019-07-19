@@ -55,8 +55,6 @@ import { AppComponent } from './app.component';
             }
           ]
         },
-        { path: 'extensions', loadChildren: () => import('@pebula/apps/ngrid/extensions').then(m => m.ExtensionsModule) },
-        { path: 'stories', loadChildren: () => import('@pebula/apps/ngrid/stories').then(m => m.StoriesModule) },
       ],
       {
         useHash: true,

@@ -26,6 +26,7 @@
     "help": "./node_modules/.bin/nx help",
     "affected:libs": "./node_modules/.bin/nx affected:libs",
     "affected": "./node_modules/.bin/nx affected",
+    "example": "./node_modules/.bin/nx workspace-schematic example-module",
     "gh-pages": "./tools/scripts/gh-pages.sh"
   },
   "private": true,

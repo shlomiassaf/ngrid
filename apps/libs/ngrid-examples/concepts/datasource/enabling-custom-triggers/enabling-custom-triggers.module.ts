@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridPaginatorModule } from '@pebula/ngrid-material/paginator';
 
-import { ExampleCommonModule } from '../../../example-common';
+import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { EnablingCustomTriggersExample } from './enabling-custom-triggers.component';
 
 @NgModule({

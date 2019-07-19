@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { PblNgridModule } from '@pebula/ngrid';
-import { ExampleCommonModule } from '../../../example-common';
 
+import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { GridHeightGridExample } from './grid-height.component';
 
 @NgModule({
