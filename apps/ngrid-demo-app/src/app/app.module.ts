@@ -22,8 +22,10 @@ import {
   MarkdownPageViewerComponent,
   EXAMPLE_COMPONENTS,
   EXAMPLE_COMPONENTS_TOKEN,
-  CONTENT_CHUNKS_COMPONENTS
+  CONTENT_CHUNKS_COMPONENTS,
+  LocationService,
 } from '@pebula/apps/shared';
+
 import { ExampleModule } from '@pebula/apps/ngrid-examples';
 import { AppContentChunksModule, APP_CONTENT_CHUNKS } from '@pebula/apps/app-content-chunks';
 
@@ -98,6 +100,7 @@ import { AppComponent } from './app.component';
     { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig },
     { provide: CONTENT_CHUNKS_COMPONENTS, useValue: APP_CONTENT_CHUNKS },
     { provide: EXAMPLE_COMPONENTS_TOKEN, useValue: EXAMPLE_COMPONENTS },
+    LocationService,
   ],
   bootstrap: [AppComponent]
 })

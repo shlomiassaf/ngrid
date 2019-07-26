@@ -48,7 +48,7 @@ For every column, there are **a lot** of definitions we can set. These definitio
 
 `NGrid` provide the factory function `columnFactory()` that help you create column definition sets, you will end up using it 99.99% of the times.
 
-<p>Of course, simple is not enough, we love features and customization... You can read more about <a [routerLink]="['./', 'column-quickthrough']">Columns</a> and how to configure them.</p>
+Of course, simple is not enough, we love features and customization... You can read more about [Columns](./columns/quick-through) and how to configure them.
 
 ### Data Source (rows)
 
@@ -57,7 +57,7 @@ datasource needs to know is to return an array of data.
 
 `NGrid` provide the factory function `createDS()` that help you create datasource instance's very easily, you will end up using it 99.99% of the times.
 
-<p>Of course, simple is not enough, we love features and customization... You can read more about <a [routerLink]="['./', 'datasource-quickthrough']">Data source</a> and how to configure them.</p>
+Of course, simple is not enough, we love features and customization... You can read more about [Data Source](./datasource/quick-through) and how to configure them.
 
 E> This page is still a WIP, the following is missing:
 

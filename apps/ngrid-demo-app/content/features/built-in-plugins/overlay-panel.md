@@ -48,7 +48,7 @@ A template panel definition looks like this:
 
 We used **myUniquePanelName** as the unique name to identify the template later when we want to use it.
 
-<p>Panels are stored in the <a [routerLink]="['../..', 'concepts', 'the-registry']">registry</a> and so they are bound to the registry lifetime rules.</p>
+Panels are stored in the [registry](../../../concepts/grid/the-registry) and so they are bound to the registry lifetime rules.
 
 > Component extensions are more complex and out of the scope of this tutorial.
 

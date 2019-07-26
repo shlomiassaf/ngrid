@@ -12,6 +12,8 @@ import {
   Injector,
   NgZone,
   Type,
+  Optional,
+  HostListener,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentPortal, DomPortalHost } from '@angular/cdk/portal';
@@ -21,13 +23,18 @@ import { PageFileAsset } from '@pebula-internal/webpack-markdown-pages';
 import { ExampleViewComponent } from '../exapmle-view/example-view.component';
 import { ContentChunkViewComponent } from '../content-chunk-view/content-chunk-view.component';
 import { MarkdownDynamicComponentPortal } from '../markdown-dynamic-component-portal';
-
 import { MarkdownPagesService } from '../../services/markdown-pages.service';
+import { LocationService } from '../../services/location.service';
+import { MarkdownPageContainerComponent } from '../markdown-page-container/markdown-page-container.component';
 
 @Component({
   selector: 'pbl-markdown-page-viewer',
   templateUrl: './markdown-page-viewer.component.html',
-  styleUrls: ['./markdown-page-viewer.component.scss']
+  styleUrls: ['./markdown-page-viewer.component.scss'],
+  host: {
+    class: 'markdown-body',
+    '[class.no-parent-container]': '!hasContainer',
+  }
 })
 @UnRx()
 export class MarkdownPageViewerComponent implements OnDestroy {
@@ -36,21 +43,41 @@ export class MarkdownPageViewerComponent implements OnDestroy {
   @Output() contentRendered = new EventEmitter<void>();
 
   page: PageFileAsset;
+  readonly hasContainer: boolean;
+
   private _portalHosts: DomPortalHost[] = [];
 
   constructor(private mdPages: MarkdownPagesService,
+              private locationService: LocationService,
               route: ActivatedRoute,
               private _elementRef: ElementRef,
               private _appRef: ApplicationRef,
               private _componentFactoryResolver: ComponentFactoryResolver,
               private _injector: Injector,
               private _viewContainerRef: ViewContainerRef,
-              private _ngZone: NgZone,) {
+              private _ngZone: NgZone,
+              @Optional() container: MarkdownPageContainerComponent) {
+    this.hasContainer = !!container;
     route.data.pipe(UnRx(this)).subscribe( data => {
       if (data.documentUrl) {
         this.updateDocument(data.documentUrl);
       }
     });
+  }
+
+  @HostListener('click', ['$event.target', '$event.button', '$event.ctrlKey', '$event.metaKey', '$event.altKey'])
+  onClick(eventTarget: HTMLElement, button: number, ctrlKey: boolean, metaKey: boolean, altKey: boolean): boolean {
+    // Deal with anchor clicks; climb DOM tree until anchor found (or null)
+    let target: HTMLElement|null = eventTarget;
+    while (target && !(target instanceof HTMLAnchorElement)) {
+      target = target.parentElement;
+    }
+    if (target instanceof HTMLAnchorElement) {
+      return this.locationService.handleAnchorClick(target, button, ctrlKey, metaKey);
+    }
+
+    // Allow the click to pass through
+    return true;
   }
 
   private updateDocument(url: string) {

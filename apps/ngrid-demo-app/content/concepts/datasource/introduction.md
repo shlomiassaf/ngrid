@@ -86,7 +86,7 @@ Based on the definitions, the factory will trigger events or handle them interna
 
 I> The datasource factory implements a fluent API
 
-<p>The various scenarios is covered in depth <a [routerLink]="['../', 'datasource-factory']">in here</a>.</p>
+The various scenarios is covered in depth [in here](../factory).
 
 ## Advanced scenarios
 

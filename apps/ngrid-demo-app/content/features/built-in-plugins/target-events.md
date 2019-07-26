@@ -54,7 +54,7 @@ Or, if we auto-enabled target events globally:
 
 <div pbl-example-view="pbl-focus-and-range-selection-example"></div>
 
-<p>The plugin is used the ContextApi to support mouse & keyboard behavior, you can read more about the API and working with focus & range selection <a [routerLink]="['../..', 'features', 'focus-and-selection']">here</a></p>
+The plugin is used the ContextApi to support mouse & keyboard behavior, you can read more about the API and working with focus & range selection [here](../../grid/focus-and-selection).
 
 ## Events
 

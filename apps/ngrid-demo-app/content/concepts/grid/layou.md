@@ -87,8 +87,8 @@ W> Avoid mixing different meta row types in the same table.
 
 W> Using **sticky** with virtual scroll is not encouraged, if you really need to make sure you read the advanced section at the end.
 
-> <p>There is a lot more to meta rows, covered in depth in the <a [routerLink]="['../', 'column-model']">column introduction</a>. To understand how they interact with the
-sections we only covered the <code>type</code> property of the meta row</p>
+> There is a lot more to meta rows, covered in depth in the [column model](../../columns/column-model). To understand how they interact with the
+sections we only covered the <code>type</code> property of the meta row
 
 ## Custom components (Outer section)
 
@@ -210,4 +210,4 @@ If you're a plugin author and this find details positioning is important, using 
 If you're a developer and an element you're trying to project is showing before or after an element
 from a plugin you're using, use the imperative API.
 
-<p>You can read more on the programmatic approach, using the API in the <a [routerLink]="['../..', 'stories', 'action-row']">action-row story</a>.</p>
+You can read more on the programmatic approach, using the API in the [action-row story](../../../stories/action-row).

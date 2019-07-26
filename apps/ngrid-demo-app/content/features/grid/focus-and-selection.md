@@ -14,7 +14,7 @@ In most cases you will not need to use the API, the `target-events` plugin will 
 including focus support via keyboard arrows as well as selection support using arrows & SHIFT, mouse & SHIFT, mouse   CTRL and mouse drag.
 
 You can keep on reading or you can go to the `target-events` page for more details on focus & selection using the plugin
-<p>You can keep on reading or you can <a [routerLink]="['../..', 'features', 'target-events']">go to the target-events page</a> for more details on focus & selection using the plugin</p>
+You can keep on reading or you can [go to the target-events page](../../built-in-plugins/target-events) for more details on focus & selection using the plugin
 
 ---
 

@@ -10,9 +10,7 @@
        [scrollContainer]="el"
        staticHtmlMode
        selector="h1[id], h2[id], h3[id], h4[id]">
-    <div class="markdown-body">
-      <pbl-markdown-page-viewer [documentUrl]="documentUrl" (contentRendered)="contentRendered()"></pbl-markdown-page-viewer>
-    </div>
+    <pbl-markdown-page-viewer [documentUrl]="documentUrl" (contentRendered)="contentRendered()"></pbl-markdown-page-viewer>
   </div>
   <div *ngIf="tocArea.hasLinks | async" fxFlex="0 0 18%" class="example-sticky-container example-toc-container">
     <docsi-toc [tocArea]="tocArea">

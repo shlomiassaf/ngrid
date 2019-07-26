@@ -6,7 +6,7 @@ ordinal: 2
 ---
 # The Data Source Factory
 
-<p>In the <a [routerLink]="['../', 'datasource-introduction']">introduction</a> we covered the basic functionality of the datasource factory.</p>
+In the [introduction](../introduction) we covered the basic functionality of the datasource factory.
 
 ```typescript
 const dataSource = createDS<Person>()

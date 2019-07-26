@@ -84,7 +84,7 @@ All column types share a set of common definitions, we will review them now and 
 
 Together, data and meta columns, define the structure of the table - a data item model.
 
-<p>You can build the column definition from JSON or use the <a [routerLink]="['../', 'column-factory']">columns factory</a>.</p>
+You can build the column definition from JSON or use the [columns factory](../factory).
 When working with simple models using JSON is easy, but once the model is big help is needed, especially with meta headers, group headers etc...
 
 If you're not familiar with the column factory we recommend reading it once you finish this page.
@@ -169,7 +169,7 @@ W> The type does not have to match the property type, for example a string might
 ### Width system
 
 Each column has 3 definitions for width, all are optional.
-<p>The table will look at each column and define it's final width based on these inputs relative to other columns in the table. This is covered in depth <a [routerLink]="['../../', 'features', 'column-width']" >here</a></p>
+The table will look at each column and define it's final width based on these inputs relative to other columns in the table. This is covered in depth [here](../../../features/column/column-width).
 
 ## The Data Column
 
@@ -244,8 +244,8 @@ const HEADER_COLUMN_DEFINITION = {
 
 In this example, **rowIndex: 0** refers to the first header row from the top.
 
-<p>Assigning row index to a column is quite messy, hard to track and error prone. The <a [routerLink]="['../', 'column-factory']">columns factory</a> comes to the rescue doing
-all the indexing for us.</p>
+Assigning row index to a column is quite messy, hard to track and error prone. The [columns factory](../factory) comes to the rescue doing
+all the indexing for us.
 
 ### Header and Footer columns
 

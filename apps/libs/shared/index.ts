@@ -6,3 +6,4 @@ export { EXAMPLE_COMPONENTS_TOKEN } from './lib/components/exapmle-view/example-
 export { LiveContentChunk, CONTENT_CHUNKS_COMPONENTS } from './lib/components/content-chunk-view/content-chunk-view.component';
 export { MarkdownPagesService } from './lib/services/markdown-pages.service';
 export { MarkdownPagesMenuService } from './lib/services/markdown-pages-menu.service';
+export { LocationService } from './lib/services/location.service';
