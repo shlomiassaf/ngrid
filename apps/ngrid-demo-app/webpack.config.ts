@@ -4,7 +4,7 @@ import { Configuration, DefinePlugin } from 'webpack';
 import { PebulaDynamicModuleWebpackPlugin } from '@pebula-internal/webpack-dynamic-module';
 import { MarkdownPagesWebpackPlugin } from '@pebula-internal/webpack-markdown-pages';
 import { MarkdownCodeExamplesWebpackPlugin } from '@pebula-internal/webpack-markdown-code-examples';
-import * as remarkPlugins from '@pebula-internal/docsi/webpack/src/lib/remark/plugins';
+import * as remarkPlugins from './build/remark';
 
 // ** CONFIG VALUES **
 function applyLoaders(webpackConfig: Configuration) {
@@ -62,7 +62,6 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
     remarkPlugins: [
       remarkSlug,
       remarkAutolinkHeadings,
-      remarkPlugins.docsiToc,
       [remarkAttr, { scope: 'permissive' }],
       remarkPlugins.gatsbyRemarkPrismJs(),
       [remarkPlugins.customBlockquotes, customBlockquotesOptions],

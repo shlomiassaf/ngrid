@@ -19,7 +19,7 @@ import { ExtendedModule } from '@angular/flex-layout/extended';
 
 import { PblNgridModule, PblNgridRegistryService } from '@pebula/ngrid';
 
-import { DocsiTocModule } from '@pebula-internal/docsi/toc';
+import { PblTocModule } from './toc.module';
 
 import {
   MarkdownPageContainerComponent,
@@ -59,7 +59,7 @@ const DECLARATION_EXPORT = [
 
     PblNgridModule,
 
-    DocsiTocModule,
+    PblTocModule,
   ],
   exports: [
     DECLARATION_EXPORT,

@@ -4,7 +4,7 @@ import { Component, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { UnRx } from '@pebula/utils';
-import { TocAreaDirective } from '@pebula-internal/docsi/toc';
+import { TocAreaDirective } from '../../toc.module';
 
 import { MarkdownPagesMenuService } from '../../services/markdown-pages-menu.service';
 

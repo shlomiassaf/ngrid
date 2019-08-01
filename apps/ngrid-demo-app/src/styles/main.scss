@@ -20,6 +20,7 @@ pbl-ngrid.slim {
 @import './markdown'; // load markdown styles
 @import './prismjs'; // load prismJs styles
 @import './helpers';
+@import './toc';
 
 html, body {
   -webkit-font-smoothing: antialiased;
@@ -33,9 +34,4 @@ html, body {
   pbl-ngrid {
     height: 300px;
   }
-}
-
-docsi-example-code-container {
-  display: block;
-  margin: 24px 0;
 }

@@ -5,6 +5,9 @@
       "jasmine"
     ]
   },
+  "exclude": [
+    "./build/**/*.ts"
+  ],
   "include": [
     "**/*.ts",
   ]
