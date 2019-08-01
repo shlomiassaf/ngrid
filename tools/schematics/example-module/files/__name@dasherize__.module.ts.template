@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PblNgridModule } from '@pebula/ngrid';
 
+import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { <%= componentClassName(name) %> } from './<%= componentFile(name) %>';
 
@@ -13,4 +14,5 @@ import { <%= componentClassName(name) %> } from './<%= componentFile(name) %>';
   exports: [ <%= componentClassName(name) %> ],
   entryComponents: [ <%= componentClassName(name) %> ],
 })
+@BindNgModule(<%= componentClassName(name) %>);
 export class <%= moduleClassName(name) %> { }

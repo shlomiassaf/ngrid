@@ -7,7 +7,7 @@ import * as webpack from 'webpack';
 const { util: { createHash } } = webpack as any;
 
 import { DynamicModuleUpdater, PebulaDynamicModuleWebpackPlugin } from '@pebula-internal/webpack-dynamic-module';
-import { ParsedPage, PageNavigationMetadata, PageAssetNavEntry } from './models';
+import { ParsedPage, PageNavigationMetadata, PageAttributes } from './models';
 import { createPageFileAsset, sortPageAssetNavEntry } from './utils';
 
 declare module '@pebula-internal/webpack-dynamic-module/plugin' {
@@ -107,13 +107,17 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
           path: obj.attr.path,
         },
         outputAssetPath,
-      }
+      };
 
-      if (obj.attr.type) {
-        obj.postRenderMetadata.navEntry.type = obj.attr.type;
-      }
-      if (obj.attr.tooltip) {
-        obj.postRenderMetadata.navEntry.tooltip = obj.attr.tooltip;
+      const copyKeys: Array<keyof PageAttributes> = ['type', 'subType', 'tooltip'];
+      copyKeys.forEach( key => {
+        if (obj.attr[key]) {
+          obj.postRenderMetadata.navEntry[key] = obj.attr[key];
+        }
+      });
+
+      if (obj.attr.tags) {
+        obj.postRenderMetadata.navEntry.tags = obj.attr.tags.split(',').map( t => t.trim() );
       }
       if (obj.attr.ordinal >= 0) {
         obj.postRenderMetadata.navEntry.ordinal = obj.attr.ordinal;

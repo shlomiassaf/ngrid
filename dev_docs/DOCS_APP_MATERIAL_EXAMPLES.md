@@ -1,8 +1,13 @@
 # Examples
 
-This folder contains examples used in the documentation app.
+This folder `apps/libs/ngrid-examples` contains examples used in the documentation app.
 
-Each example comes within its own module and all example modules are imported into a single exported module.
+Each example is a standalone component that is dynamically rendered into the HTML
+
+## NgModule separation
+
+Examples are grouped into multiple modules, with a simple rule of thumb, group very few components under the same module.
+Usually, groups are by feature/concept/doc section.
 
 This might seems verbose but it creates a boundary between the examples, preventing the leak of imported modules between them thus
 allow better testing for each example.
@@ -92,8 +97,49 @@ parent: features/built-in-plugins
 <div pbl-example-view="pbl-with-column-styles-example"></div>
 ```
 
-The first section is the `graymatter` information that provide metadata information about the page.
+The first section is the `gray-matter` information that provide metadata information about the page.
 
 The last section is html code that will cause the page to render the example components.
 
 > If the module and first example already exists and you are only adding more example, only the last part will show.
+
+## Anatomy of an example module
+
+As stated, example components come inside an example module with a module having at least one component example bound to it.
+
+To identify an example, it is prefixed with the `@Example` decorator, allowing custom metadata attached to the example:
+
+```ts
+import { Example } from '@pebula/apps/shared';
+
+@Component({ /* ANGULAR METADATA */ })
+@Example('pbl-my-example', { title: 'CMy Example' })
+export class MyExample { }
+```
+
+> The example module schematic will create this for you.
+
+In addition, we need to map each component to it's module:
+
+```ts
+import { BindNgModule } from '@pebula/apps/shared';
+
+@NgModule({
+  declarations: [ MyExample ],
+  imports: [
+    CommonModule,
+    ExampleCommonModule,
+    PblNgridModule,
+  ],
+  exports: [ MyExample ],
+  entryComponents: [ MyExample ],
+})
+BindNgModule(MyExample);
+export class MyExampleModule { }
+```
+
+We need to bind components to module so the dynamic component renderer will know which module to use to create a component.
+
+> The component/module binding is already done in the angular `NgModule` metadata, but this information is not accessible outside of angular.
+
+> The example module schematic will create this for you.

@@ -5,7 +5,9 @@ export interface PageAttributes {
   parent?: string;
   ordinal?: number;
   empty: boolean;
-  type?: 'topMenuSection' | 'index';
+  type?: 'topMenuSection' | 'index' | 'singlePage';
+  subType?: string;
+  tags?: string;
 }
 
 export interface ParsedPage {
@@ -31,6 +33,8 @@ export interface PageAssetNavEntry {
   title: string;
   path: string;
   type?: PageAttributes['type'];
+  subType?: string;
+  tags?: string[],
   tooltip?: string;
   ordinal?: number;
   children?: PageAssetNavEntry[];

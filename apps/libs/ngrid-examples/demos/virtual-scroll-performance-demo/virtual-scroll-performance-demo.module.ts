@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -15,6 +16,7 @@ import { PblNgridMatSortModule } from '@pebula/ngrid-material/sort';
 import { PblNgridCellTooltipModule } from '@pebula/ngrid-material/cell-tooltip';
 import { PblNgridCheckboxModule } from '@pebula/ngrid-material/selection-column';
 
+import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { CommonGridTemplatesModule, CommonGridTemplatesComponent } from '../common-grid-templates';
 import { VirtualScrollPerformanceDemoExample } from './virtual-scroll-performance-demo.component';
@@ -22,6 +24,7 @@ import { VirtualScrollPerformanceDemoExample } from './virtual-scroll-performanc
 @NgModule({
   declarations: [ VirtualScrollPerformanceDemoExample ],
   imports: [
+    CommonModule,
     MatFormFieldModule, MatSelectModule, MatSliderModule, MatRadioModule, MatCheckboxModule,
 
     ExampleCommonModule,
@@ -40,4 +43,5 @@ import { VirtualScrollPerformanceDemoExample } from './virtual-scroll-performanc
   providers: [ PblNgridRegistryService ],
   entryComponents: [ VirtualScrollPerformanceDemoExample ],
 })
+@BindNgModule(VirtualScrollPerformanceDemoExample)
 export class VirtualScrollPerformanceDemoExampleModule { }

@@ -1,7 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import {
   Component,
-  Type,
   InjectionToken,
   Inject,
   OnDestroy,
@@ -13,6 +12,7 @@ import { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-example
 
 import { MarkdownDynamicComponentPortal } from '../markdown-dynamic-component-portal';
 import { MarkdownCodeExamplesService } from '../../services/markdown-code-examples.service';
+import { LazyModuleStoreService } from '../../services/lazy-module-store';
 import { LiveExample } from '../../example';
 
 export const EXAMPLE_COMPONENTS_TOKEN = new InjectionToken('EXAMPLE_COMPONENTS');
@@ -53,15 +53,16 @@ export class ExampleViewComponent extends MarkdownDynamicComponentPortal impleme
   viewSourceCode = false;
   exampleStyle: 'toolbar' | 'flow' = 'toolbar';
 
-  constructor(private exampleService: MarkdownCodeExamplesService,
+  constructor(lazyModuleStore: LazyModuleStoreService,
+              private exampleService: MarkdownCodeExamplesService,
               @Inject(EXAMPLE_COMPONENTS_TOKEN) private exampleComponents: {[key: string]: LiveExample} ) {
-    super();
+    super(lazyModuleStore);
   }
 
-  getComponent(selector: string): Type<any> | undefined {
+  getRenderTypes(selector: string) {
     this.sourceCode.next(null);
     this.exampleData = this.exampleComponents[selector];
-    return this.exampleData && this.exampleData.component;
+    return this.exampleData;
   }
 
   render(): void {

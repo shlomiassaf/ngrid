@@ -28,8 +28,8 @@ export class ContentChunkViewComponent extends MarkdownDynamicComponentPortal {
 
   constructor(@Inject(CONTENT_CHUNKS_COMPONENTS) private contentChunks: {[key: string]: LiveContentChunk} ) { super(); }
 
-  getComponent(selector: string): Type<any> | undefined {
+  getRenderTypes(selector: string) {
     this.contentChunkData = this.contentChunks[selector];
-    return this.contentChunkData && this.contentChunkData.component;
+    return this.contentChunkData;
   }
 }

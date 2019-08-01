@@ -13,6 +13,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { FlexModule } from '@angular/flex-layout/flex';
 import { ExtendedModule } from '@angular/flex-layout/extended';
@@ -33,6 +34,11 @@ import {
 
 import { NgEventsDirective } from './directives/ng-hooks';
 import { ContentChunkViewGhostDirective, ExampleViewGhostDirective } from './directives/ghosts';
+import { PblNegatePipe } from './pipes';
+
+const PIPES_EXPORT = [
+  PblNegatePipe
+];
 
 const DECLARATION_EXPORT = [
   MarkdownPageContainerComponent,
@@ -48,13 +54,14 @@ const DECLARATION_EXPORT = [
 
 @NgModule({
   declarations: [
-    DECLARATION_EXPORT
+    DECLARATION_EXPORT,
+    PIPES_EXPORT,
   ],
   imports: [
     CommonModule,
     RouterModule,
     PortalModule,
-    MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatMenuModule, MatCheckboxModule, MatListModule, MatTabsModule, MatToolbarModule, MatTooltipModule, MatProgressBarModule,
+    MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatMenuModule, MatCheckboxModule, MatListModule, MatTabsModule, MatToolbarModule, MatTooltipModule, MatProgressBarModule, MatProgressSpinnerModule,
     FlexModule, ExtendedModule,
 
     PblNgridModule,
@@ -63,6 +70,7 @@ const DECLARATION_EXPORT = [
   ],
   exports: [
     DECLARATION_EXPORT,
+    PIPES_EXPORT,
 
     PblNgridModule
   ],

@@ -1,4 +1,4 @@
-export { Example, LiveExample, EXAMPLE_LIST, EXAMPLE_COMPONENTS } from './lib/example/index';
+export { bindNgModule, BindNgModule, Example, LiveExample, EXAMPLE_COMPONENTS, EXAMPLE_COMPONENT_LIST } from './lib/example/index';
 export * from './lib/pbl-demo-app-shared.module';
 export { MarkdownPageContainerComponent } from './lib/components/markdown-page-container/markdown-page-container.component';
 export { MarkdownPageViewerComponent } from './lib/components/markdown-page-viewer/markdown-page-viewer.component';
@@ -7,3 +7,5 @@ export { LiveContentChunk, CONTENT_CHUNKS_COMPONENTS } from './lib/components/co
 export { MarkdownPagesService } from './lib/services/markdown-pages.service';
 export { MarkdownPagesMenuService } from './lib/services/markdown-pages-menu.service';
 export { LocationService } from './lib/services/location.service';
+export { LazyModuleStoreService, LazyModuleInitEvent } from './lib/services/lazy-module-store';
+export { LAZY_MODULE_PRELOADING_MAP, LazyModulePreloader } from './lib/services/lazy-module-preloader';

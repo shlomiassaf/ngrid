@@ -28,6 +28,18 @@ export class MarkdownPagesMenuService {
           }
         }
         this._ofTypeCache.set(type, result);
+
+        // Although the entries come sorted from the server, because it's an object and we use `Object.keys`
+        // we need to re-sort it.
+        result.sort( (entry1, entry2) => {
+          if (entry1.ordinal > entry2.ordinal) {
+            return 1;
+          } else if (entry2.ordinal > entry1.ordinal) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
         return result;
       });
   }

@@ -20,7 +20,8 @@
     <ng-container *ngTemplateOutlet="sourceCodeTab"></ng-container>
   </div>
   <div *ngIf="!viewSourceCode" [@slideInOutLeft] class="flow-style-container">
-    <ng-template [cdkPortalOutlet]="selectedPortal" (attached)="attached($event)"></ng-template>
+    <ng-template [cdkPortalOutlet]="selectedPortal$ | async" (attached)="attached($event)"></ng-template>
+    <mat-spinner *ngIf="selectedPortal$ | async | negate"></mat-spinner>
   </div>
 
   <div class="flow-style-code-marker" matTooltip="View Source" (click)="viewSourceCode = !viewSourceCode">

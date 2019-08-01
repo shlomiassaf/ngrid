@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -22,6 +23,7 @@ import { PblNgridContextMenuModule } from '@pebula/ngrid-material/context-menu';
 import { PblNgridCellTooltipModule } from '@pebula/ngrid-material/cell-tooltip';
 import { PblNgridCheckboxModule } from '@pebula/ngrid-material/selection-column';
 
+import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { CommonGridTemplatesModule, CommonGridTemplatesComponent } from '../common-grid-templates';
 import { ComplexDemo1Example } from './complex-demo1.component';
@@ -29,6 +31,7 @@ import { ComplexDemo1Example } from './complex-demo1.component';
 @NgModule({
   declarations: [ ComplexDemo1Example ],
   imports: [
+    CommonModule,
     MatFormFieldModule, MatSelectModule, MatProgressBarModule, MatSlideToggleModule, MatCheckboxModule, MatRadioModule,
 
     ExampleCommonModule,
@@ -53,4 +56,5 @@ import { ComplexDemo1Example } from './complex-demo1.component';
   providers: [ PblNgridRegistryService ],
   entryComponents: [ ComplexDemo1Example ],
 })
+@BindNgModule(ComplexDemo1Example)
 export class ComplexDemo1ExampleModule { }

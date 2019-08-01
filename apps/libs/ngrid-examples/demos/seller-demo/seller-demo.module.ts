@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
@@ -16,6 +17,7 @@ import { PblNgridContextMenuModule } from '@pebula/ngrid-material/context-menu';
 import { PblNgridCellTooltipModule } from '@pebula/ngrid-material/cell-tooltip';
 import { PblNgridCheckboxModule } from '@pebula/ngrid-material/selection-column';
 
+import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { CommonGridTemplatesModule, CommonGridTemplatesComponent } from '../common-grid-templates';
 import { SellerDemoExample } from './seller-demo.component';
@@ -23,6 +25,7 @@ import { SellerDemoExample } from './seller-demo.component';
 @NgModule({
   declarations: [ SellerDemoExample ],
   imports: [
+    CommonModule,
     MatIconModule, MatChipsModule,
     ExampleCommonModule,
     CommonGridTemplatesModule,
@@ -43,4 +46,5 @@ import { SellerDemoExample } from './seller-demo.component';
   providers: [ PblNgridRegistryService ],
   entryComponents: [ SellerDemoExample ],
 })
+@BindNgModule(SellerDemoExample)
 export class SellerDemoExampleModule { }

@@ -24,9 +24,9 @@ import {
   EXAMPLE_COMPONENTS_TOKEN,
   CONTENT_CHUNKS_COMPONENTS,
   LocationService,
+  LazyModuleStoreService, LazyModulePreloader,
 } from '@pebula/apps/shared';
 
-import { ExampleModule } from '@pebula/apps/ngrid-examples';
 import { AppContentChunksModule, APP_CONTENT_CHUNKS } from '@pebula/apps/app-content-chunks';
 
 import { environment } from '../environments/environment';
@@ -34,6 +34,11 @@ import { DemoHomePageComponent } from './demo-home-page/demo-home-page.component
 import { RouterLinkActiveNotify } from './demo-home-page/router-link-active-notify';
 
 import { AppComponent } from './app.component';
+import { LazyCodePartsModule } from './lazy-code-parts.module';
+
+export function EXAMPLE_COMPONENTS_FACTORY() {
+  return EXAMPLE_COMPONENTS;
+}
 
 @NgModule({
   declarations: [
@@ -47,13 +52,13 @@ import { AppComponent } from './app.component';
     FlexModule, ExtendedModule,
     NxModule.forRoot(),
     PblDemoAppSharedModule,
-    ExampleModule,
     AppContentChunksModule,
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
     MatListModule,
     MatTooltipModule,
+    LazyCodePartsModule.forRoot(),
     RouterModule.forRoot(
       [
         {
@@ -86,7 +91,7 @@ import { AppComponent } from './app.component';
       ],
       {
         useHash: true,
-        preloadingStrategy: PreloadAllModules,
+        preloadingStrategy: LazyModulePreloader,
       },
     ),
     Angulartics2Module.forRoot({
@@ -99,10 +104,14 @@ import { AppComponent } from './app.component';
   providers: [
     { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig },
     { provide: CONTENT_CHUNKS_COMPONENTS, useValue: APP_CONTENT_CHUNKS },
-    { provide: EXAMPLE_COMPONENTS_TOKEN, useValue: EXAMPLE_COMPONENTS },
+    { provide: EXAMPLE_COMPONENTS_TOKEN, useFactory: EXAMPLE_COMPONENTS_FACTORY },
     LocationService,
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(store: LazyModuleStoreService, lazyPreloader: LazyModulePreloader) {
+    lazyPreloader.onCompile.subscribe( event => store.moduleRegistered(event) );
+  }
+}
 

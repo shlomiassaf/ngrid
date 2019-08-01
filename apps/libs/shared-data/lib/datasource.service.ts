@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as countryData from 'country-data';
 import {
   postError,
   sendMessageRequest,
@@ -106,7 +105,7 @@ class WindowStoreAdapter {
 export class DemoDataSource {
   ready: Promise<void>;
 
-  private countries: any = countryData;
+  private countries: any;
   private adapter: WorkerStoreAdapter | WindowStoreAdapter;
 
   constructor() {
@@ -126,7 +125,12 @@ export class DemoDataSource {
 
   getSellers(delay = 1000, limit = 500): Promise<Seller[]> { return this.adapter.getSellers(delay, limit); }
 
-  getCountries() { return Promise.resolve(this.countries); }
+  getCountries() {
+    return this.countries
+      ? Promise.resolve(this.countries)
+      : import('country-data').then( countryData => this.countries = countryData )
+    ;
+  }
 
   dispose(): void { this.adapter.dispose(); }
 }

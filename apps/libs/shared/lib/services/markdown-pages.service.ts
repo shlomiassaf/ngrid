@@ -40,6 +40,10 @@ export class MarkdownPagesService {
               return page;
             });
         } else {
+          const entry = this.markdownPages.entries[path];
+          if (entry) {
+            return { id: path, title: entry.title, contents: '' };
+          }
           throw new Error(`Could not find a page ${path}`);
         }
       });

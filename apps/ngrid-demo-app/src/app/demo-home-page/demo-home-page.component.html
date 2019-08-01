@@ -7,14 +7,16 @@
       </div>
     </a>
 
-    <a *ngFor="let topMenuItem of topMenuItems | async" mat-button [routerLink]="['/content', topMenuItem.path]">{{topMenuItem.title}}</a>
+    <a *ngFor="let topMenuItem of topMenuItems | async" mat-button
+       [matTooltip]="topMenuItem.tooltip"
+       [routerLink]="['/content', topMenuItem.path]">{{topMenuItem.title}}</a>
 
     <a mat-button [matMenuTriggerFor]="demosMenu">
       <span>{{ selectedDemoLink ? selectedDemoLink.text : 'Select Demo'}}</span>
       <mat-icon>arrow_drop_down</mat-icon>
     </a>
     <mat-menu #demosMenu="matMenu" routerLinkActiveNotify (activeLinkChanged)="demoLinkStatusChanged($event)">
-      <a *ngFor="let demoLink of demoLinks"
+      <a *ngFor="let demoLink of demoLinks | async"
          mat-menu-item
          [disabled]="selectedDemoLink === demoLink"
          [routerLink]="demoLink.cmd">{{ demoLink.text }}</a>

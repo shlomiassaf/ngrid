@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -6,6 +7,7 @@ import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridMatSortModule } from '@pebula/ngrid-material/sort';
 
+import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { ColumnHeaderMenuExample } from './column-header-menu.component';
 
@@ -14,6 +16,7 @@ const COMPONENTS = [ ColumnHeaderMenuExample ];
 @NgModule({
   declarations: COMPONENTS,
   imports: [
+    CommonModule,
     MatIconModule, MatMenuModule,
     ExampleCommonModule,
     PblNgridModule, PblNgridBlockUiModule, PblNgridMatSortModule,
@@ -21,4 +24,5 @@ const COMPONENTS = [ ColumnHeaderMenuExample ];
   exports: COMPONENTS,
   entryComponents: COMPONENTS,
 })
+@BindNgModule(ColumnHeaderMenuExample)
 export class ColumnHeaderMenuExampleModule { }
