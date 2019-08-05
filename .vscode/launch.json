@@ -24,12 +24,15 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "TYPEDOC - DEBUG",
-      "program": "${workspaceFolder}/node_modules/.bin/typedoc",
-      "cwd": "${workspaceFolder}/libs/ngrid",
+      "name": "NX SCHEMATIC - DEBUG",
+      "program": "${workspaceFolder}/node_modules/.bin/nx",
+      "cwd": "${workspaceFolder}",
       "args": [
-        "--tsconfig",
-        "tsconfig.lib.json"
+        "workspace-schematic",
+        "example-module",
+        "features/column/CellEdit",
+        "--add",
+        "MyTestRun"
       ]
     },
     {

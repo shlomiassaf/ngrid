@@ -17,8 +17,8 @@ import {
 } from '@angular-devkit/schematics';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import { parseName } from '@schematics/angular/utility/parse-name';
-import { InsertChange } from '@schematics/angular/utility/change';
-import { addImportToModule, addDeclarationToModule, addEntryComponentToModule, addExportToModule } from '@schematics/angular/utility/ast-utils';
+import { Change, InsertChange } from '@schematics/angular/utility/change';
+import { findNodes, getSourceNodes, addImportToModule, addDeclarationToModule, addEntryComponentToModule, addExportToModule } from '@schematics/angular/utility/ast-utils';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 
 const ROOT = '/apps/libs/ngrid-examples';
@@ -65,6 +65,30 @@ function addImportOfModuleToNgModule(parsedPath: ReturnType<typeof createPath>):
   };
 }
 
+export function addComponentToBindNgModule(source: ts.SourceFile,
+                                           ngModulePath: string,
+                                           symbolName: string,): Change[] {
+  const nodes = getSourceNodes(source)
+    .filter(node => ts.isDecorator(node) && node.expression.kind == ts.SyntaxKind.CallExpression )
+    .map(node => (node as ts.Decorator).expression as ts.CallExpression )
+    .filter( expr => {
+      const identExp = expr.expression;
+      return ts.isIdentifier(identExp) && identExp.text === 'BindNgModule';
+    });
+  
+  let node: ts.CallExpression = nodes[0];  // tslint:disable-line:no-any
+
+  // Find the decorator declaration.
+  if (!node) {
+    return [];
+  }
+  
+  const position = node.arguments[node.arguments.length - 1].getEnd();
+  return [
+    new InsertChange(ngModulePath, position, `, ${symbolName}`),
+  ];
+}
+
 function addDeclarationToNgModule(parsedPath: ReturnType<typeof createPath>, componentName: string): Rule {
   return (host: Tree) => {
 
@@ -95,7 +119,7 @@ function addDeclarationToNgModule(parsedPath: ReturnType<typeof createPath>, com
     }
     host.commitUpdate(exportRecorder);
 
-      // Need to refresh the AST because we overwrote the file in the host.
+    // Need to refresh the AST because we overwrote the file in the host.
     source = readIntoSourceFile(host, modulePath);
 
     const entryComponentRecorder = host.beginUpdate(modulePath);
@@ -106,6 +130,17 @@ function addDeclarationToNgModule(parsedPath: ReturnType<typeof createPath>, com
       }
     }
     host.commitUpdate(entryComponentRecorder);
+
+    // Need to refresh the AST because we overwrote the file in the host.
+    source = readIntoSourceFile(host, modulePath);
+    const bindNgModuleRecorder = host.beginUpdate(modulePath);
+    const bindNgModuleChanges = addComponentToBindNgModule(source, modulePath, classifiedName);
+    for (const change of bindNgModuleChanges) {
+      if (change instanceof InsertChange) {
+        bindNgModuleRecorder.insertLeft(change.pos, change.toAdd);
+      }
+    }
+    host.commitUpdate(bindNgModuleRecorder);
 
     return host;
   };
