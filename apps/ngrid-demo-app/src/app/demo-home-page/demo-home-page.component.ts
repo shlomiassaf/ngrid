@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterLinkWithHref, RouterLink } from '@angular/router';
+import { MarkdownPagesMenuService } from '@pebula/apps/shared';
+
+declare const ANGULAR_VERSION: string;
+declare const NGRID_VERSION: string;
 
 @Component({
   selector: 'pbl-demo-home-page',
@@ -7,16 +11,37 @@ import { RouterLinkWithHref, RouterLink } from '@angular/router';
   styleUrls: ['./demo-home-page.component.scss']
 })
 export class DemoHomePageComponent {
-  demoLinks = [
-    { cmd: [ '/', 'demos', 'all-in-one' ], text: 'Demo #1' },
-    { cmd: [ '/', 'demos', 'virtual-scroll-performance' ], text: 'Virtual Scroll Demo' },
-  ];
+  ngVersion = ANGULAR_VERSION;
+  ngridVersion = NGRID_VERSION;
+
   selectedDemoLink: any;
+
+  topMenuItems: ReturnType<MarkdownPagesMenuService['ofType']> = this.mdMenu.ofType('topMenuSection');
+  demoLinks = this.mdMenu.ofType('singlePage')
+    .then( entries => {
+      const demoLinks = entries
+        .filter( e => e.subType === 'demoPage' )
+        .map( e => {
+          return {
+            cmd: e.path.split('/'),
+            text: e.title
+          }
+        });
+      return this._demoLinks = demoLinks;
+    });
+
+  private _demoLinks: Array<{ cmd: any[], text: string }>;
+
+  constructor(private mdMenu: MarkdownPagesMenuService) { }
 
   demoLinkStatusChanged(event: { isActive: boolean; findRouterLink: (commands: any[]|string) => RouterLinkWithHref | RouterLink | undefined; }) {
     this.selectedDemoLink = null;
     if (event.isActive) {
-      this.selectedDemoLink = this.demoLinks.find( dl => !!event.findRouterLink(dl.cmd) );
+      if (!this._demoLinks) {
+        this.demoLinks.then( () => this.demoLinkStatusChanged(event) );
+        return;
+      }
+      this.selectedDemoLink = this._demoLinks.find( dl => !!event.findRouterLink(dl.cmd) );
     }
   }
 }

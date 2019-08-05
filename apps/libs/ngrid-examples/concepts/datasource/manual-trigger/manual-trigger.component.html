@@ -1,0 +1,2 @@
+<button *ngFor="let count of [50, 100, 500, 1000]" mat-stroked-button (click)="refresh(count)">{{ count }} Rows</button>
+<pbl-ngrid [dataSource]="dsManualTrigger" [columns]="columns"></pbl-ngrid>

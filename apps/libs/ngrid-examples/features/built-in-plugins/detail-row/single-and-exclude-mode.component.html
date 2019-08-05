@@ -1,0 +1,12 @@
+<pbl-ngrid blockUi [dataSource]="ds" [columns]="columns"
+           detailRow [singleDetailRow]="forceSingle" [excludeToggleFrom]="disableName" vScrollNone>
+
+  <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
+    <div>
+      <h1>Detail Row</h1>
+      <pre>{{row | json}}</pre>
+    </div>
+  </div>
+</pbl-ngrid>
+<mat-checkbox [checked]="forceSingle" (change)="forceSingle = $event.checked">Force single row</mat-checkbox>
+<mat-checkbox [checked]="disableName.length > 0" (change)="disableName = disableName.length === 0 ? ['name'] : []">Disable toggle from 'Name'</mat-checkbox>

@@ -1,0 +1,11 @@
+<div fxLayout="row" fxLayoutGap="16px" style="width: 100%; padding: 16px">
+  <mat-checkbox [checked]="explicitGridHeight" (change)="explicitGridHeight = $event.checked">Explicit grid height</mat-checkbox>
+  <mat-checkbox [checked]="fallbackMinHeight" (change)="fallbackMinHeight = $event.checked">Set fallbackMinHeight to 150</mat-checkbox>
+  <mat-checkbox [checked]="vScroll" (change)="vScroll = $event.checked">Virtual Scroll Enabled</mat-checkbox>
+  <div fxFlex="*"></div>
+  <button fxFlex="noshrink" mat-flat-button (click)="redraw()">Redraw</button>
+</div>
+<div *ngIf="settings" [class.table-height-300]="settings.explicitGridHeight">
+  <pbl-ngrid *ngIf="settings.vScroll" [dataSource]="ds" [columns]="columns" [fallbackMinHeight]="settings.fallbackMinHeight" vScrollAuto></pbl-ngrid>
+  <pbl-ngrid *ngIf="!settings.vScroll" [dataSource]="ds" [columns]="columns" [fallbackMinHeight]="settings.fallbackMinHeight" vScrollNone></pbl-ngrid>
+</div>

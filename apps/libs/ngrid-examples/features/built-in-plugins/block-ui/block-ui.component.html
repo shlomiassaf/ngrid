@@ -1,0 +1,7 @@
+<!-- Only for the example, on a real app this should be set in a common template component initialized using `PblNgridModule.withCommon` -->
+<div *pblNgridBlockUiDef class="pbl-ngrid-ui-block">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
+<pbl-ngrid blockUi [dataSource]="ds" [columns]="columns"></pbl-ngrid>
+<button mat-button (click)="refresh()">Refresh</button>

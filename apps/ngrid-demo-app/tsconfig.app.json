@@ -7,11 +7,10 @@
   "exclude": [
     "test.ts",
     "**/*.spec.ts",
-    "../../apps/libs/ngrid/**/*.worker.ts"
+    "./build/**/*.ts",
+    "../libs/shared-data/**/*.worker.ts"
   ],
   "include": [
     "**/*.ts",
-    "../../apps/libs/ngrid/**/ng-lazy-module-index.ts",
-    "../../apps/libs/ngrid-material/**/ng-lazy-module-index.ts"
   ]
 }

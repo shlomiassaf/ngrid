@@ -1,0 +1,16 @@
+<pbl-ngrid blockUi [dataSource]="ds" [columns]="columns"
+           [detailRow]="detailRowPredicate" vScrollNone>
+
+  <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
+    <div>
+      <h1>Detail Row</h1>
+      <pre>{{row | json}}</pre>
+    </div>
+  </div>
+</pbl-ngrid>
+
+<mat-radio-group (change)="onDetailRowChange($event.value)" [value]="detailRow">
+  <mat-radio-button value="off">Off</mat-radio-button>
+  <mat-radio-button value="on">On</mat-radio-button>
+  <mat-radio-button value="predicate">Predicate (Even rows only)</mat-radio-button>
+</mat-radio-group>

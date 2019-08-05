@@ -1,0 +1,27 @@
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { createDS, columnFactory } from '@pebula/ngrid';
+
+import { Person, DemoDataSource } from '@pebula/apps/shared-data';
+import { Example } from '@pebula/apps/shared';
+
+@Component({
+  selector: 'pbl-asynchronous-empty-set-example',
+  templateUrl: './asynchronous-empty-set.component.html',
+  styleUrls: ['./asynchronous-empty-set.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+@Example('pbl-asynchronous-empty-set-example', { title: 'Asynchronous Empty Set' })
+export class AsynchronousEmptySetExample {
+  columns = columnFactory()
+    .default({minWidth: 200})
+    .table(
+      { prop: 'id' },
+      { prop: 'name' },
+    )
+    .build();
+
+  ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(1000, 0) ).create();
+
+  constructor(private datasource: DemoDataSource) { }
+}

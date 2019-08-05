@@ -1,0 +1,36 @@
+<div *ngIf="section === 1" fxLayoutAlign="start stretch">
+  <div fxFlex="0 1 332px" class="col-quickthrough-table1">
+    <pbl-ngrid showFooter [columns]="columns" vScrollNone
+              [dataSource]="[ { id: 1, name: 'John', age: 25 }, { id: 2, name: 'Tom', age: 44 } ]"></pbl-ngrid>
+  </div>
+  <div fxLayoutAlign="center center">
+    <div class="text-subtitle" style="width: 75%">
+      The background of the columns is based on the <b>role</b> of the column. (excluding whites)
+    </div>
+  </div>
+</div>
+
+<div *ngIf="section === 2" fxLayout fxLayoutGap="24px" style="width: 100%; overflow: none">
+  <pbl-ngrid fxFlex="208px" style="height: 260px" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel2" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
+    <div *pblNgridHeaderCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data highlight-data-header">DATA ROW (HEADER)</div>
+    <div *pblNgridCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data">DATA ROW</div>
+    <div *pblNgridFooterCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data highlight-data-footer">DATA ROW (FOOTER)</div>
+  </pbl-ngrid>
+  <pbl-ngrid style="height: 260px" class="pbl-flex-row-fill pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel">
+    <div *pblNgridHeaderCellDef="'*'; col as col" style="text-decoration: underline">{{ col.label | uppercase }}</div>
+    <div *pblNgridCellDef="'*'; value as value">-> {{value}} <-</div>
+    <div *pblNgridFooterCellDef="'*'; col as col">({{ col.label }})</div>
+  </pbl-ngrid>
+</div>
+
+<div *ngIf="section === 3" fxLayout>
+  <pbl-ngrid fxFlex="208px" style="height: 400px" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta2" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
+    <div *pblNgridHeaderCellTypeDef="'metaRow'; let ctx; col as col" ngridCellClass="column-model-demo-highlight-header">META ROW ({{ col.label }})</div>
+    <div *pblNgridHeaderCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data">DATA ROW (HEADER)</div>
+    <div *pblNgridCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data">DATA ROW</div>
+    <div *pblNgridFooterCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data">DATA ROW (FOOTER)</div>
+    <div *pblNgridFooterCellTypeDef="'metaRow'; let ctx; col as col" ngridCellClass="column-model-demo-highlight-footer">META ROW ({{ col.label }})</div>
+  </pbl-ngrid>
+  <div fxFlex="24px"></div>
+  <pbl-ngrid style="height: 400px" class="pbl-flex-row-fill pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis" showFooter [dataSource]="dsSimpleModel" [columns]="columnsWithMeta"></pbl-ngrid>
+</div>

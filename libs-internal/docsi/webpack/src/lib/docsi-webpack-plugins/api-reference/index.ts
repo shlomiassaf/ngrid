@@ -1,1 +1,0 @@
-export { DocsiApiReferenceWebpackPlugin } from './plugin';

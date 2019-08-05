@@ -1,0 +1,13 @@
+.filler-table-container {
+  padding: 16px;
+  height: 400px;
+  background: lightgreen;
+
+  pbl-ngrid {
+    height: 100%;
+  }
+
+  .pbl-ngrid-space-fill {
+    background: lightblue;
+  }
+}

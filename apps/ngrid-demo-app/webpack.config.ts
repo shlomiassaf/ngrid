@@ -1,15 +1,12 @@
 import * as Path from 'path';
 import { Configuration, DefinePlugin } from 'webpack';
-import { DocsiMetadataFileEmitterWebpackPlugin, DocsiSourceCodeRefWebpackPlugin } from '@pebula-internal/docsi/webpack';
+
+import { PebulaDynamicModuleWebpackPlugin } from '@pebula-internal/webpack-dynamic-module';
+import { MarkdownPagesWebpackPlugin } from '@pebula-internal/webpack-markdown-pages';
+import { MarkdownCodeExamplesWebpackPlugin } from '@pebula-internal/webpack-markdown-code-examples';
+import * as remarkPlugins from './build/remark';
 
 // ** CONFIG VALUES **
-const MAIN_APP_LIBRARY_NAME = 'apps/libs/ngrid';
-const HTML_MARKDOWN_TRANSFORM_LOADER_INCLUDE = [
-  new RegExp(`/${MAIN_APP_LIBRARY_NAME}/`),
-  new RegExp(`/apps/libs/ngrid-material/`),
-];
-const HTML_MARKDOWN_TRANSFORM_LOADER_EXCLUDE = [ new RegExp(`/${MAIN_APP_LIBRARY_NAME}/shared/`) ]
-
 function applyLoaders(webpackConfig: Configuration) {
   // We have custom loaders, for webpack to be aware of them we tell it the directory the are in.
   // make sure that each folder behaves like a node module, that is it has an index file inside root or a package.json pointing to it.
@@ -26,18 +23,6 @@ function applyLoaders(webpackConfig: Configuration) {
         {
           use: [
             'html-loader',
-          ]
-        },
-        {
-          include: HTML_MARKDOWN_TRANSFORM_LOADER_INCLUDE,
-          exclude: HTML_MARKDOWN_TRANSFORM_LOADER_EXCLUDE,
-          use: [
-            {
-              loader: "docsi/webpack",
-              options: {
-                highlight: 'prismjs',
-              }
-            }
           ]
         },
       ]
@@ -58,8 +43,33 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   oldOptions.directTemplateLoading = false;
   webpackConfig.plugins[idx] = new AngularCompilerPlugin(oldOptions);
 
-  webpackConfig.plugins.push(new DocsiMetadataFileEmitterWebpackPlugin());
-  webpackConfig.plugins.push(new DocsiSourceCodeRefWebpackPlugin());
+  const remarkSlug = require('remark-slug')
+  const remarkAutolinkHeadings = require('@rigor789/remark-autolink-headings');
+  const remarkAttr = require('remark-attr')
+  const customBlockquotesOptions = { mapping: {
+    'i>': 'info',
+    'I>': 'info icon',
+    'w>': 'warn',
+    'W>': 'warn icon',
+    'e>': 'error',
+    'E>': 'error icon',
+  }};
+
+  const dynamicModule = new PebulaDynamicModuleWebpackPlugin(Path.join(process.cwd(), 'markdown-pages.js'));
+  webpackConfig.plugins.push(dynamicModule);
+  webpackConfig.plugins.push(new MarkdownPagesWebpackPlugin(dynamicModule, {
+    docsPath: 'content/**/*.md',
+    remarkPlugins: [
+      remarkSlug,
+      remarkAutolinkHeadings,
+      [remarkAttr, { scope: 'permissive' }],
+      remarkPlugins.gatsbyRemarkPrismJs(),
+      [remarkPlugins.customBlockquotes, customBlockquotesOptions],
+    ],
+  }));
+  webpackConfig.plugins.push(new MarkdownCodeExamplesWebpackPlugin(dynamicModule, {
+    docsPath: '../libs/ngrid-examples/**/*.ts',
+  }));
 
   const angular = require('@angular/core/package.json');
   const ngrid = require(Path.join(process.cwd(), `libs/ngrid/package.json`));

@@ -1,0 +1,16 @@
+<!-- Here only for the demo, in real app put this once in a top-level component. -->
+<div *pblNgridBlockUiDef class="pbl-ngrid-ui-block">
+  <mat-spinner></mat-spinner>
+</div>
+
+<pbl-ngrid matSort
+           usePagination
+           blockUi
+           vScrollNone
+           fallbackMinHeight="300"
+           [dataSource]="ds"
+           [columns]="columns">
+  <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
+                       [table]="table"
+                       [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
+</pbl-ngrid>

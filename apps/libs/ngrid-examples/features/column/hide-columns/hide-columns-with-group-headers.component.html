@@ -1,0 +1,14 @@
+<pbl-ngrid #pblTbl2 [hideColumns]="hideColumns" [dataSource]="ds" [columns]="columns">
+  <div *pblNgridOuterSection="'top'" class="pbl-ngrid-row">
+   <div class="pbl-ngrid-header-cell"></div>
+    <div class="pbl-ngrid-header-cell" style="flex: 0 0 70px">
+      <mat-select multiple [value]="hideColumns">
+        <mat-select-trigger>
+          <mat-icon>remove_red_eye</mat-icon>{{ hideColumns.length }}
+        </mat-select-trigger>
+        <mat-option *ngFor="let c of pblTbl2.columnApi.columns" [value]="c.id"
+                    (onSelectionChange)="$event.isUserInput && toggleColumn(hideColumns, $event.source.value)">{{c.label}}</mat-option>
+      </mat-select>
+    </div>
+  </div>
+</pbl-ngrid>

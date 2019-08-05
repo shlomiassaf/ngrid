@@ -1,4 +1,4 @@
-$top-nav-bar-height: 56px;
+$top-nav-bar-height: 64px;
 $nav-top-bottom-padding: 8px;
 
 :host {
@@ -70,3 +70,8 @@ $nav-top-bottom-padding: 8px;
   }
 }
 
+.version-info {
+  & sub {
+    padding: 0;
+  }
+}

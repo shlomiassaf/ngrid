@@ -1,0 +1,12 @@
+<pbl-ngrid blockUi
+           [transpose]="transposeToggle"
+           [dataSource]="ds"
+           [columns]="columns">
+
+  <div *pblNgridCellTypeDef="'date'; value as value; col as col; row as row">{{value | date:col.type.data.format}}</div>
+  <div *pblNgridCellDef="'name'; value as value;" style="background: green">{{value}}</div>
+
+</pbl-ngrid>
+
+<mat-checkbox [checked]="transposeToggle" (change)="transposeToggle = $event.checked">Transpose Enabled</mat-checkbox>
+

@@ -1,0 +1,30 @@
+<pbl-ngrid class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis" blockUi matSort [dataSource]="ds" [columns]="columns">
+  <div *pblNgridCellTypeDef="'accountBalance'; let ctx; value as value; col as col; row as row"
+        [ngridCellStyle]="{ background: value < 0 ? col.type.data.neg : col.type.data.pos }">{{ value | number:col.type.data.format }}</div>
+  <div *pblNgridHeaderExtensionRef="let ctx" style="position: absolute; right: 0; height: 100%; cursor: pointer; margin-right: 12px;"
+      [matMenuTriggerFor]="columnMenu" [matMenuTriggerData]="ctx" fxLayoutAlign="center center">
+    <mat-icon style="height: 16px; width: 16px; font-size: 16px; line-height: 16px;">more_vert</mat-icon>
+  </div>
+  <mat-menu #columnMenu="matMenu">
+    <ng-template matMenuContent let-ctx>
+      <button mat-menu-item (click)="ctx.table.columnApi.autoSizeColumn(ctx.col)">Auto Fit</button>
+      <button mat-menu-item [matMenuTriggerFor]="columnSortMenu" [matMenuTriggerData]="ctx" [disabled]="!ctx.col.sort">Sort</button>
+      <button mat-menu-item [matMenuTriggerFor]="columnPinMenu" [matMenuTriggerData]="ctx">Pin</button>
+    </ng-template>
+  </mat-menu>
+  <mat-menu #columnSortMenu="matMenu">
+    <ng-template matMenuContent let-ctx>
+      <button mat-menu-item (click)="ctx.table.ds.setSort()">None</button>
+      <button mat-menu-item (click)="ctx.table.ds.setSort(ctx.col, { order: 'asc' })">Asc</button>
+      <button mat-menu-item (click)="ctx.table.ds.setSort(ctx.col, { order: 'desc' })">Desc</button>
+    </ng-template>
+  </mat-menu>
+  <mat-menu #columnPinMenu="matMenu">
+    <ng-template matMenuContent let-ctx>
+      <button mat-menu-item (click)="ctx.col.columnDef.updatePin()">Unpin</button>
+      <button mat-menu-item (click)="ctx.col.columnDef.updatePin('start')">Pin Start</button>
+      <button mat-menu-item (click)="ctx.col.columnDef.updatePin('end')">Pin End</button>
+    </ng-template>
+  </mat-menu>
+
+</pbl-ngrid>

@@ -133,32 +133,6 @@
         "parent:material"
       ]
     },
-    "docsi": {
-      "tags": [
-        "name:docsi",
-        "type:lib"
-      ]
-    },
-    "docsi-webpack": {
-      "tags": [
-        "name:webpack",
-        "type:lib-node"
-      ]
-    },
-    "docsi-toc": {
-      "tags": [
-        "name:toc",
-        "type:child-lib",
-        "parent:docsi"
-      ]
-    },
-    "docsi-material-suite": {
-      "tags": [
-        "name:material-suite",
-        "type:child-lib",
-        "parent:docsi"
-      ]
-    },
     "utils": {
       "tags": [
         "name:utils",

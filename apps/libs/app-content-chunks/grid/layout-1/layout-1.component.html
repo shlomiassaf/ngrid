@@ -1,0 +1,76 @@
+<div *ngIf="section === 1" fxLayout>
+  <div fxFlex="50%">
+    This is the basic layout:
+    <ul>
+      <li>Header Row (optional) - <mat-checkbox [checked]="showHeader" (change)="showHeader = $event.checked">Show Header</mat-checkbox></li>
+      <li>Data Rows</li>
+      <li>Footer Row (optional) - <mat-checkbox [checked]="showFooter" (change)="showFooter = $event.checked">Show Footer</mat-checkbox></li>
+    </ul>
+  </div>
+  <div fxFlex="50%">
+    <pbl-ngrid vScrollNone [showHeader]="showHeader" [showFooter]="showFooter"
+               [columns]="columns" [dataSource]="ds"></pbl-ngrid>
+  </div>
+</div>
+
+<div *ngIf="section === 2" fxLayout fxLayoutAlign="space-between center">
+  <div fxFlex="30%">
+    <p>Type: Fixed</p>
+    <pbl-ngrid class="meta-row-type-example" [dataSource]="ds1" [columns]="columns1"></pbl-ngrid>
+  </div>
+  <div fxFlex="30%">
+    <p>Type: Row</p>
+    <pbl-ngrid class="meta-row-type-example" [dataSource]="ds2" [columns]="columns2"></pbl-ngrid>
+  </div>
+  <div fxFlex="30%">
+    <p>Type: Sticky</p>
+    <pbl-ngrid class="meta-row-type-example" [dataSource]="ds3" [columns]="columns3"></pbl-ngrid>
+  </div>
+</div>
+
+<div *ngIf="section === 3" fxLayout fxLayoutAlign="space-between center">
+  <div fxFlex="30%">
+    <p>Type: Fixed</p>
+    <pbl-ngrid class="meta-row-type-example" [dataSource]="ds1" [columns]="columns1">
+      <div *pblNgridOuterSection="'top'">
+        <span class="projected-content">I'm an Outer Top Section</span>
+      </div>
+      <div *pblNgridOuterSection="'bottom'">
+        <span class="projected-content">I'm an Outer Bottom Section</span>
+      </div>
+    </pbl-ngrid>
+  </div>
+  <div fxFlex="30%">
+    <p>Type: Row</p>
+    <pbl-ngrid class="meta-row-type-example" [dataSource]="ds2" [columns]="columns2">
+      <div *pblNgridOuterSection="'top'">
+        <span class="projected-content">I'm an Outer Top Section</span>
+      </div>
+      <div *pblNgridOuterSection="'bottom'">
+        <span class="projected-content">I'm an Outer Bottom Section</span>
+      </div>
+    </pbl-ngrid>
+  </div>
+  <div fxFlex="30%">
+    <p>Type: Sticky</p>
+    <pbl-ngrid class="meta-row-type-example" [dataSource]="ds3" [columns]="columns3">
+      <div *pblNgridOuterSection="'top'">
+        <span class="projected-content">I'm an Outer Top Section</span>
+      </div>
+      <div *pblNgridOuterSection="'bottom'">
+        <span class="projected-content">I'm an Outer Bottom Section</span>
+      </div>
+    </pbl-ngrid>
+  </div>
+</div>
+
+<pbl-ngrid *ngIf="section === 4" class="meta-row-type-example" style="height: 200px" [columns]="columns" [dataSource]="ds">
+  <span class="projected-content" >This content is projected!!!</span>
+</pbl-ngrid>
+
+<pbl-ngrid *ngIf="section === 5" class="meta-row-type-example" [columns]="columns" [dataSource]="ds">
+  <span class="projected-content" >This content is projected!!!</span>
+  <div *pblNgridOuterSection="'bottom'">
+    <span class="projected-content">I'm an Outer Bottom Section</span>
+  </div>
+</pbl-ngrid>

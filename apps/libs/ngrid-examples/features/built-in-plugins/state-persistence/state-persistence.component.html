@@ -1,0 +1,12 @@
+<div fxLayout="row" fxLayoutGap="16px" style="padding: 8px">
+  <button fxFlex="noshrink" mat-stroked-button color="accent" (click)="swapNameAndRating()">Swap Name <-> Rating</button>
+  <mat-slider thumbLabel tickInterval="1" min="250" max="500"
+              [value]="emailWidth" (change)="updateEmailWidth($event.value)">
+    Email Width
+  </mat-slider>
+  <div fxFlex="*"></div>
+</div>
+<pbl-ngrid id="statePersistenceDemo" persistState (afterLoadState)="afterLoadState()"
+           blockUi class="pbl-ngrid-cell-ellipsis"
+           [dataSource]="ds" [columns]="columns">
+</pbl-ngrid>
