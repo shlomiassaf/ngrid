@@ -189,6 +189,13 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
       source: () => navEntriesSource,
       size: () => navEntriesSource.length
     };
+
+    const pagesJson = JSON.stringify(navMetadata.entries);
+    compilation.assets['pages.json'] = {
+      source: () => pagesJson,
+      size: () => pagesJson.length
+    };
+
     notifier('markdownPages', navEntriesAssetPath);
 
     this.firstRun = false;

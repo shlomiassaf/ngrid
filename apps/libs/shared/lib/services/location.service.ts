@@ -1,8 +1,8 @@
 // LICENCE:
 // Taken from https://github.com/angular/angular/blob/887faffa256dd6bdc708fb853db4a7a47a5e4af1/aio/src/app/shared/location.service.ts#L1-L150
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Location, PlatformLocation } from '@angular/common';
+import { Location, PlatformLocation, DOCUMENT } from '@angular/common';
 
 import { ReplaySubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { map, tap } from 'rxjs/operators';
 @Injectable()
 export class LocationService {
 
-  private readonly urlParser = document.createElement('a');
+  private readonly urlParser = this.document.createElement('a');
   private urlSubject = new ReplaySubject<string>(1);
   private swUpdateActivated = false;
 
@@ -21,7 +21,10 @@ export class LocationService {
     map(url => (url.match(/[^?#]*/) || [])[0]),  // strip query and hash
   );
 
-  constructor(private location: Location, private platformLocation: PlatformLocation, private router: Router) {
+  constructor(@Inject(DOCUMENT) private document: Document,
+              private location: Location,
+              private platformLocation: PlatformLocation,
+              private router: Router) {
 
     this.urlSubject.next(location.path(true));
 

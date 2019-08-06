@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule, PreloadAllModules } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 import { FlexModule } from '@angular/flex-layout/flex';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { Angulartics2Module } from 'angulartics2';
+import { MetaModule } from '@ngx-meta/core';
 
 import { GestureConfig } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -47,9 +49,11 @@ export function EXAMPLE_COMPONENTS_FACTORY() {
     RouterLinkActiveNotify
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    HttpClientModule,
     BrowserAnimationsModule,
     FlexModule, ExtendedModule,
+    MetaModule.forRoot(),
     NxModule.forRoot(),
     PblDemoAppSharedModule,
     AppContentChunksModule,
@@ -90,7 +94,8 @@ export function EXAMPLE_COMPONENTS_FACTORY() {
         },
       ],
       {
-        useHash: true,
+        useHash: false,
+        initialNavigation: 'enabled',
         preloadingStrategy: LazyModulePreloader,
       },
     ),
