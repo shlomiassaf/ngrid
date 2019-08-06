@@ -18,13 +18,14 @@
           "builder": "ngx-build-plus:build",
           "options": {
             "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin",
-            "outputPath": "dist/apps/ngrid-demo-app",
+            "outputPath": "dist/browser",
             "index": "apps/ngrid-demo-app/src/index.html",
             "main": "apps/ngrid-demo-app/src/main.ts",
             "polyfills": "apps/ngrid-demo-app/src/polyfills.ts",
             "tsConfig": "apps/ngrid-demo-app/tsconfig.app.json",
             "assets": [
               "apps/ngrid-demo-app/src/favicon.ico",
+              "apps/ngrid-demo-app/src/google1a0455c97ead32c8.html",
               "apps/ngrid-demo-app/src/assets"
             ],
             "styles": [
@@ -111,6 +112,30 @@
             "exclude": [
               "**/node_modules/**"
             ]
+          }
+        },
+        "server": {
+          "builder": "./tools/ngx-build-plus.server:server",
+          "options": {
+            "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin",
+            "outputPath": "dist/server",
+            "main": "apps/ngrid-demo-app/src/main.server.ts",
+            "tsConfig": "apps/ngrid-demo-app/tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/ngrid-demo-app/src/environments/environment.ts",
+                  "with": "apps/ngrid-demo-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": {
+                "scripts": false,
+                "styles": true
+              }
+            }
           }
         }
       }

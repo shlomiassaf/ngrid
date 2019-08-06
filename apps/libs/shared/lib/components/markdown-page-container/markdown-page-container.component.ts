@@ -39,7 +39,11 @@ export class MarkdownPageContainerComponent implements OnDestroy {
   }
 
   getRouterLink(path: string): any[] {
-    return ['/content', ...path.split('/')];
+    const routeLink = path.split('/');
+    if (routeLink[0] !== '/') {
+      routeLink.unshift('/');
+    }
+    return routeLink;
   }
 
   contentRendered(): void {
@@ -52,9 +56,10 @@ export class MarkdownPageContainerComponent implements OnDestroy {
       this.mdPagesMenu.getMenu(this.entry)
         .then( entry => {
           this.menu$.next(entry);
-        });
+        })
+        .catch(err => this.menu$.next(null) );
     }
 
-    this.documentUrl = paths.join('/');
+    this.documentUrl = paths.length ? paths.join('/') : '/';
   }
 }

@@ -1,6 +1,6 @@
 ---
 title: Virtual Scroll Performance
-path: /demos/virtual-scroll-performance
+path: demos/virtual-scroll-performance
 type: singlePage
 subType: demoPage
 ---

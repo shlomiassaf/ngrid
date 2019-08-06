@@ -7,7 +7,7 @@ const remarkPrismJs = require('gatsby-remark-prismjs');
 
 const { util: { createHash } } = webpack as any;
 
-import { DynamicModuleUpdater, PebulaDynamicModuleWebpackPlugin } from '@pebula-internal/webpack-dynamic-module';
+import { DynamicModuleUpdater } from '@pebula-internal/webpack-dynamic-module';
 import { ParsedExampleMetadata, ExampleFileAsset } from './models';
 import { createInitialExampleFileAssets, parseExampleTsFile } from './utils';
 
@@ -33,7 +33,7 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
   private firstRun = true;
   private compiler: webpack.Compiler;
 
-  constructor(private dynamicModulePlugin: PebulaDynamicModuleWebpackPlugin, options: MarkdownCodeExamplesWebpackPluginOptions) {
+  constructor(options: MarkdownCodeExamplesWebpackPluginOptions) {
     this.options = { ...options };
   }
 

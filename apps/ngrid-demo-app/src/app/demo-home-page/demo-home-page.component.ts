@@ -16,8 +16,15 @@ export class DemoHomePageComponent {
 
   selectedDemoLink: any;
 
-  topMenuItems: ReturnType<MarkdownPagesMenuService['ofType']> = this.mdMenu.ofType('topMenuSection');
-  demoLinks = this.mdMenu.ofType('singlePage')
+  topMenuItems: ReturnType<MarkdownPagesMenuService['ofType']>;
+  demoLinks: Promise<Array<{ cmd: any[], text: string }>>;
+  private _demoLinks: Array<{ cmd: any[], text: string }>;
+
+  constructor(private mdMenu: MarkdownPagesMenuService) { }
+
+  ngOnInit() {
+    this.topMenuItems = this.mdMenu.ofType('topMenuSection');
+    this.demoLinks = this.mdMenu.ofType('singlePage')
     .then( entries => {
       const demoLinks = entries
         .filter( e => e.subType === 'demoPage' )
@@ -29,10 +36,7 @@ export class DemoHomePageComponent {
         });
       return this._demoLinks = demoLinks;
     });
-
-  private _demoLinks: Array<{ cmd: any[], text: string }>;
-
-  constructor(private mdMenu: MarkdownPagesMenuService) { }
+  }
 
   demoLinkStatusChanged(event: { isActive: boolean; findRouterLink: (commands: any[]|string) => RouterLinkWithHref | RouterLink | undefined; }) {
     this.selectedDemoLink = null;

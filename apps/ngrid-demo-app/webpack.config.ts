@@ -57,8 +57,9 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
 
   const dynamicModule = new PebulaDynamicModuleWebpackPlugin(Path.join(process.cwd(), 'markdown-pages.js'));
   webpackConfig.plugins.push(dynamicModule);
-  webpackConfig.plugins.push(new MarkdownPagesWebpackPlugin(dynamicModule, {
+  webpackConfig.plugins.push(new MarkdownPagesWebpackPlugin({
     docsPath: 'content/**/*.md',
+    ssrPagesFilename: 'ssr-pages.json',
     remarkPlugins: [
       remarkSlug,
       remarkAutolinkHeadings,
@@ -67,7 +68,7 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
       [remarkPlugins.customBlockquotes, customBlockquotesOptions],
     ],
   }));
-  webpackConfig.plugins.push(new MarkdownCodeExamplesWebpackPlugin(dynamicModule, {
+  webpackConfig.plugins.push(new MarkdownCodeExamplesWebpackPlugin({
     docsPath: '../libs/ngrid-examples/**/*.ts',
   }));
 

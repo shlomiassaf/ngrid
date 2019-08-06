@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
 import { DynamicExportedObject } from '@pebula-internal/webpack-dynamic-module';
 import { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-examples';
 
@@ -14,14 +16,22 @@ export class MarkdownCodeExamplesService {
   markdownCodeExamples: { [cmpSelector: string]: string };
 
   get ready(): Promise<MarkdownCodeExamplesService> {
-    return this.fetching ? Promise.resolve(this.fetching).then( () => this ) : Promise.resolve(this);
+    if (!this.markdownCodeExamples) {
+      if (!this.fetching) {
+        this.fetching = this.httpClient.get<{ [cmpSelector: string]: string }>(DYNAMIC_EXPORTED_OBJECT.markdownCodeExamples).toPromise()
+          .then( markdownCodeExamples => this.markdownCodeExamples = markdownCodeExamples );
+      }
+      return this.fetching.then( () => this);
+    } else {
+      return Promise.resolve(this);
+    }
   }
 
-  private fetching = fetch(DYNAMIC_EXPORTED_OBJECT.markdownCodeExamples)
-    .then( response => response.json() )
-    .then( markdownCodeExamples => this.markdownCodeExamples = markdownCodeExamples );
+  private fetching: Promise<any>;
 
   private _cache = new Map<string, ExampleFileAsset[]>();
+
+  constructor(private httpClient: HttpClient) { }
 
   getExample(cmpSelector: string): Promise<ExampleFileAsset[]> {
     if (this._cache.has(cmpSelector)) {
@@ -32,8 +42,7 @@ export class MarkdownCodeExamplesService {
       .then( () => {
         const url = this.markdownCodeExamples[cmpSelector];
         if (url) {
-          return fetch(url)
-            .then( response => response.json() )
+          return this.httpClient.get<ExampleFileAsset[]>(url).toPromise()
             .then( page => {
               this._cache.set(cmpSelector, page);
               return page;

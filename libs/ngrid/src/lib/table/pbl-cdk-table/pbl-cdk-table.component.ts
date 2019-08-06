@@ -78,7 +78,7 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
               @Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<T>,
               @Inject(DOCUMENT) _document?: any,
               platform?: Platform) {
-    super(_differs, _changeDetectorRef, _elementRef, role, _dir, document, platform);
+    super(_differs, _changeDetectorRef, _elementRef, role, _dir, _document, platform);
     this.table._cdkTable = this;
     this.trackBy = this.table.trackBy;
 

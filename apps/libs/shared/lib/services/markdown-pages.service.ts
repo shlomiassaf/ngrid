@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
 import { DynamicExportedObject } from '@pebula-internal/webpack-dynamic-module';
 import { PageNavigationMetadata, PageFileAsset } from '@pebula-internal/webpack-markdown-pages';
 
@@ -14,15 +16,22 @@ export class MarkdownPagesService {
   markdownPages: PageNavigationMetadata;
 
   get ready(): Promise<MarkdownPagesService> {
-    return this.fetching ? Promise.resolve(this.fetching).then( () => this ) : Promise.resolve(this);
+    if (!this.markdownPages) {
+      if (!this.fetching) {
+        this.fetching = this.httpClient.get<PageNavigationMetadata>(DYNAMIC_EXPORTED_OBJECT.markdownPages).toPromise()
+          .then( markdownPages => this.markdownPages = markdownPages );
+      }
+      return this.fetching.then( () => this);
+    } else {
+      return Promise.resolve(this);
+    }
   }
 
-  private fetching = fetch(DYNAMIC_EXPORTED_OBJECT.markdownPages)
-    .then( response => response.json() )
-    .then( markdownPages => this.markdownPages = markdownPages );
+  private fetching: Promise<any>;
 
   private _cache = new Map<string, PageFileAsset>();
 
+  constructor(private httpClient: HttpClient) { }
 
   getPage(path: string): Promise<PageFileAsset> {
     if (this._cache.has(path)) {
@@ -33,8 +42,7 @@ export class MarkdownPagesService {
       .then( () => {
         const url = this.markdownPages.entryData[path];
         if (url) {
-          return fetch(url)
-            .then( response => response.json() )
+          return this.httpClient.get<PageFileAsset>(url).toPromise()
             .then( page => {
               this._cache.set(path, page);
               return page;

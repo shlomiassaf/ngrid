@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentPortal, DomPortalHost } from '@angular/cdk/portal';
+import { MetaService } from '@ngx-meta/core';
 
 import { UnRx } from '@pebula/utils';
 import { PageFileAsset } from '@pebula-internal/webpack-markdown-pages';
@@ -48,6 +49,7 @@ export class MarkdownPageViewerComponent implements OnDestroy {
   private _portalHosts: DomPortalHost[] = [];
 
   constructor(private mdPages: MarkdownPagesService,
+              private meta: MetaService,
               private locationService: LocationService,
               route: ActivatedRoute,
               private _elementRef: ElementRef,
@@ -82,19 +84,21 @@ export class MarkdownPageViewerComponent implements OnDestroy {
 
   private updateDocument(url: string) {
     if (!url) {
-      document.title = '';
+      this.meta.setTitle(``);
       this._elementRef.nativeElement.innerHTML = '';
       return;
     }
     this.mdPages.getPage(url)
       .then( p => {
         this.page = p;
-        document.title = `NGrid: ${p.title}`;
+        this.meta.setTitle(`NGrid: ${p.title}`);
         this._elementRef.nativeElement.innerHTML = p.contents;
 
-        this._loadComponents('pbl-example-view', ExampleViewComponent);
-        this._loadComponents('pbl-app-content-chunk', ContentChunkViewComponent);
-
+        if (typeof this._elementRef.nativeElement.getBoundingClientRect === 'function') {
+          this._loadComponents('pbl-example-view', ExampleViewComponent);
+          this._loadComponents('pbl-app-content-chunk', ContentChunkViewComponent);
+        }
+     
         this._ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.next());
       });
   }

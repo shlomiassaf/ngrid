@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG, makeStateKey } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule, PreloadAllModules } from '@angular/router';
-
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { FlexModule } from '@angular/flex-layout/flex';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { Angulartics2Module } from 'angulartics2';
+import { TransferHttpCacheModule } from '@nguniversal/common';
+import { MetaModule } from '@ngx-meta/core';
+import { CacheModule } from '@ngx-cache/core';
 
 import { GestureConfig } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -40,6 +43,8 @@ export function EXAMPLE_COMPONENTS_FACTORY() {
   return EXAMPLE_COMPONENTS;
 }
 
+export const REQ_KEY = makeStateKey<string>('req');
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,9 +52,13 @@ export function EXAMPLE_COMPONENTS_FACTORY() {
     RouterLinkActiveNotify
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    TransferHttpCacheModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     FlexModule, ExtendedModule,
+    MetaModule.forRoot(),
+    CacheModule.forRoot(),
     NxModule.forRoot(),
     PblDemoAppSharedModule,
     AppContentChunksModule,
@@ -63,24 +72,6 @@ export function EXAMPLE_COMPONENTS_FACTORY() {
       [
         {
           path: '',
-          pathMatch: 'full',
-          component: MarkdownPageViewerComponent,
-          data: { documentUrl: '/' },
-        },
-        {
-          path: 'demos/complex-demo-1',
-          pathMatch: 'full',
-          component: MarkdownPageViewerComponent,
-          data: { documentUrl: '/demos/complex-demo-1' },
-        },
-        {
-          path: 'demos/virtual-scroll-performance',
-          pathMatch: 'full',
-          component: MarkdownPageViewerComponent,
-          data: { documentUrl: '/demos/virtual-scroll-performance' },
-        },
-        {
-          path: 'content',
           children: [
             {
               path: '**',
@@ -90,7 +81,8 @@ export function EXAMPLE_COMPONENTS_FACTORY() {
         },
       ],
       {
-        useHash: true,
+        useHash: false,
+        initialNavigation: 'enabled',
         preloadingStrategy: LazyModulePreloader,
       },
     ),

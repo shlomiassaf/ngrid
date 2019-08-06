@@ -1,0 +1,9 @@
+{
+  "builders": {
+    "server": {
+      "implementation": "./server",
+      "schema": "./server/schema.json",
+      "description": "Extensible Builder"
+    }
+  }
+}
