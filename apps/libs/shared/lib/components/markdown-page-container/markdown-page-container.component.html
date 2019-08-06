@@ -1,6 +1,6 @@
 <div class="example-group-container" fxLayout="row" fxLayoutAlign="space-between start" #el>
-  <div fxFlex="0 0 260px" class="example-sticky-container">
-    <mat-nav-list *ngIf="menu$ | async as navEntry">
+  <div *ngIf="menu$ | async as navEntry" fxFlex="0 0 260px" class="example-sticky-container">
+    <mat-nav-list>
       <ng-container *ngFor="let entry of navEntry.children">
         <ng-container *ngTemplateOutlet="entry.children ? containerEntry : linkEntry; context: { $implicit: entry }"></ng-container>
       </ng-container>
@@ -30,7 +30,7 @@
 </ng-template>
 
 <ng-template #linkEntry let-entry>
-  <mat-list-item [routerLink]="getRouterLink(entry.path)">
-    <a matLine>{{ entry.title }}</a>
+  <mat-list-item>
+    <a [routerLink]="getRouterLink(entry.path)" matLine>{{ entry.title }}</a>
   </mat-list-item>
 </ng-template>

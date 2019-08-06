@@ -1,14 +1,4 @@
-// working around:
-// https://github.com/angular/components/blob/461d5390d95732544db506fb6c6536f3a5803065/src/cdk-experimental/popover-edit/polyfill.ts#L40
-if (typeof global.Element === 'undefined') {
-  global.Element = class {};
-}
-
-if (typeof global.requestAnimationFrame === 'undefined') {
-  global.requestAnimationFrame = fn => {
-    setTimeout(fn, 16);
-  }
-}
+import './polyfills';
 
 /**
  * *** NOTE ON IMPORTING FROM ANGULAR AND NGUNIVERSAL IN THIS FILE ***
@@ -34,6 +24,7 @@ import { join } from 'path';
 import { readFileSync, existsSync, writeFileSync } from 'fs';
 import { mkdirpSync } from 'fs-extra';
 import { PageAssetNavEntry } from '@pebula-internal/webpack-markdown-pages/models';
+import { processPages } from './process-pages';
 
 // Express server
 const app = express();
@@ -73,49 +64,16 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Node Express server listening on http://localhost:${PORT}`);
 
-  const pages: { [index: string]: PageAssetNavEntry } = JSON.parse(readFileSync(join(DIST_FOLDER, 'pages.json'), { encoding: 'utf-8' }));
-  createStaticPages(Object.values(pages));
-});
-
-async function createStaticPages(pages: PageAssetNavEntry[]) {
-  const fetch = require('node-fetch').default;
-
   console.log('Pre-rendering app...');
 
-  const processEntry = async (entry: PageAssetNavEntry) => {
-    try {
-      const dirPath = join(DIST_FOLDER, 'content', entry.path);
+  processPages({
+    baseUrl: `http://localhost:${PORT}`,
+    distFolder: DIST_FOLDER,
+    ssrPagesFilename: 'ssr-pages.json',
+  })
+  .then( () => {
+    console.log('Done!');
+    process.exit(0);
+  });
+});
 
-      if (!existsSync(dirPath)) {
-        mkdirpSync(dirPath);
-      }
-
-      let pathname = entry.path === '/' ? '' : entry.path || '';
-      if (pathname[0] === '/') {
-        pathname = pathname.substr(1);
-      }
-      pathname = '/content/' + pathname;
-
-      console.log(`Fetching ${`http://localhost:${PORT}${pathname}`}`);
-      const fetchResult = await fetch(`http://localhost:${PORT}${pathname}`);
-      const staticHtml = await fetchResult.text();
-
-      if (!existsSync(join(dirPath, 'index.html'))) {
-        console.log(`Writing ${join(dirPath, 'index.html')}`);
-        writeFileSync(join(dirPath, 'index.html'), staticHtml, { encoding: 'utf-8' });
-      }
-    } catch( err ) {
-    }
-    if (entry.children) {
-      for (const childEntry of entry.children) {
-        await processEntry(childEntry);
-      }
-    }
-  }
-
-  for (const entry of pages) {
-    await processEntry(entry);
-  }
-
-  console.log('Done!');
-}

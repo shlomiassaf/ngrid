@@ -9,7 +9,7 @@
 
     <a *ngFor="let topMenuItem of topMenuItems | async" mat-button
        [matTooltip]="topMenuItem.tooltip"
-       [routerLink]="['/content', topMenuItem.path]">{{topMenuItem.title}}</a>
+       [routerLink]="[topMenuItem.path]">{{topMenuItem.title}}</a>
 
     <a mat-button [matMenuTriggerFor]="demosMenu">
       <span>{{ selectedDemoLink ? selectedDemoLink.text : 'Select Demo'}}</span>

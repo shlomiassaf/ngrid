@@ -1,6 +1,6 @@
 ---
 title: Demo 1
-path: /demos/complex-demo-1
+path: demos/complex-demo-1
 type: singlePage
 subType: demoPage
 ---

@@ -25,6 +25,7 @@
             "tsConfig": "apps/ngrid-demo-app/tsconfig.app.json",
             "assets": [
               "apps/ngrid-demo-app/src/favicon.ico",
+              "apps/ngrid-demo-app/src/google1a0455c97ead32c8.html",
               "apps/ngrid-demo-app/src/assets"
             ],
             "styles": [

@@ -6,7 +6,8 @@ import * as webpack from 'webpack';
 
 const { util: { createHash } } = webpack as any;
 
-import { DynamicModuleUpdater, PebulaDynamicModuleWebpackPlugin } from '@pebula-internal/webpack-dynamic-module';
+import SitemapPlugin from 'sitemap-webpack-plugin';
+import { DynamicModuleUpdater } from '@pebula-internal/webpack-dynamic-module';
 import { ParsedPage, PageNavigationMetadata, PageAttributes } from './models';
 import { createPageFileAsset, sortPageAssetNavEntry } from './utils';
 
@@ -21,6 +22,8 @@ const pluginName = 'markdown-pages-webpack-plugin';
 export interface MarkdownPagesWebpackPluginOptions {
   docsPath: string | string[];
   remarkPlugins: any[];
+  /** When set will save output `PageNavigationMetadata` to this file */
+  ssrPagesFilename?: string;
 }
 
 export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
@@ -49,7 +52,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
   }
   private __remarkCompiler: any;
 
-  constructor(private dynamicModulePlugin: PebulaDynamicModuleWebpackPlugin, options: MarkdownPagesWebpackPluginOptions) {
+  constructor(options: MarkdownPagesWebpackPluginOptions) {
     this.options = { ...options };
   }
 
@@ -190,10 +193,18 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
       size: () => navEntriesSource.length
     };
 
-    const pagesJson = JSON.stringify(navMetadata.entries);
-    compilation.assets['pages.json'] = {
-      source: () => pagesJson,
-      size: () => pagesJson.length
+    if (this.options.ssrPagesFilename) {
+      compilation.assets[this.options.ssrPagesFilename] = {
+        source: () => navEntriesSource,
+        size: () => navEntriesSource.length
+      };
+    }
+
+    const siteMapGen = new SitemapPlugin('https://shlomiassaf.github.io/ngrid', Object.keys(navMetadata.entryData));
+    const sitemap = siteMapGen.generate();
+    compilation.assets['sitemap.xml'] = {
+      source: () => sitemap,
+      size: () => Buffer.byteLength(sitemap, 'utf8'),
     };
 
     notifier('markdownPages', navEntriesAssetPath);

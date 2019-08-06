@@ -7,7 +7,7 @@ module.exports = {
   mode: 'none',
   entry: {
     // This is our Express server for Dynamic universal
-    server: './server.ts'
+    server: './ssr/server.ts'
   },
   externals: {
     './dist/server/main': 'require("./server/main")'
@@ -25,7 +25,7 @@ module.exports = {
   module: {
     noParse: /polyfills-.*\.js/,
     rules: [
-      { test: /\.ts$/, loader: 'ts-loader', options: { configFile: 'tsconfig.express.server.json' } },
+      { test: /\.ts$/, loader: 'ts-loader', options: { configFile: 'tsconfig.ssr.json' } },
       {
         // Mark files inside `@angular/core` as using SystemJS style dynamic imports.
         // Removing this will cause deprecation warnings to appear.
