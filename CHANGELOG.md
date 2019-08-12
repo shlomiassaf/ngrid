@@ -1,3 +1,18 @@
+# 1.0.0-alpha.27 (2019-08-12)
+
+
+### Bug Fixes
+
+* **docs:** docs indicate using an invalid columns format ([9e7b30f](https://github.com/shlomiassaf/ngrid/commit/9e7b30f)), closes [#31](https://github.com/shlomiassaf/ngrid/issues/31)
+* **docs:** handle entire link-item click ([73b1d36](https://github.com/shlomiassaf/ngrid/commit/73b1d36))
+
+
+### Features
+
+* **ngrid/detail-row:** control detail row updates ([672a590](https://github.com/shlomiassaf/ngrid/commit/672a590)), closes [#33](https://github.com/shlomiassaf/ngrid/issues/33)
+
+
+
 # 1.0.0-alpha.26 (2019-06-27)
 
 
