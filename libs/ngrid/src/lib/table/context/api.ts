@@ -450,12 +450,8 @@ export class ContextApi<T = any> {
       return rowState;
     } else {
       const dataIndex = rowState.dataIndex + offset;
-      const item = this.extApi.table.ds.source[dataIndex];
-      if (item) {
-        const identity = this.extApi.table.identityProp
-          ? item[this.extApi.table.identityProp]
-          : dataIndex
-        ;
+      const identity = this.getRowIdentity(dataIndex);
+      if (identity !== null) {
         let result = this.findRowInCache(identity);
         if (!result && create && dataIndex < this.extApi.table.ds.length) {
           result = PblRowContext.defaultState(identity, dataIndex, this.columnApi.columns.length);
@@ -463,6 +459,16 @@ export class ContextApi<T = any> {
         }
         return result;
       }
+    }
+  }
+
+  getRowIdentity(dataIndex: number, context?: RowContext<any>): string | number | null {
+    const { ds, identityProp } = this.extApi.table;
+    const row = context ? context.$implicit : ds.source[dataIndex];
+    if (!row) {
+      return null;
+    } else {
+      return identityProp ? row[identityProp] : dataIndex;
     }
   }
 
@@ -493,10 +499,7 @@ export class ContextApi<T = any> {
   private findRowContext(viewRef: EmbeddedViewRef<RowContext<T>>, renderRowIndex: number): PblRowContext<T> | undefined {
     const { context } = viewRef;
     const dataIndex = this.extApi.table.ds.renderStart + renderRowIndex;
-    const identity = this.extApi.table.identityProp
-      ? viewRef.context.$implicit[this.extApi.table.identityProp]
-      : dataIndex
-    ;
+    const identity = this.getRowIdentity(dataIndex, viewRef.context);
 
     let rowContext = context.pblRowContext as PblRowContext<T>;
 

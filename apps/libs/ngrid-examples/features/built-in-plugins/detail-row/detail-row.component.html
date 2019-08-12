@@ -1,7 +1,8 @@
 <!-- This should be declared in a top-level component (e.g. app root) -->
 <pbl-ngrid-row *pblNgridDetailRowParentRef="let row; gridInstance as gridInstance" [grid]="gridInstance" [detailRow]="row" matRipple></pbl-ngrid-row>
 
-<pbl-ngrid blockUi [dataSource]="ds" [columns]="columns" detailRow vScrollNone>
+<pbl-ngrid blockUi [dataSource]="ds" [columns]="columns" vScrollNone
+           detailRow (toggleChange)="onToggleChange($event)">
   <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
     <div>
       <h1>Detail Row</h1>
@@ -9,3 +10,7 @@
     </div>
   </div>
 </pbl-ngrid>
+
+<div>
+  Last Toggled Id: {{ lastToggleEvent ? lastToggleEvent.row.id + ' - ' + lastToggleEvent.opened : ''}}
+</div>

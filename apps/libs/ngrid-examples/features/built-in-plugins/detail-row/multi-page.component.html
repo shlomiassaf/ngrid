@@ -1,0 +1,28 @@
+<pbl-ngrid blockUi usePagination [dataSource]="ds" [columns]="columns" vScrollNone style="height: 600px"
+           #detailRow="pblNgridDetailRow" detailRow>
+  <pbl-demo-action-row filter></pbl-demo-action-row>
+
+  <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
+    <div>
+      <h1>Detail Row</h1>
+      <pre>{{row | json}}</pre>
+    </div>
+  </div>
+
+  <!-- Here only for the demo, in real app put this once in a top-level component. -->
+  <div *pblNgridBlockUiDef class="pbl-ngrid-ui-block">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
+                       [table]="table"
+                       [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
+</pbl-ngrid>
+
+<mat-form-field>
+  <mat-select placeholder="whenContextChange" [value]="detailRow?.whenContextChange" (selectionChange)="detailRow.whenContextChange = $event.value">
+    <mat-option value="ignore">Ignore</mat-option>
+    <mat-option value="render">Render</mat-option>
+    <mat-option value="close">Close</mat-option>
+  </mat-select>
+</mat-form-field>
