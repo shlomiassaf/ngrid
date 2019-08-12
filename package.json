@@ -146,6 +146,7 @@
     "scss-bundle": "^2.5.1",
     "semantic-release": "^15.13.12",
     "semantic-release-monorepo": "^6.1.1",
+    "simple-git": "^1.124.0",
     "sitemap-webpack-plugin": "^0.6.0",
     "toposort": "^2.0.2",
     "ts-loader": "^5.3.3",

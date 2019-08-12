@@ -1,5 +1,6 @@
 import * as Path from 'path';
-import { Configuration, DefinePlugin } from 'webpack';
+import { Compiler, Configuration, DefinePlugin } from 'webpack';
+import * as simplegit from 'simple-git/promise';
 
 import { PebulaDynamicModuleWebpackPlugin } from '@pebula-internal/webpack-dynamic-module';
 import { MarkdownPagesWebpackPlugin } from '@pebula-internal/webpack-markdown-pages';
@@ -74,13 +75,42 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
 
   const angular = require('@angular/core/package.json');
   const ngrid = require(Path.join(process.cwd(), `libs/ngrid/package.json`));
-  const definePlugin = new DefinePlugin({
-    ANGULAR_VERSION: JSON.stringify(angular.version),
-    NGRID_VERSION: JSON.stringify(ngrid.version),
-  });
+  const fn = async () => {
+    const format =  {
+      short_hash: '%h',
+      hash: '%H',
+      date: '%ai',
+      message: '%s',
+      refs: '%D',
+      body: '%b',
+      author_name: '%aN',
+      author_email: '%ae'
+    };
+    const gitInfo = await simplegit().log({ n: "1", format});
+    return {
+      ANGULAR_VERSION: JSON.stringify(angular.version),
+      NGRID_VERSION: JSON.stringify(ngrid.version),
+      BUILD_VERSION: JSON.stringify(gitInfo.latest.short_hash),
+    };
+
+  };
+
+  const definePlugin = new AsyncDefinePlugin(fn);
   webpackConfig.plugins.push(definePlugin);
 
   return webpackConfig;
 }
 
 module.exports = updateWebpackConfig;
+
+export class AsyncDefinePlugin {
+  constructor(private asyncDef: () => Promise<any>) { }
+
+  apply(compiler: Compiler) {
+    compiler.hooks.beforeCompile.tapPromise('AsyncDefinePlugin', async () => {
+      const definitions = await this.asyncDef();
+      const definePlugin = new DefinePlugin(definitions);
+      definePlugin.apply(compiler);
+    });
+  }
+}

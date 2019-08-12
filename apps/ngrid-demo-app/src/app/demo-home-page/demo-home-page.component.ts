@@ -4,6 +4,7 @@ import { MarkdownPagesMenuService } from '@pebula/apps/shared';
 
 declare const ANGULAR_VERSION: string;
 declare const NGRID_VERSION: string;
+declare const BUILD_VERSION: string;
 
 @Component({
   selector: 'pbl-demo-home-page',
@@ -13,6 +14,7 @@ declare const NGRID_VERSION: string;
 export class DemoHomePageComponent {
   ngVersion = ANGULAR_VERSION;
   ngridVersion = NGRID_VERSION;
+  buildVersion = BUILD_VERSION;
 
   selectedDemoLink: any;
 
