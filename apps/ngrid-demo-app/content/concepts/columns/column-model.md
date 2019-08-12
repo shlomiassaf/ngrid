@@ -39,6 +39,8 @@ const COLUMN_DEFS = [
 ];
 ```
 
+<sup>This is not the final structure that the table accepts, it's here for demonstration only.</sup>
+
   </div>
 </div>
 
@@ -52,7 +54,28 @@ Let's put a single instance of `Person` into a table:
 export class Person { id: number;    name: string;    email: string; }
 ```
 
-And now a real one:
+The structure of `COLUMN_DEFS` is a simple array containing column items, this is similar to how we define columns **but not the actual way**.  
+There are multiple types of meta rows (header/footer rows) but only data/table meta-rows map to object properties.
+
+We used a simple format to visually emphasize the connection between a model property and a column, the real data structure:
+
+```typescript
+const COLUMN_DEFS = {
+  table: {
+    cols: [
+      { prop: 'id' },
+      { prop: 'name' },
+      { prop: 'email' },
+    ],
+  },
+};
+```
+
+It's similar, however, the column definitions are set in an object with the data/table column defined in `table.cols`.
+
+I> If you're unfamiliar with meta-row or data/table rows read the [quick-through](../quick-through).
+
+And now a live example:
 
 <div pbl-example-view="pbl-columns-simple-model-example" containerClass="table-height-300 mat-elevation-z7"></div>
 
