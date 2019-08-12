@@ -30,7 +30,7 @@
 </ng-template>
 
 <ng-template #linkEntry let-entry>
-  <mat-list-item>
-    <a [routerLink]="getRouterLink(entry.path)" matLine>{{ entry.title }}</a>
+  <mat-list-item (click)="a.click($event)">
+    <a #a [routerLink]="getRouterLink(entry.path)" matLine>{{ entry.title }}</a>
   </mat-list-item>
 </ng-template>
