@@ -35,7 +35,7 @@ export interface PblDetailsRowToggleEvent<T = any> {
 }
 
 @TablePlugin({ id: PLUGIN_KEY })
-@Directive({ selector: 'pbl-ngrid[detailRow]' })
+@Directive({ selector: 'pbl-ngrid[detailRow]', exportAs: 'pblNgridDetailRow' })
 @UnRx()
 export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   /**
@@ -86,7 +86,42 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
    */
   @Input() excludeToggleFrom: string[];
 
+  /**
+   * Set the behavior when the row's context is changed while the detail row is opened (another row is displayed in place of the current row).
+   *
+   * - ignore: don't do anything, leave as is (for manual intervention)
+   * - close: close the detail row
+   * - render: re-render the row with the new context
+   *
+   * The default behavior is `render`
+   *
+   * This scenario will pop-up when using pagination and the user move between pages or change the page size.
+   * It might also happen when the data is updated due to custom refresh calls on the datasource or any other scenario that might invoke a datasource update.
+   *
+   * The `ignore` phase, when used, will not trigger an update, leaving the detail row opened and showing data from the previous row.
+   * The `ignore` is intended for use with `toggledRowContextChange`, which will emit when the row context has changed, this will allow the developer to
+   * toggle the row (mimic `close`) or update the context manually. For example, if toggling open the detail row invokes a "fetch" operation that retrieves data for the detail row
+   * this will allow updates on context change.
+   *
+   * > Note that `toggledRowContextChange` fires regardless of the value set in `whenContextChange`
+   */
+  @Input() whenContextChange: 'ignore' | 'close' | 'render' = 'render';
+
+  /**
+   * Emits whenever a detail row instance is toggled on/off
+   * Emits an event handler with the row, the toggle state and a toggle operation method.
+   */
   @Output() toggleChange = new EventEmitter<PblDetailsRowToggleEvent<T>>();
+  /**
+   * Emits whenever the row context has changed while the row is toggled open.
+   * This scenario is unique and will occur only when a detail row is opened AND the parent row has changed.
+   *
+   * For example, when using pagination and the user navigates to the next/previous set or when the rows per page size is changed.
+   * It might also occur when the data is updated due to custom refresh calls on the datasource or any other scenario that might invoke a datasource update.
+   *
+   * Emits an event handler with the row, the toggle state and a toggle operation method.
+   */
+  @Output() toggledRowContextChange = new EventEmitter<PblDetailsRowToggleEvent<T>>();
 
   private _openedRow?: PblDetailsRowToggleEvent<T>;
   private _forceSingle: boolean;

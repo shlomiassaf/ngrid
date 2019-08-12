@@ -15,7 +15,7 @@ import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 import { UnRx } from '@pebula/utils';
 import { PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN } from '@pebula/ngrid';
 
-import { PblNgridDetailRowPluginDirective, PLUGIN_KEY } from './detail-row-plugin';
+import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY } from './detail-row-plugin';
 
 @Component({
   selector: 'pbl-ngrid-row[detailRow]',
@@ -82,6 +82,25 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     this.plugin.removeDetailRow(this);
   }
 
+  updateRow(): void {
+    const prevIdentity = this.context && this.context.$implicit;
+    super.updateRow();
+    if (this.opened) {
+      const currIdentity = this.context && this.context.$implicit;
+      if (currIdentity !== prevIdentity && currIdentity) {
+        switch (this.plugin.whenContextChange) {
+          case 'render':
+              this.render();
+            break;
+          case 'close':
+            this.toggle(false);
+            break;
+        }
+        this.plugin.toggledRowContextChange.next(this.createEvent());
+      }
+    }
+  }
+
   toggle(forceState?: boolean): void {
     if (this.opened !== forceState) {
       if ( this.opened ) {
@@ -96,9 +115,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
         this._element.classList.add('pbl-row-detail-opened');
       }
 
-      const event = Object.create(this);
-      Object.defineProperty(event, 'row', { value: this.context.$implicit });
-      this.plugin.detailRowToggled(event);
+      this.plugin.detailRowToggled(this.createEvent());
     }
   }
 
@@ -114,6 +131,12 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
         this.toggle();
       }
     }
+  }
+
+  private createEvent(): PblDetailsRowToggleEvent<any> {
+    const event = Object.create(this);
+    Object.defineProperty(event, 'row', { value: this.context.$implicit });
+    return event;
   }
 
   private render(): void {

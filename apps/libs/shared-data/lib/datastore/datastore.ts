@@ -10,7 +10,7 @@ function getFaker(): Promise<typeof Faker> {
 export class DataStore {
 
   private customers: Customer[] = [];
-  private persons: Person[] = [];
+  private people: Person[] = [];
   private sellers: Seller[] = [];
 
   reset(...collections: Array<DATA_TYPES>): void {
@@ -50,15 +50,15 @@ export class DataStore {
   }
 
   getPeopleSync(limit = 500): Person[] {
-    return this.persons.slice(0, limit);
+    return this.people.slice(0, limit);
   }
 
   getPeople(delay = 1000, limit = 500): Promise<Person[]> {
     return this.wait(delay)
       .then( () => getFaker())
       .then( faker => {
-        if (this.persons.length < limit) {
-          for (let i = this.persons.length; i < limit; i++) {
+        if (this.people.length < limit) {
+          for (let i = this.people.length; i < limit; i++) {
             const p: Person = {
               id: i,
               name: faker.name.findName(),
@@ -78,10 +78,10 @@ export class DataStore {
               },
               lastLoginIp: faker.internet.ip()
             }
-            this.persons.push(p);
+            this.people.push(p);
           }
         }
-        return this.persons.slice(0, limit);
+        return this.people.slice(0, limit);
       });
   }
 
