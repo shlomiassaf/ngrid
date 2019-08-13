@@ -23,7 +23,7 @@
     </mat-menu>
     <div style="flex:1 0 auto"></div>
 
-    <app-search-input (onSearch)="doSearch($event)"></app-search-input>
+    <app-search-input style="max-height: 48px;" (onSearch)="doSearch($event)"></app-search-input>
     <app-search-results *ngIf="showSearchResults" [searchResults]="searchResults | async" (resultSelected)="hideSearchResults()"></app-search-results>
 
     <a mat-button href="https://github.com/shlomiassaf/ngrid" target="_blank">
