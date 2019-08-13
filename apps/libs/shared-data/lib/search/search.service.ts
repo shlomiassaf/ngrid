@@ -78,18 +78,35 @@ class WindowSearchAdapter {
   dispose(): void { }
 }
 
+class WindowNoopSearchAdapter {
+
+  loadIndex(): Observable<boolean> {
+    return of(true);
+  };
+
+  queryIndex(query: string): Observable<SearchResults> {
+    return of({ query, results: [] });
+  }
+
+  dispose(): void { }
+}
+
 @Injectable({ providedIn: 'root' })
 export class SearchService {
   ready: Observable<boolean>;
 
+  readonly hasWorker: boolean;
+
   private searchesSubject = new ReplaySubject<string>(1);
-  private adapter: WorkerSearchAdapter | WindowSearchAdapter;
+  private adapter: WorkerSearchAdapter | WindowSearchAdapter | WindowNoopSearchAdapter;
 
   constructor(ngZone: NgZone) {
-    if (typeof Worker !== 'undefined') {
+    this.hasWorker = typeof Worker !== 'undefined';
+
+    if (this.hasWorker) {
       this.adapter = new WorkerSearchAdapter(ngZone);
     } else {
-      this.adapter = new WindowSearchAdapter();
+      this.adapter = new WindowNoopSearchAdapter(); // new WindowSearchAdapter();
     }
   }
 
