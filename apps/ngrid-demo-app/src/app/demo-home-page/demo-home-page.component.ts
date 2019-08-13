@@ -30,11 +30,9 @@ export class DemoHomePageComponent {
   constructor(private mdMenu: MarkdownPagesMenuService,
               private searchService: SearchService,
               private locationService: LocationService) {
-    if ('Worker' in window) {
-      // Delay initialization by up to 2 seconds
-      this.searchService.loadIndex(2000)
-        .subscribe( event => console.log('Search index loaded'))
-    }
+    // Delay initialization by up to 2 seconds
+    this.searchService.loadIndex(this.searchService.hasWorker ? 2000 : 0)
+      .subscribe( event => console.log('Search index loaded'))
   }
 
   ngOnInit() {
