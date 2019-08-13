@@ -66,6 +66,7 @@
     "express": "^4.15.2",
     "faker": "^4.1.0",
     "hammerjs": "^2.0.8",
+    "lunr": "^2.3.6",
     "ng-packagr": "^5.1.0",
     "ngx-build-plus": "8.0.3",
     "primer-markdown": "^3.7.13",

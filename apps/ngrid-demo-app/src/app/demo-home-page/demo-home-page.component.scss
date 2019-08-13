@@ -25,8 +25,18 @@ $nav-top-bottom-padding: 8px;
   }
 }
 
+
+app-search-input {
+  z-index: 100;
+}
+
+app-search-results {
+  z-index: 99;
+}
+
 .main-view {
   position: relative;
+  z-index: 1;
   height: 100%;
   width: 100%;
   box-sizing: border-box;

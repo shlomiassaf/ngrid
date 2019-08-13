@@ -18,7 +18,7 @@ The table comes with native support for **logical** pagination in 3 flavors:
 ## Logical Pagination
 
 Logical pagination means that the table does not include any concrete UI implementation, this is provided by plugins.
-In the following examples we use the `@pebula/ngrid/mat-paginator" which is a  paginator based on the Material Design spec.
+In the following examples we use the `@pebula/ngrid/mat-paginator` which is a  paginator based on the Material Design spec.
 
 In fact, pagination itself is a native datasource feature and the table does not handle any logic, only the datasource.
 

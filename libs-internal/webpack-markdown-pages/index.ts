@@ -3,4 +3,4 @@ export {
   MarkdownPagesWebpackPlugin,
 } from './plugin';
 
-export { PageNavigationMetadata, PageFileAsset, PageAssetNavEntry } from './models';
+export { PageNavigationMetadata, PageFileAsset, PageAssetNavEntry, ParsedPage } from './models';
