@@ -30,6 +30,8 @@ import {
   ExampleAssetFileViewComponent,
   NgCustomLogoComponent,
   DemoActionRowComponent,
+  AppSearchInput,
+  AppSearchResults,
  } from './components';
 
 import { NgEventsDirective } from './directives/ng-hooks';
@@ -49,6 +51,8 @@ const DECLARATION_EXPORT = [
   NgCustomLogoComponent,
   NgEventsDirective,
   DemoActionRowComponent,
+  AppSearchInput,
+  AppSearchResults,
   ContentChunkViewGhostDirective, ExampleViewGhostDirective,
 ]
 

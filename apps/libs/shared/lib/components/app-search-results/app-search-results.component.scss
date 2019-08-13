@@ -1,0 +1,46 @@
+.search-results {
+  overflow: auto;
+  padding: 68px 32px 0;
+  width: auto;
+  max-height: 95vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #444;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.3);
+  box-sizing: border-box;
+
+  .visually-hidden {
+    position: absolute!important;
+    top: -9999px!important;
+    left: -9999px!important;
+  }
+
+  .search-area {
+    margin: 16px;
+    height: 100%;
+  }
+
+  .search-area .search-section-header {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin: 10px 0 5px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .search-area ul .search-result-item {
+    font-size: 1.4rem;
+    color: #dbdbdb;
+    font-weight: 400;
+  }
+
+ .search-area ul.priority-pages .search-result-item {
+    font-weight: 700;
+  }
+
+  .not-found {
+    color: #fff;
+  }
+}

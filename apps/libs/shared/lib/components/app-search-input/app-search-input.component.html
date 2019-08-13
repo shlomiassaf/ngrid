@@ -1,0 +1,9 @@
+<mat-form-field #formField>
+  <input #input matInput type="search" aria-label="search" placeholder="Search"
+         [value]="query"
+         (input)="doSearch(input.value)"
+         (keyup)="doSearch(input.value)"
+         (click)="doSearch(input.value)"/>
+  <mat-icon *ngIf="!query" matSuffix>search</mat-icon>
+  <mat-icon *ngIf="query" class="clear-search" matSuffix (click)="clear()">close</mat-icon>
+</mat-form-field>

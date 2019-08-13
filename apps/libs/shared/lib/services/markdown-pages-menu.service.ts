@@ -6,7 +6,15 @@ import { MarkdownPagesService } from './markdown-pages.service';
 @Injectable({ providedIn: 'root' })
 export class MarkdownPagesMenuService {
 
-  get ready(): Promise<MarkdownPagesMenuService> { return this.mdPages.ready.then( () => { return this; }); }
+  get ready(): Promise<MarkdownPagesMenuService> {
+    return this.mdPages.ready.then( () => {
+      const rootKeys = Object.keys(this.mdPages.markdownPages.entries);
+      for (const key of rootKeys) {
+        this.getMenuSync(key);
+      }
+      return this;
+     });
+  }
 
   private _cache = new Map<string, NavEntry>();
   private _ofTypeCache = new Map<PageAssetNavEntry['type'], PageAssetNavEntry[]>();
@@ -18,7 +26,7 @@ export class MarkdownPagesMenuService {
       return Promise.resolve(this._ofTypeCache.get(type));
     }
 
-    return this.mdPages.ready
+    return this.ready
       .then( () => {
         const result: PageAssetNavEntry[] = [];
         for (const key of Object.keys(this.mdPages.markdownPages.entries)) {
@@ -46,26 +54,46 @@ export class MarkdownPagesMenuService {
 
   getMenu(entry: string): Promise<NavEntry> {
     return this.mdPages.ready
-      .then( () => {
-        if (this._cache.has(entry)) {
-          return this._cache.get(entry);
-        }
+      .then( () => this.getMenuSync(entry) );
+  }
 
-        const pageEntry = this.mdPages.markdownPages.entries[entry];
-        if (!pageEntry) {
-          throw new Error(`No entry found for markdown menu ${entry}`);
-        }
+  getMenuSync(entry: string, throwOnMissing = true): NavEntry | undefined {
+    if (!this.mdPages.markdownPages) {
+      throw new Error('Service is not ready.');
+    }
 
-        const localPageEntry = processPageAssetNavEntry(pageEntry, this.mdPages.markdownPages);
-        this._cache.set(entry, localPageEntry);
+    if (this._cache.has(entry)) {
+      return this._cache.get(entry);
+    }
 
-        return localPageEntry;
-      });
+    const pageEntry = this.mdPages.markdownPages.entries[entry];
+    if (!pageEntry) {
+      if (throwOnMissing) {
+        throw new Error(`No entry found for markdown menu ${entry}`);
+      } else {
+        return;
+      }
+    }
+
+    const localPageEntry = processPageAssetNavEntry(pageEntry, this.mdPages.markdownPages);
+    this.cacheEntry(localPageEntry);
+
+    return localPageEntry;
+  }
+
+  private cacheEntry(entry: NavEntry): void {
+    this._cache.set(entry.path, entry);
+    if (entry.children) {
+      for (const child of entry.children) {
+        this.cacheEntry(child);
+      }
+    }
   }
 }
 
 
 export interface NavEntry {
+  entry: PageAssetNavEntry;
   title: string;
   path: string;
   tooltip?: string;
@@ -81,6 +109,7 @@ function processPageAssetNavEntry(entry: PageAssetNavEntry, meta: PageNavigation
     tooltip: entry.tooltip,
     dataPath: meta.entryData[entry.path],
     parent,
+    entry,
   }
 
   if (entry.children) {

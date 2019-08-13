@@ -27,7 +27,7 @@ class WorkerStoreAdapter {
   private messageEventListener = (event: IncomingServerMessageEvent) => this.onMessage(event);
 
   constructor() {
-    const worker = this.worker = new Worker('./datasource.worker', { type: 'module' });
+    const worker = this.worker = new Worker('./datasource.worker', { name: 'dataSourceWorker', type: 'module' });
     this.ready = eventWaitUntil(worker, 'message', msg => msg === 'ready')
       .then( () => this.worker.addEventListener('message', this.messageEventListener ) );
   }

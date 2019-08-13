@@ -4,7 +4,10 @@ import * as simplegit from 'simple-git/promise';
 
 import { PebulaDynamicModuleWebpackPlugin } from '@pebula-internal/webpack-dynamic-module';
 import { MarkdownPagesWebpackPlugin } from '@pebula-internal/webpack-markdown-pages';
+import { SsrAndSeoWebpackPlugin } from '@pebula-internal/webpack-ssr-and-seo';
+import { MarkdownAppSearchWebpackPlugin } from '@pebula-internal/webpack-markdown-app-search';
 import { MarkdownCodeExamplesWebpackPlugin } from '@pebula-internal/webpack-markdown-code-examples';
+
 import * as remarkPlugins from './build/remark';
 
 // ** CONFIG VALUES **
@@ -58,9 +61,9 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
 
   const dynamicModule = new PebulaDynamicModuleWebpackPlugin(Path.join(process.cwd(), 'markdown-pages.js'));
   webpackConfig.plugins.push(dynamicModule);
+
   webpackConfig.plugins.push(new MarkdownPagesWebpackPlugin({
     docsPath: 'content/**/*.md',
-    ssrPagesFilename: 'ssr-pages.json',
     remarkPlugins: [
       remarkSlug,
       remarkAutolinkHeadings,
@@ -69,6 +72,16 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
       [remarkPlugins.customBlockquotes, customBlockquotesOptions],
     ],
   }));
+
+  webpackConfig.plugins.push(new SsrAndSeoWebpackPlugin({
+    ssrPagesFilename: 'ssr-pages.json',
+    sitemap: {
+      basePath: 'https://shlomiassaf.github.io/ngrid',
+    },
+  }));
+
+  webpackConfig.plugins.push(new MarkdownAppSearchWebpackPlugin({ }));
+
   webpackConfig.plugins.push(new MarkdownCodeExamplesWebpackPlugin({
     docsPath: '../libs/ngrid-examples/**/*.ts',
   }));

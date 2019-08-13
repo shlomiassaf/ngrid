@@ -2,14 +2,26 @@ import * as Path from 'path';
 import * as FS from 'fs';
 import * as globby from 'globby';
 import * as matter from 'gray-matter';
+import { SyncHook } from 'tapable';
 import * as webpack from 'webpack';
+import * as unified from 'unified';
+import * as markdown from 'remark-parse';
+import * as remarkHtml from 'remark-html';
 
 const { util: { createHash } } = webpack as any;
 
-import SitemapPlugin from 'sitemap-webpack-plugin';
 import { DynamicModuleUpdater } from '@pebula-internal/webpack-dynamic-module';
 import { ParsedPage, PageNavigationMetadata, PageAttributes } from './models';
 import { createPageFileAsset, sortPageAssetNavEntry } from './utils';
+
+declare module 'webpack' {
+  export namespace compilation {
+    export interface CompilerHooks {
+      markdownPageNavigationMetadataReady: SyncHook<{ navMetadata: PageNavigationMetadata, compilation: webpack.compilation.Compilation }>;
+      markdownPageParsed: SyncHook<{ parsedPage: ParsedPage, compilation: webpack.compilation.Compilation }>;
+    }
+  }
+}
 
 declare module '@pebula-internal/webpack-dynamic-module/plugin' {
   interface DynamicExportedObject {
@@ -22,8 +34,6 @@ const pluginName = 'markdown-pages-webpack-plugin';
 export interface MarkdownPagesWebpackPluginOptions {
   docsPath: string | string[];
   remarkPlugins: any[];
-  /** When set will save output `PageNavigationMetadata` to this file */
-  ssrPagesFilename?: string;
 }
 
 export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
@@ -37,20 +47,16 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
   private compiler: webpack.Compiler;
   private get remarkCompiler() {
     if (!this.__remarkCompiler) {
-      const unified = require('unified');
-      const markdown = require('remark-parse');
-      const html = require('remark-html');
-
       this.__remarkCompiler =  unified()
         .use(markdown, { gfm: true })
         .use(this.options.remarkPlugins)
-        .use(html)
+        .use(remarkHtml)
         .freeze();
     }
 
     return this.__remarkCompiler;
   }
-  private __remarkCompiler: any;
+  private __remarkCompiler: unified.Processor;
 
   constructor(options: MarkdownPagesWebpackPluginOptions) {
     this.options = { ...options };
@@ -70,6 +76,9 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
       });
 
     });
+
+    compiler.hooks.markdownPageNavigationMetadataReady = new SyncHook(['markdownPageNavigationMetadataReady']);
+    compiler.hooks.markdownPageParsed = new SyncHook(['markdownPageParsed']);
   }
 
   private emit(compilation: webpack.compilation.Compilation, notifier: DynamicModuleUpdater) {
@@ -112,7 +121,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
         outputAssetPath,
       };
 
-      const copyKeys: Array<keyof PageAttributes> = ['type', 'subType', 'tooltip'];
+      const copyKeys: Array<keyof PageAttributes> = ['type', 'subType', 'tooltip', 'searchGroup'];
       copyKeys.forEach( key => {
         if (obj.attr[key]) {
           obj.postRenderMetadata.navEntry[key] = obj.attr[key];
@@ -124,6 +133,9 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
       }
       if (obj.attr.ordinal >= 0) {
         obj.postRenderMetadata.navEntry.ordinal = obj.attr.ordinal;
+      }
+      if (!obj.attr.empty) {
+        this.compiler.hooks.markdownPageParsed.call({ parsedPage: obj, compilation })
       }
     }
 
@@ -193,19 +205,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
       size: () => navEntriesSource.length
     };
 
-    if (this.options.ssrPagesFilename) {
-      compilation.assets[this.options.ssrPagesFilename] = {
-        source: () => navEntriesSource,
-        size: () => navEntriesSource.length
-      };
-    }
-
-    const siteMapGen = new SitemapPlugin('https://shlomiassaf.github.io/ngrid', Object.keys(navMetadata.entryData));
-    const sitemap = siteMapGen.generate();
-    compilation.assets['sitemap.xml'] = {
-      source: () => sitemap,
-      size: () => Buffer.byteLength(sitemap, 'utf8'),
-    };
+    this.compiler.hooks.markdownPageNavigationMetadataReady.call({ navMetadata, compilation });
 
     notifier('markdownPages', navEntriesAssetPath);
 
@@ -228,7 +228,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
     const fullPath = Path.join(this.compiler.options.context, file);
     const source = FS.readFileSync(fullPath, { encoding: 'utf-8' });
     const parsedAttr = matter(source);
-    const contents = this.remarkCompiler().processSync(parsedAttr.content).contents;
+    const contents = this.remarkCompiler().processSync(parsedAttr.content).contents as string;
 
     const parsedPage = {
       file,

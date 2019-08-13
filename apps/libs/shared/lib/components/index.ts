@@ -5,3 +5,5 @@ export { ContentChunkViewComponent, LiveContentChunk } from './content-chunk-vie
 export { ExampleAssetFileViewComponent } from './example-asset-file-view/example-asset-file-view.component';
 export { NgCustomLogoComponent } from './ng-custom-logo/ng-custom-logo.component';
 export { DemoActionRowComponent } from './demo-action-row/demo-action-row.component';
+export { AppSearchInput } from './app-search-input/app-search-input.component';
+export { AppSearchResults } from './app-search-results/app-search-results.component';

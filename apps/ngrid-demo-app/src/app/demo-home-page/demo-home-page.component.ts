@@ -1,6 +1,8 @@
+import { Observable } from 'rxjs';
 import { Component } from '@angular/core';
 import { RouterLinkWithHref, RouterLink } from '@angular/router';
-import { MarkdownPagesMenuService } from '@pebula/apps/shared';
+import { MarkdownPagesMenuService, LocationService } from '@pebula/apps/shared';
+import { SearchService, SearchResults } from '@pebula/apps/shared-data';
 
 declare const ANGULAR_VERSION: string;
 declare const NGRID_VERSION: string;
@@ -16,13 +18,24 @@ export class DemoHomePageComponent {
   ngridVersion = NGRID_VERSION;
   buildVersion = BUILD_VERSION;
 
+  showSearchResults: boolean;
+  searchResults: Observable<SearchResults>;
+
   selectedDemoLink: any;
 
   topMenuItems: ReturnType<MarkdownPagesMenuService['ofType']>;
   demoLinks: Promise<Array<{ cmd: any[], text: string }>>;
   private _demoLinks: Array<{ cmd: any[], text: string }>;
 
-  constructor(private mdMenu: MarkdownPagesMenuService) { }
+  constructor(private mdMenu: MarkdownPagesMenuService,
+              private searchService: SearchService,
+              private locationService: LocationService) {
+    if ('Worker' in window) {
+      // Delay initialization by up to 2 seconds
+      this.searchService.loadIndex(2000)
+        .subscribe( event => console.log('Search index loaded'))
+    }
+  }
 
   ngOnInit() {
     this.topMenuItems = this.mdMenu.ofType('topMenuSection');
@@ -48,6 +61,19 @@ export class DemoHomePageComponent {
         return;
       }
       this.selectedDemoLink = this._demoLinks.find( dl => !!event.findRouterLink(dl.cmd) );
+    }
+  }
+
+  doSearch(query: string) {
+    this.searchResults = this.searchService.queryIndex(query);
+    this.showSearchResults = !!query;
+  }
+
+  hideSearchResults() {
+    this.showSearchResults = false;
+    const oldSearch = this.locationService.search();
+    if (oldSearch.search !== undefined) {
+      this.locationService.setSearch('', { ...oldSearch, search: undefined });
     }
   }
 }

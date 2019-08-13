@@ -1,3 +1,5 @@
+export type PageSearchGroup = 'content' | 'plugin';
+
 export interface PageAttributes {
   title: string;
   path: string;
@@ -8,6 +10,7 @@ export interface PageAttributes {
   type?: 'topMenuSection' | 'index' | 'singlePage';
   subType?: string;
   tags?: string;
+  searchGroup?: PageSearchGroup;
 }
 
 export interface ParsedPage {
@@ -38,6 +41,7 @@ export interface PageAssetNavEntry {
   tooltip?: string;
   ordinal?: number;
   children?: PageAssetNavEntry[];
+  searchGroup?: PageSearchGroup;
 }
 
 export interface PageNavigationMetadata {
