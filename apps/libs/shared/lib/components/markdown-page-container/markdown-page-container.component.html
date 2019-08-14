@@ -6,19 +6,29 @@
       </ng-container>
     </mat-nav-list>
   </div>
-  <div fxFlex="*" class="example-container" pblContentTocArea #tocArea="pblContentTocArea"
-       [scrollContainer]="el"
-       staticHtmlMode
-       selector="h1[id], h2[id], h3[id], h4[id]">
-    <pbl-markdown-page-viewer [documentUrl]="documentUrl" (contentRendered)="contentRendered()"></pbl-markdown-page-viewer>
-  </div>
-  <div *ngIf="tocArea.hasLinks | async" fxFlex="0 0 18%" class="example-sticky-container example-toc-container">
-    <pbl-content-toc class="pbl-demo-app-style" [tocArea]="tocArea">
-      <a *pblContentTocLinkTemplate="let ctx;"
-         [routerLink]="[ctx.rootUrl]"
-         queryParamsHandling="preserve"
-         [fragment]="ctx.link.id">{{ ctx.link.name }}</a>
-    </pbl-content-toc>
+  <div fxFlex="*" class="example-container">
+    <div style="min-height: 100%">
+      <div fxFlex="*" class="example-container" pblContentTocArea #tocArea="pblContentTocArea"
+          [scrollContainer]="el"
+          staticHtmlMode
+          selector="h1[id], h2[id], h3[id], h4[id]">
+        <pbl-markdown-page-viewer [documentUrl]="documentUrl" (contentRendered)="contentRendered()"></pbl-markdown-page-viewer>
+      </div>
+      <div *ngIf="tocArea.hasLinks | async" fxFlex="0 0 18%" class="example-sticky-container example-toc-container">
+        <pbl-content-toc class="pbl-demo-app-style" [tocArea]="tocArea">
+          <a *pblContentTocLinkTemplate="let ctx;"
+            [routerLink]="[ctx.rootUrl]"
+            queryParamsHandling="preserve"
+            [fragment]="ctx.link.id">{{ ctx.link.name }}</a>
+        </pbl-content-toc>
+      </div>
+    </div>
+    <footer class="pbl-bg-color-primary">
+      <div>
+        <p class="pbl-color-primary-contrast">Shlomi Assaf © 2019. Code licensed under an MIT-style License. Documentation licensed under CC BY 4.0.</p>
+        <p class="pbl-color-primary-contrast">Version {{ ngridVersion }} using angular {{ ngVersion }} (hash: {{buildVersion}})</p>
+      </div>
+    </footer>
   </div>
 </div>
 

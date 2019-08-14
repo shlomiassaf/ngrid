@@ -8,6 +8,10 @@ import { TocAreaDirective } from '../../toc.module';
 
 import { MarkdownPagesMenuService } from '../../services/markdown-pages-menu.service';
 
+declare const ANGULAR_VERSION: string;
+declare const NGRID_VERSION: string;
+declare const BUILD_VERSION: string;
+
 @Component({
   selector: 'pbl-markdown-page-container',
   templateUrl: './markdown-page-container.component.html',
@@ -21,6 +25,10 @@ export class MarkdownPageContainerComponent implements OnDestroy {
   @ViewChild('tocArea', { static: true, read: TocAreaDirective}) tocArea: TocAreaDirective;
 
   menu$ = new Subject<any>();
+
+  ngVersion = ANGULAR_VERSION;
+  ngridVersion = NGRID_VERSION;
+  buildVersion = BUILD_VERSION;
 
   constructor(private mdPagesMenu: MarkdownPagesMenuService, private route: ActivatedRoute) { }
 

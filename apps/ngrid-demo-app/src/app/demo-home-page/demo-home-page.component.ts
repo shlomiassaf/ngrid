@@ -4,19 +4,12 @@ import { RouterLinkWithHref, RouterLink } from '@angular/router';
 import { MarkdownPagesMenuService, LocationService } from '@pebula/apps/shared';
 import { SearchService, SearchResults } from '@pebula/apps/shared-data';
 
-declare const ANGULAR_VERSION: string;
-declare const NGRID_VERSION: string;
-declare const BUILD_VERSION: string;
-
 @Component({
   selector: 'pbl-demo-home-page',
   templateUrl: './demo-home-page.component.html',
   styleUrls: ['./demo-home-page.component.scss']
 })
 export class DemoHomePageComponent {
-  ngVersion = ANGULAR_VERSION;
-  ngridVersion = NGRID_VERSION;
-  buildVersion = BUILD_VERSION;
 
   showSearchResults: boolean;
   searchResults: Observable<SearchResults>;

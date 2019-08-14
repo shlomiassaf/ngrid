@@ -71,6 +71,23 @@ $pbl-shell-accent:  mat-palette($mat-light-green);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
+  $schemes-colors: (
+    primary:  mat-color($primary, default),
+    accent:  mat-color($accent, default),
+    warn:  mat-color($warn, default),
+    primary-contrast:  mat-color($primary, default-contrast),
+    accent-contrast:  mat-color($accent, default-contrast),
+    warn-contrast:  mat-color($warn, default-contrast),
+    header:  mat-color($foreground, text-header),
+    success:  mat-color($foreground, text-success),
+    error:  mat-color($foreground, text-error),
+    disabled:  mat-color($foreground, disabled)
+  );
+
+  @each $key, $color in $schemes-colors {
+    .pbl-color-#{$key} { color: $color !important; }
+    .pbl-bg-color-#{$key} { background-color: $color !important; }
+  }
 
   .mat-display-4, #{$typography-selector} .mat-display-4,
   .mat-display-3, #{$typography-selector} .mat-display-3,

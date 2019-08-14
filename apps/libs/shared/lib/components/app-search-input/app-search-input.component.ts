@@ -8,7 +8,6 @@ import { LocationService } from '../../services/location.service';
   templateUrl: './app-search-input.component.html',
   styleUrls: [ './app-search-input.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
 })
 export class AppSearchInput {
   query: string = '';
