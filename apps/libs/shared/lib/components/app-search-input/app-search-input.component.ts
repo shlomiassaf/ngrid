@@ -34,6 +34,7 @@ export class AppSearchInput {
 
   onFocus(): void {
     if (this.query) {
+      this.searchSubject.next('');
       this.searchSubject.next(this.query);
     }
   }

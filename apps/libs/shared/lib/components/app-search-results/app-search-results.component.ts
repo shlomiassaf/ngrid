@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { trigger, state, transition, style, animate } from '@angular/animations';
 import { SearchResults, SearchResult, SearchArea } from '@pebula/apps/shared-data';
 import { MarkdownPagesMenuService } from '../../services/markdown-pages-menu.service';
 
@@ -6,6 +7,18 @@ import { MarkdownPagesMenuService } from '../../services/markdown-pages-menu.ser
   selector: 'app-search-results',
   templateUrl: './app-search-results.component.html',
   styleUrls: [ './app-search-results.component.scss' ],
+  animations: [
+    trigger('enterLeave', [
+      transition(':enter', [
+        style({height: '0', overflow: 'hidden'}),
+        animate(250, style({height: '*'}))
+      ]),
+      transition(':leave', [
+        style({height: '*'}),
+        animate(250, style({height: 0}))
+      ])
+    ])
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
