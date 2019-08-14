@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, Output, ViewEncapsulation, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Output, ViewChild, ElementRef } from '@angular/core';
 import { LocationService } from '../../services/location.service';
 
 @Component({
@@ -19,7 +19,6 @@ export class AppSearchInput {
   @ViewChild('formField', { static: true, read: ElementRef }) formField: ElementRef;
 
   @Output() onSearch = this.searchSubject.pipe(distinctUntilChanged(), debounceTime(this.searchDebounce));
-  @Output() onFocus = new EventEmitter<string>();
 
   constructor(private locationService: LocationService) { }
 
@@ -30,6 +29,12 @@ export class AppSearchInput {
     const query = this.locationService.search()['search'];
     if (query) {
       this.doSearch(query);
+    }
+  }
+
+  onFocus(): void {
+    if (this.query) {
+      this.searchSubject.next(this.query);
     }
   }
 

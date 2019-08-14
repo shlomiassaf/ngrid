@@ -1,6 +1,7 @@
 <mat-form-field #formField floatLabel="always">
   <input #input matInput type="search" aria-label="search" placeholder="Search" class="pbl-color-primary"
          [value]="query"
+         (focus)="onFocus()"
          (input)="doSearch(input.value)"
          (keyup)="doSearch(input.value)"
          (click)="doSearch(input.value)"/>
