@@ -2,7 +2,6 @@ import { PblNgridComponent } from '@pebula/ngrid';
 import { PickPNP } from '../../utils';
 import { createStateChunkHandler } from '../../handling';
 import { stateVisor } from '../../state-visor';
-import { WritableKeys } from '../../../../../../src/lib/table/utils/type-helpers';
 
 export interface PblNgridSurfaceState extends
   PickPNP <
