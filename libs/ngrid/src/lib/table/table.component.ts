@@ -285,7 +285,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this.noFiller = tableConfig.noFiller;
 
     this.initExtApi();
-    this.columnApi = new ColumnApi<T>(this, this._store, this._extApi);
+    this.columnApi = ColumnApi.create<T>(this, this._store, this._extApi);
     this.initPlugins(injector, elRef, vcRef);
   }
 
@@ -816,7 +816,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       ],
       parent: injector,
     });
-    this._plugin = new PblNgridPluginContext(this, pluginInjector, this._extApi);
+    this._plugin = PblNgridPluginContext.create(this, pluginInjector, this._extApi);
     bindToDataSource(this._plugin);
   }
 

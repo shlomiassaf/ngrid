@@ -1,4 +1,4 @@
-import { PblColumnTypeDefinition } from '@pebula/ngrid';
+import { PblColumnTypeDefinition, PblColumn, PblColumnDefinition, PblMetaRowDefinitions } from '@pebula/ngrid';
 import { createStateChunkHandler } from '../../handling';
 
 export function registerColumnDefChildHandlers() {
@@ -63,7 +63,10 @@ export function registerColumnDefChildHandlers() {
             }
             break;
         }
-        ctx.source[key] = stateValue;
+
+        // We must assert the type starting from 3.5 onwards
+        // See "Fixes to unsound writes to indexed access types" in https://devblogs.microsoft.com/typescript/announcing-typescript-3-5
+        ctx.source[key as keyof (PblColumn | PblColumnDefinition)] = stateValue;
       }
 
     })
@@ -79,8 +82,13 @@ export function registerColumnDefChildHandlers() {
         return active[key];
       }
     })
-    .deserialize( (key, stateValue, ctx) => ctx.source[key] = stateValue )
+    .deserialize( (key, stateValue, ctx) => {
+      // We must assert the type starting from 3.5 onwards
+      // See "Fixes to unsound writes to indexed access types" in https://devblogs.microsoft.com/typescript/announcing-typescript-3-5
+      ctx.source[key] = stateValue as any;
+    })
     .register();
+
 
   /* ====================================================================================================================================================== */
 

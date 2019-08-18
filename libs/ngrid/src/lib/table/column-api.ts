@@ -38,12 +38,30 @@ export interface AutoSizeToFitOptions {
 
 export class ColumnApi<T> {
 
+  // workaround, we need a parameter-less constructor since @ngtools/webpack@8.0.4
+  // Non @Injectable classes are now getting addded with hard reference to the ctor params which at the class creation point are undefined
+  // forwardRef() will not help since it's not inject by angular, we instantiate the class..
+  // probably due to https://github.com/angular/angular-cli/commit/639198499973e0f437f059b3c933c72c733d93d8
+  static create<T>(table: PblNgridComponent<T>, store: PblColumnStore, extApi: PblNgridExtensionApi): ColumnApi<T> {
+    const instance = new ColumnApi<T>();
+
+    instance.table = table;
+    instance.store = store;
+    instance.extApi = extApi;
+
+    return instance;
+  }
+
   get groupByColumns(): PblColumn[] { return this.store.groupBy; }
   get visibleColumnIds(): string[] { return this.store.columnIds; }
   get visibleColumns(): PblColumn[] { return this.store.columns; }
   get columns(): PblColumn[] { return this.store.allColumns; }
 
-  constructor(private table: PblNgridComponent<T>, private store: PblColumnStore, private extApi: PblNgridExtensionApi) { }
+  private table: PblNgridComponent<T>;
+  private store: PblColumnStore;
+  private extApi: PblNgridExtensionApi;
+
+  private constructor() { }
 
   /**
    * Returns the `PblColumn` at the specified index from the list of rendered columns (i.e. not hidden).

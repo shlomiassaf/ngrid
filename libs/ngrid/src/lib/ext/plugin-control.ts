@@ -15,18 +15,36 @@ const TABLE_PLUGIN_CONTEXT = new WeakMap<PblNgridComponent<any>, PblNgridPluginC
 
 /** @internal */
 export class PblNgridPluginContext<T = any> {
-  readonly controller: PblNgridPluginController<T>;
-  readonly events: Observable<PblNgridEvents>;
-  private _events = new Subject<PblNgridEvents>();
 
-  constructor(public table: PblNgridComponent<any>, public injector: Injector, public extApi: PblNgridExtensionApi) {
+  // workaround, we need a parameter-less constructor since @ngtools/webpack@8.0.4
+  // Non @Injectable classes are now getting addded with hard reference to the ctor params which at the class creation point are undefined
+  // forwardRef() will not help since it's not inject by angular, we instantiate the class..
+  // probably due to https://github.com/angular/angular-cli/commit/639198499973e0f437f059b3c933c72c733d93d8
+  static create<T = any>(table: PblNgridComponent<any>, injector: Injector, extApi: PblNgridExtensionApi): PblNgridPluginContext<T> {
     if (TABLE_PLUGIN_CONTEXT.has(table)) {
       throw new Error(`Table is already registered for extensions.`);
     }
 
-    TABLE_PLUGIN_CONTEXT.set(table, this);
+    const instance = new PblNgridPluginContext<T>();
+    TABLE_PLUGIN_CONTEXT.set(table, instance);
+
+    instance.table = table;
+    instance.injector = injector;
+    instance.extApi = extApi;
+    instance.controller = new PblNgridPluginController(instance);
+
+    return instance;
+  }
+
+  table: PblNgridComponent<any>;
+  injector: Injector;
+  extApi: PblNgridExtensionApi;
+  controller: PblNgridPluginController<T>;
+  readonly events: Observable<PblNgridEvents>;
+  private _events = new Subject<PblNgridEvents>();
+
+  private constructor() {
     this.events = this._events.asObservable();
-    this.controller = new PblNgridPluginController(this);
   }
 
   emitEvent(event: PblNgridEvents): void {

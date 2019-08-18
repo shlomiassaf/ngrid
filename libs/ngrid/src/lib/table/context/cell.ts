@@ -6,8 +6,23 @@ import { PblMetaColumn } from '../columns/meta-column';
 import { PblRowContext } from './row';
 
 export class MetaCellContext<T = any, TCol extends PblMetaColumn | PblColumn = PblMetaColumn> implements PblNgridMetaCellContext<T, TCol> {
+  col: TCol;
+  table: PblNgridComponent<any>;
   get $implicit(): MetaCellContext<T, TCol> { return this; }
-  constructor(public col: TCol, public table: PblNgridComponent<any>) {}
+
+  protected constructor() {}
+
+  // workaround, we need a parameter-less constructor since @ngtools/webpack@8.0.4
+  // Non @Injectable classes are now getting addded with hard reference to the ctor params which at the class creation point are undefined
+  // forwardRef() will not help since it's not inject by angular, we instantiate the class..
+  // probably due to https://github.com/angular/angular-cli/commit/639198499973e0f437f059b3c933c72c733d93d8
+  static create<T = any, TCol extends PblMetaColumn | PblColumn = PblMetaColumn>(col: TCol, table: PblNgridComponent<T>): MetaCellContext<T, TCol> {
+    const instance = new MetaCellContext<T, TCol>();
+    instance.col = col;
+    instance.table = table;
+    return instance;
+  }
+
 }
 
 export class PblCellContext<T = any> implements PblNgridCellContext<T> {
@@ -28,9 +43,29 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
   private _focused = false;
   private _selected = false;
 
-  constructor(private _rowContext: PblRowContext<T>, public col: PblColumn, private extApi: PblNgridExtensionApi<T>) {
-    this.table = extApi.table;
-    this.index = this.table.columnApi.indexOf(col);
+  private _rowContext: PblRowContext<T>;
+  public col: PblColumn;
+  private extApi: PblNgridExtensionApi<T>;
+
+  protected constructor() { }
+
+  // workaround, we need a parameter-less constructor since @ngtools/webpack@8.0.4
+  // Non @Injectable classes are now getting addded with hard reference to the ctor params which at the class creation point are undefined
+  // forwardRef() will not help since it's not inject by angular, we instantiate the class..
+  // probably due to https://github.com/angular/angular-cli/commit/639198499973e0f437f059b3c933c72c733d93d8
+  static create<T = any>(rowContext: PblRowContext<T>, col: PblColumn, extApi: PblNgridExtensionApi<T>): PblCellContext<T> {
+    const instance = new PblCellContext<T>();
+
+    instance._rowContext = rowContext;
+    instance.col = col;
+    instance.extApi = extApi;
+
+    Object.defineProperties(instance, {
+      table: { value: extApi.table },
+      index: { value: extApi.table.columnApi.indexOf(col) },
+    });
+
+    return instance;
   }
 
   static defaultState<T = any>(): CellContextState<T> {
@@ -38,7 +73,7 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
   }
 
   clone(): PblCellContext<T> {
-    const ctx = new PblCellContext<T>(this._rowContext, this.col, this.extApi);
+    const ctx = PblCellContext.create<T>(this._rowContext, this.col, this.extApi);
     ctx.fromState(this.getState(), this._rowContext, true);
     return ctx;
   }

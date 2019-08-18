@@ -95,9 +95,9 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
   ngOnInit(): void {
     const col: COLUMN = this.columnDef.column;
     if (col instanceof PblColumn) {
-      this.cellCtx = new PblNgridDataHeaderExtensionContext(this as PblNgridHeaderCellComponent<PblColumn>, this.vcRef.injector);
+      this.cellCtx = PblNgridDataHeaderExtensionContext.createDateHeaderCtx(this as PblNgridHeaderCellComponent<PblColumn>, this.vcRef.injector);
     } else {
-      this.cellCtx = new MetaCellContext(col, this.table);
+      this.cellCtx = MetaCellContext.create(col, this.table);
     }
   }
 
@@ -285,6 +285,6 @@ export class PblNgridFooterCellDirective extends CdkFooterCell implements DoChec
   }
 
   ngOnInit(): void {
-    this.cellCtx = new MetaCellContext(this.columnDef.column, this.table);
+    this.cellCtx = MetaCellContext.create(this.columnDef.column, this.table);
   }
 }

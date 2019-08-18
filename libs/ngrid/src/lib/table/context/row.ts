@@ -78,7 +78,7 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
     const len = columns.length;
 
     for (let columnIndex = 0; columnIndex < len; columnIndex++) {
-      const cellContext = new PblCellContext<T>(this, columns[columnIndex], extApi);
+      const cellContext = PblCellContext.create<T>(this, columns[columnIndex], extApi);
       cells.push(cellContext);
     }
   }
