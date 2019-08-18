@@ -149,6 +149,20 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     return this.elementRef.nativeElement.getBoundingClientRect().width;
   }
 
+  /// TODO(shlomiassaf): Remove when not supporting 8.1.2 and below
+  /// COMPATIBILITY 8.1.2- <-> 8.1.3+
+    /** A string representing the `style.width` property value to be used for the spacer element. */
+    _totalContentWidth = '';
+    /** A string representing the `style.height` property value to be used for the spacer element. */
+   _totalContentHeight = '';
+    /**
+   * The transform used to scale the spacer to the same size as all content, including content that
+   * is not currently rendered.
+   * @deprecated
+   */
+  _totalContentSizeTransform = '';
+ /// COMPATIBILITY 8.1.2- <-> 8.1.3+
+
   private offsetChange$ = new Subject<number>();
   private offset: number;
   private isCDPending: boolean;
