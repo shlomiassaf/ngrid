@@ -128,15 +128,15 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/cdk-experimental@8.0.1":
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/@angular/cdk-experimental/-/cdk-experimental-8.0.1.tgz#6ac1e32c58ff1eb4fbcbf2bad11582718c4bef4b"
+"@angular/cdk-experimental@^8.1.3":
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@angular/cdk-experimental/-/cdk-experimental-8.1.3.tgz#f9fc00d95a0a23265c3b358cc4c09166eda3a55a"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/cdk@8.0.1":
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-8.0.1.tgz#106872aa7fac0c55144ed5dd60df9af7e24b436a"
+"@angular/cdk@^8.1.3":
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-8.1.3.tgz#c791b4ae950bd015c4f618204e4f974e2dd64254"
   dependencies:
     tslib "^1.7.1"
   optionalDependencies:
@@ -220,9 +220,9 @@
   version "8.2.2"
   resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-8.2.2.tgz#38bda29260850e78132e89a4c370cbaf118c3062"
 
-"@angular/material@8.0.1":
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-8.0.1.tgz#cbb3f7776d2405a1d75b6e7eb6675fd80a8a5cf5"
+"@angular/material@^8.1.3":
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-8.1.3.tgz#1e65a6e02196348413cb073da3255771116c7618"
   dependencies:
     tslib "^1.7.1"
 
