@@ -1,11 +1,11 @@
 {
   "name": "@pebula/ngrid",
-  "version": "1.0.0-alpha.27",
+  "version": "1.0.0-rc.0",
   "peerDependencies": {
-    "@angular/common": "^7.2.3",
-    "@angular/core": "^7.2.3",
-    "@angular/cdk": "^7.3.1",
+    "@angular/common": "^8.0.0",
+    "@angular/core": "^8.0.0",
+    "@angular/cdk": "^8.0.0",
     "resize-observer-polyfill": "^1.5.0",
-    "@pebula/utils": "1.0.0-alpha.3"
+    "@pebula/utils": "1.0.0"
   }
 }
