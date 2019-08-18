@@ -1,13 +1,9 @@
-import { SchemaClass } from '@ngtools/json-schema';
-import { NgPackageConfig } from 'ng-packagr/ng-package.schema';
-
 import { EntryPointTaskContext } from 'ng-cli-packagr-tasks';
 
 export function mergeUmdIds(context: EntryPointTaskContext, umdModuleIds: { [ tsPath: string ]: string }): void {
   const { entryPoint } = context.epNode.data;
   const orgUmdModuleIds = entryPoint.umdModuleIds || {};
-  const schema: SchemaClass<NgPackageConfig> = (entryPoint as any).$schema;
-  schema.$$set('lib.umdModuleIds', { ...orgUmdModuleIds, ...umdModuleIds });
+  entryPoint.ngPackageJson.lib.umdModuleIds = { ...orgUmdModuleIds, ...umdModuleIds };
 }
 
 export function updatePathsFromCache(taskContext: EntryPointTaskContext, pathMappingsCache: { [ tsPath: string ]: string[] }): void {
