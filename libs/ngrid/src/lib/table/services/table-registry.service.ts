@@ -139,7 +139,7 @@ export class PblNgridRegistryService implements OnDestroy {
    * If not found WILL NOT search the parent.
    */
   getMulti<T extends keyof PblNgridMultiRegistryMap>(kind: T): Array<PblNgridMultiRegistryMap[T]> | undefined {
-    return this._multi[kind]
+    return this._multi[kind] as Array<PblNgridMultiRegistryMap[T]>;
   }
 
   addMulti<T extends keyof PblNgridMultiRegistryMap>(kind: T, cellDef: PblNgridMultiRegistryMap[T]): void {

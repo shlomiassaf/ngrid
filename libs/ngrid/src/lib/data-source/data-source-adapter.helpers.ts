@@ -46,8 +46,8 @@ export function fromRefreshDataWrapper<T>(change: PblDataSourceTriggerChange<Ref
 export type CoValue<P extends keyof PblDataSourceTriggerCache> = P extends keyof PblDataSourceTriggers ? PblDataSourceTriggers[P] : PblDataSourceTriggerCache[P];
 
 export function createChangeContainer<P extends keyof PblDataSourceTriggerCache>(type: P,
-                                                                                value: CoValue<P>,
-                                                                                cache: PblDataSourceTriggerCache): TriggerChangedEventFor<P> {
+                                                                                 value: CoValue<P>,
+                                                                                 cache: PblDataSourceTriggerCache): TriggerChangedEventFor<P> {
   if (type === 'pagination') {
     const pagination: PblDataSourceTriggers['pagination'] = (value || {}) as any;
     const cached = cache['pagination'];
@@ -73,7 +73,7 @@ export function createChangeContainer<P extends keyof PblDataSourceTriggerCache>
     if (value === cachedValue) {
       return createNotChangedEvent(cachedValue) as any;
     } else if (value !== EMPTY && cachedValue !== EMPTY) {
-      const fn: (prev: PblDataSourceTriggerCache[P], curr: PblDataSourceTriggerCache[P]) => boolean = DEEP_COMPARATORS[type];
+      const fn: (prev: PblDataSourceTriggerCache[P], curr: PblDataSourceTriggerCache[P]) => boolean = DEEP_COMPARATORS[type as any];
       if (fn(cachedValue, value as any)) {
         return createNotChangedEvent(cachedValue) as any;
       }
