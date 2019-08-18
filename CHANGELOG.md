@@ -1,3 +1,27 @@
+# 1.0.0-rc.0 (2019-08-18)
+
+
+### Bug Fixes
+
+* **docs:** wrong reference ([0ba846a](https://github.com/shlomiassaf/ngrid/commit/0ba846a))
+* **ngrid:** competability with cdk 8.1.3 ([e1a9ec8](https://github.com/shlomiassaf/ngrid/commit/e1a9ec8)), closes [#37](https://github.com/shlomiassaf/ngrid/issues/37)
+
+
+### Code Refactoring
+
+* **ngrid:** bump angular to version 8.2.2 ([8f82092](https://github.com/shlomiassaf/ngrid/commit/8f82092))
+
+
+### BREAKING CHANGES
+
+**ngrid:**
+
+- This bump included a bump in TS as well, to 3.5.3. TS 3.5.3 introduces a breaking change which was fixed in this release.
+
+- Moving from `@angular/cli 8.0.3` introduces a breaking change. The package `@ngtools/webpack@8.0.4` is now adding `ctorParameters` property to all classes with ctor params, even the non-injectable ones which now will have a hard reference leading to a circular dependency error. This release includes a refactor of the code to fit this paradigm until someone in angular understands this and push a fix...
+
+
+
 # 1.0.0-alpha.27 (2019-08-12)
 
 
