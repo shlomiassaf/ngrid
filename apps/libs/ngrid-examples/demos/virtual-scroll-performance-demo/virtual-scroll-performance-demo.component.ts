@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef, ViewEncapsulation, ViewChild } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
 
 import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
@@ -68,6 +68,7 @@ function createColumns(noType = false) {
   templateUrl: './virtual-scroll-performance-demo.component.html',
   styleUrls: ['./virtual-scroll-performance-demo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 @Example('pbl-virtual-scroll-performance-demo-example', { title: 'Virtual Scroll Performance Demo' })
 export class VirtualScrollPerformanceDemoExample {
