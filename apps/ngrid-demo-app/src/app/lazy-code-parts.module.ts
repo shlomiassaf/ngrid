@@ -209,7 +209,11 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     pathMatch: 'full',
     loadChildren: () => import('@pebula/apps/ngrid-examples/stories/column-header-menu/column-header-menu.module').then( m => m.ColumnHeaderMenuExampleModule ),
   },
-
+  {
+    path: 'extending-ngrid-copy-selection.module',
+    pathMatch: 'full',
+    loadChildren: () => import('@pebula/apps/ngrid-examples/extending-ngrid/copy-selection/copy-selection.module').then( m => m.CopySelectionExampleModule ),
+  }
 ];
 
 @NgModule({ })

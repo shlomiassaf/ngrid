@@ -83,10 +83,11 @@ Some of the feature are:
 
 In addition, there are several secondary packages that **extend** the functionality **only** if you opt-in and use them:
 
+- `@pebula/ngrid/target-events` - Support for input device events
+- `@pebula/ngrid/state` - Saving and restoring state from and to the grid
 - `@pebula/ngrid/detail-row` - Support for master / detail row structure
 - `@pebula/ngrid/drag` - Support for drag and drop (using `@angular/cdk/drag`)
 - `@pebula/ngrid/sticky` - Support for sticky rows / columns
-- `@pebula/ngrid/target-events` - Support for table events
 - `@pebula/ngrid/transpose` - Support for live transpose (switch between rows & columns)
 
 Note that A plugin might just be a UI presentation for a core level feature.  
