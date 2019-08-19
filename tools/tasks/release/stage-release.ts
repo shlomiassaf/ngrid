@@ -48,11 +48,19 @@ class StageReleaseTask extends BaseReleaseTask {
   /** Octokit API instance that can be used to make Github API calls. */
   githubApi: OctokitApi;
 
+  packagesDir: string;
+  packages: string[];
+
   constructor(public projectDir: string,
               public repositoryOwner: string,
-              public repositoryName: string) {
-    super(new GitClient(projectDir,
-      `https://github.com/${repositoryOwner}/${repositoryName}.git`));
+              public repositoryName: string,
+              packageDir: string,
+              packages: string[]) {
+
+    super(new GitClient(projectDir, `https://github.com/${repositoryOwner}/${repositoryName}.git`));
+
+    this.packagesDir = join(projectDir, packageDir);
+    this.packages = packages.map( p => join(this.packagesDir, p) );
 
     this.packageJsonPath = join(projectDir, 'package.json');
     this.packageJson = JSON.parse(readFileSync(this.packageJsonPath, 'utf-8'));
@@ -70,7 +78,7 @@ class StageReleaseTask extends BaseReleaseTask {
   async run() {
     console.log();
     console.log(cyan('-----------------------------------------'));
-    console.log(cyan('  Angular Material stage release script'));
+    console.log(cyan('  NGrid stage release script'));
     console.log(cyan('-----------------------------------------'));
     console.log();
 
@@ -88,10 +96,10 @@ class StageReleaseTask extends BaseReleaseTask {
     this.verifyNoUncommittedChanges();
 
     // Branch that will be used to stage the release for the new selected version.
-    const publishBranch = this.switchToPublishBranch(newVersion);
+    // const publishBranch = this.switchToPublishBranch(newVersion);
 
-    this.verifyLocalCommitsMatchUpstream(publishBranch);
-    await this._verifyPassingGithubStatus(publishBranch);
+    // this.verifyLocalCommitsMatchUpstream(publishBranch);
+    // await this._verifyPassingGithubStatus(publishBranch);
 
     if (!this.git.checkoutNewBranch(stagingBranch)) {
       console.error(red(`Could not create release staging branch: ${stagingBranch}. Aborting...`));
@@ -143,6 +151,30 @@ class StageReleaseTask extends BaseReleaseTask {
   private _updatePackageJsonVersion(newVersionName: string) {
     const newPackageJson = {...this.packageJson, version: newVersionName};
     writeFileSync(this.packageJsonPath, JSON.stringify(newPackageJson, null, 2) + '\n');
+    this._updateLibPackageJsonVersion(newVersionName);
+  }
+
+  private _updateLibPackageJsonVersion(newVersionName: string) {
+    const possibleDependencies: string[] = [];
+
+    for (const p of this.packages) {
+      const pkgJsonPath = join(p, 'package.json');
+      const pkgJson = JSON.parse(readFileSync(pkgJsonPath, 'utf-8'));
+
+      pkgJson.version = newVersionName;
+      for (const key of ['dependencies', 'peerDependencies']) {
+        const o = pkgJson[key];
+        if (o) {
+          for (const dep of possibleDependencies) {
+            if (o[dep]) {
+              o[dep] = newVersionName;
+            }
+          }
+        }
+      }
+      writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2) + '\n');
+      possibleDependencies.push(pkgJson.name);
+    }
   }
 
   /** Verifies that the latest commit of the current branch is passing all Github statuses. */
@@ -174,6 +206,12 @@ class StageReleaseTask extends BaseReleaseTask {
 
 /** Entry-point for the release staging script. */
 if (require.main === module) {
-  new StageReleaseTask(join(__dirname, '../../'), 'angular', 'components').run();
+  new StageReleaseTask(
+    join(__dirname, '../../../'),
+    'shlomiassaf',
+    'ngrid',
+    'libs',
+    ['ngrid', 'ngrid-material']
+  ).run();
 }
 

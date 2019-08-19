@@ -65,7 +65,7 @@
       "name": "[Node] Current TS File",
       "type": "node",
       "request": "launch",
-      "args": [ "${fileBasename}" ],
+      "args": [ "./${fileBasename}" ],
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
       "sourceMaps": true,
       "cwd": "${fileDirname}",
