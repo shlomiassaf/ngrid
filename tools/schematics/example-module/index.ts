@@ -1,5 +1,5 @@
 import * as Path from 'path';
-import * as ts from 'typescript';
+import * as ts from '@schematics/angular/third_party/github.com/Microsoft/Typescript/lib/typescript';
 import { strings } from '@angular-devkit/core';
 import {
   Rule,
@@ -75,14 +75,14 @@ export function addComponentToBindNgModule(source: ts.SourceFile,
       const identExp = expr.expression;
       return ts.isIdentifier(identExp) && identExp.text === 'BindNgModule';
     });
-  
+
   let node: ts.CallExpression = nodes[0];  // tslint:disable-line:no-any
 
   // Find the decorator declaration.
   if (!node) {
     return [];
   }
-  
+
   const position = node.arguments[node.arguments.length - 1].getEnd();
   return [
     new InsertChange(ngModulePath, position, `, ${symbolName}`),
@@ -204,8 +204,16 @@ export default function(options: { name: string; add?: string; }): Rule {
 
       console.log(createMarkdown(title, selector, parsedPath.path.substr(ROOT.length + 1)));
 
+      console.log(`
+      {
+        path: '${parsedPath.path.substr(ROOT.length + 1).split('/').join('-')}.module',
+        pathMatch: 'full',
+        loadChildren: () => import('@pebula/apps/ngrid-examples/${parsedPath.path.substr(ROOT.length + 1)}/${stringsExtensions.moduleFile(parsedPath.name)}').then( m => m.${stringsExtensions.moduleClassName(parsedPath.name)} ),
+      }
+      `);
+
       rules.push(
-        addImportOfModuleToNgModule(parsedPath),
+        // addImportOfModuleToNgModule(parsedPath),
         mergeWith(templateSource),
       );
     }
