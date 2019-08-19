@@ -351,27 +351,35 @@ export class ContextApi<T = any> {
     return this.rowContext(index);
   }
 
-  getCell(cell: HTMLElement): PblNgridCellContext | undefined
+  getCell(cell: HTMLElement | GridDataPoint): PblNgridCellContext | undefined
   /**
    * Return the cell context for the cell at the point specified
    * @param row
    * @param col
    */
   getCell(row: number, col: number): PblNgridCellContext | undefined;
-  getCell(rowOrCellElement: number | HTMLElement, col?: number): PblNgridCellContext | undefined {
+  getCell(rowOrCellElement: number | HTMLElement | GridDataPoint, col?: number): PblNgridCellContext | undefined {
     if (typeof rowOrCellElement === 'number') {
       const rowContext = this.rowContext(rowOrCellElement);
       if (rowContext) {
         return rowContext.cell(col);
       }
     } else {
-      const [ r, c ] = findCellRenderedIndex(rowOrCellElement);
-      const column = this.extApi.table.columnApi.findColumnAt(c);
-      const columnIndex = this.extApi.table.columnApi.indexOf(column);
-      const rowContext = this.rowContext(r);
-      if (rowContext) {
-        return rowContext.cell(columnIndex);
+      const ref = resolveCellReference(rowOrCellElement, this as any);
+      if (ref instanceof PblCellContext) {
+        return ref;
       }
+    }
+  }
+
+  getDataItem(cell: CellReference): any {
+    const ref = resolveCellReference(cell, this as any);
+    if (ref instanceof PblCellContext) {
+      return ref.col.getValue(ref.rowContext.$implicit);
+    } else if (ref) {
+      const row = this.extApi.table.ds.source[ref[0].dataIndex];
+      const column = this.extApi.table.columnApi.findColumnAt(ref[1]);
+      return column.getValue(row);
     }
   }
 
