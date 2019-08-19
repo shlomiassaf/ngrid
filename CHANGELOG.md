@@ -1,3 +1,13 @@
+# 1.0.0-rc.1 (2019-08-19)
+
+
+### Features
+
+* **ngrid:** get data item from cell reference ([cf5506b](https://github.com/shlomiassaf/ngrid/commit/cf5506b))
+* **ngrid/clipboard:** new plugin copy to clipboard ([1c52069](https://github.com/shlomiassaf/ngrid/commit/1c52069))
+
+
+
 # 1.0.0-rc.0 (2019-08-18)
 
 
