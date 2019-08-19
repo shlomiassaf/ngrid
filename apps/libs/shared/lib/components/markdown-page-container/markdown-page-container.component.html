@@ -1,11 +1,13 @@
 <div class="example-group-container" fxLayout="row" fxLayoutAlign="space-between start" #el>
-  <div *ngIf="menu$ | async as navEntry" fxFlex="0 0 260px" class="example-sticky-container">
-    <mat-nav-list>
-      <ng-container *ngFor="let entry of navEntry.children">
-        <ng-container *ngTemplateOutlet="entry.children ? containerEntry : linkEntry; context: { $implicit: entry }"></ng-container>
-      </ng-container>
-    </mat-nav-list>
-  </div>
+  <ng-container *ngIf="menu$ | async as navEntry">
+    <div *ngIf="navEntry.children"  fxFlex="0 0 260px" class="example-sticky-container">
+      <mat-nav-list>
+        <ng-container *ngFor="let entry of navEntry.children">
+          <ng-container *ngTemplateOutlet="entry.children ? containerEntry : linkEntry; context: { $implicit: entry }"></ng-container>
+        </ng-container>
+      </mat-nav-list>
+    </div>
+  </ng-container>
   <div fxFlex="*" style="height: 100%">
     <div style="min-height: 100%;">
       <div fxFlex="*" class="example-container" pblContentTocArea #tocArea="pblContentTocArea"
