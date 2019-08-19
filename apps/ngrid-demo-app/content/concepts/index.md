@@ -70,12 +70,6 @@ E> This page is still a WIP, the following is missing:
   - DataHeaderExtensions
 
 - Plugins
-  - Plugin types: Directive / API / Dual
-  - Running plugins without directives
-  - Global plugin configuration
   - Plugin scope
     - Extends existing features (e.g. drag/drop)
     - New features all togethers (e.g. transpose)
-  - Developers:
-    - Extensibility model and API
-    - Events
