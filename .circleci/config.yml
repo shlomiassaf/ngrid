@@ -34,9 +34,9 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
-          name: Running gh-pages
+          name: Building Libraries
           command: npm run build-grid
 
       - run:
-          name: ere
+          name: Building Docs Application
           command: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod

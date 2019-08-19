@@ -1,6 +1,7 @@
 ![npm (scoped)](https://img.shields.io/npm/v/@pebula/ngrid?label=ngrid&style=flat-square)
 ![npm (scoped)](https://img.shields.io/npm/v/@pebula/ngrid-material?label=ngrid-material&style=flat-square)
-![GitHub](https://img.shields.io/github/license/shlomiassaf/ngrid)
+![CircleCI](https://img.shields.io/circleci/build/github/shlomiassaf/ngrid/master?style=flat-square&token=abc123def456)
+![GitHub](https://img.shields.io/github/license/shlomiassaf/ngrid?style=flat-square)
 
 # N-GRID
 
