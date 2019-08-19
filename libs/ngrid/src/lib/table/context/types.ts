@@ -221,7 +221,7 @@ export interface PblNgridContextApi<T = any> {
    */
   getRow(rowIndex: number | HTMLElement): PblNgridRowContext<T> | undefined;
 
-  getCell(cell: HTMLElement): PblNgridCellContext | undefined
+  getCell(cell: HTMLElement | GridDataPoint): PblNgridCellContext | undefined
   /**
    * Get the cell context in the specific row index and column index
    * @param rowIndex The index position of the row.
@@ -229,4 +229,5 @@ export interface PblNgridContextApi<T = any> {
    */
   getCell(rowIndex: number, colIndex: number): PblNgridCellContext<T> | undefined;
 
+  getDataItem(cell: CellReference): any;
 }
