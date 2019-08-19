@@ -72,4 +72,3 @@ E> This page is still a WIP, the following is missing:
 - Plugins
   - Plugin scope
     - Extends existing features (e.g. drag/drop)
-    - New features all togethers (e.g. transpose)
