@@ -61,14 +61,3 @@ datasource needs to know is to return an array of data.
 `NGrid` provide the factory function `createDS()` that help you create datasource instance's very easily, you will end up using it 99.99% of the times.
 
 Of course, simple is not enough, we love features and customization... You can read more about [Data Source](./datasource/quick-through) and how to configure them.
-
-E> This page is still a WIP, the following is missing:
-
-## TODO
-
-- The Registry
-  - DataHeaderExtensions
-
-- Plugins
-  - Plugin scope
-    - Extends existing features (e.g. drag/drop)
