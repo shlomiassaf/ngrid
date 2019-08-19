@@ -51,9 +51,6 @@ export class EnterAndLeaveEventsExample {
         label: 'User Settings',
       }
     )
-    .footer(
-      { id: 'FOOTER', label: 'A SIMPLE 1 CELL FOOTER' },
-    )
     .build();
 
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 5) ).create();

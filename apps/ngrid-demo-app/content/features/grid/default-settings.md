@@ -1,16 +1,20 @@
 ---
-title: Default Settings
-path: features/grid/default-settings
+title: Global Settings
+path: features/grid/global-settings
 parent: features/grid
 ordinal: 3
 ---
-# Default Setting
+# Global Settings
 
-The grid is configurable, either through `@Input` properties or directly through the grid instance. This is also valid for grid plugins (both built-in and third party).
+The grid is configurable, either through `@Input` properties or directly through the grid instance. This is also valid for grid plugins (both built-in and third party).  
+In most cases, all of the configurations comes with default settings, which you can override using the global settings.
 
-In most cases, all of the configurations comes with default settings but you can define your own defaults as well.
+The settings are split into groups, each group contains a collection of relevant settings within it's context.  
+The grid itself has only **one** group, called `table`
 
-To define a default configuration we use the `PblNgridConfigService` service:
+I> Group names are strictly typed, to add a new group the type requires augmentation.
+
+To access the global configuration we use the `PblNgridConfigService` service:
 
 ```typescript
 import { NgModule } from '@angular/core';
@@ -38,9 +42,14 @@ export class MyRootModule {
 ```
 
 The `set` methods accepts 2 parameters, the 1st is the name of the settings group and the 2nd parameter is the settings object for that group.
-
 The grid's core settings are under the `table` group name, other plugins might add additional groups
 
 I> There is no need to define `PblNgridConfigService` in the providers, it is done by the grid's module.
 
 I> For plugins, the plugin author is responsible for adding the support for default settings assignment, they might choose not to do it or allow partial settings to be applied.
+
+## Additional Groups
+
+The reason for grouping the settings is to allow extensions/plugins to accept global settings using the same method in the grid.
+
+This will contribute to a single, agreed upon, way of defining and consuming settings throughout the grid's eco-system.
