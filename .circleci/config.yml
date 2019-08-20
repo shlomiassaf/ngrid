@@ -37,6 +37,6 @@ jobs:
           name: Building Libraries
           command: npm run build-grid
 
-      - run:
-          name: Building Docs Application
-          command: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod
+      # - run:
+      #     name: Building Docs Application
+      #     command: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod
