@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "types": [
-      "jasmine"
+      "jest",
+      "node"
     ]
   },
   "include": [

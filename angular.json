@@ -76,25 +76,12 @@
             }
           }
         },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "ngrid-demo-app:build"
-          }
-        },
         "test": {
-          "builder": "ngx-build-plus:karma",
+          "builder": "@nrwl/jest:jest",
           "options": {
-            "main": "apps/ngrid-demo-app/src/test.ts",
-            "polyfills": "apps/ngrid-demo-app/src/polyfills.ts",
+            "jestConfig": "apps/ngrid-demo-app/jest.config.js",
             "tsConfig": "apps/ngrid-demo-app/tsconfig.spec.json",
-            "karmaConfig": "apps/ngrid-demo-app/karma.conf.js",
-            "styles": ["apps/ngrid-demo-app/src/styles.scss"],
-            "scripts": [],
-            "assets": [
-              "apps/ngrid-demo-app/src/favicon.ico",
-              "apps/ngrid-demo-app/src/assets"
-            ]
+            "setupFile": "apps/ngrid-demo-app/src/test-setup.ts"
           }
         },
         "lint": {
@@ -130,6 +117,33 @@
                 "styles": true
               }
             }
+          }
+        }
+      }
+    },
+    "ngrid-demo-app-e2e": {
+      "root": "apps/ngrid-demo-app-e2e",
+      "sourceRoot": "apps/ngrid-demo-app-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/ngrid-demo-app-e2e/cypress.json",
+            "tsConfig": "apps/ngrid-demo-app-e2e/tsconfig.e2e.json",
+            "devServerTarget": "ngrid-demo-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ngrid-demo-app:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/ngrid-demo-app-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/ngrid-demo-app-e2e/**"]
           }
         }
       }
@@ -195,11 +209,11 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@nrwl/jest:jest",
           "options": {
-            "main": "libs/ngrid/src/test.ts",
+            "jestConfig": "libs/ngrid/jest.config.js",
             "tsConfig": "libs/ngrid/tsconfig.spec.json",
-            "karmaConfig": "libs/ngrid/karma.conf.js"
+            "setupFile": "libs/ngrid/src/test-setup.ts"
           }
         },
         "lint": {
@@ -270,11 +284,11 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@nrwl/jest:jest",
           "options": {
-            "main": "libs/ngrid-material/src/test.ts",
+            "jestConfig": "libs/ngrid-material/jest.config.js",
             "tsConfig": "libs/ngrid-material/tsconfig.spec.json",
-            "karmaConfig": "libs/ngrid-material/karma.conf.js"
+            "setupFile": "libs/ngrid-material/src/test-setup.ts"
           }
         },
         "lint": {
@@ -315,11 +329,11 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@nrwl/jest:jest",
           "options": {
-            "main": "libs/utils/src/test.ts",
+            "jestConfig": "libs/utils/jest.config.js",
             "tsConfig": "libs/utils/tsconfig.spec.json",
-            "karmaConfig": "libs/utils/karma.conf.js"
+            "setupFile": "libs/utils/src/test-setup.ts"
           }
         },
         "lint": {
@@ -345,13 +359,12 @@
   },
   "defaultProject": "ngrid-demo-app",
   "schematics": {
-    "@nrwl/schematics:library": {
-      "unitTestRunner": "karma",
-      "framework": "angular"
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
     },
-    "@nrwl/schematics:application": {
-      "unitTestRunner": "karma",
-      "e2eTestRunner": "protractor"
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
     },
     "@nrwl/schematics:node-application": {
       "framework": "express"
