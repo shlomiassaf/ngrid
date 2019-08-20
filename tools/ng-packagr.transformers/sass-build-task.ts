@@ -39,7 +39,7 @@ async function sassBundleTask(context: EntryPointTaskContext) {
 
   const assets = normalizeAssetPatterns(
     options.tasks.data.sassBundle.entries,
-    syncHost,
+    syncHost as any,
     root,
     projectRoot,
     sourceRoot,
@@ -98,7 +98,7 @@ async function sassCompileTask(context: EntryPointTaskContext) {
 
   const assets = normalizeAssetPatterns(
     options.tasks.data.sassCompile.entries,
-    syncHost,
+    syncHost as any,
     root,
     projectRoot,
     sourceRoot,
