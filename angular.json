@@ -162,7 +162,12 @@
                 "copyFile": {
                   "assets": [
                     {
-                      "glob": "README.Md",
+                      "glob": "README.md",
+                      "input": ".",
+                      "output": "dist/@pebula/ngrid"
+                    },
+                    {
+                      "glob": "LICENSE",
                       "input": ".",
                       "output": "dist/@pebula/ngrid"
                     }
