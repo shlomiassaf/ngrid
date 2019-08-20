@@ -28,9 +28,7 @@
               "apps/ngrid-demo-app/src/google1a0455c97ead32c8.html",
               "apps/ngrid-demo-app/src/assets"
             ],
-            "styles": [
-              "apps/ngrid-demo-app/src/styles/main.scss"
-            ],
+            "styles": ["apps/ngrid-demo-app/src/styles/main.scss"],
             "scripts": [
               {
                 "input": "node_modules/document-register-element/build/document-register-element.js"
@@ -91,9 +89,7 @@
             "polyfills": "apps/ngrid-demo-app/src/polyfills.ts",
             "tsConfig": "apps/ngrid-demo-app/tsconfig.spec.json",
             "karmaConfig": "apps/ngrid-demo-app/karma.conf.js",
-            "styles": [
-              "apps/ngrid-demo-app/src/styles.scss"
-            ],
+            "styles": ["apps/ngrid-demo-app/src/styles.scss"],
             "scripts": [],
             "assets": [
               "apps/ngrid-demo-app/src/favicon.ico",
@@ -109,9 +105,7 @@
               "apps/ngrid-demo-app/tsconfig.spec.json",
               "apps/ngrid-demo-app/tsconfig.worker.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "server": {
@@ -215,9 +209,7 @@
               "libs/ngrid/tsconfig.lib.json",
               "libs/ngrid/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -292,9 +284,7 @@
               "libs/ngrid-material/tsconfig.lib.json",
               "libs/ngrid-material/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -339,9 +329,7 @@
               "libs/utils/tsconfig.lib.json",
               "libs/utils/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       },
@@ -353,7 +341,20 @@
       "typescriptMismatch": false,
       "versionMismatch": false
     },
-    "defaultCollection": "@nrwl/schematics"
+    "defaultCollection": "@nrwl/angular"
   },
-  "defaultProject": "ngrid-demo-app"
+  "defaultProject": "ngrid-demo-app",
+  "schematics": {
+    "@nrwl/schematics:library": {
+      "unitTestRunner": "karma",
+      "framework": "angular"
+    },
+    "@nrwl/schematics:application": {
+      "unitTestRunner": "karma",
+      "e2eTestRunner": "protractor"
+    },
+    "@nrwl/schematics:node-application": {
+      "framework": "express"
+    }
+  }
 }

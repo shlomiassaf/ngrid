@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc/apps/ngrid-demo-app",
+    "outDir": "../../dist/out-tsc",
     "types": []
   },
   "exclude": [
@@ -10,7 +10,5 @@
     "./build/**/*.ts",
     "../libs/shared-data/**/*.worker.ts"
   ],
-  "include": [
-    "**/*.ts",
-  ]
+  "include": ["**/*.ts"]
 }

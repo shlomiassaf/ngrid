@@ -12,8 +12,16 @@ const tildeImporter = require('node-sass-tilde-importer');
 gulpSass.compiler = nodeSass;
 
 /** Create a gulp task that builds SCSS files. */
-export function buildScssPipeline(sourceDir: string, sassIncludePaths: string[] = [], minifyOutput = false) {
-  return src(join(sourceDir, '**/!(test-).scss'))
-    .pipe(gulpSass({importer: tildeImporter, includePaths: sassIncludePaths}).on('error', gulpSass.logError))
-    .pipe(gulpIf(minifyOutput, gulpCleanCss()));
+export function buildScssPipeline(
+  sourceDir: string,
+  sassIncludePaths: string[] = [],
+  minifyOutput = false
+) {
+  return src(join(sourceDir, '**/!(test-).scss')).pipe(
+    gulpSass({ importer: tildeImporter, includePaths: sassIncludePaths }).on(
+      'error',
+      gulpSass.logError
+    ),
+    gulpIf(minifyOutput, gulpCleanCss())
+  );
 }
