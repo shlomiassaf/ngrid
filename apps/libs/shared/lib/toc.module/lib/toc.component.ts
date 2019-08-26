@@ -54,8 +54,12 @@ export class TocComponent implements OnDestroy {
       this.destroyLocal();
       if (value) {
         this._linksChangedSubscription = value.linksChanged
-          .pipe(debounceTime(10))
-          .subscribe(this.linksChanged);
+          .pipe(debounceTime(1))
+          .subscribe( links => {
+            this.linksChanged.next(links);
+            this.cdr.markForCheck();
+            this.cdr.detectChanges();
+          });
 
         this._activeLinkSubscription = value.activeLinkChanged
           .pipe(filter(activeLink => activeLink !== this.activeLink))

@@ -115,6 +115,7 @@ export class TocAreaDirective implements AfterContentInit, OnDestroy {
   private _lastHeight: number;
   private _isWindowContainer: boolean;
   private _offsetCache: [number, number] = DEFAULT_OFFSET_CACHE;
+  private _activeReInit: Promise<any>;
 
   private get containerHeight(): number {
     return this._isWindowContainer
@@ -179,11 +180,20 @@ export class TocAreaDirective implements AfterContentInit, OnDestroy {
 
   reinitQueryLinks(p: Promise<any>): void {
     const el: HTMLElement = this.elRef && this.elRef.nativeElement;
+    this._activeReInit = p;
+
     p.then( () => {
+      if (this._activeReInit !== p) {
+        return;
+      }
       setTimeout( () => {
+        if (this._activeReInit !== p) {
+          return;
+        }
         this.links = [];
         this.queryLinksAndAdd(el);
         this._linksChanged$.next(this.links);
+        this._activeReInit = undefined;
       }, 25);
     });
   }
