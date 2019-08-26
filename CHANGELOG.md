@@ -1,3 +1,24 @@
+# 1.0.0-rc.3 (2019-08-26)
+
+
+### Code Refactoring
+
+* **ngrid:** deprecate `identityProp` in favor of `pIndex` ([a3edfbd](https://github.com/shlomiassaf/ngrid/commit/a3edfbd))
+
+
+### Features
+
+* **ngrid/clipboard:** add separator options ([b126951](https://github.com/shlomiassaf/ngrid/commit/b126951))
+
+
+### BREAKING CHANGES
+
+* **ngrid:** The `identityProp` input on the grid host (`pbl-ngrid`) is now deprecated in favor of the `pIndex` property on the column definitions.
+For more information, read [this doc](https://shlomiassaf.github.io/ngrid/concepts/columns/identity)
+`identityProp` will be removed in version 1.0.0
+
+
+
 # 1.0.0-rc.2 (2019-08-26)
 
 
