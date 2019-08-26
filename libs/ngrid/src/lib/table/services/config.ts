@@ -44,8 +44,8 @@ export class PblNgridConfigService {
     return this.config.has(section);
   }
 
-  get<T extends keyof PblNgridConfig>(section: T): PblNgridConfig[T] | undefined {
-    return this.config.get(section);
+  get<T extends keyof PblNgridConfig>(section: T, fallback?: Partial<PblNgridConfig[T]>): PblNgridConfig[T] | undefined {
+    return this.config.get(section) || fallback;
   }
 
   set<T extends keyof PblNgridConfig>(section: T, value: PblNgridConfig[T]): void {
