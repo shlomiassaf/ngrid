@@ -1,3 +1,12 @@
+# 1.0.0-rc.2 (2019-08-26)
+
+
+### Features
+
+* **ngrid:** allow adding custom css classes for rows ([4600b40](https://github.com/shlomiassaf/ngrid/commit/4600b40)), closes [#40](https://github.com/shlomiassaf/ngrid/issues/40)
+
+
+
 # 1.0.0-rc.1 (2019-08-19)
 
 
