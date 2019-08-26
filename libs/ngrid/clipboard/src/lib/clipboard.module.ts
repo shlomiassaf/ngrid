@@ -21,8 +21,8 @@ export class PblNgridClipboardPluginModule {
     }
     PblNgridPluginController.created
       .subscribe( event => {
-        const config = configService.get(PLUGIN_KEY);
-        if (config && config.autoEnable === true) {
+        const config = configService.get(PLUGIN_KEY, {});
+        if (config.autoEnable === true) {
           const pluginCtrl = event.controller;
           pluginCtrl.events
             .pipe(
