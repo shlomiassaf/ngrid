@@ -45,7 +45,7 @@ export class ComplexDemo1Example {
       { header: { type: 'sticky' } },
       { prop: 'drag_and_drop_handle', type: 'drag_and_drop_handle', minWidth: 48, width: '', maxWidth: 48, wontBudge: true },
       { prop: 'selection',  minWidth: 48, width: '', maxWidth: 48, wontBudge: true },
-      { prop: 'id', sort: true, width: '40px', wontBudge: true },
+      { prop: 'id', pIndex: true, sort: true, width: '40px', wontBudge: true },
       { prop: 'name', sort: true },
       { prop: 'email', minWidth: 250, width: '150px' },
       { prop: 'country', headerType: 'country', type: { name: 'countryNameDynamic', data: COUNTRY_GETTER }, width: '150px' },
