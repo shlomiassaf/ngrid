@@ -25,7 +25,7 @@ function createColumns(noType = false) {
     .table(
       { prop: 'drag_and_drop_handle', type: 'drag_and_drop_handle', minWidth: 48, maxWidth: 48 },
       { prop: 'selection', width: '48px' },
-      { prop: 'id', width: '40px' },
+      { prop: 'id', pIndex: true, width: '40px' },
       { prop: 'name', sort: true, reorder: true },
       { prop: 'country', headerType: getType('country'), type: getType({ name: 'flagAndCountry', data: COUNTRY_GETTER }), width: '150px' },
       { prop: 'jobTitle'  },

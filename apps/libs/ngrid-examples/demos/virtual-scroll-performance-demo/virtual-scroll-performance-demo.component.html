@@ -21,7 +21,6 @@
   </mat-form-field>
   <div style="flex: 1 1 100%; display: flex; min-height: 0px">
     <pbl-ngrid *ngIf="showTable" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis" style="height: 100%; width: 100%;"
-                identityProp="id"
                 [dataSource]="ds" [columns]="columns"
                 vScrollAuto maxBufferPx="100" minBufferPx="50" [wheelMode]="wheelMode"
                 showHeader showFooter

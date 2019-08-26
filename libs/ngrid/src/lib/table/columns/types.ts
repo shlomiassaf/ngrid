@@ -122,6 +122,10 @@ export interface PblColumnDefinition extends PblBaseColumnDefinition {
    */
   id?: string;
 
+  /**
+   * When set, defines this column as the primary index of the data-set with all values in this column being unique.
+   */
+  pIndex?: boolean;
 
   /**
    * The property to display (from the row element)

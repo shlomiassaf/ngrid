@@ -471,12 +471,14 @@ export class ContextApi<T = any> {
   }
 
   getRowIdentity(dataIndex: number, context?: RowContext<any>): string | number | null {
-    const { ds, identityProp } = this.extApi.table;
+    const { ds } = this.extApi.table;
+    const { primary } = this.extApi.columnStore;
+
     const row = context ? context.$implicit : ds.source[dataIndex];
     if (!row) {
       return null;
     } else {
-      return identityProp ? row[identityProp] : dataIndex;
+      return primary ? primary.getValue(row) : dataIndex;
     }
   }
 

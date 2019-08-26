@@ -10,7 +10,7 @@ import { initDefinitions, parseStyleWidth } from './utils';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 
 const PBL_NGRID_COLUMN_MARK = Symbol('PblColumn');
-const CLONE_PROPERTIES: Array<keyof PblColumn> = ['transform', 'filter', 'sort', 'alias', 'headerType', 'footerType', 'pin'];
+const CLONE_PROPERTIES: Array<keyof PblColumn> = ['pIndex', 'transform', 'filter', 'sort', 'alias', 'headerType', 'footerType', 'pin'];
 
 export function isPblColumn(def: any): def is PblColumn {
   return def instanceof PblColumn || def[PBL_NGRID_COLUMN_MARK] === true;
@@ -18,6 +18,12 @@ export function isPblColumn(def: any): def is PblColumn {
 
 export class PblColumn implements PblColumnDefinition {
   id: string;
+
+  /**
+   * When set, defines this column as the primary index of the data-set with all values in this column being unique.
+   */
+  pIndex?: boolean;
+
   label?: string;
 
   /**

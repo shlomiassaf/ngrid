@@ -1,3 +1,4 @@
+import { isDevMode } from '@angular/core';
 import { PblNgridColumnDefinitionSet, PblNgridColumnSet } from './types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';
@@ -30,6 +31,8 @@ export class PblColumnStore {
   headerColumnDef: PblMetaRowDefinitions;
   footerColumnDef: PblMetaRowDefinitions;
 
+  get primary(): PblColumn | undefined { return this._primary; }
+
   set hidden(value: string[]) {
     this._hidden = value;
     this.setHidden();
@@ -39,6 +42,7 @@ export class PblColumnStore {
 
   get groupStore(): PblColumnGroupStore { return this._groupStore; }
 
+  private _primary: PblColumn | undefined;
   private _metaRows: { header: Array<PblColumnStoreMetaRow & { allKeys?: string[] }>; footer: Array<PblColumnStoreMetaRow & { allKeys?: string[] }>; };
   private _hidden: string[];
   private _allHidden: string[];
@@ -148,6 +152,8 @@ export class PblColumnStore {
       type: (table.footer && table.footer.type) || 'fixed',
     }
 
+    this._primary = undefined;
+
     for (const def of table.cols) {
       let column: PblColumn;
       column = new PblColumn(def, this.groupStore);
@@ -160,6 +166,13 @@ export class PblColumnStore {
         this.columns.push(column);
         this.columnIds.push(column.id);
         rowWidth.addColumn(column);
+      }
+
+      if (column.pIndex) {
+        if (this._primary && isDevMode()) {
+          console.warn(`Multiple primary index columns defined: previous: "${this._primary.id}", current: "${column.id}"`);
+        }
+        this._primary = column;
       }
     }
 

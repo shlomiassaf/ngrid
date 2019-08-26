@@ -48,6 +48,8 @@ import { PblNgridMetaRowService } from './meta-rows/index';
 import { bindToDataSource } from './bind-to-datasource';
 import './bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
 
+import { setIdentityProp } from './table.deprecate-at-1.0.0';
+
 export function internalApiFactory(table: { _extApi: PblNgridExtensionApi; }) { return table._extApi; }
 export function pluginControllerFactory(table: { _plugin: PblNgridPluginContext; }) { return table._plugin.controller; }
 export function metaRowServiceFactory(table: { _extApi: PblNgridExtensionApi; }) { return table._extApi.metaRowService; }
@@ -118,13 +120,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    */
   @Input() focusMode: 'row' | 'cell' | 'none' | '' | false | undefined;
 
+  /// TODO(shlomiassaf): Remove in 1.0.0
   /**
-   * The name of the property that points to a UID on the object.
-   * If not the, the table will use it's own identifier.
-   *
-   * Note that when not set some features might not work, especially around context state.
+   * @deprecated Use `pIndex` in the column definition. (Removed in 1.0.0)
    */
-  @Input() identityProp: string;
+  @Input() get identityProp(): string { return this.__identityProp; }
+  set identityProp(value: string) { this.__identityProp = value; setIdentityProp(this._store, value); }
+  private __identityProp: string;
 
   /**
    * The table's source of data
@@ -548,7 +550,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
             // Context between the operations are not supported at the moment
             // Event for client side operations...
             // TODO: can we remove this? we clear the context with `onSourceChanging`
-            tap( () => !this.identityProp && this._extApi.contextApi.clear() ),
+            tap( () => !this._store.primary && this._extApi.contextApi.clear() ),
             switchMap( () => value.onRenderedDataChanged.pipe(take(1), mapTo(this.ds.renderLength)) ),
             observeOn(asapScheduler),
             UnRx(this, value)
@@ -607,6 +609,9 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     const rebuildRows = this._store.allColumns.length > 0;
     this._extApi.contextApi.clear();
     this._store.invalidate(this.columns);
+
+    setIdentityProp(this._store, this.__identityProp); /// TODO(shlomiassaf): Remove in 1.0.0
+
     this.attachCustomCellTemplates();
     this.attachCustomHeaderCellTemplates();
     this._cdkTable.clearHeaderRowDefs();

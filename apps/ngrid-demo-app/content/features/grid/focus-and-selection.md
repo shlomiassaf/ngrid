@@ -75,7 +75,7 @@ export interface GridDataPoint {
 
 > `GridDataPoint` is also used in other places to point to a cell.
 
-I> When using `identityProp` to define a primary key for your models (which is highly recommended) the `rowIdent` that should be used is
+I> When using `pIndex` (identity) to define a primary key for your models (which is highly recommended) the `rowIdent` that should be used is
 the identity value, otherwise use the index position in the datasource.
 
 Now, using it straight forward:
@@ -150,7 +150,7 @@ gridInstance.contextApi.unselectCells(true);
 gridInstance.contextApi.unselectCells([ { rowIdent: 3, colIndex: 2 } ], true);
 ```
 
-## Navigating with primary index (`identityProp`)
+## Navigating with primary index (`PblColumn.pIndex`)
 
 Most of the operations in focus & selection require a reference to cell (any by that we also get the reference to the row).
 We saw that `CellReference` is used for that and it can be the cell's `HTMLElement` or direct context instance.
@@ -166,7 +166,7 @@ const cellRef: GridDataPoint = { rowIdent: 3, colIndex: 2 };
 
 Both row and col are referenced by their positional index, so `rowIdent: 3` means the 4th item (0 based) in the grid's datasource.
 
-But how does it work when we do set `identityProp` (primary index)? for example, if our primary index is the social ID field?
+But how does it work when we do set a primary index (`pIndex`) for example, if our primary index is the social ID field?
 
 ```typescript
 const cellRef: GridDataPoint = { rowIdent: '0879846579', colIndex: 2 };

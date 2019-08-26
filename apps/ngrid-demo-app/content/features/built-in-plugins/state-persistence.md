@@ -267,7 +267,7 @@ I> Notice that some property can accept an array of keys, some can only accept b
 
 Starting with the **grid** chunk / property, we only specify 3 keys, the grid chunk itself has more keys on it's chunks:
 
-`'showHeader', 'showFooter', 'focusMode', 'identityProp', 'usePagination', 'hideColumns', 'fallbackMinHeight'`
+`'showHeader', 'showFooter', 'focusMode', 'usePagination', 'hideColumns', 'fallbackMinHeight'`
 
 So if we set the filter in **include** the 3 keys are the only state we save for the grid chunk.  
 If we set the filter to **exclude** we use all other keys **except** the 3.

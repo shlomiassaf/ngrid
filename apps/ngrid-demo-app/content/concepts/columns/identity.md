@@ -1,7 +1,7 @@
 ---
 title: Identity Column
-path: concepts/grid/identity
-parent: concepts/grid
+path: concepts/columns/identity
+parent: concepts/columns
 ordinal: 4
 tags: primary index
 ---
@@ -32,13 +32,10 @@ It is highly recommended to define the identity whenever possible.
 
 ## Defining the Identity
 
-To define the identity column, set the column's id to the `identityProp` property on the grid (`PblNgridComponent.identityProp`).
+To define the identity column, set the `pIndex` property of the column definitions to `true`.
 
-```html
-<pbl-ngrid identityProp="licenceId"></pbl-ngrid>
-```
-
-W> This API might change in the future and the definition might move to the column set.
+I> Make sure only one column is set as the identity column. When multiple columns are set as identity columns the last
+column defined will be the identity column. (On dev environment a warning message will appear in the console)
 
 When set, the identity column has a great impact on performance, especially when searching for row's in large data sets.
 
@@ -48,8 +45,7 @@ W> Note that some plugins/features might not work if the identity is not set.
 
 In some data sets there is not identity and we can't uniquely identify rows by their content.
 
-When this is the case, do not set the `identityProp`, **NGrid** will use the row position (index) of each row
-to identify it.
+When this is the case, **NGrid** will use the row position (index) of each row to identify it.
 
 ## Row Identity Attributes
 
