@@ -2,7 +2,7 @@
 title: Sticky
 path: features/built-in-plugins/sticky
 parent: features/built-in-plugins
-ordinal: 4
+ordinal: 5
 ---
 # Sticky
 

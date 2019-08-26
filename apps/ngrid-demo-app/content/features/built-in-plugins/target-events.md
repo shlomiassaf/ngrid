@@ -16,18 +16,20 @@ By default all grid have no support for such events and we can add them in sever
 In addition to mouse / keyboard support, `target-events` also add **focus** and **range selection** integration
 using the mouse and keyboard. Focus and range selection support already exists in grid but `target-events` exposes them to the user.
 
-## Auto Enable
+## Plugin Options
+
+This plugin provides a global configuration group under the name `targetEvents`.
+
+I> If you're unfamiliar with global configurations and configuration groups, [read about it here](../../../features/grid/global-settings)
+
+### Auto Enable
 
 To automatically enable `target-events` for all grids we use the configuration service:
 
 ```typescript
 
 @NgModule({
-  declarations: [ ],
-  imports: [
-    PblNgridModule,
-    PblNgridTargetEventsModule, // Make sure to add the `target-events` module
-  ]
+  imports: [ PblNgridModule, PblNgridTargetEventsModule ]
 })
 export class MyAppRootModule {
   constructor(config: PblNgridConfigService) {
@@ -61,5 +63,3 @@ The plugin is used the ContextApi to support mouse & keyboard behavior, you can 
 <div pbl-example-view="pbl-target-events-example"></div>
 
 <div pbl-example-view="pbl-enter-and-leave-events-example"></div>
-
-i> The plugin `@pebula/ngrid/detail-row` requires this plugin

@@ -2,7 +2,7 @@
 title: Overlay Panel
 path: features/built-in-plugins/overlay-panel
 parent: features/built-in-plugins
-ordinal: 3
+ordinal: 4
 ---
 # Overlay Panel
 

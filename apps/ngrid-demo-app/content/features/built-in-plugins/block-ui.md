@@ -1,10 +1,10 @@
 ---
-title: Block Ui
+title: Block UI
 path: features/built-in-plugins/block-ui
 parent: features/built-in-plugins
-ordinal: 5
+ordinal: 6
 ---
-# Block Ui
+# Block UI
 
 <div pbl-example-view="pbl-block-ui-example"></div>
 

@@ -36,6 +36,9 @@ export class MyRootModule {
       autoEnable: true
     });
 
+    gridConfig.set('YOUR GROUP NAME HERE', {
+      /* Group specific configuration here... */
+    });
   }
 }
 
@@ -53,3 +56,12 @@ I> For plugins, the plugin author is responsible for adding the support for defa
 The reason for grouping the settings is to allow extensions/plugins to accept global settings using the same method in the grid.
 
 This will contribute to a single, agreed upon, way of defining and consuming settings throughout the grid's eco-system.
+
+## Collisions
+
+Some plugins might provide a global configuration option and a local, instance/directive level options.
+
+If this is the case, it is up to the author of the plugin to determine which option value to use.
+
+In all of **NGrid** APIs (including plugins) the more specific option wins, that is a global option
+with a counterpart directive `@Input`, the directive input (if set) will be used.

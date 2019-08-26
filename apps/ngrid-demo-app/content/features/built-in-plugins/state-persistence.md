@@ -2,7 +2,7 @@
 title: State Persistence
 path: features/built-in-plugins/state-persistence
 parent: features/built-in-plugins
-ordinal: 2
+ordinal: 3
 ---
 # State Persistence
 
@@ -71,6 +71,33 @@ And of course, don't forget to the the `PblNgridStatePluginModule` module to you
 
 ```ts
 import { PblNgridStatePluginModule } from '@pebula/ngrid/state';
+```
+
+## Plugin Options
+
+This plugin provides a global configuration group under the name `state` and local per-instance configuration.
+
+I> If you're unfamiliar with global configurations and configuration groups, [read about it here](../../../features/grid/global-settings)
+
+### Auto Enable
+
+Automatically enabling the `state` plugin for all grids is configured **only** through the configuration service.
+In addition, you can define the load/save configuration to use when auto-enabling the plugin.
+
+```typescript
+interface PblNgridConfig {
+  state?: {
+    /** When set to true will enable the state plugin on all table instances by default. */
+    autoEnable?: boolean;
+    /**
+     * Options to use when auto-loading the plugin
+     */
+    autoEnableOptions?: {
+      loadOptions?: PblNgridStateLoadOptions;
+      saveOptions?: PblNgridStateSaveOptions;
+    }
+  };
+}
 ```
 
 ## Advanced Usage
