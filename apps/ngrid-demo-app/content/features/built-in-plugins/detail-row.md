@@ -6,7 +6,12 @@ ordinal: 1
 ---
 # Detail Row
 
-I> Requires `@pebula/ngrid/target-event` plugin
+---
+
+The detail row plugin depends on the **[target-events](../target-events)** plugin.  
+If the **[target-events](../target-events)** plugin is not initialized the detail row plugin will initialize it.
+
+---
 
 W> Currently not compatible with virtual scroll, make sure virtual scroll is not enabling on the table when detail rows are used
 

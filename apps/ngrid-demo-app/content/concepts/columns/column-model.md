@@ -105,12 +105,23 @@ All column types share a set of common definitions, we will review them now and 
 
 ## Creating Definitions
 
-Together, data and meta columns, define the structure of the table - a data item model.
+Together, data and meta columns, define the structure of the grid - a data item model.
 
 You can build the column definition from JSON or use the [columns factory](../factory).
 When working with simple models using JSON is easy, but once the model is big help is needed, especially with meta headers, group headers etc...
 
 If you're not familiar with the column factory we recommend reading it once you finish this page.
+
+For each type of column there are 2 entities:
+
+- A simple (JSON like) interface, describing the column
+- An concrete class implementation of the column type
+
+For example, the main column type (data column) has a simple JSON like interface (`PblColumnDefinition`) and a concrete implementation (`PblColumn`)
+
+Using the factory, the output created are concrete instances but you can use JSON objects as well.
+
+We will discuss this topic in more detail shortly...
 
 ## Column Definition
 
@@ -287,3 +298,55 @@ In this example, several meta columns are defined - spread across 3 rows.
 - A footer column in **rowIndex** 0
 
 W> Note that the index count is unique for headers and for footers.
+
+## The Column Set
+
+Now that we've reviewed the different column types we can see how they all fit together.
+
+It's clear that a grid **must** have a valid list of **one or more data columns**, all other types are optional.
+
+Therefore, the grid requires a **column set** definition that describes the column structure of the grid with at least 1 data column.  
+The column set is set in the input `PblNgridComponent.column`.
+
+As discussed above, column types can be either a JSON like object implementing an interface or the relevant concrete implementation.
+
+The interface for the column set:
+
+```typescript
+export interface PblNgridColumnDefinitionSet {
+  table: {
+    header?: PblMetaRowDefinitions;
+    footer?: PblMetaRowDefinitions;
+    cols: PblColumnDefinition[];
+  };
+  header: PblColumnSet<PblMetaColumnDefinition>[];
+  footer: PblColumnSet<PblMetaColumnDefinition>[];
+  headerGroup: PblColumnSet<PblColumnGroupDefinition>[];
+}
+```
+
+The `table` section represent the data columns (`table.cols`) and a single header and/or footer column for the data columns.  
+All other sections represents array of meta rows, each item in the array is a collection of columns for that row.
+
+I> The concrete implementation for the column set is `PblNgridColumnSet` which is also the output of the factory.
+
+## Runtime Changes
+
+When the columns are set (setting `PblNgridComponent.column`) they are evaluated and processed by the grid. The grid will **create an internal column set**, including a fresh
+new instance for every column in the set. Wether its a simple JSON object or a concrete implementation, a new instance is created. The internal column set **is not accessible** and does not overwrite the `columns` property.
+
+This is to say that any change to the column set or any of it's child columns will not propagate to the column set stored in the grid.
+
+For example, changing the `width`, `css` or `sort` properties of a column will not reflect in the grid because the column instance you are doing the change on is not the one used by the grid.
+
+Instead, changes are done through APs, mainly the `ColumnApi` and sometimes other APIs.
+
+For example:
+
+- To change the width of a data column, call `resizeColumn` in the `ColumnApi`.
+- To swap or move a column use `swapColumns` or `moveColumn` in the `ColumnApi`.
+
+I> The `ColumnApi` also contains searching utilities to locate columns based on different parameters
+
+W> To automatically reflect column changes you need to replaces the entire `columns` array, this will invoke a column invalidation process which is
+costly in terms of performance, thus not recommended.
