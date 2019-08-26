@@ -2,7 +2,7 @@
 title: Transpose
 path: features/built-in-plugins/transpose
 parent: features/built-in-plugins
-ordinal: 6
+ordinal: 7
 ---
 # Transpose
 
