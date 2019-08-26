@@ -117,6 +117,11 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     loadChildren: () => import('@pebula/apps/ngrid-examples/features/grid/row-height/row-height.module').then( m => m.RowHeightExampleModule ),
   },
   {
+    path: 'features-grid-row-class.module',
+    pathMatch: 'full',
+    loadChildren: () => import('@pebula/apps/ngrid-examples/features/grid/row-class/row-class.module').then( m => m.RowClassExampleModule ),
+  },
+  {
     path: 'grid-empty-collection-template.module',
     pathMatch: 'full',
     loadChildren: () => import('@pebula/apps/ngrid-examples/features/grid/empty-collection-template/empty-collection-template.module').then( m => m.EmptyCollectionTemplateExampleModule ),

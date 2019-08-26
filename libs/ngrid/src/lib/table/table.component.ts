@@ -37,7 +37,7 @@ import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
 import { findCellDef } from './directives/cell-def';
 import { PblColumn, PblColumnStore, PblMetaColumnStore, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './columns';
-import { PblNgridCellContext, PblNgridMetaCellContext, ContextApi, PblNgridContextApi } from './context/index';
+import { PblNgridCellContext, PblNgridMetaCellContext, ContextApi, PblNgridContextApi, PblNgridRowContext } from './context/index';
 import { PblNgridRegistryService } from './services/table-registry.service';
 import { PblNgridConfigService } from './services/config';
 import { DynamicColumnWidthLogic, DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY } from './col-width-logic/dynamic-column-width';
@@ -228,6 +228,9 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       this._fallbackMinHeight = value;
     }
   }
+
+  @Input() rowClassUpdate: undefined | ( (context: PblNgridRowContext<T>) => ( string | string[] | Set<string> | { [klass: string]: any } ));
+  @Input() rowClassUpdateFreq: 'item' | 'ngDoCheck' | 'none' = 'item';
 
   rowFocus: 0 | '' = '';
   cellFocus: 0 | '' = '';

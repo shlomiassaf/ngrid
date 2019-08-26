@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EmbeddedViewRef, Inject, Input, ViewEncapsulation, SimpleChanges, OnChanges, Optional } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EmbeddedViewRef, Inject, Input, ViewEncapsulation, SimpleChanges, OnChanges, Optional, DoCheck } from '@angular/core';
 import { CdkRow, CDK_ROW_TEMPLATE, RowContext } from '@angular/cdk/table';
 import { PblNgridPluginController } from '../../ext/plugin-control';
 import { EXT_API_TOKEN, PblNgridExtensionApi } from '../../ext/table-ext-api';
 import { PblRowContext } from '../context/index';
 import { PblNgridComponent } from '../table.component';
+import { StylingDiffer, StylingDifferOptions } from './cell-style-class/styling_differ';
 
 export const PBL_NGRID_ROW_TEMPLATE  = `<ng-content select=".pbl-ngrid-row-prefix"></ng-content>${CDK_ROW_TEMPLATE}<ng-content select=".pbl-ngrid-row-suffix"></ng-content>`;
 
@@ -21,7 +22,7 @@ export const PBL_NGRID_ROW_TEMPLATE  = `<ng-content select=".pbl-ngrid-row-prefi
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridRowComponent<T = any> extends CdkRow implements OnChanges {
+export class PblNgridRowComponent<T = any> extends CdkRow implements OnChanges, DoCheck {
 
   @Input() set row(value: T) { value && this.updateRow(); }
 
@@ -32,6 +33,9 @@ export class PblNgridRowComponent<T = any> extends CdkRow implements OnChanges {
 
   rowRenderIndex: number;
   context: PblRowContext<T>;
+
+  private _classDiffer: StylingDiffer<{ [klass: string]: boolean }>;
+  private _lastClass: Set<string>;
 
   constructor(@Optional() @Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<T>, protected el: ElementRef<HTMLElement>) {
     super();
@@ -48,6 +52,16 @@ export class PblNgridRowComponent<T = any> extends CdkRow implements OnChanges {
       this.context = this.extApi.contextApi.rowContext(this.rowRenderIndex);
       this.el.nativeElement.setAttribute('row-id', this.context.dataIndex as any);
       this.el.nativeElement.setAttribute('row-key', this.context.identity);
+
+      if (this.grid.rowClassUpdate && this.grid.rowClassUpdateFreq === 'item') {
+        this.updateHostClass();
+      }
+    }
+  }
+
+  ngDoCheck(): void {
+    if (this.grid.rowClassUpdate && this.grid.rowClassUpdateFreq === 'ngDoCheck') {
+      this.updateHostClass();
     }
   }
 
@@ -70,6 +84,58 @@ export class PblNgridRowComponent<T = any> extends CdkRow implements OnChanges {
       if (viewRef.rootNodes[0] === this.el.nativeElement) {
         this.rowRenderIndex = i;
         break;
+      }
+    }
+  }
+
+  protected updateHostClass(): void {
+    if (this.context) {
+      const el = this.el.nativeElement;
+
+      // if there is an updater, work with it
+      // otherwise, clear previous classes that got applied (assumed a live binding change of the updater function)
+      // users should be aware to tear down the updater only when they want to stop this feature, if the goal is just to toggle on/off
+      // it's better to set the frequency to `none` and return nothing from the function (replace it) so the differ is not nuked.
+      if (this.grid.rowClassUpdate) {
+        if (!this._classDiffer) {
+          this._classDiffer = new StylingDiffer<{ [klass: string]: boolean }>(
+            'NgClass',
+            StylingDifferOptions.TrimProperties | StylingDifferOptions.AllowSubKeys | StylingDifferOptions.AllowStringValue | StylingDifferOptions.ForceAsMap,
+          );
+          this._lastClass = new Set<string>();
+        }
+
+        const newValue = this.grid.rowClassUpdate(this.context);
+        this._classDiffer.setValue(newValue);
+
+        if (this._classDiffer.hasValueChanged()) {
+          const lastClass = this._lastClass;
+          this._lastClass = new Set<string>();
+
+          const value = this._classDiffer.value || {};
+
+          for (const key of Object.keys(value)) {
+            if (value[key]) {
+              el.classList.add(key);
+              this._lastClass.add(key);
+            } else {
+              el.classList.remove(key);
+            }
+            lastClass.delete(key);
+          }
+          if (lastClass.size > 0) {
+            for (const key of lastClass.values()) {
+              el.classList.remove(key);
+            }
+          }
+        }
+      } else if (this._classDiffer) {
+        const value = this._classDiffer.value || {};
+        this._classDiffer = this._lastClass = undefined;
+
+        for (const key of Object.keys(value)) {
+          el.classList.remove(key);
+        }
       }
     }
   }
