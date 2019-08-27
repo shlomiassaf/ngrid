@@ -61,7 +61,8 @@ pbl-cdk-virtual-scroll-viewport {
 
 .cdk-virtual-scroll-inner-width {
   width: 100%;
-  height: 0 !important;
+  height: 100%;
+  position: absolute;
   margin: 0 !important;
   padding: 0 !important;
 }

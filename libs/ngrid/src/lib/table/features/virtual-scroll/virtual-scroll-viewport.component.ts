@@ -149,6 +149,15 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     return this.elementRef.nativeElement.getBoundingClientRect().width;
   }
 
+  get innerHeight(): number {
+    const innerWidthHelper = this.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-inner-width') as HTMLElement;
+    return innerWidthHelper.getBoundingClientRect().height;
+  }
+
+  get outerHeight(): number {
+    return this.elementRef.nativeElement.getBoundingClientRect().height;
+  }
+
   /// TODO(shlomiassaf): Remove when not supporting 8.1.2 and below
   /// COMPATIBILITY 8.1.2- <-> 8.1.3+
     /** A string representing the `style.width` property value to be used for the spacer element. */
@@ -264,6 +273,11 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     let size = super.measureRenderedContentSize();
     if (this.orientation === 'vertical') {
       size -= this.stickyRowHeaderContainer.offsetHeight + this.stickyRowFooterContainer.offsetHeight;
+
+      // Compensate for hz scroll bar, if exists, only in non virtual scroll mode.
+      if (!this.enabled) {
+        size += this.outerHeight - this.innerHeight;
+      }
     }
     return this.ngeRenderedContentSize = size;
   }
