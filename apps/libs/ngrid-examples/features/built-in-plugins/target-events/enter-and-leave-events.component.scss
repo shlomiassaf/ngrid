@@ -3,48 +3,53 @@ $header-cell-color: yellow;
 $header-cell-group-color: blue;
 $footer-cell-color: pink;
 
-.cell-hovered {
-  border: 2px solid $data-cell-color;
-
-  &.pbl-ngrid-header-cell {
-    border: 2px solid $header-cell-color;
+.enter-and-leave-grid-example {
+  .pbl-ngrid-cell {
+    border: 2px solid transparent;
   }
+  .cell-hovered {
+    border: 2px solid $data-cell-color;
 
-  &.pbl-header-group-cell {
-    border: 2px solid $header-cell-group-color;
-  }
+    &.pbl-ngrid-header-cell {
+      border: 2px solid $header-cell-color;
+    }
 
-  &.pbl-ngrid-footer-cell {
-    border: 2px solid $footer-cell-color;
-  }
-}
+    &.pbl-header-group-cell {
+      border: 2px solid $header-cell-group-color;
+    }
 
-.row-hovered {
-  transition: all 250ms ease;
-  background: $data-cell-color;
-
-  &.row-cell-hovered {
-    background: transparentize($data-cell-color, 0.75);
-  }
-
-  &.pbl-ngrid-header-row {
-    background: $header-cell-color;
-    &.row-cell-hovered {
-      background: transparentize($header-cell-color, 0.75);
+    &.pbl-ngrid-footer-cell {
+      border: 2px solid $footer-cell-color;
     }
   }
 
-  &.pbl-meta-group-row {
-    background: $header-cell-group-color;
-    &.row-cell-hovered {
-      background: transparentize($header-cell-group-color, 0.75);
-    }
-  }
+  .row-hovered {
+    transition: all 250ms ease;
+    background: $data-cell-color;
 
-  &.pbl-ngrid-footer-row {
-    background: $footer-cell-color;
     &.row-cell-hovered {
-      background: transparentize($footer-cell-color, 0.75);
+      background: transparentize($data-cell-color, 0.75);
+    }
+
+    &.pbl-ngrid-header-row {
+      background: $header-cell-color;
+      &.row-cell-hovered {
+        background: transparentize($header-cell-color, 0.75);
+      }
+    }
+
+    &.pbl-meta-group-row {
+      background: $header-cell-group-color;
+      &.row-cell-hovered {
+        background: transparentize($header-cell-group-color, 0.75);
+      }
+    }
+
+    &.pbl-ngrid-footer-row {
+      background: $footer-cell-color;
+      &.row-cell-hovered {
+        background: transparentize($footer-cell-color, 0.75);
+      }
     }
   }
 }

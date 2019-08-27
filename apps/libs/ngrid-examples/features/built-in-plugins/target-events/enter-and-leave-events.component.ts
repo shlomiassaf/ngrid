@@ -53,7 +53,7 @@ export class EnterAndLeaveEventsExample {
     )
     .build();
 
-  ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 5) ).create();
+  ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 90) ).create();
 
   constructor(private datasource: DemoDataSource) { }
 
