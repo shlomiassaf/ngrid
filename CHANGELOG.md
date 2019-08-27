@@ -1,3 +1,13 @@
+# 1.0.0-rc.4 (2019-08-27)
+
+
+### Bug Fixes
+
+* **ngrid:** consider hz scroll on height calc in vScrollNone ([9d16a5a](https://github.com/shlomiassaf/ngrid/commit/9d16a5a))
+* **ngrid:** handle height properly with vScrollNone ([fe83e5f](https://github.com/shlomiassaf/ngrid/commit/fe83e5f))
+
+
+
 # 1.0.0-rc.3 (2019-08-26)
 
 
