@@ -9,6 +9,7 @@ import { TocAreaDirective } from '../../toc.module';
 import { MarkdownPagesMenuService } from '../../services/markdown-pages-menu.service';
 
 declare const ANGULAR_VERSION: string;
+declare const CDK_VERSION: string;
 declare const NGRID_VERSION: string;
 declare const BUILD_VERSION: string;
 
@@ -27,6 +28,7 @@ export class MarkdownPageContainerComponent implements OnDestroy {
   menu$ = new Subject<any>();
 
   ngVersion = ANGULAR_VERSION;
+  cdkVersion = CDK_VERSION;
   ngridVersion = NGRID_VERSION;
   buildVersion = BUILD_VERSION;
 

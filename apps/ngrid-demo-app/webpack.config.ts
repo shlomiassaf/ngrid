@@ -87,7 +87,9 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   }));
 
   const angular = require('@angular/core/package.json');
+  const cdk = require('@angular/cdk/package.json');
   const ngrid = require(Path.join(process.cwd(), `libs/ngrid/package.json`));
+
   const fn = async () => {
     const format =  {
       short_hash: '%h',
@@ -102,6 +104,7 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
     const gitInfo = await simplegit().log({ n: "1", format});
     return {
       ANGULAR_VERSION: JSON.stringify(angular.version),
+      CDK_VERSION: JSON.stringify(cdk.version),
       NGRID_VERSION: JSON.stringify(ngrid.version),
       BUILD_VERSION: JSON.stringify(gitInfo.latest.short_hash),
     };
