@@ -589,11 +589,15 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               const h = Math.min(this._fallbackMinHeight, this.viewport.measureRenderedContentSize());
               el.style.minHeight = h + 'px';
             } else {
+              el.style.minHeight = this.viewport.enabled ? null : this.viewport.measureRenderedContentSize() + 'px';
               // TODO: When viewport is disabled, we can skip the call to measureRenderedContentSize() and let the browser
               // do the job by setting `contain: unset` in `pbl-cdk-virtual-scroll-viewport`
-              // el.style.minHeight = this.viewport.enabled ? null : this.viewport.measureRenderedContentSize() + 'px';
-              el.style.minHeight = null;
-              el.style.contain = this.viewport.enabled ? null : 'unset';
+
+              // el.style.minHeight = null;
+              // el.style.contain = this.viewport.enabled ? null : 'unset';
+
+              // UPDATE: This will not work because it will cause the width to be incorrect when used with vScrollNone
+              // TODO: Check why?
             }
           });
       }
@@ -708,6 +712,14 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   resizeColumns(columns?: PblColumn[]): void {
     if (!columns) {
       columns = this._store.columns;
+    }
+
+    // protect from per-mature resize.
+    // Will happen on additional header/header-group rows AND ALSO when vScrollNone is set
+    // This will cause size not to populate because it takes time to render the rows, since it's not virtual and happens immediately.
+    // TODO: find a better protection.
+    if (!columns[0].sizeInfo) {
+      return;
     }
 
     // stores and calculates width for columns added to it. Aggregate's the total width of all added columns.
