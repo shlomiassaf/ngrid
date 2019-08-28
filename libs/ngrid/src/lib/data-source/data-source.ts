@@ -310,11 +310,14 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
 
   /**
    * Move's an item (in the entire source) from one index to the other, pushing the item in the destination one item backwards.
+   *
    * Note that if the rendered data is a subset of the entire source (i.e virtual scroll & range) the indices are considered
-   * local to the rendered view and are translated to fir the entire source.
+   * local to the rendered view and are translated to fit the entire source.
+   *
+   * Tp disable this behavior, set the `absolute` parameter to `true`
    */
-  moveItem(fromIndex: number, toIndex: number): void {
-    if (this._lastRange) {
+  moveItem(fromIndex: number, toIndex: number, absolute = false): void {
+    if (absolute !== true && this._lastRange) {
       fromIndex = this._lastRange.start + fromIndex;
       toIndex = this._lastRange.start + toIndex;
     }
