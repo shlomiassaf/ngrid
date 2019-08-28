@@ -21,7 +21,7 @@ import {
   DragDropRegistry,
   CdkDrag,
   CDK_DROP_LIST,
-  CDK_DRAG_CONFIG, DragRefConfig
+  CDK_DRAG_CONFIG, DragRefConfig, CdkDragDrop, CdkDragStart
 } from '@angular/cdk/drag-drop';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
@@ -60,7 +60,7 @@ let _uniqueIdCounter = 0;
     { provide: CDK_DROP_LIST, useExisting: PblNgridRowReorderPluginDirective },
   ],
 })
-export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> implements OnDestroy, CdkLazyDropList<T> {
+export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> implements OnDestroy, CdkLazyDropList<T, PblNgridRowReorderPluginDirective<T>> {
 
   id = `pbl-ngrid-row-reorder-list-${_uniqueIdCounter++}`;
 
@@ -85,9 +85,15 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
     super(...cdkDropList(element, dragDrop, changeDetectorRef, dir, group, dragDropRegistry, _document));
     // super(element, dragDrop, changeDetectorRef, dir, group);
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
-    this.dropped.subscribe( event => {
+
+    this.dropped.subscribe( (event: CdkDragDrop<T>) => {
+      const item = event.item as PblNgridRowDragDirective<T>;
+
+      const previousIndex = table.ds.source.indexOf(item.draggedContext.row);
+      const currentIndex = event.currentIndex + table.ds.renderStart;
+
       this.table.contextApi.clear();
-      this.table.ds.moveItem(event.previousIndex, event.currentIndex);
+      this.table.ds.moveItem(previousIndex, currentIndex, true);
       this.table._cdkTable.syncRows('data');
     });
   }
@@ -99,7 +105,7 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
    * is useful when the `cdkDropList` is not the direct parent (i.e. ancestor but not father)
    * of the draggable elements.
    */
-  directContainerElement: string;
+  directContainerElement: string = '.pbl-ngrid-scroll-container'; // we need this to allow auto-scroll
   get pblDropListRef(): PblDropListRef<any> { return this._dropListRef as any; }
   originalElement: ElementRef<HTMLElement>;
   _draggablesSet = new Set<CdkDrag>();
@@ -129,6 +135,10 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
 export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements CdkLazyDrag<T, PblNgridRowReorderPluginDirective<T>> {
   rootElementSelector = 'pbl-ngrid-row';
 
+  get context(): Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>> {
+    return this._context;
+  }
+
   @Input('pblNgridRowDrag') set context(value: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>) {
     this._context = value;
 
@@ -137,7 +147,20 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
     this.cdkDropList = plugin || undefined;
   }
 
-  private _context: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>
+  /**
+   * Reference to the last dragged context.
+   *
+   * This context is not similar to the `context` property.
+   * The `context` property holds the current context which is shared and updated on scroll so if a user start a drag and then scrolled
+   * the context will point to the row in view and not the original cell.
+   */
+  get draggedContext(): Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>> {
+    return this._draggedContext;
+  }
+
+  private _context: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>;
+  private _draggedContext: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>;
+
   private pluginCtrl: PblNgridPluginController;
 
   // CTOR IS REQUIRED OR IT WONT WORK IN AOT
@@ -166,6 +189,13 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
     //   dragDrop,
     //   _changeDetectorRef,
     // );
+
+    this.started.subscribe( (event: CdkDragStart) => {
+      const { col, row, table, value }  = this._context;
+      this._draggedContext = { col, row, table, value };
+    });
+
+
   }
 
   /* CdkLazyDrag start */
