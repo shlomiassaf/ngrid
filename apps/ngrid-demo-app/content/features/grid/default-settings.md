@@ -2,7 +2,7 @@
 title: Global Settings
 path: features/grid/global-settings
 parent: features/grid
-ordinal: 3
+ordinal: 5
 ---
 # Global Settings
 

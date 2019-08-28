@@ -2,7 +2,7 @@
 title: Empty Collection Template
 path: features/grid/empty-collection-template
 parent: features/grid
-ordinal: 3
+ordinal: 6
 ---
 # Empty collection template
 

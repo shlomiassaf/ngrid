@@ -2,7 +2,7 @@
 title: Row Height
 path: features/grid/row-height
 parent: features/grid
-ordinal: 1
+ordinal: 2
 ---
 # Row Height
 

@@ -2,7 +2,7 @@
 title: Virtual Scroll
 path: features/grid/virtual-scroll
 parent: features/grid
-ordinal: 2
+ordinal: 4
 ---
 # Virtual Scroll
 

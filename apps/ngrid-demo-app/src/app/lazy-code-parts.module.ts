@@ -112,14 +112,19 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     loadChildren: () => import('@pebula/apps/ngrid-examples/features/grid/reuse/reuse.module').then( m => m.ReuseExampleModule ),
   },
   {
+    path: 'features-grid-row-class.module',
+    pathMatch: 'full',
+    loadChildren: () => import('@pebula/apps/ngrid-examples/features/grid/row-class/row-class.module').then( m => m.RowClassExampleModule ),
+  },
+  {
     path: 'grid-row-height.module',
     pathMatch: 'full',
     loadChildren: () => import('@pebula/apps/ngrid-examples/features/grid/row-height/row-height.module').then( m => m.RowHeightExampleModule ),
   },
   {
-    path: 'features-grid-row-class.module',
+    path: 'features-grid-row-ordering.module',
     pathMatch: 'full',
-    loadChildren: () => import('@pebula/apps/ngrid-examples/features/grid/row-class/row-class.module').then( m => m.RowClassExampleModule ),
+    loadChildren: () => import('@pebula/apps/ngrid-examples/features/grid/row-ordering/row-ordering.module').then( m => m.RowOrderingExampleModule ),
   },
   {
     path: 'grid-empty-collection-template.module',

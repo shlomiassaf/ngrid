@@ -2,7 +2,7 @@
 title: Reuse
 path: features/grid/reuse
 parent: features/grid
-ordinal: 4
+ordinal: 7
 ---
 # Table Re-Use
 
