@@ -1,3 +1,14 @@
+# 1.0.0-rc.5 (2019-08-28)
+
+
+### Bug Fixes
+
+* **ngrid/drag:** fix row ordering issues ([2ec8dca](https://github.com/shlomiassaf/ngrid/commit/2ec8dca))
+
+This fix allows proper move on scroll operations and in addition proper handling of row move when used in virtual scroll mode.
+However, the UI placeholder in virtual scroll mode is not working properly due to lack of support in the cdk drag package.
+
+
 # 1.0.0-rc.4 (2019-08-27)
 
 
