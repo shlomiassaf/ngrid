@@ -11,17 +11,18 @@ import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { SelectionColumnExample } from './selection-column.component';
 import { BulkModeAndVirtualScrollExample } from './bulk-mode-and-virtual-scroll.component';
+import { CheckboxColorExample } from './checkbox-color.component';
 
 @NgModule({
-  declarations: [ SelectionColumnExample, BulkModeAndVirtualScrollExample ],
+  declarations: [ SelectionColumnExample, BulkModeAndVirtualScrollExample, CheckboxColorExample ],
   imports: [
     CommonModule,
     MatButtonToggleModule,
     ExampleCommonModule,
     PblNgridModule, PblNgridBlockUiModule, PblNgridStickyModule, PblNgridCheckboxModule,
   ],
-  exports: [ SelectionColumnExample, BulkModeAndVirtualScrollExample ],
-  entryComponents: [ SelectionColumnExample, BulkModeAndVirtualScrollExample ],
+  exports: [ SelectionColumnExample, BulkModeAndVirtualScrollExample, CheckboxColorExample ],
+  entryComponents: [ SelectionColumnExample, BulkModeAndVirtualScrollExample, CheckboxColorExample ],
 })
-@BindNgModule(SelectionColumnExample, BulkModeAndVirtualScrollExample)
+@BindNgModule(SelectionColumnExample, BulkModeAndVirtualScrollExample, CheckboxColorExample)
 export class SelectionColumnExampleModule { }

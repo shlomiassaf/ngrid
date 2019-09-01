@@ -1,7 +1,7 @@
 <ng-container *pblNgridHeaderCellDef="name; col as col;">
   <mat-checkbox *ngIf="bulkSelectMode !== 'none'"
                 style="overflow: initial"
-                color="primary"
+                [color]="color"
                 (click)="$event.stopPropagation()"
                 (change)="$event ? masterToggle() : null"
                 [checked]="allSelected"
@@ -10,7 +10,7 @@
 </ng-container>
 <mat-checkbox *pblNgridCellDef="name; row as row;"
               style="overflow: initial"
-              color="primary"
+              [color]="color"
               [disabled]=isCheckboxDisabled(row)
               (click)="$event.stopPropagation()"
               (change)="rowItemChange(row)"
