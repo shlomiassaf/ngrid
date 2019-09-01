@@ -1,5 +1,6 @@
 import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, Optional, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
+import { ThemePalette } from '@angular/material/core';
 
 import { UnRx } from '@pebula/utils';
 import {
@@ -69,6 +70,15 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
     }
   }
 
+  @Input() get color(): ThemePalette { return this._color; }
+  set color(value: ThemePalette) {
+    if (value !== this._color) {
+      this._color = value;
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
+    }
+  }
+
   @ViewChild(PblNgridHeaderCellDefDirective, { static: true }) headerDef: PblNgridHeaderCellDefDirective<any>;
   @ViewChild(PblNgridCellDefDirective, { static: true }) cellDef: PblNgridCellDefDirective<any>;
   @ViewChild(PblNgridFooterCellDefDirective, { static: true }) footerDef: PblNgridFooterCellDefDirective<any>;
@@ -79,6 +89,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
   private _selection: SelectionModel<any>;
   private _bulkSelectMode: 'all' | 'view' | 'none';
   private _isCheckboxDisabled: (row: any) => boolean = ALWAYS_FALSE_FN;
+  private _color: ThemePalette;
 
   constructor(@Optional() public table: PblNgridComponent<any>, private cdr: ChangeDetectorRef) {}
 

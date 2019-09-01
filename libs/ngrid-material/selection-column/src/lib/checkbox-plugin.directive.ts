@@ -1,4 +1,5 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 
 import { UnRx } from '@pebula/utils';
 import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/ngrid';
@@ -48,6 +49,7 @@ export class PblNgridMatCheckboxSelectionDirective implements OnDestroy {
           if (this._bulkSelectMode) {
             this.cmpRef.instance.bulkSelectMode = this._bulkSelectMode;
           }
+          this.cmpRef.instance.color = this._color;
         }
         if (this.isCheckboxDisabled) {
           this.cmpRef.instance.isCheckboxDisabled = this.isCheckboxDisabled;
@@ -77,8 +79,19 @@ export class PblNgridMatCheckboxSelectionDirective implements OnDestroy {
     }
   }
 
+  @Input() get matCheckboxSelectionColor(): ThemePalette { return this._color; }
+  set matCheckboxSelectionColor(value: ThemePalette) {
+    if (value !== this._color) {
+      this._color = value;
+      if (this.cmpRef) {
+        this.cmpRef.instance.color = value;
+      }
+    }
+  }
+
   private _name: string;
   private _bulkSelectMode: 'all' | 'view' | 'none';
+  private _color: ThemePalette;
   private cmpRef: ComponentRef<PblNgridCheckboxComponent>;
   private _removePlugin: (table: PblNgridComponent<any>) => void;
   private _isCheckboxDisabled: (row: any) => boolean;
