@@ -1,3 +1,12 @@
+# 1.0.0-rc.6 (2019-09-01)
+
+
+### Features
+
+* **ngrid-material:** allow theme palette in selection ([0686edd](https://github.com/shlomiassaf/ngrid/commit/0686edd)), closes [#43](https://github.com/shlomiassaf/ngrid/issues/43)
+
+
+
 # 1.0.0-rc.5 (2019-08-28)
 
 
