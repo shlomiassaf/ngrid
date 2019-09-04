@@ -1,0 +1,13 @@
+<pbl-ngrid [dataSource]="ds" [columns]="columns">
+  <div *pblNgridHeaderCellDef="'*'; col as col;">
+    {{col.label}}
+    <span *ngIf="ds.sort.column && ds.sort.column.id === col.id"> [{{ ds.sort.sort.order | uppercase }}]</span>
+  </div>
+</pbl-ngrid>
+
+<div fxLayout="row" fxLayoutGap="16px" style="padding: 8px">
+  <button *ngFor="let key of ['name', 'settings.emailFrequency']"
+          fxFlex="noshrink" mat-stroked-button color="primary" (click)="toggleActive(key)">{{ key }} [{{ getNextDirection(key) }}]</button>
+  <div fxFlex="*"></div>
+  <button fxFlex="noshrink" mat-stroked-button color="accent" (click)="clear()">Clear</button>
+</div>

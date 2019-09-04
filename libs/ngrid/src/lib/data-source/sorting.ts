@@ -9,15 +9,22 @@ export function applySort<T>(column: PblColumn, sort: PblNgridSortDefinition, da
   if (!sort || !sort.order) {
     return data;
   }
-  const sortFn: PblNgridSorter<T> = typeof sort.sortFn === 'function' ? sort.sortFn : defaultSorter;
+
+  const sortFn: PblNgridSorter<T> = typeof sort.sortFn === 'function'
+    ? sort.sortFn
+    : typeof column.sort === 'function'
+      ? column.sort
+      : defaultSorter
+  ;
+
   return column && data
-    ? sortFn(column, sort, data)
+    ? sortFn(column, sort, data.slice())
     : data || []
   ;
 }
 
 function defaultSorter<T>(column: PblColumn, sort: PblNgridSortInstructions, data: T[]): T[] {
-  return data.slice().sort((a, b) => {
+  return data.sort((a, b) => {
     let valueA = column.getValue(a);
     let valueB = column.getValue(b);
 

@@ -6,16 +6,39 @@ ordinal: 4
 ---
 # Column Sorting
 
-Column sorting is activated and configured in 2 locations:
+In NGrid, column sorting is the re-ordering of datasource items based on **logic** and **sort order** (criterion).  
 
-1. DataSource (API)
-2. Grid instance (API)
+> This section covers the basics of sorting, custom sorting and programmatic sorting. For UI reactive sorting (click on header to sort) see the [sorting section](../../../plugins/ngrid-material/mat-sort) in the material plugin.
 
-In addition, you can configure a column specific sorting behaviour in the column definitions.
+## Sort Order
 
-## Column definitions
+The `sort order` defines the sort state (on/off) and logical order:
 
-In the **Column** definitions we define if the column is sortable and optionally how to sort it.
+- **asc** - Ascending order (start to end, 1 to 10, A to Z)
+- **desc** - Descending order (end to start, 10 to 1, A to A)
+- `undefined` - Sorting is not enabled
+
+## Sort Logic
+
+The sort logic is where we determine if a value comes before or after another value.
+
+For example, sorting a numeric column will be based on the decimal numeric system. Sorting of a textual column will be based on the alphabet order.
+
+## Sorting Function
+
+To sort a column a sorting function is **required**. The sorting function accepts the **column**, **sort order** & **data set** and returns a sorted data-set, it is the implementation of the sort logic.
+
+```typescript
+export interface PblNgridSorter<T = any> {
+  (column: PblColumn, sort: PblNgridSortInstructions, data: T[]): T[];
+}
+```
+
+I> The sorting function is **required** for every column we want to sort but there is a default sorting function attached to all sortable column if no custom one attached.
+
+## Sortable Columns
+
+By default, columns are not sortable, to enable sorting the `sort` property must be set on the column definitions:
 
 ```typescript
 export interface PblColumnDefinition extends PblBaseColumnDefinition {
@@ -27,31 +50,25 @@ export interface PblColumnDefinition extends PblBaseColumnDefinition {
 }
 ```
 
-Setting `sort: true` will mark the column as sortable and the sort logic is to be sent when setting the current sort.
+Note that you can set a `boolean` or a sorting function (`PblNgridSorter`).
 
-Or, we can provide a sorting logic for the column via `PblNgridSorter`:
+- If `true` is set, the column is marked sortable and no sorting logic is attached to it.
+- If a sorting function is set, the column is marked sortable and the custom sorting logic is stored.
 
-```typescript
-export type PblNgridSortOrder = 'asc' | 'desc';
-
-export interface PblNgridSortInstructions {
-  order?: PblNgridSortOrder;
-}
-
-export interface PblNgridSorter<T = any> {
-  (column: PblColumn, sort: PblNgridSortInstructions, data: T[]): T[];
-}
-```
+Wether `true` or a function is set, the sort function used is picked when sorting is applied. This is covered later in "Picking a Sorting function"
 
 W> Note that defining `sort` for a column does not activate it, to activate a sorting for a column you need to use the API.
 
-## DataSource (API)
+## Activating Sort for a Column
 
-Through the datasource (`PblDataSource`) we define the sorting programmatically.
+Column sorting can be activated 2 locations:
 
-We can define the current sorted column, the direction of the sort (`asc` or `desc`) and an optional custom sort logic.
+1. DataSource API
+2. Grid Instance API
 
-If we don't supply any of those, it will just clear the active sort.
+Both APIs are similar, with the Grid API adding some sugar on top of the DataSource API.
+
+Let's take a quick look at the **DataSource API** signature:
 
 ```typescript
   /**
@@ -70,18 +87,55 @@ If we don't supply any of those, it will just clear the active sort.
   setSort(column: PblColumn, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
 ```
 
-### Grid instance (API)
+The 1st signature is used for clearing up the current sort.  
+The 2nd signature is used for defining a new sort.
 
-The grid instance API is just sugar around the datasource API, allowing you to reference columns by their **id** or **alias**.
+The **Grid Instance API** is quite identical:
 
-Internally, it will resolve the column instances and call the datasource API.
+```typescript
+  setSort(skipUpdate?: boolean): void;
+  setSort(columnOrSortAlias: PblColumn | string, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
+```
 
-<blockquote class="info icon">
-  <div class="icon-location"></div>
-  This section deals with the programmatic approach to sorting. For UI reactive sorting (click on header to sort) see the <a [routerLink]="['../..', 'extensions', 'mat-sort']">sorting section</a> in the material plugin.
-</blockquote>
+The difference is that we can provide a column id or alias instance of a column instance and the grid will find the instance for us and use
+the DataSource API to activate the sort.
+
+### Sorting Definitions
+
+The 2nd parameter in `setSort` is the `PblNgridSortDefinition`:
+
+```typescript
+export interface PblNgridSortDefinition {
+  order: PblNgridSortOrder;
+  sortFn?: PblNgridSorter;
+}
+```
+
+The sort definitions is made up of:
+
+- **order** - The sort order we want to use ('asc' or 'desc')
+- **sortFn** - The sort function (logic) we want to use (optional)
+
+I> The **sortFn** is optional, see the "Picking a Sorting function" for more details.
+
+## Picking a Sorting function
+
+When sorting is applied the grid will search for a sorting function in the following order and choose the **first match**:
+
+- `PblNgridSortDefinition.sortFn`
+- The sorting function defined on the `sort` property of the column definition
+- The default sorting function
+
+In other words, providing a sorting function to `setSort` will override any sorting function defined on the column definitions.
+If no function provided and no sorting function exists on the column definition, the default sorting function is used.
+
+## The Default Sorting Function
+
+The default sorting function is very simple, it uses the `<` and `>` operators to determine the logical order between 2 values. This is applied on all data types.
 
 <div pbl-example-view="pbl-column-sort-example"></div>
+
+<div pbl-example-view="pbl-column-specific-sorting-example"></div>
 
 ## Aliasing
 

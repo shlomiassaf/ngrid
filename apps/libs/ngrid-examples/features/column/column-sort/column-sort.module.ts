@@ -5,16 +5,17 @@ import { PblNgridModule } from '@pebula/ngrid';
 import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { ColumnSortExample } from './column-sort.component';
+import { ColumnSpecificSortingExample } from './column-specific-sorting.component';
 
 @NgModule({
-  declarations: [ ColumnSortExample ],
+  declarations: [ ColumnSortExample, ColumnSpecificSortingExample ],
   imports: [
     CommonModule,
     ExampleCommonModule,
     PblNgridModule,
   ],
-  exports: [ ColumnSortExample ],
-  entryComponents: [ ColumnSortExample ],
+  exports: [ ColumnSortExample, ColumnSpecificSortingExample ],
+  entryComponents: [ ColumnSortExample, ColumnSpecificSortingExample ],
 })
-@BindNgModule(ColumnSortExample)
+@BindNgModule(ColumnSortExample, ColumnSpecificSortingExample)
 export class ColumnSortExampleModule { }
