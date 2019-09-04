@@ -1,3 +1,12 @@
+# 1.0.0-rc.7 (2019-09-04)
+
+
+### Bug Fixes
+
+* **ngrid:** colum specific sorting is not working ([39428ad](https://github.com/shlomiassaf/ngrid/commit/39428ad)), closes [#45](https://github.com/shlomiassaf/ngrid/issues/45)
+
+
+
 # 1.0.0-rc.6 (2019-09-01)
 
 
