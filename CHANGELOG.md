@@ -1,3 +1,12 @@
+# 1.0.0-rc.8 (2019-09-05)
+
+
+### Bug Fixes
+
+* **ngrid:** proper property descriptors ([0f0aabb](https://github.com/shlomiassaf/ngrid/commit/0f0aabb))
+
+
+
 # 1.0.0-rc.7 (2019-09-04)
 
 
