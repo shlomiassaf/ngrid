@@ -47,7 +47,7 @@ export class PblMetaColumn implements PblMetaColumnDefinition {
     if (value !== this._width) {
       this._parsedWidth = parseStyleWidth(this._width = value);
       const isFixedWidth = this._parsedWidth && this._parsedWidth.type === 'px';
-      Object.defineProperty(this, 'isFixedWidth', { value: isFixedWidth });
+      Object.defineProperty(this, 'isFixedWidth', { value: isFixedWidth, configurable: true });
     }
   }
   /**

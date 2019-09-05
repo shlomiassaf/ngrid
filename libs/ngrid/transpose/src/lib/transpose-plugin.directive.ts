@@ -201,7 +201,7 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
           } else {
             c.getValue = getCellValueTransformed;
             for (const key of columnKeysToProxy) {
-              Object.defineProperty(c, key, { get: () => currentColumn && currentColumn[key], set: value => {} });
+              Object.defineProperty(c, key, { configurable: true, get: () => currentColumn && currentColumn[key], set: value => {} });
             }
           }
         }

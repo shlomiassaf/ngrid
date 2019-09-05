@@ -41,7 +41,7 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
       data: this.cdkTable._rowOutlet.viewContainer,
       footer: this.cdkTable._footerRowOutlet.viewContainer,
     };
-    Object.defineProperty(this, 'vcRefs', { value });
+    Object.defineProperty(this, 'vcRefs', { value, configurable: true });
     return value;
   }
 
