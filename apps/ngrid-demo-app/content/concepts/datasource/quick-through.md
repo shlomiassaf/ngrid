@@ -8,17 +8,17 @@ ordinal: 0
 
 The source for data items that show up as rows in the table.
 
-- `NGrid` **only** works with 1 datasource: `PblDataSource` (class)
+- n**Grid** only works with 1 datasource: `PblDataSource` (class)
 - The data source is a container of data items.
 - Internally, `PblDataSource` always use's an array.
 - `Array`, `Promise<Array>` and `Observable<Array>` are also supported, internally transformed into a `PblDataSource`.
-- `NGrid` provides a factory function to create instances of `PblDataSource` which you will probably use 99.99% of the times (manual creation is possible).
+- n**Grid** provides a factory function to create instances of `PblDataSource` which you will probably use 99.99% of the times (manual creation is possible).
 
 ## Why `PblDataSource`
 
 It's not crazy to assume that at the core of every grid out there, the low level rendering of rows is done on an array.
 
-`NGrid` is no different, so why the external API only works with `PblDataSource`?
+n**Grid** is no different, so why the external API only works with `PblDataSource`?
 
 The complete answer to this question is complex, in top-level `PblDataSource` provides:
 

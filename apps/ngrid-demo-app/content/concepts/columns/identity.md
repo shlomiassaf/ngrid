@@ -45,7 +45,7 @@ W> Note that some plugins/features might not work if the identity is not set.
 
 In some data sets there is not identity and we can't uniquely identify rows by their content.
 
-When this is the case, **NGrid** will use the row position (index) of each row to identify it.
+When this is the case, n**Grid** will use the row position (index) of each row to identify it.
 
 ## Row Identity Attributes
 

@@ -63,5 +63,5 @@ Some plugins might provide a global configuration option and a local, instance/d
 
 If this is the case, it is up to the author of the plugin to determine which option value to use.
 
-In all of **NGrid** APIs (including plugins) the more specific option wins, that is a global option
+In all of n**Grid** APIs (including plugins) the more specific option wins, that is a global option
 with a counterpart directive `@Input`, the directive input (if set) will be used.

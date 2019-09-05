@@ -6,9 +6,9 @@ ordinal: 1
 ---
 # Row Class
 
-**NGrid** allows full control and customization for grid **cells** but there are scenarios you will want to customize the row containing the cells.
+n**Grid** allows full control and customization for grid **cells** but there are scenarios you will want to customize the row containing the cells.
 
-The data rows in **NGrid** are generated internally by the grid but you can customize the CSS on per-row basis.  
+The data rows in n**Grid** are generated internally by the grid but you can customize the CSS on per-row basis.  
 For that, you need to provide a function that accepts the row's context (`PblNgridContext<T>`) and returns any valid value
 that `[NgClass]` accepts.
 

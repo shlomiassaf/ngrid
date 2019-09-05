@@ -8,7 +8,7 @@ ordinal: 0
 
 The common layout for a grid is a collection of rows where each row shows a collection of cells.
 
-In `ngrid`, the default behavior is having the first row showing the column names (label) in each cell and the following rows will display
+In n**Grid**, the default behavior is having the first row showing the column names (label) in each cell and the following rows will display
 the data provided from the datasource. There is also a footer row that is not rendered by default.  
 To toggle the header and footer visibility state use the `showHeader` and `showFooter` inputs (respectively).
 
@@ -142,7 +142,7 @@ I> You can read more about sticky rows in the <a href="https://material.angular.
 
 ## Advanced: **Outer Bottom**
 
-W> This is an advanced section is for plugin authors and users already familiar with `ngrid`
+W> This is an advanced section is for plugin authors and users already familiar with n**Grid**
 
 Let's start with some code:
 

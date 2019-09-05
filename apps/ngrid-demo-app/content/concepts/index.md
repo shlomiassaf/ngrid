@@ -8,7 +8,7 @@ searchGroup: content
 ---
 # NGrid concepts
 
-The core concept of `NGrid` is **simplicity**, creating a table should be simple and straight-forward.
+The core concept of n**Grid** is **simplicity**, creating a table should be simple and straight-forward.
 As more features are added, complexity grows but at all times **the basic operation should remain simple**.
 
 ## Principles to Simplicity
@@ -20,8 +20,8 @@ To keep things simple we stick to the following principles:
 
 ### Simplicity through Transparency
 
-Like others, `NGrid` comes with a lot of features. Some are native, some are built-in plugins and others are through external plugins. Extensibility
-is at the core of `NGrid` as it allows opting-in to what you really need without introducing complexity of what you dont use or need.
+Like others, n**Grid** comes with a lot of features. Some are native, some are built-in plugins and others are through external plugins. Extensibility
+is at the core of n**Grid** as it allows opting-in to what you really need without introducing complexity of what you dont use or need.
 
 With each feature/plugin you use the level of complexity grows, to ensure things are kept simple all of the features are transparent which means that they
 should not force you to provide a value and should always come with a default behavior.
@@ -43,13 +43,13 @@ Ok, we have some guidelines, now what? There are 2 basic ingredients every table
 - Columns: A collection of column definitions where each column definition defines what a cell will display (render) and how it will behave once a data is bound to it.
 - Rows: A collection of data items (rows), sharing the same structure (usually).
 
-I> To create an `NGrid` instance you only need column definitions and rows. Everything else is optional, adding more features at the cost of greater complexity.
+I> To create an n**Grid** instance you only need column definitions and rows. Everything else is optional, adding more features at the cost of greater complexity.
 
 ### Column Definitions
 
 For every column, there are **a lot** of definitions we can set. These definitions help us define how the column will look and behave in different scenarios but at the most basic level, all a column needs to know about is the path on the data item (row) to get the data from.
 
-`NGrid` provide the factory function `columnFactory()` that help you create column definition sets, you will end up using it 99.99% of the times.
+n**Grid** provide the factory function `columnFactory()` that help you create column definition sets, you will end up using it 99.99% of the times.
 
 Of course, simple is not enough, we love features and customization... You can read more about [Columns](./columns/quick-through) and how to configure them.
 
@@ -58,6 +58,6 @@ Of course, simple is not enough, we love features and customization... You can r
 A data source has **a lot** of options which help us define how will look and behave in different scenarios but at the most basic level, all a
 datasource needs to know is to return an array of data.
 
-`NGrid` provide the factory function `createDS()` that help you create datasource instance's very easily, you will end up using it 99.99% of the times.
+n**Grid** provide the factory function `createDS()` that help you create datasource instance's very easily, you will end up using it 99.99% of the times.
 
 Of course, simple is not enough, we love features and customization... You can read more about [Data Source](./datasource/quick-through) and how to configure them.

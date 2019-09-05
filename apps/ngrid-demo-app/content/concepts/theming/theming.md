@@ -7,7 +7,7 @@ parent: concepts/theming
 
 In *ngrid* a theme is a set of pre-defined styles that together define the look and feel of the grid.
 
-Usually, A theme is the set of colors that will be applied on the grid but in **ngrid** there are additional styles that
+Usually, A theme is the set of colors that will be applied on the grid but in n**Grid** there are additional styles that
 determine other aspects of the grid such spacing definitions (height, margins, etc...).
 
 Using a theme is mandatory as it contains the basic style instructions required to display the grid.
@@ -19,7 +19,7 @@ There are 2 ways to use a theme:
 
 ## Using a pre-built theme
 
-**Ngrid** comes prepackaged with several pre-built theme **css** files. All you have to do is to include a single css file for **ngrid** in your app.
+n**Grid** comes prepackaged with several pre-built theme **css** files. All you have to do is to include a single css file for n**Grid** in your app.
 
 You can include a theme file directly into your application from `@pebula/ngrid/themes`.
 
@@ -53,7 +53,7 @@ There are 2 configurable theme sections:
 - Color & Spacing Palette
 - Typography
 
-**ngrid** adopts the same system used by angular material to define and manage themes.
+n**Grid** adopts the same system used by angular material to define and manage themes.
 
 ---
 
@@ -65,16 +65,16 @@ In Angular Material, a theme is created by composing multiple palettes. In parti
 - A foreground palette: colors for text and icons.
 - A background palette: colors used for element backgrounds.
 
-W> **Ngrid** does not depend on angular material and does not implement the *Material Design* spec. The same theming system is used but not the same style!
+W> n**Grid** does not depend on angular material and does not implement the *Material Design* spec. The same theming system is used but not the same style!
 
 ---
 
-**Ngrid** extends this data structure by:
+n**Grid** extends this data structure by:
 
 - Extending the `foreground` and `background` palette's with additional, ngrid related, definitions.
 - Adding a 6th palette called `spacing` that defines the spacing of the grid (row height, cell margins, etc...)
 
-I> In **ngrid** the `accent` and `warn` palettes are not used, they exist only for compatibility.
+I> In n**Grid** the `accent` and `warn` palettes are not used, they exist only for compatibility.
 
 To create a custom theme:
 
@@ -244,12 +244,12 @@ Let's recall the steps required for creating a theme without using angular mater
 2. Create a theme from your palette using `pbl-light-theme` or `pbl-dark-theme`
 3. Render the theme by including the mixin `pbl-ngrid-theme`
 
-When working with material we use the material tools to create a theme. **ngrid** theme is compatible with a material theme so we can use the material theme with **ngrid**.
+When working with material we use the material tools to create a theme. n**Grid** theme is compatible with a material theme so we can use the material theme with n**Grid**.
 
-The only thing required is to push missing definitions into the theme so it will work with **ngrid**.
+The only thing required is to push missing definitions into the theme so it will work with n**Grid**.
 
 Luckily for us, `pbl-light-theme` and `pbl-dark-theme` which accept a palette and return a theme **can also** accept a theme and return a (new) theme, updated with all
-the required definitions for **ngrid**.
+the required definitions for n**Grid**.
 
 ```scss
 @import '~@angular/material/theming';
