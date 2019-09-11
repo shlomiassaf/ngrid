@@ -1,3 +1,11 @@
+# 1.0.0-rc.9 (2019-09-11)
+
+
+### Bug Fixes
+
+* **ngrid:** vScrollAuto and vScrollFix are not working when used with binding ([d7c7a5a](https://github.com/shlomiassaf/ngrid/commit/d7c7a5a))
+
+
 # 1.0.0-rc.8 (2019-09-05)
 
 
