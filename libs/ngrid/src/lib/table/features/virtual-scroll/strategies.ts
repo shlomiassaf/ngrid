@@ -182,18 +182,29 @@ export class PblCdkVirtualScrollDirective implements OnInit, OnChanges, VirtualS
   /** The scroll strategy used by this directive. */
   _scrollStrategy: VirtualScrollStrategy;
 
-  readonly type: 'vScrollFixed' | 'vScrollAuto' | 'vScrollNone';
+  get type(): 'vScrollFixed' | 'vScrollAuto' | 'vScrollNone' { return this._type; };
+  private _type: 'vScrollFixed' | 'vScrollAuto' | 'vScrollNone';
 
   constructor(el: ElementRef<HTMLElement>, private table: PblNgridComponent<any>) {
     const types = TYPES.filter( t => el.nativeElement.hasAttribute(t));
+
     if (types.length > 1) {
       throw new Error(`Invalid vScroll instruction, only one value is allow: ${JSON.stringify(types)}`);
     } else {
-      this.type = types[0];
+      this._type = types[0];
     }
   }
 
   ngOnInit(): void {
+    if (!this._type) {
+      if ('_vScrollFixed' in <any>this) {
+        this._type = 'vScrollFixed';
+      } else if ('_vScrollAuto' in <any>this) {
+        this._type = 'vScrollAuto';
+      } else {
+        this._type = 'vScrollNone';
+      }
+    }
     switch (this.type) {
       case 'vScrollFixed':
         if (!this._vScrollFixed) {
