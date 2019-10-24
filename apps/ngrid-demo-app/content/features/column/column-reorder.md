@@ -2,7 +2,7 @@
 title: Column Reorder
 path: features/column/column-reorder
 parent: features/column
-ordinal: 6
+ordinal: 7
 ---
 # Column Reordering
 

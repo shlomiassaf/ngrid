@@ -2,7 +2,7 @@
 title: Cell Edit
 path: features/column/cell-edit
 parent: features/column
-ordinal: 5
+ordinal: 6
 ---
 # Cell Edit
 

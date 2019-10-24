@@ -2,7 +2,7 @@
 title: Column Resize
 path: features/column/column-resize
 parent: features/column
-ordinal: 7
+ordinal: 8
 ---
 # Column Resizing
 
