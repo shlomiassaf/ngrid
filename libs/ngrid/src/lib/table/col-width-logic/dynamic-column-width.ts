@@ -104,13 +104,13 @@ export class DynamicColumnWidthLogic {
 export const DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY: BoxModelSpaceStrategy = {
   cell(col: PblColumnSizeInfo): number {
     const style = col.style;
-    return parseInt(style.paddingLeft) + parseInt(style.paddingRight)
+    return style ? parseInt(style.paddingLeft) + parseInt(style.paddingRight) : 0
   },
   groupCell(col: PblColumnSizeInfo): number {
     return 0;
   },
   group(cols: PblColumnSizeInfo[]): number {
     const len = cols.length;
-    return len > 0 ? parseInt(cols[0].style.paddingLeft) + parseInt(cols[len - 1].style.paddingRight) : 0;
+    return len > 0 && cols[0].style && cols[len - 1].style ? parseInt(cols[0].style.paddingLeft) + parseInt(cols[len - 1].style.paddingRight) : 0;
   }
 };
