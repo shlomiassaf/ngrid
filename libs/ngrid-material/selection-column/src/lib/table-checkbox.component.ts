@@ -130,7 +130,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
       this.selection.changed
         .pipe(UnRx(this, this.table))
         .subscribe( () => {
-          const { length } = this.getCollection();
+          const { length } = this.getCollection().filter(data => !this._isCheckboxDisabled(data));
           this.allSelected = !this.selection.isEmpty() && this.selection.selected.length === length;
           this.length = this.selection.selected.length;
           this.cdr.markForCheck();
