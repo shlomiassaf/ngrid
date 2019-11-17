@@ -24,12 +24,17 @@ export class DemoActionRowComponent implements AfterViewInit {
 
   autoSizeColumnToFitOptions: AutoSizeToFitOptions = {
     columnBehavior: (column) => {
-      if (column.id === 'drag_and_drop_handle' || column.id === 'selection') {
-        return { keepMinWidth: true, keepMaxWidth: true };
+      const behavior: AutoSizeToFitOptions = {};
+      if (column.minWidth) {
+        behavior.keepMinWidth = true;
       }
+      if (column.maxWidth) {
+        behavior.keepMaxWidth = true;
+      }
+      return behavior;
     }
   };
-  autoSizeColumnToFitOptionsForever = { ...this.autoSizeColumnToFitOptions, forceWidthType: '%', keepMinWidth: true };
+  autoSizeColumnToFitOptionsForever = { ...this.autoSizeColumnToFitOptions, forceWidthType: '%' };
 
   @Input() get showFps(): boolean { return this._showFps; }
   set showFps(value: boolean) {

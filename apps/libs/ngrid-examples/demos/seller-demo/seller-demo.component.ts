@@ -43,7 +43,7 @@ export class SellerDemoExample {
       { prop: 'country', headerType: 'country', type: { name: 'countryNameDynamic', data: COUNTRY_GETTER }, width: '150px' },
       { prop: 'sales', sort: true },
       { prop: 'address' },
-      { prop: 'rating', type: 'starRatings', width: '120px' },
+      { prop: 'rating', type: 'starRatings', minWidth: 90, maxWidth: 120 },
       { prop: 'feedback', sort: true, type: { name: 'progressBar', data: { style: progressBarStyle } }, width: '150px' },
     )
     .header(
