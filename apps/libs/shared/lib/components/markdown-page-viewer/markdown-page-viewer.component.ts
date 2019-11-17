@@ -83,6 +83,7 @@ export class MarkdownPageViewerComponent implements OnDestroy {
   }
 
   private updateDocument(url: string) {
+    this._clearLiveExamples();
     if (!url) {
       this.meta.setTitle(``);
       this._elementRef.nativeElement.innerHTML = '';
@@ -98,7 +99,7 @@ export class MarkdownPageViewerComponent implements OnDestroy {
           this._loadComponents('pbl-example-view', ExampleViewComponent);
           this._loadComponents('pbl-app-content-chunk', ContentChunkViewComponent);
         }
-     
+
         this._ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.next());
       });
   }
