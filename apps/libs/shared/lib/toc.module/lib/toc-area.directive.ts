@@ -178,23 +178,22 @@ export class TocAreaDirective implements AfterContentInit, OnDestroy {
     }
   }
 
-  reinitQueryLinks(p: Promise<any>): void {
+  reinitQueryLinks(p: Promise<any>): Promise<boolean> {
     const el: HTMLElement = this.elRef && this.elRef.nativeElement;
     this._activeReInit = p;
 
-    p.then( () => {
-      if (this._activeReInit !== p) {
-        return;
-      }
-      setTimeout( () => {
+    return new Promise<boolean>( (res, rej) => {
+      p.then( () => {
         if (this._activeReInit !== p) {
-          return;
+          return this._activeReInit;
         }
         this.links = [];
         this.queryLinksAndAdd(el);
         this._linksChanged$.next(this.links);
         this._activeReInit = undefined;
-      }, 25);
+        return this.links.length > 1;
+      })
+      .then(res).catch(rej);
     });
   }
 

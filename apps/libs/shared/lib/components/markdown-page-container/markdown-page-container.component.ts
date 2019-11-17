@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
-import { Component, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { UnRx } from '@pebula/utils';
@@ -32,7 +32,7 @@ export class MarkdownPageContainerComponent implements OnDestroy {
   ngridVersion = NGRID_VERSION;
   buildVersion = BUILD_VERSION;
 
-  constructor(private mdPagesMenu: MarkdownPagesMenuService, private route: ActivatedRoute) { }
+  constructor(private mdPagesMenu: MarkdownPagesMenuService, private route: ActivatedRoute, private cdr: ChangeDetectorRef) { }
 
   ngAfterViewInit(): void {
     this.route.url
@@ -57,7 +57,8 @@ export class MarkdownPageContainerComponent implements OnDestroy {
   }
 
   contentRendered(): void {
-    this.tocArea.reinitQueryLinks(Promise.resolve());
+    this.tocArea.reinitQueryLinks(Promise.resolve())
+      .then(() => this.cdr.detectChanges());
   }
 
   private handleUrlUpdate(paths: string[]): void {

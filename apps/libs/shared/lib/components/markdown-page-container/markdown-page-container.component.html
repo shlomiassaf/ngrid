@@ -11,17 +11,17 @@
   <div fxFlex="*" style="height: 100%">
     <div style="min-height: 100%;">
       <div fxFlex="*" class="example-container" pblContentTocArea #tocArea="pblContentTocArea"
-          [scrollContainer]="el"
-          staticHtmlMode
-          selector="h1[id], h2[id], h3[id], h4[id]">
+           [scrollContainer]="el"
+           staticHtmlMode
+           selector="h1[id], h2[id], h3[id], h4[id]">
         <pbl-markdown-page-viewer [documentUrl]="documentUrl" (contentRendered)="contentRendered()"></pbl-markdown-page-viewer>
       </div>
       <div *ngIf="tocArea.hasLinks | async" fxFlex="0 0 18%" class="example-sticky-container example-toc-container">
         <pbl-content-toc class="pbl-demo-app-style" [tocArea]="tocArea">
           <a *pblContentTocLinkTemplate="let ctx;"
-            [routerLink]="[ctx.rootUrl]"
-            queryParamsHandling="preserve"
-            [fragment]="ctx.link.id">{{ ctx.link.name }}</a>
+             [routerLink]="[ctx.rootUrl]"
+             queryParamsHandling="preserve"
+             [fragment]="ctx.link.id">{{ ctx.link.name }}</a>
         </pbl-content-toc>
       </div>
     </div>
