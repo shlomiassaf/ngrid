@@ -71,4 +71,8 @@ export class DemoActionRowComponent implements AfterViewInit {
     moreMenuTrigger.closeMenu();
   }
 
+  restore(): void {
+    this.grid.hideColumns = [];
+    this.grid.invalidateColumns();
+  }
 }
