@@ -1,3 +1,18 @@
+# 1.0.0-rc.10 (2019-11-19)
+
+
+### Bug Fixes
+
+* **core:** make sure minWidth is updated ([699b4aa](https://github.com/shlomiassaf/ngrid/commit/699b4aa))
+* **core:** wrong behavior in autoSizeToFit ([eb17685](https://github.com/shlomiassaf/ngrid/commit/eb17685))
+
+
+### Features
+
+* **docs:** document column transform ([2fef015](https://github.com/shlomiassaf/ngrid/commit/2fef015)), closes [#46](https://github.com/shlomiassaf/ngrid/issues/46)
+
+
+
 # 1.0.0-rc.9 (2019-09-11)
 
 
