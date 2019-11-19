@@ -6,17 +6,16 @@ import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/ngrid-examples/example-common';
 import { ColumnWidthFeatureExample } from './column-width.component';
 import { MinColumnWidthFeatureExample } from './min-column-width.component';
-import { MaxColumnWidthFeatureExample } from './max-column-width.component';
 
 @NgModule({
-  declarations: [ ColumnWidthFeatureExample, MinColumnWidthFeatureExample, MaxColumnWidthFeatureExample ],
+  declarations: [ ColumnWidthFeatureExample, MinColumnWidthFeatureExample ],
   imports: [
     CommonModule,
     ExampleCommonModule,
     PblNgridModule,
   ],
-  exports: [ ColumnWidthFeatureExample, MinColumnWidthFeatureExample, MaxColumnWidthFeatureExample ],
-  entryComponents: [ ColumnWidthFeatureExample, MinColumnWidthFeatureExample, MaxColumnWidthFeatureExample ],
+  exports: [ ColumnWidthFeatureExample, MinColumnWidthFeatureExample ],
+  entryComponents: [ ColumnWidthFeatureExample, MinColumnWidthFeatureExample ],
 })
-@BindNgModule(ColumnWidthFeatureExample, MinColumnWidthFeatureExample, MaxColumnWidthFeatureExample)
+@BindNgModule(ColumnWidthFeatureExample, MinColumnWidthFeatureExample)
 export class ColumnWidthFeatureExampleModule { }

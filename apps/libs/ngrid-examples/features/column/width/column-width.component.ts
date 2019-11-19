@@ -16,10 +16,14 @@ export class ColumnWidthFeatureExample {
 
   columns = columnFactory()
     .table(
-      { prop: 'name', width: '100px' },
-      { prop: 'gender', width: '50px' },
-      { prop: 'birthdate', type: 'date', width: '25%' },
-      { prop: 'bio' },
+      { prop: 'id', width: '50px', pIndex: true },
+      { prop: 'name', width: '25%' },
+      { prop: 'email' },
+      { prop: 'country', width: '35%' },
+      { prop: 'language' },
+      { prop: 'settings.timezone', label: 'TZ', width: '30px' },
+      { prop: 'balance' },
+      { prop: 'gender' },
     )
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 5) ).create();

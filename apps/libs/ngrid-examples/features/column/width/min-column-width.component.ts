@@ -16,10 +16,14 @@ export class MinColumnWidthFeatureExample {
 
   columns = columnFactory()
     .table(
-      { prop: 'name', minWidth: 500 },
-      { prop: 'gender', minWidth: 500 },
-      { prop: 'birthdate', type: 'date', minWidth: 500 },
-      { prop: 'email', minWidth: 500 },
+      { prop: 'id', width: '50px', pIndex: true },
+      { prop: 'name', width: '25%' },
+      { prop: 'email', minWidth: 250 },
+      { prop: 'country', width: '35%' },
+      { prop: 'language', maxWidth: 50 },
+      { prop: 'settings.timezone', label: 'TZ', width: '30px' },
+      { prop: 'balance' },
+      { prop: 'gender' },
     )
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 5) ).create();
