@@ -210,11 +210,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
 
       if (prevNetWidth && prevNetWidth !== this._netWidth) {
         const width = `${this._netWidth}px`;
-        this._widths = [
-          this.widths[0] || width,  // min
-          width,                    // width
-          width,                    // max
-        ];
+        this.updateWidth(width);
       }
     }
   }
