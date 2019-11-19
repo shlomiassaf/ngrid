@@ -165,7 +165,7 @@ export class ColumnApi<T> {
 
     const widthBreakouts = visibleColumns.map( (column, index) => {
       const widthBreakout = wLogic.widthBreakout(column.sizeInfo);
-      const instructions = columnBehavior(column) || options;
+      const instructions = { ...(columnBehavior(column) || {}), ...options };
 
       overflowTotalWidth += widthBreakout.content;
       totalWidth -= widthBreakout.nonContent;
@@ -186,7 +186,6 @@ export class ColumnApi<T> {
       overflowTotalWidth += addition;
     }
 
-    let sum =[];
     for (let i = 0; i < visibleColumns.length; i++) {
       const widthBreakout = widthBreakouts[i];
       const instructions = widthBreakout.instructions;
@@ -194,11 +193,11 @@ export class ColumnApi<T> {
 
       const r = widthBreakout.content / overflowTotalWidth;
 
-      if (!instructions.keepMinWidth) {
+      if (!instructions.keepMinWidth || !column.minWidth) {
         column.minWidth = undefined;
       }
-      if (!instructions.keepMaxWidth) {
-         column.maxWidth = undefined;
+      if (!instructions.keepMaxWidth || !column.maxWidth) {
+        column.maxWidth = undefined;
          column.checkMaxWidthLock(column.sizeInfo.width); // if its locked, we need to release...
       }
 
