@@ -62,7 +62,7 @@ adjustments after every new release.
 **On every new release, the start repo should:**
   - Update the `package.json` and install the updated libraries
 ```bash
-yarn add `@pebula/ngrid` `pebula/ngrid-material`
+yarn add @pebula/ngrid @pebula/ngrid-material
 ```
 
   - Initiate a `gh-pages` build and verify it works
