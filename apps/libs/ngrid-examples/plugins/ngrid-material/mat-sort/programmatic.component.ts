@@ -25,7 +25,9 @@ export class ProgrammaticExample {
 
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(500) ).create();
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DemoDataSource) {
+    this.ds.setSort(this.columns.table.cols[1], { order: 'asc' });
+  }
 
   clear(): void {
     this.ds.setSort();
