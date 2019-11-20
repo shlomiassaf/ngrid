@@ -1,6 +1,6 @@
 {
   "name": "@pebula/ngrid",
-  "version": "1.0.0-rc.10",
+  "version": "1.0.0-rc.11",
   "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^8.0.0",

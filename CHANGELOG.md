@@ -1,3 +1,17 @@
+# 1.0.0-rc.11 (2019-11-20)
+
+
+### Bug Fixes
+
+* **ngrid-material:** not reflecting sort state when predefined ([96611bb](https://github.com/shlomiassaf/ngrid/commit/96611bb)), closes [#61](https://github.com/shlomiassaf/ngrid/issues/61)
+
+
+### Code Refactoring
+
+* **ngrid:** refactor width change detection ([4ba3ae0](https://github.com/shlomiassaf/ngrid/commit/4ba3ae0))
+
+
+
 # 1.0.0-rc.10 (2019-11-19)
 
 
