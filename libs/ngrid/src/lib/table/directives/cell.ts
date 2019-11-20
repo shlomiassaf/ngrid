@@ -1,6 +1,6 @@
 // tslint:disable:use-host-property-decorator
 // tslint:disable:directive-selector
-import { first } from 'rxjs/operators';
+import { first, filter } from 'rxjs/operators';
 import {
   OnInit,
   AfterViewInit,
@@ -17,10 +17,11 @@ import {
   Input,
 } from '@angular/core';
 import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
+import { UnRx } from '@pebula/utils';
 
 import { PblNgridComponent } from '../table.component';
 import { uniqueColumnCss, uniqueColumnTypeCss, COLUMN_EDITABLE_CELL_CLASS } from '../circular-dep-bridge';
-import { COLUMN, PblMetaColumn, PblColumn, PblColumnGroup } from '../columns';
+import { COLUMN, PblMetaColumn, PblColumn, PblColumnGroup, isPblColumn, isPblColumnGroup } from '../columns';
 import { MetaCellContext, PblNgridMetaCellContext, PblRowContext, PblCellContext } from '../context/index';
 import { PblNgridMultiRegistryMap } from '../services/table-registry.service';
 import { PblNgridColumnDef } from './column-def';
@@ -69,7 +70,8 @@ const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRe
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements DoCheck, OnInit, AfterViewInit {
+@UnRx()
+export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements OnInit, AfterViewInit {
   @ViewChild('vcRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
 
   private el: HTMLElement;
@@ -84,18 +86,30 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
     const column = columnDef.column;
     const el = this.el = elementRef.nativeElement;
 
-    if (column instanceof PblColumnGroup) {
-      el.classList.add(HEADER_GROUP_CSS);
-      if (column.placeholder) {
-        el.classList.add(HEADER_GROUP_PLACE_HOLDER_CSS);
+      /*  Apply width changes to this header cell
+          We don't update resize events to any of the possible columns because
+          - PblColumn headers NEVER change their size, they always reflect the user's definitions
+          - PblMetaColumn and PblColumnGroup headers are auto-adjusted by `PblNgridComponent.syncColumnGroupsSize` */
+      columnDef.widthChange
+        .pipe(
+          filter( event => event.reason !== 'resize'),
+          UnRx(this),
+         )
+        .subscribe(event => this.columnDef.applyWidth(this.el));
+
+      if (isPblColumnGroup(column)) {
+        el.classList.add(HEADER_GROUP_CSS);
+        if (column.placeholder) {
+          el.classList.add(HEADER_GROUP_PLACE_HOLDER_CSS);
+        }
       }
-    }
   }
 
   ngOnInit(): void {
     const col: COLUMN = this.columnDef.column;
-    if (col instanceof PblColumn) {
-      this.cellCtx = PblNgridDataHeaderExtensionContext.createDateHeaderCtx(this as PblNgridHeaderCellComponent<PblColumn>, this.vcRef.injector);
+    if (isPblColumn(col)) {
+      this.cellCtx = PblNgridDataHeaderExtensionContext
+        .createDateHeaderCtx(this as PblNgridHeaderCellComponent<PblColumn>, this.vcRef.injector);
     } else {
       this.cellCtx = MetaCellContext.create(col, this.table);
     }
@@ -106,7 +120,7 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
     const { vcRef } = this;
     let view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblMetaColumn | PblColumn>>;
 
-    if (col instanceof PblColumn) {
+    if (isPblColumn(col)) {
       const context = this.cellCtx as PblNgridDataHeaderExtensionContext;
       view = vcRef.createEmbeddedView(col.headerCellTpl, context);
       this.zone.onStable
@@ -126,13 +140,6 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
     view.detectChanges();
     this.columnDef.applyWidth(this.el);
     initCellElement(this.el, col);
-  }
-
-  // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
-  ngDoCheck(): void {
-    if (this.columnDef.isDirty) {
-      this.columnDef.applyWidth(this.el);
-    }
   }
 
   protected runHeaderExtensions(context: PblNgridDataHeaderExtensionContext, view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblColumn>>): void {
@@ -200,6 +207,7 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
   },
   exportAs: 'pblNgridCell',
 })
+@UnRx()
 export class PblNgridCellDirective extends CdkCell implements DoCheck {
 
   @Input() set rowCtx(value: PblRowContext<any>) {
@@ -220,21 +228,26 @@ export class PblNgridCellDirective extends CdkCell implements DoCheck {
   private focused = false;
   private selected = false;
 
-  constructor(private colDef: PblNgridColumnDef, elementRef: ElementRef) {
+  constructor(private colDef: PblNgridColumnDef<PblColumn>, elementRef: ElementRef) {
     super(colDef, elementRef);
     this.colIndex = this.colDef.table.columnApi.indexOf(colDef.column as PblColumn);
     this.el = elementRef.nativeElement;
     colDef.applyWidth(this.el);
     initCellElement(this.el, colDef.column);
-    initDataCellElement(this.el, colDef.column as PblColumn);
+    initDataCellElement(this.el, colDef.column);
+
+
+    /*  Apply width changes to this data cell
+        We don't update "update" events because they are followed by a resize event which will update the absolute value (px) */
+    colDef.widthChange
+      .pipe(
+        filter( event => event.reason !== 'update'),
+        UnRx(this),
+      )
+      .subscribe(event => this.colDef.applyWidth(this.el));
   }
 
-  // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
   ngDoCheck(): void {
-    if (this.colDef.isDirty) {
-      this.colDef.applyWidth(this.el);
-    }
-
     if (this._rowCtx) {
       const cellContext = this.cellCtx = this._rowCtx.cell(this.colIndex);
 
@@ -265,7 +278,8 @@ export class PblNgridCellDirective extends CdkCell implements DoCheck {
   },
   exportAs: 'ngridFooterCell',
  })
-export class PblNgridFooterCellDirective extends CdkFooterCell implements DoCheck, OnInit {
+ @UnRx()
+export class PblNgridFooterCellDirective extends CdkFooterCell implements OnInit {
   private el: HTMLElement;
   cellCtx: MetaCellContext;
 
@@ -275,12 +289,12 @@ export class PblNgridFooterCellDirective extends CdkFooterCell implements DoChec
     const column = columnDef.column;
     columnDef.applyWidth(this.el);
     initCellElement(this.el, column);
-  }
 
-  // TODO: smart diff handling... handle all diffs, not just width, and change only when required.
-  ngDoCheck(): void {
-    if (this.columnDef.isDirty) {
-      this.columnDef.applyWidth(this.el);
+    // update widths for meta rows only, main footer never updates
+    if (!isPblColumn(column)) {
+      columnDef.widthChange
+        .pipe(UnRx(this))
+        .subscribe(() => this.columnDef.applyWidth(this.el));
     }
   }
 

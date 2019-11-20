@@ -36,17 +36,13 @@ export class DynamicColumnWidthLogic {
   private readonly cols = new Map<PblColumnSizeInfo, number>();
   private _minimumRowWidth = 0;
 
-  constructor(private strategy: BoxModelSpaceStrategy) { }
+  constructor(public readonly strategy: BoxModelSpaceStrategy) { }
 
   /**
    * Returns a breakout of the width of the column, breaking it into the width of the content and the rest of the width
    */
   widthBreakout(columnInfo: PblColumnSizeInfo): { content: number, nonContent: number } {
-    const nonContent = this.strategy.cell(columnInfo);
-    return {
-      content: columnInfo.width - nonContent,
-      nonContent,
-    };
+    return widthBreakout(this.strategy, columnInfo);
   }
 
   /**
@@ -99,6 +95,17 @@ export class DynamicColumnWidthLogic {
    return sum;
   }
 
+}
+
+/**
+* Returns a breakout of the width of the column, breaking it into the width of the content and the rest of the width
+*/
+export function widthBreakout(strategy: BoxModelSpaceStrategy, columnInfo: PblColumnSizeInfo): { content: number, nonContent: number } {
+ const nonContent = strategy.cell(columnInfo);
+ return {
+   content: columnInfo.width - nonContent,
+   nonContent,
+ };
 }
 
 export const DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY: BoxModelSpaceStrategy = {

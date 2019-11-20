@@ -13,7 +13,7 @@ const PBL_NGRID_COLUMN_MARK = Symbol('PblColumn');
 const CLONE_PROPERTIES: Array<keyof PblColumn> = ['pIndex', 'transform', 'filter', 'sort', 'alias', 'headerType', 'footerType', 'pin'];
 
 export function isPblColumn(def: any): def is PblColumn {
-  return def instanceof PblColumn || def[PBL_NGRID_COLUMN_MARK] === true;
+  return def instanceof PblColumn || (def && def[PBL_NGRID_COLUMN_MARK] === true);
 }
 
 export class PblColumn implements PblColumnDefinition {
@@ -264,7 +264,7 @@ export class PblColumn implements PblColumnDefinition {
     this.detach();
     this._columnDef = columnDef;
     if (this.defaultWidth) {
-      this.columnDef.updateWidth(this.width || this.defaultWidth);
+      this.columnDef.updateWidth(this.width || this.defaultWidth, 'attach');
     }
   }
 
@@ -276,16 +276,13 @@ export class PblColumn implements PblColumnDefinition {
     this.defaultWidth = defaultWidth;
   }
 
-  updateWidth(markForCheck: boolean, width?: string): void {
+  updateWidth(width?: string): void {
     if (width) {
       this.width = width;
     }
     const { columnDef } = this;
     if (columnDef) {
-      columnDef.updateWidth(this.width || this.defaultWidth || '');
-      if (markForCheck) {
-        columnDef.markForCheck();
-      }
+      columnDef.updateWidth(this.width || this.defaultWidth || '', 'update');
     }
   }
 

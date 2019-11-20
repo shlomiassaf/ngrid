@@ -8,8 +8,8 @@ import { parseStyleWidth, initDefinitions } from './utils';
 const PBL_NGRID_META_COLUMN_MARK = Symbol('PblMetaColumn');
 const CLONE_PROPERTIES: Array<keyof PblMetaColumn> = ['kind', 'rowIndex'];
 
-export function isPblMetaColumn(def: PblMetaColumnDefinition): def is PblMetaColumn {
-  return def instanceof PblMetaColumn || def[PBL_NGRID_META_COLUMN_MARK] === true;
+export function isPblMetaColumn(def: any): def is PblMetaColumn {
+  return def instanceof PblMetaColumn || (def && def[PBL_NGRID_META_COLUMN_MARK] === true);
 }
 
 export class PblMetaColumn implements PblMetaColumnDefinition {
@@ -132,7 +132,7 @@ export class PblMetaColumn implements PblMetaColumnDefinition {
   attach(columnDef: PblNgridColumnDef<PblMetaColumn>): void {
     this.detach();
     this._columnDef = columnDef;
-    this.columnDef.updateWidth(this.width || this.defaultWidth);
+    this.columnDef.updateWidth(this.width || this.defaultWidth, 'attach');
   }
 
   detach(): void {
@@ -142,7 +142,7 @@ export class PblMetaColumn implements PblMetaColumnDefinition {
   updateWidth(fallbackDefault: string): void {
     this.defaultWidth = fallbackDefault || '';
     if (this.columnDef) {
-      this.columnDef.updateWidth(this.width || fallbackDefault);
+      this.columnDef.updateWidth(this.width || fallbackDefault, 'update');
     }
   }
 }
