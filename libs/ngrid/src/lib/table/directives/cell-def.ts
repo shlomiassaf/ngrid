@@ -6,7 +6,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { COLUMN, PblColumnTypeDefinitionDataMap, PblColumn, PblMetaColumn } from '../columns';
+import { COLUMN, PblColumnTypeDefinitionDataMap, PblColumn, PblMetaColumn, isPblColumn } from '../columns';
 import { PblNgridCellContext, PblNgridMetaCellContext } from '../context/index';
 import { PblNgridRegistryService } from '../services/table-registry.service';
 
@@ -146,7 +146,7 @@ export function findCellDef<T = any>(registry: PblNgridRegistryService, colDef: 
 
   if (cellDefs) {
     let type: Pick<PblMetaColumn, 'id' | 'type'>;
-    if (colDef instanceof PblColumn) {
+    if (isPblColumn(colDef)) {
       switch (kind) {
         case 'headerCell':
           if (colDef.headerType) {

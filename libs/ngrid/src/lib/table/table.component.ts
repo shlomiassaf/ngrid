@@ -36,7 +36,7 @@ import { DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, Pbl
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
 import { findCellDef } from './directives/cell-def';
-import { PblColumn, PblColumnStore, PblMetaColumnStore, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './columns';
+import { PblColumn, PblColumnStore, PblMetaColumnStore, PblNgridColumnSet, PblNgridColumnDefinitionSet, isPblColumn } from './columns';
 import { PblNgridCellContext, PblNgridMetaCellContext, ContextApi, PblNgridContextApi, PblNgridRowContext } from './context/index';
 import { PblNgridRegistryService } from './services/table-registry.service';
 import { PblNgridConfigService } from './services/config';
@@ -672,8 +672,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    * Updates the column sizes for all columns in the table based on the column definition metadata for each column.
    * The final width represent a static width, it is the value as set in the definition (except column without width, where the calculated global width is set).
    */
-  resetColumnsWidth(options?: { tableMarkForCheck?: boolean; metaMarkForCheck?: boolean; }): void {
-    resetColumnWidths(this._store.getStaticWidth(), this._store.columns, this._store.metaColumns, options);
+  resetColumnsWidth(): void {
+    resetColumnWidths(this._store.getStaticWidth(), this._store.columns, this._store.metaColumns);
   }
 
   /**
@@ -703,9 +703,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
         g.minWidth = undefined;
         g.updateWidth(`0px`);
       }
-      if (g.columnDef) {
-        g.columnDef.markForCheck();
-      }
     }
   }
 
@@ -733,7 +730,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
     // if the max lock state has changed we need to update re-calculate the static width's again.
     if (rowWidth.maxWidthLockChanged) {
-      resetColumnWidths(this._store.getStaticWidth(), this._store.columns, this._store.metaColumns, { tableMarkForCheck: true });
+      resetColumnWidths(this._store.getStaticWidth(), this._store.columns, this._store.metaColumns);
       this.resizeColumns(columns);
       return;
     }
@@ -888,7 +885,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     if (this._viewport) {
       this._viewport.checkViewportSize();
     }
-    this.resetColumnsWidth();
+    // this.resetColumnsWidth();
     this.resizeColumns();
   }
 
@@ -1016,7 +1013,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     const defaultHeaderCellTemplate = this.registry.getMultiDefault('headerCell') || { tRef: this._fbHeaderCell };
     const defaultFooterCellTemplate = this.registry.getMultiDefault('footerCell') || { tRef: this._fbFooterCell };
     for (const col of columns) {
-      if (col instanceof PblColumn) {
+      if (isPblColumn(col)) {
         const headerCellDef = findCellDef<T>(this.registry, col, 'headerCell', true) || defaultHeaderCellTemplate;
         const footerCellDef = findCellDef<T>(this.registry, col, 'footerCell', true) || defaultFooterCellTemplate;
         col.headerCellTpl = headerCellDef.tRef;

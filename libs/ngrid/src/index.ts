@@ -25,6 +25,7 @@ export {
   PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService,
 
   PblColumn, PblMetaColumn, PblColumnGroup, PblColumnFactory, COLUMN, columnFactory,
+  isPblMetaColumn, isPblColumnGroup, isPblColumn,
 
   PBL_NGRID_ROW_TEMPLATE, PblNgridRowComponent,
 

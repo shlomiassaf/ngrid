@@ -30,7 +30,7 @@
 <div class="pbl-ngrid-container">
   <ng-container #beforeTable></ng-container>
   <div pbl-ngrid-fixed-meta-row-container="header"></div>
-  <pbl-cdk-virtual-scroll-viewport class="pbl-ngrid-scroll-container" [minWidth]="_cdkTable?.minWidth"
+  <pbl-cdk-virtual-scroll-viewport class="pbl-ngrid-scroll-container"
                                    [stickyRowHeaderContainer]="stickyRowHeaderContainer" [stickyRowFooterContainer]="stickyRowFooterContainer">
     <pbl-cdk-table tabindex="-1">
       <!-- Row templates. The columns used are set at the row template level -->
@@ -53,7 +53,7 @@
        <!-- HEADER-RECORD-FOOTER CELL DEF -->
       <ng-container *ngFor="let c of columnApi.visibleColumns;" [pblNgridColumnDef]="c">
         <!-- TABLE HEADER CELL DEF -->
-        <pbl-ngrid-header-cell #hCell="ngridHeaderCell" *cdkHeaderCellDef="let row" [observeSize]="c"></pbl-ngrid-header-cell>
+        <pbl-ngrid-header-cell *cdkHeaderCellDef="let row" [observeSize]="c"></pbl-ngrid-header-cell>
         <!-- RECORD CELL DEF -->
         <pbl-ngrid-cell #cell="pblNgridCell" *cdkCellDef="let row; pblRowContext as pblRowContext"
                         [rowCtx]="pblRowContext" [attr.tabindex]="cellFocus" [attr.id]="c.id">

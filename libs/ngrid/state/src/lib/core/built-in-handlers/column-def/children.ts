@@ -41,7 +41,7 @@ export function registerColumnDefChildHandlers() {
       if (activeColumn) {
         switch (key) {
           case 'width':
-            activeColumn.updateWidth(true, stateValue as any);
+            activeColumn.updateWidth(stateValue as any);
             break;
         }
       }

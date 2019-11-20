@@ -1,13 +1,13 @@
 import { PblNgridColumnDef } from '../directives';
-import { PblBaseColumnDefinition, PblColumnGroupDefinition } from './types';
+import { PblColumnGroupDefinition } from './types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';
 
 const PBL_NGRID_COLUMN_GROUP_MARK = Symbol('PblColumnGroup');
 const CLONE_PROPERTIES: Array<keyof PblColumnGroup> = [];
 
-export function isPblColumnGroup(def: PblColumnGroupDefinition): def is PblColumnGroup {
-  return def instanceof PblColumnGroup || def[PBL_NGRID_COLUMN_GROUP_MARK] === true;
+export function isPblColumnGroup(def: any): def is PblColumnGroup {
+  return def instanceof PblColumnGroup || (def && def[PBL_NGRID_COLUMN_GROUP_MARK] === true);
 }
 
 function getId(value: string | { id: string }): string {

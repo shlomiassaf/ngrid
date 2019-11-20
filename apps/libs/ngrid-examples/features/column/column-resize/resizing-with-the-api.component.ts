@@ -17,9 +17,9 @@ export class ResizingWithTheApiExample {
   columns = columnFactory()
     .table(
       { prop: 'id', width: '40px' },
-      { prop: 'name' },
+      { prop: 'name', width: '15%' },
       { prop: 'gender', width: '50px' },
-      { prop: 'birthdate', type: 'date' }
+      { prop: 'birthdate', type: 'date', maxWidth: 120 }
     )
     .build();
 
@@ -27,8 +27,8 @@ export class ResizingWithTheApiExample {
 
   constructor(private datasource: DemoDataSource) { }
 
-  resize(table: PblNgridComponent<Person>): void {
-    const id = table.columnApi.findColumn('id');
-    table.columnApi.resizeColumn(id, '200px');
+  resize(): void {
+    const id = this.ds.hostGrid.columnApi.findColumn('id');
+    this.ds.hostGrid.columnApi.resizeColumn(id, '200px');
   }
 }

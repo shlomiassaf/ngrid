@@ -1,13 +1,12 @@
 // tslint:disable:use-host-property-decorator
 // tslint:disable:directive-class-suffix
-
 import {
   Directive,
   Input,
   Inject,
-  KeyValueDiffers, KeyValueDiffer,
   OnDestroy,
-  DoCheck,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { CdkColumnDef } from '@angular/cdk/table';
 
@@ -15,19 +14,22 @@ import { COLUMN } from '../columns';
 import { isPblColumn } from '../columns/column';
 import { PblNgridComponent } from '../table.component';
 import { EXT_API_TOKEN, PblNgridExtensionApi } from '../../ext/table-ext-api';
-import { parseStyleWidth } from '../columns/utils';
 import { uniqueColumnCss } from '../circular-dep-bridge';
+import { widthBreakout } from '../col-width-logic/dynamic-column-width';
+import { PblColumnSizeInfo } from '../types';
 
-/* TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+export type UpdateWidthReason = 'attach' | 'update' | 'resize';
 
-  PblNgridColumnDef use's the default object KeyValueDiffer provides with angular.
-  This differ will perform the diff on the entire object which IS NOT REQUIRED!
-  We need to create a custom differ that does the diff on selected properties only.
-*/
+export interface WidthChangeEvent {
+  reason: UpdateWidthReason;
+}
 
 /**
- * Column definition for the mat-table.
- * Defines a set of cells available for a table column.
+ * Represents a runtime column definition for a user-defined column definitions.
+ *
+ * User defined column definitions are `PblColumn`, `PblMetaColumn`, `PblColumnGroup` etc...
+ * They represent static column definitions and `PblNgridColumnDef` is the runtime instance of them.
+ *
  */
 @Directive({
   selector: '[pblNgridColumnDef]',
@@ -36,17 +38,9 @@ import { uniqueColumnCss } from '../circular-dep-bridge';
     { provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: PblNgridColumnDef }
   ],
 })
-export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef implements DoCheck, OnDestroy {
+export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef implements OnDestroy {
   @Input('pblNgridColumnDef') get column(): T { return this._column; };
   set column(value: T) { this.attach(value); }
-
-  get isDirty(): boolean {
-    if (this._markedForCheck && !this._isDirty) {
-      this._markedForCheck = false;
-      this._isDirty = !!this._colDiffer.diff(this._column);
-    }
-    return this._isDirty;
-  }
 
   /**
    * The complete width definition for the column.
@@ -66,11 +60,12 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
 
   table: PblNgridComponent<any>;
 
-  protected _colDiffer: KeyValueDiffer<any, any>;
+  /**
+   * An event emitted when width of this column has changed.
+   */
+  @Output('pblNgridColumnDefWidthChange') widthChange = new EventEmitter<WidthChangeEvent>();
 
   private _column: T;
-  private _isDirty = false;
-  private _markedForCheck = false;
 
   /**
    * The complete width definition for the column.
@@ -86,39 +81,37 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
    */
   private _netWidth: number;
 
-  constructor(protected readonly _differs: KeyValueDiffers, @Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<any> ) {
+  private widthBreakout: (columnInfo: PblColumnSizeInfo) => ReturnType<typeof widthBreakout>;
+
+  constructor(@Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<any>) {
     super();
     this.table = extApi.table;
+
+    const s = extApi.dynamicColumnWidthFactory().strategy;
+    this.widthBreakout = c => widthBreakout(s, c);
   }
 
   /**
-   * Marks this column for a lazy change detection check.
-   * Lazy means it will run the check only when the diff is requested (i.e. querying the `hasChanged` property).
-   * This allow aggregation of changes between CD cycles, i.e. calling `markForCheck()` multiple times within the same CD cycle does not hit performance.
+   * Update the "widths" for this column and when width has changed.
    *
-   * Once marked for check, `pblNgridColumnDef` handles it's dirty (`isDirty`) state automatically, when `isDirty` is true it will remain true until the
-   * CD cycle ends, i.e. until `ngDoCheck()` hits. This means that only children of `pblNgridColumnDef` can relay on `isDirty`, all children will run their
-   * `ngDoCheck()` before `ngDoCheck()` of `pblNgridColumnDef`.
+   * The "widths" are the 3 values representing a width of a cell: [minWidth, width, maxWidth],
+   * this method is given the width and will calculate the minWidth and maxWidth based on the column definitions.
    *
-   * This is a how we notify all cell directives about changes in a column. It is done through angular CD logic and does not require manual
-   * CD kicks and special channels between pblNgridColumnDef and it's children.
-   */
-  markForCheck(): void {
-    if (!this._colDiffer) {
-      this._colDiffer = this._differs.find({}).create();
-      this._colDiffer.diff({});
-    }
-    this._markedForCheck = true;
-  }
-
-  /**
-   * Update the width definitions for this column. [minWidth, width, maxWidth]
-   * If an element is provided it will also apply the widths to the element.
+   * If at least one value of "widths" has changed, fires the `widthChange` event with the `reason` provided.
+   *
+   * The reason can be used to optionally update the relevant cells, based on the source (reason) of the update.
+   * - attach: This runtime column definition instance was attached to a static column definition instance.
+   * - update: The width value was updated in the static column definition instance , which triggered a width update to the runtime column definition instance
+   * - resize: A resize event to the header PblColumn cell was triggered, the width of the static column definition is not updated, only the runtime value is.
+   *
+   * Note that this updates the width of the column-def instance, not the column definitions width itself.
+   * Only when `reason === 'update'` it means that the column definition was updated and triggered this update
+   *
    * @param width The new width
-   * @param element Optional, an element to apply the width to, if not set will only update the width definitions.
+   * @param reason The reason for this change
    */
-  updateWidth(width: string, element?: HTMLElement): void {
-    const { isFixedWidth } = this._column;
+  updateWidth(width: string, reason: UpdateWidthReason): void {
+    const { isFixedWidth, parsedWidth } = this._column;
 
     /*  Setting the minimum width is based on the input.
         If the original width is pixel fixed we will take the maximum between it and the min width.
@@ -131,11 +124,8 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
     ;
 
     let minWidth = minWidthPx && `${minWidthPx}px`;
-    if (!minWidth) {
-      const parsed = parseStyleWidth(width);
-      if (parsed && parsed.type === '%') {
-        minWidth = width;
-      }
+    if (!minWidth && parsedWidth && parsedWidth.type === '%') {
+      minWidth = width;
     }
 
     const maxWidth = isFixedWidth
@@ -143,18 +133,26 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
       : this._column.maxWidth
     ;
 
+    const prev = this._widths || [];
     this._widths = [minWidth || '',  width, maxWidth ? `${maxWidth}px` : width];
-    if (element) {
-      this.applyWidth(element);
+
+    // a previous 'resize' event will be followed by another 'resize' event with the same width, so fire....
+    if (reason === 'resize') {
+      this.widthChange.emit({ reason });
+    } else {
+      for (let i = 0; i < 3; i++) {
+        if (prev[i] !== this._widths[i]) {
+          this.widthChange.emit({ reason });
+          break;
+        }
+      }
     }
   }
 
   /**
    * Apply the current width definitions (minWidth, width, maxWidth) onto the element.
    */
-  applyWidth(element: HTMLElement): void {
-    setWidth(element, this.widths);
-  }
+  applyWidth(element: HTMLElement): void { setWidth(element, this.widths); }
 
   /**
    * Query for cell elements related to this column definition.
@@ -194,23 +192,19 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
   }
 
   /** @internal */
-  ngDoCheck(): void {
-    if (this._isDirty) {
-      this._isDirty = false;
-    }
+  ngOnDestroy(): void {
+    this.detach();
+    this.widthChange.complete();
   }
-
-  /** @internal */
-  ngOnDestroy(): void { this.detach(); }
 
   onResize(): void {
     if (isPblColumn(this.column)) {
       const prevNetWidth = this._netWidth;
-      this._netWidth = this.extApi.dynamicColumnWidthFactory().widthBreakout(this.column.sizeInfo).content;
+      this._netWidth = this.widthBreakout(this.column.sizeInfo).content;
 
-      if (prevNetWidth && prevNetWidth !== this._netWidth) {
+      if (prevNetWidth !== this._netWidth) {
         const width = `${this._netWidth}px`;
-        this.updateWidth(width);
+        this.updateWidth(width, 'resize');
       }
     }
   }
@@ -241,10 +235,6 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
         if (isPblColumn(column)) {
           this.updatePin(column.pin);
         }
-      }
-
-      if (this._colDiffer) {
-        this.markForCheck();
       }
     }
   }
@@ -277,5 +267,7 @@ function setWidth(el: HTMLElement, widths: [string, string, string]) {
   // This will cause an overflow unless we apply the border-box model
   if (widths[0] && widths[0].endsWith('%')) {
     el.style.boxSizing = 'border-box';
+  } else {
+    el.style.boxSizing = 'content-box';
   }
 }

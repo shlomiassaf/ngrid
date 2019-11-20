@@ -2,46 +2,36 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
+      "name": "browser: ng serve (launch: CLI)",
+      "type": "chrome",
       "request": "launch",
-      "name": "NG SERVE - DEBUG",
-      "program": "${workspaceFolder}/node_modules/.bin/ng",
-      "args": [
-        "serve"
-      ]
+      "preLaunchTask": "npm: start",
+      "url": "http://localhost:4201/#",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack:////*": "/*",
+        "webpack:/*": "${webRoot}/*"
+      }
     },
     {
-      "type": "node",
+      "name": "browser: ng serve",
+      "type": "chrome",
       "request": "launch",
-      "name": "NG BUILD - DEBUG",
-      "program": "${workspaceFolder}/node_modules/.bin/ng",
-      "args": [
-        "build",
-        "ngrid",
-        "--prod"
-      ]
+      "url": "http://localhost:4201/#",
+      "webRoot": "${workspaceFolder}/apps/ngrid-demo-app",
+      "sourceMapPathOverrides": {
+        "webpack:////*": "/*",
+        "webpack:/*": "${webRoot}/*"
+      },
     },
     {
-      "type": "node",
-      "request": "launch",
-      "name": "NX SCHEMATIC - DEBUG",
-      "program": "${workspaceFolder}/node_modules/.bin/nx",
-      "cwd": "${workspaceFolder}",
-      "args": [
-        "workspace-schematic",
-        "example-module",
-        "features/column/CellEdit",
-        "--add",
-        "MyTestRun"
-      ]
-    },
-    {
-      "name": "ng serve - attach",
+      "name": "browser: ng serve (attach only)",
       "type": "chrome",
       "request": "attach",
       "urlFilter": "http://localhost:4201*",
       "webRoot": "${workspaceFolder}",
       "sourceMapPathOverrides": {
+        "webpack:////*": "/*",
         "webpack:/*": "${webRoot}/*"
       },
       "port": 9222
@@ -60,6 +50,40 @@
       "program": "${workspaceFolder}/node_modules/protractor/bin/protractor",
       "protocol": "inspector",
       "args": ["${workspaceFolder}/protractor.conf.js"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "node: ng serve",
+      "program": "${workspaceFolder}/node_modules/.bin/ng",
+      "args": [
+        "serve"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "node: ng build",
+      "program": "${workspaceFolder}/node_modules/.bin/ng",
+      "args": [
+        "build",
+        "ngrid",
+        "--prod"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "node: nx schematics",
+      "program": "${workspaceFolder}/node_modules/.bin/nx",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "workspace-schematic",
+        "example-module",
+        "features/column/CellEdit",
+        "--add",
+        "MyTestRun"
+      ]
     },
     {
       "name": "[Node] Current TS File",

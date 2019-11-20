@@ -35,28 +35,21 @@ export function deepPathSet(item: any, col: PblColumnDefinition, value: any): vo
  */
 export function resetColumnWidths(rowWidth: StaticColumnWidthLogic,
                                   tableColumns: PblColumn[],
-                                  metaColumns: PblMetaColumnStore[],
-                                  options: { tableMarkForCheck?: boolean; metaMarkForCheck?: boolean; } = {}): void {
+                                  metaColumns: PblMetaColumnStore[]): void {
   const { pct, px } = rowWidth.defaultColumnWidth;
   const defaultWidth = `calc(${pct}% - ${px}px)`;
 
-  let mark = !!options.tableMarkForCheck;
   for (const c of tableColumns) {
     c.setDefaultWidth(defaultWidth);
-    c.updateWidth(mark);
+    c.updateWidth();
   }
 
-  mark = !!options.metaMarkForCheck;
   for (const m of metaColumns) {
     for (const c of [m.header, m.footer]) {
       if (c) {
         c.updateWidth('');
-        if (mark) {
-          c.columnDef.markForCheck();
-        }
       }
     }
-
     // We don't handle groups because they are handled by `PblNgridComponent.resizeRows()`
     // which set the width for each.
   }

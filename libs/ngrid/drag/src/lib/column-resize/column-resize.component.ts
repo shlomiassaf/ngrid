@@ -1,14 +1,25 @@
 import { animationFrameScheduler, Subscription } from 'rxjs';
 import { auditTime, take } from 'rxjs/operators';
-
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, Optional, OnDestroy, NgZone, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  Input,
+  Optional,
+  OnDestroy,
+  NgZone,
+  ViewEncapsulation
+} from '@angular/core';
 
 import { Directionality } from '@angular/cdk/bidi';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { CdkDragConfig, DragDropRegistry, CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
 
-import { PblNgridComponent, PblColumn, PblNgridMetaCellContext, TablePlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblColumn, PblNgridMetaCellContext, TablePlugin, isPblColumn } from '@pebula/ngrid';
 import { toggleNativeDragInteractions } from './cdk-encapsulated-code';
 import { extendGrid } from './extend-grid';
 
@@ -44,7 +55,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
   @Input() set context(value: PblNgridMetaCellContext<any>) {
     if (value) {
       const { col, table } = value;
-      if (col && col instanceof PblColumn) {
+      if (isPblColumn(col)) {
         this.column = col;
         this.table = table;
         return;

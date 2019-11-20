@@ -1,4 +1,5 @@
 import { Observable, Subject } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 import {
   AfterViewInit,
@@ -82,8 +83,6 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
    */
   readonly offsetChange: Observable<number>;
 
-  @Input() minWidth: number;
-
   @Input() stickyRowHeaderContainer: HTMLElement;
   @Input() stickyRowFooterContainer: HTMLElement;
 
@@ -158,6 +157,10 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     return this.elementRef.nativeElement.getBoundingClientRect().height;
   }
 
+  get scrollWidth(): number {
+    return this.elementRef.nativeElement.scrollWidth;
+  }
+
   /// TODO(shlomiassaf): Remove when not supporting 8.1.2 and below
   /// COMPATIBILITY 8.1.2- <-> 8.1.3+
     /** A string representing the `style.width` property value to be used for the spacer element. */
@@ -171,6 +174,8 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
    */
   _totalContentSizeTransform = '';
  /// COMPATIBILITY 8.1.2- <-> 8.1.3+
+
+  readonly _minWidth$: Observable<number>;
 
   private offsetChange$ = new Subject<number>();
   private offset: number;
@@ -207,6 +212,13 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     }
     pluginCtrl.extApi.setViewport(this);
     this.offsetChange = this.offsetChange$.asObservable();
+
+    this._minWidth$ = pluginCtrl.events
+      .pipe(
+        filter(event => event.kind === 'onResizeRow'),
+        map( e => this.table.columnApi.visibleColumns.reduce( (p, c) => p + c.sizeInfo.width, 0 ) ),
+        UnRx(this)
+      );
   }
 
   ngOnInit(): void {

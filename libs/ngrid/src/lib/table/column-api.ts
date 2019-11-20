@@ -1,6 +1,6 @@
 import { PblNgridExtensionApi } from '../ext/table-ext-api';
 import { PblNgridComponent } from './table.component';
-import { PblColumn } from './columns/column';
+import { PblColumn, isPblColumn } from './columns/column';
 import { PblColumnStore } from './columns/column-store';
 
 export interface AutoSizeToFitOptions {
@@ -109,9 +109,9 @@ export class ColumnApi<T> {
    * Resizing the column will trigger a table width resizing event, updating column group if necessary.
    */
   resizeColumn(column: PblColumn, width: string): void {
-    column.updateWidth(true, width)
-    this.table.resetColumnsWidth();
-    this.table.resizeColumns();
+    column.updateWidth(width);
+    // this.table.resetColumnsWidth();
+    // this.table.resizeColumns();
   }
 
   /**
@@ -144,10 +144,10 @@ export class ColumnApi<T> {
     const cols = columns.length > 0 ? columns : this.visibleColumns;
     for (const column of cols) {
       const size = this.findColumnAutoSize(column);
-      column.updateWidth(true, `${size}px`)
+      column.updateWidth(`${size}px`);
     }
-    this.table.resetColumnsWidth();
-    this.table.resizeColumns();
+    // this.table.resetColumnsWidth();
+    // this.table.resizeColumns();
   }
 
   /**
@@ -198,7 +198,7 @@ export class ColumnApi<T> {
       }
       if (!instructions.keepMaxWidth || !column.maxWidth) {
         column.maxWidth = undefined;
-         column.checkMaxWidthLock(column.sizeInfo.width); // if its locked, we need to release...
+        column.checkMaxWidthLock(column.sizeInfo.width); // if its locked, we need to release...
       }
 
       // There are 3 scenarios when updating the column
@@ -214,14 +214,13 @@ export class ColumnApi<T> {
       } // else (3) -> the update is skipped and it will run through resetColumnsWidth
 
       if (width) {
-        // We're not updating the width width markForCheck set to true because it will be done right after in `this.table.resetColumnsWidth()`
-        column.updateWidth(false, width);
+        column.updateWidth(width);
       }
 
     }
     // we now reset the column widths, this will calculate a new `defaultWidth` and set it in all columns but the relevant ones are column from (3)
-    // It will also mark all columnDef's for check
-    this.table.resetColumnsWidth({ tableMarkForCheck: true });
+    // It will also mark all columnDefs for check
+    this.table.resetColumnsWidth();
     this.table.resizeColumns();
   }
 
@@ -237,7 +236,7 @@ export class ColumnApi<T> {
    */
   moveColumn(column: PblColumn, renderColumnIndex: number, skipRedraw?: boolean): boolean; // tslint:disable-line:unified-signatures
   moveColumn(column: PblColumn, anchor: PblColumn | number, skipRedraw?: boolean): boolean {
-    if (anchor instanceof PblColumn) {
+    if (isPblColumn(anchor)) {
       const result = column === anchor ? false : this.store.moveColumn(column, anchor);
       if (result && skipRedraw !== true) {
         this.afterColumnPositionChange();
