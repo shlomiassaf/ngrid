@@ -30,7 +30,7 @@ export class PblNgridCellEditDirective<T> {
   private _dblClick = false;
   private targetEventsPlugin: PblNgridTargetEventsPlugin<T>;
 
-  constructor(table: PblNgridComponent<any>, injector: Injector, pluginCtrl: PblNgridPluginController) {
+  constructor(grid: PblNgridComponent<any>, injector: Injector, pluginCtrl: PblNgridPluginController) {
 
     let subscription = pluginCtrl.events.subscribe( event => {
       if (event.kind === 'onInit') {

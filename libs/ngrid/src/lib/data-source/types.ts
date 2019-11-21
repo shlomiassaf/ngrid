@@ -1,4 +1,4 @@
-import { PblColumn } from '../table/columns/column';
+import { PblColumn } from '../grid/columns/column';
 
 export type PblNgridSortOrder = 'asc' | 'desc';
 

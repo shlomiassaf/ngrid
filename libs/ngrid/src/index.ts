@@ -1,4 +1,4 @@
-import { isPblColumn, isPblMetaColumn, isPblColumnGroup } from './lib/table/index';
+import { isPblColumn, isPblMetaColumn, isPblColumnGroup } from './lib/grid/index';
 
 export {
   PblNgridPaginatorKind,
@@ -52,7 +52,7 @@ export {
   PblNgridFocusChangedEvent, PblNgridSelectionChangedEvent,
   PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext, PblNgridContextApi,
   CellReference, GridDataPoint,
-} from './lib/table/index';
+} from './lib/grid/index';
 
 export {
   PblNgridPlugin,
@@ -64,8 +64,8 @@ export {
   PblNgridEvents,
  } from './lib/ext/types';
 
-export { EXT_API_TOKEN, PblNgridExtensionApi } from './lib/ext/table-ext-api';
-export { TablePlugin, TablePluginMetadata } from './lib/ext/table-plugin';
+export { EXT_API_TOKEN, PblNgridExtensionApi } from './lib/ext/grid-ext-api';
+export { NgridPlugin, NgridPluginMetadata } from './lib/ext/grid-plugin';
 export { PblNgridPluginController } from './lib/ext/plugin-control';
 
 export const utils = {
@@ -74,4 +74,4 @@ export const utils = {
   isPblColumnGroup,
 };
 
-export { PblNgridModule, provideCommon } from './lib/table.module';
+export { PblNgridModule, provideCommon } from './lib/ngrid.module';

@@ -1,4 +1,4 @@
-import { PblColumn } from '../table/columns';
+import { PblColumn } from '../grid/columns';
 import { DataSourceFilter, DataSourceFilterToken, DataSourcePredicate, DataSourceColumnPredicate } from './types';
 
 export function createFilter(value: DataSourceFilterToken, columns: PblColumn[]): DataSourceFilter {

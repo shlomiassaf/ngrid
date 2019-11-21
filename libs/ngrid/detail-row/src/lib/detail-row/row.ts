@@ -54,7 +54,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   }
 
   ngOnInit(): void {
-    const controller = PblNgridPluginController.find(this.extApi.table);
+    const controller = PblNgridPluginController.find(this.extApi.grid);
     this.plugin = controller.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
     const tradeEvents = controller.getPlugin('targetEvents');
@@ -142,7 +142,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   private render(): void {
     this.vcRef.clear();
     if (this.context.$implicit) {
-      const detailRowDef = this.context.table.registry.getSingle('detailRow');
+      const detailRowDef = this.context.grid.registry.getSingle('detailRow');
       if ( detailRowDef ) {
         this.vcRef.createEmbeddedView(detailRowDef.tRef, this.context);
       }

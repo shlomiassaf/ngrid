@@ -24,47 +24,47 @@ export class TransposeTableSession {
   private destroyed: boolean;
   private rawSource: any[];
 
-  constructor(private table: PblNgridComponent<any>,
+  constructor(private grid: PblNgridComponent<any>,
               private pluginCtrl: PblNgridPluginController,
               private updateColumns: () => void,
               private sourceFactoryWrapper: (results: any[]) => any[]) {
     this.init();
-    if (table.columns && table.columnApi.visibleColumns.length > 0) {
+    if (grid.columns && grid.columnApi.visibleColumns.length > 0) {
       this.onInvalidateHeaders();
     }
-    this.onDataSource(this.table.ds);
+    this.onDataSource(this.grid.ds);
   }
 
   destroy(updateTable: boolean): void {
     if (!this.destroyed) {
       this.destroyed = true;
-      UnRx.kill(this, this.table);
+      UnRx.kill(this, this.grid);
 
-      this.table.showHeader = this.headerRow;
-      this.table.columns = this.columnsInput;
+      this.grid.showHeader = this.headerRow;
+      this.grid.columns = this.columnsInput;
       if (updateTable) {
-        this.table.invalidateColumns();
-        this.table.ds.refresh(VIRTUAL_REFRESH);
+        this.grid.invalidateColumns();
+        this.grid.ds.refresh(VIRTUAL_REFRESH);
       }
     }
   }
 
   private init(): void {
-    this.headerRow = this.table.showHeader;
-    this.table.showHeader = false;
+    this.headerRow = this.grid.showHeader;
+    this.grid.showHeader = false;
     this.pluginCtrl.events
-      .pipe(UnRx(this, this.table))
+      .pipe(UnRx(this, this.grid))
       .subscribe( e => e.kind === 'onInvalidateHeaders' && this.onInvalidateHeaders() );
 
     this.pluginCtrl.events
-      .pipe(UnRx(this, this.table))
+      .pipe(UnRx(this, this.grid))
       .subscribe( e => e.kind === 'onDataSource' && this.onDataSource(e.curr) );
   }
 
   private onInvalidateHeaders(): void {
-    if (!this.table.columns[LOCAL_COLUMN_DEF]) {
-      this.columnsInput = this.table.columns;
-      this.storeColumns = this.table.columnApi.visibleColumns;
+    if (!this.grid.columns[LOCAL_COLUMN_DEF]) {
+      this.columnsInput = this.grid.columns;
+      this.storeColumns = this.grid.columnApi.visibleColumns;
       this.updateColumns();
     }
   }

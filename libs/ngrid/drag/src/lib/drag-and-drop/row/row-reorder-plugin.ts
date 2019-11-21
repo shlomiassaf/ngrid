@@ -25,7 +25,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
-import { PblNgridComponent, TablePlugin, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
+import { PblNgridComponent, NgridPlugin, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
 import { cdkDropList, cdkDrag } from '../v7-compat';
 import { CdkLazyDropList, CdkLazyDrag } from '../core/lazy-drag-drop';
 import { PblDropListRef } from '../core/drop-list-ref';
@@ -41,7 +41,7 @@ const PLUGIN_KEY: 'rowReorder' = 'rowReorder';
 
 let _uniqueIdCounter = 0;
 
-@TablePlugin({ id: PLUGIN_KEY })
+@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({
   selector: 'pbl-ngrid[rowReorder]',
   exportAs: 'pblNgridRowReorder',
@@ -53,7 +53,7 @@ let _uniqueIdCounter = 0;
     '[id]': 'id',
     '[class.cdk-drop-list-dragging]': '_dropListRef.isDragging()',
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
-    '[class.pbl-row-reorder]': 'rowReorder && !this.table.ds?.sort.sort?.order && !this.table.ds?.filter?.filter',
+    '[class.pbl-row-reorder]': 'rowReorder && !this.grid.ds?.sort.sort?.order && !this.grid.ds?.filter?.filter',
   },
   providers: [
     { provide: CdkDropListGroup, useValue: undefined },
@@ -71,9 +71,9 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
   }
 
   private _rowReorder = false;
-  private _removePlugin: (table: PblNgridComponent<any>) => void;
+  private _removePlugin: (grid: PblNgridComponent<any>) => void;
 
-  constructor(public table: PblNgridComponent<T>,
+  constructor(public grid: PblNgridComponent<T>,
               pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
               dragDrop: DragDrop,
@@ -89,12 +89,12 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
     this.dropped.subscribe( (event: CdkDragDrop<T>) => {
       const item = event.item as PblNgridRowDragDirective<T>;
 
-      const previousIndex = table.ds.source.indexOf(item.draggedContext.row);
-      const currentIndex = event.currentIndex + table.ds.renderStart;
+      const previousIndex = grid.ds.source.indexOf(item.draggedContext.row);
+      const currentIndex = event.currentIndex + grid.ds.renderStart;
 
-      this.table.contextApi.clear();
-      this.table.ds.moveItem(previousIndex, currentIndex, true);
-      this.table._cdkTable.syncRows('data');
+      this.grid.contextApi.clear();
+      this.grid.ds.moveItem(previousIndex, currentIndex, true);
+      this.grid._cdkTable.syncRows('data');
     });
   }
 
@@ -117,7 +117,7 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
-    this._removePlugin(this.table);
+    this._removePlugin(this.grid);
   }
 }
 
@@ -135,14 +135,14 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
 export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements CdkLazyDrag<T, PblNgridRowReorderPluginDirective<T>> {
   rootElementSelector = 'pbl-ngrid-row';
 
-  get context(): Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>> {
+  get context(): Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>> {
     return this._context;
   }
 
-  @Input('pblNgridRowDrag') set context(value: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>) {
+  @Input('pblNgridRowDrag') set context(value: Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>) {
     this._context = value;
 
-    const pluginCtrl = this.pluginCtrl = value && PblNgridPluginController.find(value.table);
+    const pluginCtrl = this.pluginCtrl = value && PblNgridPluginController.find(value.grid);
     const plugin = pluginCtrl && pluginCtrl.getPlugin(PLUGIN_KEY);
     this.cdkDropList = plugin || undefined;
   }
@@ -154,12 +154,12 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
    * The `context` property holds the current context which is shared and updated on scroll so if a user start a drag and then scrolled
    * the context will point to the row in view and not the original cell.
    */
-  get draggedContext(): Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>> {
+  get draggedContext(): Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>> {
     return this._draggedContext;
   }
 
-  private _context: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>;
-  private _draggedContext: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>;
+  private _context: Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>;
+  private _draggedContext: Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>;
 
   private pluginCtrl: PblNgridPluginController;
 
@@ -191,8 +191,8 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
     // );
 
     this.started.subscribe( (event: CdkDragStart) => {
-      const { col, row, table, value }  = this._context;
-      this._draggedContext = { col, row, table, value };
+      const { col, row, grid, value }  = this._context;
+      this._draggedContext = { col, row, grid, value };
     });
 
 

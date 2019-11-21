@@ -1,6 +1,6 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef, DoCheck } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, NgridPlugin } from '@pebula/ngrid';
 
 import { PblPaginatorComponent } from './table-paginator.component';
 
@@ -12,7 +12,7 @@ declare module '@pebula/ngrid/lib/ext/types' {
 
 const PLUGIN_KEY: 'matPaginator' = 'matPaginator';
 
-@TablePlugin({ id: PLUGIN_KEY })
+@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[matPaginator]' })
 export class PblNgridMatPaginatorDirective implements OnDestroy, DoCheck {
   /**

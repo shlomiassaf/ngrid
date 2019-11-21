@@ -3,13 +3,13 @@ import { bufferWhen, debounce, map, filter, takeUntil } from 'rxjs/operators';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, PblColumn, TablePlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblColumn, NgridPlugin } from '@pebula/ngrid';
 
 import * as Events from './events';
 import { matrixRowFromRow, isRowContainer, findCellRenderIndex, findParentCell } from './utils';
 import { handleFocusAndSelection } from './focus-and-selection';
 
-declare module '@pebula/ngrid/lib/table/services/config' {
+declare module '@pebula/ngrid/lib/grid/services/config' {
   interface PblNgridConfig {
     targetEvents?: {
       /** When set to true will enable the target events plugin on all table instances by default. */
@@ -46,7 +46,7 @@ export function runOnce(): void {
   PblColumn.extendProperty('editable');
 }
 
-@TablePlugin({ id: PLUGIN_KEY, factory: 'create', runOnce })
+@NgridPlugin({ id: PLUGIN_KEY, factory: 'create', runOnce })
 export class PblNgridTargetEventsPlugin<T = any> {
   rowClick = new EventEmitter<Events.PblNgridRowEvent<T>>();
   rowDblClick = new EventEmitter<Events.PblNgridRowEvent<T>>();
@@ -63,14 +63,18 @@ export class PblNgridTargetEventsPlugin<T = any> {
   keyUp = new EventEmitter<Events.PblNgridCellEvent<T, KeyboardEvent> | Events.PblNgridRowEvent<T>>();
   keyDown = new EventEmitter<Events.PblNgridCellEvent<T, KeyboardEvent> | Events.PblNgridRowEvent<T>>();
 
-  private cdr: ChangeDetectorRef;
-  private _removePlugin: (table: PblNgridComponent<any>) => void;
+  /** @deprecated use `gird` instead */
+  get table(): PblNgridComponent<any> { return this.grid; }
+
   protected readonly destroyed = new ReplaySubject<void>();
 
-  constructor(public table: PblNgridComponent<any>, protected injector: Injector, protected pluginCtrl: PblNgridPluginController) {
+  private _removePlugin: (table: PblNgridComponent<any>) => void;
+
+  constructor(public readonly grid: PblNgridComponent<any>,
+              protected injector: Injector,
+              protected pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
-    this.cdr = injector.get(ChangeDetectorRef);
-    if (table.isInit) {
+    if (grid.isInit) {
       this.init();
     } else {
       let subscription = pluginCtrl.events
@@ -95,8 +99,8 @@ export class PblNgridTargetEventsPlugin<T = any> {
   }
 
   private setupDomEvents(): void {
-    const table = this.table;
-    const cdkTable = table._cdkTable;
+    const grid = this.grid;
+    const cdkTable = grid._cdkTable;
     const cdkTableElement: HTMLElement = cdkTable['_element'];
 
     const createCellEvent = <TEvent extends Event>(cellTarget: HTMLElement, source: TEvent): Events.PblNgridCellEvent<T, TEvent> | undefined => {
@@ -105,7 +109,7 @@ export class PblNgridTargetEventsPlugin<T = any> {
       if (matrixPoint) {
         const event: Events.PblNgridCellEvent<T, TEvent> = { ...matrixPoint, source, cellTarget, rowTarget } as any;
         if (matrixPoint.type === 'data') {
-          (event as Events.PblNgridDataMatrixPoint<T>).row = table.ds.renderedData[matrixPoint.rowIndex];
+          (event as Events.PblNgridDataMatrixPoint<T>).row = grid.ds.renderedData[matrixPoint.rowIndex];
         } else if (event.subType === 'meta') {
           // When multiple containers exists (fixed/sticky/row) the rowIndex we get is the one relative to the container..
           // We need to find the rowIndex relative to the definitions:
@@ -129,8 +133,8 @@ export class PblNgridTargetEventsPlugin<T = any> {
         */
         event.colIndex = findCellRenderIndex(cellTarget);
         if (matrixPoint.subType === 'data') {
-          const column = this.table.columnApi.findColumnAt(event.colIndex);
-          const columnIndex = this.table.columnApi.indexOf(column);
+          const column = this.grid.columnApi.findColumnAt(event.colIndex);
+          const columnIndex = this.grid.columnApi.indexOf(column);
           event.column = column;
           (event as Events.PblNgridDataMatrixPoint<T>).context = this.pluginCtrl.extApi.contextApi.getCell(event.rowIndex, columnIndex);
         } else {
@@ -366,11 +370,11 @@ export class PblNgridTargetEventsPlugin<T = any> {
   destroy(): void {
     this.destroyed.next();
     this.destroyed.complete();
-    this._removePlugin(this.table);
+    this._removePlugin(this.grid);
   }
 
   private syncRow<TEvent extends Event>(event: Events.PblNgridRowEvent<T> | Events.PblNgridCellEvent<T, TEvent>): void {
-    this.table._cdkTable.syncRows(event.type, event.rowIndex);
+    this.grid._cdkTable.syncRows(event.type, event.rowIndex);
   }
 }
 

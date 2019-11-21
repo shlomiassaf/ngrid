@@ -2,7 +2,7 @@ import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, O
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, TablePlugin, PblNgridRowContext } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, NgridPlugin, PblNgridRowContext } from '@pebula/ngrid';
 
 import { PblNgridDetailRowComponent } from './row';
 import { PblNgridDetailRowParentRefDirective, PblNgridDefaultDetailRowParentComponent } from './directives';
@@ -18,8 +18,8 @@ export const PLUGIN_KEY: 'detailRow' = 'detailRow';
 export const ROW_WHEN_TRUE = () => true;
 export const ROW_WHEN_FALSE = () => false;
 
-export function toggleDetailRow<T = any>(table: PblNgridComponent<T>, row: T, forceState?: boolean): boolean | void {
-  const controller = PblNgridPluginController.find(table);
+export function toggleDetailRow<T = any>(grid: PblNgridComponent<T>, row: T, forceState?: boolean): boolean | void {
+  const controller = PblNgridPluginController.find(grid);
   if (controller) {
     const plugin = controller.getPlugin(PLUGIN_KEY);
     if (plugin) {
@@ -34,7 +34,7 @@ export interface PblDetailsRowToggleEvent<T = any> {
   toggle(): void;
 }
 
-@TablePlugin({ id: PLUGIN_KEY })
+@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[detailRow]', exportAs: 'pblNgridDetailRow' })
 @UnRx()
 export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
@@ -43,13 +43,13 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
    *
    * A detail row is an additional row added below a row rendered with the context of the row above it.
    *
-   * You can enable/disable detail row for the entire table by setting `detailRow` to true/false respectively.
+   * You can enable/disable detail row for the entire grid by setting `detailRow` to true/false respectively.
    * To control detail row per row, provide a predicate.
    */
   @Input() get detailRow(): ( (index: number, rowData: T) => boolean ) | boolean { return this._detailRow; }
   set detailRow(value: ( (index: number, rowData: T) => boolean ) | boolean ) {
     if (this._detailRow !== value) {
-      const table = this.table;
+      const grid = this.grid;
 
       if (typeof value === 'function') {
         this._isSimpleRow = (index: number, rowData: T) => !(value as any)(index, rowData);
@@ -61,7 +61,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
       }
       this._detailRow = value;
 
-      if (table.isInit) {
+      if (grid.isInit) {
         this.updateTable();
       }
     }
@@ -131,9 +131,9 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   private _detailRow: ( (index: number, rowData: T) => boolean ) | boolean;
   private _detailRowDef: PblNgridDetailRowParentRefDirective<T>;
   private _defaultParentRef: ComponentRef<PblNgridDefaultDetailRowParentComponent>;
-  private _removePlugin: (table: PblNgridComponent<any>) => void;
+  private _removePlugin: (grid: PblNgridComponent<any>) => void;
 
-  constructor(private table: PblNgridComponent<any>, pluginCtrl: PblNgridPluginController<T>, private injector: Injector) {
+  constructor(private grid: PblNgridComponent<any>, pluginCtrl: PblNgridPluginController<T>, private injector: Injector) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     let subscription = pluginCtrl.events.subscribe( event => {
@@ -147,23 +147,23 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
           pluginCtrl.createPlugin('targetEvents');
         }
 
-        table.registry.changes
+        grid.registry.changes
           .subscribe( changes => {
             for (const c of changes) {
               switch (c.type) {
                 case 'detailRowParent':
                   if (c.op === 'remove') {
-                    table._cdkTable.removeRowDef(c.value);
+                    grid._cdkTable.removeRowDef(c.value);
                     this._detailRowDef = undefined;
                   }
                   this.setupDetailRowParent();
-                  // table._cdkTable.syncRows('data');
+                  // grid._cdkTable.syncRows('data');
                   break;
               }
             }
           });
 
-        // if we start with an initial value, then update the table cause we didn't do that
+        // if we start with an initial value, then update the grid cause we didn't do that
         // when it was set (we cant cause we're not init)
         // otherwise just setup the parent.
         if (this._detailRow) {
@@ -195,7 +195,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
     if (this._defaultParentRef) {
       this._defaultParentRef.destroy();
     }
-    this._removePlugin(this.table);
+    this._removePlugin(this.grid);
   }
 
   /** @internal */
@@ -214,21 +214,21 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   }
 
   private setupDetailRowParent(): void {
-    const table = this.table;
-    const cdkTable = table._cdkTable;
+    const grid = this.grid;
+    const cdkTable = grid._cdkTable;
     if (this._detailRowDef) {
       cdkTable.removeRowDef(this._detailRowDef);
       this._detailRowDef = undefined;
     }
     if (this.detailRow) {
-      let detailRow = table.registry.getSingle('detailRowParent');
+      let detailRow = grid.registry.getSingle('detailRowParent');
       if (detailRow) {
         this._detailRowDef = detailRow = detailRow.clone();
-        Object.defineProperty(detailRow, 'columns', { enumerable: true,  get: () => table.columnApi.visibleColumnIds });
+        Object.defineProperty(detailRow, 'columns', { enumerable: true,  get: () => grid.columnApi.visibleColumnIds });
         Object.defineProperty(detailRow, 'when', { enumerable: true,  get: () => this._isDetailRow });
         detailRow.ngOnChanges({ columns: { isFirstChange: () => true, firstChange: true, currentValue: detailRow.columns, previousValue: null }});
       } else if (!this._defaultParentRef) {
-        // TODO: move to module? set in root registry? put elsewhere to avoid table sync (see event of registry change)...
+        // TODO: move to module? set in root registry? put elsewhere to avoid grid sync (see event of registry change)...
         this._defaultParentRef = this.injector.get(ComponentFactoryResolver)
           .resolveComponentFactory(PblNgridDefaultDetailRowParentComponent)
           .create(this.injector);
@@ -240,25 +240,25 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   }
 
   private resetTableRowDefs(): void {
-    const table = this.table;
+    const grid = this.grid;
     if (this._detailRowDef) {
       this._detailRow === false
-        ? table._cdkTable.removeRowDef(this._detailRowDef)
-        : table._cdkTable.addRowDef(this._detailRowDef)
+        ? grid._cdkTable.removeRowDef(this._detailRowDef)
+        : grid._cdkTable.addRowDef(this._detailRowDef)
       ;
     }
   }
 
   /**
-   * Update the table with detail row infor.
+   * Update the grid with detail row infor.
    * Instead of calling for a change detection cycle we can assign the new predicates directly to the cdkRowDef instances.
    */
   private updateTable(): void {
-    this.table._tableRowDef.when = this._isSimpleRow;
+    this.grid._tableRowDef.when = this._isSimpleRow;
     this.setupDetailRowParent();
     // Once we changed the `when` predicate on the `CdkRowDef` we must:
     //   1. Update the row cache (property `rowDefs`) to reflect the new change
-    this.table._cdkTable.updateRowDefCache();
+    this.grid._cdkTable.updateRowDefCache();
 
     //   2. re-render all rows.
     // The logic for re-rendering all rows is handled in `CdkTable._forceRenderDataRows()` which is a private method.
@@ -266,6 +266,6 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
     // also calls `CdkTable._forceRenderDataRows()`
     // TODO: This is risky, the setter logic might change.
     // for example, if material will chack for change in `multiTemplateDataRows` setter from previous value...
-    this.table._cdkTable.multiTemplateDataRows = !!this._detailRow;
+    this.grid._cdkTable.multiTemplateDataRows = !!this._detailRow;
   }
 }

@@ -22,7 +22,7 @@ export class MatExcelStyleHeaderMenu {
 
   constructor(private ref: PblNgridOverlayPanelRef<PblNgridDataHeaderExtensionContext>, private vcRef: ViewContainerRef) {
     this.column = ref.data.col;
-    this.grid = ref.data.table;
+    this.grid = ref.data.grid;
 
     if (this.grid.ds.sort.column === this.column) {
       this.currentSort = this.grid.ds.sort.sort.order;

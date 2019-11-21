@@ -49,7 +49,7 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
 
   pending: PblColumn;
 
-  constructor(public table: PblNgridComponent<T>,
+  constructor(public grid: PblNgridComponent<T>,
               pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
               dragDrop: DragDrop,
@@ -67,7 +67,7 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
       .subscribe( event => {
         const item = event.item as PblDragRef<PblNgridColumnDragDirective<any>>;
         this.pending = undefined;
-        this.table.columnApi.addGroupBy(item.data.column);
+        this.grid.columnApi.addGroupBy(item.data.column);
       });
 
     this.pblDropListRef.entered

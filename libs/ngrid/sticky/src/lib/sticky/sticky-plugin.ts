@@ -1,7 +1,7 @@
 import { filter } from 'rxjs/operators';
 import { Directive, Input, IterableDiffers, IterableDiffer, IterableChangeRecord, OnDestroy } from '@angular/core';
 
-import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, NgridPlugin } from '@pebula/ngrid';
 
 
 declare module '@pebula/ngrid/lib/ext/types' {
@@ -12,19 +12,19 @@ declare module '@pebula/ngrid/lib/ext/types' {
 
 export const PLUGIN_KEY: 'sticky' = 'sticky';
 
-export function setStickyRow(table: PblNgridComponent<any>, type: 'header' | 'footer', bulk: Array<['table' | number, boolean]>): void;
-export function setStickyRow(table: PblNgridComponent<any>, type: 'header' | 'footer', value: 'table' | number, state: boolean): void;
-export function setStickyRow(table: PblNgridComponent<any>, type: 'header' | 'footer', valueOrBulk: Array<['table' | number, boolean]> | 'table' | number, state?: boolean): void {
+export function setStickyRow(grid: PblNgridComponent<any>, type: 'header' | 'footer', bulk: Array<['table' | number, boolean]>): void;
+export function setStickyRow(grid: PblNgridComponent<any>, type: 'header' | 'footer', value: 'table' | number, state: boolean): void;
+export function setStickyRow(grid: PblNgridComponent<any>, type: 'header' | 'footer', valueOrBulk: Array<['table' | number, boolean]> | 'table' | number, state?: boolean): void {
   const isHeader = type === 'header';
-  const queryList = isHeader ? table._headerRowDefs : table._footerRowDefs;
+  const queryList = isHeader ? grid._headerRowDefs : grid._footerRowDefs;
   const bulk: Array<['table' | number, boolean]> = Array.isArray(valueOrBulk) ? valueOrBulk : [ [valueOrBulk, state] ];
 
-  const addOneIfMainExists = (isHeader && table.showHeader) || (!isHeader && table.showFooter) ? 1 : 0;
+  const addOneIfMainExists = (isHeader && grid.showHeader) || (!isHeader && grid.showFooter) ? 1 : 0;
 
   let changed: boolean;
   for (const [value, state] of bulk) {
-    // the index from the user is 0 based or the table header/footer row.
-    // we store them both, so we need to convert... our first is always the table header/footer and then we have the same order as the user's.
+    // the index from the user is 0 based or the grid header/footer row.
+    // we store them both, so we need to convert... our first is always the grid header/footer and then we have the same order as the user's.
     let idx = value === 'table' ? 0 : value + addOneIfMainExists;
     if (!isHeader) {
       // sticky-styler stickRows() methods will reverse the order of footer columns
@@ -44,23 +44,23 @@ export function setStickyRow(table: PblNgridComponent<any>, type: 'header' | 'fo
 
   if (changed) {
     if (isHeader) {
-      table._cdkTable.updateStickyHeaderRowStyles();
+      grid._cdkTable.updateStickyHeaderRowStyles();
     } else {
-      table._cdkTable.updateStickyFooterRowStyles();
+      grid._cdkTable.updateStickyFooterRowStyles();
     }
   }
 }
 
-export function setStickyColumns(table: PblNgridComponent<any>, type: 'start' | 'end', bulk: Array<[string | number, boolean]>): void;
-export function setStickyColumns(table: PblNgridComponent<any>, type: 'start' | 'end', value: string  | number, state: boolean): void;
-export function setStickyColumns(table: PblNgridComponent<any>, type: 'start' | 'end', valueOrBulk: Array<[string  | number, boolean]> | string  | number, state?: boolean): void {
+export function setStickyColumns(grid: PblNgridComponent<any>, type: 'start' | 'end', bulk: Array<[string | number, boolean]>): void;
+export function setStickyColumns(grid: PblNgridComponent<any>, type: 'start' | 'end', value: string  | number, state: boolean): void;
+export function setStickyColumns(grid: PblNgridComponent<any>, type: 'start' | 'end', valueOrBulk: Array<[string  | number, boolean]> | string  | number, state?: boolean): void {
   const bulk: Array<[string | number, boolean]> = Array.isArray(valueOrBulk) ? valueOrBulk : [ [valueOrBulk, state] ];
   let changed: boolean;
   for (let [columnId, state] of bulk) {
     if (typeof columnId === 'string') {
-      columnId = table.columnApi.visibleColumns.findIndex( c => c.orgProp === columnId );
+      columnId = grid.columnApi.visibleColumns.findIndex( c => c.orgProp === columnId );
     }
-    const c = table.columnApi.visibleColumns[columnId];
+    const c = grid.columnApi.visibleColumns[columnId];
     if (c) {
       changed = true;
       c.pin = state ? type : undefined;
@@ -74,17 +74,17 @@ export function setStickyColumns(table: PblNgridComponent<any>, type: 'start' | 
     }
   }
   if (changed) {
-    table._cdkTable.updateStickyColumnStyles();
+    grid._cdkTable.updateStickyColumnStyles();
   }
 }
 
-@TablePlugin({ id: PLUGIN_KEY })
+@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[stickyColumnStart], pbl-ngrid[stickyColumnEnd], pbl-ngrid[stickyHeader], pbl-ngrid[stickyFooter]' })
 export class PblNgridStickyPluginDirective implements OnDestroy {
   /**
    * Set the header rows you want to apply sticky positioning to.
    * Valid values are:
-   *   - `table` - Literal string `table` that will set the table's main header row.
+   *   - `grid` - Literal string `grid` that will set the grid's main header row.
    *   - number  - The index of the row, for multi-header row. The index refers to the order you defined the header/headerGroup rows (base 0);
    *
    * For performance considerations only new values will trigger a change (i.e. the array should be treated as immutable).
@@ -100,7 +100,7 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
   /**
    * Set the footer rows you want to apply sticky positioning to.
    * Valid values are:
-   *   - `table` - Literal string `table` that will set the table's main footer row.
+   *   - `grid` - Literal string `grid` that will set the grid's main footer row.
    *   - number  - The index of the row, for multi-footer row. The index refers to the order you defined the footer rows (base 0);
    *
    * For performance considerations only new values will trigger a change (i.e. the array should be treated as immutable).
@@ -116,7 +116,7 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
     /**
    * Set the header rows you want to apply sticky positioning to.
    * Valid values are:
-   *   - `table` - Literal string `table` that will set the table's main header row.
+   *   - `grid` - Literal string `grid` that will set the grid's main header row.
    *   - number  - The index of the row, for multi-header row. The index refers to the order you defined the header/headerGroup rows (base 0);
    *
    * For performance considerations only new values will trigger a change (i.e. the array should be treated as immutable).
@@ -132,7 +132,7 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
   /**
    * Set the footer rows you want to apply sticky positioning to.
    * Valid values are:
-   *   - `table` - Literal string `table` that will set the table's main footer row.
+   *   - `grid` - Literal string `grid` that will set the grid's main footer row.
    *   - number  - The index of the row, for multi-footer row. The index refers to the order you defined the footer rows (base 0);
    *
    * For performance considerations only new values will trigger a change (i.e. the array should be treated as immutable).
@@ -151,9 +151,9 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
   private _footerDiffer: IterableDiffer<'table' | number>;
 
   private _columnCache: { start: Array<string | number>; end: Array<string | number>; } = { start: [], end: [] };
-  private _removePlugin: (table: PblNgridComponent<any>) => void;
+  private _removePlugin: (grid: PblNgridComponent<any>) => void;
 
-  constructor (protected readonly table: PblNgridComponent<any>,
+  constructor (protected readonly grid: PblNgridComponent<any>,
                protected readonly _differs: IterableDiffers,
                protected readonly pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
@@ -161,20 +161,20 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
     pluginCtrl.events
       .pipe(filter( e => e.kind === 'onResizeRow'))
       .subscribe( () => {
-        this.table._cdkTable.updateStickyHeaderRowStyles();
-        this.table._cdkTable.updateStickyColumnStyles();
-        this.table._cdkTable.updateStickyFooterRowStyles();
+        this.grid._cdkTable.updateStickyHeaderRowStyles();
+        this.grid._cdkTable.updateStickyColumnStyles();
+        this.grid._cdkTable.updateStickyFooterRowStyles();
       });
 
       pluginCtrl.events
         .pipe(filter ( e => e.kind === 'onInvalidateHeaders' ))
         .subscribe( () => {
-          if (this._startDiffer && this.table.isInit) {
+          if (this._startDiffer && this.grid.isInit) {
             this._startDiffer.diff([]);
             this.applyColumnDiff('start', this._columnCache.start, this._startDiffer)
           }
 
-          if (this._endDiffer && this.table.isInit) {
+          if (this._endDiffer && this.grid.isInit) {
             this._endDiffer.diff([]);
             this.applyColumnDiff('end', this._columnCache.end, this._endDiffer)
           }
@@ -182,11 +182,11 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._removePlugin(this.table);
+    this._removePlugin(this.grid);
   }
 
   protected applyColumnDiff(type: 'start' | 'end', value: Array<string | number>, differ: IterableDiffer<string | number>): void {
-    if (!this.table.isInit) {
+    if (!this.grid.isInit) {
       const unsub = this.pluginCtrl.events.subscribe( event => {
         if (event.kind === 'onInit') {
           unsub.unsubscribe();
@@ -208,12 +208,12 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
       }
     });
     if (bulk.length > 0) {
-      setStickyColumns(this.table, type, bulk);
+      setStickyColumns(this.grid, type, bulk);
     }
   }
 
   protected applyRowDiff(type: 'header' | 'footer', value: Array<'table' | number>, differ: IterableDiffer<'table' | number>): void {
-    if (!this.table.isInit) {
+    if (!this.grid.isInit) {
       const unsub = this.pluginCtrl.events.subscribe( event => {
         if (event.kind === 'onInit') {
           unsub.unsubscribe();
@@ -233,7 +233,7 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
       }
     });
     if (bulk.length > 0) {
-      setStickyRow(this.table, type, bulk);
+      setStickyRow(this.grid, type, bulk);
     }
   }
 }
