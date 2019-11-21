@@ -34,6 +34,14 @@ class PblNgridGroupHeaderSizeController {
     return controller;
   }
 
+  has(col: PblColumnSizeObserver): boolean {
+    return this.columns.indexOf(col) !== -1;
+  }
+
+  hasColumn(column: PblColumn): boolean {
+    return this.columns.some( c => c.column === column );
+  }
+
   add(col: PblColumnSizeObserver): void {
     this.entries.set(col.target, col);
     this.ro.observe(col.target);
@@ -95,8 +103,19 @@ export class PblColumnSizeObserver extends ColumnSizeInfo implements AfterViewIn
     this.controller = PblNgridGroupHeaderSizeController.get(table);
   }
 
+  attachColumn(column: PblColumn): void {
+    if (!this.controller.hasColumn(column)) {
+      super.attachColumn(column);
+      this.updateSize();
+    } else {
+      this._column = column;
+    }
+  }
+
   ngAfterViewInit(): void {
-    this.controller.add(this);
+    if (!this.column || !this.controller.hasColumn(this.column)) {
+      this.controller.add(this);
+    }
   }
 
   ngOnDestroy() {

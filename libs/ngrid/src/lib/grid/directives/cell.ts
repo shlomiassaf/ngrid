@@ -3,7 +3,6 @@
 import { first, filter } from 'rxjs/operators';
 import {
   OnInit,
-  AfterViewInit,
   Component,
   Directive,
   ElementRef,
@@ -24,7 +23,7 @@ import { uniqueColumnCss, uniqueColumnTypeCss, COLUMN_EDITABLE_CELL_CLASS } from
 import { COLUMN, PblMetaColumn, PblColumn, PblColumnGroup, isPblColumn, isPblColumnGroup } from '../columns';
 import { MetaCellContext, PblNgridMetaCellContext, PblRowContext, PblCellContext } from '../context/index';
 import { PblNgridMultiRegistryMap } from '../services/grid-registry.service';
-import { PblNgridColumnDef } from './column-def';
+import { PblNgridColumnDef, WidthChangeEvent } from './column-def';
 import { PblNgridDataHeaderExtensionContext, PblNgridMultiComponentRegistry, PblNgridMultiTemplateRegistry } from './registry.directives';
 
 const HEADER_GROUP_CSS = `pbl-header-group-cell`;
@@ -51,6 +50,14 @@ function initDataCellElement(el: HTMLElement, column: PblColumn): void {
 
 const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRegistryMap['dataHeaderExtensions'][]>();
 
+function applyWidth(this: { columnDef: PblNgridColumnDef; el: HTMLElement }) {
+  this.columnDef.applyWidth(this.el);
+}
+
+function applySourceWidth(this: { columnDef: PblNgridColumnDef; el: HTMLElement }) {
+  this.columnDef.applySourceWidth(this.el);
+}
+
 /**
  * Header cell component.
  * The header cell component will render the header cell template and add the proper classes and role.
@@ -71,7 +78,7 @@ const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRe
   encapsulation: ViewEncapsulation.None,
 })
 @UnRx()
-export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements OnInit, AfterViewInit {
+export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements OnInit {
   @ViewChild('vcRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
 
   private el: HTMLElement;
@@ -91,60 +98,60 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
     const column = columnDef.column;
     const el = this.el = elementRef.nativeElement;
 
-      /*  Apply width changes to this header cell
-          We don't update resize events to any of the possible columns because
-          - PblColumn headers NEVER change their size, they always reflect the user's definitions
-          - PblMetaColumn and PblColumnGroup headers are auto-adjusted by `PblNgridComponent.syncColumnGroupsSize` */
-      columnDef.widthChange
-        .pipe(
-          filter( event => event.reason !== 'resize'),
-          UnRx(this),
-         )
-        .subscribe(event => this.columnDef.applyWidth(this.el));
-
-      if (isPblColumnGroup(column)) {
-        el.classList.add(HEADER_GROUP_CSS);
-        if (column.placeholder) {
-          el.classList.add(HEADER_GROUP_PLACE_HOLDER_CSS);
-        }
+    if (isPblColumnGroup(column)) {
+      el.classList.add(HEADER_GROUP_CSS);
+      if (column.placeholder) {
+        el.classList.add(HEADER_GROUP_PLACE_HOLDER_CSS);
       }
+    }
   }
 
   ngOnInit(): void {
     const col: COLUMN = this.columnDef.column;
+    let predicate: (event: WidthChangeEvent) => boolean;
+    let view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblMetaColumn | PblColumn>>
+    let widthUpdater: (...args: any[]) => void;
+
     if (isPblColumn(col)) {
-      this.cellCtx = PblNgridDataHeaderExtensionContext
-        .createDateHeaderCtx(this as PblNgridHeaderCellComponent<PblColumn>, this.vcRef.injector);
+      const gridWidthRow = this.el.parentElement.hasAttribute('gridWidthRow');
+      widthUpdater = gridWidthRow ? applySourceWidth : applyWidth;
+      predicate = event => (!gridWidthRow && event.reason !== 'update') || (gridWidthRow && event.reason !== 'resize');
+      view = !gridWidthRow ? this.initMainHeaderColumnView(col) : undefined;
     } else {
-      this.cellCtx = MetaCellContext.create(col, this.grid);
+      widthUpdater = applySourceWidth;
+      predicate = event => event.reason !== 'resize';
+      view = this.initMetaHeaderColumnView(col);
     }
+
+    this.columnDef.widthChange
+      .pipe(filter(predicate), UnRx(this))
+      .subscribe(widthUpdater.bind(this));
+
+    view && view.detectChanges();
+    widthUpdater.call(this);
+    initCellElement(this.el, col);
   }
 
-  ngAfterViewInit(): void {
-    const col: COLUMN = this.columnDef.column;
-    const { vcRef } = this;
-    let view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblMetaColumn | PblColumn>>;
+  protected initMainHeaderColumnView(col: PblColumn) {
+    this.cellCtx = PblNgridDataHeaderExtensionContext.createDateHeaderCtx(this as PblNgridHeaderCellComponent<PblColumn>, this.vcRef.injector);
+    const context = this.cellCtx as PblNgridDataHeaderExtensionContext;
+    const view = this.vcRef.createEmbeddedView(col.headerCellTpl, context);
+    this.zone.onStable
+      .pipe(first())
+      .subscribe( () => {
+        this.runHeaderExtensions(context, view as EmbeddedViewRef<PblNgridMetaCellContext<any, PblColumn>>);
+        const v = this.vcRef.get(0);
+        // at this point the view might get destroyed, its possible...
+        if (!v.destroyed) {
+          v.detectChanges();
+        }
+      });
+    return view;
+  }
 
-    if (isPblColumn(col)) {
-      const context = this.cellCtx as PblNgridDataHeaderExtensionContext;
-      view = vcRef.createEmbeddedView(col.headerCellTpl, context);
-      this.zone.onStable
-        .pipe(first())
-        .subscribe( () => {
-          this.runHeaderExtensions(context, view as EmbeddedViewRef<PblNgridMetaCellContext<any, PblColumn>>);
-          const v = vcRef.get(0);
-          // at this point the view might get destroyed, its possible...
-          if (!v.destroyed) {
-            v.detectChanges();
-          }
-        });
-    } else {
-      view = vcRef.createEmbeddedView(col.template, this.cellCtx);
-    }
-
-    view.detectChanges();
-    this.columnDef.applyWidth(this.el);
-    initCellElement(this.el, col);
+  protected initMetaHeaderColumnView(col: PblMetaColumn | PblColumnGroup) {
+    this.cellCtx = MetaCellContext.create(col, this.grid);
+    return this.vcRef.createEmbeddedView(col.template, this.cellCtx);
   }
 
   protected runHeaderExtensions(context: PblNgridDataHeaderExtensionContext, view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblColumn>>): void {
@@ -297,15 +304,15 @@ export class PblNgridFooterCellDirective extends CdkFooterCell implements OnInit
     this.table = grid;
     this.el = elementRef.nativeElement;
     const column = columnDef.column;
-    columnDef.applyWidth(this.el);
+    applyWidth.call(this);
     initCellElement(this.el, column);
 
-    // update widths for meta rows only, main footer never updates
-    if (!isPblColumn(column)) {
-      columnDef.widthChange
-        .pipe(UnRx(this))
-        .subscribe(() => this.columnDef.applyWidth(this.el));
-    }
+    columnDef.widthChange
+      .pipe(
+        filter( event => event.reason !== 'update'),
+        UnRx(this),
+      )
+      .subscribe(applyWidth.bind(this));
   }
 
   ngOnInit(): void {

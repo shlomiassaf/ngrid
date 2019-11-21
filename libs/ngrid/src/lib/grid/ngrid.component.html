@@ -1,9 +1,15 @@
-<!-- GRID HEADER ROW DEF -->
+<!-- GRID HEADER ROW DEF - THE MAIN HEADER OF THE GRID -->
 <cdk-header-row *cdkHeaderRowDef="columnApi.visibleColumnIds; sticky: columnRowDef.header?.type === 'sticky'"
                 [pblMetaRow]="columnRowDef.header"
                 data-rowtype="header"
                 class="pbl-ngrid-header-row pbl-ngrid-header-row-main"
-                [class.pbl-ngrid-row-visually-hidden]="!showHeader"></cdk-header-row>
+                [class.pbl-ngrid-row-hidden]="!showHeader"></cdk-header-row>
+
+<!-- DUPLICATE HEADER FOR THE MAIN HEADER, NEVER SEEN (NOT VISUAL), USED FOR RESIZING -->
+<cdk-header-row *cdkHeaderRowDef="columnApi.visibleColumnIds;"
+                [pblMetaRow]="columnRowDef.header" gridWidthRow
+                data-rowtype="header"
+                class="pbl-ngrid-header-row pbl-ngrid-row-visually-hidden"></cdk-header-row>
 
 <!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
 <ng-container *ngFor="let row of metaColumnIds.header;">
@@ -50,10 +56,11 @@
       </ng-container>
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
 
-       <!-- HEADER-RECORD-FOOTER CELL DEF -->
+      <!-- HEADER-RECORD-FOOTER CELL DEF -->
       <ng-container *ngFor="let c of columnApi.visibleColumns;" [pblNgridColumnDef]="c">
         <!-- GRID HEADER CELL DEF -->
         <pbl-ngrid-header-cell *cdkHeaderCellDef="let row" [observeSize]="c"></pbl-ngrid-header-cell>
+
         <!-- RECORD CELL DEF -->
         <pbl-ngrid-cell #cell="pblNgridCell" *cdkCellDef="let row; pblRowContext as pblRowContext"
                         [rowCtx]="pblRowContext" [attr.tabindex]="cellFocus" [attr.id]="c.id">

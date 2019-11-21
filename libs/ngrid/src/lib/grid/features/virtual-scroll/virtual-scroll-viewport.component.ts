@@ -1,5 +1,4 @@
 import { Observable, Subject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
 
 import {
   AfterViewInit,
@@ -213,12 +212,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     pluginCtrl.extApi.setViewport(this);
     this.offsetChange = this.offsetChange$.asObservable();
 
-    this._minWidth$ = pluginCtrl.events
-      .pipe(
-        filter(event => event.kind === 'onResizeRow'),
-        map( e => this.grid.columnApi.visibleColumns.reduce( (p, c) => p + c.sizeInfo.width, 0 ) ),
-        UnRx(this)
-      );
+    this._minWidth$ = grid.columnApi.totalColumnWidthChange;
   }
 
   ngOnInit(): void {

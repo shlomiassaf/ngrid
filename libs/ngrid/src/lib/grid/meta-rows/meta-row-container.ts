@@ -4,10 +4,11 @@ import { UnRx } from '@pebula/utils';
 
 import { PblMetaRowDefinitions } from '../columns/types';
 import { PblNgridMetaRowService } from './meta-row.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'div[pbl-ngrid-fixed-meta-row-container]',
-  template: `<div class="pbl-cdk-table" [style.width.px]="_width"></div>`,
+  template: `<div class="pbl-cdk-table" [style.width.px]="_width"></div><div class="pbl-cdk-table" [style.width.px]="_width$ | async"></div>`,
   host: { // tslint:disable-line:use-host-property-decorator
     style: 'flex: 0 0 auto; overflow: hidden;',
     '[style.width.px]': '_innerWidth',
@@ -30,8 +31,9 @@ export class PblNgridMetaRowContainerComponent {
   _minWidth: number;
   _width: number;
 
+  readonly _width$: Observable<number>;
+
   private _type: 'header' | 'footer';
-  private defs: Array<{ index: number; rowDef: PblMetaRowDefinitions }>;
   private element: HTMLElement;
 
   constructor(public readonly metaRows: PblNgridMetaRowService, elRef: ElementRef<HTMLElement>) {
@@ -46,6 +48,7 @@ export class PblNgridMetaRowContainerComponent {
           this._width = Math.max(this._innerWidth, this._minWidth);
         }
       });
+    this._width$ = this.metaRows.extApi.grid.columnApi.totalColumnWidthChange;
   }
 
   private init(type: 'header' | 'footer'): void {
@@ -72,13 +75,17 @@ export class PblNgridMetaRowContainerComponent {
   }
 
   private syncRowDefinitions(): void {
-    this.defs = [];
     const isHeader = this._type === 'header';
     const section = isHeader ? this.metaRows.header : this.metaRows.footer;
 
-    const container = this.element.firstElementChild;
+    const widthContainer = this.element.firstElementChild;
+    const container = widthContainer.nextElementSibling;
+
+    if (isHeader) {
+      widthContainer.appendChild(this.metaRows.gridWidthRow.el);
+    }
+
     for (const def of section.fixed) {
-      this.defs.push(def);
       container.appendChild(def.el);
     }
   }

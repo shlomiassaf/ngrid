@@ -20,6 +20,7 @@ export interface MetaRowSection {
 
 @Injectable()
 export class PblNgridMetaRowService<T = any> {
+  gridWidthRow: { rowDef: PblMetaRowDefinitions; el: HTMLElement; };
   header: MetaRowSection = metaRowSectionFactory();
   footer: MetaRowSection = metaRowSectionFactory();
 
@@ -30,9 +31,7 @@ export class PblNgridMetaRowService<T = any> {
 
   constructor(@Inject(EXT_API_TOKEN) public readonly extApi: PblNgridExtensionApi<T>) {
     this.sync = this.sync$ // TODO: complete
-      .pipe(
-        debounceTime(0, asapScheduler),
-      );
+      .pipe(debounceTime(0, asapScheduler));
 
     this.hzScroll = this.hzScroll$.asObservable();
 
@@ -64,10 +63,15 @@ export class PblNgridMetaRowService<T = any> {
     const { header, footer } = columnStore.metaColumnIds;
 
     const rowDef = metaRow.meta;
-    if (rowDef === columnStore.footerColumnDef) {
+    if (rowDef === columnStore.headerColumnDef) {
+      if (metaRow.gridWidthRow === true) {
+        this.gridWidthRow = { rowDef, el: metaRow.elRef.nativeElement };
+        this.header.all.push(rowDef);
+      } else {
+        this.addToSection(this.header, metaRow, columnStore.metaColumnIds.header.length);
+      }
+    } else if (rowDef === columnStore.footerColumnDef) {
       this.addToSection(this.footer, metaRow, 0);
-    } else if (rowDef === columnStore.headerColumnDef) {
-      this.addToSection(this.header, metaRow, columnStore.metaColumnIds.header.length);
     } else {
       let index = header.findIndex( h => h.rowDef === rowDef );
       if (index > -1) {

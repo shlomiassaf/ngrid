@@ -20,6 +20,8 @@ import { PblColumnSizeInfo } from '../types';
 
 export type UpdateWidthReason = 'attach' | 'update' | 'resize';
 
+export type WidthSet = [string, string, string];
+
 export interface WidthChangeEvent {
   reason: UpdateWidthReason;
 }
@@ -43,12 +45,12 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
   set column(value: T) { this.attach(value); }
 
   /**
-   * The complete width definition for the column.
-   * There are 3 width definitions: MIN-WIDTH, WIDTH and MAX-WIDTH.
+   * The absolute width definitions, as currently set in the DOM (getBoundingClientRect()).
+   * If no measurements exists yet, return the user defined width's.
    *
    * The tuple represents them in that order, i.e: [ MIN-WIDTH, WIDTH, MAX-WIDTH ]
    */
-  get widths(): [string, string, string] { return this._widths; }
+  get widths(): WidthSet { return this._widths[1]; }
 
   /**
    * The last net width of the column.
@@ -71,11 +73,15 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
 
   /**
    * The complete width definition for the column.
-   * There are 3 width definitions: MIN-WIDTH, WIDTH and MAX-WIDTH.
    *
+   * There are 2 width sets (tuple):
+   * - [0]: The source width definitions as set in static column definition instance
+   * - [1]: The absolute width definitions, as currently set in the DOM (getBoundingClientRect())
+   *
+   * Each set is made up of 3 primitive width definitions: MIN-WIDTH, WIDTH and MAX-WIDTH.
    * The tuple represents them in that order, i.e: [ MIN-WIDTH, WIDTH, MAX-WIDTH ]
    */
-  private _widths: [string, string, string];
+  private _widths: [WidthSet?, WidthSet?] = [];
 
   /**
    * The last net width of the column.
@@ -135,15 +141,18 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
       : this._column.maxWidth
     ;
 
-    const prev = this._widths || [];
-    this._widths = [minWidth || '',  width, maxWidth ? `${maxWidth}px` : width];
-
-    // a previous 'resize' event will be followed by another 'resize' event with the same width, so fire....
+    const newWidths = [minWidth || '',  width, maxWidth ? `${maxWidth}px` : width] as WidthSet;
     if (reason === 'resize') {
+      this._widths[1] = newWidths;
       this.widthChange.emit({ reason });
     } else {
+      const prev = this._widths[0] || [];
+      this._widths[0] = newWidths;
+      if (!this._widths[1]) {
+        this._widths[1] = newWidths;
+      }
       for (let i = 0; i < 3; i++) {
-        if (prev[i] !== this._widths[i]) {
+        if (prev[i] !== newWidths[i]) {
           this.widthChange.emit({ reason });
           break;
         }
@@ -152,9 +161,14 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
   }
 
   /**
-   * Apply the current width definitions (minWidth, width, maxWidth) onto the element.
+   * Apply the current absolute width definitions (minWidth, width, maxWidth) onto an element.
    */
   applyWidth(element: HTMLElement): void { setWidth(element, this.widths); }
+
+  /**
+   * Apply the source width definitions )set in static column definition instance) onto an element.
+   */
+  applySourceWidth(element: HTMLElement): void { setWidth(element, this._widths[0]); }
 
   /**
    * Query for cell elements related to this column definition.
@@ -254,7 +268,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
  * @param el The element to set widths to
  * @param widths The widths, a tuple of 3 strings [ MIN-WIDTH, WIDTH, MAX-WIDTH ]
  */
-function setWidth(el: HTMLElement, widths: [string, string, string]) {
+function setWidth(el: HTMLElement, widths: WidthSet) {
   el.style.minWidth = widths[0];
   el.style.width = widths[1];
   el.style.maxWidth = widths[2];
