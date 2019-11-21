@@ -1,12 +1,9 @@
-import { Directive, Input, ElementRef, OnDestroy } from '@angular/core';
-
+import { Directive, Input, ElementRef, OnDestroy, Attribute } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { UnRx } from '@pebula/utils';
 
 import { PblMetaRowDefinitions } from '../columns/types';
-
-import { PblColumnStoreMetaRow } from '../columns/column-store';
 import { PblNgridMetaRowService } from './meta-row.service';
-
 
 @Directive({
   selector: '[pblMetaRow]',
@@ -22,10 +19,14 @@ export class PblMetaRowDirective implements OnDestroy {
     }
   }
 
+  public readonly gridWidthRow: boolean;
+
   private _meta: PblMetaRowDefinitions;
 
-  constructor(public readonly metaRows: PblNgridMetaRowService, public elRef: ElementRef<HTMLElement>) {
-
+  constructor(public readonly metaRows: PblNgridMetaRowService,
+              public elRef: ElementRef<HTMLElement>,
+              @Attribute('gridWidthRow') gridWidthRow: any) {
+    this.gridWidthRow = gridWidthRow !== null;
   }
 
   ngOnDestroy(): void {

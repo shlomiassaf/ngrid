@@ -42,7 +42,7 @@ export class SellerDemoExample {
       { prop: 'email', minWidth: 250, width: '150px' },
       { prop: 'country', headerType: 'country', type: { name: 'countryNameDynamic', data: COUNTRY_GETTER }, width: '150px' },
       { prop: 'sales', sort: true },
-      { prop: 'address' },
+      { prop: 'address', width: undefined, },
       { prop: 'rating', type: 'starRatings', minWidth: 90, maxWidth: 120 },
       { prop: 'feedback', sort: true, type: { name: 'progressBar', data: { style: progressBarStyle } }, width: '150px' },
     )

@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+
 import { PblNgridExtensionApi } from '../ext/grid-ext-api';
 import { PblNgridComponent } from './ngrid.component';
 import { PblColumn, isPblColumn } from './columns/column';
@@ -57,9 +60,21 @@ export class ColumnApi<T> {
   get visibleColumns(): PblColumn[] { return this.store.columns; }
   get columns(): PblColumn[] { return this.store.allColumns; }
 
+  get totalColumnWidthChange(): Observable<number> {
+    if (!this._totalColumnWidthChange) {
+      this._totalColumnWidthChange = this.extApi.events
+        .pipe(
+          filter(event => event.kind === 'onResizeRow'),
+          map( e => this.grid.columnApi.visibleColumns.reduce( (p, c) => p + c.sizeInfo.width, 0 ) ),
+        );
+    }
+    return this._totalColumnWidthChange;
+  }
+
   private grid: PblNgridComponent<T>;
   private store: PblColumnStore;
   private extApi: PblNgridExtensionApi;
+  private _totalColumnWidthChange: Observable<number>;
 
   private constructor() { }
 

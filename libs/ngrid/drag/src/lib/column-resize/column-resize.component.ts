@@ -85,8 +85,6 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
   private _initialWidth: number;
   private _lastWidth: number;
 
-  private cache: HTMLElement[];
-
   private _rootElementInitSubscription = Subscription.EMPTY;
 
   constructor(public element: ElementRef<HTMLElement>,
@@ -183,7 +181,6 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
 
         this.column.sizeInfo.updateSize();
         this._lastWidth = this._initialWidth = this.column.columnDef.netWidth;
-        this.cache = this.column.columnDef.queryCellElements('table', 'header', 'footer');
       }
       return;
     }
@@ -202,14 +199,10 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
 
     if (this._lastWidth !== newWidth) {
       this._lastWidth = newWidth;
-      this.column.width = newWidth + 'px';
+      this.column.updateWidth(`${newWidth}px`);
       this.grid.resetColumnsWidth();
-
-      for (const el of this.cache) {
-        this.column.columnDef.applyWidth(el)
-      }
-      // the above will change the size of on column AND because we didn't disable the resize observer it will pop an event.
-      // if there are groups it will fire grid.resizeColumns(); which will recalculate the groups...
+      // `this.column.updateWidth` will update the grid width cell only, which will trigger a resize that will update all other cells
+      // `this.grid.resetColumnsWidth()` will re-adjust all other grid width cells, and if their size changes they will trigger the resize event...
     }
   }
 
@@ -228,9 +221,6 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
 
     // this.column.columnDef.isDragging = false;
     this.grid.columnApi.resizeColumn(this.column, this._lastWidth + 'px');
-
-    // cleanup
-    this.cache = undefined;
   }
 
   private _getPointerPositionOnPage(event: MouseEvent | TouchEvent): Point {
