@@ -6,7 +6,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { PblNgridModule, PblNgridPluginController, PblNgridConfigService } from '@pebula/ngrid';
 import { PblNgridStickyPluginDirective, setStickyRow, setStickyColumns } from './sticky/sticky-plugin';
 
-declare module '@pebula/ngrid/lib/table/services/config' {
+declare module '@pebula/ngrid/lib/grid/services/config' {
   interface PblNgridConfig {
     stickyPlugin?: {
       headers?: Array<'table' | number>;

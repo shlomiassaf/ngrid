@@ -7,7 +7,7 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 
 import { UnRx } from '@pebula/utils';
 
-import { PblColumn } from '../table/columns';
+import { PblColumn } from '../grid/columns';
 import { PblNgridPaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPaginator } from '../paginator';
 import { DataSourcePredicate, DataSourceFilter, DataSourceFilterToken, PblNgridSortDefinition, PblNgridDataSourceSortChange } from './types';
 import { createFilter } from './filtering';

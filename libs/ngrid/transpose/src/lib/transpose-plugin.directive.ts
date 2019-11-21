@@ -10,7 +10,7 @@ import {
   PblNgridComponent,
   PblNgridPluginController,
   PblColumn,
-  TablePlugin,
+  NgridPlugin,
 } from '@pebula/ngrid';
 
 import { TransposeTableSession, LOCAL_COLUMN_DEF, VIRTUAL_REFRESH } from './transpose-table-session';
@@ -18,7 +18,7 @@ import { getCellValueTransformed, createTransformedColumn } from './utils';
 
 const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'pbl-ngrid-header-cell pbl-ngrid-transposed-header-cell' };
 
-declare module '@pebula/ngrid/lib/table/services/config' {
+declare module '@pebula/ngrid/lib/grid/services/config' {
   interface PblNgridConfig {
     transposePlugin?: {
       header?: Partial<PblColumnDefinition>;
@@ -38,23 +38,23 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
 /**
  * Transpose plugin.
  *
- * This plugin will swaps around the rows and columns of the table.
+ * This plugin will swaps around the rows and columns of the grid.
  *
- * A **regular table** (not transposed) represents rows horizontally:
+ * A **regular grid** (not transposed) represents rows horizontally:
  *
  * - Each horizontal row represents an item in the collection.
  * - Each vertical column represents the same property of all rows in the collection.
  *
- * A **transposed** table represents row vertically:
+ * A **transposed** grid represents row vertically:
  *
  * - Each horizontal row represents the same property of all rows in the collection.
  * - Each vertical row represents an item in the collection.
  *
- * > Note that transposing a table might not play nice with other plugins and/or features.
+ * > Note that transposing a grid might not play nice with other plugins and/or features.
  * For example, using pagination with transpose make no sense.
  */
 
-@TablePlugin({ id: PLUGIN_KEY })
+@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[transpose]' })
 @UnRx()
 export class PblNgridTransposePluginDirective implements OnDestroy {
@@ -89,8 +89,8 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
    * When set, the new column values will merge into the default definitions, overriding existing properties
    * set on the default column settings.
    *
-   * > The header column behave like any other column and you can also provide define it in the `column` property on the table.
-   * When using this approach the column defined on the table is used as is (no merging). Just make sure you use the right `prop` value for it.
+   * > The header column behave like any other column and you can also provide define it in the `column` property on the grid.
+   * When using this approach the column defined on the grid is used as is (no merging). Just make sure you use the right `prop` value for it.
    * e.g. if `header` is not set here its `__transpose__` otherwise, the actual `prop` value.
    */
   @Input('transposeHeaderCol') set header(value: Partial<PblColumnDefinition>) {
@@ -113,12 +113,12 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
 
   private enabled: boolean;
   private _header: PblColumnDefinition = DEFAULT_HEADER_COLUMN;
-  private tableState: TransposeTableSession;
+  private gridState: TransposeTableSession;
   private columns: PblColumn[];
   private selfColumn: PblColumn;
-  private _removePlugin: (table: PblNgridComponent<any>) => void;
+  private _removePlugin: (grid: PblNgridComponent<any>) => void;
 
-  constructor(private table: PblNgridComponent<any>, private pluginCtrl: PblNgridPluginController, config: PblNgridConfigService) {
+  constructor(private grid: PblNgridComponent<any>, private pluginCtrl: PblNgridPluginController, config: PblNgridConfigService) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
     const transposePlugin = config.get('transposePlugin');
     if (transposePlugin) {
@@ -129,26 +129,26 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this._removePlugin(this.table);
+    this._removePlugin(this.grid);
     this.disable(false);
   }
 
   disable(updateTable: boolean): void {
-    if (this.tableState) {
-      const { tableState } = this;
-      this.columns = this.selfColumn = this.tableState = this.columns = this.selfColumn = undefined;
+    if (this.gridState) {
+      const { gridState: tableState } = this;
+      this.columns = this.selfColumn = this.gridState = this.columns = this.selfColumn = undefined;
       tableState.destroy(updateTable);
     }
   }
 
   enable(refreshDataSource: boolean = false): void {
-    if (this.tableState) {
+    if (this.gridState) {
       this.disable(false);
     }
 
     const sourceFactoryWrapper = (results: any[]) => {
       if (results) {
-        const local: PblNgridColumnDefinitionSet = this.table.columns = columnFactory()
+        const local: PblNgridColumnDefinitionSet = this.grid.columns = columnFactory()
           .default(this.defaultCol || {})
           .table(
             this.selfColumn,
@@ -156,13 +156,13 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
           )
           .build();
 
-        const prev = this.tableState.columnsInput;
+        const prev = this.gridState.columnsInput;
         local.header = prev.header;
         local.headerGroup = prev.headerGroup;
         local.footer = prev.footer;
         local[LOCAL_COLUMN_DEF] = true;
 
-        this.table.invalidateColumns();
+        this.grid.invalidateColumns();
 
         const matchTemplates = coerceBooleanProperty(this.matchTemplates);
         const { prop } = this._header;
@@ -192,7 +192,7 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
            with that we can get a reference to the original column tha that now represents the whole row.
          */
         let currentColumn: PblColumn;
-        for (const c of this.table.columnApi.visibleColumns) {
+        for (const c of this.grid.columnApi.visibleColumns) {
           if (c.orgProp === prop) {
             c.getValue = (row: PblColumn) => {
               currentColumn = row;
@@ -210,18 +210,18 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
       return results;
     };
 
-    this.tableState = new TransposeTableSession(
-      this.table,
+    this.gridState = new TransposeTableSession(
+      this.grid,
       this.pluginCtrl,
-      () => this.updateColumns(this.table.columnApi.visibleColumns),
+      () => this.updateColumns(this.grid.columnApi.visibleColumns),
       sourceFactoryWrapper,
     );
 
     if (refreshDataSource) {
       this.pluginCtrl.extApi.contextApi.clear();
-      this.table.ds.refresh();
-    } else if (this.table.ds.length > 0) {
-      this.table.ds.refresh(VIRTUAL_REFRESH);
+      this.grid.ds.refresh();
+    } else if (this.grid.ds.length > 0) {
+      this.grid.ds.refresh(VIRTUAL_REFRESH);
     }
   }
 

@@ -19,7 +19,7 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { CdkDragConfig, DragDropRegistry, CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
 
-import { PblNgridComponent, PblColumn, PblNgridMetaCellContext, TablePlugin, isPblColumn } from '@pebula/ngrid';
+import { PblNgridComponent, PblColumn, PblNgridMetaCellContext, NgridPlugin, isPblColumn } from '@pebula/ngrid';
 import { toggleNativeDragInteractions } from './cdk-encapsulated-code';
 import { extendGrid } from './extend-grid';
 
@@ -37,7 +37,7 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: tr
 /** Options that can be used to bind an active event listener. */
 const activeEventListenerOptions = normalizePassiveListenerOptions({passive: false});
 
-@TablePlugin({ id: PLUGIN_KEY, runOnce: extendGrid })
+@NgridPlugin({ id: PLUGIN_KEY, runOnce: extendGrid })
 @Component({
   selector: 'pbl-ngrid-drag-resize', // tslint:disable-line:component-selector
   host: { // tslint:disable-line:use-host-property-decorator
@@ -54,14 +54,14 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
   // tslint:disable-next-line:no-input-rename
   @Input() set context(value: PblNgridMetaCellContext<any>) {
     if (value) {
-      const { col, table } = value;
+      const { col, grid } = value;
       if (isPblColumn(col)) {
         this.column = col;
-        this.table = table;
+        this.grid = grid;
         return;
       }
     }
-    this.column = this.table = undefined;
+    this.column = this.grid = undefined;
   }
 
   /**
@@ -71,7 +71,9 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
   @Input() grabAreaWidth = 6;
 
   column: PblColumn;
-  table: PblNgridComponent<any>;
+  /** @deprecated use grid instead */
+  get table(): PblNgridComponent<any> { return this.grid; }
+  grid: PblNgridComponent<any>;
 
   _hasStartedDragging: boolean;
   private _hasMoved: boolean;
@@ -123,7 +125,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('dblclick', ['$event'])
   onDoubleClick(event: MouseEvent): void {
-    this.table.columnApi.autoSizeColumn(this.column);
+    this.grid.columnApi.autoSizeColumn(this.column);
   }
 
   _pointerDown = (event: MouseEvent | TouchEvent) => {
@@ -173,9 +175,9 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
         this._hasStartedDragging = true;
 
         // It will be a good thing if we turned of the header's resize observer to boost performance
-        // However, because we relay on the total table minimum width updates to relatively even out the columns it will not work.
+        // However, because we relay on the total grid minimum width updates to relatively even out the columns it will not work.
         // Group cells will not cover all of the children, when we enlarge the width of a child in the group.
-        // This is because the max-width of the group is set proportional to the total min-width of the inner table.
+        // This is because the max-width of the group is set proportional to the total min-width of the inner grid.
         // For it to work we need to directly update the width of ALL OF THE GROUPS.
         // this.column.columnDef.isDragging = true;
 
@@ -201,13 +203,13 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
     if (this._lastWidth !== newWidth) {
       this._lastWidth = newWidth;
       this.column.width = newWidth + 'px';
-      this.table.resetColumnsWidth();
+      this.grid.resetColumnsWidth();
 
       for (const el of this.cache) {
         this.column.columnDef.applyWidth(el)
       }
       // the above will change the size of on column AND because we didn't disable the resize observer it will pop an event.
-      // if there are groups it will fire table.resizeColumns(); which will recalculate the groups...
+      // if there are groups it will fire grid.resizeColumns(); which will recalculate the groups...
     }
   }
 
@@ -225,7 +227,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
     }
 
     // this.column.columnDef.isDragging = false;
-    this.table.columnApi.resizeColumn(this.column, this._lastWidth + 'px');
+    this.grid.columnApi.resizeColumn(this.column, this._lastWidth + 'px');
 
     // cleanup
     this.cache = undefined;

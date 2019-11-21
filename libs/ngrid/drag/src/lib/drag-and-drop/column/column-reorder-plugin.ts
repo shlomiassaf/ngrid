@@ -34,7 +34,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
-import { PblNgridComponent, TablePlugin, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
+import { PblNgridComponent, NgridPlugin, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
 import { cdkDropList, cdkDrag } from '../v7-compat';
 import { CdkLazyDropList, CdkLazyDrag } from '../core';
 import { PblDropListRef } from '../core/drop-list-ref';
@@ -51,7 +51,7 @@ export const PLUGIN_KEY: 'columnReorder' = 'columnReorder';
 
 let _uniqueIdCounter = 0;
 
-@TablePlugin({ id: PLUGIN_KEY, runOnce: extendGrid })
+@NgridPlugin({ id: PLUGIN_KEY, runOnce: extendGrid })
 @Directive({
   selector: 'pbl-ngrid[columnReorder]',
   exportAs: 'pblNgridColumnReorder',
@@ -259,16 +259,16 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
 
   column: PblColumn;
 
-  @Input('pblNgridColumnDrag') set context(value: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>) {
+  @Input('pblNgridColumnDrag') set context(value: Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>) {
     this._context = value;
     this.column = value && value.col;
-    const pluginCtrl = this.pluginCtrl = value && PblNgridPluginController.find(value.table);
+    const pluginCtrl = this.pluginCtrl = value && PblNgridPluginController.find(value.grid);
     const plugin = pluginCtrl && pluginCtrl.getPlugin(PLUGIN_KEY);
     this.cdkDropList = plugin || undefined;
     this.disabled = this.column && this.column.reorder ? false : true;
   }
 
-  private _context: Pick<PblNgridCellContext<T>, 'col' | 'table'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>
+  private _context: Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>
   private pluginCtrl: PblNgridPluginController;
   private cache: HTMLElement[];
 

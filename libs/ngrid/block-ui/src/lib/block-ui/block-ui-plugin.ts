@@ -3,7 +3,7 @@ import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, NgridPlugin } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -13,7 +13,7 @@ declare module '@pebula/ngrid/lib/ext/types' {
 
 const PLUGIN_KEY: 'blockUi' = 'blockUi';
 
-@TablePlugin({ id: PLUGIN_KEY })
+@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[blockUi]', exportAs: 'blockUi' })
 @UnRx()
 export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
@@ -72,12 +72,12 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
   private _blockInProgress: boolean = false;
   private _blockUi: boolean | 'auto' | Observable<boolean>;
   private _blockerEmbeddedVRef: EmbeddedViewRef<any>;
-  private _removePlugin: (table: PblNgridComponent<any>) => void;
+  private _removePlugin: (grid: PblNgridComponent<any>) => void;
 
-  constructor(private table: PblNgridComponent<any>, pluginCtrl: PblNgridPluginController<T>) {
+  constructor(private grid: PblNgridComponent<any>, pluginCtrl: PblNgridPluginController<T>) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    table.registry.changes.subscribe( changes => {
+    grid.registry.changes.subscribe( changes => {
       for (const c of changes) {
         switch (c.type) {
           case 'blocker':
@@ -116,21 +116,21 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
 
 
   ngOnDestroy(): void {
-    this._removePlugin(this.table);
+    this._removePlugin(this.grid);
   }
 
   private setupBlocker(): void {
     const state = this._blockInProgress;
     if (state) {
       if (!this._blockerEmbeddedVRef) {
-        const blockerTemplate = this.table.registry.getSingle('blocker');
+        const blockerTemplate = this.grid.registry.getSingle('blocker');
         if (blockerTemplate) {
-          this._blockerEmbeddedVRef = this.table.createView('afterContent', blockerTemplate.tRef, { $implicit: this.table });
+          this._blockerEmbeddedVRef = this.grid.createView('afterContent', blockerTemplate.tRef, { $implicit: this.grid });
           this._blockerEmbeddedVRef.detectChanges();
         }
       }
     } else if (this._blockerEmbeddedVRef) {
-      this.table.removeView(this._blockerEmbeddedVRef, 'afterContent');
+      this.grid.removeView(this._blockerEmbeddedVRef, 'afterContent');
       this._blockerEmbeddedVRef = undefined;
     }
   }

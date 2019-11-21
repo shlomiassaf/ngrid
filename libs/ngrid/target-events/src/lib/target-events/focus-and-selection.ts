@@ -10,7 +10,7 @@ const isOsx = /^mac/.test(navigator.platform.toLowerCase())
 const isMainMouseButtonClick = (event: PblNgridDataCellEvent<any, MouseEvent>) => event.source.button === 0;
 
 export function handleFocusAndSelection(targetEvents: PblNgridTargetEventsPlugin) {
-  const isCellFocusMode = () => targetEvents.table.focusMode === 'cell';
+  const isCellFocusMode = () => targetEvents.grid.focusMode === 'cell';
 
   const handlers = createHandlers(targetEvents);
 
@@ -39,7 +39,7 @@ export function handleFocusAndSelection(targetEvents: PblNgridTargetEventsPlugin
 }
 
 function createHandlers(targetEvents: PblNgridTargetEventsPlugin) {
-  const { contextApi } = targetEvents.table;
+  const { contextApi } = targetEvents.grid;
 
   function focusCell(rowIdent: any, colIndex: number, markForCheck?: boolean): void {
     contextApi.focusCell({ rowIdent, colIndex }, markForCheck);

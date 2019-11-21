@@ -1,5 +1,5 @@
 // for type info only, should work in published pacakge
-import { PblBaseColumnDefinition } from '@pebula/ngrid/lib/table/columns/types';
+import { PblBaseColumnDefinition } from '@pebula/ngrid/lib/grid/columns/types';
 
 import {
   PblMetaColumnDefinition,

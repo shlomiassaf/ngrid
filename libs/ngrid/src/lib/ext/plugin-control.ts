@@ -1,17 +1,17 @@
 import { Observable, Subject } from 'rxjs';
 import { Injector } from '@angular/core';
 
-import { PblNgridComponent } from '../table/table.component';
+import { PblNgridComponent } from '../grid/ngrid.component';
 import {
   PblNgridPlugin,
   PblNgridPluginExtension,
   PblNgridPluginExtensionFactories,
   PblNgridEvents,
 } from './types';
-import { PblNgridExtensionApi } from './table-ext-api';
-import { PLUGIN_STORE } from './table-plugin';
+import { PblNgridExtensionApi } from './grid-ext-api';
+import { PLUGIN_STORE } from './grid-plugin';
 
-const TABLE_PLUGIN_CONTEXT = new WeakMap<PblNgridComponent<any>, PblNgridPluginContext>();
+const NGRID_PLUGIN_CONTEXT = new WeakMap<PblNgridComponent<any>, PblNgridPluginContext>();
 
 /** @internal */
 export class PblNgridPluginContext<T = any> {
@@ -21,14 +21,14 @@ export class PblNgridPluginContext<T = any> {
   // forwardRef() will not help since it's not inject by angular, we instantiate the class..
   // probably due to https://github.com/angular/angular-cli/commit/639198499973e0f437f059b3c933c72c733d93d8
   static create<T = any>(table: PblNgridComponent<any>, injector: Injector, extApi: PblNgridExtensionApi): PblNgridPluginContext<T> {
-    if (TABLE_PLUGIN_CONTEXT.has(table)) {
+    if (NGRID_PLUGIN_CONTEXT.has(table)) {
       throw new Error(`Table is already registered for extensions.`);
     }
 
     const instance = new PblNgridPluginContext<T>();
-    TABLE_PLUGIN_CONTEXT.set(table, instance);
+    NGRID_PLUGIN_CONTEXT.set(table, instance);
 
-    instance.table = table;
+    instance.grid = table;
     instance.injector = injector;
     instance.extApi = extApi;
     instance.controller = new PblNgridPluginController(instance);
@@ -36,7 +36,7 @@ export class PblNgridPluginContext<T = any> {
     return instance;
   }
 
-  table: PblNgridComponent<any>;
+  grid: PblNgridComponent<any>;
   injector: Injector;
   extApi: PblNgridExtensionApi;
   controller: PblNgridPluginController<T>;
@@ -52,11 +52,11 @@ export class PblNgridPluginContext<T = any> {
   }
 
   destroy(): void  {
-    if (!TABLE_PLUGIN_CONTEXT.has(this.table)) {
+    if (!NGRID_PLUGIN_CONTEXT.has(this.grid)) {
       throw new Error(`Table is not registered.`);
     }
     this._events.complete();
-    TABLE_PLUGIN_CONTEXT.delete(this.table);
+    NGRID_PLUGIN_CONTEXT.delete(this.grid);
   }
 }
 
@@ -72,14 +72,14 @@ export class PblNgridPluginController<T = any> {
   private readonly plugins = new Map<keyof PblNgridPluginExtension, PblNgridPlugin>();
 
   constructor(private context: PblNgridPluginContext) {
-    this.grid = context.table;
+    this.grid = context.grid;
     this.extApi = context.extApi;
     this.events = context.events;
     PblNgridPluginController.created$.next({ table: this.grid, controller: this });
   }
 
   static find<T = any>(grid: PblNgridComponent<T>): PblNgridPluginController<T> | undefined {
-    const context = TABLE_PLUGIN_CONTEXT.get(grid);
+    const context = NGRID_PLUGIN_CONTEXT.get(grid);
     if (context) {
       return context.controller;
     }

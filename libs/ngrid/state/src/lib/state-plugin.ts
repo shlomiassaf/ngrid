@@ -3,13 +3,13 @@ import { map, mapTo, filter, take, skip, debounceTime } from 'rxjs/operators';
 import { Directive, OnDestroy, Injector, Input } from '@angular/core';
 
 import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, TablePlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, NgridPlugin } from '@pebula/ngrid';
 import { hasState, saveState, loadState, PblNgridStateLoadOptions, PblNgridStateSaveOptions } from './core/index';
 import { registerBuiltInHandlers } from './core/built-in-handlers/_register';
 
 import { userSessionPref } from './presets';
 
-declare module '@pebula/ngrid/lib/table/services/config' {
+declare module '@pebula/ngrid/lib/grid/services/config' {
   interface PblNgridConfig {
     state?: {
       /** When set to true will enable the state plugin on all table instances by default. */
@@ -42,7 +42,7 @@ interface InternalStatePluginEvents {
 
 export const PLUGIN_KEY: 'state' = 'state';
 
-@TablePlugin({ id: PLUGIN_KEY, factory: 'create', runOnce: registerBuiltInHandlers })
+@NgridPlugin({ id: PLUGIN_KEY, factory: 'create', runOnce: registerBuiltInHandlers })
 @UnRx()
 export class PblNgridStatePlugin {
 

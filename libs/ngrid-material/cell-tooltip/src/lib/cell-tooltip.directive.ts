@@ -17,10 +17,10 @@ import { Platform} from '@angular/cdk/platform';
 import { TooltipPosition, MatTooltipDefaultOptions, MatTooltip, MAT_TOOLTIP_SCROLL_STRATEGY, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
 import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, TablePlugin, PblNgridConfigService } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, NgridPlugin, PblNgridConfigService } from '@pebula/ngrid';
 import { PblNgridCellEvent } from '@pebula/ngrid/target-events';
 
-declare module '@pebula/ngrid/lib/table/services/config' {
+declare module '@pebula/ngrid/lib/grid/services/config' {
   interface PblNgridConfig {
     cellTooltip?: CellTooltipOptions & {
       /** When set to true will apply the default cell tooltip to ALL tables */
@@ -55,7 +55,7 @@ export interface CellTooltipOptions {
   message?: (event: PblNgridCellEvent<any>) => string;
 }
 
-@TablePlugin({ id: PLUGIN_KEY, factory: 'create' })
+@NgridPlugin({ id: PLUGIN_KEY, factory: 'create' })
 @Directive({ selector: '[cellTooltip]', exportAs: 'pblOverflowTooltip' })
 @UnRx()
 export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDestroy {
