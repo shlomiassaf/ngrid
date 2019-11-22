@@ -91,7 +91,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
   private _isCheckboxDisabled: (row: any) => boolean = ALWAYS_FALSE_FN;
   private _color: ThemePalette;
 
-  constructor(@Optional() public table: PblNgridComponent<any>, private cdr: ChangeDetectorRef) {}
+  constructor(@Optional() public table: PblNgridComponent<any>, private cdr: ChangeDetectorRef) { }
 
   ngAfterViewInit(): void {
 
@@ -129,15 +129,25 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
       this.length = this.selection.selected.length;
       this.selection.changed
         .pipe(UnRx(this, this.table))
-        .subscribe( () => {
-          const { length } = this.getCollection().filter(data => !this._isCheckboxDisabled(data));
-          this.allSelected = !this.selection.isEmpty() && this.selection.selected.length === length;
-          this.length = this.selection.selected.length;
-          this.cdr.markForCheck();
-          this.cdr.detectChanges();
+        .subscribe(() => {
+          this.handleSelectionChanged();
         });
-    } else {
+      const changeSource = this.bulkSelectMode === 'view' ? this.table.ds.onRenderedDataChanged : this.table.ds.onSourceChanged;
+      changeSource
+        .pipe(UnRx(this, this.table))
+        .subscribe(() => {
+          this.handleSelectionChanged();
+        });
+  } else {
       this.length = 0;
     }
+  }
+
+  private handleSelectionChanged() {
+    const { length } = this.getCollection().filter(data => !this._isCheckboxDisabled(data));
+    this.allSelected = !this.selection.isEmpty() && this.selection.selected.length === length;
+    this.length = this.selection.selected.length;
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 }
