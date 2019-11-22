@@ -1,3 +1,21 @@
+# 1.0.0-rc.12 (2019-11-22)
+
+
+### Code Refactoring
+
+* **ngrid:** terminology, change from 'table'  to 'grid' ([4ca1a1e](https://github.com/shlomiassaf/ngrid/commit/4ca1a1e))
+
+* **ngrid:** refactor(ngrid): width in isolation ([a6d9290](https://github.com/shlomiassaf/ngrid/commit/a6d9290))
+
+### BREAKING CHANGES
+
+* **ngrid:** This refactor changes the terminology used by the library from legacy "table" references to "grid" references.
+This refactor addressed filenames and property names but did not include literal string names, and property names of configuration objects (e.g. configs...)  so functions that accepted 'table' will still accept it.
+Filenames change should not have any effect unless you are extending the types using TS augmentation so any `declare module '@pebula/ngrid/lib/table/...` will have to change.
+For property names, all private/protected references to `table` are now `grid` and also all public references, however is most public ref's a getter was added to support the `table` property, with a `@deprecated` JSDoc annotation
+
+
+
 # 1.0.0-rc.11 (2019-11-20)
 
 
