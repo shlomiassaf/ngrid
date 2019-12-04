@@ -863,7 +863,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     //        An example is a grid in a mat-tab that is hidden, the grid will hit the resize one when we focus the tab
     //        which will require a resize handling because it's initial size is 0
     //        To workaround this, we only skip elements not yet added to the DOM, which means they will not trigger a resize event.
-    let skipValue = document.contains(this.elRef.nativeElement) ? 1 : 0;
+    let skipValue = document.body.contains(this.elRef.nativeElement) ? 1 : 0;
 
     ro$
       .pipe(
