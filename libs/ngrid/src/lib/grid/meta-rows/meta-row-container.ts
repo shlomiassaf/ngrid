@@ -1,10 +1,8 @@
-import { Component, Input, ElementRef } from '@angular/core';
-
+import { Subject } from 'rxjs';
+import { Component, Input, ElementRef, OnDestroy } from '@angular/core';
 import { UnRx } from '@pebula/utils';
 
-import { PblMetaRowDefinitions } from '../columns/types';
 import { PblNgridMetaRowService } from './meta-row.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'div[pbl-ngrid-fixed-meta-row-container]',
@@ -15,7 +13,7 @@ import { Observable } from 'rxjs';
   },
 })
 @UnRx()
-export class PblNgridMetaRowContainerComponent {
+export class PblNgridMetaRowContainerComponent implements OnDestroy {
 
   @Input('pbl-ngrid-fixed-meta-row-container') set type(value: 'header' | 'footer') {
     if (this._type !== value) {
@@ -30,9 +28,9 @@ export class PblNgridMetaRowContainerComponent {
   _innerWidth: number;
   _minWidth: number;
   _width: number;
+  readonly _width$ = new Subject<number>();
 
-  readonly _width$: Observable<number>;
-
+  private _totalColumnWidth: number = 0;
   private _type: 'header' | 'footer';
   private element: HTMLElement;
 
@@ -43,14 +41,27 @@ export class PblNgridMetaRowContainerComponent {
       .pipe(UnRx(this))
       .subscribe( event => {
         if (event.kind === 'onResizeRow') {
-          this._innerWidth = this.metaRows.extApi.grid.viewport.innerWidth;
-          this._minWidth = this.metaRows.extApi.cdkTable.minWidth;
-          this._width = Math.max(this._innerWidth, this._minWidth);
+          this.updateWidths();
         }
       });
-    this._width$ = this.metaRows.extApi.grid.columnApi.totalColumnWidthChange;
+    this.metaRows.extApi.grid.columnApi.totalColumnWidthChange
+      .pipe(UnRx(this))
+      .subscribe( width => {
+        this._totalColumnWidth = width;
+        this.updateWidths();
+      });
   }
 
+  ngOnDestroy(): void {
+    this._width$.complete();
+  }
+
+  private updateWidths(): void {
+    this._innerWidth = this.metaRows.extApi.grid.viewport.innerWidth;
+    this._minWidth = this.metaRows.extApi.cdkTable.minWidth;
+    this._width = Math.max(this._innerWidth, this._minWidth);
+    this._width$.next(Math.max(this._innerWidth, this._totalColumnWidth))
+  }
   private init(type: 'header' | 'footer'): void {
 
     if (type === 'header') {
@@ -68,10 +79,7 @@ export class PblNgridMetaRowContainerComponent {
 
     this.metaRows.extApi.cdkTable.onRenderRows
       .pipe(UnRx(this))
-      .subscribe( () => {
-        this._innerWidth = this.metaRows.extApi.grid.viewport.innerWidth;
-        this._width = Math.max(this._innerWidth, this._minWidth);
-      });
+      .subscribe( () => { this.updateWidths() });
   }
 
   private syncRowDefinitions(): void {
