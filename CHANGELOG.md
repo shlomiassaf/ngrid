@@ -1,3 +1,12 @@
+# 1.0.0-rc.13 (2019-12-10)
+
+
+### Bug Fixes
+
+* **ngrid:** proper width's in FF ([83cd3e5](https://github.com/shlomiassaf/ngrid/commit/83cd3e5)), closes [#69](https://github.com/shlomiassaf/ngrid/issues/69)
+
+
+
 # 1.0.0-rc.12 (2019-11-22)
 
 
