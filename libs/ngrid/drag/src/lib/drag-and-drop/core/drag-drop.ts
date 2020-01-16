@@ -28,10 +28,9 @@ export class PblDragDrop {
    * @param config Object used to configure the dragging behavior.
    */
   createDrag<T = any>(element: ElementRef<HTMLElement> | HTMLElement,
-                config: DragRefConfig = DEFAULT_CONFIG): PblDragRef<T> {
+                      config: DragRefConfig = DEFAULT_CONFIG): PblDragRef<T> {
 
-    return new PblDragRef<T>(element, config, this._document, this._ngZone, this._viewportRuler,
-        this._dragDropRegistry);
+    return new PblDragRef<T>(element, config, this._document, this._ngZone, this._viewportRuler, this._dragDropRegistry);
   }
 
   /**
@@ -39,6 +38,6 @@ export class PblDragDrop {
    * @param element Element to which to attach the drop list functionality.
    */
   createDropList<T = any>(element: ElementRef<HTMLElement> | HTMLElement): PblDropListRef<T> {
-    return new PblDropListRef<T>(element, this._dragDropRegistry, this._document);
+    return new PblDropListRef<T>(element, this._dragDropRegistry, this._document, this._ngZone, this._viewportRuler);
   }
 }
