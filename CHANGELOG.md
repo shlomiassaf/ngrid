@@ -1,3 +1,12 @@
+# 1.0.0-rc.16 (2020-01-16)
+
+
+### Bug Fixes
+
+* **ngrid:** document.contains fails on IE ([bdc4b10](https://github.com/shlomiassaf/ngrid/commit/bdc4b10))
+
+
+
 # 1.0.0-rc.15 (2020-01-16)
 
 
