@@ -40,7 +40,6 @@ import { DragPluginDefaultTemplatesComponent } from './default-settings.componen
   ],
   providers: [
     PblDragDrop,
-    { provide: DragDrop, useExisting: PblDragDrop },
   ],
   entryComponents: [ DragPluginDefaultTemplatesComponent ],
 })

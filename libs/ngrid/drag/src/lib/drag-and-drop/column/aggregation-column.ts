@@ -26,6 +26,7 @@ import { CdkLazyDropList } from '../core/lazy-drag-drop';
 import { PblDragRef } from '../core/drag-ref';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblNgridColumnDragDirective } from './column-reorder-plugin';
+import { PblDragDrop } from '../core';
 
 let _uniqueIdCounter = 0;
 
@@ -40,6 +41,7 @@ let _uniqueIdCounter = 0;
     '[id]': 'id',
   },
   providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CDK_DROP_LIST, useExisting: PblNgridAggregationContainerDirective },
   ],
 })

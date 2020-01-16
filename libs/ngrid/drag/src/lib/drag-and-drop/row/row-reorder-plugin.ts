@@ -30,6 +30,7 @@ import { cdkDropList, cdkDrag } from '../v7-compat';
 import { CdkLazyDropList, CdkLazyDrag } from '../core/lazy-drag-drop';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblDragRef } from '../core/drag-ref';
+import { PblDragDrop } from '../core/drag-drop';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -56,6 +57,7 @@ let _uniqueIdCounter = 0;
     '[class.pbl-row-reorder]': 'rowReorder && !this.grid.ds?.sort.sort?.order && !this.grid.ds?.filter?.filter',
   },
   providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CdkDropListGroup, useValue: undefined },
     { provide: CDK_DROP_LIST, useExisting: PblNgridRowReorderPluginDirective },
   ],
@@ -129,6 +131,7 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
   providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CdkDrag, useExisting: PblNgridRowDragDirective }
   ]
 })
