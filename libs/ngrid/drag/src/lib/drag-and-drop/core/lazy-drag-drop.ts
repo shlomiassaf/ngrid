@@ -1,13 +1,15 @@
 import { take } from 'rxjs/operators';
 import { Input, Directive, ElementRef, QueryList, OnDestroy, Optional, AfterViewInit, OnInit } from '@angular/core';
-import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST } from '@angular/cdk/drag-drop';
+import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST, DragDrop } from '@angular/cdk/drag-drop';
 import { PblDropListRef } from './drop-list-ref';
 import { PblDragRef } from './drag-ref';
+import { PblDragDrop } from './drag-drop';
 
 @Directive({
   selector: '[cdkLazyDropList]',
   exportAs: 'cdkLazyDropList',
   providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CDK_DROP_LIST, useClass: CdkLazyDropList },
   ],
   host: { // tslint:disable-line:use-host-property-decorator
@@ -79,6 +81,9 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
     'class': 'cdk-drag',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
+  providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
+  ],
 })
 export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList<T>, DRef = any> extends CdkDrag<T> implements OnInit, AfterViewInit, OnDestroy {
 

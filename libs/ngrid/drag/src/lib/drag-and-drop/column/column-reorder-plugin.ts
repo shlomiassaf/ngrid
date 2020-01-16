@@ -36,7 +36,7 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 
 import { PblNgridComponent, NgridPlugin, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
 import { cdkDropList, cdkDrag } from '../v7-compat';
-import { CdkLazyDropList, CdkLazyDrag } from '../core';
+import { CdkLazyDropList, CdkLazyDrag, PblDragDrop } from '../core';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblDragRef } from '../core/drag-ref';
 import { extendGrid } from './extend-grid';
@@ -65,6 +65,7 @@ let _uniqueIdCounter = 0;
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
   },
   providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CDK_DROP_LIST, useExisting: PblNgridColumnReorderPluginDirective },
   ],
 })
@@ -251,6 +252,7 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
   providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CdkDrag, useExisting: PblNgridColumnDragDirective }
   ]
 })
