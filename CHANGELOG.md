@@ -1,3 +1,12 @@
+# 1.0.0-rc.14 (2020-01-16)
+
+
+### Bug Fixes
+
+* **ngrid:** unable to use cdk-drag with ngrid ([20250cb](https://github.com/shlomiassaf/ngrid/commit/20250cb)), closes [#72](https://github.com/shlomiassaf/ngrid/issues/72)
+
+
+
 # 1.0.0-rc.13 (2019-12-10)
 
 
