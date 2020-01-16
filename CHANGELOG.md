@@ -1,3 +1,12 @@
+# 1.0.0-rc.15 (2020-01-16)
+
+
+### Bug Fixes
+
+* **ngrid:** breaking change in cdk/drag ([7c9e4fe](https://github.com/shlomiassaf/ngrid/commit/7c9e4fe))
+
+
+
 # 1.0.0-rc.14 (2020-01-16)
 
 
