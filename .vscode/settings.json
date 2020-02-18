@@ -20,5 +20,6 @@
     "quickthrough",
     "sortables"
   ],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "explorer.compactFolders": false
 }
