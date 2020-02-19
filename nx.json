@@ -9,135 +9,65 @@
   },
   "projects": {
     "ngrid-demo-app": {
-      "tags": [
-        "type:app",
-        "ngrid-demo-app"
-      ]
+      "tags": ["type:app", "ngrid-demo-app"]
     },
     "ngrid-demo-app-e2e": {
-      "tags": [
-        "type:e2e-app",
-        "parent:ngrid-demo-app"
-      ]
+      "tags": ["type:e2e-app", "parent:ngrid-demo-app"],
+      "implicitDependencies": ["ngrid-demo-app"]
     },
     "apps-ngrid-shared": {
-      "tags": [
-        "type:child-app",
-        "parent:ngrid-demo-app"
-      ]
+      "tags": ["type:child-app", "parent:ngrid-demo-app"]
     },
     "apps-ngrid-concepts": {
-      "tags": [
-        "type:child-app",
-        "parent:ngrid-demo-app"
-      ]
+      "tags": ["type:child-app", "parent:ngrid-demo-app"]
     },
     "apps-ngrid-features": {
-      "tags": [
-        "type:child-app",
-        "parent:ngrid-demo-app"
-      ]
+      "tags": ["type:child-app", "parent:ngrid-demo-app"]
     },
     "apps-ngrid-stories": {
-      "tags": [
-        "type:child-app",
-        "parent:ngrid-demo-app"
-      ]
+      "tags": ["type:child-app", "parent:ngrid-demo-app"]
     },
     "apps-ngrid-demos": {
-      "tags": [
-        "type:child-app",
-        "parent:ngrid-demo-app"
-      ]
+      "tags": ["type:child-app", "parent:ngrid-demo-app"]
     },
     "ngrid": {
-      "tags": [
-        "name:ngrid",
-        "type:lib"
-      ]
+      "tags": ["name:ngrid", "type:lib"]
     },
     "ngrid-sticky": {
-      "tags": [
-        "name:sticky",
-        "type:child-lib",
-        "parent:ngrid"
-      ]
+      "tags": ["name:sticky", "type:child-lib", "parent:ngrid"]
     },
     "ngrid-detail-row": {
-      "tags": [
-        "name:detail-row",
-        "type:child-lib",
-        "parent:ngrid"
-      ]
+      "tags": ["name:detail-row", "type:child-lib", "parent:ngrid"]
     },
     "ngrid-block-ui": {
-      "tags": [
-        "name:block-ui",
-        "type:child-lib",
-        "parent:ngrid"
-      ]
+      "tags": ["name:block-ui", "type:child-lib", "parent:ngrid"]
     },
     "ngrid-drag": {
-      "tags": [
-        "name:drag",
-        "type:child-lib",
-        "parent:ngrid"
-      ]
+      "tags": ["name:drag", "type:child-lib", "parent:ngrid"]
     },
     "ngrid-transpose": {
-      "tags": [
-        "name:transpose",
-        "type:child-lib",
-        "parent:ngrid"
-      ]
+      "tags": ["name:transpose", "type:child-lib", "parent:ngrid"]
     },
     "ngrid-target-events": {
-      "tags": [
-        "name:target-events",
-        "type:child-lib",
-        "parent:ngrid"
-      ]
+      "tags": ["name:target-events", "type:child-lib", "parent:ngrid"]
     },
     "ngrid-material": {
-      "tags": [
-        "name:material",
-        "type:child-lib",
-        "parent:ngrid"
-      ]
+      "tags": ["name:material", "type:child-lib", "parent:ngrid"]
     },
     "ngrid-material-selection-column": {
-      "tags": [
-        "name:selection-column",
-        "type:child-lib",
-        "parent:material"
-      ]
+      "tags": ["name:selection-column", "type:child-lib", "parent:material"]
     },
     "ngrid-material-paginator": {
-      "tags": [
-        "name:paginator",
-        "type:child-lib",
-        "parent:material"
-      ]
+      "tags": ["name:paginator", "type:child-lib", "parent:material"]
     },
     "ngrid-material-sort": {
-      "tags": [
-        "name:sort",
-        "type:child-lib",
-        "parent:material"
-      ]
+      "tags": ["name:sort", "type:child-lib", "parent:material"]
     },
     "ngrid-material-cell-tooltip": {
-      "tags": [
-        "name:cell-tooltip",
-        "type:child-lib",
-        "parent:material"
-      ]
+      "tags": ["name:cell-tooltip", "type:child-lib", "parent:material"]
     },
     "utils": {
-      "tags": [
-        "name:utils",
-        "type:lib"
-      ]
+      "tags": ["name:utils", "type:lib"]
     }
   },
   "nx-enforce-module-boundaries": [
@@ -159,9 +89,7 @@
         },
         {
           "sourceTag": "*",
-          "onlyDependOnLibsWithTags": [
-            "*"
-          ]
+          "onlyDependOnLibsWithTags": ["*"]
         }
       ]
     }
