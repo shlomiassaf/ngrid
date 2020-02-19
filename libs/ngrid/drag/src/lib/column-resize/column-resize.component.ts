@@ -17,7 +17,7 @@ import {
 import { Directionality } from '@angular/cdk/bidi';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
-import { CdkDragConfig, DragDropRegistry, CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
+import { DragRefConfig, DragDropRegistry, CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, PblColumn, PblNgridMetaCellContext, NgridPlugin, isPblColumn } from '@pebula/ngrid';
 import { toggleNativeDragInteractions } from './cdk-encapsulated-code';
@@ -91,7 +91,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
               private _ngZone: NgZone,
               private _viewportRuler: ViewportRuler,
               private _dragDropRegistry: DragDropRegistry<PblNgridDragResizeComponent, any>,
-              @Inject(CDK_DRAG_CONFIG) private _config: CdkDragConfig,
+              @Inject(CDK_DRAG_CONFIG) private _config: DragRefConfig,
               @Optional() private _dir: Directionality) {
     _dragDropRegistry.registerDragItem(this);
   }
