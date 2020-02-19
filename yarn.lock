@@ -12382,9 +12382,10 @@ ngrx-store-freeze@0.2.4:
   dependencies:
     deep-freeze-strict "^1.1.1"
 
-ngx-build-plus@8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/ngx-build-plus/-/ngx-build-plus-8.0.3.tgz#a047c21257d1101bd76cde130fbe765acc91eb34"
+ngx-build-plus@9.0.6:
+  version "9.0.6"
+  resolved "https://registry.yarnpkg.com/ngx-build-plus/-/ngx-build-plus-9.0.6.tgz#2c9089c01f16a742ad74f728340384312f20169f"
+  integrity sha512-RFfDH2UG2PuNI2ZXS9vMZoK6Sfo78HPoyzXzh1EzdsZyhlGKHvuNloDak7pCS4f/97JHRTPS1MKnrbste9I21A==
   dependencies:
     "@schematics/angular" "8.0.0"
     cross-spawn "^6.0.5"
