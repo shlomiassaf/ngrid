@@ -6,7 +6,7 @@ import { PblNgridComponent } from '../ngrid.component';
 import { CellContextState, RowContextState, PblNgridRowContext } from './types';
 import { PblCellContext } from './cell';
 
-declare module '@angular/cdk/table/typings/row.d' {
+declare module '@angular/cdk/table/row.d' {
   export interface CdkCellOutletRowContext<T> {
     pblRowContext: PblNgridRowContext<T>;
   }

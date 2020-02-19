@@ -2421,29 +2421,33 @@
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@nguniversal/module-map-ngfactory-loader/-/module-map-ngfactory-loader-8.1.1.tgz#653522a616daaeae21d134752879beebb7da31ca"
 
-"@ngx-cache/core@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@ngx-cache/core/-/core-7.0.0.tgz#adb475316bd45d7549e53212553f2f4d5ba0411f"
+"@ngx-cache/core@^8.0.1":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@ngx-cache/core/-/core-8.0.1.tgz#3fd82b2eda1c4df4043d7128092ea7f9ad488905"
+  integrity sha512-YX3Ty4ENysp4/DjUJ392h4P+2obg5AlGJerdzVLMU1Vhd/7ePh504neZBvIDxEnaracs+TV8WEsLoWKcjJ5FQQ==
   dependencies:
-    tslib "~1.9.0"
+    tslib "^1.10.0"
 
-"@ngx-cache/fs-storage@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@ngx-cache/fs-storage/-/fs-storage-7.0.0.tgz#d012e5a1c5974c33b1461a4f1da52a30c666957d"
+"@ngx-cache/fs-storage@^8.0.1":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@ngx-cache/fs-storage/-/fs-storage-8.0.1.tgz#c80af67502271bf4590ef404016dc7dd7f99ce7b"
+  integrity sha512-SjZFcnwO80FTAnBjg6sMamriUbVK7bNAhs1omIposZCE/11iq3vXKS3rjlDAQxt/gTcyYfw9l6XhUBm1Q7+llw==
   dependencies:
-    tslib "~1.9.0"
+    tslib "^1.10.0"
 
-"@ngx-cache/platform-browser@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@ngx-cache/platform-browser/-/platform-browser-7.0.0.tgz#7644a6b61c9d1fe076281e209a7b918ada543e31"
+"@ngx-cache/platform-browser@^8.0.1":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@ngx-cache/platform-browser/-/platform-browser-8.0.1.tgz#98f71f8d958b64378b645132b1bf63b275edf876"
+  integrity sha512-hwAzddjE2RNbT7wPWBZjzU411QFttKeFSlwoMCx1j1Y6lNzy08sRxX1sjefG1szC4Lm6XmyPntaOk/HdIW3KUw==
   dependencies:
-    tslib "~1.9.0"
+    tslib "^1.10.0"
 
-"@ngx-cache/platform-server@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@ngx-cache/platform-server/-/platform-server-7.0.0.tgz#a3c34fab705bba1bfbd21d63c50b53395e2b24d1"
+"@ngx-cache/platform-server@^8.0.1":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@ngx-cache/platform-server/-/platform-server-8.0.1.tgz#d7b5a04fa6fcc1422bc2637ac4ec7e2d786a5661"
+  integrity sha512-4rjYD5oNGSYZpm2us27VYpTbjcOhCCVmsWGzTGQKYJj6OubpbdEdjs98pyBXs3s5oeC9AXokCdPsEDivIWXaFw==
   dependencies:
-    tslib "~1.9.0"
+    tslib "^1.10.0"
 
 "@ngx-meta/core@^7.0.0":
   version "7.0.0"

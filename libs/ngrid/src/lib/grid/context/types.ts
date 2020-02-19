@@ -5,7 +5,7 @@ import { PblNgridComponent } from '../ngrid.component';
 import { PblColumnTypeDefinitionDataMap, PblMetaColumn, PblColumn } from '../columns';
 import { PblRowContext } from './row';
 
-declare module '@angular/cdk/table/typings/table.d' {
+declare module '@angular/cdk/table/table.d' {
   interface RowContext<T> {
     gridInstance: PblNgridComponent<T>;
   }

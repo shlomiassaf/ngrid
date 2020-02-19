@@ -34,7 +34,8 @@
     "build:ssr_bak": "npm run build:client-and-server-bundles && npm run compile:server",
     "serve:ssr_bak": "node dist/server",
     "build:client-and-server-bundles_bak": "node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod && node --max-old-space-size=8192 ./node_modules/.bin/ng run ngrid-demo-app:server:production --bundleDependencies all",
-    "nx": "nx"
+    "nx": "nx",
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
   },
   "private": true,
   "dependencies": {
@@ -59,10 +60,10 @@
     "@nguniversal/common": "^9.0.0",
     "@nguniversal/express-engine": "^9.0.0",
     "@nguniversal/module-map-ngfactory-loader": "8.1.1",
-    "@ngx-cache/core": "^7.0.0",
-    "@ngx-cache/fs-storage": "^7.0.0",
-    "@ngx-cache/platform-browser": "^7.0.0",
-    "@ngx-cache/platform-server": "^7.0.0",
+    "@ngx-cache/core": "^8.0.1",
+    "@ngx-cache/fs-storage": "^8.0.1",
+    "@ngx-cache/platform-browser": "^8.0.1",
+    "@ngx-cache/platform-server": "^8.0.1",
     "@nrwl/angular": "9.0.1",
     "core-js": "^2.6.2",
     "document-register-element": "^1.13.1",
