@@ -122,7 +122,7 @@ export class PblNgridModule {
     }
   }
 
-  static forRoot(config: PblNgridConfig, components: CommonTemplateInit[]): ModuleWithProviders {
+  static forRoot(config: PblNgridConfig, components: CommonTemplateInit[]): ModuleWithProviders<PblNgridModule> {
     return {
       ngModule: PblNgridModule,
       providers: [
@@ -133,7 +133,7 @@ export class PblNgridModule {
     };
   }
 
-  static withCommon(components: CommonTemplateInit[]): ModuleWithProviders {
+  static withCommon(components: CommonTemplateInit[]): ModuleWithProviders<PblNgridModule> {
     return {
       ngModule: PblNgridModule,
       providers: provideCommon(components),

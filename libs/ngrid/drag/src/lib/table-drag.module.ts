@@ -45,7 +45,7 @@ import { DragPluginDefaultTemplatesComponent } from './default-settings.componen
 })
 export class PblNgridDragModule {
 
-  static withDefaultTemplates(): ModuleWithProviders {
+  static withDefaultTemplates(): ModuleWithProviders<PblNgridDragModule> {
     return {
       ngModule: PblNgridDragModule,
       providers: provideCommon( [ { component: DragPluginDefaultTemplatesComponent } ]),

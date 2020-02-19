@@ -228,7 +228,7 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
 
 @NgModule({ })
 export class LazyCodePartsModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<LazyCodePartsModule> {
     return {
       ngModule: LazyCodePartsModule,
       providers: [
