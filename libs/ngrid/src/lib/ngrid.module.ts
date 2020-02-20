@@ -9,7 +9,6 @@ import {
   NgModuleRef,
   ModuleWithProviders,
   Self,
-  ComponentFactoryResolver,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -119,7 +118,6 @@ export function provideCommon(components: CommonTemplateInit[]): any {
 export class PblNgridModule {
 
   constructor(ngRef: NgModuleRef<any>,
-              cfr: ComponentFactoryResolver,
               registry: PblNgridRegistryService,
               @Inject(COMMON_TABLE_TEMPLATE_INIT) @Optional() @Self() components: CommonTemplateInit[][]) {
 

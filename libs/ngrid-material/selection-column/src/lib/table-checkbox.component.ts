@@ -74,8 +74,10 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
   set color(value: ThemePalette) {
     if (value !== this._color) {
       this._color = value;
-      this.cdr.markForCheck();
-      this.cdr.detectChanges();
+      if (this.table.isInit) {
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
+      }
     }
   }
 
@@ -124,6 +126,8 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
 
   rowItemChange(row: any): void {
     this.selection.toggle(row);
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   private getCollection() {

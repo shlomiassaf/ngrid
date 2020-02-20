@@ -91,7 +91,7 @@ export class PblNgridMatCheckboxSelectionDirective implements OnDestroy {
 
   private _name: string;
   private _bulkSelectMode: 'all' | 'view' | 'none';
-  private _color: ThemePalette;
+  private _color: ThemePalette = 'primary';
   private cmpRef: ComponentRef<PblNgridCheckboxComponent>;
   private _removePlugin: (table: PblNgridComponent<any>) => void;
   private _isCheckboxDisabled: (row: any) => boolean;
