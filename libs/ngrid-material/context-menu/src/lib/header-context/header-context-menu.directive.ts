@@ -10,8 +10,8 @@ declare module '@pebula/ngrid/lib/ext/types' {
 
 const PLUGIN_KEY: 'matHeaderContextMenu' = 'matHeaderContextMenu';
 
-@Directive({ selector: 'pbl-ngrid[matHeaderContextMenu]' })
 @NgridPlugin({ id: PLUGIN_KEY })
+@Directive({ selector: 'pbl-ngrid[matHeaderContextMenu]', providers: [ PblNgridOverlayPanelFactory ] })
 export class PblNgridMatHeaderContextMenuPlugin {
 
   @Input('matHeaderContextMenu') style: any;

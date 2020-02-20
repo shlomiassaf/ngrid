@@ -18,7 +18,6 @@ import { EnterAndLeaveEventsExample } from './enter-and-leave-events.component';
     PblNgridModule, PblNgridBlockUiModule, PblNgridTargetEventsModule,
   ],
   exports: [ TargetEventsExample, FocusAndRangeSelectionExample, EnterAndLeaveEventsExample ],
-  entryComponents: [ TargetEventsExample, FocusAndRangeSelectionExample, EnterAndLeaveEventsExample ],
 })
 @BindNgModule(TargetEventsExample, FocusAndRangeSelectionExample, EnterAndLeaveEventsExample)
 export class TargetEventsExampleModule { }

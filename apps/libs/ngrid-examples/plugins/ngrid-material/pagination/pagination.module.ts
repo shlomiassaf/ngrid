@@ -21,7 +21,6 @@ import { AsyncTokenExample } from './async-token.component';
     PblNgridModule, PblNgridBlockUiModule, PblNgridPaginatorModule,
   ],
   exports: [ PaginationExample, AsyncPageNumberExample, AsyncTokenExample ],
-  entryComponents: [ PaginationExample, AsyncPageNumberExample, AsyncTokenExample ],
 })
 @BindNgModule(PaginationExample, AsyncPageNumberExample, AsyncTokenExample)
 export class PaginationExampleModule { }

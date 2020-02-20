@@ -11,7 +11,6 @@ import { MatSortExtension } from './mat-sort-component-extension';
   imports: [ CommonModule, MatButtonModule, MatSortModule, PblNgridModule ],
   declarations: [ PblNgridMatSortDirective ],
   exports: [ PblNgridMatSortDirective, MatSortModule ],
-  entryComponents: [ MatSortHeader ],
 })
 export class PblNgridMatSortModule {
   constructor(private registry: PblNgridRegistryService, cfr: ComponentFactoryResolver) {

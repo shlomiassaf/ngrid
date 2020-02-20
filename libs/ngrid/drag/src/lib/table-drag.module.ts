@@ -41,7 +41,6 @@ import { DragPluginDefaultTemplatesComponent } from './default-settings.componen
   providers: [
     PblDragDrop,
   ],
-  entryComponents: [ DragPluginDefaultTemplatesComponent ],
 })
 export class PblNgridDragModule {
 

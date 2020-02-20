@@ -19,7 +19,6 @@ import { HideColumnWithGroupHeadersFeatureExample } from './hide-columns-with-gr
     PblNgridModule,
   ],
   exports: [ HideColumnFeatureExample, HideColumnWithGroupHeadersFeatureExample ],
-  entryComponents: [ HideColumnFeatureExample, HideColumnWithGroupHeadersFeatureExample ],
 })
 @BindNgModule(HideColumnFeatureExample, HideColumnWithGroupHeadersFeatureExample)
 export class HideColumnFeatureExampleModule { }

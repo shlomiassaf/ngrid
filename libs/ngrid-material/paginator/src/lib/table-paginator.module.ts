@@ -14,7 +14,6 @@ import { PblPaginatorComponent } from './table-paginator.component';
   imports: [ CommonModule, MatPaginatorModule, MatSelectModule, MatTooltipModule, MatButtonModule, PblNgridModule ],
   declarations: [ PblPaginatorComponent ],
   exports: [ PblPaginatorComponent ],
-  entryComponents: [ PblPaginatorComponent, MatPaginator ]
 })
 export class PblNgridPaginatorModule {
   constructor(cf: ComponentFactoryResolver, injector: Injector) {

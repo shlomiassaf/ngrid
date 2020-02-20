@@ -196,7 +196,7 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
       projectedContent.push(rootNodes);
     }
 
-    const cmpRef = this.vcRef.createComponent(factory, 0, null, projectedContent);
+    const cmpRef = this.vcRef.createComponent(factory, this.vcRef.length, null, projectedContent);
 
     if (ext.projectContent) {
       rootNodes = [ cmpRef.location.nativeElement ];

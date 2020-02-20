@@ -25,7 +25,6 @@ import { CellEditDirectivesExample } from './cell-edit-directives.component';
     PblNgridModule, PblNgridTargetEventsModule,
   ],
   exports: [ CellEditExample, CellEditGlobalTriggerExample, CellEditDirectivesExample ],
-  entryComponents: [ CellEditExample, CellEditGlobalTriggerExample, CellEditDirectivesExample ],
 })
 @BindNgModule(CellEditExample, CellEditGlobalTriggerExample, CellEditDirectivesExample)
 export class CellEditExampleModule { }

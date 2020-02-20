@@ -14,7 +14,6 @@ import { RowOrderingExample } from './row-ordering.component';
     PblNgridDragModule.withDefaultTemplates(),
   ],
   exports: [ RowOrderingExample ],
-  entryComponents: [ RowOrderingExample ],
 })
 @BindNgModule(RowOrderingExample)
 export class RowOrderingExampleModule { }

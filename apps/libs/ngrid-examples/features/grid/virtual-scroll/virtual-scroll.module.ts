@@ -18,7 +18,6 @@ import { ScrollingStateExample } from './scrolling-state.component';
     PblNgridModule, PblNgridBlockUiModule,
   ],
   exports: [ VirtualScrollExample, ScrollingStateExample ],
-  entryComponents: [ VirtualScrollExample, ScrollingStateExample ],
 })
 @BindNgModule(VirtualScrollExample, ScrollingStateExample)
 export class VirtualScrollExampleModule { }

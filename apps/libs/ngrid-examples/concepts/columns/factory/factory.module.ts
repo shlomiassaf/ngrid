@@ -12,7 +12,6 @@ import { ColumnsFactoryExample } from './factory.component';
     PblNgridModule,
   ],
   exports: [ ColumnsFactoryExample ],
-  entryComponents: [ ColumnsFactoryExample ],
 })
 @BindNgModule(ColumnsFactoryExample)
 export class ColumnsFactoryExampleModule { }

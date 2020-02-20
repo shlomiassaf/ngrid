@@ -20,7 +20,6 @@ import { DynamicSetExample } from './dynamic-set.component';
     PblNgridModule, PblNgridBlockUiModule,
   ],
   exports: [ EmptyCollectionTemplateExample, AsynchronousEmptySetExample, DynamicSetExample ],
-  entryComponents: [ EmptyCollectionTemplateExample, AsynchronousEmptySetExample, DynamicSetExample ],
 })
 @BindNgModule(EmptyCollectionTemplateExample, AsynchronousEmptySetExample, DynamicSetExample)
 export class EmptyCollectionTemplateExampleModule { }

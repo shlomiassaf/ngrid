@@ -12,7 +12,6 @@ import { RowClassExample } from './row-class.component';
     PblNgridModule,
   ],
   exports: [ RowClassExample ],
-  entryComponents: [ RowClassExample ],
 })
 @BindNgModule(RowClassExample)
 export class RowClassExampleModule { }

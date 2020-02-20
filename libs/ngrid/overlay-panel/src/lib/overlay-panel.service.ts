@@ -155,10 +155,13 @@ export class PblNgridOverlayPanel<T = any> {
    * @returns OverlayConfig
    */
   private _getOverlayConfig(element: ElementRef<HTMLElement>, config: PblNgridOverlayPanelConfig): OverlayConfig {
+    const positionStrategy = this._overlay
+      .position()
+      .flexibleConnectedTo(element)
+      .withLockedPosition();
+
     return new OverlayConfig({
-      positionStrategy: this._overlay.position()
-        .flexibleConnectedTo(element)
-        .withLockedPosition(),
+      positionStrategy,
       backdropClass: config.backdropClass || 'cdk-overlay-transparent-backdrop', // TODO: don't use the cdk's class, create it
       scrollStrategy: this._scrollStrategy(),
       direction: this._dir

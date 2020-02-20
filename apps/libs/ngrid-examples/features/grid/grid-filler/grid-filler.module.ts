@@ -19,7 +19,6 @@ import { GridFillerNoVirtualScrollExample } from './grid-filler-no-virtual-scrol
     PblNgridModule, PblNgridBlockUiModule,
   ],
   exports: [ GridFillerExample, GridFillerFixedVirtualScrollExample, GridFillerDisabledExample, GridFillerNoVirtualScrollExample ],
-  entryComponents: [ GridFillerExample, GridFillerFixedVirtualScrollExample, GridFillerDisabledExample, GridFillerNoVirtualScrollExample ],
 })
 @BindNgModule(GridFillerExample, GridFillerFixedVirtualScrollExample, GridFillerDisabledExample, GridFillerNoVirtualScrollExample)
 export class GridFillerExampleModule { }

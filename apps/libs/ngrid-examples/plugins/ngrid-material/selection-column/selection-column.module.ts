@@ -22,7 +22,6 @@ import { CheckboxColorExample } from './checkbox-color.component';
     PblNgridModule, PblNgridBlockUiModule, PblNgridStickyModule, PblNgridCheckboxModule,
   ],
   exports: [ SelectionColumnExample, BulkModeAndVirtualScrollExample, CheckboxColorExample ],
-  entryComponents: [ SelectionColumnExample, BulkModeAndVirtualScrollExample, CheckboxColorExample ],
 })
 @BindNgModule(SelectionColumnExample, BulkModeAndVirtualScrollExample, CheckboxColorExample)
 export class SelectionColumnExampleModule { }

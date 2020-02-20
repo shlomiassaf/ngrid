@@ -14,7 +14,6 @@ import { CopySelectionExample } from './copy-selection.component';
     PblNgridModule, PblNgridBlockUiModule, PblNgridClipboardPluginModule,
   ],
   exports: [ CopySelectionExample ],
-  entryComponents: [ CopySelectionExample ],
 })
 @BindNgModule(CopySelectionExample)
 export class CopySelectionExampleModule { }

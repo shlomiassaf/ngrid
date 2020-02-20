@@ -20,6 +20,5 @@ const DETAIL_ROW = [
   imports: [ CommonModule, CdkTableModule, PblNgridModule, PblNgridTargetEventsModule ],
   declarations: [ DETAIL_ROW, PblNgridDefaultDetailRowParentComponent ],
   exports: [ DETAIL_ROW ],
-  entryComponents: [ PblNgridDetailRowComponent, PblNgridDefaultDetailRowParentComponent ]
 })
 export class PblNgridDetailRowModule { }

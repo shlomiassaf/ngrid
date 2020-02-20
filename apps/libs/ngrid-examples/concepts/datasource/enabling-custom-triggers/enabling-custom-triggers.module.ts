@@ -16,7 +16,6 @@ import { EnablingCustomTriggersExample } from './enabling-custom-triggers.compon
     PblNgridPaginatorModule,
   ],
   exports: [ EnablingCustomTriggersExample ],
-  entryComponents: [ EnablingCustomTriggersExample ],
 })
 @BindNgModule(EnablingCustomTriggersExample)
 export class EnablingCustomTriggersExampleModule { }

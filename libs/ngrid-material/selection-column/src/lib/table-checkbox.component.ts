@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, Optional, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ThemePalette } from '@angular/material/core';
 
@@ -8,6 +8,7 @@ import {
   PblNgridHeaderCellDefDirective,
   PblNgridCellDefDirective,
   PblNgridFooterCellDefDirective,
+  PblNgridPluginController,
 } from '@pebula/ngrid';
 
 const ALWAYS_FALSE_FN = () => false;
@@ -49,8 +50,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
    * A Custom selection model, optional.
    * If not set, the selection model from the DataSource is used.
    */
-  @Input()
-  get selection(): SelectionModel<any> {
+  @Input() get selection(): SelectionModel<any> {
     return this._selection;
   }
   set selection(value: SelectionModel<any>) {
@@ -91,11 +91,19 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
   private _isCheckboxDisabled: (row: any) => boolean = ALWAYS_FALSE_FN;
   private _color: ThemePalette;
 
-  constructor(@Optional() public table: PblNgridComponent<any>, private cdr: ChangeDetectorRef) {}
+  constructor(public table: PblNgridComponent<any>, private cdr: ChangeDetectorRef) {
+    const pluginCtrl = PblNgridPluginController.find(table);
+    pluginCtrl.events
+      .pipe(UnRx(this))
+      .subscribe( e => {
+        if (e.kind === 'onDataSource') {
+          this.selection = e.curr.selection;
+        }
+      });
+  }
 
   ngAfterViewInit(): void {
-
-    if (!this.selection) {
+    if (!this.selection && this.table.ds) {
       this.selection = this.table.ds.selection;
     }
 

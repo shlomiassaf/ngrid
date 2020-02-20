@@ -20,6 +20,5 @@ import { CommonGridTemplatesComponent } from './common-grid-templates.component'
     PblNgridModule, PblNgridDragModule.withDefaultTemplates(), PblNgridBlockUiModule,
   ],
   exports: [ CommonGridTemplatesComponent ],
-  entryComponents: [ CommonGridTemplatesComponent ],
 })
 export class CommonGridTemplatesModule { }
