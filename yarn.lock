@@ -157,10 +157,10 @@
   resolved "https://registry.yarnpkg.com/@angular/cdk-experimental/-/cdk-experimental-9.0.0.tgz#844acab5c26dfaa5c1223ae6cb8708217eade80b"
   integrity sha512-RYWcUY2utIblX4Pe9Dk0FtlX7oSWgwXk1DFQT/k0U7vidy+RoQzcDz+19cn0oLi+2eoIFly3p2r4mcDQFDLODQ==
 
-"@angular/cdk@9.0.0":
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-9.0.0.tgz#5734817ae97044f90d304fa0f25c9c1a7fa0bf96"
-  integrity sha512-2kYpyYbewIB6fubSIDMvSprJLNplRZoL/AtXW3od4dLyRxtzX+7iWTAtzUG/dhq8CKev0lpd1HENh5lLR/Lhjw==
+"@angular/cdk@^9.0.1":
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-9.0.1.tgz#3580375ce0b4aa9ddbd6ea790ab241a8db73b156"
+  integrity sha512-slhYG9lOX7JoxcULdfIvXspkDRjYTBG8PH6B2Slxi8CpV42x0t+yQnBQxp/U3ud1m1BWVrlxwKZywaPFe1tSeA==
   optionalDependencies:
     parse5 "^5.0.0"
 
@@ -11944,9 +11944,10 @@ next-tick@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
-ng-cli-packagr-tasks@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/ng-cli-packagr-tasks/-/ng-cli-packagr-tasks-4.0.0.tgz#3576afa5b6ac9069f2341c09730f162106ea95f9"
+ng-cli-packagr-tasks@9.0.0-alpha.0:
+  version "9.0.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/ng-cli-packagr-tasks/-/ng-cli-packagr-tasks-9.0.0-alpha.0.tgz#88120670fcfcf6fc84fa9713a5bcb77c131171d4"
+  integrity sha512-Aan2SkJjWuIg3Z5VRcxJ4irOAPGqkx5vKdKdya1ZqdQ+b0XhCKxiBDAcNhrMc+0ooxkA41CvpjZT5WO8PJruHg==
 
 ng-packagr@^9.0.0:
   version "9.0.1"
@@ -16829,6 +16830,11 @@ tsconfig-paths@^3.7.0:
     json5 "^1.0.1"
     minimist "^1.2.0"
     strip-bom "^3.0.0"
+
+tsickle@^0.38.0:
+  version "0.38.0"
+  resolved "https://registry.yarnpkg.com/tsickle/-/tsickle-0.38.0.tgz#89f5952c9bb3ba0b36dc384975e23cf90e584822"
+  integrity sha512-k7kI6afBuLd2jIrj9JR8lKhEkp99sFVRKQbHeaHQkdvDaH5AvzwqA/qX+aNj28OfuAsWryOKAZoXm24l7JelEw==
 
 tslib@1.10.0, tslib@^1.10.0:
   version "1.10.0"

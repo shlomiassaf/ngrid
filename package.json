@@ -1,6 +1,6 @@
 {
   "name": "pebula",
-  "version": "2.0.0-rc.0",
+  "version": "2.0.0-alpha.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -36,7 +36,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "9.0.1",
-    "@angular/cdk": "9.0.0",
+    "@angular/cdk": "^9.0.1",
     "@angular/cdk-experimental": "^9.0.0",
     "@angular/common": "9.0.1",
     "@angular/compiler": "9.0.1",
@@ -139,7 +139,7 @@
     "lerna-semantic-release": "^9.1.0",
     "marked": "^0.6.0",
     "merge2": "^1.2.3",
-    "ng-cli-packagr-tasks": "^4.0.0",
+    "ng-cli-packagr-tasks": "9.0.0-alpha.0",
     "node-sass-tilde-importer": "^1.0.2",
     "prettier": "1.19.1",
     "prismjs": "^1.15.0",
@@ -159,6 +159,7 @@
     "ts-loader": "^5.3.3",
     "ts-node": "~7.0.0",
     "tsconfig-paths": "^3.7.0",
+    "tsickle": "^0.38.0",
     "tslint": "~5.12.1",
     "typescript": "~3.7.5",
     "typescript-formatter": "^7.2.2",

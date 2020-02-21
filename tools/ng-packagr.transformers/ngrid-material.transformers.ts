@@ -15,6 +15,7 @@ async function writeBundles(context: EntryPointTaskContext) {
     '@pebula/utils': 'pebula.utils',
     '@pebula/ngrid': 'pebula.ngrid',
     '@pebula/ngrid/target-events': 'pebula.ngrid.target-events',
+    '@pebula/ngrid/overlay-panel': 'pebula.ngrid.overlay-panel',
   });
 }
 

@@ -7,5 +7,8 @@
         "dist/@pebula/*"
       ]
     }
+  },
+  "angularCompilerOptions": {
+    "enableIvy": false
   }
 }
