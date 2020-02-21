@@ -124,6 +124,7 @@ export class PblNgridModule {
     // TODO: Remove this once issue fixed: https://github.com/angular/angular/issues/35580
     try {
       if (ngRef.componentFactoryResolver) {
+        registry.getRoot(); // this line will keep the try/catch block in place when doing minification
       }
     } catch (err) {
       const parent = (ngRef as any)._parent;

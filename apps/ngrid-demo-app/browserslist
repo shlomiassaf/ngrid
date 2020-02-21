@@ -4,8 +4,13 @@
 #
 # For IE 9-11 support, please remove 'not' from the last line of the file and adjust as needed
 
-> 0.5%
-last 2 versions
-Firefox ESR
-not dead
-not IE 9-11
+# For some reason, angular CLI overrides the es5/es2015 differential versions, so both have same name and can't co-exist until fixed
+# The workaround is here, so only es2015 is emitted.
+
+# > 0.5%
+# last 2 versions
+# Firefox ESR
+# not dead
+# not IE 9-11
+
+Chrome >= 61

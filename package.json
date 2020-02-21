@@ -1,11 +1,10 @@
 {
   "name": "pebula",
-  "version": "1.0.0-rc.17",
+  "version": "2.0.0-rc.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "lerna": "lerna",
     "build-grid": "ng build utils --prod && ng build ngrid --prod && ng build ngrid-material --prod",
     "test": "ng test",
     "lint": "./node_modules/.bin/nx workspace-lint && ng lint",
@@ -30,10 +29,7 @@
     "affected": "./node_modules/.bin/nx affected",
     "example": "./node_modules/.bin/nx workspace-schematic example-module",
     "gh-pages": "./tools/scripts/gh-pages.sh",
-    "compile:server_bak": "webpack --config webpack.config.ssr.js --progress --colors",
-    "build:ssr_bak": "npm run build:client-and-server-bundles && npm run compile:server",
-    "serve:ssr_bak": "node dist/server",
-    "build:client-and-server-bundles_bak": "node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod && node --max-old-space-size=8192 ./node_modules/.bin/ng run ngrid-demo-app:server:production --bundleDependencies all",
+    "compile:server": "webpack --config webpack.config.ssr.js --progress --colors",
     "nx": "nx",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
   },
@@ -59,7 +55,6 @@
     "@ngrx/store": "8.3.0",
     "@nguniversal/common": "^9.0.0",
     "@nguniversal/express-engine": "^9.0.0",
-    "@nguniversal/module-map-ngfactory-loader": "8.1.1",
     "@ngx-cache/core": "^8.0.1",
     "@ngx-cache/fs-storage": "^8.0.1",
     "@ngx-cache/platform-browser": "^8.0.1",

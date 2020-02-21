@@ -17,6 +17,7 @@
         "build": {
           "builder": "ngx-build-plus:build",
           "options": {
+            "aot": true,
             "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin",
             "outputPath": "dist/browser",
             "index": "apps/ngrid-demo-app/src/index.html",
@@ -49,7 +50,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,

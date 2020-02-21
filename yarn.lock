@@ -2417,10 +2417,6 @@
   dependencies:
     "@nguniversal/common" "9.0.0"
 
-"@nguniversal/module-map-ngfactory-loader@8.1.1":
-  version "8.1.1"
-  resolved "https://registry.yarnpkg.com/@nguniversal/module-map-ngfactory-loader/-/module-map-ngfactory-loader-8.1.1.tgz#653522a616daaeae21d134752879beebb7da31ca"
-
 "@ngx-cache/core@^8.0.1":
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/@ngx-cache/core/-/core-8.0.1.tgz#3fd82b2eda1c4df4043d7128092ea7f9ad488905"
