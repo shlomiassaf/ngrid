@@ -1,3 +1,12 @@
+# 1.0.0-rc.17 (2020-02-23)
+
+
+### Bug Fixes
+
+* **ngrid/clipboard:** copy rows in logical order ([be53250](https://github.com/shlomiassaf/ngrid/commit/be53250))
+
+
+
 # 1.0.0-rc.16 (2020-01-16)
 
 
