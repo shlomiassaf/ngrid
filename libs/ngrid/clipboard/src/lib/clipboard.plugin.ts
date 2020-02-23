@@ -126,9 +126,25 @@ export class PblNgridClipboardPlugin implements OnDestroy {
       }
     }
 
+    // contextApi.selectedCells are un-ordered, their order is based on the order in which user have selected cells.
+    // It means that the row's will not paste in the proper order unless we re-order them based on the data index.
+    // This is a very native and simple implementation that will hold most copy actions 1k +-
+    // TODO: Consider a better logic, taking performance into consideration.
+
+    const entries = Array.from(data.entries());
+    entries.sort((a, b) => {
+      const aIndex = contextApi.findRowInCache(a[0]).dataIndex;
+      const bIndex = contextApi.findRowInCache(b[0]).dataIndex;
+      if (aIndex < bIndex) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+
     return {
       minIndex,
-      rows: Array.from(data.values()),
+      rows: entries.map( e => e[1] ),
     };
   }
 
