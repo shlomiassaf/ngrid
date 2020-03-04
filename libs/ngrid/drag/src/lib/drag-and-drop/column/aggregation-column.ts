@@ -9,7 +9,6 @@ import {
   Optional,
   SkipSelf,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 import { Directionality } from '@angular/cdk/bidi';
 import {
   DragDrop,
@@ -25,7 +24,7 @@ import { CdkLazyDropList } from '../core/lazy-drag-drop';
 import { PblDragRef } from '../core/drag-ref';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblNgridColumnDragDirective } from './column-reorder-plugin';
-import { PblDragDrop } from '../core';
+import { PblDragDrop } from '../core/drag-drop';
 
 let _uniqueIdCounter = 0;
 

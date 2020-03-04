@@ -33,7 +33,8 @@ import {
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, NgridPlugin, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
-import { CdkLazyDropList, CdkLazyDrag, PblDragDrop } from '../core';
+import { PblDragDrop } from '../core/drag-drop';
+import { CdkLazyDropList, CdkLazyDrag } from '../core/lazy-drag-drop';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblDragRef } from '../core/drag-ref';
 import { extendGrid } from './extend-grid';
