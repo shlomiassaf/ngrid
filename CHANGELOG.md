@@ -1,3 +1,21 @@
+# 2.0.0-rc.0 (2020-03-13)
+
+
+### Features
+
+* **ngrid:** support angular 9 (#79) ([9f80f9e](https://github.com/shlomiassaf/ngrid/commit/9f80f9e))
+
+
+
+# 1.0.0-rc.20 (2020-03-03)
+
+
+### Bug Fixes
+
+* **ngrid/drag:** sneaky issue with PblDragDrop and AOT ([5eb6929](https://github.com/shlomiassaf/ngrid/commit/5eb6929))
+
+
+
 # 1.0.0-rc.17 (2020-02-23)
 
 
