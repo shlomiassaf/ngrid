@@ -22,7 +22,6 @@ import { MultiColumnFilterExample } from './multi-column-filter.component';
     PblNgridModule, PblNgridBlockUiModule,
   ],
   exports: [ MultiColumnFilterExample ],
-  entryComponents: [ MultiColumnFilterExample ],
 })
 @BindNgModule(MultiColumnFilterExample)
 export class MultiColumnFilterExampleModule { }

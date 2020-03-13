@@ -14,7 +14,6 @@ import { ManualDatasourceTriggerExample } from './manual-trigger.component';
     PblNgridModule,
   ],
   exports: [ ManualDatasourceTriggerExample ],
-  entryComponents: [ ManualDatasourceTriggerExample ],
 })
 @BindNgModule(ManualDatasourceTriggerExample)
 export class ManualDatasourceTriggerExampleModule { }

@@ -66,7 +66,7 @@ export function registerColumnDefChildHandlers() {
 
         // We must assert the type starting from 3.5 onwards
         // See "Fixes to unsound writes to indexed access types" in https://devblogs.microsoft.com/typescript/announcing-typescript-3-5
-        ctx.source[key as keyof (PblColumn | PblColumnDefinition)] = stateValue;
+        ctx.source[key as any] = stateValue;
       }
 
     })

@@ -24,7 +24,7 @@ import { MatExcelStyleHeaderMenu } from './header-context/styles/excel-style-hea
     MatFormFieldModule,
     MatInputModule,
     PblNgridModule,
-    PblNgridOverlayPanelModule
+    PblNgridOverlayPanelModule,
   ],
   declarations: [
     MatHeaderContextMenuTrigger,
@@ -33,11 +33,7 @@ import { MatExcelStyleHeaderMenu } from './header-context/styles/excel-style-hea
   ],
   exports: [
     PblNgridMatHeaderContextMenuPlugin,
-  ],
-  entryComponents: [
-    MatHeaderContextMenuTrigger,
-    MatExcelStyleHeaderMenu,
-  ],
+  ]
 })
 export class PblNgridContextMenuModule {
   constructor(@Optional() @SkipSelf() parentModule: PblNgridContextMenuModule,

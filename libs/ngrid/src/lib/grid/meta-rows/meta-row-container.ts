@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { Component, Input, ElementRef, OnDestroy } from '@angular/core';
+import { Component, Input, ElementRef, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { UnRx } from '@pebula/utils';
 
 import { PblNgridMetaRowService } from './meta-row.service';
@@ -13,13 +13,9 @@ import { PblNgridMetaRowService } from './meta-row.service';
   },
 })
 @UnRx()
-export class PblNgridMetaRowContainerComponent implements OnDestroy {
+export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
 
-  @Input('pbl-ngrid-fixed-meta-row-container') set type(value: 'header' | 'footer') {
-    if (this._type !== value) {
-      this.init(value);
-    }
-  };
+  @Input('pbl-ngrid-fixed-meta-row-container') type: 'header' | 'footer';
 
   /**
    * The inner width of the grid, the viewport width of a row.
@@ -31,7 +27,6 @@ export class PblNgridMetaRowContainerComponent implements OnDestroy {
   readonly _width$ = new Subject<number>();
 
   private _totalColumnWidth: number = 0;
-  private _type: 'header' | 'footer';
   private element: HTMLElement;
 
   constructor(public readonly metaRows: PblNgridMetaRowService, elRef: ElementRef<HTMLElement>) {
@@ -52,6 +47,23 @@ export class PblNgridMetaRowContainerComponent implements OnDestroy {
       });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('type' in changes) {
+      const scrollContainerElement = this.element;
+      scrollContainerElement.scrollLeft = this.metaRows.extApi.grid.viewport.measureScrollOffset('start');
+
+      if (changes.type.isFirstChange) {
+        this.metaRows.hzScroll
+          .pipe(UnRx(this))
+          .subscribe( offset => scrollContainerElement.scrollLeft = offset );
+
+        this.metaRows.extApi.cdkTable.onRenderRows
+          .pipe(UnRx(this))
+          .subscribe( () => { this.updateWidths() });
+      }
+    }
+  }
+
   ngOnDestroy(): void {
     this._width$.complete();
   }
@@ -62,28 +74,9 @@ export class PblNgridMetaRowContainerComponent implements OnDestroy {
     this._width = Math.max(this._innerWidth, this._minWidth);
     this._width$.next(Math.max(this._innerWidth, this._totalColumnWidth))
   }
-  private init(type: 'header' | 'footer'): void {
-
-    if (type === 'header') {
-      this._type = type;
-    } else {
-      this._type = 'footer';
-    }
-
-    const scrollContainerElement = this.element;
-    scrollContainerElement.scrollLeft = this.metaRows.extApi.grid.viewport.measureScrollOffset('start');
-
-    this.metaRows.hzScroll
-      .pipe(UnRx(this))
-      .subscribe( offset => scrollContainerElement.scrollLeft = offset );
-
-    this.metaRows.extApi.cdkTable.onRenderRows
-      .pipe(UnRx(this))
-      .subscribe( () => { this.updateWidths() });
-  }
 
   private syncRowDefinitions(): void {
-    const isHeader = this._type === 'header';
+    const isHeader = this.type === 'header';
     const section = isHeader ? this.metaRows.header : this.metaRows.footer;
 
     const widthContainer = this.element.firstElementChild;

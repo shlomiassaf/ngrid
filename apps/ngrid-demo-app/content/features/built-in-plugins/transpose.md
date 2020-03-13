@@ -12,6 +12,6 @@ W> and because the table does not support vertical virtual scroll, transpose wil
 
 <div pbl-example-view="pbl-transpose-example"></div>
 
-<div pbl-example-view="pbl-original-templates-example"></div>
+<!-- <div pbl-example-view="pbl-original-templates-example"></div> -->
 
 <div pbl-example-view="pbl-with-column-styles-example"></div>

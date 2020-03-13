@@ -34,15 +34,12 @@ interface DragCSSStyleDeclaration extends CSSStyleDeclaration {
  * Shallow-extends a stylesheet object with another stylesheet object.
  * @docs-private
  */
-export function extendStyles(
-    dest: Writeable<CSSStyleDeclaration>,
-    source: Partial<DragCSSStyleDeclaration>) {
+export function extendStyles(dest: Writeable<CSSStyleDeclaration>, source: Partial<DragCSSStyleDeclaration>) {
   for (let key in source) {
     if (source.hasOwnProperty(key)) {
-      dest[key as keyof CSSStyleDeclaration] = source[key as keyof CSSStyleDeclaration];
+      dest[key] = source[key as keyof CSSStyleDeclaration];
     }
   }
-
   return dest;
 }
 

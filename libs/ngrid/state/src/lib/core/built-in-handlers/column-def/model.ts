@@ -1,6 +1,3 @@
-// for type info only, should work in published pacakge
-import { PblBaseColumnDefinition } from '@pebula/ngrid/lib/grid/columns/types';
-
 import {
   PblMetaColumnDefinition,
   PblColumnGroupDefinition,
@@ -14,7 +11,7 @@ import {
 
 export interface PblNgridBaseColumnState extends
   PickPNP <
-    PblBaseColumnDefinition,
+    import('@pebula/ngrid/lib/grid/columns/types').PblBaseColumnDefinition,
     'id' | 'label' | 'css' | 'type' | 'width' | 'minWidth' | 'maxWidth',
     never
   > { }

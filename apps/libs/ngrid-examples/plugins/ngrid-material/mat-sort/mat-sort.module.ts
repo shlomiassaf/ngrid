@@ -23,7 +23,6 @@ import { ProgrammaticExample } from './programmatic.component';
     PblNgridModule, PblNgridBlockUiModule, PblNgridPaginatorModule, PblNgridMatSortModule,
   ],
   exports: [ MatSortExample, ActiveColumnAndDirectionExample, ProgrammaticExample ],
-  entryComponents: [ MatSortExample, ActiveColumnAndDirectionExample, ProgrammaticExample ],
 })
 @BindNgModule(MatSortExample, ActiveColumnAndDirectionExample, ProgrammaticExample)
 export class MatSortExampleModule { }

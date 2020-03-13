@@ -14,7 +14,6 @@ import { DatasourceIntroductionSimpleModelExample } from './simple-model.compone
     PblNgridModule,
   ],
   exports: [ DatasourceIntroductionSimpleModelExample ],
-  entryComponents: [ DatasourceIntroductionSimpleModelExample ],
 })
 @BindNgModule(DatasourceIntroductionSimpleModelExample)
 export class DatasourceIntroductionSimpleModelExampleModule { }

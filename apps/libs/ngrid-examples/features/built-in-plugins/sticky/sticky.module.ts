@@ -21,7 +21,6 @@ import { ColumnMixSetupExample } from './column-mix-setup.component';
     PblNgridModule, PblNgridStickyModule,
   ],
   exports: [ StickyExample, RowColumnDefinitionsExample, RowWithDirectivesExample, RowMultiHeaderExample, ColumnWithDirectivesExample, ColumnMixSetupExample ],
-  entryComponents: [ StickyExample, RowColumnDefinitionsExample, RowWithDirectivesExample, RowMultiHeaderExample, ColumnWithDirectivesExample, ColumnMixSetupExample ],
 })
 @BindNgModule(StickyExample, RowColumnDefinitionsExample, RowWithDirectivesExample, RowMultiHeaderExample, ColumnWithDirectivesExample, ColumnMixSetupExample)
 export class StickyExampleModule { }

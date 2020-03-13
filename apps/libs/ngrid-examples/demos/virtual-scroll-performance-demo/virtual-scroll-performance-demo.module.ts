@@ -41,7 +41,6 @@ import { VirtualScrollPerformanceDemoExample } from './virtual-scroll-performanc
   ],
   exports: [ VirtualScrollPerformanceDemoExample ],
   providers: [ PblNgridRegistryService ],
-  entryComponents: [ VirtualScrollPerformanceDemoExample ],
 })
 @BindNgModule(VirtualScrollPerformanceDemoExample)
 export class VirtualScrollPerformanceDemoExampleModule { }

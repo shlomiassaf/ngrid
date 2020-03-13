@@ -1,4 +1,15 @@
-import { ANALYZE_FOR_ENTRY_COMPONENTS, ComponentRef, Inject, InjectionToken, Injector, Type, Optional, NgModule, NgModuleRef, ModuleWithProviders, Self } from '@angular/core';
+import {
+  ComponentRef,
+  Inject,
+  InjectionToken,
+  Injector,
+  Type,
+  Optional,
+  NgModule,
+  NgModuleRef,
+  ModuleWithProviders,
+  Self,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ScrollingModule as ScrollingModuleExp } from '@angular/cdk-experimental/scrolling';
@@ -48,7 +59,6 @@ export interface CommonTemplateInit {
 
 export function provideCommon(components: CommonTemplateInit[]): any {
   return [
-    { provide: ANALYZE_FOR_ENTRY_COMPONENTS, multi: true, useValue: components },
     { provide: COMMON_TABLE_TEMPLATE_INIT, multi: true, useValue: components },
   ];
 }
@@ -110,6 +120,17 @@ export class PblNgridModule {
   constructor(ngRef: NgModuleRef<any>,
               registry: PblNgridRegistryService,
               @Inject(COMMON_TABLE_TEMPLATE_INIT) @Optional() @Self() components: CommonTemplateInit[][]) {
+
+    // TODO: Remove this once issue fixed: https://github.com/angular/angular/issues/35580
+    try {
+      if (ngRef.componentFactoryResolver) {
+        registry.getRoot(); // this line will keep the try/catch block in place when doing minification
+      }
+    } catch (err) {
+      const parent = (ngRef as any)._parent;
+      (ngRef as any)._r3Injector = parent;
+    }
+
     if (components) {
       for (const multi of components) {
         for (const c of multi) {
@@ -122,7 +143,7 @@ export class PblNgridModule {
     }
   }
 
-  static forRoot(config: PblNgridConfig, components: CommonTemplateInit[]): ModuleWithProviders {
+  static forRoot(config: PblNgridConfig, components: CommonTemplateInit[]): ModuleWithProviders<PblNgridModule> {
     return {
       ngModule: PblNgridModule,
       providers: [
@@ -133,7 +154,7 @@ export class PblNgridModule {
     };
   }
 
-  static withCommon(components: CommonTemplateInit[]): ModuleWithProviders {
+  static withCommon(components: CommonTemplateInit[]): ModuleWithProviders<PblNgridModule> {
     return {
       ngModule: PblNgridModule,
       providers: provideCommon(components),
@@ -143,10 +164,10 @@ export class PblNgridModule {
   static loadCommonTemplates<T>(ngRef: NgModuleRef<any>,
                                 component: Type<T>,
                                 options?: {
-                                  /** When set will use it as first registry in the DI tree */
-                                  registry?: PblNgridRegistryService;
-                                  /** When set will destroy the component when the module is destroyed. */
-                                  destroy?: boolean;
+                                 /** When set will use it as first registry in the DI tree */
+                                 registry?: PblNgridRegistryService;
+                                 /** When set will destroy the component when the module is destroyed. */
+                                 destroy?: boolean;
                                 }): ComponentRef<T> {
     let { injector } = ngRef;
     const { registry, destroy } = options || ({} as any);
@@ -160,7 +181,6 @@ export class PblNgridModule {
 
     const cmpRef = ngRef.componentFactoryResolver.resolveComponentFactory<T>(component).create(injector);
     cmpRef.changeDetectorRef.detectChanges();
-
     if (destroy) {
       ngRef.onDestroy( () => {
         try {

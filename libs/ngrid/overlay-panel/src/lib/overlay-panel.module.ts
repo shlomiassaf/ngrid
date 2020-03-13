@@ -21,7 +21,6 @@ import { PblNgridOverlayPanelDef } from './overlay-panel-def';
   providers: [
     PblNgridOverlayPanelFactory,
   ],
-  entryComponents: [ ],
 })
 export class PblNgridOverlayPanelModule {
 

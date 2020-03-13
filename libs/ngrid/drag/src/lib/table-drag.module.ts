@@ -4,7 +4,6 @@ import { DragDropModule, DragDrop } from '@angular/cdk/drag-drop';
 
 import { PblNgridModule, provideCommon } from '@pebula/ngrid';
 
-import { PblDragDrop } from './drag-and-drop/core/drag-drop';
 import { CdkLazyDropList, CdkLazyDrag, PblDragHandle } from './drag-and-drop/core/lazy-drag-drop';
 import { PblNgridRowReorderPluginDirective, PblNgridRowDragDirective } from './drag-and-drop/row/row-reorder-plugin';
 import { PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective } from './drag-and-drop/column/column-reorder-plugin';
@@ -38,14 +37,10 @@ import { DragPluginDefaultTemplatesComponent } from './default-settings.componen
     PblNgridAggregationContainerDirective,
     PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
   ],
-  providers: [
-    PblDragDrop,
-  ],
-  entryComponents: [ DragPluginDefaultTemplatesComponent ],
 })
 export class PblNgridDragModule {
 
-  static withDefaultTemplates(): ModuleWithProviders {
+  static withDefaultTemplates(): ModuleWithProviders<PblNgridDragModule> {
     return {
       ngModule: PblNgridDragModule,
       providers: provideCommon( [ { component: DragPluginDefaultTemplatesComponent } ]),

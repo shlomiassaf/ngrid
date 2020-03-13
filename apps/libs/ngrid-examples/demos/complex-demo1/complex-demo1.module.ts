@@ -54,7 +54,6 @@ import { ComplexDemo1Example } from './complex-demo1.component';
   ],
   exports: [ ComplexDemo1Example ],
   providers: [ PblNgridRegistryService ],
-  entryComponents: [ ComplexDemo1Example ],
 })
 @BindNgModule(ComplexDemo1Example)
 export class ComplexDemo1ExampleModule { }

@@ -15,7 +15,6 @@ import { MinColumnWidthFeatureExample } from './min-column-width.component';
     PblNgridModule,
   ],
   exports: [ ColumnWidthFeatureExample, MinColumnWidthFeatureExample ],
-  entryComponents: [ ColumnWidthFeatureExample, MinColumnWidthFeatureExample ],
 })
 @BindNgModule(ColumnWidthFeatureExample, MinColumnWidthFeatureExample)
 export class ColumnWidthFeatureExampleModule { }

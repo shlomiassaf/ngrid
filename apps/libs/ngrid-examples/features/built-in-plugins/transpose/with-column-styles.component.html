@@ -1,5 +1,5 @@
 <pbl-ngrid blockUi
-            transpose matchTemplates [transposeDefaultCol]="{ minWidth: 100 }"
+            transpose [transposeDefaultCol]="{ minWidth: 100 }"
             [dataSource]="ds"
             [columns]="columns">
   <div *pblNgridCellDef="'name'; value as value;" style="background: green">{{value}}</div>

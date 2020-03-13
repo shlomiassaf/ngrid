@@ -18,7 +18,6 @@ import { CustomHeaderExample } from './custom-header.component';
     PblNgridModule, PblNgridOverlayPanelModule, PblNgridContextMenuModule,
   ],
   exports: [ ContextMenuExample, CustomHeaderExample ],
-  entryComponents: [ ContextMenuExample, CustomHeaderExample ],
 })
 @BindNgModule(ContextMenuExample, CustomHeaderExample)
 export class ContextMenuExampleModule { }

@@ -16,7 +16,6 @@ import { ControlledRowHeightExample } from './controlled-row-height.component';
     PblNgridModule,
   ],
   exports: [ RowHeightExample, UncontrolledRowHeightExample, ControlledRowHeightExample ],
-  entryComponents: [ RowHeightExample, UncontrolledRowHeightExample, ControlledRowHeightExample ],
 })
 @BindNgModule(RowHeightExample, UncontrolledRowHeightExample, ControlledRowHeightExample)
 export class RowHeightExampleModule { }

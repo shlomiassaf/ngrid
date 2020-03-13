@@ -21,7 +21,6 @@ import { WithColumnStylesExample } from './with-column-styles.component';
     PblNgridModule, PblNgridTransposeModule, PblNgridBlockUiModule,
   ],
   exports: [ TransposeExample, OriginalTemplatesExample, WithColumnStylesExample ],
-  entryComponents: [ TransposeExample, OriginalTemplatesExample, WithColumnStylesExample ],
 })
 @BindNgModule(TransposeExample, OriginalTemplatesExample, WithColumnStylesExample)
 export class TransposeExampleModule { }

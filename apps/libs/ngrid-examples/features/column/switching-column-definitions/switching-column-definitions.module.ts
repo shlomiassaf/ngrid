@@ -16,7 +16,6 @@ import { SwitchingColumnDefinitionsExample } from './switching-column-definition
     PblNgridModule,
   ],
   exports: [ SwitchingColumnDefinitionsExample ],
-  entryComponents: [ SwitchingColumnDefinitionsExample ],
 })
 @BindNgModule(SwitchingColumnDefinitionsExample)
 export class SwitchingColumnDefinitionsExampleModule { }

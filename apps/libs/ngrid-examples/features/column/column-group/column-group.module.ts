@@ -15,7 +15,6 @@ import { MultiHeaderColumnGroupExample } from './multi-header-column-group.compo
     PblNgridModule,
   ],
   exports: [ ColumnGroupExample, MultiHeaderColumnGroupExample ],
-  entryComponents: [ ColumnGroupExample, MultiHeaderColumnGroupExample ],
 })
 @BindNgModule(ColumnGroupExample, MultiHeaderColumnGroupExample)
 export class ColumnGroupExampleModule { }

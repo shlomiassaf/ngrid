@@ -16,7 +16,6 @@ import { PLUGIN_KEY, PblNgridStatePluginDirective } from './state-plugin';
     PblNgridStatePluginDirective,
   ],
   providers: [ ],
-  entryComponents: [ ],
 })
 export class PblNgridStatePluginModule {
   constructor(@Optional() @SkipSelf() parentModule: PblNgridStatePluginModule,

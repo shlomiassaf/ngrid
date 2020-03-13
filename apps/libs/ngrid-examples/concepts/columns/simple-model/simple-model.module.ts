@@ -14,7 +14,6 @@ import { ColumnsSimpleModelExample } from './simple-model.component';
     PblNgridModule,
   ],
   exports: [ ColumnsSimpleModelExample ],
-  entryComponents: [ ColumnsSimpleModelExample ],
 })
 @BindNgModule(ColumnsSimpleModelExample)
 export class ColumnsSimpleModelExampleModule { }

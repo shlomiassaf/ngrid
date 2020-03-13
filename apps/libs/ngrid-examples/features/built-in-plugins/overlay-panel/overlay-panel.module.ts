@@ -20,7 +20,6 @@ const COMPONENTS = [ OverlayPanelExample ];
     PblNgridModule, PblNgridOverlayPanelModule,
   ],
   exports: COMPONENTS,
-  entryComponents: COMPONENTS,
 })
 @BindNgModule(OverlayPanelExample)
 export class OverlayPanelExampleModule { }

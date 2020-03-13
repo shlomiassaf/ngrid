@@ -44,7 +44,6 @@ import { SellerDemoExample } from './seller-demo.component';
   ],
   exports: [ SellerDemoExample ],
   providers: [ PblNgridRegistryService ],
-  entryComponents: [ SellerDemoExample ],
 })
 @BindNgModule(SellerDemoExample)
 export class SellerDemoExampleModule { }
