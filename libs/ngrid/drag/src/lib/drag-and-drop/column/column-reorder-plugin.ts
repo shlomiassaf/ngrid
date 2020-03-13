@@ -15,6 +15,7 @@ import {
   OnInit,
   ViewContainerRef,
   NgZone,
+  QueryList,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
@@ -85,6 +86,8 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
   set manualOverride(value: boolean) { this._manualOverride = coerceBooleanProperty(value); }
 
   @Output('cdkDropDragging') dragging: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  _draggables: QueryList<CdkDrag>;
 
   private _columnReorder = false;
   private _manualOverride = false;

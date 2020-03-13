@@ -9,6 +9,7 @@ import {
   SkipSelf,
   ViewContainerRef,
   NgZone,
+  QueryList,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
@@ -68,6 +69,8 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
     value = coerceBooleanProperty(value);
     this._rowReorder = value;
   }
+
+  _draggables: QueryList<CdkDrag>;
 
   private _rowReorder = false;
   private _removePlugin: (grid: PblNgridComponent<any>) => void;

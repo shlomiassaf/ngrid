@@ -8,6 +8,7 @@ import {
   OnDestroy,
   Optional,
   SkipSelf,
+  QueryList,
 } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import {
@@ -48,6 +49,7 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   pending: PblColumn;
+  _draggables: QueryList<CdkDrag>;
 
   constructor(public grid: PblNgridComponent<T>,
               pluginCtrl: PblNgridPluginController,
