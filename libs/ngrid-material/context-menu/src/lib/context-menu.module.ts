@@ -33,7 +33,12 @@ import { MatExcelStyleHeaderMenu } from './header-context/styles/excel-style-hea
   ],
   exports: [
     PblNgridMatHeaderContextMenuPlugin,
-  ]
+  ],
+  entryComponents: [
+    // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
+    MatHeaderContextMenuTrigger,
+    MatExcelStyleHeaderMenu,
+  ],
 })
 export class PblNgridContextMenuModule {
   constructor(@Optional() @SkipSelf() parentModule: PblNgridContextMenuModule,

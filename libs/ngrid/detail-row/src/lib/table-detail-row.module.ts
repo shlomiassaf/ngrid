@@ -20,5 +20,7 @@ const DETAIL_ROW = [
   imports: [ CommonModule, CdkTableModule, PblNgridModule, PblNgridTargetEventsModule ],
   declarations: [ DETAIL_ROW, PblNgridDefaultDetailRowParentComponent ],
   exports: [ DETAIL_ROW ],
+  // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
+  entryComponents: [ PblNgridDetailRowComponent, PblNgridDefaultDetailRowParentComponent ],
 })
 export class PblNgridDetailRowModule { }
