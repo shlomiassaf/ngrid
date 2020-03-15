@@ -11,6 +11,8 @@ import { MatSortExtension } from './mat-sort-component-extension';
   imports: [ CommonModule, MatButtonModule, MatSortModule, PblNgridModule ],
   declarations: [ PblNgridMatSortDirective ],
   exports: [ PblNgridMatSortDirective, MatSortModule ],
+  // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
+  entryComponents: [ MatSortHeader ],
 })
 export class PblNgridMatSortModule {
   constructor(private registry: PblNgridRegistryService, cfr: ComponentFactoryResolver) {

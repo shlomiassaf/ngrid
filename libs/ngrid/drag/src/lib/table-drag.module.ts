@@ -37,6 +37,8 @@ import { DragPluginDefaultTemplatesComponent } from './default-settings.componen
     PblNgridAggregationContainerDirective,
     PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
   ],
+  // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
+  entryComponents: [ DragPluginDefaultTemplatesComponent ]
 })
 export class PblNgridDragModule {
 
