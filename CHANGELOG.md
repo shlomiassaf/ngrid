@@ -1,3 +1,13 @@
+# 2.0.0-rc.1 (2020-03-15)
+
+
+### Bug Fixes
+
+* **ngrid:** allow running in ViewEngine mode (fixes [#84](https://github.com/shlomiassaf/ngrid/issues/84)) ([#86](https://github.com/shlomiassaf/ngrid/issues/86)) ([fad8409](https://github.com/shlomiassaf/ngrid/commit/fad8409))
+* **ngrid/drag:** fully implement interface ([66f896b](https://github.com/shlomiassaf/ngrid/commit/66f896b))
+
+
+
 # 2.0.0-rc.0 (2020-03-13)
 
 
