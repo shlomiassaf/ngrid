@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { trigger, transition, animate, style } from '@angular/animations'
 
-import { UnRx } from '@pebula/utils';
+import { utils } from '@pebula/ngrid';
 import { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-examples';
 
 import { MarkdownDynamicComponentPortal } from '../markdown-dynamic-component-portal';
@@ -46,7 +46,6 @@ export const EXAMPLE_COMPONENTS_TOKEN = new InjectionToken('EXAMPLE_COMPONENTS')
     ])
   ]
 })
-@UnRx()
 export class ExampleViewComponent extends MarkdownDynamicComponentPortal implements OnDestroy {
   exampleData: LiveExample;
   sourceCode = new BehaviorSubject<ExampleFileAsset[]>(null);
@@ -76,5 +75,6 @@ export class ExampleViewComponent extends MarkdownDynamicComponentPortal impleme
 
   ngOnDestroy(): void {
     this.sourceCode.complete();
+    utils.unrx.kill(this);
   }
 }

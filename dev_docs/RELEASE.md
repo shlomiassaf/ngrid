@@ -29,7 +29,6 @@ npm run build-grid
 Run any of the relevant commands:
 
 ```bash
-npm publish dist/@pebula/utils
 npm publish dist/@pebula/ngrid
 npm publish dist/@pebula/ngrid-material
 ```
@@ -76,7 +75,7 @@ yarn add @pebula/ngrid @pebula/ngrid-material
 
 The process is semi-automatic and can improve.
 
-- Include other libraries in the process (i.e. `@pebula/utils`)
+- Include other libraries in the process
 - Integrate in CI?
 - Automate the production script
   - Auto-tag version

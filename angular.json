@@ -305,53 +305,6 @@
           }
         }
       }
-    },
-    "utils": {
-      "root": "libs/utils",
-      "sourceRoot": "libs/utils/src",
-      "projectType": "library",
-      "architect": {
-        "build": {
-          "builder": "ng-cli-packagr-tasks:build",
-          "options": {
-            "tsConfig": "libs/utils/tsconfig.lib.json",
-            "project": "libs/utils/ng-package.json",
-            "tasks": {
-              "config": "tools/ng-packagr.transformers/utils.ng-packagr.tasks.ts",
-              "data": {
-                "nodeLib": {
-                  "tsConfig": "libs/utils/tsconfig.node-lib.json"
-                }
-              }
-            }
-          },
-          "configurations": {
-            "production": {
-              "project": "libs/utils/ng-package.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/utils/jest.config.js",
-            "tsConfig": "libs/utils/tsconfig.spec.json",
-            "setupFile": "libs/utils/src/test-setup.ts",
-            "passWithNoTests": true
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/utils/tsconfig.lib.json",
-              "libs/utils/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/utils/**"]
-          }
-        }
-      },
-      "schematics": {}
     }
   },
   "cli": {

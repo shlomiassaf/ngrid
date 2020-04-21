@@ -65,9 +65,6 @@
     },
     "ngrid-material-cell-tooltip": {
       "tags": ["name:cell-tooltip", "type:child-lib", "parent:material"]
-    },
-    "utils": {
-      "tags": ["name:utils", "type:lib"]
     }
   },
   "nx-enforce-module-boundaries": [
