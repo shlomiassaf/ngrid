@@ -2,7 +2,6 @@ import { fromEvent, timer, Observer, ReplaySubject } from 'rxjs';
 import { bufferWhen, debounce, map, filter, takeUntil } from 'rxjs/operators';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
-import { UnRx } from '@pebula/utils';
 import { PblNgridComponent, PblNgridPluginController, PblColumn, NgridPlugin } from '@pebula/ngrid';
 
 import * as Events from './events';
@@ -384,7 +383,6 @@ export class PblNgridTargetEventsPlugin<T = any> {
   // tslint:disable-next-line:use-output-property-decorator
   outputs: [ 'rowClick', 'rowDblClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellDblClick', 'cellEnter', 'cellLeave', 'keyDown', 'keyUp' ]
 })
-@UnRx()
 export class PblNgridTargetEventsPluginDirective<T> extends PblNgridTargetEventsPlugin<T> implements OnDestroy {
 
   constructor(table: PblNgridComponent<any>, injector: Injector, pluginCtrl: PblNgridPluginController) {

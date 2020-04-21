@@ -1,4 +1,4 @@
-import { isPblColumn, isPblMetaColumn, isPblColumnGroup } from './lib/grid/index';
+import { isPblColumn, isPblMetaColumn, isPblColumnGroup, unrx } from './lib/grid/index';
 
 export {
   PblNgridPaginatorKind,
@@ -72,6 +72,7 @@ export const utils = {
   isPblColumn,
   isPblMetaColumn,
   isPblColumnGroup,
+  unrx,
 };
 
 export { PblNgridModule, provideCommon } from './lib/ngrid.module';

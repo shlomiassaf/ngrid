@@ -27,8 +27,7 @@ import {
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
-import { UnRx } from '@pebula/utils';
-
+import { unrx } from './utils';
 import { EXT_API_TOKEN, PblNgridExtensionApi } from '../ext/grid-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
 import { PblNgridPaginatorKind } from '../paginator';
@@ -79,7 +78,6 @@ export function metaRowServiceFactory(grid: { _extApi: PblNgridExtensionApi; }) 
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-@UnRx()
 export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
 
   /**
@@ -414,6 +412,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       if (this._viewport) {
         this._cdkTable.detachViewPort();
       }
+      unrx.kill(this);
     };
 
     let p: Promise<void>;
@@ -513,7 +512,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     if (this._dataSource !== value) {
       // KILL ALL subscriptions for the previous datasource.
       if (this._dataSource) {
-        UnRx.kill(this, this._dataSource);
+        unrx.kill(this, this._dataSource);
       }
 
       const prev = this._dataSource;
@@ -534,14 +533,14 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
       if ( value ) {
         if (isDevMode()) {
-          value.onError.pipe(UnRx(this, value)).subscribe(console.error.bind(console));
+          value.onError.pipe(unrx(this, value)).subscribe(console.error.bind(console));
         }
 
         // We register to this event because it fires before the entire data-changing process starts.
         // This is required because `onRenderDataChanging` is fired async, just before the data is emitted.
         // Its not enough to clear the context when `setDataSource` is called, we also need to handle `refresh` calls which will not
         // trigger this method.
-        value.onSourceChanging.pipe(UnRx(this, value)).subscribe( () => this._extApi.contextApi.clear() );
+        value.onSourceChanging.pipe(unrx(this, value)).subscribe( () => this._extApi.contextApi.clear() );
 
         // Run CD, scheduled as a micro-task, after each rendering
         value.onRenderDataChanging
@@ -553,7 +552,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
             tap( () => !this._store.primary && this._extApi.contextApi.clear() ),
             switchMap( () => value.onRenderedDataChanged.pipe(take(1), mapTo(this.ds.renderLength)) ),
             observeOn(asapScheduler),
-            UnRx(this, value)
+            unrx(this, value)
           )
           .subscribe( previousRenderLength => {
             // If the number of rendered items has changed the grid will update the data and run CD on it.
@@ -581,7 +580,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               }
             }),
             observeOn(animationFrameScheduler), // ww want to give the browser time to remove/add rows
-            UnRx(this, value)
+            unrx(this, value)
           )
           .subscribe(() => {
             const el = this.viewport.elementRef.nativeElement;
@@ -869,7 +868,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       .pipe(
         skip(skipValue),
         debounceTime(0, animationFrameScheduler),
-        UnRx(this),
+        unrx(this),
       )
       .subscribe( (args: [ResizeObserverEntry[], ResizeObserver]) => {
         if (skipValue === 0) {
@@ -974,7 +973,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     }
 
     if (this.isInit) {
-      UnRx.kill(this, paginationKillKey);
+      unrx.kill(this, paginationKillKey);
       if (this._paginatorEmbeddedVRef) {
         this.removeView(this._paginatorEmbeddedVRef, 'beforeContent');
         this._paginatorEmbeddedVRef = undefined;

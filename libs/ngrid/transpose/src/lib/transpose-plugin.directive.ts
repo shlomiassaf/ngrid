@@ -2,7 +2,6 @@ import { filter, take } from 'rxjs/operators';
 import { Directive, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { UnRx } from '@pebula/utils';
 import {
   columnFactory,
   PblNgridConfigService,
@@ -12,6 +11,7 @@ import {
   PblNgridPluginController,
   PblColumn,
   NgridPlugin,
+  utils,
 } from '@pebula/ngrid';
 
 import { TransposeTableSession, LOCAL_COLUMN_DEF, VIRTUAL_REFRESH } from './transpose-table-session';
@@ -57,7 +57,6 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
 
 @NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[transpose]' })
-@UnRx()
 export class PblNgridTransposePluginDirective implements OnDestroy {
 
   @Input() get transpose(): boolean { return this.enabled; };
@@ -127,7 +126,7 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
       .pipe(
         filter( e => e.kind === 'onInit' ),
         take(1),
-        UnRx(this, this.grid)
+        utils.unrx(this, this.grid)
       )
       .subscribe( e => {
         if (this.enabled !== undefined) {
@@ -139,6 +138,7 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
   ngOnDestroy() {
     this._removePlugin(this.grid);
     this.disable(false);
+    utils.unrx.kill(this);
   }
 
   disable(updateTable: boolean): void {

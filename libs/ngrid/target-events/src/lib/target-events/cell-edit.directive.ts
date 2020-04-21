@@ -1,16 +1,14 @@
-import { Directive, Input, Injector } from '@angular/core';
+import { Directive, Input, Injector, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, utils } from '@pebula/ngrid';
 import { PblNgridTargetEventsPlugin } from './target-events-plugin';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
   selector: 'pbl-ngrid[cellEditClick], pbl-ngrid[cellEditDblClick]',
 })
-@UnRx()
-export class PblNgridCellEditDirective<T> {
+export class PblNgridCellEditDirective<T> implements OnDestroy {
   @Input() set cellEditClick(value: boolean) {
     value = coerceBooleanProperty(value);
     if (this._click !== value) {
@@ -45,12 +43,16 @@ export class PblNgridCellEditDirective<T> {
     });
   }
 
+  ngOnDestroy(): void {
+    utils.unrx.kill(this);
+  }
+
   private update(): void {
     if (this.targetEventsPlugin) {
-      UnRx.kill(this, this.targetEventsPlugin);
+      utils.unrx.kill(this, this.targetEventsPlugin);
       if (this._click) {
         this.targetEventsPlugin.cellClick
-          .pipe(UnRx(this, this.targetEventsPlugin))
+          .pipe(utils.unrx(this, this.targetEventsPlugin))
           .subscribe( event => {
             if (event.type === 'data' && event.column.editable) {
               event.context.startEdit(true);
@@ -60,7 +62,7 @@ export class PblNgridCellEditDirective<T> {
 
       if (this._dblClick) {
         this.targetEventsPlugin.cellDblClick
-          .pipe(UnRx(this, this.targetEventsPlugin))
+          .pipe(utils.unrx(this, this.targetEventsPlugin))
           .subscribe( event => {
             if (event.type === 'data' && event.column.editable) {
               event.context.startEdit(true);

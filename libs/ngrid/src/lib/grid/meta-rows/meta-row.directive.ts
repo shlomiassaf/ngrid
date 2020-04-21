@@ -1,6 +1,4 @@
 import { Directive, Input, ElementRef, OnDestroy, Attribute } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { UnRx } from '@pebula/utils';
 
 import { PblMetaRowDefinitions } from '../columns/types';
 import { PblNgridMetaRowService } from './meta-row.service';
@@ -8,7 +6,6 @@ import { PblNgridMetaRowService } from './meta-row.service';
 @Directive({
   selector: '[pblMetaRow]',
 })
-@UnRx()
 export class PblMetaRowDirective implements OnDestroy {
 
   // tslint:disable-next-line:no-input-rename

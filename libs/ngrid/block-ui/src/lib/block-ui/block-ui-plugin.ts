@@ -2,8 +2,7 @@ import { Observable, isObservable } from 'rxjs';
 import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, NgridPlugin, utils } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -15,7 +14,6 @@ const PLUGIN_KEY: 'blockUi' = 'blockUi';
 
 @NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[blockUi]', exportAs: 'blockUi' })
-@UnRx()
 export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
 
   /**
@@ -53,10 +51,10 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
 
     if (isObservable(value) && this._blockUi !== value) {
       if (isObservable(this._blockUi)) {
-        UnRx.kill(this, this._blockUi);
+        utils.unrx.kill(this, this._blockUi);
       }
       this._blockUi = value;
-      value.pipe(UnRx(this, this._blockUi)).subscribe( state => {
+      value.pipe(utils.unrx(this, this._blockUi)).subscribe( state => {
         this._blockInProgress = state;
         this.setupBlocker();
       });
@@ -92,10 +90,10 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
         if (event.kind === 'onDataSource') {
           const { prev, curr } = event;
           if (prev) {
-            UnRx.kill(this, prev);
+            utils.unrx.kill(this, prev);
           }
           curr.onSourceChanging
-            .pipe(UnRx(this, curr))
+            .pipe(utils.unrx(this, curr))
             .subscribe( () => {
               if (this._blockUi === 'auto') {
                 this._blockInProgress = true;
@@ -103,7 +101,7 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
               }
             });
           curr.onSourceChanged
-            .pipe(UnRx(this, curr))
+            .pipe(utils.unrx(this, curr))
             .subscribe( () => {
               if (this._blockUi === 'auto') {
                 this._blockInProgress = false;
@@ -116,6 +114,7 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
 
 
   ngOnDestroy(): void {
+    utils.unrx.kill(this);
     this._removePlugin(this.grid);
   }
 

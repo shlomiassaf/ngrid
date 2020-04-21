@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { Component, Input, ElementRef, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
-import { UnRx } from '@pebula/utils';
 
+import { unrx } from '../utils';
 import { PblNgridMetaRowService } from './meta-row.service';
 
 @Component({
@@ -12,7 +12,6 @@ import { PblNgridMetaRowService } from './meta-row.service';
     '[style.width.px]': '_innerWidth',
   },
 })
-@UnRx()
 export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
 
   @Input('pbl-ngrid-fixed-meta-row-container') type: 'header' | 'footer';
@@ -31,16 +30,16 @@ export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
 
   constructor(public readonly metaRows: PblNgridMetaRowService, elRef: ElementRef<HTMLElement>) {
     this.element = elRef.nativeElement;
-    metaRows.sync.pipe(UnRx(this)).subscribe( () => this.syncRowDefinitions() );
+    metaRows.sync.pipe(unrx(this)).subscribe( () => this.syncRowDefinitions() );
     this.metaRows.extApi.events
-      .pipe(UnRx(this))
+      .pipe(unrx(this))
       .subscribe( event => {
         if (event.kind === 'onResizeRow') {
           this.updateWidths();
         }
       });
     this.metaRows.extApi.grid.columnApi.totalColumnWidthChange
-      .pipe(UnRx(this))
+      .pipe(unrx(this))
       .subscribe( width => {
         this._totalColumnWidth = width;
         this.updateWidths();
@@ -54,11 +53,11 @@ export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
 
       if (changes.type.isFirstChange) {
         this.metaRows.hzScroll
-          .pipe(UnRx(this))
+          .pipe(unrx(this))
           .subscribe( offset => scrollContainerElement.scrollLeft = offset );
 
         this.metaRows.extApi.cdkTable.onRenderRows
-          .pipe(UnRx(this))
+          .pipe(unrx(this))
           .subscribe( () => { this.updateWidths() });
       }
     }
@@ -66,6 +65,7 @@ export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this._width$.complete();
+    unrx.kill(this);
   }
 
   private updateWidths(): void {
