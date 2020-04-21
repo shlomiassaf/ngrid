@@ -10,7 +10,6 @@ import {
   PblNgridComponent,
   PblNgridPluginController,
   PblColumn,
-  NgridPlugin,
   utils,
 } from '@pebula/ngrid';
 
@@ -34,7 +33,7 @@ declare module '@pebula/ngrid/lib/ext/types' {
     transpose?: PblNgridTransposePluginDirective;
   }
 }
-const PLUGIN_KEY: 'transpose' = 'transpose';
+export const PLUGIN_KEY: 'transpose' = 'transpose';
 
 /**
  * Transpose plugin.
@@ -55,7 +54,6 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
  * For example, using pagination with transpose make no sense.
  */
 
-@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[transpose]' })
 export class PblNgridTransposePluginDirective implements OnDestroy {
 

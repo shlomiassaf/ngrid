@@ -1,7 +1,7 @@
 import { filter } from 'rxjs/operators';
 import { Directive, Input, IterableDiffers, IterableDiffer, IterableChangeRecord, OnDestroy } from '@angular/core';
 
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
 
 declare module '@pebula/ngrid/lib/ext/types' {
@@ -78,7 +78,6 @@ export function setStickyColumns(grid: PblNgridComponent<any>, type: 'start' | '
   }
 }
 
-@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[stickyColumnStart], pbl-ngrid[stickyColumnEnd], pbl-ngrid[stickyHeader], pbl-ngrid[stickyFooter]' })
 export class PblNgridStickyPluginDirective implements OnDestroy {
   /**

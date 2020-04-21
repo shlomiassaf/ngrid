@@ -33,12 +33,11 @@ import {
   DragRefConfig,
 } from '@angular/cdk/drag-drop';
 
-import { PblNgridComponent, NgridPlugin, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
+import { PblNgridComponent, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
 import { PblDragDrop } from '../core/drag-drop';
 import { CdkLazyDropList, CdkLazyDrag } from '../core/lazy-drag-drop';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblDragRef } from '../core/drag-ref';
-import { extendGrid } from './extend-grid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -46,11 +45,10 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
-export const PLUGIN_KEY: 'columnReorder' = 'columnReorder';
+export const COL_REORDER_PLUGIN_KEY: 'columnReorder' = 'columnReorder';
 
 let _uniqueIdCounter = 0;
 
-@NgridPlugin({ id: PLUGIN_KEY, runOnce: extendGrid })
 @Directive({
   selector: 'pbl-ngrid[columnReorder]',
   exportAs: 'pblNgridColumnReorder',
@@ -111,7 +109,7 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
               @Optional() dir?: Directionality,
               @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>) {
     super(element, dragDrop, changeDetectorRef, dir, group);
-    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
+    this._removePlugin = pluginCtrl.setPlugin(COL_REORDER_PLUGIN_KEY, this);
 
     this.directContainerElement = '.pbl-ngrid-header-row-main';
     this.dropped.subscribe( (event: CdkDragDrop<T, any>) => {
@@ -263,7 +261,7 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
     this._context = value;
     this.column = value && value.col;
     const pluginCtrl = this.pluginCtrl = value && PblNgridPluginController.find(value.grid);
-    const plugin = pluginCtrl && pluginCtrl.getPlugin(PLUGIN_KEY);
+    const plugin = pluginCtrl && pluginCtrl.getPlugin(COL_REORDER_PLUGIN_KEY);
     this.cdkDropList = plugin || undefined;
     this.disabled = this.column && this.column.reorder ? false : true;
   }

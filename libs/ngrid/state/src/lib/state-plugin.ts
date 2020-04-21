@@ -2,9 +2,8 @@ import { Subject, Observable, from } from 'rxjs';
 import { map, mapTo, filter, take, skip, debounceTime } from 'rxjs/operators';
 import { Directive, OnDestroy, Injector, Input } from '@angular/core';
 
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 import { hasState, saveState, loadState, PblNgridStateLoadOptions, PblNgridStateSaveOptions } from './core/index';
-import { registerBuiltInHandlers } from './core/built-in-handlers/_register';
 
 import { userSessionPref } from './presets';
 
@@ -41,7 +40,6 @@ interface InternalStatePluginEvents {
 
 export const PLUGIN_KEY: 'state' = 'state';
 
-@NgridPlugin({ id: PLUGIN_KEY, factory: 'create', runOnce: registerBuiltInHandlers })
 export class PblNgridStatePlugin {
 
   loadOptions?: PblNgridStateLoadOptions;

@@ -2,7 +2,7 @@ import { Observable, isObservable } from 'rxjs';
 import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin, utils } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, utils } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -10,9 +10,8 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
-const PLUGIN_KEY: 'blockUi' = 'blockUi';
+export const PLUGIN_KEY: 'blockUi' = 'blockUi';
 
-@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[blockUi]', exportAs: 'blockUi' })
 export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
 

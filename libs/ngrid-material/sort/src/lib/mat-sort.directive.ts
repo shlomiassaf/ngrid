@@ -1,16 +1,15 @@
 import { Directive, OnDestroy } from '@angular/core';
 import { Sort, MatSort, MatSortHeader, SortDirection } from '@angular/material/sort';
 
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin, PblNgridSortDefinition, PblDataSource, utils } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblNgridSortDefinition, PblDataSource, utils } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
     matSort?: PblNgridMatSortDirective;
   }
 }
-const PLUGIN_KEY: 'matSort' = 'matSort';
+export const PLUGIN_KEY: 'matSort' = 'matSort';
 
-@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[matSort]', exportAs: 'pblMatSort' })
 export class PblNgridMatSortDirective implements OnDestroy {
   private _removePlugin: (table: PblNgridComponent<any>) => void;

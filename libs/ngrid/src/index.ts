@@ -65,7 +65,7 @@ export {
  } from './lib/ext/types';
 
 export { EXT_API_TOKEN, PblNgridExtensionApi } from './lib/ext/grid-ext-api';
-export { NgridPlugin, NgridPluginMetadata } from './lib/ext/grid-plugin';
+export { ngridPlugin, NgridPluginMetadata } from './lib/ext/grid-plugin';
 export { PblNgridPluginController } from './lib/ext/plugin-control';
 
 export const utils = {

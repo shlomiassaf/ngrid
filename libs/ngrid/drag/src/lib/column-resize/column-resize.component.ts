@@ -19,9 +19,8 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DragRefConfig, DragDropRegistry, CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
 
-import { PblNgridComponent, PblColumn, PblNgridMetaCellContext, NgridPlugin, isPblColumn } from '@pebula/ngrid';
+import { PblNgridComponent, PblColumn, PblNgridMetaCellContext, isPblColumn } from '@pebula/ngrid';
 import { toggleNativeDragInteractions } from './cdk-encapsulated-code';
-import { extendGrid } from './extend-grid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -29,7 +28,7 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
-export const PLUGIN_KEY: 'columnResize' = 'columnResize';
+export const COL_RESIZE_PLUGIN_KEY: 'columnResize' = 'columnResize';
 
 /** Options that can be used to bind a passive event listener. */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: true});
@@ -37,7 +36,6 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: tr
 /** Options that can be used to bind an active event listener. */
 const activeEventListenerOptions = normalizePassiveListenerOptions({passive: false});
 
-@NgridPlugin({ id: PLUGIN_KEY, runOnce: extendGrid })
 @Component({
   selector: 'pbl-ngrid-drag-resize', // tslint:disable-line:component-selector
   host: { // tslint:disable-line:use-host-property-decorator

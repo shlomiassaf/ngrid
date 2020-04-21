@@ -5,7 +5,7 @@ import { Directive, Injector, OnDestroy, Input } from '@angular/core';
 // TODO: remove internal implementation in the next version of cdk-experimental (right after 8.1.3)
 import { Clipboard } from './clipboard.service';
 
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin, PblNgridConfigService, utils } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblNgridConfigService, utils } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -41,7 +41,6 @@ const DEFAULT_ROW_SEP = '\n';
 
 export const PLUGIN_KEY: 'clipboard' = 'clipboard';
 
-@NgridPlugin({ id: PLUGIN_KEY, factory: 'create' })
 @Directive({ selector: 'pbl-ngrid[clipboard]', exportAs: 'pblNgridClipboard' })
 export class PblNgridClipboardPlugin implements OnDestroy {
 

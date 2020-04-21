@@ -59,7 +59,7 @@ function checkGroupLockConstraint(this: PblColumn, column: PblColumn): boolean {
   return true;
 }
 
-export function extendGrid(): void {
+export function colReorderExtendGrid(): void {
   PblColumn.extendProperty('reorder');
   PblColumn.extendProperty('wontBudge');
   PblColumnGroup.extendProperty('lockColumns');
