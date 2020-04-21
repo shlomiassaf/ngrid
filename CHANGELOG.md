@@ -1,3 +1,17 @@
+# 2.0.0-rc.2 (2020-04-21)
+
+
+### Refactor
+
+* **ngrid:** remove UnRx as decorator (fixes [#92](https://github.com/shlomiassaf/ngrid/issues/92)) ([733cf71](https://github.com/shlomiassaf/ngrid/commit/733cf71))
+* **ngrid:** dont use decorators for NgridPlugin (fixes [#92](https://github.com/shlomiassaf/ngrid/issues/92)) ([703b4b3](https://github.com/shlomiassaf/ngrid/commit/703b4b3))
+
+### BREAKING CHANGES
+
+* **ngrid:** If you created a custom plugin which required registration, registration is not longer supported using decorators. Instead, register using the ngridPlugin method.
+
+
+
 # 2.0.0-rc.1 (2020-03-15)
 
 
