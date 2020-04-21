@@ -13,6 +13,6 @@ declare module '@pebula/ngrid/lib/grid/columns/types' {
   }
 }
 
-export function extendGrid(): void {
+export function colResizeExtendGrid(): void {
   PblColumn.extendProperty('resize');
 }

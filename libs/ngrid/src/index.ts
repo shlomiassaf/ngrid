@@ -1,4 +1,4 @@
-import { isPblColumn, isPblMetaColumn, isPblColumnGroup } from './lib/grid/index';
+import { isPblColumn, isPblMetaColumn, isPblColumnGroup, unrx } from './lib/grid/index';
 
 export {
   PblNgridPaginatorKind,
@@ -65,13 +65,14 @@ export {
  } from './lib/ext/types';
 
 export { EXT_API_TOKEN, PblNgridExtensionApi } from './lib/ext/grid-ext-api';
-export { NgridPlugin, NgridPluginMetadata } from './lib/ext/grid-plugin';
+export { ngridPlugin, NgridPluginMetadata } from './lib/ext/grid-plugin';
 export { PblNgridPluginController } from './lib/ext/plugin-control';
 
 export const utils = {
   isPblColumn,
   isPblMetaColumn,
   isPblColumnGroup,
+  unrx,
 };
 
 export { PblNgridModule, provideCommon } from './lib/ngrid.module';

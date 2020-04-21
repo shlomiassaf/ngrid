@@ -35,7 +35,7 @@ For full documentation, walkthroughs and examples - [visit the official site](ht
 ## Setup
 
 ```bash
-yarn add @pebula/utils @pebula/ngrid @pebula/ngrid-material
+yarn add @pebula/ngrid @pebula/ngrid-material
 ```
 
 > Packages include secondary packages / plugins (e.g: `@pebula/ngrid/detail-row`)

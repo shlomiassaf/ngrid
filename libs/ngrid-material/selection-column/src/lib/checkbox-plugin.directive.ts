@@ -1,8 +1,7 @@
 import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
 import { PblNgridCheckboxComponent } from './table-checkbox.component';
 
@@ -12,11 +11,9 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
-const PLUGIN_KEY: 'matCheckboxSelection' = 'matCheckboxSelection';
+export const PLUGIN_KEY: 'matCheckboxSelection' = 'matCheckboxSelection';
 
-@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[matCheckboxSelection]' })
-@UnRx()
 export class PblNgridMatCheckboxSelectionDirective implements OnDestroy {
 
   @Input() get isCheckboxDisabled() { return this._isCheckboxDisabled; }

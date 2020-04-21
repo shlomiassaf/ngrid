@@ -27,8 +27,7 @@ import {
   CdkScrollable,
 } from '@angular/cdk/scrolling';
 
-import { UnRx } from '@pebula/utils';
-
+import { unrx } from '../../utils';
 import { PblNgridPluginController } from '../../../ext/plugin-control';
 import { PblNgridConfigService } from '../../services/config';
 import { PblNgridComponent } from '../../ngrid.component';
@@ -68,7 +67,6 @@ function resolveScrollStrategy(config: PblNgridConfigService, scrollStrategy?: V
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-@UnRx()
 export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewport implements OnInit, AfterViewInit, OnDestroy {
 
   get isScrolling(): boolean { return this._isScrolling; }
@@ -202,7 +200,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     if (config.has('virtualScroll')) {
       this.wheelModeDefault = config.get('virtualScroll').wheelMode;
     }
-    config.onUpdate('virtualScroll').pipe(UnRx(this)).subscribe( change => this.wheelModeDefault = change.curr.wheelMode);
+    config.onUpdate('virtualScroll').pipe(unrx(this)).subscribe( change => this.wheelModeDefault = change.curr.wheelMode);
 
     if (pblScrollStrategy instanceof PblCdkVirtualScrollDirective) {
       this.enabled = pblScrollStrategy.type !== 'vScrollNone';
@@ -236,7 +234,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     }
 
     this.scrolling
-      .pipe(UnRx(this))
+      .pipe(unrx(this))
       .subscribe( isScrolling => {
         this._isScrolling = !!isScrolling;
         if (isScrolling) {
@@ -250,6 +248,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   ngOnDestroy(): void {
     super.ngOnDestroy();
     this.offsetChange$.complete();
+    unrx.kill(this);
   }
 
   setTotalContentSize(size: number) {

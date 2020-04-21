@@ -1,11 +1,11 @@
 {
   "name": "pebula",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0-rc.2",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build-grid": "ng build utils --prod && ng build ngrid --prod && ng build ngrid-material --prod",
+    "build-grid": "ng build ngrid --prod && ng build ngrid-material --prod",
     "test": "ng test",
     "lint": "./node_modules/.bin/nx workspace-lint && ng lint",
     "e2e": "ng e2e",

@@ -24,7 +24,7 @@ import {
   CDK_DRAG_CONFIG, DragRefConfig, CdkDragDrop, CdkDragStart
 } from '@angular/cdk/drag-drop';
 
-import { PblNgridComponent, NgridPlugin, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
 import { CdkLazyDropList, CdkLazyDrag } from '../core/lazy-drag-drop';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblDragRef } from '../core/drag-ref';
@@ -36,11 +36,10 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
-const PLUGIN_KEY: 'rowReorder' = 'rowReorder';
+export const ROW_REORDER_PLUGIN_KEY: 'rowReorder' = 'rowReorder';
 
 let _uniqueIdCounter = 0;
 
-@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({
   selector: 'pbl-ngrid[rowReorder]',
   exportAs: 'pblNgridRowReorder',
@@ -83,7 +82,7 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
               @Optional() dir?: Directionality,
               @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>) {
     super(element, dragDrop, changeDetectorRef, dir, group);
-    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
+    this._removePlugin = pluginCtrl.setPlugin(ROW_REORDER_PLUGIN_KEY, this);
 
     this.dropped.subscribe( (event: CdkDragDrop<T>) => {
       const item = event.item as PblNgridRowDragDirective<T>;
@@ -143,7 +142,7 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
     this._context = value;
 
     const pluginCtrl = this.pluginCtrl = value && PblNgridPluginController.find(value.grid);
-    const plugin = pluginCtrl && pluginCtrl.getPlugin(PLUGIN_KEY);
+    const plugin = pluginCtrl && pluginCtrl.getPlugin(ROW_REORDER_PLUGIN_KEY);
     this.cdkDropList = plugin || undefined;
   }
 

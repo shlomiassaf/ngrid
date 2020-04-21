@@ -1,3 +1,4 @@
+import { Type } from '@angular/core';
 import { PblNgridPluginExtension, PblNgridPluginExtensionFactories } from './types';
 
 /** @internal */
@@ -12,11 +13,10 @@ export interface NgridPluginMetadata<P extends keyof PblNgridPluginExtension = k
   runOnce?: () => void;
 }
 
-export function NgridPlugin(metadata: NgridPluginMetadata) {
+export function ngridPlugin(metadata: NgridPluginMetadata, target: Type<any>) {
   if (metadata.runOnce) {
     metadata.runOnce();
   }
-  return target => {
-    PLUGIN_STORE.set(metadata.id, { ...metadata, target });
-  }
+  PLUGIN_STORE.set(metadata.id, { ...metadata, target });
+  return metadata.id;
 }

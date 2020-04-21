@@ -1,7 +1,6 @@
 import { Observable, isObservable, of as obsOf, from as obsFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { UnRx } from '@pebula/utils';
 import {
   PblNgridColumnDefinitionSet,
   PblNgridComponent,
@@ -9,6 +8,7 @@ import {
   PblDataSource,
   PblColumn,
   PblDataSourceTriggerChangedEvent,
+  utils,
 } from '@pebula/ngrid';
 
 export const LOCAL_COLUMN_DEF = Symbol('LOCAL_COLUMN_DEF');
@@ -38,7 +38,7 @@ export class TransposeTableSession {
   destroy(updateTable: boolean): void {
     if (!this.destroyed) {
       this.destroyed = true;
-      UnRx.kill(this, this.grid);
+      utils.unrx.kill(this, this.grid);
 
       this.grid.showHeader = this.headerRow;
       this.grid.columns = this.columnsInput;
@@ -53,11 +53,11 @@ export class TransposeTableSession {
     this.headerRow = this.grid.showHeader;
     this.grid.showHeader = false;
     this.pluginCtrl.events
-      .pipe(UnRx(this, this.grid))
+      .pipe(utils.unrx(this, this.grid))
       .subscribe( e => e.kind === 'onInvalidateHeaders' && this.onInvalidateHeaders() );
 
     this.pluginCtrl.events
-      .pipe(UnRx(this, this.grid))
+      .pipe(utils.unrx(this, this.grid))
       .subscribe( e => e.kind === 'onDataSource' && this.onDataSource(e.curr) );
   }
 

@@ -16,8 +16,7 @@ import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Platform} from '@angular/cdk/platform';
 import { TooltipPosition, MatTooltipDefaultOptions, MatTooltip, MAT_TOOLTIP_SCROLL_STRATEGY, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin, PblNgridConfigService } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblNgridConfigService, utils } from '@pebula/ngrid';
 import { PblNgridCellEvent } from '@pebula/ngrid/target-events';
 
 declare module '@pebula/ngrid/lib/grid/services/config' {
@@ -38,7 +37,7 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
-const PLUGIN_KEY: 'cellTooltip' = 'cellTooltip';
+export const PLUGIN_KEY: 'cellTooltip' = 'cellTooltip';
 
 const DEFAULT_OPTIONS: CellTooltipOptions = {
   canShow: (event: PblNgridCellEvent<any>): boolean => {
@@ -55,9 +54,7 @@ export interface CellTooltipOptions {
   message?: (event: PblNgridCellEvent<any>) => string;
 }
 
-@NgridPlugin({ id: PLUGIN_KEY, factory: 'create' })
 @Directive({ selector: '[cellTooltip]', exportAs: 'pblOverflowTooltip' })
-@UnRx()
 export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDestroy {
   static readonly PLUGIN_KEY: 'cellTooltip' = PLUGIN_KEY;
 
@@ -110,7 +107,7 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     ];
 
     configService.onUpdate('cellTooltip')
-      .pipe(UnRx(this))
+      .pipe(utils.unrx(this))
       .subscribe( cfg => this.lastConfig = cfg.curr );
 
     if (table.isInit) {
@@ -134,6 +131,7 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
   ngOnDestroy(): void {
     this._removePlugin(this.table);
     this.killTooltip();
+    utils.unrx.kill(this);
   }
 
   private init(pluginCtrl: PblNgridPluginController): void {
@@ -141,11 +139,11 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     // if it's not set, create it.
     const targetEventsPlugin = pluginCtrl.getPlugin('targetEvents') || pluginCtrl.createPlugin('targetEvents');
     targetEventsPlugin.cellEnter
-      .pipe(UnRx(this))
+      .pipe(utils.unrx(this))
       .subscribe( event => this.cellEnter(event) );
 
     targetEventsPlugin.cellLeave
-      .pipe(UnRx(this))
+      .pipe(utils.unrx(this))
       .subscribe( event => this.cellLeave(event) );
   }
 

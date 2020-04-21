@@ -1,14 +1,14 @@
-import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ThemePalette } from '@angular/material/core';
 
-import { UnRx } from '@pebula/utils';
 import {
   PblNgridComponent,
   PblNgridHeaderCellDefDirective,
   PblNgridCellDefDirective,
   PblNgridFooterCellDefDirective,
   PblNgridPluginController,
+  utils,
 } from '@pebula/ngrid';
 
 const ALWAYS_FALSE_FN = () => false;
@@ -20,8 +20,7 @@ const ALWAYS_FALSE_FN = () => false;
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-@UnRx()
-export class PblNgridCheckboxComponent implements AfterViewInit {
+export class PblNgridCheckboxComponent implements AfterViewInit, OnDestroy {
   /**
    * Unique name for the checkbox column.
    * When not set, the name 'checkbox' is used.
@@ -96,7 +95,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
   constructor(public table: PblNgridComponent<any>, private cdr: ChangeDetectorRef) {
     const pluginCtrl = PblNgridPluginController.find(table);
     pluginCtrl.events
-      .pipe(UnRx(this))
+      .pipe(utils.unrx(this))
       .subscribe( e => {
         if (e.kind === 'onDataSource') {
           this.selection = e.curr.selection;
@@ -113,6 +112,10 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
     registry.addMulti('headerCell', this.headerDef);
     registry.addMulti('tableCell', this.cellDef);
     registry.addMulti('footerCell', this.footerDef);
+  }
+
+  ngOnDestroy(): void {
+    utils.unrx.kill(this);
   }
 
   masterToggle(): void {
@@ -136,11 +139,11 @@ export class PblNgridCheckboxComponent implements AfterViewInit {
   }
 
   private setupSelection(): void {
-    UnRx.kill(this, this.table);
+    utils.unrx.kill(this, this.table);
     if (this._selection) {
       this.length = this.selection.selected.length;
       this.selection.changed
-        .pipe(UnRx(this, this.table))
+        .pipe(utils.unrx(this, this.table))
         .subscribe( () => {
           const { length } = this.getCollection().filter(data => !this._isCheckboxDisabled(data));
           this.allSelected = !this.selection.isEmpty() && this.selection.selected.length === length;

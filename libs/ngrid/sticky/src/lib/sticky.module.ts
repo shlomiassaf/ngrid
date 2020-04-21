@@ -3,8 +3,8 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
-import { PblNgridModule, PblNgridPluginController, PblNgridConfigService } from '@pebula/ngrid';
-import { PblNgridStickyPluginDirective, setStickyRow, setStickyColumns } from './sticky/sticky-plugin';
+import { PblNgridModule, PblNgridPluginController, PblNgridConfigService, ngridPlugin } from '@pebula/ngrid';
+import { PblNgridStickyPluginDirective, setStickyRow, setStickyColumns, PLUGIN_KEY } from './sticky/sticky-plugin';
 
 declare module '@pebula/ngrid/lib/grid/services/config' {
   interface PblNgridConfig {
@@ -25,6 +25,9 @@ const MAPPER = <T>(v: T): [T, boolean] => [v, true];
   exports: [ PblNgridStickyPluginDirective ],
 })
 export class PblNgridStickyModule {
+
+  static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY }, PblNgridStickyPluginDirective);
+
   constructor(@Optional() @SkipSelf() parentModule: PblNgridStickyModule,
               configService: PblNgridConfigService) {
     if (parentModule) {

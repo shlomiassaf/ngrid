@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { PblNgridModule, PblNgridPluginController, PblNgridConfigService } from '@pebula/ngrid';
+import { PblNgridModule, PblNgridPluginController, PblNgridConfigService, ngridPlugin } from '@pebula/ngrid';
 import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 
-import { PblNgridCellTooltipDirective } from './cell-tooltip.directive';
+import { PblNgridCellTooltipDirective, PLUGIN_KEY } from './cell-tooltip.directive';
 
 @NgModule({
   imports: [ CommonModule, MatTooltipModule, OverlayModule, PblNgridModule, PblNgridTargetEventsModule ],
@@ -14,6 +14,8 @@ import { PblNgridCellTooltipDirective } from './cell-tooltip.directive';
   exports: [ PblNgridCellTooltipDirective, MatTooltipModule ],
 })
 export class PblNgridCellTooltipModule {
+  static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY, factory: 'create' }, PblNgridCellTooltipDirective);
+
   constructor(@Optional() @SkipSelf() parentModule: PblNgridCellTooltipModule,
               configService: PblNgridConfigService) {
     if (parentModule) {

@@ -4,13 +4,13 @@ import {
   Component,
   Input,
   Optional,
-  ViewEncapsulation
+  ViewEncapsulation,
+  OnDestroy,
 } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
-import { UnRx } from '@pebula/utils';
-import { PblPagingPaginator, PblPaginatorChangeEvent, PblNgridComponent } from '@pebula/ngrid';
+import { PblPagingPaginator, PblPaginatorChangeEvent, PblNgridComponent, utils } from '@pebula/ngrid';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
 
@@ -24,8 +24,7 @@ const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-@UnRx()
-export class PblPaginatorComponent {
+export class PblPaginatorComponent implements OnDestroy {
   pages: number[] = [];
   pageSizes: number[] = DEFAULT_PAGE_SIZE_OPTIONS.slice();
 
@@ -42,13 +41,13 @@ export class PblPaginatorComponent {
       return;
     }
     if (this._paginator) {
-      UnRx.kill(this, this._paginator);
+      utils.unrx.kill(this, this._paginator);
     }
     this._paginator = value;
     if (value) {
       // pagination.onChange is BehaviorSubject so handlePageChange will trigger
       value.onChange
-        .pipe(UnRx(this, value))
+        .pipe(utils.unrx(this, value))
         .subscribe( event => this.handlePageChange(event) );
       this.updatePageSizes();
     }
@@ -74,8 +73,12 @@ export class PblPaginatorComponent {
       this.table = table;
     }
     _intl.changes
-      .pipe(UnRx(this))
+      .pipe(utils.unrx(this))
       .subscribe(() => this.cdr.markForCheck());
+  }
+
+  ngOnDestroy(): void {
+    utils.unrx.kill(this);
   }
 
   private updatePageSizes(): void {

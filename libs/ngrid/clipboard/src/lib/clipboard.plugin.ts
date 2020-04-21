@@ -5,8 +5,7 @@ import { Directive, Injector, OnDestroy, Input } from '@angular/core';
 // TODO: remove internal implementation in the next version of cdk-experimental (right after 8.1.3)
 import { Clipboard } from './clipboard.service';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin, PblNgridConfigService } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblNgridConfigService, utils } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -42,9 +41,7 @@ const DEFAULT_ROW_SEP = '\n';
 
 export const PLUGIN_KEY: 'clipboard' = 'clipboard';
 
-@NgridPlugin({ id: PLUGIN_KEY, factory: 'create' })
 @Directive({ selector: 'pbl-ngrid[clipboard]', exportAs: 'pblNgridClipboard' })
-@UnRx()
 export class PblNgridClipboardPlugin implements OnDestroy {
 
   static create(grid: PblNgridComponent, injector: Injector): PblNgridClipboardPlugin {
@@ -77,6 +74,7 @@ export class PblNgridClipboardPlugin implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    utils.unrx.kill(this);
     this._removePlugin(this.grid);
   }
 
@@ -159,7 +157,7 @@ export class PblNgridClipboardPlugin implements OnDestroy {
     targetEvents.keyDown
       .pipe(
         filter( event => this.isCopyEvent(event.source) ),
-        UnRx(this)
+        utils.unrx(this)
       )
       .subscribe( event => this.doCopy() );
   }

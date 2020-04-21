@@ -2,8 +2,8 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
-import { PblNgridModule, PblNgridPluginController, PblNgridConfigService } from '@pebula/ngrid';
-import { PblNgridTargetEventsPluginDirective, PLUGIN_KEY } from './target-events/target-events-plugin';
+import { PblNgridModule, PblNgridPluginController, PblNgridConfigService, ngridPlugin } from '@pebula/ngrid';
+import { PblNgridTargetEventsPlugin, PblNgridTargetEventsPluginDirective, PLUGIN_KEY, runOnce } from './target-events/target-events-plugin';
 import { PblNgridCellEditDirective } from './target-events/cell-edit.directive';
 
 @NgModule({
@@ -12,6 +12,9 @@ import { PblNgridCellEditDirective } from './target-events/cell-edit.directive';
   exports: [ PblNgridTargetEventsPluginDirective, PblNgridCellEditDirective  ]
 })
 export class PblNgridTargetEventsModule {
+
+  static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY, factory: 'create', runOnce }, PblNgridTargetEventsPlugin );
+
   constructor(@Optional() @SkipSelf() parentModule: PblNgridTargetEventsModule,
               configService: PblNgridConfigService) {
 

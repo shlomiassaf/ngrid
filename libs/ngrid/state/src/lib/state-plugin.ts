@@ -2,10 +2,8 @@ import { Subject, Observable, from } from 'rxjs';
 import { map, mapTo, filter, take, skip, debounceTime } from 'rxjs/operators';
 import { Directive, OnDestroy, Injector, Input } from '@angular/core';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 import { hasState, saveState, loadState, PblNgridStateLoadOptions, PblNgridStateSaveOptions } from './core/index';
-import { registerBuiltInHandlers } from './core/built-in-handlers/_register';
 
 import { userSessionPref } from './presets';
 
@@ -42,8 +40,6 @@ interface InternalStatePluginEvents {
 
 export const PLUGIN_KEY: 'state' = 'state';
 
-@NgridPlugin({ id: PLUGIN_KEY, factory: 'create', runOnce: registerBuiltInHandlers })
-@UnRx()
 export class PblNgridStatePlugin {
 
   loadOptions?: PblNgridStateLoadOptions;
@@ -127,7 +123,6 @@ export class PblNgridStatePlugin {
   selector: 'pbl-ngrid[persistState]', // tslint:disable-line:directive-selector
   outputs: ['afterLoadState', 'afterSaveState', 'onError'],
 })
-@UnRx()
 export class PblNgridStatePluginDirective extends PblNgridStatePlugin implements OnDestroy {
 
   @Input() loadOptions: PblNgridStateLoadOptions = { include: userSessionPref() };

@@ -12,8 +12,7 @@ import {
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN } from '@pebula/ngrid';
+import { PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN, utils } from '@pebula/ngrid';
 
 import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY } from './detail-row-plugin';
 
@@ -34,7 +33,6 @@ import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY 
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-@UnRx()
 export class PblNgridDetailRowComponent extends PblNgridRowComponent implements OnInit, OnDestroy {
 
   get expended(): boolean {
@@ -59,7 +57,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     this.plugin.addDetailRow(this);
     const tradeEvents = controller.getPlugin('targetEvents');
     tradeEvents.cellClick
-      .pipe(UnRx(this))
+      .pipe(utils.unrx(this))
       .subscribe( event => {
         if (event.type === 'data' && event.row === this.context.$implicit) {
           const { excludeToggleFrom } = this.plugin;
@@ -70,7 +68,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
       });
 
     tradeEvents.rowClick
-      .pipe(UnRx(this))
+      .pipe(utils.unrx(this))
       .subscribe( event => {
         if (!event.root && event.type === 'data' && event.row === this.context.$implicit) {
           this.toggle();
@@ -79,6 +77,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   }
 
   ngOnDestroy(): void {
+    utils.unrx.kill(this);
     this.plugin.removeDetailRow(this);
   }
 
