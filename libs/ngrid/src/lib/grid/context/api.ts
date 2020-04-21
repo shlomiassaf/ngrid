@@ -4,7 +4,6 @@ import { debounceTime, buffer, map, filter } from 'rxjs/operators';
 import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
 import { RowContext } from '@angular/cdk/table';
 
-import { removeFromArray } from '@pebula/utils';
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
 import {
   RowContextState,
@@ -18,7 +17,8 @@ import {
 } from './types';
 import { PblColumn } from '../columns/column';
 import { ColumnApi } from '../column-api';
-import { findCellRenderedIndex, findRowRenderedIndex, resolveCellReference } from './utils';
+import { removeFromArray } from '../utils';
+import { findRowRenderedIndex, resolveCellReference } from './utils';
 import { PblRowContext } from './row';
 import { PblCellContext } from './cell';
 
