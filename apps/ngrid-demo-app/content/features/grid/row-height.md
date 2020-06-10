@@ -6,7 +6,7 @@ ordinal: 2
 ---
 # Row Height
 
-By default the row height is not limited, there is a minimum row height set via CSS (`mix-height`).
+By default the row height is not limited, there is a minimum row height set via CSS (`min-height`).
 
 i> The minimum limit for a row size can be changed via CSS overrides. The default is 48px
 
