@@ -173,11 +173,11 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   }
 
   addDetailRow(detailRow: PblNgridDetailRowComponent): void {
-    this._detailRowRows.set(detailRow.row, detailRow);
+    this._detailRowRows.set(detailRow.context, detailRow);
   }
 
   removeDetailRow(detailRow: PblNgridDetailRowComponent): void {
-    this._detailRowRows.delete(detailRow.row);
+    this._detailRowRows.delete(detailRow.context);
   }
 
   toggleDetailRow(row: any, forceState?: boolean): boolean | void {

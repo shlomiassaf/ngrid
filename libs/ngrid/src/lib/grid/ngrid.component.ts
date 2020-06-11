@@ -199,6 +199,9 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this._hideColumns = value;
     this._hideColumnsDirty = true;
   }
+  get hideColumns() {
+    return this._hideColumns;
+  }
 
   /**
    * A fallback height for "the inner scroll container".
