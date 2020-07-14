@@ -172,6 +172,7 @@
             "project": "libs/ngrid/ng-package.json",
             "tasks": {
               "config": "tools/ng-packagr.transformers/ngrid.transformers.ts",
+              "tsConfig": "tools/tsconfig.json",
               "data": {
                 "copyFile": {
                   "assets": [
@@ -253,6 +254,7 @@
             "project": "libs/ngrid-material/ng-package.json",
             "tasks": {
               "config": "tools/ng-packagr.transformers/ngrid-material.transformers.ts",
+              "tsConfig": "tools/tsconfig.json",
               "data": {
                 "copyFile": {
                   "assets": [
