@@ -35,7 +35,12 @@
                 "input": "node_modules/document-register-element/build/document-register-element.js"
               }
             ],
-            "webWorkerTsConfig": "apps/ngrid-demo-app/tsconfig.worker.json"
+            "webWorkerTsConfig": "apps/ngrid-demo-app/tsconfig.worker.json",
+            "allowedCommonJsDependencies": [
+              "country-data",
+              "currency-symbol-map",
+              "faker"
+            ]
           },
           "configurations": {
             "production": {
@@ -167,6 +172,7 @@
             "project": "libs/ngrid/ng-package.json",
             "tasks": {
               "config": "tools/ng-packagr.transformers/ngrid.transformers.ts",
+              "tsConfig": "tools/tsconfig.json",
               "data": {
                 "copyFile": {
                   "assets": [
@@ -248,6 +254,7 @@
             "project": "libs/ngrid-material/ng-package.json",
             "tasks": {
               "config": "tools/ng-packagr.transformers/ngrid-material.transformers.ts",
+              "tsConfig": "tools/tsconfig.json",
               "data": {
                 "copyFile": {
                   "assets": [
@@ -309,7 +316,6 @@
   },
   "cli": {
     "warnings": {
-      "typescriptMismatch": false,
       "versionMismatch": false
     },
     "defaultCollection": "@nrwl/angular"

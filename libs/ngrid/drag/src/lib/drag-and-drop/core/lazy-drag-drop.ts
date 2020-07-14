@@ -31,10 +31,7 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   // tslint:disable-next-line:no-input-rename
   @Input('cdkDropListDirectContainerElement') directContainerElement: string;
 
-  _draggables: QueryList<CdkDrag>;
-
   /* private */ originalElement: ElementRef<HTMLElement>;
-  /* private */ _draggablesSet = new Set<CdkDrag>();
 
   ngOnInit(): void {
     if (this.pblDropListRef instanceof PblDropListRef === false) {
@@ -44,18 +41,11 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   }
 
   addDrag(drag: CdkDrag): void {
-    this._draggablesSet.add(drag);
-    this._draggables.reset(Array.from(this._draggablesSet.values()));
-    this._draggables.notifyOnChanges(); // TODO: notify with asap schedular and obs$
+    this.addItem(drag);
   }
 
-  removeDrag(drag: CdkDrag): boolean {
-    const result = this._draggablesSet.delete(drag);
-    if (result) {
-      this._draggables.reset(Array.from(this._draggablesSet.values()));
-      this._draggables.notifyOnChanges(); // TODO: notify with asap schedular and obs$
-    }
-    return result;
+  removeDrag(drag: CdkDrag): void {
+    this.removeItem(drag);
   }
 
   /* protected */ beforeStarted(): void {

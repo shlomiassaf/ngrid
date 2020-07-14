@@ -15,7 +15,6 @@ import {
   OnInit,
   ViewContainerRef,
   NgZone,
-  QueryList,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
@@ -30,7 +29,7 @@ import {
   CdkDropListGroup,
   CdkDropList,
   CDK_DRAG_CONFIG,
-  DragRefConfig,
+  DragDropConfig,
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
@@ -84,8 +83,6 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
   set manualOverride(value: boolean) { this._manualOverride = coerceBooleanProperty(value); }
 
   @Output('cdkDropDragging') dragging: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-  _draggables: QueryList<CdkDrag>;
 
   private _columnReorder = false;
   private _manualOverride = false;
@@ -141,10 +138,9 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
   directContainerElement: string;
   get pblDropListRef(): PblDropListRef<PblNgridColumnReorderPluginDirective<T>> { return this._dropListRef as any; }
   originalElement: ElementRef<HTMLElement>;
-  _draggablesSet = new Set<CdkDrag>();
   // ngOnInit(): void { CdkLazyDropList.prototype.ngOnInit.call(this); }
   addDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.addDrag.call(this, drag); }
-  removeDrag(drag: CdkDrag): boolean { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
+  removeDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
   // beforeStarted(): void { CdkLazyDropList.prototype.beforeStarted.call(this); }
   /* CdkLazyDropList end */
 
@@ -277,7 +273,7 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
               @Inject(DOCUMENT) _document: any,
               _ngZone: NgZone,
               _viewContainerRef: ViewContainerRef,
-              @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
+              @Optional() @Inject(CDK_DRAG_CONFIG) config: DragDropConfig,
               _dir: Directionality,
               dragDrop: DragDrop,
               _changeDetectorRef: ChangeDetectorRef) {

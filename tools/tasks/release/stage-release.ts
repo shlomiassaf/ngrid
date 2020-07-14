@@ -1,4 +1,4 @@
-import * as OctokitApi from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 import {bold, cyan, green, italic, red, yellow} from 'chalk';
 import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
@@ -46,7 +46,7 @@ class StageReleaseTask extends BaseReleaseTask {
   git: GitClient;
 
   /** Octokit API instance that can be used to make Github API calls. */
-  githubApi: OctokitApi;
+  githubApi: Octokit;
 
   packagesDir: string;
   packages: string[];
@@ -72,7 +72,7 @@ class StageReleaseTask extends BaseReleaseTask {
       process.exit(1);
     }
 
-    this.githubApi = new OctokitApi();
+    this.githubApi = new Octokit();
   }
 
   async run() {
