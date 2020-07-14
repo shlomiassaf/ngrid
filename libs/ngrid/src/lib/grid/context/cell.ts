@@ -10,9 +10,6 @@ export class MetaCellContext<T = any, TCol extends PblMetaColumn | PblColumn = P
   grid: PblNgridComponent<any>;
   get $implicit(): MetaCellContext<T, TCol> { return this; }
 
-  /** @deprecated use grid instead */
-  get table(): PblNgridComponent<T> { return this.grid };
-
   protected constructor() {}
 
   // workaround, we need a parameter-less constructor since @ngtools/webpack@8.0.4
@@ -41,9 +38,6 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
 
   readonly grid: PblNgridComponent<any>;
   readonly index: number;
-
-  /** @deprecated use grid instead */
-  get table(): PblNgridComponent<any> { return this.grid; }
 
   private _editing = false;
   private _focused = false;

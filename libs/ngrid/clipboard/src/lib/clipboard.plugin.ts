@@ -1,9 +1,7 @@
 import { filter } from 'rxjs/operators';
 import { Directive, Injector, OnDestroy, Input } from '@angular/core';
 
-// import { Clipboard } from '@angular/cdk-experimental/clipboard';
-// TODO: remove internal implementation in the next version of cdk-experimental (right after 8.1.3)
-import { Clipboard } from './clipboard.service';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 import { PblNgridComponent, PblNgridPluginController, PblNgridConfigService, utils } from '@pebula/ngrid';
 

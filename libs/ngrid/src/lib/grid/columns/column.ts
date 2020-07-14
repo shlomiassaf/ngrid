@@ -112,11 +112,6 @@ export class PblColumn implements PblColumnDefinition {
 
   pin: 'start' | 'end' | undefined;
 
-  // TODO(1.0.0): remove
-  /** @deprecated BREAKING CHANGE 1.0.0 - Use `alias` instead. */
-  get sortAlias(): string | undefined { return this.alias; }
-  set sortAlias(value: string) { this.alias = value; }
-
   /**
    * An alias used to identify the column.
    * Useful when the server provides sort/filter metadata that does not have a 1:1 match with the column names.

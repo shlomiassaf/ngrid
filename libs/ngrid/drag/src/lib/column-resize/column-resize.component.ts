@@ -69,8 +69,6 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
   @Input() grabAreaWidth = 6;
 
   column: PblColumn;
-  /** @deprecated use grid instead */
-  get table(): PblNgridComponent<any> { return this.grid; }
   grid: PblNgridComponent<any>;
 
   _hasStartedDragging: boolean;

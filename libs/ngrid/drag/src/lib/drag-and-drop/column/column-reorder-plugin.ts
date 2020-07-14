@@ -7,16 +7,12 @@ import {
   Directive,
   ElementRef,
   Input,
-  Inject,
   SkipSelf,
   Output,
   OnDestroy,
   Optional,
   OnInit,
-  ViewContainerRef,
-  NgZone,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -28,8 +24,6 @@ import {
   DragRef,
   CdkDropListGroup,
   CdkDropList,
-  CDK_DRAG_CONFIG,
-  DragDropConfig,
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
@@ -265,30 +259,6 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
   private _context: Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>
   private pluginCtrl: PblNgridPluginController;
   private cache: HTMLElement[];
-
-  // CTOR IS REQUIRED OR IT WONT WORK IN AOT
-  // TODO: Try to remove when supporting IVY
-  constructor(element: ElementRef<HTMLElement>,
-              @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() dropContainer: CdkDropList,
-              @Inject(DOCUMENT) _document: any,
-              _ngZone: NgZone,
-              _viewContainerRef: ViewContainerRef,
-              @Optional() @Inject(CDK_DRAG_CONFIG) config: DragDropConfig,
-              _dir: Directionality,
-              dragDrop: DragDrop,
-              _changeDetectorRef: ChangeDetectorRef) {
-    super(
-      element,
-      dropContainer,
-      _document,
-      _ngZone,
-      _viewContainerRef,
-      config,
-      _dir,
-      dragDrop,
-      _changeDetectorRef,
-    );
-  }
 
   /* CdkLazyDrag start */
   /**

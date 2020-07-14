@@ -121,16 +121,6 @@ export class PblNgridModule {
               registry: PblNgridRegistryService,
               @Inject(COMMON_TABLE_TEMPLATE_INIT) @Optional() @Self() components: CommonTemplateInit[][]) {
 
-    // TODO: Remove this once issue fixed: https://github.com/angular/angular/issues/35580
-    try {
-      if (ngRef.componentFactoryResolver) {
-        registry.getRoot(); // this line will keep the try/catch block in place when doing minification
-      }
-    } catch (err) {
-      const parent = (ngRef as any)._parent;
-      (ngRef as any)._r3Injector = parent;
-    }
-
     if (components) {
       for (const multi of components) {
         for (const c of multi) {

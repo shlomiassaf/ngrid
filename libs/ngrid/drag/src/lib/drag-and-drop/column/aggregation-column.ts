@@ -58,8 +58,21 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
               @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>) {
     super(element, dragDrop, changeDetectorRef, dir, group);
     const reorder = pluginCtrl.getPlugin('columnReorder');
-    reorder.connectedTo = this.id;
+    reorder.connectedTo = this;
+  }
 
+    /* CdkLazyDropList start */
+  /**
+   * Selector that will be used to determine the direct container element, starting from
+   * the `cdkDropList` element and going down the DOM. Passing an alternate direct container element
+   * is useful when the `cdkDropList` is not the direct parent (i.e. ancestor but not father)
+   * of the draggable elements.
+   */
+  directContainerElement: string;
+  get pblDropListRef(): PblDropListRef<any> { return this._dropListRef as any; }
+  originalElement: ElementRef<HTMLElement>;
+  ngOnInit(): void {
+    CdkLazyDropList.prototype.ngOnInit.call(this);
     this.pblDropListRef.dropped
       .subscribe( event => {
         const item = event.item as PblDragRef<PblNgridColumnDragDirective<any>>;
@@ -87,18 +100,6 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
         }
       });
   }
-
-    /* CdkLazyDropList start */
-  /**
-   * Selector that will be used to determine the direct container element, starting from
-   * the `cdkDropList` element and going down the DOM. Passing an alternate direct container element
-   * is useful when the `cdkDropList` is not the direct parent (i.e. ancestor but not father)
-   * of the draggable elements.
-   */
-  directContainerElement: string;
-  get pblDropListRef(): PblDropListRef<any> { return this._dropListRef as any; }
-  originalElement: ElementRef<HTMLElement>;
-  ngOnInit(): void { CdkLazyDropList.prototype.ngOnInit.call(this); }
   addDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.addDrag.call(this, drag); }
   removeDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
   beforeStarted(): void { CdkLazyDropList.prototype.beforeStarted.call(this); }
