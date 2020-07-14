@@ -21,7 +21,14 @@ export function registerGridHandlers() {
 
   createStateChunkHandler('grid')
     .handleKeys('showHeader', 'showFooter', 'focusMode', 'usePagination', 'hideColumns', 'fallbackMinHeight')
-    .serialize( (key, ctx) => ctx.source[key] )
+    .serialize((key, ctx) => {
+      switch (key) {
+        case 'hideColumns':
+          return ctx.extApi.columnStore.allColumns.filter( c => !!c.hidden ).map( c => c.id );
+        default:
+          return ctx.source[key];
+      }
+    })
     .deserialize( (key, stateValue, ctx) => {
       // We must assert the type starting from 3.5 onwards
       // See "Fixes to unsound writes to indexed access types" in https://devblogs.microsoft.com/typescript/announcing-typescript-3-5
