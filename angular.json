@@ -35,7 +35,12 @@
                 "input": "node_modules/document-register-element/build/document-register-element.js"
               }
             ],
-            "webWorkerTsConfig": "apps/ngrid-demo-app/tsconfig.worker.json"
+            "webWorkerTsConfig": "apps/ngrid-demo-app/tsconfig.worker.json",
+            "allowedCommonJsDependencies": [
+              "country-data",
+              "currency-symbol-map",
+              "faker"
+            ]
           },
           "configurations": {
             "production": {
@@ -309,7 +314,6 @@
   },
   "cli": {
     "warnings": {
-      "typescriptMismatch": false,
       "versionMismatch": false
     },
     "defaultCollection": "@nrwl/angular"

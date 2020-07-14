@@ -15,10 +15,10 @@ import { Example } from '@pebula/apps/shared';
 export class LockingColumnsExample {
   columns = columnFactory()
     .table(
-      { prop: 'id', wontBudge: true, width: '40px' },
+      { prop: 'id', wontBudge: true, reorder: false, width: '40px' },
       { prop: 'name', reorder: true },
       { prop: 'gender', reorder: true, width: '50px' },
-      { prop: 'birthdate', wontBudge: true, type: 'date', reorder: true }
+      { prop: 'birthdate', wontBudge: true, type: 'date', reorder: false }
     )
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();

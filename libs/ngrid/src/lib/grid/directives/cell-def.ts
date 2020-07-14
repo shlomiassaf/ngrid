@@ -15,6 +15,7 @@ export interface PblNgridCellDefDirectiveBase {
   type: keyof PblColumnTypeDefinitionDataMap;
 }
 
+@Directive()
 export abstract class PblNgridBaseCellDef<Z> implements OnInit, OnDestroy, PblNgridCellDefDirectiveBase {
   name: string;
   type: keyof PblColumnTypeDefinitionDataMap;

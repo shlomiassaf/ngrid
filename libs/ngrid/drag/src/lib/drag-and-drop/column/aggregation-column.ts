@@ -8,7 +8,6 @@ import {
   OnDestroy,
   Optional,
   SkipSelf,
-  QueryList,
 } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import {
@@ -49,7 +48,6 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   pending: PblColumn;
-  _draggables: QueryList<CdkDrag>;
 
   constructor(public grid: PblNgridComponent<T>,
               pluginCtrl: PblNgridPluginController,
@@ -100,10 +98,9 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
   directContainerElement: string;
   get pblDropListRef(): PblDropListRef<any> { return this._dropListRef as any; }
   originalElement: ElementRef<HTMLElement>;
-  _draggablesSet = new Set<CdkDrag>();
   ngOnInit(): void { CdkLazyDropList.prototype.ngOnInit.call(this); }
   addDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.addDrag.call(this, drag); }
-  removeDrag(drag: CdkDrag): boolean { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
+  removeDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
   beforeStarted(): void { CdkLazyDropList.prototype.beforeStarted.call(this); }
   /* CdkLazyDropList end */
 

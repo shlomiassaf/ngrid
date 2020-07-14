@@ -9,7 +9,8 @@ export class PblDropListRef<T = any> extends DropListRef<T> {
 
   withElement(element: ElementRef<HTMLElement> | HTMLElement): this {
     // TODO: Workaround, see if we can push this through https://github.com/angular/material2/issues/15086
-    (this as { -readonly [P in keyof PblDropListRef]: PblDropListRef[P] }).element = coerceElement(element);
+    this.element = coerceElement(element);
+    this.withScrollableParents([this.element]);
     return this;
   }
 
