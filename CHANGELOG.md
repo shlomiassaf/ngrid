@@ -1,3 +1,12 @@
+# 2.0.0-rc.3 (2020-07-14)
+
+
+### Refactor
+
+* **ngrid:** upgrade to angular 10, cdk 10 and material 10 ([40c091e](https://github.com/shlomiassaf/ngrid/commit/40c091e))
+
+
+
 # 2.0.0-rc.2 (2020-04-21)
 
 
