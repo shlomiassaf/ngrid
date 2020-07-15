@@ -13,8 +13,7 @@
   so that the scrollbar captures the size of the entire data set.
 -->
 <div *ngIf="enabled" class="cdk-virtual-scroll-spacer"
-     [style.width]="_totalContentWidth" [style.height]="_totalContentHeight"
-     [style.transform]="_totalContentSizeTransform"></div>
+     [style.width]="_totalContentWidth" [style.height]="_totalContentHeight"></div>
 <div *ngIf="pblFillerHeight && enabled"
     class="pbl-ngrid-space-fill"
     [style.minWidth.px]="_minWidth$ | async"

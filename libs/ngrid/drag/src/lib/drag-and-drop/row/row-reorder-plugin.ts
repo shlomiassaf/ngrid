@@ -3,14 +3,10 @@ import {
   Directive,
   ElementRef,
   Input,
-  Inject,
   OnDestroy,
   Optional,
   SkipSelf,
-  ViewContainerRef,
-  NgZone,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -20,7 +16,7 @@ import {
   CdkDropListGroup,
   CdkDrag,
   CDK_DROP_LIST,
-  CDK_DRAG_CONFIG, DragDropConfig, CdkDragDrop, CdkDragStart
+  CdkDragDrop, CdkDragStart
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
@@ -158,37 +154,6 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
 
   private pluginCtrl: PblNgridPluginController;
 
-  // CTOR IS REQUIRED OR IT WONT WORK IN AOT
-  // TODO: Try to remove when supporting IVY
-  constructor(element: ElementRef<HTMLElement>,
-              @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() dropContainer: CdkDropList,
-              @Inject(DOCUMENT) _document: any,
-              _ngZone: NgZone,
-              _viewContainerRef: ViewContainerRef,
-              @Optional() @Inject(CDK_DRAG_CONFIG) config: DragDropConfig,
-              _dir: Directionality,
-              dragDrop: DragDrop,
-              _changeDetectorRef: ChangeDetectorRef) {
-    super(
-      element,
-      dropContainer,
-      _document,
-      _ngZone,
-      _viewContainerRef,
-      config,
-      _dir,
-      dragDrop,
-      _changeDetectorRef,
-    );
-
-    this.started.subscribe( (event: CdkDragStart) => {
-      const { col, row, grid, value }  = this._context;
-      this._draggedContext = { col, row, grid, value };
-    });
-
-
-  }
-
   /* CdkLazyDrag start */
     /**
    * A class to set when the root element is not the host element. (i.e. when `cdkDragRootElement` is used).
@@ -222,7 +187,13 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
 
   _rootClass: string;
   _hostNotRoot = false;
-  ngOnInit(): void { CdkLazyDrag.prototype.ngOnInit.call(this); }
+  ngOnInit(): void {
+    this.started.subscribe( (event: CdkDragStart) => {
+      const { col, row, grid, value }  = this._context;
+      this._draggedContext = { col, row, grid, value };
+    });
+    CdkLazyDrag.prototype.ngOnInit.call(this);
+  }
   ngAfterViewInit(): void { CdkLazyDrag.prototype.ngAfterViewInit.call(this); super.ngAfterViewInit(); }
   ngOnDestroy(): void { CdkLazyDrag.prototype.ngOnDestroy.call(this);  super.ngOnDestroy(); }
   /* CdkLazyDrag end */

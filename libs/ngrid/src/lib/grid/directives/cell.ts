@@ -84,15 +84,11 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
 
   cellCtx: PblNgridDataHeaderExtensionContext | MetaCellContext;
 
-  /** @deprecated use grid instead */
-  readonly table: PblNgridComponent<T>;
-
   constructor(public readonly columnDef: PblNgridColumnDef<T>,
               public readonly grid: PblNgridComponent<any>,
               public readonly elementRef: ElementRef,
               private zone: NgZone) {
     super(columnDef, elementRef);
-    this.table = grid;
 
     const column = columnDef.column;
     const el = this.el = elementRef.nativeElement;
@@ -299,15 +295,12 @@ export class PblNgridCellDirective extends CdkCell implements DoCheck, OnDestroy
  })
 export class PblNgridFooterCellDirective extends CdkFooterCell implements OnInit, OnDestroy {
   cellCtx: MetaCellContext;
-  /** @deprecated use grid instead */
-  readonly table: PblNgridComponent;
 
   private el: HTMLElement;
   constructor(private columnDef: PblNgridColumnDef<PblMetaColumn | PblColumnGroup>,
               public grid: PblNgridComponent,
               elementRef: ElementRef) {
     super(columnDef, elementRef);
-    this.table = grid;
     this.el = elementRef.nativeElement;
     const column = columnDef.column;
     applyWidth.call(this);

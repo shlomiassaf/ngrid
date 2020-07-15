@@ -35,7 +35,7 @@ export interface PblNgridGroupColumnState extends PblNgridBaseColumnState,
 export interface PblNgridColumnState extends PblNgridBaseColumnState,
   PickPNP <
     PblColumnDefinition,
-    'headerType' | 'footerType' | 'sort' | 'sortAlias' | 'editable' | 'pin',
+    'headerType' | 'footerType' | 'sort' | 'alias' | 'editable' | 'pin',
     'prop'
   > { }
 

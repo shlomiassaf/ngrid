@@ -56,8 +56,6 @@ export interface PblNgridMetaCellContext<T = any, TCol extends PblMetaColumn | P
   $implicit: PblNgridMetaCellContext<T>;
   col: TCol;
 
-  /** @deprecated use grid instead */
-  table: PblNgridComponent<T>;
   grid: PblNgridComponent<T>;
 }
 
@@ -67,8 +65,6 @@ export interface PblNgridCellContext<T = any, P extends keyof PblColumnTypeDefin
   row: T,
   value: any;
   col: PblColumn;
-  /** @deprecated use grid instead */
-  table: PblNgridComponent<T>;
   grid: PblNgridComponent<T>;
   readonly index: number;
   readonly editing: boolean;
@@ -105,8 +101,6 @@ export interface PblNgridRowContext<T = any> extends RowContext<T> {
    */
   outOfView: boolean;
 
-  /** @deprecated use grid instead */
-  readonly table: PblNgridComponent<T>;
   readonly grid: PblNgridComponent<T>;
 
   /**

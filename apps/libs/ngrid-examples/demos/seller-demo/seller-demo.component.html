@@ -15,13 +15,13 @@
   <pbl-demo-action-row filter (refresh)="refresh()" ></pbl-demo-action-row>
   <div *pblNgridCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
 
-  <div *pblNgridHeaderCellTypeDef="'pbl-groupby-row'; col as col; table as table" pblAggregationContainer #agg="pblAggregationContainer"
+  <div *pblNgridHeaderCellTypeDef="'pbl-groupby-row'; col as col; grid as grid" pblAggregationContainer #agg="pblAggregationContainer"
        fxLayoutAlign="start center"
        style="position: absolute; height: 100%; width: 100%;">
     <mat-icon>format_list_bulleted</mat-icon>
     <mat-chip-list>
-      <mat-chip *ngFor="let c of table.columnApi.groupByColumns"
-                (removed)="table.columnApi.removeGroupBy(c)">
+      <mat-chip *ngFor="let c of grid.columnApi.groupByColumns"
+                (removed)="grid.columnApi.removeGroupBy(c)">
         {{ c.label }}
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>

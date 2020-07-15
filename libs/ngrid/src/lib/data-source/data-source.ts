@@ -123,9 +123,6 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
     }
   }
 
-  // TODO(1.0.0): remove
-  /** @deprecated BREAKING CHANGE: removed in 1.0.0 - Use renderedData instead. */
-  get renderedRows(): T[] { return this._renderData$.value || []; }
   /** Returns the starting index of the rendered data */
   get renderStart(): number { return this._lastRange ? this._lastRange.start : 0; }
   get renderLength(): number { return this._renderData$.value.length; }

@@ -170,10 +170,6 @@ export interface PblColumnDefinition extends PblBaseColumnDefinition {
 
   pin?: 'start' | 'end';
 
-  // TODO(1.0.0): remove
-  /** @deprecated BREAKING CHANGE 1.0.0 - Use `alias` instead. */
-  sortAlias?: string;
-
   /**
    * An alias used to identify the column.
    * Useful when the server provides sort/filter metadata that does not have a 1:1 match with the column names.

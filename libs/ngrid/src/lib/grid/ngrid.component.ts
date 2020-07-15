@@ -47,8 +47,6 @@ import { PblNgridMetaRowService } from './meta-rows/index';
 import { bindToDataSource } from './bind-to-datasource';
 import './bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
 
-import { setIdentityProp } from './ngrid.deprecate-at-1.0.0';
-
 export function internalApiFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi; }
 export function pluginControllerFactory(grid: { _plugin: PblNgridPluginContext; }) { return grid._plugin.controller; }
 export function metaRowServiceFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi.metaRowService; }
@@ -117,14 +115,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    * ENTER / SPACE only when focusMode is set to `row`.
    */
   @Input() focusMode: 'row' | 'cell' | 'none' | '' | false | undefined;
-
-  /// TODO(shlomiassaf): Remove in 1.0.0
-  /**
-   * @deprecated Use `pIndex` in the column definition. (Removed in 1.0.0)
-   */
-  @Input() get identityProp(): string { return this.__identityProp; }
-  set identityProp(value: string) { this.__identityProp = value; setIdentityProp(this._store, value); }
-  private __identityProp: string;
 
   /**
    * The grid's source of data
@@ -439,29 +429,29 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   /**
    * Set the sorting definition for the current data set.
    *
-   * This method is a proxy to `PblDataSource.setSort` with the added sugar of providing column by string that match the `id` or `sortAlias` properties.
+   * This method is a proxy to `PblDataSource.setSort` with the added sugar of providing column by string that match the `id` or `alias` properties.
    * For more information see `PblDataSource.setSort`
    *
-   * @param columnOrSortAlias A column instance or a string matching `PblColumn.sortAlias` or `PblColumn.id`.
+   * @param columnOrAlias A column instance or a string matching `PblColumn.alias` or `PblColumn.id`.
    * @param skipUpdate When true will not update the datasource, use this when the data comes sorted and you want to sync the definitions with the current data set.
    * default to false.
    */
-  setSort(columnOrSortAlias: PblColumn | string, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
-  setSort(columnOrSortAlias?: PblColumn | string | boolean, sort?: PblNgridSortDefinition, skipUpdate = false): void {
-    if (!columnOrSortAlias || typeof columnOrSortAlias === 'boolean') {
-      this.ds.setSort(!!columnOrSortAlias);
+  setSort(columnOrAlias: PblColumn | string, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
+  setSort(columnOrAlias?: PblColumn | string | boolean, sort?: PblNgridSortDefinition, skipUpdate = false): void {
+    if (!columnOrAlias || typeof columnOrAlias === 'boolean') {
+      this.ds.setSort(!!columnOrAlias);
       return;
     }
 
     let column: PblColumn;
-    if (typeof columnOrSortAlias === 'string') {
-      column = this._store.columns.find( c => c.alias ? c.alias === columnOrSortAlias : (c.sort && c.id === columnOrSortAlias) );
+    if (typeof columnOrAlias === 'string') {
+      column = this._store.columns.find( c => c.alias ? c.alias === columnOrAlias : (c.sort && c.id === columnOrAlias) );
       if (!column && isDevMode()) {
-        console.warn(`Could not find column with alias "${columnOrSortAlias}".`);
+        console.warn(`Could not find column with alias "${columnOrAlias}".`);
         return;
       }
     } else {
-      column = columnOrSortAlias;
+      column = columnOrAlias;
     }
     this.ds.setSort(column, sort, skipUpdate);
   }
@@ -612,8 +602,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     const rebuildRows = this._store.allColumns.length > 0;
     this._extApi.contextApi.clear();
     this._store.invalidate(this.columns);
-
-    setIdentityProp(this._store, this.__identityProp); /// TODO(shlomiassaf): Remove in 1.0.0
 
     this.attachCustomCellTemplates();
     this.attachCustomHeaderCellTemplates();

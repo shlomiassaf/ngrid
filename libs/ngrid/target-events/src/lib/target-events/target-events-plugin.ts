@@ -61,9 +61,6 @@ export class PblNgridTargetEventsPlugin<T = any> {
   keyUp = new EventEmitter<Events.PblNgridCellEvent<T, KeyboardEvent> | Events.PblNgridRowEvent<T>>();
   keyDown = new EventEmitter<Events.PblNgridCellEvent<T, KeyboardEvent> | Events.PblNgridRowEvent<T>>();
 
-  /** @deprecated use `gird` instead */
-  get table(): PblNgridComponent<any> { return this.grid; }
-
   protected readonly destroyed = new ReplaySubject<void>();
 
   private _removePlugin: (table: PblNgridComponent<any>) => void;
