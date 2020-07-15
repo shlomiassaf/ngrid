@@ -3,7 +3,7 @@
   "version": "2.0.0-rc.3",
   "peerDependencies": {
     "@angular/material": "^10.0.0",
-    "@pebula/ngrid": "2.0.0-rc.3"
+    "@pebula/ngrid": "2.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"
