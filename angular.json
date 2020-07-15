@@ -17,7 +17,7 @@
         "build": {
           "builder": "ngx-build-plus:build",
           "options": {
-            "aot": true,
+            "aot": false,
             "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin",
             "outputPath": "dist/browser",
             "index": "apps/ngrid-demo-app/src/index.html",
@@ -44,6 +44,7 @@
           },
           "configurations": {
             "production": {
+              "aot": true,
               "fileReplacements": [
                 {
                   "replace": "apps/ngrid-demo-app/src/environments/environment.ts",

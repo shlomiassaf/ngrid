@@ -34,7 +34,6 @@ function applyLoaders(webpackConfig: Configuration) {
   );
 }
 
-
 function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   applyLoaders(webpackConfig);
 
