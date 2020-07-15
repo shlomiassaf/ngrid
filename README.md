@@ -25,12 +25,12 @@ For full documentation, walkthroughs and examples - [visit the official site](ht
 
 - [Documentation site](https://shlomiassaf.github.io/ngrid) with code samples.
 - [Starter @ GitHub](https://github.com/shlomiassaf/ngrid-material-starter)
-- [Starter @ StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter-v9?file=app%2Fapp.component.ts)
+- [Starter @ StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter?file=app%2Fapp.component.ts)
 
 ### Version 1.x.x - angular V8
 
 - [Starter @ GitHub](https://github.com/shlomiassaf/ngrid-material-starter/tree/v8)
-- [Starter @ StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter?file=app%2Fapp.component.ts)
+- [Starter @ StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter-v8?file=app%2Fapp.component.ts)
 
 ## Setup
 
