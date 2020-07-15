@@ -1,3 +1,16 @@
+# 2.0.0 (2020-07-15)
+
+
+### Refactor
+
+* **ngrid:** remove all deprecated code (v7, v8) ([a2dd3f4](https://github.com/shlomiassaf/ngrid/commit/a2dd3f43f71af9cab667f0ef6d1313f683409d75)), closes [#108](https://github.com/shlomiassaf/ngrid/issues/108)
+
+### Bug Fixes
+
+* **ngrid:** hideColumns not saved by StatePersistence ([10258ab](https://github.com/shlomiassaf/ngrid/commit/10258ab5c70c1af03daca6290592c668ecdaf1d3)), closes [#99](https://github.com/shlomiassaf/ngrid/issues/99)
+
+
+
 # 2.0.0-rc.3 (2020-07-14)
 
 
