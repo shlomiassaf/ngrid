@@ -1,3 +1,112 @@
+# 2.0.0 (2020-07-15)
+
+
+### Refactor
+
+* **ngrid:** remove all deprecated code (v7, v8) ([a2dd3f4](https://github.com/shlomiassaf/ngrid/commit/a2dd3f43f71af9cab667f0ef6d1313f683409d75)), closes [#108](https://github.com/shlomiassaf/ngrid/issues/108)
+
+### Bug Fixes
+
+* **ngrid:** hideColumns not saved by StatePersistence ([10258ab](https://github.com/shlomiassaf/ngrid/commit/10258ab5c70c1af03daca6290592c668ecdaf1d3)), closes [#99](https://github.com/shlomiassaf/ngrid/issues/99)
+
+
+
+# 2.0.0-rc.3 (2020-07-14)
+
+
+### Refactor
+
+* **ngrid:** upgrade to angular 10, cdk 10 and material 10 ([40c091e](https://github.com/shlomiassaf/ngrid/commit/40c091e))
+
+
+
+# 2.0.0-rc.2 (2020-04-21)
+
+
+### Refactor
+
+* **ngrid:** remove UnRx as decorator (fixes [#92](https://github.com/shlomiassaf/ngrid/issues/92)) ([733cf71](https://github.com/shlomiassaf/ngrid/commit/733cf71))
+* **ngrid:** dont use decorators for NgridPlugin (fixes [#92](https://github.com/shlomiassaf/ngrid/issues/92)) ([703b4b3](https://github.com/shlomiassaf/ngrid/commit/703b4b3))
+
+### BREAKING CHANGES
+
+* **ngrid:** If you created a custom plugin which required registration, registration is not longer supported using decorators. Instead, register using the ngridPlugin method.
+
+
+
+# 2.0.0-rc.1 (2020-03-15)
+
+
+### Bug Fixes
+
+* **ngrid:** allow running in ViewEngine mode (fixes [#84](https://github.com/shlomiassaf/ngrid/issues/84)) ([#86](https://github.com/shlomiassaf/ngrid/issues/86)) ([fad8409](https://github.com/shlomiassaf/ngrid/commit/fad8409))
+* **ngrid/drag:** fully implement interface ([66f896b](https://github.com/shlomiassaf/ngrid/commit/66f896b))
+
+
+
+# 2.0.0-rc.0 (2020-03-13)
+
+
+### Features
+
+* **ngrid:** support angular 9 (#79) ([9f80f9e](https://github.com/shlomiassaf/ngrid/commit/9f80f9e))
+
+
+
+# 1.0.0-rc.20 (2020-03-03)
+
+
+### Bug Fixes
+
+* **ngrid/drag:** sneaky issue with PblDragDrop and AOT ([5eb6929](https://github.com/shlomiassaf/ngrid/commit/5eb6929))
+
+
+
+# 1.0.0-rc.17 (2020-02-23)
+
+
+### Bug Fixes
+
+* **ngrid/clipboard:** copy rows in logical order ([be53250](https://github.com/shlomiassaf/ngrid/commit/be53250))
+
+
+
+# 1.0.0-rc.16 (2020-01-16)
+
+
+### Bug Fixes
+
+* **ngrid:** document.contains fails on IE ([bdc4b10](https://github.com/shlomiassaf/ngrid/commit/bdc4b10))
+
+
+
+# 1.0.0-rc.15 (2020-01-16)
+
+
+### Bug Fixes
+
+* **ngrid:** breaking change in cdk/drag ([7c9e4fe](https://github.com/shlomiassaf/ngrid/commit/7c9e4fe))
+
+
+
+# 1.0.0-rc.14 (2020-01-16)
+
+
+### Bug Fixes
+
+* **ngrid:** unable to use cdk-drag with ngrid ([20250cb](https://github.com/shlomiassaf/ngrid/commit/20250cb)), closes [#72](https://github.com/shlomiassaf/ngrid/issues/72)
+
+
+
+# 1.0.0-rc.13 (2019-12-10)
+
+
+### Bug Fixes
+
+* **ngrid:** proper width's in FF ([83cd3e5](https://github.com/shlomiassaf/ngrid/commit/83cd3e5)), closes [#69](https://github.com/shlomiassaf/ngrid/issues/69)
+
+
+
 # 1.0.0-rc.12 (2019-11-22)
 
 

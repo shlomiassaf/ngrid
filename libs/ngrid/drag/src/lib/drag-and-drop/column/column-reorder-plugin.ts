@@ -7,16 +7,12 @@ import {
   Directive,
   ElementRef,
   Input,
-  Inject,
   SkipSelf,
   Output,
   OnDestroy,
   Optional,
   OnInit,
-  ViewContainerRef,
-  NgZone,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -28,18 +24,13 @@ import {
   DragRef,
   CdkDropListGroup,
   CdkDropList,
-  CDK_DRAG_CONFIG,
-  DragRefConfig,
-  DragDropRegistry,
 } from '@angular/cdk/drag-drop';
-import { ViewportRuler } from '@angular/cdk/scrolling';
 
-import { PblNgridComponent, NgridPlugin, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
-import { cdkDropList, cdkDrag } from '../v7-compat';
-import { CdkLazyDropList, CdkLazyDrag } from '../core';
+import { PblNgridComponent, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
+import { PblDragDrop } from '../core/drag-drop';
+import { CdkLazyDropList, CdkLazyDrag } from '../core/lazy-drag-drop';
 import { PblDropListRef } from '../core/drop-list-ref';
 import { PblDragRef } from '../core/drag-ref';
-import { extendGrid } from './extend-grid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -47,11 +38,10 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
-export const PLUGIN_KEY: 'columnReorder' = 'columnReorder';
+export const COL_REORDER_PLUGIN_KEY: 'columnReorder' = 'columnReorder';
 
 let _uniqueIdCounter = 0;
 
-@NgridPlugin({ id: PLUGIN_KEY, runOnce: extendGrid })
 @Directive({
   selector: 'pbl-ngrid[columnReorder]',
   exportAs: 'pblNgridColumnReorder',
@@ -65,6 +55,7 @@ let _uniqueIdCounter = 0;
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
   },
   providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CDK_DROP_LIST, useExisting: PblNgridColumnReorderPluginDirective },
   ],
 })
@@ -107,12 +98,9 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
               dragDrop: DragDrop,
               changeDetectorRef: ChangeDetectorRef,
               @Optional() dir?: Directionality,
-              @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>,
-              @Optional() dragDropRegistry?: DragDropRegistry<any, any>, // for v7 compat
-              @Optional() @Inject(DOCUMENT) _document?: any) {
-    super(...cdkDropList(element, dragDrop, changeDetectorRef, dir, group, dragDropRegistry, _document));
-     // super(element, dragDrop, changeDetectorRef, dir, group);
-    this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
+              @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>) {
+    super(element, dragDrop, changeDetectorRef, dir, group);
+    this._removePlugin = pluginCtrl.setPlugin(COL_REORDER_PLUGIN_KEY, this);
 
     this.directContainerElement = '.pbl-ngrid-header-row-main';
     this.dropped.subscribe( (event: CdkDragDrop<T, any>) => {
@@ -144,10 +132,9 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
   directContainerElement: string;
   get pblDropListRef(): PblDropListRef<PblNgridColumnReorderPluginDirective<T>> { return this._dropListRef as any; }
   originalElement: ElementRef<HTMLElement>;
-  _draggablesSet = new Set<CdkDrag>();
   // ngOnInit(): void { CdkLazyDropList.prototype.ngOnInit.call(this); }
   addDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.addDrag.call(this, drag); }
-  removeDrag(drag: CdkDrag): boolean { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
+  removeDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
   // beforeStarted(): void { CdkLazyDropList.prototype.beforeStarted.call(this); }
   /* CdkLazyDropList end */
 
@@ -251,6 +238,7 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
   providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CdkDrag, useExisting: PblNgridColumnDragDirective }
   ]
 })
@@ -263,7 +251,7 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
     this._context = value;
     this.column = value && value.col;
     const pluginCtrl = this.pluginCtrl = value && PblNgridPluginController.find(value.grid);
-    const plugin = pluginCtrl && pluginCtrl.getPlugin(PLUGIN_KEY);
+    const plugin = pluginCtrl && pluginCtrl.getPlugin(COL_REORDER_PLUGIN_KEY);
     this.cdkDropList = plugin || undefined;
     this.disabled = this.column && this.column.reorder ? false : true;
   }
@@ -271,34 +259,6 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
   private _context: Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>
   private pluginCtrl: PblNgridPluginController;
   private cache: HTMLElement[];
-
-  // CTOR IS REQUIRED OR IT WONT WORK IN AOT
-  // TODO: Try to remove when supporting IVY
-  constructor(element: ElementRef<HTMLElement>,
-              @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() dropContainer: CdkDropList,
-              @Inject(DOCUMENT) _document: any,
-              _ngZone: NgZone,
-              _viewContainerRef: ViewContainerRef,
-              @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
-              _dir: Directionality,
-              dragDrop: DragDrop,
-              _changeDetectorRef: ChangeDetectorRef,
-
-              @Optional() viewportRuler: ViewportRuler, // for v7 compat
-              @Optional() dragDropRegistry: DragDropRegistry<any, any>,) {
-    super(...cdkDrag(element, dropContainer, _document, _ngZone, _viewContainerRef, config, _dir, dragDrop, _changeDetectorRef, viewportRuler, dragDropRegistry));
-    // super(
-    //   element,
-    //   dropContainer,
-    //   _document,
-    //   _ngZone,
-    //   _viewContainerRef,
-    //   config,
-    //   _dir,
-    //   dragDrop,
-    //   _changeDetectorRef,
-    // );
-  }
 
   /* CdkLazyDrag start */
   /**

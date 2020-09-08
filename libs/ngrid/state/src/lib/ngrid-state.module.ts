@@ -1,8 +1,9 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PblNgridPluginController, PblNgridModule, PblNgridConfigService } from '@pebula/ngrid';
+import { PblNgridPluginController, PblNgridModule, PblNgridConfigService, ngridPlugin } from '@pebula/ngrid';
 
-import { PLUGIN_KEY, PblNgridStatePluginDirective } from './state-plugin';
+import { registerBuiltInHandlers } from './core/built-in-handlers/_register';
+import { PblNgridStatePlugin, PblNgridStatePluginDirective, PLUGIN_KEY } from './state-plugin';
 
 @NgModule({
   imports: [
@@ -16,9 +17,11 @@ import { PLUGIN_KEY, PblNgridStatePluginDirective } from './state-plugin';
     PblNgridStatePluginDirective,
   ],
   providers: [ ],
-  entryComponents: [ ],
 })
 export class PblNgridStatePluginModule {
+
+  static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY, factory: 'create', runOnce: registerBuiltInHandlers }, PblNgridStatePlugin);
+
   constructor(@Optional() @SkipSelf() parentModule: PblNgridStatePluginModule,
               configService: PblNgridConfigService) {
 

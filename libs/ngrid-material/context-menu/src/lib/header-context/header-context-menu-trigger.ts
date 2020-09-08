@@ -9,6 +9,7 @@ const DEFAULT_CONFIG: PblNgridOverlayPanelConfig = { hasBackdrop: true, xPos: 'a
 @Component({
   selector: 'div[mat-header-context-menu-trigger]',
   host: {
+    class: 'mat-header-context-menu-trigger',
     '(click)': 'openOverlayPanel()',
   },
   templateUrl: `./header-context-menu-trigger.html`,

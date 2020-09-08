@@ -1,7 +1,7 @@
+import { filter, take } from 'rxjs/operators';
 import { Directive, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { UnRx } from '@pebula/utils';
 import {
   columnFactory,
   PblNgridConfigService,
@@ -10,7 +10,7 @@ import {
   PblNgridComponent,
   PblNgridPluginController,
   PblColumn,
-  NgridPlugin,
+  utils,
 } from '@pebula/ngrid';
 
 import { TransposeTableSession, LOCAL_COLUMN_DEF, VIRTUAL_REFRESH } from './transpose-table-session';
@@ -33,7 +33,7 @@ declare module '@pebula/ngrid/lib/ext/types' {
     transpose?: PblNgridTransposePluginDirective;
   }
 }
-const PLUGIN_KEY: 'transpose' = 'transpose';
+export const PLUGIN_KEY: 'transpose' = 'transpose';
 
 /**
  * Transpose plugin.
@@ -54,23 +54,16 @@ const PLUGIN_KEY: 'transpose' = 'transpose';
  * For example, using pagination with transpose make no sense.
  */
 
-@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[transpose]' })
-@UnRx()
 export class PblNgridTransposePluginDirective implements OnDestroy {
 
   @Input() get transpose(): boolean { return this.enabled; };
   set transpose(value: boolean) {
     value = coerceBooleanProperty(value);
-    if (value !== this.enabled) {
-      const isFirst = this.enabled === undefined;
-      this.enabled = value;
-      if (!value) {
-        this.disable(true);
-      } else {
-        this.enable(!isFirst);
-      }
+    if (value !== this.enabled && this.grid.isInit) {
+      this.updateState(this.enabled, value);
     }
+    this.enabled = value;
   }
 
   /**
@@ -126,18 +119,31 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
       this.defaultCol = transposePlugin.defaultCol || {};
       this.matchTemplates = transposePlugin.matchTemplates || false;
     }
+
+    pluginCtrl.events
+      .pipe(
+        filter( e => e.kind === 'onInit' ),
+        take(1),
+        utils.unrx(this, this.grid)
+      )
+      .subscribe( e => {
+        if (this.enabled !== undefined) {
+          this.updateState(undefined, this.enabled);
+        }
+      });
   }
 
   ngOnDestroy() {
     this._removePlugin(this.grid);
     this.disable(false);
+    utils.unrx.kill(this);
   }
 
   disable(updateTable: boolean): void {
     if (this.gridState) {
-      const { gridState: tableState } = this;
+      const { gridState } = this;
       this.columns = this.selfColumn = this.gridState = this.columns = this.selfColumn = undefined;
-      tableState.destroy(updateTable);
+      gridState.destroy(updateTable);
     }
   }
 
@@ -222,6 +228,15 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
       this.grid.ds.refresh();
     } else if (this.grid.ds.length > 0) {
       this.grid.ds.refresh(VIRTUAL_REFRESH);
+    }
+  }
+
+  private updateState(prev: boolean | undefined, curr: boolean): void {
+    const isFirst = prev === undefined;
+    if (!curr) {
+      this.disable(true);
+    } else {
+      this.enable(!isFirst);
     }
   }
 

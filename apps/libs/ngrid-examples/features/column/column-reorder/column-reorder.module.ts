@@ -19,7 +19,6 @@ import { GroupColumnsLockExample } from './group-columns-lock.component';
     PblNgridDragModule.withDefaultTemplates(),
   ],
   exports: [ ColumnReorderExample, MovingWithTheApiExample, LockingColumnsExample, GroupColumnsLockExample ],
-  entryComponents: [ ColumnReorderExample, MovingWithTheApiExample, LockingColumnsExample, GroupColumnsLockExample ],
 })
 @BindNgModule(ColumnReorderExample, MovingWithTheApiExample, LockingColumnsExample, GroupColumnsLockExample)
 export class ColumnReorderExampleModule { }

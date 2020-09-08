@@ -131,9 +131,7 @@ import { BindNgModule } from '@pebula/apps/shared';
     ExampleCommonModule,
     PblNgridModule,
   ],
-  exports: [ MyExample ],
-  entryComponents: [ MyExample ],
-})
+  exports: [ MyExample ],})
 BindNgModule(MyExample);
 export class MyExampleModule { }
 ```

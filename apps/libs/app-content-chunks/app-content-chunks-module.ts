@@ -40,7 +40,6 @@ export const APP_CONTENT_CHUNKS: {[key: string]: LiveExample} = {
 
 @NgModule({
   declarations: APP_CONTENT_CHUNKS_LIST,
-  entryComponents: APP_CONTENT_CHUNKS_LIST,
   imports: [
     CommonModule,
     FlexModule,

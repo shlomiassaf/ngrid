@@ -5,7 +5,7 @@ if (typeof global.Element === 'undefined') {
 }
 
 if (typeof global.requestAnimationFrame === 'undefined') {
-  global.requestAnimationFrame = fn => {
+  global.requestAnimationFrame = (fn => {
     setTimeout(fn, 16);
-  }
+  }) as any;
 }

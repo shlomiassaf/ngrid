@@ -2,8 +2,7 @@ import { fromEvent, timer, Observer, ReplaySubject } from 'rxjs';
 import { bufferWhen, debounce, map, filter, takeUntil } from 'rxjs/operators';
 import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, PblColumn, NgridPlugin } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblColumn } from '@pebula/ngrid';
 
 import * as Events from './events';
 import { matrixRowFromRow, isRowContainer, findCellRenderIndex, findParentCell } from './utils';
@@ -46,7 +45,6 @@ export function runOnce(): void {
   PblColumn.extendProperty('editable');
 }
 
-@NgridPlugin({ id: PLUGIN_KEY, factory: 'create', runOnce })
 export class PblNgridTargetEventsPlugin<T = any> {
   rowClick = new EventEmitter<Events.PblNgridRowEvent<T>>();
   rowDblClick = new EventEmitter<Events.PblNgridRowEvent<T>>();
@@ -62,9 +60,6 @@ export class PblNgridTargetEventsPlugin<T = any> {
   mouseUp = new EventEmitter<Events.PblNgridCellEvent<T, MouseEvent> | Events.PblNgridRowEvent<T>>();
   keyUp = new EventEmitter<Events.PblNgridCellEvent<T, KeyboardEvent> | Events.PblNgridRowEvent<T>>();
   keyDown = new EventEmitter<Events.PblNgridCellEvent<T, KeyboardEvent> | Events.PblNgridRowEvent<T>>();
-
-  /** @deprecated use `gird` instead */
-  get table(): PblNgridComponent<any> { return this.grid; }
 
   protected readonly destroyed = new ReplaySubject<void>();
 
@@ -384,7 +379,6 @@ export class PblNgridTargetEventsPlugin<T = any> {
   // tslint:disable-next-line:use-output-property-decorator
   outputs: [ 'rowClick', 'rowDblClick', 'rowEnter', 'rowLeave', 'cellClick', 'cellDblClick', 'cellEnter', 'cellLeave', 'keyDown', 'keyUp' ]
 })
-@UnRx()
 export class PblNgridTargetEventsPluginDirective<T> extends PblNgridTargetEventsPlugin<T> implements OnDestroy {
 
   constructor(table: PblNgridComponent<any>, injector: Injector, pluginCtrl: PblNgridPluginController) {

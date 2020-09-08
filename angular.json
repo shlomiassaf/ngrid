@@ -17,6 +17,7 @@
         "build": {
           "builder": "ngx-build-plus:build",
           "options": {
+            "aot": true,
             "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin",
             "outputPath": "dist/browser",
             "index": "apps/ngrid-demo-app/src/index.html",
@@ -34,7 +35,12 @@
                 "input": "node_modules/document-register-element/build/document-register-element.js"
               }
             ],
-            "webWorkerTsConfig": "apps/ngrid-demo-app/tsconfig.worker.json"
+            "webWorkerTsConfig": "apps/ngrid-demo-app/tsconfig.worker.json",
+            "allowedCommonJsDependencies": [
+              "country-data",
+              "currency-symbol-map",
+              "faker"
+            ]
           },
           "configurations": {
             "production": {
@@ -49,7 +55,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -81,7 +86,8 @@
           "options": {
             "jestConfig": "apps/ngrid-demo-app/jest.config.js",
             "tsConfig": "apps/ngrid-demo-app/tsconfig.spec.json",
-            "setupFile": "apps/ngrid-demo-app/src/test-setup.ts"
+            "setupFile": "apps/ngrid-demo-app/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -92,7 +98,7 @@
               "apps/ngrid-demo-app/tsconfig.spec.json",
               "apps/ngrid-demo-app/tsconfig.worker.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": ["**/node_modules/**", "!apps/ngrid-demo-app/**"]
           }
         },
         "server": {
@@ -155,7 +161,7 @@
       "prefix": "pbl",
       "schematics": {
         "@schematics/angular:component": {
-          "styleext": "scss"
+          "style": "scss"
         }
       },
       "architect": {
@@ -166,6 +172,7 @@
             "project": "libs/ngrid/ng-package.json",
             "tasks": {
               "config": "tools/ng-packagr.transformers/ngrid.transformers.ts",
+              "tsConfig": "tools/tsconfig.json",
               "data": {
                 "copyFile": {
                   "assets": [
@@ -213,7 +220,8 @@
           "options": {
             "jestConfig": "libs/ngrid/jest.config.js",
             "tsConfig": "libs/ngrid/tsconfig.spec.json",
-            "setupFile": "libs/ngrid/src/test-setup.ts"
+            "setupFile": "libs/ngrid/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -223,7 +231,7 @@
               "libs/ngrid/tsconfig.lib.json",
               "libs/ngrid/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": ["**/node_modules/**", "!libs/ngrid/**"]
           }
         }
       }
@@ -246,6 +254,7 @@
             "project": "libs/ngrid-material/ng-package.json",
             "tasks": {
               "config": "tools/ng-packagr.transformers/ngrid-material.transformers.ts",
+              "tsConfig": "tools/tsconfig.json",
               "data": {
                 "copyFile": {
                   "assets": [
@@ -288,7 +297,8 @@
           "options": {
             "jestConfig": "libs/ngrid-material/jest.config.js",
             "tsConfig": "libs/ngrid-material/tsconfig.spec.json",
-            "setupFile": "libs/ngrid-material/src/test-setup.ts"
+            "setupFile": "libs/ngrid-material/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -298,61 +308,14 @@
               "libs/ngrid-material/tsconfig.lib.json",
               "libs/ngrid-material/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": ["**/node_modules/**", "!libs/ngrid-material/**"]
           }
         }
       }
-    },
-    "utils": {
-      "root": "libs/utils",
-      "sourceRoot": "libs/utils/src",
-      "projectType": "library",
-      "architect": {
-        "build": {
-          "builder": "ng-cli-packagr-tasks:build",
-          "options": {
-            "tsConfig": "libs/utils/tsconfig.lib.json",
-            "project": "libs/utils/ng-package.json",
-            "tasks": {
-              "config": "tools/ng-packagr.transformers/utils.ng-packagr.tasks.ts",
-              "data": {
-                "nodeLib": {
-                  "tsConfig": "libs/utils/tsconfig.node-lib.json"
-                }
-              }
-            }
-          },
-          "configurations": {
-            "production": {
-              "project": "libs/utils/ng-package.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/utils/jest.config.js",
-            "tsConfig": "libs/utils/tsconfig.spec.json",
-            "setupFile": "libs/utils/src/test-setup.ts"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/utils/tsconfig.lib.json",
-              "libs/utils/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      },
-      "schematics": {}
     }
   },
   "cli": {
     "warnings": {
-      "typescriptMismatch": false,
       "versionMismatch": false
     },
     "defaultCollection": "@nrwl/angular"

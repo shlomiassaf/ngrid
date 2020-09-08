@@ -7,7 +7,7 @@
       "request": "launch",
       "preLaunchTask": "npm: start",
       "url": "http://localhost:4201/#",
-      "webRoot": "${workspaceFolder}",
+      "webRoot": "${workspaceFolder}/apps/ngrid-demo-app",
       "sourceMapPathOverrides": {
         "webpack:////*": "/*",
         "webpack:/*": "${webRoot}/*"
@@ -29,7 +29,7 @@
       "type": "chrome",
       "request": "attach",
       "urlFilter": "http://localhost:4201*",
-      "webRoot": "${workspaceFolder}",
+      "webRoot": "${workspaceFolder}/apps/ngrid-demo-app",
       "sourceMapPathOverrides": {
         "webpack:////*": "/*",
         "webpack:/*": "${webRoot}/*"

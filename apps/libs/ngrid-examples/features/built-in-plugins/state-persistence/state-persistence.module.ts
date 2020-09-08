@@ -19,7 +19,6 @@ import { StatePersistenceExample } from './state-persistence.component';
     PblNgridModule, PblNgridStatePluginModule,
   ],
   exports: [ StatePersistenceExample ],
-  entryComponents: [ StatePersistenceExample ],
 })
 @BindNgModule(StatePersistenceExample)
 export class StatePersistenceExampleModule { }

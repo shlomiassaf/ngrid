@@ -3,8 +3,7 @@ import { Customer, Person, Seller } from './models';
 import { DATA_TYPES } from './protocols';
 
 function getFaker(): Promise<typeof Faker> {
-  // return import('faker');
-  return Promise.resolve(Faker)
+  return import('faker');
 }
 
 export class DataStore {

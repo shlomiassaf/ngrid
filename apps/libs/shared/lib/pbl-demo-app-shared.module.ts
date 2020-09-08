@@ -81,7 +81,6 @@ const DECLARATION_EXPORT = [
   providers: [
     PblNgridRegistryService,
   ],
-  entryComponents: [ ExampleViewComponent, ContentChunkViewComponent ],
 })
 export class PblDemoAppSharedModule {
 

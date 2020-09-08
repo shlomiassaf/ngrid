@@ -7,7 +7,6 @@ import { ServerModule, ServerTransferStateModule } from '@angular/platform-serve
 import { CACHE, CacheService, STORAGE } from '@ngx-cache/core';
 import { fsStorageFactory, FsStorageLoader } from '@ngx-cache/fs-storage';
 import { FsCacheService, ServerCacheModule } from '@ngx-cache/platform-server';
-import { ModuleMapLoaderModule } from '@nguniversal/module-map-ngfactory-loader';
 import { Request } from 'express';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 
@@ -19,7 +18,6 @@ import { AppComponent } from './app.component';
   imports: [
     AppModule,
     ServerModule,
-    ModuleMapLoaderModule,
     ServerTransferStateModule,
     FlexLayoutServerModule,
     ServerCacheModule.forRoot([

@@ -15,12 +15,13 @@ export class MatExcelStyleHeaderMenu {
   grid: PblNgridComponent
 
   @ViewChild('columnMenu', { read: MatMenu, static: true }) matMenu: MatMenu;
+  @ViewChild('menuViewLocation', { read: ViewContainerRef, static: true }) menuViewLocation: ViewContainerRef;
 
   currentSort: 'asc' | 'desc' | undefined;
   currentPin: 'start' | 'end' | undefined;
   currentFilter: any = '';
 
-  constructor(private ref: PblNgridOverlayPanelRef<PblNgridDataHeaderExtensionContext>, private vcRef: ViewContainerRef) {
+  constructor(private ref: PblNgridOverlayPanelRef<PblNgridDataHeaderExtensionContext>) {
     this.column = ref.data.col;
     this.grid = ref.data.grid;
 
@@ -39,7 +40,7 @@ export class MatExcelStyleHeaderMenu {
       this.ref.close();
     });
 
-    const view = this.vcRef.createEmbeddedView(this.matMenu.templateRef);
+    const view = this.menuViewLocation.createEmbeddedView(this.matMenu.templateRef);
     this.matMenu.setElevation(0);
     this.matMenu.focusFirstItem('program');
     this.matMenu._resetAnimation();

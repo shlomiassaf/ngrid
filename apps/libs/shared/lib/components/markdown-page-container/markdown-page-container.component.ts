@@ -3,7 +3,7 @@ import { map, debounceTime } from 'rxjs/operators';
 import { Component, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { UnRx } from '@pebula/utils';
+import { utils } from '@pebula/ngrid';
 import { TocAreaDirective } from '../../toc.module';
 
 import { MarkdownPagesMenuService } from '../../services/markdown-pages-menu.service';
@@ -18,7 +18,6 @@ declare const BUILD_VERSION: string;
   templateUrl: './markdown-page-container.component.html',
   styleUrls: ['./markdown-page-container.component.scss']
 })
-@UnRx()
 export class MarkdownPageContainerComponent implements OnDestroy {
 
   entry: string;
@@ -39,13 +38,14 @@ export class MarkdownPageContainerComponent implements OnDestroy {
       .pipe(
         debounceTime(1),
         map( urlSegments => urlSegments.map(u => u.path) ),
-        UnRx(this)
+        utils.unrx(this)
       )
       .subscribe( paths => this.handleUrlUpdate(paths) );
   }
 
   ngOnDestroy(): void {
     this.menu$.complete();
+    utils.unrx.kill(this);
   }
 
   getRouterLink(path: string): any[] {

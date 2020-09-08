@@ -1,15 +1,16 @@
 
-import { NgModule } from '@angular/core';
+import { NgModule, Inject, PLATFORM_ID, Injectable } from '@angular/core';
 import { BrowserTransferStateModule, TransferState } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { CACHE } from '@ngx-cache/core';
-import { BrowserCacheModule, MemoryCacheService } from '@ngx-cache/platform-browser';
-import 'hammerjs';
+import { BrowserCacheModule } from '@ngx-cache/platform-browser';
 
 import { AppComponent } from './app.component';
 import { AppModule, REQ_KEY } from './app.module';
+import { MemoryCacheService } from './app.browser.module-fix-ngx-cache-v9-compat';
 
+// TODO: remove workaround once ngx-cache supports v9
 @NgModule({
   imports: [
     BrowserTransferStateModule,
@@ -17,7 +18,7 @@ import { AppModule, REQ_KEY } from './app.module';
     BrowserCacheModule.forRoot([
       {
         provide: CACHE,
-        useClass: MemoryCacheService
+        useClass: MemoryCacheService,
       }
     ]),
     AppModule

@@ -1,6 +1,7 @@
 ![npm (scoped)](https://img.shields.io/npm/v/@pebula/ngrid?label=ngrid&style=flat-square)
 ![npm (scoped)](https://img.shields.io/npm/v/@pebula/ngrid-material?label=ngrid-material&style=flat-square)
 ![CircleCI](https://img.shields.io/circleci/build/github/shlomiassaf/ngrid/master?style=flat-square&token=abc123def456)
+![CircleCI](https://img.shields.io/circleci/build/github/shlomiassaf/ngrid-material-starter/master?style=flat-square&token=abc123def456&label=ngrid-material-starter)
 ![GitHub](https://img.shields.io/github/license/shlomiassaf/ngrid?style=flat-square)
 
 # N-GRID
@@ -26,10 +27,15 @@ For full documentation, walkthroughs and examples - [visit the official site](ht
 - [Starter @ GitHub](https://github.com/shlomiassaf/ngrid-material-starter)
 - [Starter @ StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter?file=app%2Fapp.component.ts)
 
+### Version 1.x.x - angular V8
+
+- [Starter @ GitHub](https://github.com/shlomiassaf/ngrid-material-starter/tree/v8)
+- [Starter @ StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter-v8?file=app%2Fapp.component.ts)
+
 ## Setup
 
 ```bash
-yarn add @pebula/utils @pebula/ngrid @pebula/ngrid-material
+yarn add @pebula/ngrid @pebula/ngrid-material
 ```
 
 > Packages include secondary packages / plugins (e.g: `@pebula/ngrid/detail-row`)
@@ -100,24 +106,10 @@ Daily, mundane and repetitive routines like setting up a datasource or creating 
 
 Templates should be shared and reused, define a template once and use it multiple times.
 
-## Angular 7 vs Angular 8
+## Versioning
 
-If you're using angular 8 download the latest package (any version will work)
+The `master` repository is for version 2.x.x and onwards of **nGrid** which aligns with angular 9.0.6+
 
-If you're using angular 7 download version `1.0.0-alpha.23` and below. From `1.0.0-alpha.24` only angular 8 is supported.
+For angular 7-8 versions, use the 1.x.x versions [Code Here](https://github.com/shlomiassaf/ngrid/tree/1.x.x-(angular-v8))
 
-Once the library is compiled with the v8 angular compiler it will not work in angular v7 and below [read here why](https://github.com/angular/angular/issues/30413).
-
-### Will v7 get support ?
-
-It is theoretically possible to support angular 7 as well, it will require 2 distinct versions 1 for v8 and one for v7.  
-It will require 2 compilations, one with angular v8, then uninstall it and install v7 and run the compilation again.
-
-This is not trivial, the compiler has changed but also other parts like the cli with it's new Builders API.  
-
-This will require updating the relevant build script to support dual mode as well as installing build packages that relay on the cli (ng-cli-packagr-tasks)
-
-- Update angular/cdk/material/other packages that are built with v8 compiler to their v7 equivalent
-- Update scss-bundler/compiler tool script to use v7 Architect API
-
-Since `@angular/material` does not support backwards I don't see any reason to do that...
+> Note that only critical patches will be issued to the existing 1.x.x version.

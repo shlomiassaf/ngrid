@@ -6,8 +6,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { UnRx } from '@pebula/utils';
-
+import { unrx } from '../utils';
 import {
   PblNgridCellDefDirective,
   PblNgridEditorCellDefDirective,
@@ -75,7 +74,6 @@ export interface PblNgridMultiRegistryMap {
  * If a registry does not contain the template the search will move to the next one.
  */
 @Injectable({ providedIn: 'root' })
-@UnRx()
 export class PblNgridRegistryService implements OnDestroy {
 
   readonly changes: Observable<RegistryChangedEvent[]>;
@@ -93,7 +91,7 @@ export class PblNgridRegistryService implements OnDestroy {
     this.changes$ = new Subject();
     this.changes = this.changes$.asObservable();
     if (this._parent) {
-      this._parent.changes.pipe(UnRx(this)).subscribe(this.changes$);
+      this._parent.changes.pipe(unrx(this)).subscribe(this.changes$);
       this.root = this._parent.root;
     } else {
       this.root = this;
@@ -192,6 +190,7 @@ export class PblNgridRegistryService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.changes$.complete();
+    unrx.kill(this);
   }
 
   /**

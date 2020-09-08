@@ -14,7 +14,6 @@ import { ColumnFilterExample } from './column-filter.component';
     PblNgridModule,
   ],
   exports: [ ColumnFilterExample ],
-  entryComponents: [ ColumnFilterExample ],
 })
 @BindNgModule(ColumnFilterExample)
 export class ColumnFilterExampleModule { }

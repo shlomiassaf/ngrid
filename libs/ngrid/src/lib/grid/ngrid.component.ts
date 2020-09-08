@@ -27,8 +27,7 @@ import {
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
-import { UnRx } from '@pebula/utils';
-
+import { unrx } from './utils';
 import { EXT_API_TOKEN, PblNgridExtensionApi } from '../ext/grid-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
 import { PblNgridPaginatorKind } from '../paginator';
@@ -47,8 +46,6 @@ import { PblNgridMetaRowService } from './meta-rows/index';
 
 import { bindToDataSource } from './bind-to-datasource';
 import './bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
-
-import { setIdentityProp } from './ngrid.deprecate-at-1.0.0';
 
 export function internalApiFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi; }
 export function pluginControllerFactory(grid: { _plugin: PblNgridPluginContext; }) { return grid._plugin.controller; }
@@ -79,7 +76,6 @@ export function metaRowServiceFactory(grid: { _extApi: PblNgridExtensionApi; }) 
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-@UnRx()
 export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
 
   /**
@@ -119,14 +115,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    * ENTER / SPACE only when focusMode is set to `row`.
    */
   @Input() focusMode: 'row' | 'cell' | 'none' | '' | false | undefined;
-
-  /// TODO(shlomiassaf): Remove in 1.0.0
-  /**
-   * @deprecated Use `pIndex` in the column definition. (Removed in 1.0.0)
-   */
-  @Input() get identityProp(): string { return this.__identityProp; }
-  set identityProp(value: string) { this.__identityProp = value; setIdentityProp(this._store, value); }
-  private __identityProp: string;
 
   /**
    * The grid's source of data
@@ -414,6 +402,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       if (this._viewport) {
         this._cdkTable.detachViewPort();
       }
+      unrx.kill(this);
     };
 
     let p: Promise<void>;
@@ -440,29 +429,29 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   /**
    * Set the sorting definition for the current data set.
    *
-   * This method is a proxy to `PblDataSource.setSort` with the added sugar of providing column by string that match the `id` or `sortAlias` properties.
+   * This method is a proxy to `PblDataSource.setSort` with the added sugar of providing column by string that match the `id` or `alias` properties.
    * For more information see `PblDataSource.setSort`
    *
-   * @param columnOrSortAlias A column instance or a string matching `PblColumn.sortAlias` or `PblColumn.id`.
+   * @param columnOrAlias A column instance or a string matching `PblColumn.alias` or `PblColumn.id`.
    * @param skipUpdate When true will not update the datasource, use this when the data comes sorted and you want to sync the definitions with the current data set.
    * default to false.
    */
-  setSort(columnOrSortAlias: PblColumn | string, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
-  setSort(columnOrSortAlias?: PblColumn | string | boolean, sort?: PblNgridSortDefinition, skipUpdate = false): void {
-    if (!columnOrSortAlias || typeof columnOrSortAlias === 'boolean') {
-      this.ds.setSort(!!columnOrSortAlias);
+  setSort(columnOrAlias: PblColumn | string, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
+  setSort(columnOrAlias?: PblColumn | string | boolean, sort?: PblNgridSortDefinition, skipUpdate = false): void {
+    if (!columnOrAlias || typeof columnOrAlias === 'boolean') {
+      this.ds.setSort(!!columnOrAlias);
       return;
     }
 
     let column: PblColumn;
-    if (typeof columnOrSortAlias === 'string') {
-      column = this._store.columns.find( c => c.alias ? c.alias === columnOrSortAlias : (c.sort && c.id === columnOrSortAlias) );
+    if (typeof columnOrAlias === 'string') {
+      column = this._store.columns.find( c => c.alias ? c.alias === columnOrAlias : (c.sort && c.id === columnOrAlias) );
       if (!column && isDevMode()) {
-        console.warn(`Could not find column with alias "${columnOrSortAlias}".`);
+        console.warn(`Could not find column with alias "${columnOrAlias}".`);
         return;
       }
     } else {
-      column = columnOrSortAlias;
+      column = columnOrAlias;
     }
     this.ds.setSort(column, sort, skipUpdate);
   }
@@ -513,7 +502,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     if (this._dataSource !== value) {
       // KILL ALL subscriptions for the previous datasource.
       if (this._dataSource) {
-        UnRx.kill(this, this._dataSource);
+        unrx.kill(this, this._dataSource);
       }
 
       const prev = this._dataSource;
@@ -534,14 +523,14 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
       if ( value ) {
         if (isDevMode()) {
-          value.onError.pipe(UnRx(this, value)).subscribe(console.error.bind(console));
+          value.onError.pipe(unrx(this, value)).subscribe(console.error.bind(console));
         }
 
         // We register to this event because it fires before the entire data-changing process starts.
         // This is required because `onRenderDataChanging` is fired async, just before the data is emitted.
         // Its not enough to clear the context when `setDataSource` is called, we also need to handle `refresh` calls which will not
         // trigger this method.
-        value.onSourceChanging.pipe(UnRx(this, value)).subscribe( () => this._extApi.contextApi.clear() );
+        value.onSourceChanging.pipe(unrx(this, value)).subscribe( () => this._extApi.contextApi.clear() );
 
         // Run CD, scheduled as a micro-task, after each rendering
         value.onRenderDataChanging
@@ -553,7 +542,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
             tap( () => !this._store.primary && this._extApi.contextApi.clear() ),
             switchMap( () => value.onRenderedDataChanged.pipe(take(1), mapTo(this.ds.renderLength)) ),
             observeOn(asapScheduler),
-            UnRx(this, value)
+            unrx(this, value)
           )
           .subscribe( previousRenderLength => {
             // If the number of rendered items has changed the grid will update the data and run CD on it.
@@ -581,7 +570,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               }
             }),
             observeOn(animationFrameScheduler), // ww want to give the browser time to remove/add rows
-            UnRx(this, value)
+            unrx(this, value)
           )
           .subscribe(() => {
             const el = this.viewport.elementRef.nativeElement;
@@ -613,8 +602,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     const rebuildRows = this._store.allColumns.length > 0;
     this._extApi.contextApi.clear();
     this._store.invalidate(this.columns);
-
-    setIdentityProp(this._store, this.__identityProp); /// TODO(shlomiassaf): Remove in 1.0.0
 
     this.attachCustomCellTemplates();
     this.attachCustomHeaderCellTemplates();
@@ -863,13 +850,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     //        An example is a grid in a mat-tab that is hidden, the grid will hit the resize one when we focus the tab
     //        which will require a resize handling because it's initial size is 0
     //        To workaround this, we only skip elements not yet added to the DOM, which means they will not trigger a resize event.
-    let skipValue = document.contains(this.elRef.nativeElement) ? 1 : 0;
+    let skipValue = document.body.contains(this.elRef.nativeElement) ? 1 : 0;
 
     ro$
       .pipe(
         skip(skipValue),
         debounceTime(0, animationFrameScheduler),
-        UnRx(this),
+        unrx(this),
       )
       .subscribe( (args: [ResizeObserverEntry[], ResizeObserver]) => {
         if (skipValue === 0) {
@@ -974,7 +961,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     }
 
     if (this.isInit) {
-      UnRx.kill(this, paginationKillKey);
+      unrx.kill(this, paginationKillKey);
       if (this._paginatorEmbeddedVRef) {
         this.removeView(this._paginatorEmbeddedVRef, 'beforeContent');
         this._paginatorEmbeddedVRef = undefined;

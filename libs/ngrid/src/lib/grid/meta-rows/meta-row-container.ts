@@ -1,10 +1,8 @@
-import { Component, Input, ElementRef } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Component, Input, ElementRef, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 
-import { UnRx } from '@pebula/utils';
-
-import { PblMetaRowDefinitions } from '../columns/types';
+import { unrx } from '../utils';
 import { PblNgridMetaRowService } from './meta-row.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'div[pbl-ngrid-fixed-meta-row-container]',
@@ -14,14 +12,9 @@ import { Observable } from 'rxjs';
     '[style.width.px]': '_innerWidth',
   },
 })
-@UnRx()
-export class PblNgridMetaRowContainerComponent {
+export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
 
-  @Input('pbl-ngrid-fixed-meta-row-container') set type(value: 'header' | 'footer') {
-    if (this._type !== value) {
-      this.init(value);
-    }
-  };
+  @Input('pbl-ngrid-fixed-meta-row-container') type: 'header' | 'footer';
 
   /**
    * The inner width of the grid, the viewport width of a row.
@@ -30,52 +23,60 @@ export class PblNgridMetaRowContainerComponent {
   _innerWidth: number;
   _minWidth: number;
   _width: number;
+  readonly _width$ = new Subject<number>();
 
-  readonly _width$: Observable<number>;
-
-  private _type: 'header' | 'footer';
+  private _totalColumnWidth: number = 0;
   private element: HTMLElement;
 
   constructor(public readonly metaRows: PblNgridMetaRowService, elRef: ElementRef<HTMLElement>) {
     this.element = elRef.nativeElement;
-    metaRows.sync.pipe(UnRx(this)).subscribe( () => this.syncRowDefinitions() );
+    metaRows.sync.pipe(unrx(this)).subscribe( () => this.syncRowDefinitions() );
     this.metaRows.extApi.events
-      .pipe(UnRx(this))
+      .pipe(unrx(this))
       .subscribe( event => {
         if (event.kind === 'onResizeRow') {
-          this._innerWidth = this.metaRows.extApi.grid.viewport.innerWidth;
-          this._minWidth = this.metaRows.extApi.cdkTable.minWidth;
-          this._width = Math.max(this._innerWidth, this._minWidth);
+          this.updateWidths();
         }
       });
-    this._width$ = this.metaRows.extApi.grid.columnApi.totalColumnWidthChange;
+    this.metaRows.extApi.grid.columnApi.totalColumnWidthChange
+      .pipe(unrx(this))
+      .subscribe( width => {
+        this._totalColumnWidth = width;
+        this.updateWidths();
+      });
   }
 
-  private init(type: 'header' | 'footer'): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('type' in changes) {
+      const scrollContainerElement = this.element;
+      scrollContainerElement.scrollLeft = this.metaRows.extApi.grid.viewport.measureScrollOffset('start');
 
-    if (type === 'header') {
-      this._type = type;
-    } else {
-      this._type = 'footer';
+      if (changes.type.isFirstChange) {
+        this.metaRows.hzScroll
+          .pipe(unrx(this))
+          .subscribe( offset => scrollContainerElement.scrollLeft = offset );
+
+        this.metaRows.extApi.cdkTable.onRenderRows
+          .pipe(unrx(this))
+          .subscribe( () => { this.updateWidths() });
+      }
     }
+  }
 
-    const scrollContainerElement = this.element;
-    scrollContainerElement.scrollLeft = this.metaRows.extApi.grid.viewport.measureScrollOffset('start');
+  ngOnDestroy(): void {
+    this._width$.complete();
+    unrx.kill(this);
+  }
 
-    this.metaRows.hzScroll
-      .pipe(UnRx(this))
-      .subscribe( offset => scrollContainerElement.scrollLeft = offset );
-
-    this.metaRows.extApi.cdkTable.onRenderRows
-      .pipe(UnRx(this))
-      .subscribe( () => {
-        this._innerWidth = this.metaRows.extApi.grid.viewport.innerWidth;
-        this._width = Math.max(this._innerWidth, this._minWidth);
-      });
+  private updateWidths(): void {
+    this._innerWidth = this.metaRows.extApi.grid.viewport.innerWidth;
+    this._minWidth = this.metaRows.extApi.cdkTable.minWidth;
+    this._width = Math.max(this._innerWidth, this._minWidth);
+    this._width$.next(Math.max(this._innerWidth, this._totalColumnWidth))
   }
 
   private syncRowDefinitions(): void {
-    const isHeader = this._type === 'header';
+    const isHeader = this.type === 'header';
     const section = isHeader ? this.metaRows.header : this.metaRows.footer;
 
     const widthContainer = this.element.firstElementChild;

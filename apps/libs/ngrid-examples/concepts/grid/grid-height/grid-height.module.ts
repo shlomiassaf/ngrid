@@ -17,7 +17,6 @@ import { GridHeightGridExample } from './grid-height.component';
     PblNgridModule,
   ],
   exports: [ GridHeightGridExample ],
-  entryComponents: [ GridHeightGridExample ],
 })
 @BindNgModule(GridHeightGridExample)
 export class GridHeightGridExampleModule { }

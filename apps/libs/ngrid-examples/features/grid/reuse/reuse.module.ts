@@ -17,7 +17,6 @@ import { ReuseExample } from './reuse.component';
     PblNgridModule, PblNgridPaginatorModule, PblNgridBlockUiModule,
   ],
   exports: [ ReuseExample ],
-  entryComponents: [ ReuseExample ],
 })
 @BindNgModule(ReuseExample)
 export class ReuseExampleModule { }

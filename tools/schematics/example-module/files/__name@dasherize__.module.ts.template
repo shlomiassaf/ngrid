@@ -12,7 +12,6 @@ import { <%= componentClassName(name) %> } from './<%= componentFile(name) %>';
     PblNgridModule,
   ],
   exports: [ <%= componentClassName(name) %> ],
-  entryComponents: [ <%= componentClassName(name) %> ],
 })
 @BindNgModule(<%= componentClassName(name) %>)
 export class <%= moduleClassName(name) %> { }

@@ -102,7 +102,6 @@ By itself, an angular directive is the perfect plugin host, allowing immediate a
 ```typescript
 export const PLUGIN_KEY: 'myCustomPlugin' = 'myCustomPlugin';
 
-@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[myCustomPlugin]', exportAs: 'myCustomPlugin' })
 export class MyCustomPlugin {
   constructor(private grid: PblNgridComponent, private pluginCtrl: PblNgridPluginController) {
@@ -118,7 +117,7 @@ To use it:
 
 Since it's an angular directive it can also get input, emit output, exportAs and get queried by angular (`ViewChild`).
 
-I> The `PLUGIN_KEY` is a unique identifier used to register the plugin together with `@NgridPlugin()`. This is not mandatory, directive style plugin
+I> The `PLUGIN_KEY` is a unique identifier used to register the plugin together with `ngridPlugin()`. This is not mandatory, directive style plugin
 does not require registration as it is template driven and created by the angular runtime. However, registration provide better control and inter-plugin communication.
 
 ### Grid Extension Registry
@@ -133,7 +132,6 @@ We will use the same example:
 ```typescript
 export const PLUGIN_KEY: 'myCustomPlugin' = 'myCustomPlugin';
 
-@NgridPlugin({ id: PLUGIN_KEY })
 export class MyCustomPlugin { }
 ```
 
@@ -165,7 +163,6 @@ declare module '@pebula/ngrid/lib/ext/types' {
 
 export const PLUGIN_KEY: 'myCustomPlugin' = 'myCustomPlugin';
 
-@NgridPlugin({ id: PLUGIN_KEY, factory: 'create' })
 export class MyCustomPlugin {
   static create(grid: PblNgridComponent, injector: Injector): MyCustomPlugin {
     const pluginCtrl = PblNgridPluginController.find(grid);
@@ -174,11 +171,17 @@ export class MyCustomPlugin {
 
   constructor(private grid: PblNgridComponent, private pluginCtrl: PblNgridPluginController) { }
 }
+
+@NgModule()
+export class MyCustomPluginModule {
+  static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY, factory: 'create' }, MyCustomPlugin);
+}
+
 ```
 
 Let's explain:
 
-We added another metadata property to `@NgridPlugin()` called `factory`. `factory` is the name of a **static** function on out plugin class
+We added another metadata property to `ngridPlugin()` called `factory`. `factory` is the name of a **static** function on out plugin class
 that we can use as a factory for creating new instances of the plugin.
 
 The factory method must accept 2 parameters, the grid and an angular `Injector` and in it can create a new instance and return it.
@@ -224,7 +227,6 @@ declare module '@pebula/ngrid/lib/ext/types' {
 Because this is a simple example, we will use the same class for the plugin and directive, you can split them in more complex scenarios.
 
 ```typescript
-@NgridPlugin({ id: PLUGIN_KEY, factory: 'create' })
 @Directive({ selector: 'pbl-ngrid[clipboard]', exportAs: 'pblNgridClipboard' })
 @UnRx()
 export class PblNgridClipboardPlugin implements OnDestroy {
@@ -241,9 +243,18 @@ export class PblNgridClipboardPlugin implements OnDestroy {
 
   }
 }
+
+@NgModule()
+export class MyCustomPluginModule {
+  static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY, factory: 'create' }, PblNgridClipboardPlugin);
+}
+
 ```
 
 Quite simple, a factory method called `create` that will create new instances for us.
+
+I> We register our plugins in a static method inside the module, this is done to allow proper compilation of the library without tree-shaking the
+registration code. This is probably not mandatory in your application.
 
 ### Adding business
 

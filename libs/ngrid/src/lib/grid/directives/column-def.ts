@@ -60,8 +60,6 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
 
   isDragging = false;
 
-  /** @deprecated use grid instead */
-  readonly table: PblNgridComponent<T>;
   readonly grid: PblNgridComponent<any>;
 
   /**
@@ -93,7 +91,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
 
   constructor(@Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<any>) {
     super();
-    this.grid = this.table = extApi.grid;
+    this.grid = extApi.grid;
 
     const s = extApi.dynamicColumnWidthFactory().strategy;
     this.widthBreakout = c => widthBreakout(s, c);

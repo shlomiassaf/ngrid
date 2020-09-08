@@ -5,7 +5,7 @@ import { PblNgridComponent } from '../ngrid.component';
 import { PblColumnTypeDefinitionDataMap, PblMetaColumn, PblColumn } from '../columns';
 import { PblRowContext } from './row';
 
-declare module '@angular/cdk/table/typings/table.d' {
+declare module '@angular/cdk/table/table.d' {
   interface RowContext<T> {
     gridInstance: PblNgridComponent<T>;
   }
@@ -56,8 +56,6 @@ export interface PblNgridMetaCellContext<T = any, TCol extends PblMetaColumn | P
   $implicit: PblNgridMetaCellContext<T>;
   col: TCol;
 
-  /** @deprecated use grid instead */
-  table: PblNgridComponent<T>;
   grid: PblNgridComponent<T>;
 }
 
@@ -67,8 +65,6 @@ export interface PblNgridCellContext<T = any, P extends keyof PblColumnTypeDefin
   row: T,
   value: any;
   col: PblColumn;
-  /** @deprecated use grid instead */
-  table: PblNgridComponent<T>;
   grid: PblNgridComponent<T>;
   readonly index: number;
   readonly editing: boolean;
@@ -105,8 +101,6 @@ export interface PblNgridRowContext<T = any> extends RowContext<T> {
    */
   outOfView: boolean;
 
-  /** @deprecated use grid instead */
-  readonly table: PblNgridComponent<T>;
   readonly grid: PblNgridComponent<T>;
 
   /**

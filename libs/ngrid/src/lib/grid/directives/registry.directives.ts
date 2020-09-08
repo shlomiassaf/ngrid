@@ -8,6 +8,7 @@ import { MetaCellContext, PblNgridMetaCellContext } from '../context/index';
 import { PblNgridHeaderCellComponent } from './cell';
 import { PblNgridSingleRegistryMap, PblNgridMultiRegistryMap, PblNgridRegistryService } from '../services/grid-registry.service';
 
+@Directive()
 export abstract class PblNgridSingleTemplateRegistry<T, TKind extends keyof PblNgridSingleRegistryMap> implements OnInit, OnDestroy {
   abstract readonly kind: TKind;
 
@@ -22,6 +23,7 @@ export abstract class PblNgridSingleTemplateRegistry<T, TKind extends keyof PblN
   }
 }
 
+@Directive()
 export abstract class PblNgridMultiTemplateRegistry<T, TKind extends keyof PblNgridMultiRegistryMap> implements OnInit, OnDestroy {
   abstract readonly name: string;
   abstract readonly kind: TKind;

@@ -18,7 +18,6 @@ import { CustomSetupExample } from './custom-setup.component';
     PblNgridModule, PblNgridBlockUiModule, PblNgridCellTooltipModule,
   ],
   exports: [ CellTooltipExample, CustomSetupExample ],
-  entryComponents: [ CellTooltipExample, CustomSetupExample ],
 })
 @BindNgModule(CellTooltipExample, CustomSetupExample)
 export class CellTooltipExampleModule { }

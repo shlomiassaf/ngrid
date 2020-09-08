@@ -6,7 +6,7 @@ import { writeFile } from 'fs-extra';
 import * as globby from 'globby';
 import { resolve, virtualFs } from '@angular-devkit/core';
 import { normalizeAssetPatterns } from '@angular-devkit/build-angular/src/utils/normalize-asset-patterns';
-import * as log from 'ng-packagr/lib/util/log';
+import * as log from 'ng-packagr/lib/utils/log';
 
 import { EntryPointTaskContext, Job } from 'ng-cli-packagr-tasks';
 import { buildScssPipeline } from '../tasks/package-tools/gulp/build-scss-pipeline';

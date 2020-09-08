@@ -1,5 +1,5 @@
 import { Directive, Input } from '@angular/core';
-import { PblNgridPluginController, NgridPlugin } from '@pebula/ngrid';
+import { PblNgridPluginController } from '@pebula/ngrid';
 import { PblNgridOverlayPanelFactory, PblNgridOverlayPanel, PblNgridOverlayPanelConfig } from '@pebula/ngrid/overlay-panel';
 
 declare module '@pebula/ngrid/lib/ext/types' {
@@ -8,10 +8,9 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
-const PLUGIN_KEY: 'matHeaderContextMenu' = 'matHeaderContextMenu';
+export const PLUGIN_KEY: 'matHeaderContextMenu' = 'matHeaderContextMenu';
 
-@Directive({ selector: 'pbl-ngrid[matHeaderContextMenu]' })
-@NgridPlugin({ id: PLUGIN_KEY })
+@Directive({ selector: 'pbl-ngrid[matHeaderContextMenu]', providers: [ PblNgridOverlayPanelFactory ] })
 export class PblNgridMatHeaderContextMenuPlugin {
 
   @Input('matHeaderContextMenu') style: any;

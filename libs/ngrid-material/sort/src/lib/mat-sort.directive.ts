@@ -1,19 +1,16 @@
 import { Directive, OnDestroy } from '@angular/core';
 import { Sort, MatSort, MatSortHeader, SortDirection } from '@angular/material/sort';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin, PblNgridSortDefinition, PblDataSource } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblNgridSortDefinition, PblDataSource, utils } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
     matSort?: PblNgridMatSortDirective;
   }
 }
-const PLUGIN_KEY: 'matSort' = 'matSort';
+export const PLUGIN_KEY: 'matSort' = 'matSort';
 
-@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[matSort]', exportAs: 'pblMatSort' })
-@UnRx()
 export class PblNgridMatSortDirective implements OnDestroy {
   private _removePlugin: (table: PblNgridComponent<any>) => void;
 
@@ -22,7 +19,7 @@ export class PblNgridMatSortDirective implements OnDestroy {
 
     let origin: 'ds' | 'click' = 'click';
     this.sort.sortChange
-      .pipe(UnRx(this))
+      .pipe(utils.unrx(this))
       .subscribe( s => {
         this.onSort(s, origin);
         origin = 'click';
@@ -69,12 +66,12 @@ export class PblNgridMatSortDirective implements OnDestroy {
           }
         }
         if (e.kind === 'onDataSource') {
-          UnRx.kill(this, e.prev);
+          utils.unrx.kill(this, e.prev);
           if (this.sort && this.sort.active) {
             this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' }, origin);
           }
           table.ds.sortChange
-            .pipe(UnRx(this, e.curr))
+            .pipe(utils.unrx(this, e.curr))
             .subscribe( event => { handleDataSourceSortChange(event); });
         }
       });
@@ -82,6 +79,7 @@ export class PblNgridMatSortDirective implements OnDestroy {
 
   ngOnDestroy(): void {
     this._removePlugin(this.table);
+    utils.unrx.kill(this);
   }
 
   private onSort(sort: Sort, origin: 'ds' | 'click'): void {

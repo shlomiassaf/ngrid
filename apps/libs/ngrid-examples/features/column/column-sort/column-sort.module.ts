@@ -15,7 +15,6 @@ import { ColumnSpecificSortingExample } from './column-specific-sorting.componen
     PblNgridModule,
   ],
   exports: [ ColumnSortExample, ColumnSpecificSortingExample ],
-  entryComponents: [ ColumnSortExample, ColumnSpecificSortingExample ],
 })
 @BindNgModule(ColumnSortExample, ColumnSpecificSortingExample)
 export class ColumnSortExampleModule { }

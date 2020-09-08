@@ -1,20 +1,30 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragDropModule, DragDrop } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
-import { PblNgridModule, provideCommon } from '@pebula/ngrid';
+import { PblNgridModule, provideCommon, ngridPlugin } from '@pebula/ngrid';
 
-import { PblDragDrop } from './drag-and-drop/core/drag-drop';
 import { CdkLazyDropList, CdkLazyDrag, PblDragHandle } from './drag-and-drop/core/lazy-drag-drop';
-import { PblNgridRowReorderPluginDirective, PblNgridRowDragDirective } from './drag-and-drop/row/row-reorder-plugin';
-import { PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective } from './drag-and-drop/column/column-reorder-plugin';
+import { PblNgridRowReorderPluginDirective, PblNgridRowDragDirective, ROW_REORDER_PLUGIN_KEY } from './drag-and-drop/row/row-reorder-plugin';
+import { PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, COL_REORDER_PLUGIN_KEY } from './drag-and-drop/column/column-reorder-plugin';
 import { PblNgridCellDraggerRefDirective } from './drag-and-drop/column/cell-dragger-ref';
+import { colReorderExtendGrid } from './drag-and-drop/column/extend-grid';
+
 import { PblNgridAggregationContainerDirective } from './drag-and-drop/column/aggregation-column';
 
-import { PblNgridDragResizeComponent } from './column-resize/column-resize.component';
+import { PblNgridDragResizeComponent, COL_RESIZE_PLUGIN_KEY } from './column-resize/column-resize.component';
 import { PblNgridCellResizerRefDirective } from './column-resize/cell-resizer-ref';
+import { colResizeExtendGrid } from './column-resize/extend-grid';
 
 import { DragPluginDefaultTemplatesComponent } from './default-settings.component';
+
+export function ngridPlugins() {
+  return [
+    ngridPlugin({ id: ROW_REORDER_PLUGIN_KEY }, PblNgridRowReorderPluginDirective),
+    ngridPlugin({ id: COL_REORDER_PLUGIN_KEY, runOnce: colReorderExtendGrid }, PblNgridColumnReorderPluginDirective),
+    ngridPlugin({ id: COL_RESIZE_PLUGIN_KEY, runOnce: colResizeExtendGrid }, PblNgridDragResizeComponent),
+  ]
+}
 
 @NgModule({
   imports: [
@@ -38,15 +48,14 @@ import { DragPluginDefaultTemplatesComponent } from './default-settings.componen
     PblNgridAggregationContainerDirective,
     PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
   ],
-  providers: [
-    PblDragDrop,
-    { provide: DragDrop, useExisting: PblDragDrop },
-  ],
-  entryComponents: [ DragPluginDefaultTemplatesComponent ],
+  // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
+  entryComponents: [ DragPluginDefaultTemplatesComponent ]
 })
 export class PblNgridDragModule {
 
-  static withDefaultTemplates(): ModuleWithProviders {
+  static readonly NGRID_PLUGIN = ngridPlugins();
+
+  static withDefaultTemplates(): ModuleWithProviders<PblNgridDragModule> {
     return {
       ngModule: PblNgridDragModule,
       providers: provideCommon( [ { component: DragPluginDefaultTemplatesComponent } ]),

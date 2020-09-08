@@ -1,12 +1,9 @@
 import { filter } from 'rxjs/operators';
 import { Directive, Injector, OnDestroy, Input } from '@angular/core';
 
-// import { Clipboard } from '@angular/cdk-experimental/clipboard';
-// TODO: remove internal implementation in the next version of cdk-experimental (right after 8.1.3)
-import { Clipboard } from './clipboard.service';
+import { Clipboard } from '@angular/cdk/clipboard';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin, PblNgridConfigService } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController, PblNgridConfigService, utils } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -42,9 +39,7 @@ const DEFAULT_ROW_SEP = '\n';
 
 export const PLUGIN_KEY: 'clipboard' = 'clipboard';
 
-@NgridPlugin({ id: PLUGIN_KEY, factory: 'create' })
 @Directive({ selector: 'pbl-ngrid[clipboard]', exportAs: 'pblNgridClipboard' })
-@UnRx()
 export class PblNgridClipboardPlugin implements OnDestroy {
 
   static create(grid: PblNgridComponent, injector: Injector): PblNgridClipboardPlugin {
@@ -77,6 +72,7 @@ export class PblNgridClipboardPlugin implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    utils.unrx.kill(this);
     this._removePlugin(this.grid);
   }
 
@@ -126,9 +122,25 @@ export class PblNgridClipboardPlugin implements OnDestroy {
       }
     }
 
+    // contextApi.selectedCells are un-ordered, their order is based on the order in which user have selected cells.
+    // It means that the row's will not paste in the proper order unless we re-order them based on the data index.
+    // This is a very native and simple implementation that will hold most copy actions 1k +-
+    // TODO: Consider a better logic, taking performance into consideration.
+
+    const entries = Array.from(data.entries());
+    entries.sort((a, b) => {
+      const aIndex = contextApi.findRowInCache(a[0]).dataIndex;
+      const bIndex = contextApi.findRowInCache(b[0]).dataIndex;
+      if (aIndex < bIndex) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+
     return {
       minIndex,
-      rows: Array.from(data.values()),
+      rows: entries.map( e => e[1] ),
     };
   }
 
@@ -143,7 +155,7 @@ export class PblNgridClipboardPlugin implements OnDestroy {
     targetEvents.keyDown
       .pipe(
         filter( event => this.isCopyEvent(event.source) ),
-        UnRx(this)
+        utils.unrx(this)
       )
       .subscribe( event => this.doCopy() );
   }

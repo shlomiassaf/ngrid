@@ -19,7 +19,6 @@ import { CustomResizingExample } from './custom-resizing.component';
     PblNgridDragModule.withDefaultTemplates(),
   ],
   exports: [ ColumnResizeExample, ResizingWithTheApiExample, ResizeBoundariesExample, CustomResizingExample ],
-  entryComponents: [ ColumnResizeExample, ResizingWithTheApiExample, ResizeBoundariesExample, CustomResizingExample ],
 })
 @BindNgModule(ColumnResizeExample, ResizingWithTheApiExample, ResizeBoundariesExample, CustomResizingExample)
 export class ColumnResizeExampleModule { }

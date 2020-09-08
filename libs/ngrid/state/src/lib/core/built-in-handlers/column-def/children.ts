@@ -8,7 +8,7 @@ export function registerColumnDefChildHandlers() {
     .requiredKeys('id', 'prop')
     .handleKeys(
       'label', 'css', 'type', 'width', 'minWidth', 'maxWidth',              // PblNgridBaseColumnState (all optional)
-      'headerType', 'footerType', 'sort', 'sortAlias', 'editable', 'pin'    // All Optional
+      'headerType', 'footerType', 'sort', 'alias', 'editable', 'pin'    // All Optional
     )
     .serialize( (key, ctx) => {
       const c = ctx.data.activeColumn || ctx.data.pblColumn;
@@ -66,7 +66,7 @@ export function registerColumnDefChildHandlers() {
 
         // We must assert the type starting from 3.5 onwards
         // See "Fixes to unsound writes to indexed access types" in https://devblogs.microsoft.com/typescript/announcing-typescript-3-5
-        ctx.source[key as keyof (PblColumn | PblColumnDefinition)] = stateValue;
+        ctx.source[key as any] = stateValue;
       }
 
     })

@@ -21,7 +21,6 @@ import { ManualExample } from './manual.component';
     PblNgridModule, PblNgridBlockUiModule,
   ],
   exports: [ BlockUiExample, ManualExample ],
-  entryComponents: [ BlockUiExample, ManualExample ],
 })
 @BindNgModule(BlockUiExample, ManualExample)
 export class BlockUiExampleModule { }

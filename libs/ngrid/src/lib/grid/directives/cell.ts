@@ -2,7 +2,7 @@
 // tslint:disable:directive-selector
 import { first, filter } from 'rxjs/operators';
 import {
-  OnInit,
+  OnInit, OnDestroy,
   Component,
   Directive,
   ElementRef,
@@ -16,8 +16,8 @@ import {
   Input,
 } from '@angular/core';
 import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
-import { UnRx } from '@pebula/utils';
 
+import { unrx } from '../utils';
 import { PblNgridComponent } from '../ngrid.component';
 import { uniqueColumnCss, uniqueColumnTypeCss, COLUMN_EDITABLE_CELL_CLASS } from '../circular-dep-bridge';
 import { COLUMN, PblMetaColumn, PblColumn, PblColumnGroup, isPblColumn, isPblColumnGroup } from '../columns';
@@ -77,23 +77,18 @@ function applySourceWidth(this: { columnDef: PblNgridColumnDef; el: HTMLElement 
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-@UnRx()
-export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements OnInit {
+export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements OnInit, OnDestroy {
   @ViewChild('vcRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
 
   private el: HTMLElement;
 
   cellCtx: PblNgridDataHeaderExtensionContext | MetaCellContext;
 
-  /** @deprecated use grid instead */
-  readonly table: PblNgridComponent<T>;
-
   constructor(public readonly columnDef: PblNgridColumnDef<T>,
               public readonly grid: PblNgridComponent<any>,
               public readonly elementRef: ElementRef,
               private zone: NgZone) {
     super(columnDef, elementRef);
-    this.table = grid;
 
     const column = columnDef.column;
     const el = this.el = elementRef.nativeElement;
@@ -124,12 +119,16 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
     }
 
     this.columnDef.widthChange
-      .pipe(filter(predicate), UnRx(this))
+      .pipe(filter(predicate), unrx(this))
       .subscribe(widthUpdater.bind(this));
 
     view && view.detectChanges();
     widthUpdater.call(this);
     initCellElement(this.el, col);
+  }
+
+  ngOnDestroy(): void {
+    unrx.kill(this);
   }
 
   protected initMainHeaderColumnView(col: PblColumn) {
@@ -196,7 +195,7 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
       projectedContent.push(rootNodes);
     }
 
-    const cmpRef = this.vcRef.createComponent(factory, 0, null, projectedContent);
+    const cmpRef = this.vcRef.createComponent(factory, this.vcRef.length, null, projectedContent);
 
     if (ext.projectContent) {
       rootNodes = [ cmpRef.location.nativeElement ];
@@ -219,8 +218,7 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
   },
   exportAs: 'pblNgridCell',
 })
-@UnRx()
-export class PblNgridCellDirective extends CdkCell implements DoCheck {
+export class PblNgridCellDirective extends CdkCell implements DoCheck, OnDestroy {
 
   @Input() set rowCtx(value: PblRowContext<any>) {
     if (value !== this._rowCtx) {
@@ -254,7 +252,7 @@ export class PblNgridCellDirective extends CdkCell implements DoCheck {
     colDef.widthChange
       .pipe(
         filter( event => event.reason !== 'update'),
-        UnRx(this),
+        unrx(this),
       )
       .subscribe(event => this.colDef.applyWidth(this.el));
   }
@@ -280,6 +278,11 @@ export class PblNgridCellDirective extends CdkCell implements DoCheck {
       }
     }
   }
+
+  ngOnDestroy(): void {
+    unrx.kill(this);
+  }
+
 }
 
 @Directive({
@@ -290,18 +293,14 @@ export class PblNgridCellDirective extends CdkCell implements DoCheck {
   },
   exportAs: 'ngridFooterCell',
  })
- @UnRx()
-export class PblNgridFooterCellDirective extends CdkFooterCell implements OnInit {
+export class PblNgridFooterCellDirective extends CdkFooterCell implements OnInit, OnDestroy {
   cellCtx: MetaCellContext;
-  /** @deprecated use grid instead */
-  readonly table: PblNgridComponent;
 
   private el: HTMLElement;
   constructor(private columnDef: PblNgridColumnDef<PblMetaColumn | PblColumnGroup>,
               public grid: PblNgridComponent,
               elementRef: ElementRef) {
     super(columnDef, elementRef);
-    this.table = grid;
     this.el = elementRef.nativeElement;
     const column = columnDef.column;
     applyWidth.call(this);
@@ -310,7 +309,7 @@ export class PblNgridFooterCellDirective extends CdkFooterCell implements OnInit
     columnDef.widthChange
       .pipe(
         filter( event => event.reason !== 'update'),
-        UnRx(this),
+        unrx(this),
       )
       .subscribe(applyWidth.bind(this));
   }
@@ -318,4 +317,9 @@ export class PblNgridFooterCellDirective extends CdkFooterCell implements OnInit
   ngOnInit(): void {
     this.cellCtx = MetaCellContext.create(this.columnDef.column, this.grid);
   }
+
+  ngOnDestroy(): void {
+    unrx.kill(this);
+  }
+
 }

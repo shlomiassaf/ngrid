@@ -5,8 +5,7 @@ import { SelectionModel, CollectionViewer, ListRange } from '@angular/cdk/collec
 import { DataSource } from '@angular/cdk/table';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 
-import { UnRx } from '@pebula/utils';
-
+import { unrx } from '../grid/utils';
 import { PblColumn } from '../grid/columns';
 import { PblNgridPaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPaginator } from '../paginator';
 import { DataSourcePredicate, DataSourceFilter, DataSourceFilterToken, PblNgridSortDefinition, PblNgridDataSourceSortChange } from './types';
@@ -124,9 +123,6 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
     }
   }
 
-  // TODO(1.0.0): remove
-  /** @deprecated BREAKING CHANGE: removed in 1.0.0 - Use renderedData instead. */
-  get renderedRows(): T[] { return this._renderData$.value || []; }
   /** Returns the starting index of the rendered data */
   get renderStart(): number { return this._lastRange ? this._lastRange.start : 0; }
   get renderLength(): number { return this._renderData$.value.length; }
@@ -279,7 +275,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
 
   dispose(): void {
     if (!this._disposed) {
-      UnRx.kill(this);
+      unrx.kill(this);
       this._adapter.dispose();
       this._onRenderDataChanging.complete();
       this._renderData$.complete();
@@ -345,7 +341,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
       initialState,
     );
 
-    UnRx.kill(this, PROCESSING_SUBSCRIPTION_GROUP)
+    unrx.kill(this, PROCESSING_SUBSCRIPTION_GROUP)
 
     const trimToRange = (range: ListRange, data: any[]) => data.slice(range.start, range.end) ;
 
@@ -353,7 +349,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
     let lastEmittedSource: T[];
 
     cv.viewChange
-      .pipe(UnRx(this, PROCESSING_SUBSCRIPTION_GROUP))
+      .pipe(unrx(this, PROCESSING_SUBSCRIPTION_GROUP))
       .subscribe( range => {
         if (this._lastRange && this._lastRange.start === range.start && this._lastRange.end === range.end) {
           return;
@@ -368,7 +364,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
 
     stream
       .pipe(
-        UnRx(this, PROCESSING_SUBSCRIPTION_GROUP),
+        unrx(this, PROCESSING_SUBSCRIPTION_GROUP),
         tap( result => {
           lastEmittedSource = result.data;
           skipViewChange = true;
@@ -387,7 +383,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
       );
 
     this._adapter.onSourceChanged
-      .pipe(UnRx(this, PROCESSING_SUBSCRIPTION_GROUP))
+      .pipe(unrx(this, PROCESSING_SUBSCRIPTION_GROUP))
       .subscribe( source => this._source = source || [] );
 
     if (this._lastRefresh !== undefined) {

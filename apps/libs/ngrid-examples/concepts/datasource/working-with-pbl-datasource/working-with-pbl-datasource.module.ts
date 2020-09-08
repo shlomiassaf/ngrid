@@ -14,7 +14,6 @@ import { WorkingWithPblDataSourceExample } from './working-with-pbl-datasource.c
     PblNgridModule,
   ],
   exports: [ WorkingWithPblDataSourceExample ],
-  entryComponents: [ WorkingWithPblDataSourceExample ],
 })
 @BindNgModule(WorkingWithPblDataSourceExample)
 export class WorkingWithPblDataSourceExampleModule { }

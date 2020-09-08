@@ -1,8 +1,7 @@
-import { Directive, EmbeddedViewRef, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
+import { Directive, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { UnRx } from '@pebula/utils';
-import { PblNgridComponent, PblNgridPluginController, NgridPlugin, PblNgridRowContext } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
 import { PblNgridDetailRowComponent } from './row';
 import { PblNgridDetailRowParentRefDirective, PblNgridDefaultDetailRowParentComponent } from './directives';
@@ -34,9 +33,7 @@ export interface PblDetailsRowToggleEvent<T = any> {
   toggle(): void;
 }
 
-@NgridPlugin({ id: PLUGIN_KEY })
 @Directive({ selector: 'pbl-ngrid[detailRow]', exportAs: 'pblNgridDetailRow' })
-@UnRx()
 export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   /**
    * Detail row control (none / all rows / selective rows)

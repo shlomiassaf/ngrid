@@ -6,7 +6,7 @@ import { PblNgridComponent } from '../ngrid.component';
 import { CellContextState, RowContextState, PblNgridRowContext } from './types';
 import { PblCellContext } from './cell';
 
-declare module '@angular/cdk/table/typings/row.d' {
+declare module '@angular/cdk/table/row.d' {
   export interface CdkCellOutletRowContext<T> {
     pblRowContext: PblNgridRowContext<T>;
   }
@@ -37,9 +37,6 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
 
   firstRender: boolean;
   outOfView: boolean;
-
-  /** @deprecated use grid instead */
-  readonly table: PblNgridComponent<T>;
 
   readonly grid: PblNgridComponent<T>;
 
@@ -75,8 +72,7 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
       Object.defineProperty(this, 'index', { get: function() { return this.renderIndex; } });
     }
 
-    this.grid = this.table = extApi.grid;
-
+    this.grid = extApi.grid;
     const cells = this.cells = [];
     const { columns } = extApi.grid.columnApi;
     const len = columns.length;

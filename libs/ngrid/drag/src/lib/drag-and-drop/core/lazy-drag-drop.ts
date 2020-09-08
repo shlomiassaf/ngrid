@@ -1,13 +1,15 @@
 import { take } from 'rxjs/operators';
 import { Input, Directive, ElementRef, QueryList, OnDestroy, Optional, AfterViewInit, OnInit } from '@angular/core';
-import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST } from '@angular/cdk/drag-drop';
+import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST, DragDrop } from '@angular/cdk/drag-drop';
 import { PblDropListRef } from './drop-list-ref';
 import { PblDragRef } from './drag-ref';
+import { PblDragDrop } from './drag-drop';
 
 @Directive({
   selector: '[cdkLazyDropList]',
   exportAs: 'cdkLazyDropList',
   providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CDK_DROP_LIST, useClass: CdkLazyDropList },
   ],
   host: { // tslint:disable-line:use-host-property-decorator
@@ -29,10 +31,7 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   // tslint:disable-next-line:no-input-rename
   @Input('cdkDropListDirectContainerElement') directContainerElement: string;
 
-  _draggables: QueryList<CdkDrag>;
-
   /* private */ originalElement: ElementRef<HTMLElement>;
-  /* private */ _draggablesSet = new Set<CdkDrag>();
 
   ngOnInit(): void {
     if (this.pblDropListRef instanceof PblDropListRef === false) {
@@ -42,18 +41,11 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   }
 
   addDrag(drag: CdkDrag): void {
-    this._draggablesSet.add(drag);
-    this._draggables.reset(Array.from(this._draggablesSet.values()));
-    this._draggables.notifyOnChanges(); // TODO: notify with asap schedular and obs$
+    this.addItem(drag);
   }
 
-  removeDrag(drag: CdkDrag): boolean {
-    const result = this._draggablesSet.delete(drag);
-    if (result) {
-      this._draggables.reset(Array.from(this._draggablesSet.values()));
-      this._draggables.notifyOnChanges(); // TODO: notify with asap schedular and obs$
-    }
-    return result;
+  removeDrag(drag: CdkDrag): void {
+    this.removeItem(drag);
   }
 
   /* protected */ beforeStarted(): void {
@@ -79,6 +71,9 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
     'class': 'cdk-drag',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
+  providers: [
+    { provide: DragDrop, useExisting: PblDragDrop },
+  ],
 })
 export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList<T>, DRef = any> extends CdkDrag<T> implements OnInit, AfterViewInit, OnDestroy {
 

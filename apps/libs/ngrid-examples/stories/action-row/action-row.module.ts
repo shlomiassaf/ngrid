@@ -23,7 +23,6 @@ import { ActionRowExample, MyGridActionRowComponent } from './action-row.compone
     PblNgridModule, PblNgridBlockUiModule, PblNgridPaginatorModule,
   ],
   exports: [ ActionRowExample ],
-  entryComponents: [ ActionRowExample ],
 })
 @BindNgModule(ActionRowExample)
 export class ActionRowExampleModule { }
