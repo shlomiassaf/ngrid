@@ -131,15 +131,14 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
                 } else {
                   this.viewport.scrollFrameRate
                     .pipe(takeUntil(scrollEnd$.pipe(take(1))))
-                    .subscribe(
-                      frameRate => {
+                    .subscribe({
+                      next: frameRate => {
                         if (!removedEvent && frameRate < wheelMode) {
                           wheelUnListen();
                           removedEvent = true;
                         }
                       },
-                      null,
-                      () => {
+                      complete: () => {
                         const lastWheel$ = fromEvent(viewPort, 'wheel').pipe(debounceTime(50), take(1));
                         race(lastWheel$, timer(51) as any)
                           .subscribe( () => {
@@ -152,7 +151,7 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
                           // TODO: maybe we can measure time between no-scrolling and wheel to find this MS value
                           //        OR, register a temp `wheel` listener that will detect wheel end and re-register the original handler.
                       }
-                    );
+                    });
                 }
               } else {
                 scrollEnd$.pipe(take(1)).subscribe(restore);

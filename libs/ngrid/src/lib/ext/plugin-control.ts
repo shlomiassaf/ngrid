@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { Injector } from '@angular/core';
+import { InjectFlags, Injector } from '@angular/core';
 
 import { PblNgridComponent } from '../grid/ngrid.component';
 import {
@@ -12,6 +12,8 @@ import { PblNgridExtensionApi } from './grid-ext-api';
 import { PLUGIN_STORE } from './grid-plugin';
 
 const NGRID_PLUGIN_CONTEXT = new WeakMap<PblNgridComponent<any>, PblNgridPluginContext>();
+
+const CREATED$ = new Subject<{ table: PblNgridComponent<any>, controller: PblNgridPluginController<any> }>();
 
 /** @internal */
 export class PblNgridPluginContext<T = any> {
@@ -31,7 +33,7 @@ export class PblNgridPluginContext<T = any> {
     instance.grid = table;
     instance.injector = injector;
     instance.extApi = extApi;
-    instance.controller = new PblNgridPluginController(instance);
+    PblNgridPluginController.create<T>(instance);
 
     return instance;
   }
@@ -61,8 +63,13 @@ export class PblNgridPluginContext<T = any> {
 }
 
 export class PblNgridPluginController<T = any> {
-  private static readonly created$ = new Subject<{ table: PblNgridComponent<any>, controller: PblNgridPluginController<any> }>();
-  static readonly created = PblNgridPluginController.created$.asObservable();
+  static readonly created = CREATED$.asObservable();
+
+  static create<T = any>(context: PblNgridPluginContext<T>) {
+    const controller = new PblNgridPluginController<T>(context);
+    context.controller = controller;
+    CREATED$.next({ table: context.grid, controller });
+  }
 
   get injector(): Injector { return this.context.injector; }
 
@@ -71,11 +78,10 @@ export class PblNgridPluginController<T = any> {
   private readonly grid: PblNgridComponent<T>
   private readonly plugins = new Map<keyof PblNgridPluginExtension, PblNgridPlugin>();
 
-  constructor(private context: PblNgridPluginContext) {
+  private constructor(private context: PblNgridPluginContext) {
     this.grid = context.grid;
     this.extApi = context.extApi;
     this.events = context.events;
-    PblNgridPluginController.created$.next({ table: this.grid, controller: this });
   }
 
   static find<T = any>(grid: PblNgridComponent<T>): PblNgridPluginController<T> | undefined {
@@ -105,6 +111,15 @@ export class PblNgridPluginController<T = any> {
     }
     this.plugins.set(name, plugin);
     return (tbl: PblNgridComponent<any>) => this.grid === tbl && this.plugins.delete(name);
+  }
+
+  /**
+   * Checks if the grid is declared in a location within the DI that has access to an ancestor token.
+   * For example, if we want to use `createPlugin()` only if the grid is defined in a module that has a specific parent module imported into it
+   * we will use `hasAncestor(MyParentModule)`
+   */
+  hasAncestor(token: any) {
+    return !!this.injector.get(token, null, InjectFlags.Optional);
   }
 
   createPlugin<P extends (keyof PblNgridPluginExtensionFactories & keyof PblNgridPluginExtension)>(name: P): PblNgridPluginExtension[P] {

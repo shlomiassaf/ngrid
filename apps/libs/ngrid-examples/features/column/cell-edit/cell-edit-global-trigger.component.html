@@ -1,8 +1,6 @@
 <pbl-ngrid (cellClick)="$event.context.startEdit()"
            [dataSource]="ds" [columns]="columns">
-  <div *pblNgridCellDef="'name'; let ctx">
-    <a (click)="ctx.startEdit(true)">{{ ctx.value }}</a>
-  </div>
+
   <div *pblNgridCellEditorDef="'name'; let ctx">
     <input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
   </div>
