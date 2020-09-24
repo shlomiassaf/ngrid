@@ -1,3 +1,12 @@
+# 2.1.0 (2020-09-24)
+
+
+### Bug Fixes
+
+* **ngrid:** align with CDK changes ([ebd7aa9](https://github.com/shlomiassaf/ngrid/commit/ebd7aa97f86aa958787be2fa72d6ae384ce54bbf))
+
+
+
 # 2.0.0 (2020-07-15)
 
 
