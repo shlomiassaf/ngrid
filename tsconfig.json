@@ -1,38 +1,26 @@
-/*
-  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
-  It is not intended to be used to perform a compilation.
-
-  To learn more about this file see: https://angular.io/config/solution-tsconfig.
-*/
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./apps/ngrid-demo-app/tsconfig.app.json"
+  "compileOnSave": false,
+  "compilerOptions": {
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2015",
+    "module": "es2020",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@pebula-internal/*": ["libs-internal/*/src/index.ts", "libs-internal/*"],
+      "@pebula/apps/*": ["apps/libs/*", "apps/libs/*/src/index.ts"],
+      "@pebula/ngrid/lib/*": ["libs/ngrid/src/lib/*"],
+      "@pebula/ngrid-material/lib/*": ["libs/ngrid-material/src/lib/*"],
+      "@pebula/*": ["libs/*/src/index.ts", "libs/*"]
     },
-    {
-      "path": "./apps/ngrid-demo-app/tsconfig.worker.json"
-    },
-    {
-      "path": "./apps/ngrid-demo-app/tsconfig.spec.json"
-    },
-    {
-      "path": "./apps/ngrid-demo-app/tsconfig.server.json"
-    },
-    {
-      "path": "./apps/ngrid-demo-app-e2e/tsconfig.e2e.json"
-    },
-    {
-      "path": "./libs/ngrid/tsconfig.lib.json"
-    },
-    {
-      "path": "./libs/ngrid/tsconfig.spec.json"
-    },
-    {
-      "path": "./libs/ngrid-material/tsconfig.lib.json"
-    },
-    {
-      "path": "./libs/ngrid-material/tsconfig.spec.json"
-    }
-  ]
+    "rootDir": "."
+  },
+  "exclude": ["dist", "node_modules", "tmp"]
 }

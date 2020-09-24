@@ -25,6 +25,7 @@ import {
   ScrollDispatcher,
   CdkVirtualForOf,
   CdkScrollable,
+  ViewportRuler,
 } from '@angular/cdk/scrolling';
 
 import { unrx } from '../../utils';
@@ -174,6 +175,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
               @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) public pblScrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher,
+              @Optional() viewportRuler: ViewportRuler,
               pluginCtrl: PblNgridPluginController,
               private grid: PblNgridComponent<any>) {
     super(elementRef,
@@ -181,7 +183,8 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
           ngZone,
           pblScrollStrategy = resolveScrollStrategy(config, pblScrollStrategy),
           dir,
-          scrollDispatcher);
+          scrollDispatcher,
+          viewportRuler);
 
     if (config.has('virtualScroll')) {
       this.wheelModeDefault = config.get('virtualScroll').wheelMode;
