@@ -140,7 +140,7 @@
     "lerna-semantic-release": "^9.1.0",
     "marked": "^0.6.0",
     "merge2": "^1.2.3",
-    "ng-cli-packagr-tasks": "9.0.0-alpha.0",
+    "ng-cli-packagr-tasks": "^10.0.0",
     "node-sass-tilde-importer": "^1.0.2",
     "prettier": "1.19.1",
     "prismjs": "^1.15.0",
