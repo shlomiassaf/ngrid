@@ -220,6 +220,11 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     loadChildren: () => import('@pebula/apps/ngrid-examples/stories/column-header-menu/column-header-menu.module').then( m => m.ColumnHeaderMenuExampleModule ),
   },
   {
+    path: 'stories-infinite-scroll.module',
+    pathMatch: 'full',
+    loadChildren: () => import('@pebula/apps/ngrid-examples/stories/infinite-scroll/infinite-scroll.module').then( m => m.InfiniteScrollExampleModule ),
+  },
+  {
     path: 'extending-ngrid-copy-selection.module',
     pathMatch: 'full',
     loadChildren: () => import('@pebula/apps/ngrid-examples/extending-ngrid/copy-selection/copy-selection.module').then( m => m.CopySelectionExampleModule ),

@@ -1,6 +1,6 @@
 import { take } from 'rxjs/operators';
-import { Input, Directive, ElementRef, QueryList, OnDestroy, Optional, AfterViewInit, OnInit } from '@angular/core';
-import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST, DragDrop } from '@angular/cdk/drag-drop';
+import { Input, Directive, ElementRef, QueryList, OnDestroy, Optional, AfterViewInit, OnInit, Inject, SkipSelf } from '@angular/core';
+import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST, DragDrop, CDK_DRAG_HANDLE, CDK_DRAG_PARENT } from '@angular/cdk/drag-drop';
 import { PblDropListRef } from './drop-list-ref';
 import { PblDragRef } from './drag-ref';
 import { PblDragDrop } from './drag-drop';
@@ -163,11 +163,12 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
   },
   providers: [
     {
-      provide: CdkDragHandle,
+      provide: CDK_DRAG_HANDLE,
       useExisting: PblDragHandle
     }
   ]
 })
 export class PblDragHandle extends CdkDragHandle {
-  constructor(public element: ElementRef<HTMLElement>, @Optional() parentDrag?: CdkDrag) { super(element, parentDrag); }
+  constructor(public element: ElementRef<HTMLElement>,
+              @Inject(CDK_DRAG_PARENT) @Optional() @SkipSelf() parentDrag?: any) { super(element, parentDrag); }
 }

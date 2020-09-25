@@ -7,9 +7,12 @@
 
   "exclude": [
     "src/test-setup.ts",
+    "src/main.server.ts",
+    "src/app/app.server.module.ts",
+    "src/app/ssr/**/*.ts",
     "**/*.spec.ts",
     "./build/**/*.ts",
     "../libs/shared-data/**/*.worker.ts"
   ],
-  "include": ["**/*.ts"]
+  "include": ["src/**/*.ts"]
 }

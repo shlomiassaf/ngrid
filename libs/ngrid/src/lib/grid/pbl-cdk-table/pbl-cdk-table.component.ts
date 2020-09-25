@@ -19,13 +19,14 @@ import {
 import { DOCUMENT } from '@angular/common';
 
 import { Platform } from '@angular/cdk/platform';
-import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef, RowContext } from '@angular/cdk/table';
+import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef, RowContext, CDK_TABLE, _COALESCED_STYLE_SCHEDULER, _CoalescedStyleScheduler, RenderRow } from '@angular/cdk/table';
 import { Directionality } from '@angular/cdk/bidi';
 
 import { PblNgridComponent } from '../ngrid.component';
 import { PblNgridExtensionApi, EXT_API_TOKEN } from '../../ext/grid-ext-api';
 import { PblNgridColumnDef } from '../directives/column-def';
 import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
+import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } from '@angular/cdk/collections';
 
 /**
  * Wrapper for the CdkTable that extends it's functionality to support various table features.
@@ -42,6 +43,11 @@ import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'pbl-cdk-table',
   },
+  providers: [
+    {provide: CDK_TABLE, useExisting: PblCdkTableComponent},
+    {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},
+    {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -76,9 +82,11 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
               protected injector: Injector,
               protected grid: PblNgridComponent<T>,
               @Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<T>,
-              @Inject(DOCUMENT) _document?: any,
-              platform?: Platform) {
-    super(_differs, _changeDetectorRef, _elementRef, role, _dir, _document, platform);
+              @Inject(DOCUMENT) _document: any,
+              platform: Platform,
+              @Inject(_VIEW_REPEATER_STRATEGY) protected readonly _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>,
+              @Inject(_COALESCED_STYLE_SCHEDULER) protected readonly _coalescedStyleScheduler: _CoalescedStyleScheduler) {
+    super(_differs, _changeDetectorRef, _elementRef, role, _dir, _document, platform, _viewRepeater, _coalescedStyleScheduler);
     this.grid._cdkTable = this;
     this.trackBy = this.grid.trackBy;
 

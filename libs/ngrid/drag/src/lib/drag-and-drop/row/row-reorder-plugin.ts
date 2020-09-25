@@ -16,7 +16,7 @@ import {
   CdkDropListGroup,
   CdkDrag,
   CDK_DROP_LIST,
-  CdkDragDrop, CdkDragStart
+  CdkDragDrop, CdkDragStart, CDK_DRAG_PARENT
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
@@ -38,9 +38,6 @@ let _uniqueIdCounter = 0;
 @Directive({
   selector: 'pbl-ngrid[rowReorder]',
   exportAs: 'pblNgridRowReorder',
-  inputs: [
-    'directContainerElement:cdkDropListDirectContainerElement'
-  ],
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
     '[id]': 'id',
@@ -96,7 +93,9 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
    * is useful when the `cdkDropList` is not the direct parent (i.e. ancestor but not father)
    * of the draggable elements.
    */
-  directContainerElement: string = '.pbl-ngrid-scroll-container'; // we need this to allow auto-scroll
+   // tslint:disable-next-line:no-input-rename
+  @Input('cdkDropListDirectContainerElement') directContainerElement: string = '.pbl-ngrid-scroll-container'; // we need this to allow auto-scroll
+
   get pblDropListRef(): PblDropListRef<any> { return this._dropListRef as any; }
   originalElement: ElementRef<HTMLElement>;
   ngOnInit(): void { CdkLazyDropList.prototype.ngOnInit.call(this); }
@@ -120,7 +119,7 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
   },
   providers: [
     { provide: DragDrop, useExisting: PblDragDrop },
-    { provide: CdkDrag, useExisting: PblNgridRowDragDirective }
+    { provide: CDK_DRAG_PARENT, useExisting: PblNgridRowDragDirective },
   ]
 })
 export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements CdkLazyDrag<T, PblNgridRowReorderPluginDirective<T>> {
