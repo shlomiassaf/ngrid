@@ -19,7 +19,8 @@ export class MarkdownPagesMenuService {
   private _cache = new Map<string, NavEntry>();
   private _ofTypeCache = new Map<PageAssetNavEntry['type'], PageAssetNavEntry[]>();
 
-  constructor(private mdPages: MarkdownPagesService) { }
+  constructor(private mdPages: MarkdownPagesService) {
+  }
 
   ofType(type: PageAssetNavEntry['type']): Promise<PageAssetNavEntry[]> {
     if (this._ofTypeCache.has(type)) {

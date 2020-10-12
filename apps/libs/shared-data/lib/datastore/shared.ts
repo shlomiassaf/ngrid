@@ -79,7 +79,7 @@ export function sendMessageRequest<T extends keyof ClientProtocol>(
 export function sendMessageRequest<T extends keyof (ServerProtocol | ClientProtocol)>(
   target:  Worker,
   message: { action: T, data: ClientRequest<T> | ServerRequest<T> },
-  timeout = 3 * 1e3
+  timeout = 30 * 1000
 ): Promise<ClientPostMessageEvent<T> | ServerPostMessageEvent<T>> {
 
   const { port1, port2 } = new MessageChannel();

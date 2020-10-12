@@ -14,6 +14,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { FlexModule } from '@angular/flex-layout/flex';
 import { ExtendedModule } from '@angular/flex-layout/extended';
@@ -65,7 +67,7 @@ const DECLARATION_EXPORT = [
     CommonModule,
     RouterModule,
     PortalModule,
-    MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatMenuModule, MatCheckboxModule, MatListModule, MatTabsModule, MatToolbarModule, MatTooltipModule, MatProgressBarModule, MatProgressSpinnerModule,
+    MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatMenuModule, MatCheckboxModule, MatListModule, MatTabsModule, MatToolbarModule, MatTooltipModule, MatProgressBarModule, MatProgressSpinnerModule, MatExpansionModule, MatSidenavModule,
     FlexModule, ExtendedModule,
 
     PblNgridModule,
