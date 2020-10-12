@@ -3,15 +3,15 @@ import { PblNgridModule } from '@pebula/ngrid';
 
 import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/example-common';
-import { <%= componentClassName(name) %> } from './<%= componentFile(name) %>';
+import { RowClassExample } from './row-class.component';
 
 @NgModule({
-  declarations: [ <%= componentClassName(name) %> ],
+  declarations: [ RowClassExample ],
   imports: [
     ExampleCommonModule,
     PblNgridModule,
   ],
-  exports: [ <%= componentClassName(name) %> ],
+  exports: [ RowClassExample ],
 })
-@BindNgModule(<%= componentClassName(name) %>)
-export class <%= moduleClassName(name) %> { }
+@BindNgModule(RowClassExample)
+export class RowClassExampleModule { }

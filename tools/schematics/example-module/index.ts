@@ -208,7 +208,7 @@ export default function(options: { name: string; add?: string; }): Rule {
       {
         path: '${parsedPath.path.substr(ROOT.length + 1).split('/').join('-')}.module',
         pathMatch: 'full',
-        loadChildren: () => import('@pebula/apps/ngrid-examples/${parsedPath.path.substr(ROOT.length + 1)}/${stringsExtensions.moduleFile(parsedPath.name)}').then( m => m.${stringsExtensions.moduleClassName(parsedPath.name)} ),
+        loadChildren: () => import('@pebula/apps/${parsedPath.path.substr(ROOT.length + 1)}/${stringsExtensions.moduleFile(parsedPath.name)}').then( m => m.${stringsExtensions.moduleClassName(parsedPath.name)} ),
       }
       `);
 

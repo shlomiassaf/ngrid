@@ -33,6 +33,8 @@ const pluginName = 'markdown-pages-webpack-plugin';
 
 export interface MarkdownPagesWebpackPluginOptions {
   docsPath: string | string[];
+  docsRoot?: string;
+  outputAssetPathRoot?: string;
   remarkPlugins: any[];
 }
 
@@ -57,12 +59,25 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
     return this.__remarkCompiler;
   }
   private __remarkCompiler: unified.Processor;
+  private root: string;
+  private outputAssetPathRoot: string;
 
   constructor(options: MarkdownPagesWebpackPluginOptions) {
     this.options = { ...options };
   }
 
   apply(compiler: webpack.Compiler): void {
+    const { docsRoot } = this.options;
+    this.root = compiler.options.context;
+    if (docsRoot) {
+      if (Path.isAbsolute(docsRoot)) {
+        this.root = docsRoot;
+      } else {
+        this.root = Path.join(this.root, docsRoot);
+      }
+    }
+    this.outputAssetPathRoot = this.options.outputAssetPathRoot || '';
+
     this.compiler = compiler;
     compiler.hooks.pebulaDynamicModuleUpdater.tap(pluginName, notifier => {
       compiler.hooks.run.tapPromise(pluginName, async () => { await this.run(compiler); });
@@ -105,7 +120,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
         const source = createPageFileAsset(obj);
         const hash = createHash(hashFunction);
         hash.update(source);
-        outputAssetPath = Path.join(Path.dirname(obj.file), `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`);
+        outputAssetPath = this.outputAssetPathRoot + Path.join(Path.dirname(obj.file), `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`);
 
         compilation.assets[outputAssetPath] = {
           source: () => source,
@@ -214,7 +229,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
 
   private async run(compiler: webpack.Compiler) {
     const paths = await globby(this.options.docsPath, {
-      cwd: compiler.options.context
+      cwd: this.root,
     });
 
     for (const p of paths) {
@@ -225,7 +240,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
   }
 
   private processFile(file: string) {
-    const fullPath = Path.join(this.compiler.options.context, file);
+    const fullPath = Path.join(this.root, file);
     const source = FS.readFileSync(fullPath, { encoding: 'utf-8' });
     const parsedAttr = matter(source);
     const contents = this.remarkCompiler().processSync(parsedAttr.content).contents as string;

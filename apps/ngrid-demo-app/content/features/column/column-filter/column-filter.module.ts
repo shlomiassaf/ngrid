@@ -1,17 +1,19 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { PblNgridModule } from '@pebula/ngrid';
 
 import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/example-common';
-import { <%= componentClassName(name) %> } from './<%= componentFile(name) %>';
+import { ColumnFilterExample } from './column-filter.component';
 
 @NgModule({
-  declarations: [ <%= componentClassName(name) %> ],
+  declarations: [ ColumnFilterExample ],
   imports: [
+    CommonModule,
     ExampleCommonModule,
     PblNgridModule,
   ],
-  exports: [ <%= componentClassName(name) %> ],
+  exports: [ ColumnFilterExample ],
 })
-@BindNgModule(<%= componentClassName(name) %>)
-export class <%= moduleClassName(name) %> { }
+@BindNgModule(ColumnFilterExample)
+export class ColumnFilterExampleModule { }
