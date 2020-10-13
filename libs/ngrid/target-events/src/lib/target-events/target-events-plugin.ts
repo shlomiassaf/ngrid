@@ -69,18 +69,7 @@ export class PblNgridTargetEventsPlugin<T = any> {
               protected injector: Injector,
               protected pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
-    if (grid.isInit) {
-      this.init();
-    } else {
-      let subscription = pluginCtrl.events
-        .subscribe( event => {
-          if (event.kind === 'onInit') {
-            this.init();
-            subscription.unsubscribe();
-            subscription = undefined;
-          }
-        });
-    }
+    pluginCtrl.onInit().subscribe( () => this.init() );
   }
 
   static create<T = any>(table: PblNgridComponent<any>, injector: Injector): PblNgridTargetEventsPlugin<T> {

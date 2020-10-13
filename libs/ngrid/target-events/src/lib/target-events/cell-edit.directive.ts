@@ -29,18 +29,11 @@ export class PblNgridCellEditDirective<T> implements OnDestroy {
   private targetEventsPlugin: PblNgridTargetEventsPlugin<T>;
 
   constructor(grid: PblNgridComponent<any>, injector: Injector, pluginCtrl: PblNgridPluginController) {
-
-    let subscription = pluginCtrl.events.subscribe( event => {
-      if (event.kind === 'onInit') {
-        subscription.unsubscribe();
-        subscription = undefined;
-
-        // Depends on target-events plugin
-        // if it's not set, create it.
+    pluginCtrl.onInit()
+      .subscribe( () => {
         this.targetEventsPlugin = pluginCtrl.getPlugin('targetEvents') || pluginCtrl.createPlugin('targetEvents');
         this.update();
-      }
-    });
+      });
   }
 
   ngOnDestroy(): void {

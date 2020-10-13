@@ -34,18 +34,14 @@ export class PblNgridStatePluginModule {
       const targetEventsConfig = configService.get(PLUGIN_KEY);
       if (targetEventsConfig && targetEventsConfig.autoEnable === true) {
         const pluginCtrl = event.controller;
-        let subscription = pluginCtrl.events
-          .subscribe( evt => {
-            if (evt.kind === 'onInit') {
-              if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
-                const instance = pluginCtrl.createPlugin(PLUGIN_KEY);
-                if (targetEventsConfig.autoEnableOptions) {
-                  instance.loadOptions = targetEventsConfig.autoEnableOptions.loadOptions;
-                  instance.saveOptions = targetEventsConfig.autoEnableOptions.saveOptions;
-                }
+        pluginCtrl.onInit()
+          .subscribe(() => {
+            if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
+              const instance = pluginCtrl.createPlugin(PLUGIN_KEY);
+              if (targetEventsConfig.autoEnableOptions) {
+                instance.loadOptions = targetEventsConfig.autoEnableOptions.loadOptions;
+                instance.saveOptions = targetEventsConfig.autoEnableOptions.saveOptions;
               }
-              subscription.unsubscribe();
-              subscription = undefined;
             }
           });
       }

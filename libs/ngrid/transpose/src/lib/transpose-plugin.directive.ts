@@ -120,13 +120,8 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
       this.matchTemplates = transposePlugin.matchTemplates || false;
     }
 
-    pluginCtrl.events
-      .pipe(
-        filter( e => e.kind === 'onInit' ),
-        take(1),
-        utils.unrx(this, this.grid)
-      )
-      .subscribe( e => {
+    pluginCtrl.onInit()
+      .subscribe( () => {
         if (this.enabled !== undefined) {
           this.updateState(undefined, this.enabled);
         }

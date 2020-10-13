@@ -62,44 +62,15 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
         this._enabled = event.curr instanceof PblInfiniteScrollDataSource;
 
         if (this._enabled !== prevState) {
-          if (this.grid.isInit) {
-            // TODO: Remove when and if https://github.com/angular/components/issues/20717 is approved
-            this.updateTrackBy(pluginCtrl.extApi.columnStore.primary);
-            this.updateTable();
-          } else {
-            pluginCtrl.events
-              .pipe(
-                filter( e => e.kind === 'onInit' ),
-                take(1)
-              )
-              .subscribe( () => this.updateTable() )
-          }
+          pluginCtrl.onInit().subscribe( () => this.updateTable() );
         }
       } else if (event.kind === 'onDestroy') {
         if (this._infiniteVirtualRowRef) {
           this._infiniteVirtualRowRef.destroy();
         }
         this._removePlugin(this.grid);
-      } else if (event.kind === 'onInvalidateHeaders') {
-        // TODO: Remove when and if https://github.com/angular/components/issues/20717 is approved
-        if (this._enabled) {
-          this.updateTrackBy(pluginCtrl.extApi.columnStore.primary);
-        }
       }
     });
-  }
-
-  /**
-   * TODO: Remove when and if https://github.com/angular/components/issues/20717 is approved
-   * @deprecated
-   */
-  private updateTrackBy(primaryCol?: PblColumn) {
-    if (primaryCol) {
-      // this.grid.rowClassUpdate = item => item.$implicit === INFINITE_SCROLL_DEFFERED_ROW ? 'pbl-ngrid-infinite-virtual-row' : '';
-      // this.grid._cdkTable.trackBy = (index) => index;
-    } else {
-      // this.grid.rowClassUpdate = undefined;
-    }
   }
 
   private setupInfiniteVirtualRow(): void {

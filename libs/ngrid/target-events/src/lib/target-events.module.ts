@@ -27,14 +27,10 @@ export class PblNgridTargetEventsModule {
       const targetEventsConfig = configService.get(PLUGIN_KEY);
       if (targetEventsConfig && targetEventsConfig.autoEnable === true) {
         const pluginCtrl = event.controller;
-        let subscription = pluginCtrl.events
-          .subscribe( evt => {
-            if (evt.kind === 'onInit') {
-              if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
-                pluginCtrl.createPlugin(PLUGIN_KEY);
-              }
-              subscription.unsubscribe();
-              subscription = undefined;
+        event.controller.onInit()
+          .subscribe(() => {
+            if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
+              pluginCtrl.createPlugin(PLUGIN_KEY);
             }
           });
       }

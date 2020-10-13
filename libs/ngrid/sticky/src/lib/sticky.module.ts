@@ -1,4 +1,3 @@
-import { filter, first } from 'rxjs/operators';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -38,9 +37,8 @@ export class PblNgridStickyModule {
       .subscribe( event => {
         const { table, controller } = event;
         if (controller && !controller.hasPlugin('sticky')) {
-          controller.events
-            .pipe( filter( e => e.kind === 'onInit' ), first() )
-            .subscribe( event => {
+          controller.onInit()
+            .subscribe(() => {
               const stickyPluginConfig = configService.get('stickyPlugin');
               if (stickyPluginConfig) {
                 if (stickyPluginConfig.headers) {

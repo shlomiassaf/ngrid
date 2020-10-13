@@ -27,6 +27,7 @@ import { PblNgridExtensionApi, EXT_API_TOKEN } from '../../ext/grid-ext-api';
 import { PblNgridColumnDef } from '../directives/column-def';
 import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
 import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } from '@angular/cdk/collections';
+import { _TempDisposeViewRepeaterStrategy } from './cdk-20765-temp-workaround';
 
 /**
  * Wrapper for the CdkTable that extends it's functionality to support various table features.
@@ -45,7 +46,7 @@ import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } 
   },
   providers: [
     {provide: CDK_TABLE, useExisting: PblCdkTableComponent},
-    {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},
+    {provide: _VIEW_REPEATER_STRATEGY, useClass: _TempDisposeViewRepeaterStrategy},
     {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
   ],
   encapsulation: ViewEncapsulation.None,
@@ -84,11 +85,13 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
               @Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<T>,
               @Inject(DOCUMENT) _document: any,
               platform: Platform,
-              @Inject(_VIEW_REPEATER_STRATEGY) protected readonly _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>,
-              @Inject(_COALESCED_STYLE_SCHEDULER) protected readonly _coalescedStyleScheduler: _CoalescedStyleScheduler) {
+              @Inject(_VIEW_REPEATER_STRATEGY) _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>,
+              @Inject(_COALESCED_STYLE_SCHEDULER) _coalescedStyleScheduler: _CoalescedStyleScheduler) {
     super(_differs, _changeDetectorRef, _elementRef, role, _dir, _document, platform, _viewRepeater, _coalescedStyleScheduler);
     this.grid._cdkTable = this;
     this.trackBy = this.grid.trackBy;
+
+    (_viewRepeater as _TempDisposeViewRepeaterStrategy<T, RenderRow<T>, RowContext<T>>).init(this);
 
     extApi.events.subscribe( e => {
       if (e.kind === 'beforeInvalidateHeaders') {

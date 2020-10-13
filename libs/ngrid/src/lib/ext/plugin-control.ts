@@ -1,4 +1,5 @@
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
+import { filter, take, mapTo } from 'rxjs/operators';
 import { InjectFlags, Injector } from '@angular/core';
 
 import { PblNgridComponent } from '../grid/ngrid.component';
@@ -82,6 +83,30 @@ export class PblNgridPluginController<T = any> {
     this.grid = context.grid;
     this.extApi = context.extApi;
     this.events = context.events;
+  }
+
+  /**
+   * A Simple shortcut to the `onInit` event which is fired once.
+   * If the grid has already been init the event will fire immediately, otherwise it will emit once when `onInit`
+   * occurs and cleanup the subscription.
+   *
+   * The boolean value emitted reflects the state it was emitted on.
+   * false - grid was already initialized
+   * true - grid was just initialized
+   *
+   * In other words, if you get false, it means you called this method when the grid was already initialized.
+   */
+  onInit() {
+    if (this.grid.isInit) {
+      return of(false);
+    }
+
+    return this.events
+      .pipe(
+        filter( e => e.kind === 'onInit' ),
+        take(1),
+        mapTo(true),
+      );
   }
 
   static find<T = any>(grid: PblNgridComponent<T>): PblNgridPluginController<T> | undefined {
