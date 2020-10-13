@@ -41,8 +41,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit, OnDestroy {
   set bulkSelectMode(value: 'all' | 'view' | 'none') {
     if (value !== this._bulkSelectMode) {
       this._bulkSelectMode = value;
-      this.cdr.markForCheck();
-      this.cdr.detectChanges();
+      this.setupSelection();
     }
   }
   /**
@@ -74,8 +73,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit, OnDestroy {
     if (value !== this._color) {
       this._color = value;
       if (this.table.isInit) {
-        this.cdr.markForCheck();
-        this.cdr.detectChanges();
+        this.markAndDetect();
       }
     }
   }
@@ -101,6 +99,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit, OnDestroy {
           this.selection = e.curr.selection;
         }
       });
+
   }
 
   ngAfterViewInit(): void {
@@ -129,8 +128,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit, OnDestroy {
 
   rowItemChange(row: any): void {
     this.selection.toggle(row);
-    this.cdr.markForCheck();
-    this.cdr.detectChanges();
+    this.markAndDetect();
   }
 
   private getCollection() {
@@ -144,16 +142,12 @@ export class PblNgridCheckboxComponent implements AfterViewInit, OnDestroy {
       this.length = this.selection.selected.length;
       this.selection.changed
         .pipe(utils.unrx(this, this.table))
-        .subscribe(() => {
-          this.handleSelectionChanged();
-        });
+        .subscribe(() => this.handleSelectionChanged());
       const changeSource = this.bulkSelectMode === 'view' ? this.table.ds.onRenderedDataChanged : this.table.ds.onSourceChanged;
       changeSource
         .pipe(utils.unrx(this, this.table))
-        .subscribe(() => {
-          this.handleSelectionChanged();
-        });
-  } else {
+        .subscribe(() => this.handleSelectionChanged());
+    } else {
       this.length = 0;
     }
   }
@@ -162,6 +156,10 @@ export class PblNgridCheckboxComponent implements AfterViewInit, OnDestroy {
     const { length } = this.getCollection().filter(data => !this._isCheckboxDisabled(data));
     this.allSelected = !this.selection.isEmpty() && this.selection.selected.length === length;
     this.length = this.selection.selected.length;
+    this.markAndDetect();
+  }
+
+  private markAndDetect() {
     this.cdr.markForCheck();
     this.cdr.detectChanges();
   }
