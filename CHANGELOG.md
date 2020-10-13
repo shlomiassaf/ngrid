@@ -1,3 +1,14 @@
+## 2.2.1 (2020-10-13)
+
+
+### Bug Fixes
+
+* **ngrid-material/selection-column:** disable animation to prevent flickering ([7b45329](https://github.com/shlomiassaf/ngrid/commit/7b4532985855cfe43e4b0fce6ca6f0fec615e1fc))
+* **ngrid-material/selection-column:** reset listeners when bulk mode changes ([e802997](https://github.com/shlomiassaf/ngrid/commit/e8029973901881846b49ff920d8b27c0a90244e9))
+* **ngrid** columnDef override error ([e6dbf9c](https://github.com/shlomiassaf/ngrid/commit/e6dbf9c48f9459006215c7c0d2219f113e23c978)), closes [#118](https://github.com/shlomiassaf/ngrid/issues/118)
+
+
+
 # 2.2.0 (2020-10-13)
 
 
