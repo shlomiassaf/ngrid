@@ -112,6 +112,7 @@ export class MarkdownPageContainerComponent implements OnDestroy {
   toggleMobileMenu() {
     this.layoutState.hamburger = !this.layoutState.hamburger;
     this.setMenuState();
+    this.cdr.markForCheck();
   }
 
   private setMenuState() {
@@ -125,6 +126,7 @@ export class MarkdownPageContainerComponent implements OnDestroy {
       this.drawer.close();
     }
   }
+
   private handleUrlUpdate(paths: string[]): void {
     this.layoutState.hamburger = false;
     this.drawer.close();
@@ -133,20 +135,20 @@ export class MarkdownPageContainerComponent implements OnDestroy {
     this.documentUrl = paths.length ? paths.join('/') : '/';
 
     if (this.entry !== paths[0]) {
-      this.entry = paths[0];
-      if (this.entry) {
-        this.mdPagesMenu.getMenu(this.entry)
-          .then( entry => {
-            this.findActive(this.root = entry);
-            this.menu$.next(entry);
-            this.setMenuState();
-          })
-          .catch(err => this.menu$.next(null) );
-      } else {
-        this.menu$.next(null);
-        this.root = undefined;
-        this.setMenuState();
-      }
+      this.mdPagesMenu.getMenu(this.entry = paths[0])
+        .then( entry => {
+          this.findActive(this.root = entry);
+          this.menu$.next(entry);
+          this.setMenuState();
+          if (this.active && !this.active.dataPath && this.active.children) {
+            this.handleUrlUpdate(this.active.children[0].path.split('/'));
+          }
+        })
+        .catch(err => {
+          this.menu$.next(null);
+          this.root = undefined;
+          this.setMenuState();
+        });
     } else {
       this.root && this.findActive(this.root);
       this.setMenuState();
