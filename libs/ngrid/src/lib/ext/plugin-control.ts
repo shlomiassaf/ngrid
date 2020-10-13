@@ -16,6 +16,8 @@ const NGRID_PLUGIN_CONTEXT = new WeakMap<PblNgridComponent<any>, PblNgridPluginC
 
 const CREATED$ = new Subject<{ table: PblNgridComponent<any>, controller: PblNgridPluginController<any> }>();
 
+const REGISTERED_TO_CREATE = new WeakSet<any>();
+
 /** @internal */
 export class PblNgridPluginContext<T = any> {
 
@@ -65,6 +67,13 @@ export class PblNgridPluginContext<T = any> {
 
 export class PblNgridPluginController<T = any> {
   static readonly created = CREATED$.asObservable();
+
+  static onCreatedSafe(token: any, fn: (grid: PblNgridComponent<any>, controller: PblNgridPluginController<any>) => void) {
+    if (!REGISTERED_TO_CREATE.has(token)) {
+      REGISTERED_TO_CREATE.add(token);
+      PblNgridPluginController.created.subscribe( event => fn(event.table, event.controller));
+    }
+  }
 
   static create<T = any>(context: PblNgridPluginContext<T>) {
     const controller = new PblNgridPluginController<T>(context);
@@ -132,7 +141,7 @@ export class PblNgridPluginController<T = any> {
       throw new Error(`Unknown plugin ${name}.`);
     }
     if (this.plugins.has(name)) {
-      throw new Error(`Plugin ${name} is not registered for this table.`);
+      throw new Error(`Plugin ${name} is already registered for this grid.`);
     }
     this.plugins.set(name, plugin);
     return (tbl: PblNgridComponent<any>) => this.grid === tbl && this.plugins.delete(name);

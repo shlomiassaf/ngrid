@@ -46,6 +46,8 @@ import { _TempDisposeViewRepeaterStrategy } from './cdk-20765-temp-workaround';
   },
   providers: [
     {provide: CDK_TABLE, useExisting: PblCdkTableComponent},
+    // TODO: Remove when and if PR https://github.com/angular/components/pull/20765 is accepted and support for
+    //       CDK version is dropped for those versions without the fix in 20765
     {provide: _VIEW_REPEATER_STRATEGY, useClass: _TempDisposeViewRepeaterStrategy},
     {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
   ],
@@ -90,8 +92,6 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     super(_differs, _changeDetectorRef, _elementRef, role, _dir, _document, platform, _viewRepeater, _coalescedStyleScheduler);
     this.grid._cdkTable = this;
     this.trackBy = this.grid.trackBy;
-
-    (_viewRepeater as _TempDisposeViewRepeaterStrategy<T, RenderRow<T>, RowContext<T>>).init(this);
 
     extApi.events.subscribe( e => {
       if (e.kind === 'beforeInvalidateHeaders') {

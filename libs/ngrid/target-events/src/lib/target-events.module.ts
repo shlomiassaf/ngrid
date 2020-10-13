@@ -1,4 +1,4 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
@@ -15,25 +15,20 @@ export class PblNgridTargetEventsModule {
 
   static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY, factory: 'create', runOnce }, PblNgridTargetEventsPlugin );
 
-  constructor(@Optional() @SkipSelf() parentModule: PblNgridTargetEventsModule,
-              configService: PblNgridConfigService) {
-
-  if (parentModule) {
-    return;
-  }
-
-  PblNgridPluginController.created
-    .subscribe( event => {
-      const targetEventsConfig = configService.get(PLUGIN_KEY);
-      if (targetEventsConfig && targetEventsConfig.autoEnable === true) {
-        const pluginCtrl = event.controller;
-        event.controller.onInit()
-          .subscribe(() => {
-            if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
-              pluginCtrl.createPlugin(PLUGIN_KEY);
-            }
-          });
-      }
-    });
+  constructor(configService: PblNgridConfigService) {
+    PblNgridPluginController.onCreatedSafe(
+      PblNgridTargetEventsModule,
+      (grid, controller) => {
+        const targetEventsConfig = configService.get(PLUGIN_KEY);
+        if (targetEventsConfig && targetEventsConfig.autoEnable === true) {
+          controller.onInit()
+            .subscribe(() => {
+              if (!controller.hasPlugin(PLUGIN_KEY)) {
+                controller.createPlugin(PLUGIN_KEY);
+              }
+            });
+        }
+      },
+    );
   }
 }

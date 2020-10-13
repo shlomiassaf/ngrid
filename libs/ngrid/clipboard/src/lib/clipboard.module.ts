@@ -1,4 +1,4 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PblNgridModule, PblNgridConfigService, PblNgridPluginController, ngridPlugin } from '@pebula/ngrid';
@@ -15,24 +15,20 @@ export class PblNgridClipboardPluginModule {
 
   static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY, factory: 'create' }, PblNgridClipboardPlugin);
 
-  constructor(@Optional() @SkipSelf() parentModule: PblNgridClipboardPluginModule,
-              configService: PblNgridConfigService) {
-
-    if (parentModule) {
-      return;
-    }
-    PblNgridPluginController.created
-      .subscribe( event => {
+  constructor(configService: PblNgridConfigService) {
+    PblNgridPluginController.onCreatedSafe(
+      PblNgridClipboardPluginModule,
+      (grid, controller) => {
         const config = configService.get(PLUGIN_KEY, {});
         if (config.autoEnable === true) {
-          const pluginCtrl = event.controller;
-          pluginCtrl.onInit()
+          controller.onInit()
             .subscribe(() => {
-              if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
-                pluginCtrl.createPlugin(PLUGIN_KEY);
+              if (!controller.hasPlugin(PLUGIN_KEY)) {
+                controller.createPlugin(PLUGIN_KEY);
               }
             });
         }
-      });
+      },
+    );
   }
 }

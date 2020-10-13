@@ -1,24 +1,28 @@
-import { IterableChangeRecord, IterableChanges, ViewContainerRef } from '@angular/core';
+import { Injectable, IterableChangeRecord, IterableChanges, ViewContainerRef } from '@angular/core';
 import { _DisposeViewRepeaterStrategy, _ViewRepeaterItemChange, _ViewRepeaterItemChanged, _ViewRepeaterItemContext, _ViewRepeaterItemContextFactory, _ViewRepeaterItemValueResolver, _ViewRepeaterOperation } from '@angular/cdk/collections';
 import { CdkRowDef, RenderRow, BaseRowDef, RowContext, CdkTable } from '@angular/cdk/table';
+
+import { PblNgridPluginController } from '../../ext/plugin-control';
+import { PblNgridComponent } from '../ngrid.component';
 
 /**
  *
  * @deprecated remove when and if PR https://github.com/angular/components/pull/20765 is accepted and the old version not supporting the solution is not supported by ngrid.
  */
+@Injectable()
 export class _TempDisposeViewRepeaterStrategy<T, R extends RenderRow<T>, C extends RowContext<T>> extends _DisposeViewRepeaterStrategy<T, R, C> {
   private workaroundEnabled = false;
   private renderer: { _renderCellTemplateForItem: (rowDef: BaseRowDef, context: RowContext<T>) => void; };
-
   private _cachedRenderDefMap = new Map<number, CdkRowDef<T>>();
 
-  /**
-   *
-   * @deprecated Remove when workaround no longer needed @see _TempDisposeViewRepeaterStrategy
-   */
-  init(cdkTable: CdkTable<T>) {
-    this.renderer = cdkTable as any;
-    this.workaroundEnabled = !cdkTable['_cachedRenderDefMap'] && typeof this.renderer._renderCellTemplateForItem === 'function';
+  constructor(grid: PblNgridComponent<T>) {
+    super();
+    PblNgridPluginController.find(grid).onInit()
+      .subscribe(() => {
+        const cdkTable = grid._cdkTable;
+        this.renderer = cdkTable as any;
+        this.workaroundEnabled = !cdkTable['_cachedRenderDefMap'] && typeof this.renderer._renderCellTemplateForItem === 'function';
+      });
   }
 
   applyChanges(changes: IterableChanges<R>,
