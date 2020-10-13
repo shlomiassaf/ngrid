@@ -1,3 +1,18 @@
+# 2.2.0 (2020-10-13)
+
+
+### Bug Fixes
+
+* **ngrid:** detect edge case where row index might be out of sync ([5ac6496](https://github.com/shlomiassaf/ngrid/commit/5ac6496f82f1459b114de2b4efb418df4205d018))
+* **ngrid:** fix memory leak when registering for create ([db003dd](https://github.com/shlomiassaf/ngrid/commit/db003dd6f3dec763f2559508718b67cf617a70b1))
+
+
+### Features
+
+* **ngrid/infinite-scroll:** implement infinite scroll ([a08c977](https://github.com/shlomiassaf/ngrid/commit/a08c97740c4a33b870828d5443e3edb40fb0ed6e))
+
+
+
 # 2.1.0 (2020-09-24)
 
 
