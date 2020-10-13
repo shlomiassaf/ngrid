@@ -10,6 +10,7 @@
 </ng-container>
 <mat-checkbox *pblNgridCellDef="name; row as row;"
               style="overflow: initial"
+              class="pbl-ngrid-selection-checkbox"
               [color]="color"
               [disabled]=isCheckboxDisabled(row)
               (click)="$event.stopPropagation()"
