@@ -110,18 +110,7 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
       .pipe(utils.unrx(this))
       .subscribe( cfg => this.lastConfig = cfg.curr );
 
-    if (table.isInit) {
-      this.init(pluginCtrl);
-    } else {
-      let subscription = pluginCtrl.events
-        .subscribe( event => {
-          if (event.kind === 'onInit') {
-            this.init(pluginCtrl);
-            subscription.unsubscribe();
-            subscription = undefined;
-          }
-        });
-    }
+    pluginCtrl.onInit().subscribe( () => this.init(pluginCtrl) );
   }
 
   static create<T = any>(table: PblNgridComponent<any>, injector: Injector): PblNgridCellTooltipDirective<T> {

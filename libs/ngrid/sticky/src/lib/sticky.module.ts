@@ -1,5 +1,4 @@
-import { filter, first } from 'rxjs/operators';
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CdkTableModule } from '@angular/cdk/table';
@@ -28,36 +27,31 @@ export class PblNgridStickyModule {
 
   static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY }, PblNgridStickyPluginDirective);
 
-  constructor(@Optional() @SkipSelf() parentModule: PblNgridStickyModule,
-              configService: PblNgridConfigService) {
-    if (parentModule) {
-      return;
-    }
-
-    PblNgridPluginController.created
-      .subscribe( event => {
-        const { table, controller } = event;
+  constructor(configService: PblNgridConfigService) {
+    PblNgridPluginController.onCreatedSafe(
+      PblNgridStickyModule,
+      (grid, controller) => {
         if (controller && !controller.hasPlugin('sticky')) {
-          controller.events
-            .pipe( filter( e => e.kind === 'onInit' ), first() )
-            .subscribe( event => {
+          controller.onInit()
+            .subscribe(() => {
               const stickyPluginConfig = configService.get('stickyPlugin');
               if (stickyPluginConfig) {
                 if (stickyPluginConfig.headers) {
-                  setStickyRow(table, 'header', stickyPluginConfig.headers.map(MAPPER));
+                  setStickyRow(grid, 'header', stickyPluginConfig.headers.map(MAPPER));
                 }
                 if (stickyPluginConfig.footers) {
-                  setStickyRow(table, 'footer', stickyPluginConfig.footers.map(MAPPER));
+                  setStickyRow(grid, 'footer', stickyPluginConfig.footers.map(MAPPER));
                 }
                 if (stickyPluginConfig.columnStart) {
-                  setStickyColumns(table, 'start', stickyPluginConfig.columnStart.map(MAPPER));
+                  setStickyColumns(grid, 'start', stickyPluginConfig.columnStart.map(MAPPER));
                 }
                 if (stickyPluginConfig.columnEnd) {
-                  setStickyColumns(table, 'end', stickyPluginConfig.columnEnd.map(MAPPER));
+                  setStickyColumns(grid, 'end', stickyPluginConfig.columnEnd.map(MAPPER));
                 }
               }
             });
         }
-      });
+      },
+    );
   }
 }

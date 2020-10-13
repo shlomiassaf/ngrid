@@ -1,4 +1,17 @@
 <div class="search-results">
+
+  <ng-container *ngIf="viewLayout.isMobile$ | async">
+    <div fxLayoutAlign="start center" style="margin-bottom: 16px;">
+      <app-search-input (onSearch)="doSearch($event)"></app-search-input>
+      <div style="flex:1 0 auto"></div>
+      <button mat-icon-button (click)="resultSelected.emit({query: '', results: []})">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+  </ng-container>
+
+
   <h2 class="visually-hidden">Search Results</h2>
 
   <div @enterLeave *ngIf="searchAreas.length" fxLayoutAlign="space-around">

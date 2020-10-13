@@ -14,6 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 import { NxModule } from '@nrwl/angular';
 
@@ -66,6 +68,8 @@ export const REQ_KEY = makeStateKey<string>('req');
     MatMenuModule,
     MatListModule,
     MatTooltipModule,
+    MatFormFieldModule,
+    MatSelectModule,
     LazyCodePartsModule.forRoot(),
     RouterModule.forRoot(
       [

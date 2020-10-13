@@ -101,10 +101,10 @@ class StageReleaseTask extends BaseReleaseTask {
     // this.verifyLocalCommitsMatchUpstream(publishBranch);
     // await this._verifyPassingGithubStatus(publishBranch);
 
-    if (!this.git.checkoutNewBranch(stagingBranch)) {
-      console.error(red(`Could not create release staging branch: ${stagingBranch}. Aborting...`));
-      process.exit(1);
-    }
+    // if (!this.git.checkoutNewBranch(stagingBranch)) {
+    //   console.error(red(`Could not create release staging branch: ${stagingBranch}. Aborting...`));
+    //   process.exit(1);
+    // }
 
     if (needsVersionBump) {
       this._updatePackageJsonVersion(newVersionName);

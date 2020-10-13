@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, transition, style, animate } from '@angular/animations';
-import { SearchResults, SearchResult, SearchArea } from '@pebula/apps/shared-data';
+
+import { utils } from '@pebula/ngrid';
+import { SearchResults, SearchResult, SearchArea, SearchService } from '@pebula/apps/shared-data';
 import { MarkdownPagesMenuService } from '../../services/markdown-pages-menu.service';
+import { ViewLayoutObserver } from '../../services/view-layout-observer.service';
 
 @Component({
   selector: 'app-search-results',
@@ -22,7 +25,7 @@ import { MarkdownPagesMenuService } from '../../services/markdown-pages-menu.ser
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class AppSearchResults implements OnChanges {
+export class AppSearchResults implements OnChanges, OnDestroy {
     /**
    * The results to display
    */
@@ -37,7 +40,10 @@ export class AppSearchResults implements OnChanges {
   searchAreas: SearchArea[] = [];
   readonly defaultArea = 'other';
 
-  constructor(private menu: MarkdownPagesMenuService) { }
+  constructor(public readonly viewLayout: ViewLayoutObserver,
+              public searchService: SearchService,
+              private menu: MarkdownPagesMenuService,
+              private cdr: ChangeDetectorRef) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.searchResults) {
@@ -45,11 +51,29 @@ export class AppSearchResults implements OnChanges {
     }
   }
 
+  ngOnDestroy(): void {
+    utils.unrx.kill(this);
+  }
+
   onResultSelected(page: SearchResult, event: MouseEvent) {
     // Emit a `resultSelected` event if the result is to be displayed on this page.
     if (event.button === 0 && !event.ctrlKey && !event.metaKey) {
       this.resultSelected.emit(page);
     }
+  }
+
+  doSearch(query: string) {
+    utils.unrx.kill(this, this.searchService);
+    this.searchService.queryIndex(query)
+      .pipe(utils.unrx(this, this.searchService))
+      .subscribe( results => {
+        this.searchResults = results;
+        if (this.searchResults) {
+          this.searchAreas = this.processSearchResults(this.searchResults);
+        }
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
+      });
   }
 
   private processSearchResults(searchResults: SearchResults) {

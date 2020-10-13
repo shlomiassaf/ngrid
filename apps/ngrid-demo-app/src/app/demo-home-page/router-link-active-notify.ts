@@ -19,7 +19,7 @@ export class RouterLinkActiveNotify implements OnChanges, OnDestroy, AfterConten
 
   @Input() whichRouterLinkActive: { exact: boolean } = {exact: false};
 
-  @Output() activeLinkChanged = new ReplaySubject<{ isActive: boolean; findRouterLink: (commands: any[]|string) => RouterLinkWithHref | RouterLink | undefined; }>(1);
+  @Output() routerLinkActiveNotify = new ReplaySubject<{ isActive: boolean; findRouterLink: (commands: any[]|string) => RouterLinkWithHref | RouterLink | undefined; }>(1);
 
   private activeLinks: Array<RouterLink | RouterLinkWithHref> = [];
 
@@ -48,7 +48,7 @@ export class RouterLinkActiveNotify implements OnChanges, OnDestroy, AfterConten
       if (this.statusHasChanged(isActive, activeLinks)) {
         (this as any).isActive = isActive;
         this.activeLinks = activeLinks;
-        this.activeLinkChanged.next({ isActive, findRouterLink: this.findRouterLink.bind(this) });
+        this.routerLinkActiveNotify.next({ isActive, findRouterLink: this.findRouterLink.bind(this) });
       }
     });
   }

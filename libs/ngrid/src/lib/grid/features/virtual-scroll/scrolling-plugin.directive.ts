@@ -22,15 +22,12 @@ export class PblNgridScrolling<T = any> {
   @Output() scrolling = new EventEmitter< -1 | 0 | 1 >();
 
   constructor(table: PblNgridComponent<T>, pluginCtrl: PblNgridPluginController, zone: NgZone) {
-    let subscription = pluginCtrl.events.subscribe( event => {
-      if (event.kind === 'onInit') {
+    pluginCtrl.onInit()
+      .subscribe(() => {
         const { viewport } = table;
         if (viewport) {
           viewport.scrolling.subscribe( isScrolling => zone.run( () => this.scrolling.next(isScrolling) ) );
         }
-        subscription.unsubscribe();
-        subscription = undefined;
-      }
-    });
+      });
   }
 }

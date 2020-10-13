@@ -1,0 +1,15 @@
+pbl-ngrid + h1 {
+  .virtual-scroll-css-scrolling-demo-on {
+    display: none;
+  }
+}
+
+.pbl-ngrid-scrolling + h1 {
+  .virtual-scroll-css-scrolling-demo-on {
+    display: inline;
+  }
+  .virtual-scroll-css-scrolling-demo-off {
+    display: none;
+  }
+
+}

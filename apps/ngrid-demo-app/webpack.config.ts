@@ -62,7 +62,9 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   webpackConfig.plugins.push(dynamicModule);
 
   webpackConfig.plugins.push(new MarkdownPagesWebpackPlugin({
-    docsPath: 'content/**/*.md',
+    docsPath: '**/*.md',
+    docsRoot: './content',
+    outputAssetPathRoot: 'md-content',
     remarkPlugins: [
       remarkSlug,
       remarkAutolinkHeadings,
@@ -82,7 +84,7 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   webpackConfig.plugins.push(new MarkdownAppSearchWebpackPlugin({ }));
 
   webpackConfig.plugins.push(new MarkdownCodeExamplesWebpackPlugin({
-    docsPath: '../libs/ngrid-examples/**/*.ts',
+    docsPath: './content/**/*.ts',
   }));
 
   const angular = require('@angular/core/package.json');

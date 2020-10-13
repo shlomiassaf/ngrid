@@ -3,7 +3,7 @@ import { PblNgridComponent } from './ngrid.component';
 
 declare module '../data-source/data-source' {
   interface PblDataSource<T = any, TData = any> {
-    hostGrid: PblNgridComponent<T>
+    hostGrid: PblNgridComponent<T>;
   }
 }
 

@@ -31,7 +31,7 @@ export interface PblDataSourceOptions {
   skipInitial?: boolean;
 }
 
-export class PblDataSource<T = any, TData = any> extends DataSource<T> {
+export class PblDataSource<T = any, TData = any, TDataSourceAdapter extends PblDataSourceAdapter<T, TData> = PblDataSourceAdapter<T, TData>> extends DataSource<T> {
 
   get pagination(): PblNgridPaginatorKind | false { return this._pagination; }
   set pagination(value: PblNgridPaginatorKind | false) {
@@ -113,8 +113,8 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
    */
   readonly skipInitial: boolean;
 
-  get adapter(): PblDataSourceAdapter { return this._adapter; };
-  set adapter(value: PblDataSourceAdapter) {
+  get adapter(): TDataSourceAdapter { return this._adapter; };
+  set adapter(value: TDataSourceAdapter) {
     if (this._adapter !== value) {
       this._adapter = value;
       if (this.pagination) {
@@ -166,7 +166,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
   protected _paginator: PblPaginator<any>;
 
   private _pagination: PblNgridPaginatorKind | false;
-  private _adapter: PblDataSourceAdapter;
+  private _adapter: TDataSourceAdapter;
   private _source: T[];
   private _disposed: boolean;
   private _tableConnected: boolean;
@@ -174,7 +174,7 @@ export class PblDataSource<T = any, TData = any> extends DataSource<T> {
   private _lastRange: ListRange;
   private _lastAdapterEvent: PblDataSourceAdapterProcessedResult<T, TData>;
 
-  constructor(adapter: PblDataSourceAdapter<T, TData>, options?: PblDataSourceOptions) {
+  constructor(adapter: TDataSourceAdapter, options?: PblDataSourceOptions) {
     super();
     options = options || {};
 

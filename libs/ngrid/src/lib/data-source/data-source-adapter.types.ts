@@ -1,4 +1,5 @@
 import { PblPaginatorChangeEvent } from '../paginator';
+import { DataSourceOf } from './data-source';
 import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
 
 /** @internal */
@@ -41,7 +42,8 @@ export interface PblDataSourceTriggerChange<T> {
   curr?: T;
 }
 
-export interface PblDataSourceTriggerChangedEvent<T = any> {
+export interface PblDataSourceTriggerChangedEvent<TData = any> {
+  id: number,
   filter: PblDataSourceTriggerChange<DataSourceFilter>;
   sort: PblDataSourceTriggerChange<PblNgridDataSourceSortChange>;
   pagination: {
@@ -49,7 +51,7 @@ export interface PblDataSourceTriggerChangedEvent<T = any> {
     page: PblDataSourceTriggerChange<any>;
     perPage: PblDataSourceTriggerChange<number>;
   }
-  data: PblDataSourceTriggerChange<T>;
+  data: PblDataSourceTriggerChange<TData>;
 
 
   /**
@@ -76,3 +78,5 @@ export interface PblDataSourceAdapterProcessedResult<T = any, TData = any>  {
   sorted?: T[];
   filtered?: T[];
 }
+
+export type PblDataSourceTriggerChangeHandler<T, TEvent extends PblDataSourceTriggerChangedEvent<any>> = (event: TEvent) => (false | DataSourceOf<T>)

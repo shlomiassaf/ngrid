@@ -44,17 +44,20 @@ export class PblNgridMetaRowService<T = any> {
           filter( () => trackScroll ),
           auditTime(0, animationFrameScheduler),
         )
-        .subscribe(() => {
-          const newOffset = grid.viewport.measureScrollOffset('start');
-          if (hzOffset !== newOffset) {
-            this.hzScroll$.next(hzOffset = newOffset);
-          } else if (grid.viewport.isScrolling) {
-            trackScroll = false;
-            grid.viewport.scrolling
-              .pipe(take(1))
-              .subscribe( () => trackScroll = true );
-          }
-        }, null, () => this.hzScroll$.complete() );
+        .subscribe({
+          next: () => {
+            const newOffset = grid.viewport.measureScrollOffset('start');
+            if (hzOffset !== newOffset) {
+              this.hzScroll$.next(hzOffset = newOffset);
+            } else if (grid.viewport.isScrolling) {
+              trackScroll = false;
+              grid.viewport.scrolling
+                .pipe(take(1))
+                .subscribe( () => trackScroll = true );
+            }
+          },
+          complete: () => this.hzScroll$.complete(),
+        });
     });
   }
 

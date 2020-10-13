@@ -186,12 +186,10 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
 
   protected applyColumnDiff(type: 'start' | 'end', value: Array<string | number>, differ: IterableDiffer<string | number>): void {
     if (!this.grid.isInit) {
-      const unsub = this.pluginCtrl.events.subscribe( event => {
-        if (event.kind === 'onInit') {
-          unsub.unsubscribe();
+      this.pluginCtrl.onInit()
+        .subscribe(() => {
           this.applyColumnDiff(type, value, differ);
-        }
-      });
+        });
       return;
     }
 
@@ -213,12 +211,10 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
 
   protected applyRowDiff(type: 'header' | 'footer', value: Array<'table' | number>, differ: IterableDiffer<'table' | number>): void {
     if (!this.grid.isInit) {
-      const unsub = this.pluginCtrl.events.subscribe( event => {
-        if (event.kind === 'onInit') {
-          unsub.unsubscribe();
+      this.pluginCtrl.onInit()
+        .subscribe(() => {
           this.applyRowDiff(type, value, differ);
-        }
-      });
+        });
       return;
     }
 
