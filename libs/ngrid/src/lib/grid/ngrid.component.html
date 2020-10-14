@@ -45,9 +45,8 @@
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
       <ng-container *ngFor="let meta of metaColumns">
         <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [pblNgridColumnDef]="c">
-          <pbl-ngrid-header-cell #hCell="ngridHeaderCell" *cdkHeaderCellDef>
-            <ng-container *ngTemplateOutlet="c.template; context: hCell.cellCtx"></ng-container>
-          </pbl-ngrid-header-cell>
+          <!-- For heder cells, we create the internal content programmatically and not via declarations -->
+          <pbl-ngrid-header-cell #hCell="ngridHeaderCell" *cdkHeaderCellDef></pbl-ngrid-header-cell>
         </ng-container>
         <ng-container *ngIf="meta.footer as c" [pblNgridColumnDef]="c">
           <pbl-ngrid-footer-cell #fCell="ngridFooterCell" *cdkFooterCellDef>
