@@ -1,5 +1,5 @@
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
-import { ColumnApi } from '../column-api';
+import { ColumnApi } from '../column-management';
 import { RowContextState, PblNgridCellContext, CellReference, GridDataPoint } from './types';
 import { PblRowContext } from './row';
 import { PblCellContext } from './cell';

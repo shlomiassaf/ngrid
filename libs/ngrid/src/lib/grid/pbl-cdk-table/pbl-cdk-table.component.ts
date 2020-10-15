@@ -12,7 +12,6 @@ import {
   OnDestroy,
   Optional,
   ViewEncapsulation,
-  ViewContainerRef,
   Injector,
   NgZone,
 } from '@angular/core';
@@ -23,7 +22,7 @@ import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooter
 import { Directionality } from '@angular/cdk/bidi';
 
 import { PblNgridComponent } from '../ngrid.component';
-import { PblNgridExtensionApi, EXT_API_TOKEN } from '../../ext/grid-ext-api';
+import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridColumnDef } from '../directives/column-def';
 import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
 import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } from '@angular/cdk/collections';
@@ -71,6 +70,8 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     this._element.style.minWidth = value ? value + 'px' : null;
   }
 
+  readonly cdRef: ChangeDetectorRef;
+
   private _minWidth: number | null = null;
   private onRenderRows$: Subject<DataRowOutlet>;
   private _lastSticky: PblNgridColumnDef;
@@ -84,13 +85,14 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
               @Optional() _dir: Directionality,
               protected injector: Injector,
               protected grid: PblNgridComponent<T>,
-              @Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<T>,
+              @Inject(EXT_API_TOKEN) protected extApi: PblNgridInternalExtensionApi<T>,
               @Inject(DOCUMENT) _document: any,
               platform: Platform,
               @Inject(_VIEW_REPEATER_STRATEGY) _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>,
               @Inject(_COALESCED_STYLE_SCHEDULER) _coalescedStyleScheduler: _CoalescedStyleScheduler) {
     super(_differs, _changeDetectorRef, _elementRef, role, _dir, _document, platform, _viewRepeater, _coalescedStyleScheduler);
-    this.grid._cdkTable = this;
+    this.cdRef = _changeDetectorRef;
+    extApi.setCdkTable(this);
     this.trackBy = this.grid.trackBy;
 
     extApi.events.subscribe( e => {
@@ -220,54 +222,6 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
 
     if (this.onRenderRows$) {
       this.onRenderRows$.next(this._rowOutlet);
-    }
-  }
-
-  /**
-   * Force run change detection for rows.
-   * You can run it for specific groups or for all rows.
-   */
-  syncRows(rowType?: 'all' | boolean, detectChanges?: boolean): void;
-  syncRows(rowType: 'header' | 'data' | 'footer', detectChanges: boolean, ...rows: number[]): void;
-  syncRows(rowType: 'header' | 'data' | 'footer', ...rows: number[]): void;
-  syncRows(rowType: 'header' | 'data' | 'footer' | 'all' | boolean = false, ...rows: any[]): void {
-    const detectChanges: boolean = typeof rowType === 'boolean'
-      ? rowType
-      : typeof rows[0] === 'boolean'
-        ? rows.shift()
-        : false
-    ;
-
-    let vcRef: ViewContainerRef;
-    switch(rowType) {
-      case 'header':
-        vcRef = this._headerRowOutlet.viewContainer;
-        break;
-      case 'data':
-        vcRef = this._rowOutlet.viewContainer;
-        break;
-      case 'footer':
-        vcRef = this._footerRowOutlet.viewContainer;
-        break;
-      default: // boolean or 'all'
-        this._changeDetectorRef.markForCheck();
-        if (detectChanges) {
-          this._changeDetectorRef.detectChanges();
-        }
-        return;
-    }
-
-    const useSpecificRows = rows.length > 0;
-    const count = useSpecificRows ? rows.length : vcRef.length;
-
-    for (let renderIndex = 0; renderIndex < count; renderIndex++) {
-      const viewRef = vcRef.get(useSpecificRows ? rows[renderIndex] : renderIndex) as EmbeddedViewRef<any>;
-      if (viewRef) {
-        viewRef.markForCheck();
-        if (detectChanges) {
-          viewRef.detectChanges();
-        }
-      }
     }
   }
 

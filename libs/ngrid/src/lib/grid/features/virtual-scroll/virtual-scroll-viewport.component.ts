@@ -34,6 +34,7 @@ import { PblNgridConfigService } from '../../services/config';
 import { PblNgridComponent } from '../../ngrid.component';
 import { PblCdkVirtualScrollDirective, NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies';
 import { NgeVirtualTableRowInfo } from './virtual-scroll-for-of';
+import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
 
 declare module '../../services/config' {
   interface PblNgridConfig {
@@ -176,7 +177,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher,
               @Optional() viewportRuler: ViewportRuler,
-              pluginCtrl: PblNgridPluginController,
+              @Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi,
               private grid: PblNgridComponent<any>) {
     super(elementRef,
           cdr,
@@ -196,7 +197,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     } else {
       this.enabled = !(pblScrollStrategy instanceof NoVirtualScrollStrategy);
     }
-    pluginCtrl.extApi.setViewport(this);
+    extApi.setViewport(this);
     this.offsetChange = this.offsetChange$.asObservable();
 
     this._minWidth$ = grid.columnApi.totalColumnWidthChange;
@@ -219,7 +220,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     // Additionally, the host itself (viewport) is set to contain: strict.
     const { grid } = this;
     if (this.enabled) {
-      grid._cdkTable.attachViewPort();
+      this.extApi.cdkTable.attachViewPort();
     }
 
     this.scrolling

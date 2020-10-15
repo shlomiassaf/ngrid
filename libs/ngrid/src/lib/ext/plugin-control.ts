@@ -18,6 +18,8 @@ const CREATED$ = new Subject<{ table: PblNgridComponent<any>, controller: PblNgr
 
 const REGISTERED_TO_CREATE = new WeakSet<any>();
 
+const ON_INIT_PIPE = (o: Observable<PblNgridEvents>) => o.pipe(filter( e => e.kind === 'onInit' ), take(1));
+
 /** @internal */
 export class PblNgridPluginContext<T = any> {
 
@@ -25,20 +27,24 @@ export class PblNgridPluginContext<T = any> {
   // Non @Injectable classes are now getting addded with hard reference to the ctor params which at the class creation point are undefined
   // forwardRef() will not help since it's not inject by angular, we instantiate the class..
   // probably due to https://github.com/angular/angular-cli/commit/639198499973e0f437f059b3c933c72c733d93d8
-  static create<T = any>(table: PblNgridComponent<any>, injector: Injector, extApi: PblNgridExtensionApi): PblNgridPluginContext<T> {
-    if (NGRID_PLUGIN_CONTEXT.has(table)) {
+  static create<T = any>(injector: Injector, extApi: PblNgridExtensionApi) {
+    if (NGRID_PLUGIN_CONTEXT.has(extApi.grid)) {
       throw new Error(`Table is already registered for extensions.`);
     }
 
     const instance = new PblNgridPluginContext<T>();
-    NGRID_PLUGIN_CONTEXT.set(table, instance);
+    NGRID_PLUGIN_CONTEXT.set(extApi.grid, instance);
 
-    instance.grid = table;
+    instance.grid = extApi.grid;
     instance.injector = injector;
     instance.extApi = extApi;
-    PblNgridPluginController.create<T>(instance);
 
-    return instance;
+    instance.controller = new PblNgridPluginController<T>(instance);
+
+    return {
+      plugin: instance,
+      init: () => CREATED$.next({ table: instance.grid, controller: instance.controller }),
+    };
   }
 
   grid: PblNgridComponent<any>;
@@ -66,6 +72,7 @@ export class PblNgridPluginContext<T = any> {
 }
 
 export class PblNgridPluginController<T = any> {
+
   static readonly created = CREATED$.asObservable();
 
   static onCreatedSafe(token: any, fn: (grid: PblNgridComponent<any>, controller: PblNgridPluginController<any>) => void) {
@@ -75,12 +82,6 @@ export class PblNgridPluginController<T = any> {
     }
   }
 
-  static create<T = any>(context: PblNgridPluginContext<T>) {
-    const controller = new PblNgridPluginController<T>(context);
-    context.controller = controller;
-    CREATED$.next({ table: context.grid, controller });
-  }
-
   get injector(): Injector { return this.context.injector; }
 
   readonly extApi: PblNgridExtensionApi
@@ -88,7 +89,7 @@ export class PblNgridPluginController<T = any> {
   private readonly grid: PblNgridComponent<T>
   private readonly plugins = new Map<keyof PblNgridPluginExtension, PblNgridPlugin>();
 
-  private constructor(private context: PblNgridPluginContext) {
+  constructor(private context: PblNgridPluginContext) {
     this.grid = context.grid;
     this.extApi = context.extApi;
     this.events = context.events;
@@ -106,16 +107,7 @@ export class PblNgridPluginController<T = any> {
    * In other words, if you get false, it means you called this method when the grid was already initialized.
    */
   onInit() {
-    if (this.grid.isInit) {
-      return of(false);
-    }
-
-    return this.events
-      .pipe(
-        filter( e => e.kind === 'onInit' ),
-        take(1),
-        mapTo(true),
-      );
+    return this.grid.isInit ? of(false) : this.events.pipe(ON_INIT_PIPE, mapTo(true));
   }
 
   static find<T = any>(grid: PblNgridComponent<T>): PblNgridPluginController<T> | undefined {

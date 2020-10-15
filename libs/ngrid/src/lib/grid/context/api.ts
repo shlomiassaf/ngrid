@@ -1,10 +1,12 @@
 import { BehaviorSubject, Subject, Observable, asapScheduler } from 'rxjs';
-import { debounceTime, buffer, map, filter } from 'rxjs/operators';
+import { debounceTime, buffer, map, filter, take } from 'rxjs/operators';
 
 import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
 import { RowContext } from '@angular/cdk/table';
 
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
+import { PblColumn } from '../columns/column';
+import { ColumnApi } from '../column-management';
 import {
   RowContextState,
   CellContextState,
@@ -15,8 +17,6 @@ import {
   PblNgridFocusChangedEvent,
   PblNgridSelectionChangedEvent
 } from './types';
-import { PblColumn } from '../columns/column';
-import { ColumnApi } from '../column-api';
 import { removeFromArray } from '../utils';
 import { findRowRenderedIndex, resolveCellReference } from './utils';
 import { PblRowContext } from './row';
@@ -72,11 +72,19 @@ export class ContextApi<T = any> {
   }
 
   constructor(private extApi: PblNgridExtensionApi<T>) {
-    this.vcRef = extApi.cdkTable._rowOutlet.viewContainer;
-    this.columnApi = extApi.grid.columnApi;
+    this.columnApi = extApi.columnApi;
+    extApi.events
+      .pipe(
+        filter( e => e.kind === 'onDataSource'),
+        take(1),
+      ).subscribe(() => {
+        this.vcRef = extApi.cdkTable._rowOutlet.viewContainer;
+        updateContext();
+        extApi.cdkTable.onRenderRows.subscribe(updateContext);
+      });
 
     extApi.events
-      .pipe( filter( e => e.kind === 'onDestroy' ) )
+      .pipe(filter( e => e.kind === 'onDestroy' ))
       .subscribe( e => this.destroy() );
 
     const updateContext = () => {
@@ -180,9 +188,6 @@ export class ContextApi<T = any> {
 
       lastView.forEach( ident => this.cache.get(ident).firstRender = false );
     };
-
-    updateContext();
-    extApi.cdkTable.onRenderRows.subscribe(updateContext);
   }
 
   /**
@@ -201,7 +206,7 @@ export class ContextApi<T = any> {
         if (markForCheck) {
           const rowContext = this.findRowInView(rowIdent);
           if (rowContext) {
-            this.extApi.grid._cdkTable.syncRows('data', rowContext.index);
+            this.extApi.grid.rowsApi.syncRows('data', rowContext.index);
           }
         }
       }
@@ -218,7 +223,7 @@ export class ContextApi<T = any> {
             this.selectCells( [ this.activeFocused ], markForCheck, true);
 
             if (markForCheck) {
-              this.extApi.grid._cdkTable.syncRows('data', ref.rowContext.index);
+              this.extApi.grid.rowsApi.syncRows('data', ref.rowContext.index);
             }
           }
         } else {
@@ -272,7 +277,7 @@ export class ContextApi<T = any> {
     }
 
     if (toMarkRendered.size > 0) {
-      this.extApi.grid._cdkTable.syncRows('data', ...Array.from(toMarkRendered.values()));
+      this.extApi.grid.rowsApi.syncRows('data', ...Array.from(toMarkRendered.values()));
     }
 
     this.selectionChanged$.next({ added, removed: [] });
@@ -331,7 +336,7 @@ export class ContextApi<T = any> {
     }
 
     if (toMarkRendered.size > 0) {
-      this.extApi.grid._cdkTable.syncRows('data', ...Array.from(toMarkRendered.values()));
+      this.extApi.grid.rowsApi.syncRows('data', ...Array.from(toMarkRendered.values()));
     }
 
     this.selectionChanged$.next({ added: [], removed });

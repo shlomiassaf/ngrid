@@ -206,7 +206,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
   private deferSyncRows(ms = 0, runBefore?: () => void, runAfter?: () => void) {
     this.safeAsyncOp(() => {
       runBefore && runBefore();
-      this.ds.hostGrid._cdkTable.syncRows('data', true);
+      this.ds.hostGrid.rowsApi.syncRows('data', true);
       runAfter && runAfter();
     }, ms);
   }

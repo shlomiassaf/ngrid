@@ -50,15 +50,7 @@ export class MatExcelStyleHeaderMenu {
   }
 
   hide(): void {
-    const hidden: string[] = [this.column.id];
-
-    for (const col of this.grid.columnApi.columns) {
-      if (col.hidden) {
-        hidden.push(col.id);
-      }
-    }
-
-    this.grid.hideColumns = hidden;
+    this.grid.columnApi.hideColumns(this.column.id);
   }
 
   onSortToggle(sort: 'asc' | 'desc'): void {
@@ -76,7 +68,6 @@ export class MatExcelStyleHeaderMenu {
       this.column.columnDef.updatePin(pin)
     }
   }
-
 
   filterColumn(filterValue: string) {
     this.currentFilter = filterValue;

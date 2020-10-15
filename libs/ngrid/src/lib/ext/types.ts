@@ -6,6 +6,17 @@ export interface PblNgridPluginExtension { }
 
 export interface PblNgridPluginExtensionFactories { }
 
+/**
+ * This event is fired after the grid has constructed, including the main internal grid component and the viewport.
+ * > Note that the components we're constructed, not initialized!
+ */
+export interface PblNgridOnConstructedEvent {
+  kind: 'onConstructed';
+}
+
+/**
+ * This event is fired after the grid has initialized
+ */
 export interface PblNgridOnInitEvent {
   kind: 'onInit';
 }
@@ -34,6 +45,7 @@ export interface PblNgridOnDataSourceEvent {
 }
 
 export type PblNgridEvents =
+  | PblNgridOnConstructedEvent
   | PblNgridOnInitEvent
   | PblNgridOnResizeRowEvent
   | PblNgridBeforeInvalidateHeadersEvent

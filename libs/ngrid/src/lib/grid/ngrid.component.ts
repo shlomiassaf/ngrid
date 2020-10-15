@@ -21,7 +21,7 @@ import {
   ViewContainerRef,
   EmbeddedViewRef,
   NgZone,
-  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck, Attribute, Optional
+  isDevMode, forwardRef, Attribute,
 } from '@angular/core';
 
 import { Directionality } from '@angular/cdk/bidi';
@@ -29,24 +29,25 @@ import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coerci
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
 import { unrx } from './utils';
-import { EXT_API_TOKEN, PblNgridExtensionApi } from '../ext/grid-ext-api';
+import { EXT_API_TOKEN, PblNgridExtensionApi, PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
 import { PblNgridPaginatorKind } from '../paginator';
 import { DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
-import { findCellDef } from './directives/cell-def';
-import { PblColumn, PblColumnStore, PblMetaColumnStore, PblNgridColumnSet, PblNgridColumnDefinitionSet, isPblColumn } from './columns';
+import { PblColumn, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './columns';
+import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column-management';
 import { PblNgridCellContext, PblNgridMetaCellContext, ContextApi, PblNgridContextApi, PblNgridRowContext } from './context/index';
 import { PblNgridRegistryService } from './services/grid-registry.service';
 import { PblNgridConfigService } from './services/config';
 import { DynamicColumnWidthLogic, DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY } from './col-width-logic/dynamic-column-width';
-import { ColumnApi, AutoSizeToFitOptions } from './column-api';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblNgridMetaRowService } from './meta-rows/index';
 
 import { bindToDataSource } from './bind-to-datasource';
 import './bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
+import { RowsApi } from './rows-api';
+import { createApis } from './api-factory';
 
 export function internalApiFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi; }
 export function pluginControllerFactory(grid: { _plugin: PblNgridPluginContext; }) { return grid._plugin.controller; }
@@ -77,7 +78,7 @@ export function metaRowServiceFactory(grid: { _extApi: PblNgridExtensionApi; }) 
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewInit, DoCheck, OnChanges, OnDestroy {
+export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewInit, OnChanges, OnDestroy {
 
   /**
    * Show/Hide the header row.
@@ -186,11 +187,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    */
   @Input() columns: PblNgridColumnSet | PblNgridColumnDefinitionSet;
 
-  @Input() set hideColumns(value: string[]) {
-    this._hideColumns = value;
-    this._hideColumnsDirty = true;
-  }
-
   /**
    * A fallback height for "the inner scroll container".
    * The fallback is used only when it LOWER than the rendered height, so no empty gaps are created when setting the fallback.
@@ -247,27 +243,24 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    */
   readonly isInit: boolean;
   readonly columnApi: ColumnApi<T>;
-  get contextApi(): PblNgridContextApi<T> { return this._extApi.contextApi; }
+  readonly rowsApi: RowsApi<T>;
+  readonly contextApi: PblNgridContextApi<T>;
 
-  get viewport(): PblCdkVirtualScrollViewportComponent | undefined { return this._viewport; }
+  get viewport() { return this._viewport; }
+  get innerTableMinWidth() { return this._cdkTable?.minWidth }
 
-  _cdkTable: PblCdkTableComponent<T>;
-  private _store: PblColumnStore = new PblColumnStore();
-  private _hideColumnsDirty: boolean;
-  private _hideColumns: string[];
-  private _colHideDiffer: IterableDiffer<string>;
+  private _store: PblColumnStore;
   private _noDateEmbeddedVRef: EmbeddedViewRef<any>;
   private _paginatorEmbeddedVRef: EmbeddedViewRef<any>;
   private _pagination: PblNgridPaginatorKind | false;
   private _noCachePaginator = false;
-  private _minimumRowWidth: string;
-  private _viewport?: PblCdkVirtualScrollViewportComponent;
   private _plugin: PblNgridPluginContext;
-  private _extApi: PblNgridExtensionApi<T>;
+  private _extApi: PblNgridInternalExtensionApi<T>;
+  private _cdkTable: PblCdkTableComponent<T>;
+  private _viewport: PblCdkVirtualScrollViewportComponent;
 
   constructor(injector: Injector, vcRef: ViewContainerRef,
               private elRef: ElementRef<HTMLElement>,
-              private differs: IterableDiffers,
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
               private config: PblNgridConfigService,
@@ -279,39 +272,16 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this.showFooter = gridConfig.showFooter;
     this.noFiller = gridConfig.noFiller;
 
-    this.initExtApi();
-    this.columnApi = ColumnApi.create<T>(this, this._store, this._extApi);
-    this.initPlugins(injector, elRef, vcRef);
-  }
-
-  ngDoCheck(): void {
-    if (this._hideColumnsDirty) {
-      this._hideColumnsDirty = false;
-      const value = this._hideColumns;
-      if (!this._colHideDiffer && value) {
-        try {
-          this._colHideDiffer = this.differs.find(value).create();
-        } catch (e) {
-          throw new Error(`Cannot find a differ supporting object '${value}. hideColumns only supports binding to Iterables such as Arrays.`);
-        }
-      }
-    }
-    if (this._colHideDiffer) {
-      const hideColumns = this._hideColumns || [];
-      const changes = this._colHideDiffer.diff(hideColumns);
-      if (changes) {
-        this._store.hidden = hideColumns;
-        this._minimumRowWidth = '';
-
-        // TODO(shlomiassaf) [perf, 4]: Right now we attach all columns, we can improve it by attaching only those "added" (we know them from "changes")
-        this.attachCustomCellTemplates();
-        this.attachCustomHeaderCellTemplates();
-        this._cdkTable.syncRows('header');
-      }
-      if (!this._hideColumns) {
-        this._colHideDiffer = undefined;
-      }
-    }
+    this._extApi = createApis(this, { ngZone, injector, vcRef, elRef, cdRef: cdr });
+    this._extApi.onConstructed(() => {
+      this._viewport = this._extApi.viewport;
+      this._cdkTable = this._extApi.cdkTable;
+    });
+    this.contextApi = this._extApi.contextApi;
+    this._store = this._extApi.columnStore;
+    this._plugin = this._extApi.plugin;
+    this.columnApi = this._extApi.columnApi;
+    this.rowsApi = this._extApi.rowsApi;
   }
 
   ngAfterContentInit(): void {
@@ -340,10 +310,10 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
         }
       }
       if (gridCell) {
-        this.attachCustomCellTemplates();
+        this._store.attachCustomCellTemplates();
       }
       if (headerFooterCell) {
-        this.attachCustomHeaderCellTemplates();
+        this._store.attachCustomHeaderCellTemplates();
       }
     });
   }
@@ -401,7 +371,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   ngOnDestroy(): void {
     const destroy = () => {
       this._plugin.destroy();
-      if (this._viewport) {
+      if (this.viewport) {
         this._cdkTable.detachViewPort();
       }
       unrx.kill(this);
@@ -514,14 +484,14 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       this.setupPaginator();
       this.setupNoData(false);
 
-      // clear the context, new datasource
-      this._extApi.contextApi.clear();
-
       this._plugin.emitEvent({
         kind: 'onDataSource',
         prev,
         curr: value
       });
+
+      // clear the context, new datasource
+      this._extApi.contextApi.clear();
 
       if ( value ) {
         if (isDevMode()) {
@@ -552,12 +522,11 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
           .subscribe( previousRenderLength => {
             // If the number of rendered items has changed the grid will update the data and run CD on it.
             // so we only update the rows.
-            const { cdkTable } = this._extApi;
             if (previousRenderLength === this.ds.renderLength) {
-              cdkTable.syncRows(true);
+              this.rowsApi.syncRows(true);
             } else {
-              cdkTable.syncRows('header', true);
-              cdkTable.syncRows('footer', true);
+              this.rowsApi.syncRows('header', true);
+              this.rowsApi.syncRows('footer', true);
             }
           });
 
@@ -608,8 +577,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this._extApi.contextApi.clear();
     this._store.invalidate(this.columns);
 
-    this.attachCustomCellTemplates();
-    this.attachCustomHeaderCellTemplates();
+    this._store.attachCustomCellTemplates();
+    this._store.attachCustomHeaderCellTemplates();
     this._cdkTable.clearHeaderRowDefs();
     this._cdkTable.clearFooterRowDefs();
     // this.cdr.markForCheck();
@@ -727,15 +696,10 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       return;
     }
 
-    if (!this._minimumRowWidth ) {
-      // We calculate the total minimum width of the grid
-      // We do it once, to set the minimum width based on the initial setup.
-      // Note that we don't apply strategy here, we want the entire length of the grid!
-      this._cdkTable.minWidth = rowWidth.minimumRowWidth;
-    }
+    this._cdkTable.minWidth = rowWidth.minimumRowWidth;
 
     this.ngZone.run( () => {
-      this._cdkTable.syncRows('header');
+      this.rowsApi.syncRows('header');
       this._plugin.emitEvent({ kind: 'onResizeRow' });
     });
   }
@@ -811,24 +775,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     }
   }
 
-  private initPlugins(injector: Injector, elRef: ElementRef<any>, vcRef: ViewContainerRef): void {
-    // Create an injector for the extensions/plugins
-    // This injector allow plugins (that choose so) to provide a factory function for runtime use.
-    // I.E: as if they we're created by angular via template...
-    // This allows seamless plugin-to-plugin dependencies without requiring specific template syntax.
-    // And also allows auto plugin binding (app wide) without the need for template syntax.
-    const pluginInjector = Injector.create({
-      providers: [
-        { provide: ViewContainerRef, useValue: vcRef },
-        { provide: ElementRef, useValue: elRef },
-        { provide: ChangeDetectorRef, useValue: this.cdr },
-      ],
-      parent: injector,
-    });
-    this._plugin = PblNgridPluginContext.create(this, pluginInjector, this._extApi);
-    bindToDataSource(this._plugin);
-  }
-
   private listenToResize(): void {
     let resizeObserver: ResizeObserver;
     const ro$ = fromEventPattern<[ResizeObserverEntry[], ResizeObserver]>(
@@ -874,53 +820,9 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   }
 
   private onResize(entries: ResizeObserverEntry[]): void {
-    if (this._viewport) {
-      this._viewport.checkViewportSize();
-    }
+    this.viewport?.checkViewportSize();
     // this.resetColumnsWidth();
     this.resizeColumns();
-  }
-
-  private initExtApi(): void {
-    let onInit: Array<() => void> = [];
-    const extApi = {
-      grid: this,
-      element: this.elRef.nativeElement,
-      get cdkTable() { return extApi.grid._cdkTable; },
-      get events() { return extApi.grid._plugin.events },
-      get contextApi() {
-        Object.defineProperty(this, 'contextApi', { value: new ContextApi<T>(extApi) });
-        return extApi.contextApi;
-      },
-      get metaRowService() {
-        Object.defineProperty(this, 'metaRowService', { value: new PblNgridMetaRowService<T>(extApi) });
-        return extApi.metaRowService;
-      },
-      onInit: (fn: () => void) => {
-        if (extApi.grid.isInit) {
-          fn();
-        } else {
-          if (onInit.length === 0) {
-            let u = extApi.events.subscribe( e => {
-              if (e.kind === 'onInit') {
-                for (const onInitFn of onInit) {
-                  onInitFn();
-                }
-                u.unsubscribe();
-                onInit = u = undefined;
-              }
-            });
-          }
-          onInit.push(fn);
-        }
-      },
-      columnStore: this._store,
-      setViewport: (viewport) => this._viewport = viewport,
-      dynamicColumnWidthFactory: (): DynamicColumnWidthLogic => {
-        return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY, this.dir?.value);
-      }
-    };
-    this._extApi = extApi;
   }
 
   private setupNoData(force?: boolean): void {
@@ -975,53 +877,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
         const paginatorTemplate = this.registry.getSingle('paginator');
         if (paginatorTemplate) {
           this._paginatorEmbeddedVRef = this.createView('beforeContent', paginatorTemplate.tRef, { $implicit: this });
-        }
-      }
-    }
-  }
-
-  private attachCustomCellTemplates(): void {
-    for (const col of this._store.columns) {
-      const cell = findCellDef(this.registry, col, 'tableCell', true);
-      if ( cell ) {
-        col.cellTpl = cell.tRef;
-      } else {
-        const defaultCellTemplate = this.registry.getMultiDefault('tableCell');
-        col.cellTpl = defaultCellTemplate ? defaultCellTemplate.tRef : this._fbTableCell;
-      }
-
-      const editorCell = findCellDef(this.registry, col, 'editorCell', true);
-      if ( editorCell ) {
-        col.editorTpl = editorCell.tRef;
-      } else {
-        const defaultCellTemplate = this.registry.getMultiDefault('editorCell');
-        col.editorTpl = defaultCellTemplate ? defaultCellTemplate.tRef : undefined;
-      }
-    }
-  }
-
-  private attachCustomHeaderCellTemplates(): void {
-    const columns: Array<PblColumn | PblMetaColumnStore> = [].concat(this._store.columns, this._store.metaColumns);
-    const defaultHeaderCellTemplate = this.registry.getMultiDefault('headerCell') || { tRef: this._fbHeaderCell };
-    const defaultFooterCellTemplate = this.registry.getMultiDefault('footerCell') || { tRef: this._fbFooterCell };
-    for (const col of columns) {
-      if (isPblColumn(col)) {
-        const headerCellDef = findCellDef<T>(this.registry, col, 'headerCell', true) || defaultHeaderCellTemplate;
-        const footerCellDef = findCellDef<T>(this.registry, col, 'footerCell', true) || defaultFooterCellTemplate;
-        col.headerCellTpl = headerCellDef.tRef;
-        col.footerCellTpl = footerCellDef.tRef;
-      } else {
-        if (col.header) {
-          const headerCellDef = findCellDef(this.registry, col.header, 'headerCell', true) || defaultHeaderCellTemplate;
-          col.header.template = headerCellDef.tRef;
-        }
-        if (col.headerGroup) {
-          const headerCellDef = findCellDef(this.registry, col.headerGroup, 'headerCell', true) || defaultHeaderCellTemplate;
-          col.headerGroup.template = headerCellDef.tRef;
-        }
-        if (col.footer) {
-          const footerCellDef = findCellDef(this.registry, col.footer, 'footerCell', true) || defaultFooterCellTemplate;
-          col.footer.template = footerCellDef.tRef;
         }
       }
     }

@@ -43,10 +43,11 @@ export function setStickyRow(grid: PblNgridComponent<any>, type: 'header' | 'foo
   }
 
   if (changed) {
+    const cdkTable = PblNgridPluginController.find(grid).extApi.cdkTable;
     if (isHeader) {
-      grid._cdkTable.updateStickyHeaderRowStyles();
+      cdkTable.updateStickyHeaderRowStyles();
     } else {
-      grid._cdkTable.updateStickyFooterRowStyles();
+      cdkTable.updateStickyFooterRowStyles();
     }
   }
 }
@@ -74,7 +75,8 @@ export function setStickyColumns(grid: PblNgridComponent<any>, type: 'start' | '
     }
   }
   if (changed) {
-    grid._cdkTable.updateStickyColumnStyles();
+    const cdkTable = PblNgridPluginController.find(grid).extApi.cdkTable;
+    cdkTable.updateStickyColumnStyles();
   }
 }
 
@@ -160,9 +162,10 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
     pluginCtrl.events
       .pipe(filter( e => e.kind === 'onResizeRow'))
       .subscribe( () => {
-        this.grid._cdkTable.updateStickyHeaderRowStyles();
-        this.grid._cdkTable.updateStickyColumnStyles();
-        this.grid._cdkTable.updateStickyFooterRowStyles();
+        const cdkTable = pluginCtrl.extApi.cdkTable;
+        cdkTable.updateStickyHeaderRowStyles();
+        cdkTable.updateStickyColumnStyles();
+        cdkTable.updateStickyFooterRowStyles();
       });
 
       pluginCtrl.events
