@@ -17,9 +17,10 @@ export class _TempDisposeViewRepeaterStrategy<T, R extends RenderRow<T>, C exten
 
   constructor(grid: PblNgridComponent<T>) {
     super();
-    PblNgridPluginController.find(grid).onInit()
+    const pluginCtrl = PblNgridPluginController.find(grid);
+    pluginCtrl.onInit()
       .subscribe(() => {
-        const cdkTable = grid._cdkTable;
+        const cdkTable = pluginCtrl.extApi.cdkTable;
         this.renderer = cdkTable as any;
         this.workaroundEnabled = !cdkTable['_cachedRenderDefMap'] && typeof this.renderer._renderCellTemplateForItem === 'function';
       });

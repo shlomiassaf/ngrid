@@ -35,9 +35,12 @@ export { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 
 export { PblNgridComponent } from './ngrid.component';
 export { PblNgridRegistryService } from './services/grid-registry.service';
-export { AutoSizeToFitOptions, ColumnApi } from './column-api';
+export { AutoSizeToFitOptions, ColumnApi } from './column-management';
 
 export { PblColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';
 export * from './features/virtual-scroll/index';
+export * from './features/hide-columns.directive';
+
+export * from './rows-api';
 
 export * from './utils/index';

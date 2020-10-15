@@ -21,6 +21,7 @@ export interface PblNgridBuiltInGlobalState {
   grid: PblNgridSurfaceState;
   columns: C.PblNgridColumnDefinitionSetState;
   columnOrder: string[];
+  columnVisibility: string[];
 }
 
 export interface BuiltInRootStateChunks {
@@ -50,6 +51,14 @@ export interface BuiltInRootStateChunks {
    * - root chunk.
    */
   columnOrder: StateChunkItem<Pick<PblNgridGlobalState, 'columnOrder'>, ColumnApi<any>, any, true>;
+  /**
+   * A state chunk that handles serialization of the current column visibility.
+   * This is a keyless chunk, in this case an array, so you can only include / exclude it as a whole.
+   *
+   * - keyless chunk.
+   * - root chunk.
+   */
+  columnVisibility: StateChunkItem<Pick<PblNgridGlobalState, 'columnVisibility'>, ColumnApi<any>, any, true>;
 }
 
 export interface BuiltInStateChunks {

@@ -234,7 +234,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
         break;
     }
     if (this.grid.isInit) {
-      this.grid._cdkTable.updateStickyColumnStyles();
+      this.extApi.cdkTable.updateStickyColumnStyles();
     }
   }
 

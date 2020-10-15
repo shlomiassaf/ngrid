@@ -84,8 +84,8 @@ export class PblNgridTargetEventsPlugin<T = any> {
 
   private setupDomEvents(): void {
     const grid = this.grid;
-    const cdkTable = grid._cdkTable;
-    const cdkTableElement: HTMLElement = cdkTable['_element'];
+    const cdkTable = this.pluginCtrl.extApi.cdkTable;
+    const cdkTableElement = cdkTable._element;
 
     const createCellEvent = <TEvent extends Event>(cellTarget: HTMLElement, source: TEvent): Events.PblNgridCellEvent<T, TEvent> | undefined => {
       const rowTarget = cellTarget.parentElement;
@@ -358,7 +358,7 @@ export class PblNgridTargetEventsPlugin<T = any> {
   }
 
   private syncRow<TEvent extends Event>(event: Events.PblNgridRowEvent<T> | Events.PblNgridCellEvent<T, TEvent>): void {
-    this.grid._cdkTable.syncRows(event.type, event.rowIndex);
+    this.grid.rowsApi.syncRows(event.type, event.rowIndex);
   }
 }
 

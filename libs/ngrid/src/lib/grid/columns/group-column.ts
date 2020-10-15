@@ -1,4 +1,3 @@
-import { PblNgridColumnDef } from '../directives';
 import { PblColumnGroupDefinition } from './types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';

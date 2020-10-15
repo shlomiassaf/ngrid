@@ -38,7 +38,7 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
   private _infiniteVirtualRowRef: ComponentRef<PblNgridDefaultInfiniteVirtualRowComponent>;
   private _removePlugin: (grid: PblNgridComponent<any>) => void;
 
-  constructor(private grid: PblNgridComponent<any>, pluginCtrl: PblNgridPluginController<T>, private injector: Injector) {
+  constructor(private grid: PblNgridComponent<any>, private pluginCtrl: PblNgridPluginController<T>, private injector: Injector) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     grid.registry.changes
@@ -47,7 +47,7 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
           switch (c.type) {
             case 'infiniteVirtualRow':
               if (c.op === 'remove') {
-                grid._cdkTable.removeRowDef(c.value);
+                this.pluginCtrl.extApi.cdkTable.removeRowDef(c.value);
                 this._infiniteVirtualRowDef = undefined;
               }
               this.setupInfiniteVirtualRow();
@@ -75,7 +75,7 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
 
   private setupInfiniteVirtualRow(): void {
     const grid = this.grid;
-    const cdkTable = grid._cdkTable;
+    const cdkTable = this.pluginCtrl.extApi.cdkTable;
     if (this._infiniteVirtualRowDef) {
       cdkTable.removeRowDef(this._infiniteVirtualRowDef);
       this._infiniteVirtualRowDef = undefined;
@@ -105,8 +105,8 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
     const grid = this.grid;
     if (this._infiniteVirtualRowDef) {
       this._enabled === false
-        ? grid._cdkTable.removeRowDef(this._infiniteVirtualRowDef)
-        : grid._cdkTable.addRowDef(this._infiniteVirtualRowDef)
+        ? this.pluginCtrl.extApi.cdkTable.removeRowDef(this._infiniteVirtualRowDef)
+        : this.pluginCtrl.extApi.cdkTable.addRowDef(this._infiniteVirtualRowDef)
       ;
     }
   }
@@ -120,7 +120,7 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
     this.setupInfiniteVirtualRow();
     // Once we changed the `when` predicate on the `CdkRowDef` we must:
     //   1. Update the row cache (property `rowDefs`) to reflect the new change
-    this.grid._cdkTable.updateRowDefCache();
+    this.pluginCtrl.extApi.cdkTable.updateRowDefCache();
 
     //   2. re-render all rows.
     // The logic for re-rendering all rows is handled in `CdkTable._forceRenderDataRows()` which is a private method.
@@ -128,6 +128,6 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
     // also calls `CdkTable._forceRenderDataRows()`
     // TODO: This is risky, the setter logic might change.
     // for example, if material will check for change in `multiTemplateDataRows` setter from previous value...
-    this.grid._cdkTable.multiTemplateDataRows = !!this._enabled;
+    this.pluginCtrl.extApi.cdkTable.multiTemplateDataRows = !!this._enabled;
   }
 }
