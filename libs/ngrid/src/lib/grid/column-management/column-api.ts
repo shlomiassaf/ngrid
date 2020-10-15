@@ -1,43 +1,11 @@
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
-import { PblNgridExtensionApi } from '../ext/grid-ext-api';
-import { PblNgridComponent } from './ngrid.component';
-import { PblColumn, isPblColumn } from './columns/column';
-import { PblColumnStore } from './columns/column-store';
-
-export interface AutoSizeToFitOptions {
-  /**
-   * When `px` will force all columns width to be in fixed pixels
-   * When `%` will force all column width to be in %
-   * otherwise (default) the width will be set in the same format it was originally set.
-   * e.g.: If width was `33%` the new width will also be in %, or if width not set the new width will not be set as well.
-   *
-   * Does not apply when columnBehavior is set and returns a value.
-   */
-  forceWidthType?: '%' | 'px';
-
-  /**
-   * When true will keep the `minWidth` column definition (when set), otherwise will clear it.
-   * Does not apply when columnBehavior is set and returns a value.
-   */
-  keepMinWidth?: boolean;
-
-  /**
-   * When true will keep the `maxWidth` column definition (when set), otherwise will clear it.
-   * Does not apply when columnBehavior is set and returns a value.
-   */
-  keepMaxWidth?: boolean
-
-  /**
-   * A function for per-column fine tuning of the process.
-   * The function receives the `PblColumn`, its relative width (in %, 0 to 1) and total width (in pixels) and should return
-   * an object describing how it should auto fit.
-   *
-   * When the function returns undefined the options are taken from the root.
-   */
-  columnBehavior?(column: PblColumn): Pick<AutoSizeToFitOptions, 'forceWidthType' | 'keepMinWidth' | 'keepMaxWidth'> | undefined;
-}
+import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
+import { PblNgridComponent } from '../ngrid.component';
+import { PblColumn, isPblColumn } from '../columns/column';
+import { PblColumnStore } from './column-store';
+import { AutoSizeToFitOptions } from './types';
 
 export class ColumnApi<T> {
 
@@ -45,18 +13,18 @@ export class ColumnApi<T> {
   // Non @Injectable classes are now getting addded with hard reference to the ctor params which at the class creation point are undefined
   // forwardRef() will not help since it's not inject by angular, we instantiate the class..
   // probably due to https://github.com/angular/angular-cli/commit/639198499973e0f437f059b3c933c72c733d93d8
-  static create<T>(grid: PblNgridComponent<T>, store: PblColumnStore, extApi: PblNgridExtensionApi): ColumnApi<T> {
+  static create<T>(extApi: PblNgridExtensionApi): ColumnApi<T> {
     const instance = new ColumnApi<T>();
 
-    instance.grid = grid;
-    instance.store = store;
+    instance.grid = extApi.grid;
+    instance.store = extApi.columnStore;
     instance.extApi = extApi;
 
     return instance;
   }
 
-  get groupByColumns(): PblColumn[] { return this.store.groupBy; }
   get visibleColumnIds(): string[] { return this.store.columnIds; }
+  get hiddenColumnIds(): string[] { return this.store.hiddenColumnIds; }
   get visibleColumns(): PblColumn[] { return this.store.columns; }
   get columns(): PblColumn[] { return this.store.allColumns; }
 
@@ -113,6 +81,31 @@ export class ColumnApi<T> {
   indexOf(column: string | PblColumn): number {
     const c = typeof column === 'string' ? this.findColumn(column) : column;
     return this.store.allColumns.indexOf(c);
+  }
+
+  isColumnHidden(column: PblColumn) {
+    return this.store.isColumnHidden(column);
+  }
+
+  /**
+   * Hide columns in the table
+   */
+  hideColumns(column: PblColumn | string,  ...columns: PblColumn[] | string[]): void {
+    this.store.updateColumnVisibility([column, ...columns] as PblColumn[] | string[]);
+  }
+
+  /**
+   * Change the visibility state of the provided columns to visible.
+   * If no columns are provided all columns
+   */
+  showColumns(showAll: true): void;
+  showColumns(column: PblColumn | string,  ...columns: PblColumn[] | string[]): void;
+  showColumns(columnOrShowAll: PblColumn | string | true,  ...columns: PblColumn[] | string[]): void {
+    if (columnOrShowAll === true) {
+      this.store.clearColumnVisibility();
+    } else {
+      this.store.updateColumnVisibility(undefined, [columnOrShowAll, ...columns] as PblColumn[] | string[]);
+    }
   }
 
   /**

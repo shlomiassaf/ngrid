@@ -1,6 +1,6 @@
 import { PblColumnDefinition } from '../columns/types';
 import { PblColumn } from '../columns/column';
-import { PblMetaColumnStore } from '../columns/column-store';
+import { PblMetaColumnStore } from '../column-management';
 import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 
 /**

@@ -130,7 +130,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   private _defaultParentRef: ComponentRef<PblNgridDefaultDetailRowParentComponent>;
   private _removePlugin: (grid: PblNgridComponent<any>) => void;
 
-  constructor(private grid: PblNgridComponent<any>, pluginCtrl: PblNgridPluginController<T>, private injector: Injector) {
+  constructor(private grid: PblNgridComponent<any>, private pluginCtrl: PblNgridPluginController<T>, private injector: Injector) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     pluginCtrl.onInit()
@@ -147,11 +147,11 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
               switch (c.type) {
                 case 'detailRowParent':
                   if (c.op === 'remove') {
-                    grid._cdkTable.removeRowDef(c.value);
+                    this.pluginCtrl.extApi.cdkTable.removeRowDef(c.value);
                     this._detailRowDef = undefined;
                   }
                   this.setupDetailRowParent();
-                  // grid._cdkTable.syncRows('data');
+                  // grid.rowsApi.syncRows('data');
                   break;
               }
             }
@@ -208,7 +208,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
 
   private setupDetailRowParent(): void {
     const grid = this.grid;
-    const cdkTable = grid._cdkTable;
+    const cdkTable = this.pluginCtrl.extApi.cdkTable;
     if (this._detailRowDef) {
       cdkTable.removeRowDef(this._detailRowDef);
       this._detailRowDef = undefined;
@@ -233,11 +233,10 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   }
 
   private resetTableRowDefs(): void {
-    const grid = this.grid;
     if (this._detailRowDef) {
       this._detailRow === false
-        ? grid._cdkTable.removeRowDef(this._detailRowDef)
-        : grid._cdkTable.addRowDef(this._detailRowDef)
+        ? this.pluginCtrl.extApi.cdkTable.removeRowDef(this._detailRowDef)
+        : this.pluginCtrl.extApi.cdkTable.addRowDef(this._detailRowDef)
       ;
     }
   }
@@ -251,7 +250,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
     this.setupDetailRowParent();
     // Once we changed the `when` predicate on the `CdkRowDef` we must:
     //   1. Update the row cache (property `rowDefs`) to reflect the new change
-    this.grid._cdkTable.updateRowDefCache();
+    this.pluginCtrl.extApi.cdkTable.updateRowDefCache();
 
     //   2. re-render all rows.
     // The logic for re-rendering all rows is handled in `CdkTable._forceRenderDataRows()` which is a private method.
@@ -259,6 +258,6 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
     // also calls `CdkTable._forceRenderDataRows()`
     // TODO: This is risky, the setter logic might change.
     // for example, if material will chack for change in `multiTemplateDataRows` setter from previous value...
-    this.grid._cdkTable.multiTemplateDataRows = !!this._detailRow;
+    this.pluginCtrl.extApi.cdkTable.multiTemplateDataRows = !!this._detailRow;
   }
 }

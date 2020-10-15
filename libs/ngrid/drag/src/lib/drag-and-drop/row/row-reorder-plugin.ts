@@ -82,11 +82,11 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
 
       this.grid.contextApi.clear();
       this.grid.ds.moveItem(previousIndex, currentIndex, true);
-      this.grid._cdkTable.syncRows('data');
+      this.grid.rowsApi.syncRows('data');
     });
   }
 
-  /* CdkLazyDropList start */
+  //#region CdkLazyDropList
   /**
    * Selector that will be used to determine the direct container element, starting from
    * the `cdkDropList` element and going down the DOM. Passing an alternate direct container element
@@ -102,7 +102,7 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
   addDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.addDrag.call(this, drag); }
   removeDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
   beforeStarted(): void { CdkLazyDropList.prototype.beforeStarted.call(this); }
-  /* CdkLazyDropList end */
+  //#endregion CdkLazyDropList
 
   ngOnDestroy(): void {
     super.ngOnDestroy();

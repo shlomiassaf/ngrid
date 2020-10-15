@@ -38,6 +38,7 @@ import {
   PblNgridNoDataRefDirective,
   PblNgridPaginatorRefDirective,
 
+  PblNgridHideColumns,
   PblColumnSizeObserver,
   PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblNgridScrolling,
 
@@ -86,6 +87,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridCellDirective,
     PblNgridFooterCellDirective,
 
+    PblNgridHideColumns,
     PblColumnSizeObserver,
     PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblNgridScrolling,
 
@@ -107,6 +109,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridCellDirective,
     PblNgridFooterCellDirective,
 
+    PblNgridHideColumns,
     PblColumnSizeObserver,
     PblCdkVirtualScrollDirective,
 

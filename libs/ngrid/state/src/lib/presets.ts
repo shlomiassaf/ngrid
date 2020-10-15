@@ -10,10 +10,10 @@ import { StateChunkKeyFilter } from './core/models/index';
 export function userSessionPref(...basedOn: StateChunkKeyFilter[]): StateChunkKeyFilter {
   const resultFilter: StateChunkKeyFilter = {
     grid: [
-      'hideColumns',
       'showFooter',
       'showHeader',
     ],
+    columnVisibility: true,
     columnOrder: true,
     columns: [ 'table' ],
     dataColumn: [

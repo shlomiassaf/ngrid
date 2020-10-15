@@ -51,6 +51,8 @@ export {
   PblNgridFocusChangedEvent, PblNgridSelectionChangedEvent,
   PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext, PblNgridContextApi,
   CellReference, GridDataPoint,
+
+  RowsApi,
 } from './lib/grid/index';
 
 export {

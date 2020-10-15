@@ -104,7 +104,7 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
       this._editing = true;
       this._rowContext.updateCell(this);
       if (markForCheck) {
-        this.grid._cdkTable.syncRows('data', true, this.rowContext.index);
+        this.grid.rowsApi.syncRows('data', true, this.rowContext.index);
       }
     }
   }
@@ -114,7 +114,7 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
       this._editing = false;
       this._rowContext.updateCell(this);
       if (markForCheck) {
-        this.grid._cdkTable.syncRows('data', this.rowContext.index);
+        this.grid.rowsApi.syncRows('data', this.rowContext.index);
       }
     }
   }

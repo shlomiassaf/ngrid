@@ -7,8 +7,8 @@ export function registerColumnDefChildHandlers() {
   createStateChunkHandler('dataColumn')
     .requiredKeys('id', 'prop')
     .handleKeys(
-      'label', 'css', 'type', 'width', 'minWidth', 'maxWidth',              // PblNgridBaseColumnState (all optional)
-      'headerType', 'footerType', 'sort', 'alias', 'editable', 'pin'    // All Optional
+      'label', 'css', 'type', 'width', 'minWidth', 'maxWidth',          // PblNgridBaseColumnState (all optional)
+      'headerType', 'footerType', 'sort', 'alias', 'editable', 'pin',   // All Optional
     )
     .serialize( (key, ctx) => {
       const c = ctx.data.activeColumn || ctx.data.pblColumn;
