@@ -1,74 +1,82 @@
 import { isDevMode } from '@angular/core';
-import { PblNgridColumnDefinitionSet, PblNgridColumnSet } from './types';
-import { PblMetaColumn } from './meta-column';
-import { PblColumn } from './column';
-import { PblColumnSet, PblMetaRowDefinitions, PblMetaColumnDefinition, PblColumnGroupDefinition } from './types';
-import { PblColumnGroup, PblColumnGroupStore } from './group-column';
+import { PblNgridComponent } from '../ngrid.component';
+import { findCellDef } from '../directives/cell-def';
+import { PblMetaColumn } from '../columns/meta-column';
+import { isPblColumn, PblColumn } from '../columns/column';
+import {
+  PblNgridColumnDefinitionSet,
+  PblNgridColumnSet,
+  PblColumnSet,
+  PblMetaRowDefinitions,
+} from '../columns/types';
+import { PblColumnGroup, PblColumnGroupStore } from '../columns/group-column';
 import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
 import { resetColumnWidths } from '../utils/helpers';
-import { PblColumnFactory } from './factory';
-
-export interface PblMetaColumnStore {
-  id: string;
-  header?: PblMetaColumn;
-  footer?: PblMetaColumn;
-  headerGroup?: PblColumnGroup;
-  footerGroup?: PblColumnGroup;
-}
-
-export interface PblColumnStoreMetaRow {
-  rowDef: PblColumnSet<PblMetaColumnDefinition | PblColumnGroupDefinition>,
-  keys: string[];
-  isGroup?: boolean;
-}
+import { PblColumnFactory } from '../columns/factory';
+import { PblColumnStoreMetaRow, PblMetaColumnStore } from './types';
+import { HiddenColumns } from './hidden-columns';
 
 export class PblColumnStore {
   metaColumnIds: { header: Array<PblColumnStoreMetaRow>; footer: Array<PblColumnStoreMetaRow>; };
   metaColumns: PblMetaColumnStore[];
   columnIds: string[];
+  hiddenColumnIds: string[];
   columns: PblColumn[];
   allColumns: PblColumn[];
   headerColumnDef: PblMetaRowDefinitions;
   footerColumnDef: PblMetaRowDefinitions;
 
   get primary(): PblColumn | undefined { return this._primary; }
-
-  set hidden(value: string[]) {
-    this._hidden = value;
-    this.setHidden();
-  }
-
-  get groupBy(): PblColumn[] { return this._groupBy; }
-
   get groupStore(): PblColumnGroupStore { return this._groupStore; }
 
   private _primary: PblColumn | undefined;
   private _metaRows: { header: Array<PblColumnStoreMetaRow & { allKeys?: string[] }>; footer: Array<PblColumnStoreMetaRow & { allKeys?: string[] }>; };
-  private _hidden: string[];
-  private _allHidden: string[];
-  private _groupBy: PblColumn[] = [];
   private byId = new Map<string, PblMetaColumnStore & { data?: PblColumn }>();
   private _groupStore: PblColumnGroupStore;
   private lastSet: PblNgridColumnSet;
+  private hiddenColumns = new HiddenColumns();
 
-  constructor() {
+  constructor(private readonly grid: PblNgridComponent) {
     this.resetIds();
     this.resetColumns();
   }
 
-  addGroupBy(...column: PblColumn[]): void {
-    this.groupBy.push(...column);
-    this.setHidden();
+  isColumnHidden(column: PblColumn) {
+    return this.hiddenColumns.hidden.has(column.id);
   }
 
-  removeGroupBy(...column: PblColumn[]): void {
-    for (const c of column) {
-      const idx = this.groupBy.findIndex( gbc => gbc.id === c.id );
-      if (idx > -1) {
-        this.groupBy.splice(idx, 1);
+  clearColumnVisibility() {
+    this.updateColumnVisibility(undefined, this.allColumns);
+  }
+
+  updateColumnVisibility(hide?: PblColumn[] | string[], show?: PblColumn[] | string[]) {
+    const didHide = hide && this.hiddenColumns.add(hide);
+    const didShow = show && this.hiddenColumns.remove(show);
+    if (didShow || didHide) {
+      this.setHidden();
+      this.hiddenColumnIds = Array.from(this.hiddenColumns.hidden);
+      if (didShow) {
+        // TODO(shlomiassaf) [perf, 4]: Right now we attach all columns, we can improve it by attaching only those "added" (we know them from "changes")
+        this.attachCustomCellTemplates();
+        this.attachCustomHeaderCellTemplates();
       }
+      // This is mostly required when we un-hide things (didShow === true)
+      // However, when we hide, we only need it when the event comes from any are not in the view
+      // i.e. areas outside of the grid or areas which are CONTENT of the grid
+      this.grid.rowsApi.syncRows();
     }
-    this.setHidden();
+  }
+
+  addGroupBy(...columns: PblColumn[] | string[]): void {
+    if (this.hiddenColumns.add(columns, 'groupBy')) {
+      this.setHidden();
+    }
+  }
+
+  removeGroupBy(...columns: PblColumn[] | string[]): void {
+    if (this.hiddenColumns.remove(columns, 'groupBy')) {
+      this.setHidden();
+    }
   }
 
   /**
@@ -83,7 +91,7 @@ export class PblColumnStore {
     if (anchorIndex > -1 && columnIndex > -1) {
       moveItemInArray(columnIds, columnIndex, anchorIndex);
       moveItemInArray(columns, columnIndex, anchorIndex);
-      if (this._allHidden && this._allHidden.length > 0) {
+      if (this.hiddenColumns.allHidden.size > 0) {
         anchorIndex = allColumns.indexOf(anchor);
         columnIndex = allColumns.indexOf(column);
       }
@@ -102,7 +110,7 @@ export class PblColumnStore {
       columnIds[col1Index] = col2.id;
       columnIds[col2Index] = col1.id;
 
-      if (this._allHidden && this._allHidden.length > 0) {
+      if (this.hiddenColumns.allHidden.size) {
         col1Index = allColumns.indexOf(col1);
         col2Index = allColumns.indexOf(col2);
       }
@@ -141,7 +149,6 @@ export class PblColumnStore {
     const rowWidth = new StaticColumnWidthLogic();
     this.resetColumns();
     this.resetIds();
-    const hidden = this._allHidden = (this._hidden || []).concat(this._groupBy.map( c => c.id ));
 
     this.headerColumnDef = {
       rowClassName: (table.header && table.header.rowClassName) || '',
@@ -154,6 +161,9 @@ export class PblColumnStore {
 
     this._primary = undefined;
 
+    this.hiddenColumnIds = Array.from(this.hiddenColumns.hidden);
+    const hidden = this.hiddenColumns.syncAllHidden().allHidden;
+
     for (const def of table.cols) {
       let column: PblColumn;
       column = new PblColumn(def, this.groupStore);
@@ -161,7 +171,7 @@ export class PblColumnStore {
       columnRecord.data = column;
       this.allColumns.push(column);
 
-      column.hidden = hidden.indexOf(column.id) > -1;
+      column.hidden = hidden.has(column.id);
       if (!column.hidden) {
         this.columns.push(column);
         this.columnIds.push(column.id);
@@ -217,6 +227,64 @@ export class PblColumnStore {
           if (rows.length === 0) {
             return;
           }
+        }
+      }
+    }
+  }
+
+  attachCustomCellTemplates(columns?: PblColumn[]): void {
+    const { registry } = this.grid;
+
+    if (!columns) {
+      columns = this.columns;
+    }
+
+    for (const col of this.columns) {
+      const cell = findCellDef(registry, col, 'tableCell', true);
+      if ( cell ) {
+        col.cellTpl = cell.tRef;
+      } else {
+        const defaultCellTemplate = registry.getMultiDefault('tableCell');
+        col.cellTpl = defaultCellTemplate ? defaultCellTemplate.tRef : this.grid._fbTableCell;
+      }
+
+      const editorCell = findCellDef(registry, col, 'editorCell', true);
+      if ( editorCell ) {
+        col.editorTpl = editorCell.tRef;
+      } else {
+        const defaultCellTemplate = registry.getMultiDefault('editorCell');
+        col.editorTpl = defaultCellTemplate ? defaultCellTemplate.tRef : undefined;
+      }
+    }
+  }
+
+  attachCustomHeaderCellTemplates(columns?: Array<PblColumn | PblMetaColumnStore>): void {
+    const { registry } = this.grid;
+
+    if (!columns) {
+      columns = [].concat(this.columns, this.metaColumns);
+    }
+
+    const defaultHeaderCellTemplate = registry.getMultiDefault('headerCell') || { tRef: this.grid._fbHeaderCell };
+    const defaultFooterCellTemplate = registry.getMultiDefault('footerCell') || { tRef: this.grid._fbFooterCell };
+    for (const col of columns) {
+      if (isPblColumn(col)) {
+        const headerCellDef = findCellDef(registry, col, 'headerCell', true) || defaultHeaderCellTemplate;
+        const footerCellDef = findCellDef(registry, col, 'footerCell', true) || defaultFooterCellTemplate;
+        col.headerCellTpl = headerCellDef.tRef;
+        col.footerCellTpl = footerCellDef.tRef;
+      } else {
+        if (col.header) {
+          const headerCellDef = findCellDef(registry, col.header, 'headerCell', true) || defaultHeaderCellTemplate;
+          col.header.template = headerCellDef.tRef;
+        }
+        if (col.headerGroup) {
+          const headerCellDef = findCellDef(registry, col.headerGroup, 'headerCell', true) || defaultHeaderCellTemplate;
+          col.headerGroup.template = headerCellDef.tRef;
+        }
+        if (col.footer) {
+          const footerCellDef = findCellDef(registry, col.footer, 'footerCell', true) || defaultFooterCellTemplate;
+          col.footer.template = footerCellDef.tRef;
         }
       }
     }
@@ -293,11 +361,11 @@ export class PblColumnStore {
   }
 
   private setHidden(): void {
-    this._allHidden = (this._hidden || []).concat(this._groupBy.map( c => c.id ));
+    const hidden = this.hiddenColumns.syncAllHidden().allHidden;
     this.columnIds = [];
     this.columns = [];
     for (const c of this.allColumns) {
-      c.hidden = this._allHidden.indexOf(c.id) > -1;
+      c.hidden = hidden.has(c.id);
       if (!c.hidden) {
         this.columns.push(c);
         this.columnIds.push(c.id);
@@ -320,6 +388,7 @@ export class PblColumnStore {
 
   private resetIds(): void {
     this.columnIds = [];
+    this.hiddenColumnIds = [];
     this._metaRows = this.metaColumnIds = { header: [], footer: [] };
   }
 }

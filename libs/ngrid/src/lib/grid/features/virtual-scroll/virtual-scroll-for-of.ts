@@ -4,7 +4,7 @@ import { filter, startWith, pairwise, take, tap, takeUntil, map, debounceTime } 
 import { NgZone, ViewContainerRef } from '@angular/core';
 import { CollectionViewer, ListRange } from '@angular/cdk/collections';
 
-import { PblNgridExtensionApi } from '../../../ext/grid-ext-api';
+import { PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
 import { PblNgridComponent } from '../../ngrid.component';
 import { PblNgridPluginController } from '../../../ext/plugin-control';
 import { PblDataSource } from '../../../data-source/data-source';
@@ -58,10 +58,10 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
   private cdkTable: PblCdkTableComponent<T>;
   private viewport: PblCdkVirtualScrollViewportComponent;
 
-  constructor(extApi: PblNgridExtensionApi<T>, private ngZone: NgZone) {
+  constructor(extApi: PblNgridInternalExtensionApi<T>, private ngZone: NgZone) {
     this.grid = extApi.grid;
     this.cdkTable = extApi.cdkTable;
-    this.viewport = extApi.grid.viewport;
+    this.viewport = extApi.viewport;
 
     this.viewChange = this.cdkTable.viewChange;
 

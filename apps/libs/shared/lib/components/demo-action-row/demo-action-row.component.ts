@@ -72,7 +72,7 @@ export class DemoActionRowComponent implements AfterViewInit {
   }
 
   restore(): void {
-    this.grid.hideColumns = [];
+    this.grid.columnApi.showColumns(true);
     this.grid.invalidateColumns();
   }
 }
