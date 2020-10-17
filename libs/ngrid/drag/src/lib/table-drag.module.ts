@@ -4,13 +4,23 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { PblNgridModule, provideCommon, ngridPlugin } from '@pebula/ngrid';
 
-import { CdkLazyDropList, CdkLazyDrag, PblDragHandle } from './drag-and-drop/core/lazy-drag-drop';
-import { PblNgridRowReorderPluginDirective, PblNgridRowDragDirective, ROW_REORDER_PLUGIN_KEY } from './drag-and-drop/row/row-reorder-plugin';
-import { PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, COL_REORDER_PLUGIN_KEY } from './drag-and-drop/column/column-reorder-plugin';
-import { PblNgridCellDraggerRefDirective } from './drag-and-drop/column/cell-dragger-ref';
-import { colReorderExtendGrid } from './drag-and-drop/column/extend-grid';
+import {
+  colReorderExtendGrid,
+  PblNgridAggregationContainerDirective,
+  PblNgridCellDraggerRefDirective,
+  PblNgridColumnDragDirective,
+  PblNgridColumnDropContainerDirective,
+  COL_DRAG_CONTAINER_PLUGIN_KEY, PblNgridColumnDragContainerDirective,
+  COL_REORDER_PLUGIN_KEY, PblNgridColumnReorderPluginDirective,
+} from './drag-and-drop/column';
 
-import { PblNgridAggregationContainerDirective } from './drag-and-drop/column/aggregation-column';
+import {
+  CdkLazyDropList,
+  CdkLazyDrag,
+  PblDragHandle
+} from './drag-and-drop/core/index';
+
+import { PblNgridRowReorderPluginDirective, PblNgridRowDragDirective, ROW_REORDER_PLUGIN_KEY } from './drag-and-drop/row/index';
 
 import { PblNgridDragResizeComponent, COL_RESIZE_PLUGIN_KEY } from './column-resize/column-resize.component';
 import { PblNgridCellResizerRefDirective } from './column-resize/cell-resizer-ref';
@@ -21,6 +31,7 @@ import { DragPluginDefaultTemplatesComponent } from './default-settings.componen
 export function ngridPlugins() {
   return [
     ngridPlugin({ id: ROW_REORDER_PLUGIN_KEY }, PblNgridRowReorderPluginDirective),
+    ngridPlugin({ id: COL_DRAG_CONTAINER_PLUGIN_KEY }, PblNgridColumnDragContainerDirective),
     ngridPlugin({ id: COL_REORDER_PLUGIN_KEY, runOnce: colReorderExtendGrid }, PblNgridColumnReorderPluginDirective),
     ngridPlugin({ id: COL_RESIZE_PLUGIN_KEY, runOnce: colResizeExtendGrid }, PblNgridDragResizeComponent),
   ]
@@ -36,7 +47,8 @@ export function ngridPlugins() {
     DragPluginDefaultTemplatesComponent,
     CdkLazyDropList, CdkLazyDrag, PblDragHandle,
     PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
-    PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
+    PblNgridColumnDragContainerDirective,
+    PblNgridColumnDropContainerDirective, PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
     PblNgridAggregationContainerDirective,
     PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
   ],
@@ -44,7 +56,8 @@ export function ngridPlugins() {
     DragDropModule,
     CdkLazyDropList, CdkLazyDrag, PblDragHandle,
     PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
-    PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
+    PblNgridColumnDragContainerDirective,
+    PblNgridColumnDropContainerDirective, PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
     PblNgridAggregationContainerDirective,
     PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
   ],

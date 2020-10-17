@@ -10,7 +10,7 @@ import { PblCdkVirtualScrollViewportComponent } from '../grid/features/virtual-s
 import { PblNgridEvents } from './types';
 import { PblNgridMetaRowService } from '../grid/meta-rows/index';
 import { RowsApi } from '../grid/rows-api';
-import { PblNgridPluginContext } from './plugin-control';
+import { PblNgridPluginContext, PblNgridPluginController } from './plugin-control';
 
 export const EXT_API_TOKEN = new InjectionToken('PBL_NGRID_EXTERNAL_API');
 
@@ -24,6 +24,7 @@ export interface PblNgridExtensionApi<T = any> {
   rowsApi: RowsApi<T>;
   events: Observable<PblNgridEvents>;
   metaRowService: PblNgridMetaRowService;
+  pluginCtrl: PblNgridPluginController<T>;
   onConstructed(fn: () => void): void;
   onInit(fn: () => void): void;
   dynamicColumnWidthFactory(): DynamicColumnWidthLogic;

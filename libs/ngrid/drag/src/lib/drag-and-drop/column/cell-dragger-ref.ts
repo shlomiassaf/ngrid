@@ -1,7 +1,13 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { PblNgridRegistryService, PblNgridMultiTemplateRegistry, PblNgridDataHeaderExtensionRef, PblNgridDataHeaderExtensionContext, PblNgridPluginController } from '@pebula/ngrid';
+import {
+  PblNgridRegistryService,
+  PblNgridMultiTemplateRegistry,
+  PblNgridDataHeaderExtensionRef,
+  PblNgridDataHeaderExtensionContext,
+  PblNgridPluginController
+} from '@pebula/ngrid';
 
-import { COL_REORDER_PLUGIN_KEY } from './column-reorder-plugin';
+import { COL_DRAG_CONTAINER_PLUGIN_KEY } from './column-drag-container';
 
 /**
  * Marks the element as the resizer template for cells.
@@ -20,6 +26,6 @@ export class PblNgridCellDraggerRefDirective extends PblNgridMultiTemplateRegist
     // However, when the plugin does not exists for this table we don't need to render...
 
     const pluginCtrl = PblNgridPluginController.find(context.grid);
-    return pluginCtrl.hasPlugin(COL_REORDER_PLUGIN_KEY);
+    return pluginCtrl.hasPlugin(COL_DRAG_CONTAINER_PLUGIN_KEY);
   }
 }

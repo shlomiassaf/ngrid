@@ -231,8 +231,13 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     loadChildren: () => import('./extending-ngrid/copy-selection/copy-selection.module').then( m => m.CopySelectionExampleModule ),
   },
   {
-    path: 'features-grid-rtl-support.module',
+    path: 'features-built-in-plugins-drag.module',
     pathMatch: 'full',
-    loadChildren: () => import('./features/grid/rtl-support/rtl-support.module').then( m => m.RtlSupportExampleModule ),
+    loadChildren: () => import('./features/built-in-plugins/drag/drag.module').then( m => m.DragExampleModule ),
+  },
+  {
+    path: 'features-built-in-plugins-drag-drop-container.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./features/built-in-plugins/drag/drop-container/drop-container.module').then( m => m.DropContainerExampleModule ),
   }
 ];
