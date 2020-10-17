@@ -8,7 +8,8 @@ import {
   OnDestroy,
   Optional,
   SkipSelf,
-  Input
+  Input,
+  Output
 } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import {
@@ -29,12 +30,13 @@ import { PblDropListRef } from '../core/drop-list-ref';
 import { PblNgridColumnDragDirective, PblNgridColumnReorderPluginDirective } from './column-reorder-plugin';
 import { PblDragDrop } from '../core/drag-drop';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
+import { EventEmitter } from '@angular/core';
 
 let _uniqueIdCounter = 0;
 
 @Directive({
-  selector: '[pblAggregationContainer]',
-  exportAs: 'pblAggregationContainer',
+  selector: '[pblColumnDropContainer]',
+  exportAs: 'pblColumnDropContainer',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drop-list',
     '[id]': 'id',
@@ -42,19 +44,23 @@ let _uniqueIdCounter = 0;
   providers: [
     { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CDK_DROP_LIST_GROUP, useValue: undefined },
-    { provide: CDK_DROP_LIST, useExisting: PblNgridAggregationContainerDirective },
+    { provide: CDK_DROP_LIST, useExisting: PblNgridColumnDropContainerDirective },
   ],
 })
-export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<T> implements OnDestroy, CdkLazyDropList<T> {
-  id = `pbl-ngrid-column-aggregation-container-${_uniqueIdCounter++}`;
+export class PblNgridColumnDropContainerDirective<T = any> extends CdkDropList<T> implements OnDestroy, CdkLazyDropList<T> {
+  id = `pbl-ngrid-column-drop-container-${_uniqueIdCounter++}`;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
-  pending: PblColumn;
+  @Input('pblColumnDropContainer') set grid(value: PblNgridComponent<T>) { this.updateGrid(value); }
 
-  columnContainer: PblNgridColumnReorderPluginDirective;
+  @Output() columnEntered = new EventEmitter<PblDragRef<PblNgridColumnDragDirective<any>>>();
+  @Output() columnExited = new EventEmitter<PblDragRef<PblNgridColumnDragDirective<any>>>();
+  @Output() columnDropped = new EventEmitter<PblDragRef<PblNgridColumnDragDirective<any>>>();
 
-  constructor(public grid: PblNgridComponent<T>,
-              pluginCtrl: PblNgridPluginController,
+  private _grid: PblNgridComponent<T>;
+  private columnContainer: PblNgridColumnReorderPluginDirective;
+
+  constructor(@Optional() grid: PblNgridComponent<T>,
               element: ElementRef<HTMLElement>,
               dragDrop: DragDrop,
               changeDetectorRef: ChangeDetectorRef,
@@ -63,8 +69,9 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
               _scrollDispatcher?: ScrollDispatcher,
               @Optional() @Inject(CDK_DRAG_CONFIG) config?: DragDropConfig) {
     super(element, dragDrop, changeDetectorRef, dir, group, _scrollDispatcher, config);
-    this.columnContainer = pluginCtrl.getPlugin('columnReorder');
-    this.columnContainer.connectTo(this);
+    if (grid) {
+      this.updateGrid(grid);
+    }
   }
 
   /**
@@ -81,38 +88,36 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
   ngOnInit(): void {
     CdkLazyDropList.prototype.ngOnInit.call(this);
     this.pblDropListRef.dropped
-      .subscribe( event => {
-        const item = event.item as PblDragRef<PblNgridColumnDragDirective<any>>;
-        this.pending = undefined;
-        this.grid.columnApi.addGroupBy(item.data.column);
-      });
+      .subscribe( event => this.columnDropped.next(event.item as PblDragRef<PblNgridColumnDragDirective<any>>) );
 
     this.pblDropListRef.entered
-      .subscribe( event => {
-        const item = event.item as PblDragRef<PblNgridColumnDragDirective<any>>;
-        this.pending = item.data.column;
-        item.getPlaceholderElement().style.display = 'none';
-        for (const c of item.data.getCells()) {
-          c.style.display = 'none';
-        }
-      });
+      .subscribe( event => this.columnEntered.next(event.item as PblDragRef<PblNgridColumnDragDirective<any>>) );
 
     this.pblDropListRef.exited
-      .subscribe( event => {
-        const item = event.item as PblDragRef<PblNgridColumnDragDirective<any>>;
-        this.pending = undefined;
-        item.getPlaceholderElement().style.display = '';
-        for (const c of item.data.getCells()) {
-          c.style.display = '';
-        }
-      });
+      .subscribe( event => this.columnExited.next(event.item as PblDragRef<PblNgridColumnDragDirective<any>>) );
   }
+
   addDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.addDrag.call(this, drag); }
   removeDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
   beforeStarted(): void { CdkLazyDropList.prototype.beforeStarted.call(this); }
   /* CdkLazyDropList end */
 
   ngOnDestroy() {
-    this.columnContainer.disconnectFrom(this);
+    if (this.columnContainer) {
+      this.columnContainer.disconnectFrom(this);
+    }
+  }
+
+  private updateGrid(grid: PblNgridComponent<T>) {
+    if (grid !== this._grid) {
+      if (this.columnContainer) {
+        this.columnContainer.disconnectFrom(this);
+      }
+
+      this._grid = grid;
+      const pluginCtrl = PblNgridPluginController.find(grid)
+      this.columnContainer = pluginCtrl.getPlugin('columnReorder');
+      this.columnContainer.connectTo(this);
+    }
   }
 }

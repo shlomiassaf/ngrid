@@ -1,4 +1,5 @@
 <pbl-ngrid id="sellers"
+           #grid
            persistState rowReorder columnReorder
            matHeaderContextMenu="excelMenu"
            blockUi
@@ -14,7 +15,6 @@
            class=" pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
   <pbl-demo-action-row filter (refresh)="refresh()" ></pbl-demo-action-row>
   <div *pblNgridCellTypeDef="'countryNameDynamic'; col as col; row as row">{{ col.type.data.name(row) }}</div>
-
   <div *pblNgridHeaderCellTypeDef="'pbl-groupby-row'; col as col; grid as grid" pblAggregationContainer #agg="pblAggregationContainer"
        fxLayoutAlign="start center"
        style="position: absolute; height: 100%; width: 100%;">
