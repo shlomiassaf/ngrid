@@ -4,13 +4,18 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { PblNgridModule, provideCommon, ngridPlugin } from '@pebula/ngrid';
 
+import {
+  colReorderExtendGrid,
+  COL_REORDER_PLUGIN_KEY,
+  PblNgridAggregationContainerDirective,
+  PblNgridCellDraggerRefDirective,
+  PblNgridColumnDragDirective,
+  PblNgridColumnDropContainerDirective,
+  PblNgridColumnReorderPluginDirective,
+} from './drag-and-drop/column';
+
 import { CdkLazyDropList, CdkLazyDrag, PblDragHandle } from './drag-and-drop/core/lazy-drag-drop';
 import { PblNgridRowReorderPluginDirective, PblNgridRowDragDirective, ROW_REORDER_PLUGIN_KEY } from './drag-and-drop/row/row-reorder-plugin';
-import { PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, COL_REORDER_PLUGIN_KEY } from './drag-and-drop/column/column-reorder-plugin';
-import { PblNgridCellDraggerRefDirective } from './drag-and-drop/column/cell-dragger-ref';
-import { colReorderExtendGrid } from './drag-and-drop/column/extend-grid';
-
-import { PblNgridAggregationContainerDirective } from './drag-and-drop/column/aggregation-column';
 
 import { PblNgridDragResizeComponent, COL_RESIZE_PLUGIN_KEY } from './column-resize/column-resize.component';
 import { PblNgridCellResizerRefDirective } from './column-resize/cell-resizer-ref';
@@ -36,7 +41,7 @@ export function ngridPlugins() {
     DragPluginDefaultTemplatesComponent,
     CdkLazyDropList, CdkLazyDrag, PblDragHandle,
     PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
-    PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
+    PblNgridColumnDropContainerDirective, PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
     PblNgridAggregationContainerDirective,
     PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
   ],
@@ -44,7 +49,7 @@ export function ngridPlugins() {
     DragDropModule,
     CdkLazyDropList, CdkLazyDrag, PblDragHandle,
     PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
-    PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
+    PblNgridColumnDropContainerDirective, PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
     PblNgridAggregationContainerDirective,
     PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
   ],

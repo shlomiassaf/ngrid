@@ -10,9 +10,11 @@ export {
 } from './lib/drag-and-drop/row/row-reorder-plugin';
 
 export {
+  PblNgridColumnDragDirective,
+  PblNgridColumnDropContainerDirective,
   PblNgridColumnReorderPluginDirective,
-  PblNgridColumnDragDirective
-} from './lib/drag-and-drop/column/column-reorder-plugin';
+} from './lib/drag-and-drop/column';
+
 
 export { PblNgridDragResizeComponent } from './lib/column-resize/column-resize.component';
 export { PblNgridDragModule } from './lib/table-drag.module';

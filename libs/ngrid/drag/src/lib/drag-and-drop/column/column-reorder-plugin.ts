@@ -90,6 +90,8 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
     return (this._dropListRef as any)._itemPositions;
   }
 
+  private connections = new Set<CdkDropList>();
+
   constructor(public table: PblNgridComponent<T>,
               pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
@@ -120,7 +122,20 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
     this.monkeyPatchDropListRef();
   }
 
-  /* CdkLazyDropList start */
+  connectTo(dropList: CdkDropList) {
+    if (!this.connections.has(dropList)) {
+      this.connections.add(dropList);
+      this.connectedTo = Array.from(this.connections);
+    }
+  }
+
+  disconnectFrom(dropList: CdkDropList) {
+    if (this.connections.delete(dropList)) {
+      this.connectedTo = Array.from(this.connections);
+    }
+  }
+
+  //#region CdkLazyDropList
   /**
    * Selector that will be used to determine the direct container element, starting from
    * the `cdkDropList` element and going down the DOM. Passing an alternate direct container element
@@ -132,11 +147,9 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
 
   get pblDropListRef(): PblDropListRef<PblNgridColumnReorderPluginDirective<T>> { return this._dropListRef as any; }
   originalElement: ElementRef<HTMLElement>;
-  // ngOnInit(): void { CdkLazyDropList.prototype.ngOnInit.call(this); }
   addDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.addDrag.call(this, drag); }
   removeDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
-  // beforeStarted(): void { CdkLazyDropList.prototype.beforeStarted.call(this); }
-  /* CdkLazyDropList end */
+  //#endregion CdkLazyDropList
 
   ngOnInit(): void {
     CdkLazyDropList.prototype.ngOnInit.call(this); // super.ngOnInit();
