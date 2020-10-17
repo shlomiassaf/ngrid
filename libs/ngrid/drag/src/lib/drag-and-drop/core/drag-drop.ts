@@ -29,7 +29,6 @@ export class PblDragDrop {
    */
   createDrag<T = any>(element: ElementRef<HTMLElement> | HTMLElement,
                       config: DragRefConfig = DEFAULT_CONFIG): PblDragRef<T> {
-
     return new PblDragRef<T>(element, config, this._document, this._ngZone, this._viewportRuler, this._dragDropRegistry);
   }
 

@@ -1,37 +1,18 @@
 // tslint:disable:no-output-rename
 import { BehaviorSubject } from 'rxjs';
-
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Directive,
-  ElementRef,
-  Input,
-  SkipSelf,
-  Output,
-  OnDestroy,
-  Optional,
-  OnInit,
-} from '@angular/core';
-
-import { Directionality } from '@angular/cdk/bidi';
+import { Directive, Input, Output } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   DragDrop,
-  CdkDrag,
   CdkDragDrop,
   CDK_DROP_LIST,
   DragRef,
-  CdkDropListGroup,
   CdkDropList,
   CDK_DRAG_PARENT
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
-import { PblDragDrop } from '../core/drag-drop';
-import { CdkLazyDropList, CdkLazyDrag } from '../core/lazy-drag-drop';
-import { PblDropListRef } from '../core/drop-list-ref';
-import { PblDragRef } from '../core/drag-ref';
+import { PblDragDrop, CdkLazyDropList, CdkLazyDrag } from '../core/index';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -57,7 +38,7 @@ let _uniqueIdCounter = 0;
     { provide: CDK_DROP_LIST, useExisting: PblNgridColumnReorderPluginDirective },
   ],
 })
-export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T> implements OnInit, OnDestroy, CdkLazyDropList<T, PblNgridColumnReorderPluginDirective<T>> {
+export class PblNgridColumnReorderPluginDirective<T = any> extends CdkLazyDropList<T, PblNgridColumnReorderPluginDirective<T>> {
   id = `pbl-ngrid-column-reorder-list-${_uniqueIdCounter++}`;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
@@ -74,7 +55,7 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
   @Input() get manualOverride(): boolean { return this._manualOverride; };
   set manualOverride(value: boolean) { this._manualOverride = coerceBooleanProperty(value); }
 
-  @Output('cdkDropDragging') dragging: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  @Output('cdkDropDragging') dragging: BehaviorSubject<boolean>;
 
   private _columnReorder = false;
   private _manualOverride = false;
@@ -92,36 +73,6 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
 
   private connections = new Set<CdkDropList>();
 
-  constructor(public table: PblNgridComponent<T>,
-              pluginCtrl: PblNgridPluginController,
-              element: ElementRef<HTMLElement>,
-              dragDrop: DragDrop,
-              changeDetectorRef: ChangeDetectorRef,
-              @Optional() dir?: Directionality,
-              @Optional() @SkipSelf() group?: CdkDropListGroup<CdkDropList>) {
-    super(element, dragDrop, changeDetectorRef, dir, group);
-    this._removePlugin = pluginCtrl.setPlugin(COL_REORDER_PLUGIN_KEY, this);
-
-    this.directContainerElement = '.pbl-ngrid-header-row-main';
-    this.dropped.subscribe( (event: CdkDragDrop<T, any>) => {
-      if (!this.manualOverride) {
-        this.table.columnApi.moveColumn((event.item as PblNgridColumnDragDirective<T>).column, event.currentIndex);
-      }
-    });
-
-    this.dragging.subscribe( isDragging => {
-      const el = element.nativeElement;
-      if (isDragging) {
-        el.classList.add('pbl-ngrid-column-list-dragging');
-      } else {
-        el.classList.remove('pbl-ngrid-column-list-dragging');
-      }
-      this.lastSwap = undefined;
-    });
-
-    this.monkeyPatchDropListRef();
-  }
-
   connectTo(dropList: CdkDropList) {
     if (!this.connections.has(dropList)) {
       this.connections.add(dropList);
@@ -135,35 +86,19 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
     }
   }
 
-  //#region CdkLazyDropList
-  /**
-   * Selector that will be used to determine the direct container element, starting from
-   * the `cdkDropList` element and going down the DOM. Passing an alternate direct container element
-   * is useful when the `cdkDropList` is not the direct parent (i.e. ancestor but not father)
-   * of the draggable elements.
-   */
-   // tslint:disable-next-line:no-input-rename
-  @Input('cdkDropListDirectContainerElement') directContainerElement: string;
-
-  get pblDropListRef(): PblDropListRef<PblNgridColumnReorderPluginDirective<T>> { return this._dropListRef as any; }
-  originalElement: ElementRef<HTMLElement>;
-  addDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.addDrag.call(this, drag); }
-  removeDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.removeDrag.call(this, drag); }
-  //#endregion CdkLazyDropList
-
   ngOnInit(): void {
-    CdkLazyDropList.prototype.ngOnInit.call(this); // super.ngOnInit();
+    super.ngOnInit();
     this.dropped.subscribe( e => this._pblReset() );
     this.pblDropListRef.beforeExit.subscribe( e => this._pblReset() );
   }
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
-    this._removePlugin(this.table);
+    this._removePlugin(this.grid);
   }
 
-  /* protected */ beforeStarted(): void {
-    CdkLazyDropList.prototype.beforeStarted.call(this); // super.beforeStarted();
+  protected beforeStarted(): void {
+    super.beforeStarted();
     this.lastSorted = undefined;
     this.dragging.next(true);
   }
@@ -176,6 +111,30 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
         c.style.transform = ``;
       }
     });
+  }
+
+  protected gridChanged() {
+    this.dragging = new BehaviorSubject<boolean>(false);
+    this._removePlugin = this.gridApi.pluginCtrl.setPlugin(COL_REORDER_PLUGIN_KEY, this);
+
+    this.directContainerElement = '.pbl-ngrid-header-row-main';
+    this.dropped.subscribe( (event: CdkDragDrop<T, any>) => {
+      if (!this.manualOverride) {
+        this.grid.columnApi.moveColumn((event.item as PblNgridColumnDragDirective<T>).column, event.currentIndex);
+      }
+    });
+
+    this.dragging.subscribe( isDragging => {
+      const el = this.originalElement.nativeElement;
+      if (isDragging) {
+        el.classList.add('pbl-ngrid-column-list-dragging');
+      } else {
+        el.classList.remove('pbl-ngrid-column-list-dragging');
+      }
+      this.lastSwap = undefined;
+    });
+
+    this.monkeyPatchDropListRef();
   }
 
   private monkeyPatchDropListRef(): void {
@@ -255,7 +214,7 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
     { provide: CDK_DRAG_PARENT, useExisting: PblNgridColumnDragDirective }
   ]
 })
-export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements AfterViewInit, CdkLazyDrag<T, PblNgridColumnReorderPluginDirective<T>, PblNgridColumnDragDirective<T>> {
+export class PblNgridColumnDragDirective<T = any> extends CdkLazyDrag<T, PblNgridColumnReorderPluginDirective<T>, PblNgridColumnDragDirective<T>> {
   rootElementSelector = 'pbl-ngrid-header-cell';
 
   column: PblColumn;
@@ -273,46 +232,7 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
   private pluginCtrl: PblNgridPluginController;
   private cache: HTMLElement[];
 
-  /* CdkLazyDrag start */
-  /**
-   * A class to set when the root element is not the host element. (i.e. when `cdkDragRootElement` is used).
-   */
-  @Input('cdkDragRootElementClass') set rootElementSelectorClass(value: string) { // tslint:disable-line:no-input-rename
-    if (value !== this._rootClass && this._hostNotRoot) {
-      if (this._rootClass) {
-        this.getRootElement().classList.remove(...this._rootClass.split(' '));
-      }
-      if (value) {
-        this.getRootElement().classList.add(...value.split(' '));
-      }
-    }
-    this._rootClass = value;
-  }
-
-  get pblDragRef(): PblDragRef<PblNgridColumnDragDirective<T>> { return this._dragRef as any; }
-
-  @Input() get cdkDropList(): PblNgridColumnReorderPluginDirective<T> { return this.dropContainer as PblNgridColumnReorderPluginDirective<T>; }
-  set cdkDropList(value: PblNgridColumnReorderPluginDirective<T>) {
-    // TO SUPPORT `cdkDropList` via string input (ID) we need a reactive registry...
-    if (this.cdkDropList) {
-      this.cdkDropList.removeDrag(this);
-    }
-    this.dropContainer = value;
-    if (value) {
-      this._dragRef._withDropContainer(value._dropListRef);
-      value.addDrag(this);
-    }
-  }
-
-  _rootClass: string;
-  _hostNotRoot = false;
-  ngOnInit(): void { CdkLazyDrag.prototype.ngOnInit.call(this); }
-  // ngAfterViewInit(): void { CdkLazyDrag.prototype.ngAfterViewInit.call(this); super.ngAfterViewInit(); }
-  ngOnDestroy(): void { CdkLazyDrag.prototype.ngOnDestroy.call(this);  super.ngOnDestroy(); }
-  /* CdkLazyDrag end */
-
   ngAfterViewInit(): void {
-    CdkLazyDrag.prototype.ngAfterViewInit.call(this);
     super.ngAfterViewInit();
 
     this._dragRef.beforeStarted.subscribe( () => {

@@ -14,8 +14,13 @@ import {
   PblNgridColumnReorderPluginDirective,
 } from './drag-and-drop/column';
 
-import { CdkLazyDropList, CdkLazyDrag, PblDragHandle } from './drag-and-drop/core/lazy-drag-drop';
-import { PblNgridRowReorderPluginDirective, PblNgridRowDragDirective, ROW_REORDER_PLUGIN_KEY } from './drag-and-drop/row/row-reorder-plugin';
+import {
+  CdkLazyDropList,
+  CdkLazyDrag,
+  PblDragHandle
+} from './drag-and-drop/core/index';
+
+import { PblNgridRowReorderPluginDirective, PblNgridRowDragDirective, ROW_REORDER_PLUGIN_KEY } from './drag-and-drop/row/index';
 
 import { PblNgridDragResizeComponent, COL_RESIZE_PLUGIN_KEY } from './column-resize/column-resize.component';
 import { PblNgridCellResizerRefDirective } from './column-resize/cell-resizer-ref';

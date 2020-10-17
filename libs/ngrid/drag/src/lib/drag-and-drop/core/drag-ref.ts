@@ -11,10 +11,7 @@ export class PblDragRef<T = any> extends DragRef<T> {
    *
    * > Does not emit on the initial setup.
    */
-  rootElementChanged = new EventEmitter<{
-    prev: HTMLElement;
-    curr: HTMLElement;
-  }>();
+  rootElementChanged = new EventEmitter<{ prev: HTMLElement; curr: HTMLElement; }>();
 
   constructor(...args: ConstructorParameters<typeof DragRef>) {
     super(...args);
