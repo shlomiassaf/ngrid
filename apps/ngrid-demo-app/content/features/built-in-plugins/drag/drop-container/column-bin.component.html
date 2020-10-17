@@ -1,0 +1,20 @@
+<button mat-mat-flat-button
+        [disabled]="grid?.columnApi.hiddenColumnIds.length === 0"
+        [matBadge]="grid?.columnApi.hiddenColumnIds.length" [matBadgeHidden]="grid?.columnApi.hiddenColumnIds.length === 0"
+        [matMenuTriggerFor]="menu"
+        [pblColumnDropContainer]="grid"
+        (columnEntered)="columnEntered($event)"
+        (columnExited)="columnExited($event)"
+        (columnDropped)="columnDropped($event)">
+  <span class="trash">
+    <span></span>
+    <i></i>
+  </span>
+  <mat-menu #menu="matMenu">
+    <ng-container *ngFor="let c of grid?.columnApi.hiddenColumnIds">
+      <button mat-menu-item (click)="grid?.columnApi.showColumns(c)">{{ grid?.columnApi.findColumn(c).label }}</button>
+    </ng-container>
+  </mat-menu>
+</button>
+
+<pbl-ngrid #grid [dataSource]="ds" [columns]="columns" columnDrag></pbl-ngrid>

@@ -38,6 +38,7 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
   get cdkTable() { return this._cdkTable; }
   get contextApi() { return this._contextApi || (this._contextApi = new ContextApi<T>(this)); }
   get viewport(): PblCdkVirtualScrollViewportComponent { return this._viewPort; }
+  get pluginCtrl() { return this.plugin.controller; }
 
   private _cdkTable: PblCdkTableComponent<T>;
   private _contextApi: ContextApi<T>;

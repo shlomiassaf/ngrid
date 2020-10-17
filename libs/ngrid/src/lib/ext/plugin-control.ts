@@ -82,6 +82,17 @@ export class PblNgridPluginController<T = any> {
     }
   }
 
+  static find<T = any>(grid: PblNgridComponent<T>): PblNgridPluginController<T> | undefined {
+    const context = NGRID_PLUGIN_CONTEXT.get(grid);
+    if (context) {
+      return context.controller;
+    }
+  }
+
+  static findPlugin<P extends keyof PblNgridPluginExtension, T = any>(grid: PblNgridComponent<T>, name: P): PblNgridPluginExtension[P] | undefined {
+    return PblNgridPluginController.find(grid)?.getPlugin(name);
+  }
+
   get injector(): Injector { return this.context.injector; }
 
   readonly extApi: PblNgridExtensionApi
@@ -108,13 +119,6 @@ export class PblNgridPluginController<T = any> {
    */
   onInit() {
     return this.grid.isInit ? of(false) : this.events.pipe(ON_INIT_PIPE, mapTo(true));
-  }
-
-  static find<T = any>(grid: PblNgridComponent<T>): PblNgridPluginController<T> | undefined {
-    const context = NGRID_PLUGIN_CONTEXT.get(grid);
-    if (context) {
-      return context.controller;
-    }
   }
 
   hasPlugin<P extends keyof PblNgridPluginExtension>(name: P): boolean {
