@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@pebula/ngrid';
+import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
 
 import { Person, DemoDataSource } from '@pebula/apps/shared-data';
 import { Example } from '@pebula/apps/shared';
+import { PblDragDrop } from '@pebula/ngrid/drag';
 
 @Component({
   selector: 'pbl-drop-container-example',
@@ -22,5 +23,19 @@ export class DropContainerExample {
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(100, 500) ).create();
 
-  constructor(private datasource: DemoDataSource) { }
+  @ViewChild(PblNgridComponent) grid: PblNgridComponent<Person>;
+
+  constructor(private datasource: DemoDataSource, private dragDrop: PblDragDrop) { }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      const el = document.body.querySelector('.pbl-ngrid-header-row-main');
+      const dropListRef = this.dragDrop.createDropList(el as HTMLElement);
+
+      const cells = el.querySelectorAll('pbl-ngrid-header-cell');
+      for (const cell of Array.from(cells)) {
+        const dragRef = this.dragDrop.createDrag(cell as HTMLElement);
+      }
+    }, 500);
+  }
 }

@@ -2,12 +2,15 @@ export {
   CdkLazyDropList,
   CdkLazyDrag,
   PblDragHandle,
-} from './lib/drag-and-drop/core/lazy-drag-drop';
+  PblDragDrop,
+  PblDragRef,
+  PblDropListRef,
+} from './lib/drag-and-drop/core/index';
 
 export {
   PblNgridRowReorderPluginDirective,
   PblNgridRowDragDirective
-} from './lib/drag-and-drop/row/row-reorder-plugin';
+} from './lib/drag-and-drop/row/index';
 
 export {
   PblNgridColumnDragDirective,
