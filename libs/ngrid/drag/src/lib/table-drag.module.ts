@@ -6,12 +6,12 @@ import { PblNgridModule, provideCommon, ngridPlugin } from '@pebula/ngrid';
 
 import {
   colReorderExtendGrid,
-  COL_REORDER_PLUGIN_KEY,
   PblNgridAggregationContainerDirective,
   PblNgridCellDraggerRefDirective,
   PblNgridColumnDragDirective,
   PblNgridColumnDropContainerDirective,
-  PblNgridColumnReorderPluginDirective,
+  COL_DRAG_CONTAINER_PLUGIN_KEY, PblNgridColumnDragContainerDirective,
+  COL_REORDER_PLUGIN_KEY, PblNgridColumnReorderPluginDirective,
 } from './drag-and-drop/column';
 
 import {
@@ -31,6 +31,7 @@ import { DragPluginDefaultTemplatesComponent } from './default-settings.componen
 export function ngridPlugins() {
   return [
     ngridPlugin({ id: ROW_REORDER_PLUGIN_KEY }, PblNgridRowReorderPluginDirective),
+    ngridPlugin({ id: COL_DRAG_CONTAINER_PLUGIN_KEY }, PblNgridColumnDragContainerDirective),
     ngridPlugin({ id: COL_REORDER_PLUGIN_KEY, runOnce: colReorderExtendGrid }, PblNgridColumnReorderPluginDirective),
     ngridPlugin({ id: COL_RESIZE_PLUGIN_KEY, runOnce: colResizeExtendGrid }, PblNgridDragResizeComponent),
   ]
@@ -46,6 +47,7 @@ export function ngridPlugins() {
     DragPluginDefaultTemplatesComponent,
     CdkLazyDropList, CdkLazyDrag, PblDragHandle,
     PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
+    PblNgridColumnDragContainerDirective,
     PblNgridColumnDropContainerDirective, PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
     PblNgridAggregationContainerDirective,
     PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
@@ -54,6 +56,7 @@ export function ngridPlugins() {
     DragDropModule,
     CdkLazyDropList, CdkLazyDrag, PblDragHandle,
     PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
+    PblNgridColumnDragContainerDirective,
     PblNgridColumnDropContainerDirective, PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
     PblNgridAggregationContainerDirective,
     PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,

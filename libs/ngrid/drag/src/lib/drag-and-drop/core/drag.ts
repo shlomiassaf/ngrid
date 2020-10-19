@@ -39,13 +39,17 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
   @Input() get cdkDropList(): Z { return this.dropContainer as Z; }
   set cdkDropList(value: Z) {
     // TO SUPPORT `cdkDropList` via string input (ID) we need a reactive registry...
-    if (this.cdkDropList) {
-      this.cdkDropList.removeDrag(this);
-    }
-    this.dropContainer = value;
-    if (value) {
-      this._dragRef._withDropContainer(value._dropListRef);
-      value.addDrag(this);
+    const prev = this.cdkDropList;
+    if (value !== prev) {
+      if (prev) {
+        prev.removeDrag(this);
+      }
+      this.dropContainer = value;
+      if (value) {
+        this._dragRef._withDropContainer(value._dropListRef);
+        value.addDrag(this);
+      }
+      this.dropContainerChanged(prev);
     }
   }
 
@@ -53,7 +57,7 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
   private _hostNotRoot = false;
 
   ngOnInit(): void {
-    if (this.pblDragRef instanceof PblDragRef === false) {
+    if (!(this.pblDragRef instanceof PblDragRef)) {
       throw new Error('Invalid `DragRef` injection, the ref is not an instance of PblDragRef')
     }
     this.pblDragRef.rootElementChanged.subscribe( event => {
@@ -94,4 +98,6 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
     }
     super.ngOnDestroy();
   }
+
+  protected dropContainerChanged(prev: Z) { }
 }

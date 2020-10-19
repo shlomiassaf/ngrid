@@ -4,7 +4,8 @@ import { DragDrop, CDK_DROP_LIST, CDK_DROP_LIST_GROUP } from '@angular/cdk/drag-
 
 import { PblColumn } from '@pebula/ngrid';
 import { CdkLazyDropList, PblDragRef, PblDragDrop } from '../core/index';
-import { PblNgridColumnDragDirective, PblNgridColumnReorderPluginDirective } from './column-reorder-plugin';
+import { PblNgridColumnReorderPluginDirective } from './column-reorder-plugin';
+import { PblNgridColumnDragDirective } from './column-drag';
 
 let _uniqueIdCounter = 0;
 

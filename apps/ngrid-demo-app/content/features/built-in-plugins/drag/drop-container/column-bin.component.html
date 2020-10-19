@@ -4,7 +4,8 @@
         [matMenuTriggerFor]="menu"
         [pblColumnDropContainer]="grid"
         (columnEntered)="columnEntered($event)"
-        (columnDropped)="grid?.columnApi.hideColumns($event.data.column)">
+        (columnExited)="columnExited($event)"
+        (columnDropped)="columnDropped($event)">
   <span class="trash">
     <span></span>
     <i></i>
@@ -16,4 +17,4 @@
   </mat-menu>
 </button>
 
-<pbl-ngrid #grid [dataSource]="ds" [columns]="columns" columnReorder></pbl-ngrid>
+<pbl-ngrid #grid [dataSource]="ds" [columns]="columns" columnDrag></pbl-ngrid>

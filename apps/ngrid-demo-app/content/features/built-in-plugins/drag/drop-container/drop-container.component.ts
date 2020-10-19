@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
+import { PblColumnDragDropContainerEnter, PblColumnDragDropContainerExit, PblColumnDragDropContainerDrop } from '@pebula/ngrid/drag';
 
 import { Person, DemoDataSource } from '@pebula/apps/shared-data';
 import { Example } from '@pebula/apps/shared';
-import { PblDragDrop } from '@pebula/ngrid/drag';
 
 @Component({
   selector: 'pbl-drop-container-example',
@@ -25,17 +25,19 @@ export class DropContainerExample {
 
   @ViewChild(PblNgridComponent) grid: PblNgridComponent<Person>;
 
-  constructor(private datasource: DemoDataSource, private dragDrop: PblDragDrop) { }
+  constructor(private datasource: DemoDataSource) { }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      const el = document.body.querySelector('.pbl-ngrid-header-row-main');
-      const dropListRef = this.dragDrop.createDropList(el as HTMLElement);
+  columnEntered(event: PblColumnDragDropContainerEnter) {
+  }
 
-      const cells = el.querySelectorAll('pbl-ngrid-header-cell');
-      for (const cell of Array.from(cells)) {
-        const dragRef = this.dragDrop.createDrag(cell as HTMLElement);
-      }
-    }, 500);
+  columnExited(event: PblColumnDragDropContainerExit) {
+  }
+
+  columnDropped(event: PblColumnDragDropContainerDrop) {
+    if (event.isPointerOverContainer) {
+      event.container.grid.columnApi.hideColumns(event.item.column);
+    } else {
+      event.container.grid.columnApi.showColumns(event.item.column);
+    }
   }
 }
