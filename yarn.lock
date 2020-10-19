@@ -225,17 +225,17 @@
   dependencies:
     tslib "^2.0.0"
 
-"@angular/cdk-experimental@10.2.2":
-  version "10.2.2"
-  resolved "https://registry.yarnpkg.com/@angular/cdk-experimental/-/cdk-experimental-10.2.2.tgz#75d0a935f17a029437faa74699e2d7104ccc8bf2"
-  integrity sha512-MDINvDBdTKz1JV1vhgpiVJbf9jIlOEiue/7e2dirIbnsOe6Et0MqPsBLcUbzzVTMz+AlcowlGcZW5eoVWxnQ4w==
+"@angular/cdk-experimental@11.0.0-next.2":
+  version "11.0.0-next.2"
+  resolved "https://registry.yarnpkg.com/@angular/cdk-experimental/-/cdk-experimental-11.0.0-next.2.tgz#38af14a1335e1ed188c5d7a1587411db0640022c"
+  integrity sha512-6gRPOqYi2vqYWwyHSJYkQAZkViqS06Fj0vW2x19J6I77VGS6hhQR6PGxfyNbPz2E3p6XqqSTeActYDk8tEm1DQ==
   dependencies:
     tslib "^2.0.0"
 
-"@angular/cdk@^10.2.2":
-  version "10.2.2"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-10.2.2.tgz#429816d2f8d15d1da99b85ee6810d54bf46e3d05"
-  integrity sha512-DVMnj7QY1prZblRjYfDeyEH79p1TDI0JGgg2D2BAWwzMoPKCgVCqy1uRuvi+WNhYoDR3QJJJ8tXLKucUoShuIw==
+"@angular/cdk@11.0.0-next.2":
+  version "11.0.0-next.2"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-11.0.0-next.2.tgz#94870d9940f5f070110d65bd18c8e54f405f620a"
+  integrity sha512-J59V70i+mI/f2cIF47+gAYpWWI5qmiwB5Ud6qwIX8L6AzHVpNsZKMs7ZuBv6xd3nhvMSo64usjsPDXoxmujDIw==
   dependencies:
     tslib "^2.0.0"
   optionalDependencies:
@@ -343,10 +343,10 @@
   resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-10.1.3.tgz#0903579293fc897cd3ae0d047ffd4bc5968337f4"
   integrity sha512-BdRlbmVC9frtvqMZ9kaxMlgm3OIypTuB1z3cRwJVCnvBVsWz6+QishTdSCvYI7USFNU5EwGH6dCBWwl53spBLw==
 
-"@angular/material@^10.2.2":
-  version "10.2.2"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-10.2.2.tgz#224864e3c280ee2e8f0ccf28574c65d788799782"
-  integrity sha512-xRt8FsjY/MdC/dMBhitCXmOfXo4uhzLZ+kBqkKwY8gBsJ7FjhJIPbe/kRPBuzvVkVphrEfi/pMeDOge8v5ETbA==
+"@angular/material@11.0.0-next.2":
+  version "11.0.0-next.2"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-11.0.0-next.2.tgz#838b4af2c17771ab8173be7bff7a38471144494a"
+  integrity sha512-VTSjdZEZCwzL8tAGyjwkxV+iRMqZTevp6nxh+S7HOLrP/H1+k9qeNbp4czGTedfj5OvbQF4ZcOfER1A+idzc/g==
   dependencies:
     tslib "^2.0.0"
 

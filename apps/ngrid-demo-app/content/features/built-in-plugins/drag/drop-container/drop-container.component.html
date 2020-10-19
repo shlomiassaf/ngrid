@@ -1,1 +1,11 @@
-<pbl-ngrid [dataSource]="ds" [columns]="columns"></pbl-ngrid>
+<div style="display: flex; width: 100%;">
+  <pbl-ngrid style="width: 70%" #grid [dataSource]="ds" [columns]="columns" columnReorder></pbl-ngrid>
+  <div style="width: 30%; height: 300px;"
+     [pblColumnDropContainer]="grid"
+     (columnEntered)="columnEntered($event)"
+     (columnExited)="columnExited($event)"
+     (columnDropped)="columnDropped($event)">
+  <div *ngFor="let c of grid?.columnApi.hiddenColumnIds" [pblNgridColumnDrag]="grid.columnApi.findColumn(c)">
+    <div mat-menu-item>{{ grid?.columnApi.findColumn(c).label }}</div>
+  </div>
+</div>

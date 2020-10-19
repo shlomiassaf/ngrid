@@ -73,7 +73,9 @@
 	border-radius: 5px;
 }
 
-button:hover .trash span {
-	transform: rotate(-45deg);
-	transition: transform 250ms;
+.cdk-drop-list-receiving, .cdk-drop-list-dragging {
+  .trash span {
+    transform: rotate(-45deg);
+    transition: transform 250ms;
+  }
 }

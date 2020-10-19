@@ -59,7 +59,7 @@
 <ng-template #containerEntry let-entry>
   <mat-accordion>
     <mat-expansion-panel style="box-shadow: none" [expanded]="isExpanded(entry)">
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header style="padding-left: 16px;">
         <mat-panel-title>{{ entry.title }}</mat-panel-title>
       </mat-expansion-panel-header>
       <ng-container *ngFor="let childEntry of entry.children">

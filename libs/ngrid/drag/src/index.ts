@@ -14,7 +14,12 @@ export {
 
 export {
   PblNgridColumnDragDirective,
+
   PblNgridColumnDropContainerDirective,
+  PblColumnDragDropContainerDrop,
+  PblColumnDragDropContainerEnter,
+  PblColumnDragDropContainerExit,
+
   PblNgridColumnReorderPluginDirective,
 } from './lib/drag-and-drop/column';
 

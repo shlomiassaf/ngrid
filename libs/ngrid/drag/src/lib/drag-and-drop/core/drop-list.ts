@@ -64,11 +64,11 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
               element: ElementRef<HTMLElement>,
               dragDrop: DragDrop,
               changeDetectorRef: ChangeDetectorRef,
+              _scrollDispatcher?: ScrollDispatcher,
               @Optional() dir?: Directionality,
               @Optional() @Inject(CDK_DROP_LIST_GROUP) @SkipSelf() group?: CdkDropListGroup<CdkDropList>,
-              _scrollDispatcher?: ScrollDispatcher,
               @Optional() @Inject(CDK_DRAG_CONFIG) config?: DragDropConfig) {
-    super(element, dragDrop, changeDetectorRef, dir, group, _scrollDispatcher, config);
+    super(element, dragDrop, changeDetectorRef, _scrollDispatcher, dir, group, config);
 
     this.pblDropListRef = this._dropListRef as any;
     // This is a workaround for https://github.com/angular/material2/pull/14153

@@ -17,10 +17,10 @@ const DEFAULT_CONFIG = {
  */
 @Injectable({providedIn: 'root'})
 export class PblDragDrop {
-  constructor(@Inject(DOCUMENT) private _document: any,
-              private _ngZone: NgZone,
-              private _viewportRuler: ViewportRuler,
-              private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>) {}
+  constructor(@Inject(DOCUMENT) protected _document: any,
+              protected _ngZone: NgZone,
+              protected _viewportRuler: ViewportRuler,
+              protected _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>) {}
 
   /**
    * Turns an element into a draggable item.
