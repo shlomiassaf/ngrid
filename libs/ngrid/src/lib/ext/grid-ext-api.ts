@@ -4,12 +4,12 @@ import { InjectionToken } from '@angular/core';
 import { PblCdkTableComponent } from '../grid/pbl-cdk-table/pbl-cdk-table.component';
 import { ContextApi } from '../grid/context/api';
 import { PblNgridComponent } from '../grid/ngrid.component';
-import { ColumnApi, PblColumnStore } from '../grid/column-management';
-import { DynamicColumnWidthLogic } from '../grid/col-width-logic/dynamic-column-width';
+import { ColumnApi, PblColumnStore } from '../grid/column/management';
+import { DynamicColumnWidthLogic } from '../grid/column/width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from '../grid/features/virtual-scroll/virtual-scroll-viewport.component'
 import { PblNgridEvents } from './types';
 import { PblNgridMetaRowService } from '../grid/meta-rows/index';
-import { RowsApi } from '../grid/rows-api';
+import { RowsApi, PblRowsApi } from '../grid/row';
 import { PblNgridPluginContext, PblNgridPluginController } from './plugin-control';
 
 export const EXT_API_TOKEN = new InjectionToken('PBL_NGRID_EXTERNAL_API');
@@ -33,6 +33,7 @@ export interface PblNgridExtensionApi<T = any> {
 export interface PblNgridInternalExtensionApi<T = any> extends PblNgridExtensionApi<T> {
   viewport: PblCdkVirtualScrollViewportComponent;
   plugin: PblNgridPluginContext;
+  rowsApi: PblRowsApi<T>;
   setViewport(viewport: PblCdkVirtualScrollViewportComponent): void;
   setCdkTable(cdkTable: PblCdkTableComponent<T>): void;
 }

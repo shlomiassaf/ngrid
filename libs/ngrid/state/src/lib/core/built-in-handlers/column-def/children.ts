@@ -1,4 +1,4 @@
-import { PblColumnTypeDefinition, PblColumn, PblColumnDefinition, PblMetaRowDefinitions } from '@pebula/ngrid';
+import { PblColumnTypeDefinition } from '@pebula/ngrid';
 import { createStateChunkHandler } from '../../handling';
 
 export function registerColumnDefChildHandlers() {

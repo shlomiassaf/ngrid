@@ -18,15 +18,15 @@ import {
 import { DOCUMENT } from '@angular/common';
 
 import { Platform } from '@angular/cdk/platform';
+import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } from '@angular/cdk/collections';
 import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef, RowContext, CDK_TABLE, _COALESCED_STYLE_SCHEDULER, _CoalescedStyleScheduler, RenderRow } from '@angular/cdk/table';
 import { Directionality } from '@angular/cdk/bidi';
 
 import { PblNgridComponent } from '../ngrid.component';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
-import { PblNgridColumnDef } from '../directives/column-def';
+import { PblNgridColumnDef } from '../column/directives/column-def';
 import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
-import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } from '@angular/cdk/collections';
-import { _TempDisposeViewRepeaterStrategy } from './cdk-20765-temp-workaround';
+import { BypassCellRenderDisposeViewRepeaterStrategy } from './bypass-cdk-cell rendering-repeater-strategy';
 
 /**
  * Wrapper for the CdkTable that extends it's functionality to support various table features.
@@ -47,7 +47,7 @@ import { _TempDisposeViewRepeaterStrategy } from './cdk-20765-temp-workaround';
     {provide: CDK_TABLE, useExisting: PblCdkTableComponent},
     // TODO: Remove when and if PR https://github.com/angular/components/pull/20765 is accepted and support for
     //       CDK version is dropped for those versions without the fix in 20765
-    {provide: _VIEW_REPEATER_STRATEGY, useClass: _TempDisposeViewRepeaterStrategy},
+    {provide: _VIEW_REPEATER_STRATEGY, useClass: BypassCellRenderDisposeViewRepeaterStrategy},
     {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
   ],
   encapsulation: ViewEncapsulation.None,

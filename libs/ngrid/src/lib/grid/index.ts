@@ -3,6 +3,9 @@ export * from './directives/index';
 export * from './meta-rows/index';
 
 export {
+  PblNgridColumnDef,
+} from './column/directives';
+export {
   PblColumnTypeDefinition, PblColumnTypeDefinitionDataMap,
   PblBaseColumnDefinition,
   PblMetaColumnDefinition,
@@ -21,7 +24,32 @@ export {
   PblColumnFactory,
   columnFactory,
   isPblColumn, isPblMetaColumn, isPblColumnGroup,
-} from './columns/index';
+} from './column/model';
+export { AutoSizeToFitOptions, ColumnApi } from './column/management';
+
+export { RowsApi, NGRID_CELL_FACTORY, PBL_NGRID_ROW_TEMPLATE, PblNgridRowComponent } from './row';
+
+export {
+  PblNgridRegistryService,
+  PblNgridHeaderExtensionRefDirective,
+  PblNgridNoDataRefDirective,
+  PblNgridPaginatorRefDirective,
+  PblNgridSingleTemplateRegistry, PblNgridMultiTemplateRegistry, PblNgridMultiComponentRegistry,
+  PblNgridDataHeaderExtensionRef, PblNgridDataHeaderExtensionContext,
+ } from './registry';
+
+export {
+  PblNgridCellStyling,
+  PblNgridHeaderCellComponent,
+  PblNgridCellDirective,
+  PblNgridFooterCellDirective,
+  PblNgridCellEditAutoFocusDirective,
+
+  PblNgridHeaderCellDefDirective,
+  PblNgridCellDefDirective,
+  PblNgridEditorCellDefDirective,
+  PblNgridFooterCellDefDirective,
+} from './cell';
 
 export {
   PblNgridFocusChangedEvent, PblNgridSelectionChangedEvent,
@@ -34,13 +62,9 @@ export {
 export { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 
 export { PblNgridComponent } from './ngrid.component';
-export { PblNgridRegistryService } from './services/grid-registry.service';
-export { AutoSizeToFitOptions, ColumnApi } from './column-management';
 
 export { PblColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';
 export * from './features/virtual-scroll/index';
 export * from './features/hide-columns.directive';
-
-export * from './rows-api';
 
 export * from './utils/index';

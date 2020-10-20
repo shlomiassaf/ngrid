@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { RowContext } from '@angular/cdk/table';
 
 import { PblNgridComponent } from '../ngrid.component';
-import { PblColumnTypeDefinitionDataMap, PblMetaColumn, PblColumn } from '../columns';
+import { PblColumnTypeDefinitionDataMap, PblMetaColumn, PblColumn } from '../column/model';
 import { PblRowContext } from './row';
 
 declare module '@angular/cdk/table/table.d' {

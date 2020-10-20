@@ -1,4 +1,4 @@
-import { PblNgridColumnDefinitionSet, PblColumnDefinition, PblColumn, utils } from '@pebula/ngrid';
+import { utils } from '@pebula/ngrid';
 import { createStateChunkHandler } from '../../handling';
 import { stateVisor } from '../../state-visor';
 import { StateChunks, PblNgridStateChunkContext } from '../../models/index';

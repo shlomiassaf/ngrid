@@ -5,8 +5,8 @@ import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
 import { RowContext } from '@angular/cdk/table';
 
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
-import { PblColumn } from '../columns/column';
-import { ColumnApi } from '../column-management';
+import { PblColumn } from '../column/model';
+import { ColumnApi } from '../column/management';
 import {
   RowContextState,
   CellContextState,
@@ -79,115 +79,13 @@ export class ContextApi<T = any> {
         take(1),
       ).subscribe(() => {
         this.vcRef = extApi.cdkTable._rowOutlet.viewContainer;
-        updateContext();
-        extApi.cdkTable.onRenderRows.subscribe(updateContext);
+        this.syncViewAndContext();
+        extApi.cdkTable.onRenderRows.subscribe(() => this.syncViewAndContext());
       });
 
     extApi.events
       .pipe(filter( e => e.kind === 'onDestroy' ))
       .subscribe( e => this.destroy() );
-
-    const updateContext = () => {
-      const viewPortRect = this.getViewRect();
-      const lastView = new Set(Array.from(this.viewCache.values()).map( v => v.identity ));
-      const unmatchedRefs = new Map<T, [number, number]>();
-
-      let keepProcessOutOfView = !!viewPortRect;
-      for (let i = 0, len = this.vcRef.length; i < len; i++) {
-        const viewRef = this.findViewRef(i);
-        const rowContext = this.findRowContext(viewRef, i);
-        this.viewCache.set(i, rowContext);
-        lastView.delete(rowContext.identity);
-
-        // Identity did not change but context did change
-        // This is probably due to trackBy with index reference or that matched data on some property but the actual data reference changed.
-        // We log these and handle them later, they come in pair and we need to switch the context between the values in the pair.
-
-        // The pair is a 2 item tuple - 1st item is new index, 2nd item is the old index.
-        // We build the pairs, each pair is a switch
-        if (viewRef.context.$implicit !== rowContext.$implicit) {
-          let pair = unmatchedRefs.get(rowContext.$implicit) || [-1, -1];
-          pair[1] = i;
-          unmatchedRefs.set(rowContext.$implicit, pair);
-
-          pair = unmatchedRefs.get(viewRef.context.$implicit) || [-1, -1];
-          pair[0] = i;
-          unmatchedRefs.set(viewRef.context.$implicit, pair);
-        }
-
-        if (keepProcessOutOfView) {
-          keepProcessOutOfView = processOutOfView(viewRef, viewPortRect, 'top');
-        }
-      }
-
-      if (unmatchedRefs.size > 0) {
-        // We have pairs but we can't just start switching because when the items move or swap we need
-        // to update their values and so we need to cache one of them.
-        // The operation will effect all items (N) between then origin and destination.
-        // When N === 2 its a swap, when N > 2 its a move.
-        // In both cases the first and last operations share the same object.
-        // Also, we need to make sure that the order of operations does not use the same row as the source more then once.
-        // For example, If I copy row 5 to to row 4 and then 4 to 3 I need to start from 3->4->5, if I do 5->4->3 I will get 5 in all rows.
-        //
-        // We use the source (pair[1]) for sorting, the sort order depends on the direction of the move (up/down).
-        const arr = Array.from(unmatchedRefs.entries()).filter( entry => {
-          const pair = entry[1];
-          if (pair[0] === -1) {
-            return false;
-          } else if (pair[1] === -1) {
-            const to = this.viewCache.get(pair[0]);
-            to.$implicit = entry[0];
-            return false;
-          }
-          return true;
-        }).map( entry => entry[1] );
-
-        unmatchedRefs.clear();
-
-        if (arr.length) {
-          const sortFn = arr[arr.length - 1][0] - arr[arr.length - 1][1] > 0 // check sort direction
-            ? (a,b) => b[1] - a[1]
-            : (a,b) => a[1] - b[1]
-          ;
-          arr.sort(sortFn);
-
-          const lastOp = {
-            data: this.viewCache.get(arr[0][0]).$implicit,
-            state: this.viewCache.get(arr[0][0]).getState(),
-            pair: arr.pop(),
-          };
-
-          for (const pair of arr) {
-            // What we're doing here is switching the context wrapped by `RotContext` while the `RowContext` preserve it's identity.
-            // Each row context has a state, which is valid for it's current context, if we switch context we must switch state as well and also
-            // cache it.
-            const to = this.viewCache.get(pair[0]);
-            const from = this.viewCache.get(pair[1]);
-            const state = from.getState();
-            state.identity = to.identity;
-            this.cache.set(to.identity, state);
-            to.fromState(state);
-            to.$implicit = from.$implicit;
-          }
-
-          const to = this.viewCache.get(lastOp.pair[0]);
-          lastOp.state.identity = to.identity;
-          this.cache.set(to.identity, lastOp.state);
-          to.fromState(lastOp.state);
-          to.$implicit = lastOp.data;
-        }
-      }
-
-      if(viewPortRect) {
-        for (let i = this.vcRef.length -1; i > -1; i--) {
-          if (!processOutOfView(this.findViewRef(i), viewPortRect, 'bottom')) {
-            break;
-          }
-        }
-      }
-
-      lastView.forEach( ident => this.cache.get(ident).firstRender = false );
-    };
   }
 
   /**
@@ -342,13 +240,22 @@ export class ContextApi<T = any> {
     this.selectionChanged$.next({ added: [], removed });
   }
 
-  clear(): void {
+  /**
+   * Clears the entire context, including view cache and memory cache (rows out of view)
+   * @param syncView If true will sync the view and the context right after clearing which will ensure the view cache is hot and synced with the actual rendered rows
+   * Some plugins will expect a row to have a context so this might be required.
+   * The view and context are synced every time rows are rendered so make sure you set this to true only when you know there is no rendering call coming down the pipe.
+   */
+  clear(syncView?: boolean): void {
     for (let i = 0, len = this.vcRef.length; i < len; i++) {
       const viewRef = this.findViewRef(i);
       viewRef.context.pblRowContext = undefined;
     }
     this.viewCache.clear();
     this.cache.clear();
+    if (syncView === true) {
+      this.syncViewAndContext();
+    }
   }
 
   getRow(row: number | HTMLElement): PblNgridRowContext<T> | undefined {
@@ -574,6 +481,108 @@ export class ContextApi<T = any> {
   private destroy(): void {
     this.focusChanged$.complete();
     this.selectionChanged$.complete();
+  }
+
+  private syncViewAndContext() {
+    const viewPortRect = this.getViewRect();
+    const lastView = new Set(Array.from(this.viewCache.values()).map( v => v.identity ));
+    const unmatchedRefs = new Map<T, [number, number]>();
+
+    let keepProcessOutOfView = !!viewPortRect;
+    for (let i = 0, len = this.vcRef.length; i < len; i++) {
+      const viewRef = this.findViewRef(i);
+      const rowContext = this.findRowContext(viewRef, i);
+      this.viewCache.set(i, rowContext);
+      lastView.delete(rowContext.identity);
+
+      // Identity did not change but context did change
+      // This is probably due to trackBy with index reference or that matched data on some property but the actual data reference changed.
+      // We log these and handle them later, they come in pair and we need to switch the context between the values in the pair.
+
+      // The pair is a 2 item tuple - 1st item is new index, 2nd item is the old index.
+      // We build the pairs, each pair is a switch
+      if (viewRef.context.$implicit !== rowContext.$implicit) {
+        let pair = unmatchedRefs.get(rowContext.$implicit) || [-1, -1];
+        pair[1] = i;
+        unmatchedRefs.set(rowContext.$implicit, pair);
+
+        pair = unmatchedRefs.get(viewRef.context.$implicit) || [-1, -1];
+        pair[0] = i;
+        unmatchedRefs.set(viewRef.context.$implicit, pair);
+      }
+
+      if (keepProcessOutOfView) {
+        keepProcessOutOfView = processOutOfView(viewRef, viewPortRect, 'top');
+      }
+    }
+
+    if (unmatchedRefs.size > 0) {
+      // We have pairs but we can't just start switching because when the items move or swap we need
+      // to update their values and so we need to cache one of them.
+      // The operation will effect all items (N) between then origin and destination.
+      // When N === 2 its a swap, when N > 2 its a move.
+      // In both cases the first and last operations share the same object.
+      // Also, we need to make sure that the order of operations does not use the same row as the source more then once.
+      // For example, If I copy row 5 to to row 4 and then 4 to 3 I need to start from 3->4->5, if I do 5->4->3 I will get 5 in all rows.
+      //
+      // We use the source (pair[1]) for sorting, the sort order depends on the direction of the move (up/down).
+      const arr = Array.from(unmatchedRefs.entries()).filter( entry => {
+        const pair = entry[1];
+        if (pair[0] === -1) {
+          return false;
+        } else if (pair[1] === -1) {
+          const to = this.viewCache.get(pair[0]);
+          to.$implicit = entry[0];
+          return false;
+        }
+        return true;
+      }).map( entry => entry[1] );
+
+      unmatchedRefs.clear();
+
+      if (arr.length) {
+        const sortFn = arr[arr.length - 1][0] - arr[arr.length - 1][1] > 0 // check sort direction
+          ? (a,b) => b[1] - a[1]
+          : (a,b) => a[1] - b[1]
+        ;
+        arr.sort(sortFn);
+
+        const lastOp = {
+          data: this.viewCache.get(arr[0][0]).$implicit,
+          state: this.viewCache.get(arr[0][0]).getState(),
+          pair: arr.pop(),
+        };
+
+        for (const pair of arr) {
+          // What we're doing here is switching the context wrapped by `RotContext` while the `RowContext` preserve it's identity.
+          // Each row context has a state, which is valid for it's current context, if we switch context we must switch state as well and also
+          // cache it.
+          const to = this.viewCache.get(pair[0]);
+          const from = this.viewCache.get(pair[1]);
+          const state = from.getState();
+          state.identity = to.identity;
+          this.cache.set(to.identity, state);
+          to.fromState(state);
+          to.$implicit = from.$implicit;
+        }
+
+        const to = this.viewCache.get(lastOp.pair[0]);
+        lastOp.state.identity = to.identity;
+        this.cache.set(to.identity, lastOp.state);
+        to.fromState(lastOp.state);
+        to.$implicit = lastOp.data;
+      }
+    }
+
+    if(viewPortRect) {
+      for (let i = this.vcRef.length -1; i > -1; i--) {
+        if (!processOutOfView(this.findViewRef(i), viewPortRect, 'bottom')) {
+          break;
+        }
+      }
+    }
+
+    lastView.forEach( ident => this.cache.get(ident).firstRender = false );
   }
 }
 

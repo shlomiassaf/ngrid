@@ -1,4 +1,4 @@
-import { PblColumn } from '../grid/columns';
+import { PblColumn } from '../grid/column/model';
 import { PblNgridSortDefinition, PblNgridSortInstructions, PblNgridSorter } from './types';
 
 /**

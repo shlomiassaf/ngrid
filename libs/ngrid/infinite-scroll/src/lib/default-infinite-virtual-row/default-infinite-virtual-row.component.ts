@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { PblColumn } from '@pebula/ngrid';
 
 /**
  * Use to set the a default `pblNgridInfiniteVirtualRowRef` if the user did not set one.
@@ -9,4 +10,10 @@ import { Component, ViewEncapsulation } from '@angular/core';
   styleUrls: ['./default-infinite-virtual-row.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridDefaultInfiniteVirtualRowComponent { }
+export class PblNgridDefaultInfiniteVirtualRowComponent {
+  protected createCell(column: PblColumn) {
+  }
+
+  protected destroyCell(column: PblColumn) {
+  }
+}

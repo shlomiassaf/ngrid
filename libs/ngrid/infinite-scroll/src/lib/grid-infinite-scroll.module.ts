@@ -8,11 +8,12 @@ import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 import { PblNgridInfiniteScrollPlugin, PLUGIN_KEY } from './infinite-scroll-plugin';
 import { PblNgridInfiniteVirtualRowRefDirective } from './infinite-virtual-row/directives';
 import { PblNgridDefaultInfiniteVirtualRowComponent } from './default-infinite-virtual-row/default-infinite-virtual-row.component';
+import { PblNgridInfiniteRowComponent } from './infinite-virtual-row/row';
 
 @NgModule({
   imports: [ CommonModule, CdkTableModule, PblNgridModule, PblNgridTargetEventsModule ],
-  declarations: [ PblNgridInfiniteVirtualRowRefDirective, PblNgridDefaultInfiniteVirtualRowComponent ],
-  exports: [ PblNgridInfiniteVirtualRowRefDirective ],
+  declarations: [ PblNgridInfiniteVirtualRowRefDirective, PblNgridInfiniteRowComponent, PblNgridDefaultInfiniteVirtualRowComponent ],
+  exports: [ PblNgridInfiniteVirtualRowRefDirective, PblNgridInfiniteRowComponent],
   // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
   entryComponents: [ PblNgridDefaultInfiniteVirtualRowComponent ],
 })

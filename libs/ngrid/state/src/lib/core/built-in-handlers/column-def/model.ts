@@ -11,7 +11,7 @@ import {
 
 export interface PblNgridBaseColumnState extends
   PickPNP <
-    import('@pebula/ngrid/lib/grid/columns/types').PblBaseColumnDefinition,
+    import('@pebula/ngrid/lib/grid/column/model/types').PblBaseColumnDefinition,
     'id' | 'label' | 'css' | 'type' | 'width' | 'minWidth' | 'maxWidth',
     never
   > { }
