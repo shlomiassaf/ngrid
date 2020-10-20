@@ -1,18 +1,20 @@
 import { Observable, of } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { ChangeDetectorRef, ElementRef, Injector, NgZone, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, Injector, IterableDiffers, NgZone, ViewContainerRef } from '@angular/core';
 import { PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { ColumnApi, PblColumnStore } from './column-management';
 import { PblNgridComponent } from './ngrid.component';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
-import { RowsApi } from './rows-api';
+import { NGRID_CELL_FACTORY, PblRowsApi } from './rows-api';
 import { DynamicColumnWidthLogic, DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY } from './col-width-logic/dynamic-column-width';
 import { ContextApi } from './context/api';
 import { PblNgridMetaRowService } from './meta-rows/meta-row.service';
-import { PblNgridPluginContext, PblNgridPluginController } from '../ext/plugin-control';
+import { PblNgridPluginContext } from '../ext/plugin-control';
 import { PblNgridEvents } from '../ext/types';
 import { bindToDataSource } from './bind-to-datasource';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
+
+import './bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
 
 export interface RequiredAngularTokens {
   ngZone: NgZone;
@@ -31,7 +33,7 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
   readonly columnStore: PblColumnStore;
   readonly columnApi: ColumnApi<T>;
   readonly metaRowService: PblNgridMetaRowService<T>;
-  readonly rowsApi: RowsApi<T>;
+  readonly rowsApi: PblRowsApi<T>;
   readonly events: Observable<PblNgridEvents>;
   readonly plugin: PblNgridPluginContext;
 
@@ -51,8 +53,11 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     this._create = init;
     this.plugin = plugin;
     this.events = plugin.events;
-    this.columnStore = new PblColumnStore(grid);
-    this.rowsApi = new RowsApi<T>(this, tokens.ngZone);
+    this.columnStore = new PblColumnStore(grid, tokens.injector.get(IterableDiffers));
+
+    const cellFactory = tokens.injector.get(NGRID_CELL_FACTORY);
+    this.rowsApi = new PblRowsApi<T>(this, tokens.ngZone, cellFactory);
+
     this.columnApi = ColumnApi.create<T>(this);
     this.metaRowService = new PblNgridMetaRowService(this);
     this._contextApi = new ContextApi<T>(this);

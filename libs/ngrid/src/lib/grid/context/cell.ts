@@ -72,8 +72,8 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
     return { editing: false, focused: false, selected: false };
   }
 
-  clone(): PblCellContext<T> {
-    const ctx = PblCellContext.create<T>(this._rowContext, this.col, this.extApi);
+  clone(col?: PblColumn): PblCellContext<T> {
+    const ctx = PblCellContext.create<T>(this._rowContext, col || this.col, this.extApi);
     ctx.fromState(this.getState(), this._rowContext, true);
     return ctx;
   }

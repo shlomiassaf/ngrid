@@ -9,6 +9,7 @@ import {
   NgModuleRef,
   ModuleWithProviders,
   Self,
+  ComponentFactoryResolver,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -45,9 +46,12 @@ import {
   PblNgridCellEditAutoFocusDirective,
 
   PblNgridConfigService,
+  NGRID_CELL_FACTORY,
 } from './grid/index';
 
 export const COMMON_TABLE_TEMPLATE_INIT = new InjectionToken('COMMON TABLE TEMPLATE INIT');
+
+export function ngridCellFactory(cfr: ComponentFactoryResolver) { return cfr.resolveComponentFactory(PblNgridCellDirective); }
 
 export interface CommonTemplateInit {
   component: Type<any>;
@@ -94,6 +98,13 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridCellEditAutoFocusDirective,
 
     PblNgridComponent,
+  ],
+  providers: [
+    {
+      provide: NGRID_CELL_FACTORY,
+      useFactory: ngridCellFactory,
+      deps: [ComponentFactoryResolver],
+    },
   ],
   exports: [
     PblNgridRowComponent,

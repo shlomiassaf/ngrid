@@ -62,10 +62,8 @@
         <pbl-ngrid-header-cell *cdkHeaderCellDef="let row" [observeSize]="c"></pbl-ngrid-header-cell>
 
         <!-- RECORD CELL DEF -->
-        <pbl-ngrid-cell #cell="pblNgridCell" *cdkCellDef="let row; pblRowContext as pblRowContext"
-                        [rowCtx]="pblRowContext" [attr.tabindex]="cellFocus" [attr.id]="c.id">
-          <ng-container *ngTemplateOutlet="cell.cellCtx?.editing ? c.editorTpl : c.cellTpl; context: cell.cellCtx"></ng-container>
-        </pbl-ngrid-cell>
+        <!-- We don't need to define a template for data cell (cdkCellDef)
+             Because we generate the cells internally in the row component (pbl-ngrid-row) -->
 
         <!-- GRID FOOTER CELL DEF -->
         <pbl-ngrid-footer-cell #fCell="ngridFooterCell" *cdkFooterCellDef>
@@ -75,14 +73,15 @@
       <!-- HEADER-RECORD-FOOTER CELL DEF -->
 
       <!-- GRID RECORD ROW DEFINITION TEMPLATES -->
-      <pbl-ngrid-row *cdkRowDef="let row; columns: columnApi.visibleColumnIds;" [row]="row"></pbl-ngrid-row>
+      <pbl-ngrid-row *cdkRowDef="let row; columns: columnApi.columnIds;" [row]="row"></pbl-ngrid-row>
       <!-- GRID RECORD ROW DEFINITION TEMPLATES -->
     </pbl-cdk-table>
   </pbl-cdk-virtual-scroll-viewport>
   <div pbl-ngrid-fixed-meta-row-container="footer"></div>
+
   <ng-container #beforeContent>
     <!-- This dummy row is used to extract an initial row height -->
-    <pbl-ngrid-row row style="display: none"></pbl-ngrid-row>
+    <div role="row" row="" class="pbl-ngrid-row cdk-row" style="display: none;"></div>
   </ng-container>
   <ng-content></ng-content>
   <ng-container #afterContent></ng-container>

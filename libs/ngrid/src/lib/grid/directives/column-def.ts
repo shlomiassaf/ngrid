@@ -13,7 +13,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
 import { COLUMN } from '../columns';
 import { isPblColumn } from '../columns/column';
 import { PblNgridComponent } from '../ngrid.component';
-import { EXT_API_TOKEN, PblNgridExtensionApi } from '../../ext/grid-ext-api';
+import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { uniqueColumnCss } from '../circular-dep-bridge';
 import { widthBreakout } from '../col-width-logic/dynamic-column-width';
 import { PblColumnSizeInfo } from '../types';
@@ -89,7 +89,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
 
   private widthBreakout: (columnInfo: PblColumnSizeInfo) => ReturnType<typeof widthBreakout>;
 
-  constructor(@Inject(EXT_API_TOKEN) protected extApi: PblNgridExtensionApi<any>) {
+  constructor(@Inject(EXT_API_TOKEN) protected extApi: PblNgridInternalExtensionApi<any>) {
     super();
     this.grid = extApi.grid;
 
@@ -245,7 +245,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
         this._column = column;
         (column as any).attach(this);
         this.name = column.id.replace(/ /g, '_');
-
+        this.extApi.columnStore.notifyColumnDefBind(column, this);
         if (isPblColumn(column)) {
           this.updatePin(column.pin);
         }
@@ -255,8 +255,10 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
 
   private detach(): void {
     if (this._column) {
-      this._column.detach();
+      const col = this._column;
       this._column = undefined;
+      col.detach();
+      this.extApi.columnStore.notifyColumnDefBind(col, this);
     }
   }
 }
