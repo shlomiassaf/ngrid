@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 
 import { PblNgridComponent } from '../../ngrid.component';
-import { PblColumn, ColumnSizeInfo } from '../../columns/index';
+import { PblColumn, ColumnSizeInfo } from '../../column/model';
 
 const PBL_NGRID_MAP = new Map<PblNgridComponent<any>, PblNgridGroupHeaderSizeController>();
 

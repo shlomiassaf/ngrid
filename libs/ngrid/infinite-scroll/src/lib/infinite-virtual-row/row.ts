@@ -22,7 +22,7 @@ export class PblNgridInfiniteRowComponent<T = any> extends PblNgridRowComponent<
 
   @Input('infiniteRow') set row(value: any) { this.updateRow(); }
 
-  protected createCell(column: PblColumn, atIndex?: number) { }
+  _createCell(column: PblColumn, atIndex?: number) { }
 
-  protected destroyCell(column: PblColumn) { }
+  _destroyCell(column: PblColumn) { }
 }

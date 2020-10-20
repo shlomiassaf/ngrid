@@ -5,8 +5,8 @@ import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
 import { RowContext } from '@angular/cdk/table';
 
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
-import { PblColumn } from '../columns/column';
-import { ColumnApi } from '../column-management';
+import { PblColumn } from '../column/model';
+import { ColumnApi } from '../column/management';
 import {
   RowContextState,
   CellContextState,

@@ -1,12 +1,14 @@
 import { Observable, of } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { ChangeDetectorRef, ElementRef, Injector, IterableDiffers, NgZone, ViewContainerRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+
 import { PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
-import { ColumnApi, PblColumnStore } from './column-management';
+import { ColumnApi, PblColumnStore } from './column/management';
 import { PblNgridComponent } from './ngrid.component';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
-import { NGRID_CELL_FACTORY, PblRowsApi } from './rows-api';
-import { DynamicColumnWidthLogic, DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY } from './col-width-logic/dynamic-column-width';
+import { NGRID_CELL_FACTORY, PblRowsApi } from './row/rows-api';
+import { DynamicColumnWidthLogic, DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY } from './column/width-logic/dynamic-column-width';
 import { ContextApi } from './context/api';
 import { PblNgridMetaRowService } from './meta-rows/meta-row.service';
 import { PblNgridPluginContext } from '../ext/plugin-control';
@@ -22,6 +24,7 @@ export interface RequiredAngularTokens {
   vcRef: ViewContainerRef;
   cdRef: ChangeDetectorRef;
   elRef: ElementRef<HTMLElement>;
+  dir?: Directionality;
 }
 
 export function createApis<T>(grid: PblNgridComponent<T>, tokens: RequiredAngularTokens) {
@@ -46,9 +49,14 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
   private _contextApi: ContextApi<T>;
   private _viewPort: PblCdkVirtualScrollViewportComponent;
   private _create: () => void;
+  private dir?: Directionality;
 
   constructor(public readonly grid: PblNgridComponent<T>, tokens: RequiredAngularTokens) {
     this.element = tokens.elRef.nativeElement;
+    if (tokens.dir) {
+      this.dir = tokens.dir;
+    }
+
     const { plugin, init } = this.createPlugin(tokens);
     this._create = init;
     this.plugin = plugin;
@@ -89,7 +97,7 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
   }
 
   dynamicColumnWidthFactory(): DynamicColumnWidthLogic {
-    return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY);
+    return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY, this.dir?.value);
   }
 
   private createPlugin(tokens: RequiredAngularTokens) {

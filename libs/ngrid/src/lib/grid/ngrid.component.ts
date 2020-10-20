@@ -21,7 +21,7 @@ import {
   ViewContainerRef,
   EmbeddedViewRef,
   NgZone,
-  isDevMode, forwardRef, Attribute, Inject,
+  isDevMode, forwardRef, Attribute, Optional,
 } from '@angular/core';
 
 import { Directionality } from '@angular/cdk/bidi';
@@ -35,16 +35,16 @@ import { PblNgridPaginatorKind } from '../paginator';
 import { DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
-import { PblColumn, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './columns';
-import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column-management';
-import { PblNgridCellContext, PblNgridMetaCellContext, ContextApi, PblNgridContextApi, PblNgridRowContext } from './context/index';
-import { PblNgridRegistryService } from './services/grid-registry.service';
+import { PblColumn, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './column/model';
+import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column/management';
+import { PblNgridCellContext, PblNgridMetaCellContext, PblNgridContextApi, PblNgridRowContext } from './context/index';
+import { PblNgridRegistryService } from './registry';
 import { PblNgridConfigService } from './services/config';
-import { DynamicColumnWidthLogic } from './col-width-logic/dynamic-column-width';
+import { DynamicColumnWidthLogic } from './column/width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblNgridMetaRowService } from './meta-rows/index';
 
-import { RowsApi } from './rows-api';
+import { RowsApi } from './row';
 import { createApis } from './api-factory';
 
 export function internalApiFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi; }
@@ -264,13 +264,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               private config: PblNgridConfigService,
               public registry: PblNgridRegistryService,
               @Attribute('id') public readonly id: string,
-              @Optional() public dir?: Directionality) {
+              @Optional() dir?: Directionality) {
     const gridConfig = config.get('table');
     this.showHeader = gridConfig.showHeader;
     this.showFooter = gridConfig.showFooter;
     this.noFiller = gridConfig.noFiller;
 
-    this._extApi = createApis(this, { ngZone, injector, vcRef, elRef, cdRef: cdr });
+    this._extApi = createApis(this, { ngZone, injector, vcRef, elRef, cdRef: cdr, dir });
     this._extApi.onConstructed(() => {
       this._viewport = this._extApi.viewport;
       this._cdkTable = this._extApi.cdkTable;

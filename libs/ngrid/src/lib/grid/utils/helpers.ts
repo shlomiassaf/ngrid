@@ -1,7 +1,6 @@
-import { PblColumnDefinition } from '../columns/types';
-import { PblColumn } from '../columns/column';
-import { PblMetaColumnStore } from '../column-management';
-import { StaticColumnWidthLogic } from '../col-width-logic/static-column-width';
+import { PblColumn, PblColumnDefinition } from '../column/model';
+import { PblMetaColumnStore } from '../column/management';
+import { StaticColumnWidthLogic } from '../column/width-logic/static-column-width';
 
 /**
  * Given an object (item) and a path, returns the value at the path

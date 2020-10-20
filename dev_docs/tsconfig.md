@@ -50,7 +50,7 @@ we need to point to the exact location (file) that the type is declared in.
 For example:
 
 ```ts
-declare module '@pebula/ngrid/lib/grid/columns/types' {
+declare module '@pebula/ngrid/lib/grid/column/model/types' {
   interface PblColumnTypeDefinitionDataMap {
     currencyFn: (row: Person) => string;
     countryNameDynamic: (row: Person) => string;

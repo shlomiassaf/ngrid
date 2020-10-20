@@ -1,4 +1,4 @@
-import { Injectable, ViewContainerRef, ElementRef, Injector, EmbeddedViewRef, TemplateRef } from '@angular/core';
+import { Injectable, ViewContainerRef, ElementRef, Injector, TemplateRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import {
   FlexibleConnectedPositionStrategy,
@@ -10,14 +10,13 @@ import {
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import { TemplatePortal, ComponentPortal } from '@angular/cdk/portal';
-import { RowContext } from '@angular/cdk/table';
 import { PblNgridPluginController, PblNgridComponent, PblNgridMultiTemplateRegistry } from '@pebula/ngrid';
 
 import { PblNgridOverlayPanelComponentExtension } from './component-registry-extension';
 import { PblNgridOverlayPanelRef } from './overlay-panel-ref';
 import { PblNgridOverlayPanelContext } from './overlay-panel-def';
 
-declare module '@pebula/ngrid/lib/grid/services/grid-registry.service' {
+declare module '@pebula/ngrid/lib/grid/registry/types' {
   interface PblNgridMultiRegistryMap {
     overlayPanels?:
       | PblNgridMultiTemplateRegistry<any, 'overlayPanels'>
