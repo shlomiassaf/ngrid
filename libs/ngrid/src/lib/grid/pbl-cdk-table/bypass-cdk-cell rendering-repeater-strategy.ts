@@ -1,15 +1,21 @@
 import { Inject, Injectable, IterableChangeRecord, IterableChanges, ViewContainerRef } from '@angular/core';
 import { _DisposeViewRepeaterStrategy, _ViewRepeaterItemChange, _ViewRepeaterItemChanged, _ViewRepeaterItemContext, _ViewRepeaterItemContextFactory, _ViewRepeaterItemValueResolver, _ViewRepeaterOperation } from '@angular/cdk/collections';
-import { CdkRowDef, RenderRow, BaseRowDef, RowContext, CdkTable, CdkCellOutlet } from '@angular/cdk/table';
+import { CdkRowDef, RenderRow, BaseRowDef, RowContext } from '@angular/cdk/table';
 
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 
 /**
+ * This is a noop strategy that simply prevents the CDK from rendering cells for each row and instead the logic for it is now
+ * handled within the row itself.
  *
- * @deprecated remove when and if PR https://github.com/angular/components/pull/20765 is accepted and the old version not supporting the solution is not supported by ngrid.
+ * This is very powerful and eliminate the need to use column declaration in strings.
+ * Since we have a column store we can take it directly from there.
+ *
+ * Additionally, a temp fix for a bug is applied (see `workaroundEnabled`
+ * Remove when and if PR https://github.com/angular/components/pull/20765 is accepted and the old version not supporting the solution is not supported by ngrid.
  */
 @Injectable()
-export class _TempDisposeViewRepeaterStrategy<T, R extends RenderRow<T>, C extends RowContext<T>> extends _DisposeViewRepeaterStrategy<T, R, C> {
+export class BypassCellRenderDisposeViewRepeaterStrategy<T, R extends RenderRow<T>, C extends RowContext<T>> extends _DisposeViewRepeaterStrategy<T, R, C> {
   private workaroundEnabled = false;
   private renderer: { _renderCellTemplateForItem: (rowDef: BaseRowDef, context: RowContext<T>) => void; };
   private _cachedRenderDefMap = new Map<number, CdkRowDef<T>>();
