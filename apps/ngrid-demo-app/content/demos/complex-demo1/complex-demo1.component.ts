@@ -17,7 +17,7 @@ const COUNTRY_GETTER = {
   data: undefined as any
 }
 
-declare module '@pebula/ngrid/lib/grid/columns/types' {
+declare module '@pebula/ngrid/lib/grid/column/model/types' {
   interface PblColumnTypeDefinitionDataMap {
     currencyFn: (row: Person) => string;
     countryNameDynamic: (row: Person) => string;

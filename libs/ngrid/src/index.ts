@@ -26,7 +26,7 @@ export {
   PblColumn, PblMetaColumn, PblColumnGroup, PblColumnFactory, COLUMN, columnFactory,
   isPblMetaColumn, isPblColumnGroup, isPblColumn,
 
-  PBL_NGRID_ROW_TEMPLATE, PblNgridRowComponent,
+  RowsApi, NGRID_CELL_FACTORY, PBL_NGRID_ROW_TEMPLATE, PblNgridRowComponent,
 
   PblNgridComponent,
   PblNgridRegistryService,
@@ -51,8 +51,6 @@ export {
   PblNgridFocusChangedEvent, PblNgridSelectionChangedEvent,
   PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext, PblNgridContextApi,
   CellReference, GridDataPoint,
-
-  RowsApi,
 } from './lib/grid/index';
 
 export {

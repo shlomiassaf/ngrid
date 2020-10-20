@@ -21,7 +21,7 @@ import {
   ViewContainerRef,
   EmbeddedViewRef,
   NgZone,
-  isDevMode, forwardRef, Attribute,
+  isDevMode, forwardRef, Attribute, Optional,
 } from '@angular/core';
 
 import { Directionality } from '@angular/cdk/bidi';
@@ -35,18 +35,16 @@ import { PblNgridPaginatorKind } from '../paginator';
 import { DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS } from '../data-source/index';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
-import { PblColumn, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './columns';
-import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column-management';
-import { PblNgridCellContext, PblNgridMetaCellContext, ContextApi, PblNgridContextApi, PblNgridRowContext } from './context/index';
-import { PblNgridRegistryService } from './services/grid-registry.service';
+import { PblColumn, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './column/model';
+import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column/management';
+import { PblNgridCellContext, PblNgridMetaCellContext, PblNgridContextApi, PblNgridRowContext } from './context/index';
+import { PblNgridRegistryService } from './registry';
 import { PblNgridConfigService } from './services/config';
-import { DynamicColumnWidthLogic, DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY } from './col-width-logic/dynamic-column-width';
+import { DynamicColumnWidthLogic } from './column/width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblNgridMetaRowService } from './meta-rows/index';
 
-import { bindToDataSource } from './bind-to-datasource';
-import './bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
-import { RowsApi } from './rows-api';
+import { RowsApi } from './row';
 import { createApis } from './api-factory';
 
 export function internalApiFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi; }
@@ -266,13 +264,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               private config: PblNgridConfigService,
               public registry: PblNgridRegistryService,
               @Attribute('id') public readonly id: string,
-              @Optional() public dir?: Directionality) {
+              @Optional() dir?: Directionality) {
     const gridConfig = config.get('table');
     this.showHeader = gridConfig.showHeader;
     this.showFooter = gridConfig.showFooter;
     this.noFiller = gridConfig.noFiller;
 
-    this._extApi = createApis(this, { ngZone, injector, vcRef, elRef, cdRef: cdr });
+    this._extApi = createApis(this, { ngZone, injector, vcRef, elRef, cdRef: cdr, dir });
     this._extApi.onConstructed(() => {
       this._viewport = this._extApi.viewport;
       this._cdkTable = this._extApi.cdkTable;
@@ -369,6 +367,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   }
 
   ngOnDestroy(): void {
+    this._store.dispose();
     const destroy = () => {
       this._plugin.destroy();
       if (this.viewport) {
@@ -417,7 +416,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
     let column: PblColumn;
     if (typeof columnOrAlias === 'string') {
-      column = this._store.columns.find( c => c.alias ? c.alias === columnOrAlias : (c.sort && c.id === columnOrAlias) );
+      column = this._store.visibleColumns.find( c => c.alias ? c.alias === columnOrAlias : (c.sort && c.id === columnOrAlias) );
       if (!column && isDevMode()) {
         console.warn(`Could not find column with alias "${columnOrAlias}".`);
         return;
@@ -454,7 +453,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       if (Array.isArray(columns) && typeof columns[0] === 'string') {
         columnInstances = [];
         for (const colId of columns) {
-          const column = this._store.columns.find( c => c.alias ? c.alias === colId : (c.id === colId) );
+          const column = this._store.visibleColumns.find( c => c.alias ? c.alias === colId : (c.id === colId) );
           if (!column && isDevMode()) {
             console.warn(`Could not find column with alias ${colId} "${colId}".`);
             return;
@@ -634,7 +633,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    * The final width represent a static width, it is the value as set in the definition (except column without width, where the calculated global width is set).
    */
   resetColumnsWidth(): void {
-    resetColumnWidths(this._store.getStaticWidth(), this._store.columns, this._store.metaColumns);
+    resetColumnWidths(this._store.getStaticWidth(), this._store.visibleColumns, this._store.metaColumns);
   }
 
   /**
@@ -655,7 +654,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       // it is static, representing the initial state.
       // Only columns hold their group owners.
       // TODO: find way to improve iteration
-      const colSizeInfos = this._store.columns.filter( c => !c.hidden && c.isInGroup(g)).map( c => c.sizeInfo );
+      const colSizeInfos = this._store.visibleColumns.filter( c => !c.hidden && c.isInGroup(g)).map( c => c.sizeInfo );
       if (colSizeInfos.length > 0) {
         const groupWidth = dynamicWidthLogic.addGroup(colSizeInfos);
         g.minWidth = groupWidth;
@@ -669,7 +668,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
   resizeColumns(columns?: PblColumn[]): void {
     if (!columns) {
-      columns = this._store.columns;
+      columns = this._store.visibleColumns;
     }
 
     // protect from per-mature resize.
@@ -691,7 +690,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
     // if the max lock state has changed we need to update re-calculate the static width's again.
     if (rowWidth.maxWidthLockChanged) {
-      resetColumnWidths(this._store.getStaticWidth(), this._store.columns, this._store.metaColumns);
+      resetColumnWidths(this._store.getStaticWidth(), this._store.visibleColumns, this._store.metaColumns);
       this.resizeColumns(columns);
       return;
     }
@@ -752,10 +751,10 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       return parseInt(height, 10);
     } else if (this._vcRefBeforeContent) {
       rowElement = this._vcRefBeforeContent.length > 0
-        ? (this._vcRefBeforeContent.get(this._vcRefBeforeContent.length - 1) as EmbeddedViewRef<any>).rootNodes[0]
+        ? (this._vcRefBeforeContent.get(0) as EmbeddedViewRef<any>).rootNodes[0]
         : this._vcRefBeforeContent.element.nativeElement
       ;
-      rowElement = rowElement.nextElementSibling as HTMLElement;
+      rowElement = rowElement.previousElementSibling as HTMLElement;
       rowElement.style.display = '';
       const height = getComputedStyle(rowElement).height;
       rowElement.style.display = 'none';
@@ -812,7 +811,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       .subscribe( (args: [ResizeObserverEntry[], ResizeObserver]) => {
         if (skipValue === 0) {
           skipValue = 1;
-          const columns = this._store.columns;
+          const columns = this._store.visibleColumns;
           columns.forEach( c => c.sizeInfo.updateSize() );
         }
         this.onResize(args[0]);

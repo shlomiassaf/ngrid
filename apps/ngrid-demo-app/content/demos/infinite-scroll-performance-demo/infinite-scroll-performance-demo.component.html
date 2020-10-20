@@ -25,12 +25,8 @@
             [ngridCellClass]="value < 0 ? col.type.data.pbl : col.type.data.pos">{{ value | currency:col.type.data.meta.currency(row):'symbol':col.type.data.format }}</div>
       <div *pblNgridCellTypeDef="'flagAndCountry'; col as col; row as row">{{ col.type.data.flagAndCountry(row) }}</div>
 
-      <div *pblNgridCellDef="'id'; value as value;">
-        <mat-spinner *ngIf="!value" diameter="24"></mat-spinner>
-        <span *ngIf="value">{{value}}</span>
-      </div>
-
-      <pbl-ngrid-row *pblNgridInfiniteVirtualRowRef="let row; columns: ['id']; gridInstance as gridInstance" [grid]="gridInstance" [row]="row">
+      <pbl-ngrid-row in *pblNgridInfiniteVirtualRowRef="let row; gridInstance as gridInstance" class="pbl-ngrid-infinite-virtual-row" [grid]="gridInstance" [infiniteRow]="row">
+         <mat-spinner diameter="24"></mat-spinner>
       </pbl-ngrid-row>
 
     </pbl-ngrid>

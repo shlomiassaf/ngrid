@@ -4,16 +4,14 @@ import {
   Input,
   Inject,
   ElementRef,
-  OnInit,
   OnDestroy, Optional,
   ViewEncapsulation,
   ViewContainerRef,
 } from '@angular/core';
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
-import { CDK_ROW_TEMPLATE, CdkRow } from '@angular/cdk/table';
+import { CdkRow } from '@angular/cdk/table';
 
-import { PblNgridPluginController, PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN, utils } from '@pebula/ngrid';
-
+import { PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN, utils, PBL_NGRID_ROW_TEMPLATE } from '@pebula/ngrid';
 import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY } from './detail-row-plugin';
 
 @Component({
@@ -25,7 +23,7 @@ import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY 
     '[attr.tabindex]': 'grid?.rowFocus',
     '(keydown)': 'handleKeydown($event)'
   },
-  template: CDK_ROW_TEMPLATE,
+  template: PBL_NGRID_ROW_TEMPLATE,
   styles: [ `.pbl-row-detail-parent { position: relative; cursor: pointer; }` ],
   providers: [
     { provide: CdkRow, useExisting: PblNgridDetailRowComponent }
@@ -33,7 +31,7 @@ import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY 
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridDetailRowComponent extends PblNgridRowComponent implements OnInit, OnDestroy {
+export class PblNgridDetailRowComponent extends PblNgridRowComponent implements OnDestroy {
 
   get expended(): boolean {
     return this.opened;
@@ -45,40 +43,16 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   private opened = false;
   private plugin: PblNgridDetailRowPluginDirective<any>;
 
-  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: PblNgridExtensionApi<any>,
+  constructor(@Optional() @Inject(EXT_API_TOKEN) private extApi: PblNgridExtensionApi<any>,
               el: ElementRef<HTMLElement>,
               private vcRef: ViewContainerRef) {
     super(extApi, el);
   }
 
-  ngOnInit(): void {
-    const controller = PblNgridPluginController.find(this.extApi.grid);
-    this.plugin = controller.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
-    this.plugin.addDetailRow(this);
-    const tradeEvents = controller.getPlugin('targetEvents');
-    tradeEvents.cellClick
-      .pipe(utils.unrx(this))
-      .subscribe( event => {
-        if (event.type === 'data' && event.row === this.context.$implicit) {
-          const { excludeToggleFrom } = this.plugin;
-          if (!excludeToggleFrom || !excludeToggleFrom.some( c => event.column.id === c )) {
-            this.toggle();
-          }
-        }
-      });
-
-    tradeEvents.rowClick
-      .pipe(utils.unrx(this))
-      .subscribe( event => {
-        if (!event.root && event.type === 'data' && event.row === this.context.$implicit) {
-          this.toggle();
-        }
-      });
-  }
-
   ngOnDestroy(): void {
     utils.unrx.kill(this);
     this.plugin.removeDetailRow(this);
+    super.ngOnDestroy();
   }
 
   updateRow(): void {
@@ -130,6 +104,32 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
         this.toggle();
       }
     }
+  }
+
+  protected setGrid(extApi?: PblNgridExtensionApi) {
+    super.setGrid(extApi);
+
+    this.plugin = extApi.pluginCtrl.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
+    this.plugin.addDetailRow(this);
+    const tradeEvents = extApi.pluginCtrl.getPlugin('targetEvents');
+    tradeEvents.cellClick
+      .pipe(utils.unrx(this))
+      .subscribe( event => {
+        if (event.type === 'data' && event.row === this.context.$implicit) {
+          const { excludeToggleFrom } = this.plugin;
+          if (!excludeToggleFrom || !excludeToggleFrom.some( c => event.column.id === c )) {
+            this.toggle();
+          }
+        }
+      });
+
+    tradeEvents.rowClick
+      .pipe(utils.unrx(this))
+      .subscribe( event => {
+        if (!event.root && event.type === 'data' && event.row === this.context.$implicit) {
+          this.toggle();
+        }
+      });
   }
 
   private createEvent(): PblDetailsRowToggleEvent<any> {

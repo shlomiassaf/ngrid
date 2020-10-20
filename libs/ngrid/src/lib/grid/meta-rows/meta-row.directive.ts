@@ -1,6 +1,6 @@
 import { Directive, Input, ElementRef, OnDestroy, Attribute } from '@angular/core';
 
-import { PblMetaRowDefinitions } from '../columns/types';
+import { PblMetaRowDefinitions } from '../column/model/types';
 import { PblNgridMetaRowService } from './meta-row.service';
 
 @Directive({

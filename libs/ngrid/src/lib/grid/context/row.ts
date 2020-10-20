@@ -1,6 +1,6 @@
 import { RowContext } from '@angular/cdk/table';
 
-import { PblColumn } from '../columns/column';
+import { PblColumn } from '../column/model';
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridComponent } from '../ngrid.component';
 import { CellContextState, RowContextState, PblNgridRowContext } from './types';

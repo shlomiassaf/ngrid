@@ -11,7 +11,7 @@ import { CdkRowDef } from '@angular/cdk/table';
 
 import { PblNgridRegistryService, PblNgridSingleTemplateRegistry, PblNgridRowContext } from '@pebula/ngrid';
 
-declare module '@pebula/ngrid/lib/grid/services/grid-registry.service' {
+declare module '@pebula/ngrid/lib/grid/registry/types' {
   interface PblNgridSingleRegistryMap {
     detailRowParent?: PblNgridDetailRowParentRefDirective<any>;
     detailRow?: PblNgridDetailRowDefDirective;

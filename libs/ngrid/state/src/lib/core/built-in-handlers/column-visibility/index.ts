@@ -1,7 +1,5 @@
-import { PblColumn } from '@pebula/ngrid';
 import { createStateChunkHandler } from '../../handling';
 import { stateVisor } from '../../state-visor';
-import { PblNgridStateLoadOptions } from '../../models/index';
 
 export function registerColumnVisibilityHandlers() {
   stateVisor.registerRootChunkSection(

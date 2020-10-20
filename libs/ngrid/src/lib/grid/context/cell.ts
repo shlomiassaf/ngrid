@@ -1,8 +1,7 @@
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridComponent } from '../ngrid.component';
 import { CellContextState, PblNgridCellContext, PblNgridMetaCellContext, PblNgridRowContext } from './types';
-import { PblColumn } from '../columns/column';
-import { PblMetaColumn } from '../columns/meta-column';
+import { PblColumn, PblMetaColumn } from '../column/model';
 import { PblRowContext } from './row';
 
 export class MetaCellContext<T = any, TCol extends PblMetaColumn | PblColumn = PblMetaColumn> implements PblNgridMetaCellContext<T, TCol> {
@@ -72,8 +71,8 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
     return { editing: false, focused: false, selected: false };
   }
 
-  clone(): PblCellContext<T> {
-    const ctx = PblCellContext.create<T>(this._rowContext, this.col, this.extApi);
+  clone(col?: PblColumn): PblCellContext<T> {
+    const ctx = PblCellContext.create<T>(this._rowContext, col || this.col, this.extApi);
     ctx.fromState(this.getState(), this._rowContext, true);
     return ctx;
   }
