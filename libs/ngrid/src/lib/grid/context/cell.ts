@@ -1,8 +1,7 @@
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridComponent } from '../ngrid.component';
 import { CellContextState, PblNgridCellContext, PblNgridMetaCellContext, PblNgridRowContext } from './types';
-import { PblColumn } from '../columns/column';
-import { PblMetaColumn } from '../columns/meta-column';
+import { PblColumn, PblMetaColumn } from '../column/model';
 import { PblRowContext } from './row';
 
 export class MetaCellContext<T = any, TCol extends PblMetaColumn | PblColumn = PblMetaColumn> implements PblNgridMetaCellContext<T, TCol> {

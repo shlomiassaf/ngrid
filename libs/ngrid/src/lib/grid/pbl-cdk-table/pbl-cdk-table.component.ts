@@ -18,14 +18,14 @@ import {
 import { DOCUMENT } from '@angular/common';
 
 import { Platform } from '@angular/cdk/platform';
+import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } from '@angular/cdk/collections';
 import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef, RowContext, CDK_TABLE, _COALESCED_STYLE_SCHEDULER, _CoalescedStyleScheduler, RenderRow } from '@angular/cdk/table';
 import { Directionality } from '@angular/cdk/bidi';
 
 import { PblNgridComponent } from '../ngrid.component';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
-import { PblNgridColumnDef } from '../directives/column-def';
+import { PblNgridColumnDef } from '../column/directives/column-def';
 import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
-import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } from '@angular/cdk/collections';
 import { _TempDisposeViewRepeaterStrategy } from './cdk-20765-temp-workaround';
 
 /**

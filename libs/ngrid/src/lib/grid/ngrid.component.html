@@ -73,7 +73,8 @@
       <!-- HEADER-RECORD-FOOTER CELL DEF -->
 
       <!-- GRID RECORD ROW DEFINITION TEMPLATES -->
-      <pbl-ngrid-row *cdkRowDef="let row; columns: columnApi.columnIds;" [row]="row"></pbl-ngrid-row>
+      <!-- We dont need columns because we implement them internally -->
+      <pbl-ngrid-row *cdkRowDef="let row; columns: [];" [row]="row"></pbl-ngrid-row>
       <!-- GRID RECORD ROW DEFINITION TEMPLATES -->
     </pbl-cdk-table>
   </pbl-cdk-virtual-scroll-viewport>
@@ -82,6 +83,7 @@
   <ng-container #beforeContent>
     <!-- This dummy row is used to extract an initial row height -->
     <div role="row" row="" class="pbl-ngrid-row cdk-row" style="display: none;"></div>
+    <pbl-ngrid-row row style="display: none"></pbl-ngrid-row>
   </ng-container>
   <ng-content></ng-content>
   <ng-container #afterContent></ng-container>

@@ -24,15 +24,14 @@ export function registerColumnOrderHandlers() {
       const { extApi, grid } = ctx;
       let lastMove: [PblColumn, PblColumn];
 
-      const { visibleColumnIds } = grid.columnApi;
-      if (columnOrder && columnOrder.length === visibleColumnIds.length) {
+      if (columnOrder?.length === grid.columnApi.visibleColumnIds.length) {
         for (let i = 0, len = columnOrder.length; i < len; i++) {
-          if (columnOrder[i] !== visibleColumnIds[i]) {
+          if (columnOrder[i] !== grid.columnApi.visibleColumnIds[i]) {
             const column = grid.columnApi.findColumn(columnOrder[i]);
             if (!column) {
               return;
             }
-            const anchor = grid.columnApi.findColumn(visibleColumnIds[i]);
+            const anchor = grid.columnApi.findColumn(grid.columnApi.visibleColumnIds[i]);
             lastMove = [column, anchor];
             grid.columnApi.moveColumn(column, anchor, true);
             extApi.columnStore.updateGroups();

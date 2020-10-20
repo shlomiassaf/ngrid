@@ -2,7 +2,7 @@
 import { Directive, TemplateRef } from '@angular/core';
 import { PblNgridComponent, PblNgridRegistryService, PblNgridSingleTemplateRegistry } from '@pebula/ngrid';
 
-declare module '@pebula/ngrid/lib/grid/services/grid-registry.service' {
+declare module '@pebula/ngrid/lib/grid/registry/types' {
   interface PblNgridSingleRegistryMap {
     blocker?: PblNgridBlockUiDefDirective;
   }

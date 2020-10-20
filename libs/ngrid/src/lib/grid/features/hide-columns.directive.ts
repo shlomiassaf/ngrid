@@ -1,6 +1,6 @@
 import { Directive, Input, DoCheck, IterableDiffer, IterableDiffers } from '@angular/core';
 import { PblNgridPluginController } from '../../ext/plugin-control';
-import { PblColumnStore } from '../column-management';
+import { PblColumnStore } from '../column/management';
 
 @Directive({
   selector: 'pbl-ngrid[hideColumns]'

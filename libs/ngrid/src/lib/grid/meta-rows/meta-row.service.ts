@@ -4,7 +4,7 @@ import { auditTime, filter, take, debounceTime } from 'rxjs/operators';
 import { Injectable, Inject } from '@angular/core';
 
 import { PblNgridExtensionApi, EXT_API_TOKEN } from '../../ext/grid-ext-api';
-import { PblMetaRowDefinitions } from '../columns/types';
+import { PblMetaRowDefinitions } from '../column/model/types';
 import { PblMetaRowDirective } from './meta-row.directive';
 
 function metaRowSectionFactory(): MetaRowSection {
