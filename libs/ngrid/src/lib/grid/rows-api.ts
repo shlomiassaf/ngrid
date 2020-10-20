@@ -1,13 +1,37 @@
-import { EmbeddedViewRef, ViewContainerRef, NgZone } from '@angular/core';
+import { EmbeddedViewRef, ViewContainerRef, NgZone, ComponentFactory, InjectionToken } from '@angular/core';
 import { PblNgridExtensionApi } from '../ext/grid-ext-api';
+import { PblNgridCellDirective } from './directives/cell';
+import { PblNgridRowComponent } from './directives/row';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 
-export class RowsApi<T = any> {
+export const NGRID_CELL_FACTORY = new InjectionToken<ComponentFactory<PblNgridCellDirective>>('ComponentFactory<PblNgridCellDirective>');
+
+export interface RowsApi<T = any> {
+  cdkTable: PblCdkTableComponent<T>;
+
+  syncRows(rowType?: 'all' | boolean, detectChanges?: boolean): void;
+  syncRows(rowType: 'header' | 'data' | 'footer', detectChanges: boolean, ...rows: number[]): void;
+  syncRows(rowType: 'header' | 'data' | 'footer', ...rows: number[]): void;
+}
+
+export class PblRowsApi<T = any> implements RowsApi<T> {
 
   cdkTable: PblCdkTableComponent<T>;
 
-  constructor(private readonly extApi: PblNgridExtensionApi<T>, private readonly zone: NgZone) {
+  private dataRows = new Set<PblNgridRowComponent<T>>();
+
+  constructor(private readonly extApi: PblNgridExtensionApi<T>,
+              private readonly zone: NgZone,
+              public readonly _factory: ComponentFactory<PblNgridCellDirective>) {
     extApi.onConstructed(() => this.cdkTable = extApi.cdkTable);
+  }
+
+  addRow(row: PblNgridRowComponent<T>) {
+    this.dataRows.add(row);
+  }
+
+  removeRow(row: PblNgridRowComponent<T>) {
+    this.dataRows.delete(row);
   }
 
   /**

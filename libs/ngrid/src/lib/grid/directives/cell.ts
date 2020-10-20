@@ -13,9 +13,9 @@ import {
   ViewChild,
   NgZone,
   EmbeddedViewRef,
-  Input,
+  TemplateRef,
 } from '@angular/core';
-import { CdkHeaderCell, CdkCell, CdkFooterCell } from '@angular/cdk/table';
+import { CdkHeaderCell, CdkFooterCell, RowContext } from '@angular/cdk/table';
 
 import { unrx } from '../utils';
 import { PblNgridComponent } from '../ngrid.component';
@@ -29,7 +29,20 @@ import { PblNgridDataHeaderExtensionContext, PblNgridMultiComponentRegistry, Pbl
 const HEADER_GROUP_CSS = `pbl-header-group-cell`;
 const HEADER_GROUP_PLACE_HOLDER_CSS = `pbl-header-group-cell-placeholder`;
 
-function initCellElement(el: HTMLElement, column: COLUMN): void {
+function initCellElement(el: HTMLElement, column: COLUMN, prev?: COLUMN): void {
+  if (prev) {
+    el.classList.remove(uniqueColumnCss(prev.columnDef));
+    if (prev.type) {
+      el.classList.remove(uniqueColumnTypeCss(prev.type));
+    }
+    if (prev.css) {
+      const css = prev.css.split(' ');
+      for (const c of css) {
+        el.classList.remove(c);
+      }
+    }
+  }
+
   el.classList.add(uniqueColumnCss(column.columnDef));
   if (column.type) {
     el.classList.add(uniqueColumnTypeCss(column.type));
@@ -42,7 +55,10 @@ function initCellElement(el: HTMLElement, column: COLUMN): void {
   }
 }
 
-function initDataCellElement(el: HTMLElement, column: PblColumn): void {
+function initDataCellElement(el: HTMLElement, column: PblColumn, prev?: PblColumn): void {
+  if (prev?.editable && prev.editorTpl) {
+    el.classList.remove(COLUMN_EDITABLE_CELL_CLASS);
+  }
   if (column.editable && column.editorTpl) {
     el.classList.add(COLUMN_EDITABLE_CELL_CLASS);
   }
@@ -210,25 +226,25 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkH
 }
 
 /** Cell template container that adds the right classes and role. */
-@Directive({
+@Component({
   selector: 'pbl-ngrid-cell',
+  template: `<ng-container *ngTemplateOutlet="template; context: cellCtx"></ng-container>`,
   host: {
     'class': 'pbl-ngrid-cell',
     'role': 'gridcell',
+    '[attr.id]': 'column?.id',
+    '[attr.tabindex]': 'column?.columnDef?.grid.cellFocus'
   },
   exportAs: 'pblNgridCell',
 })
-export class PblNgridCellDirective extends CdkCell implements DoCheck, OnDestroy {
+export class PblNgridCellDirective implements DoCheck, OnDestroy {
 
-  @Input() set rowCtx(value: PblRowContext<any>) {
-    if (value !== this._rowCtx) {
-      this._rowCtx = value;
-      this.ngDoCheck();
-    }
-  }
+  public column: PblColumn;
+  cellCtx: PblCellContext | undefined;
+  template: TemplateRef<any>;
 
   private _rowCtx: PblRowContext<any>;
-  cellCtx: PblCellContext | undefined;
+  private __rowCtx: RowContext<any>;
 
   /**
    * The position of the column def among all columns regardless of visibility.
@@ -238,28 +254,51 @@ export class PblNgridCellDirective extends CdkCell implements DoCheck, OnDestroy
   private focused = false;
   private selected = false;
 
-  constructor(private colDef: PblNgridColumnDef<PblColumn>, elementRef: ElementRef) {
-    super(colDef, elementRef);
-    this.colIndex = this.colDef.grid.columnApi.indexOf(colDef.column as PblColumn);
-    this.el = elementRef.nativeElement;
-    colDef.applyWidth(this.el);
-    initCellElement(this.el, colDef.column);
-    initDataCellElement(this.el, colDef.column);
+  constructor(private elementRef: ElementRef) {
+    this.el = this.elementRef.nativeElement;
+  }
 
+  syncColumn() {
+    if (this.column) {
+      this.colIndex = this.column.columnDef.grid.columnApi.indexOf(this.column);
+    }
+  }
 
-    /*  Apply width changes to this data cell
-        We don't update "update" events because they are followed by a resize event which will update the absolute value (px) */
-    colDef.widthChange
-      .pipe(
-        filter( event => event.reason !== 'update'),
-        unrx(this),
-      )
-      .subscribe(event => this.colDef.applyWidth(this.el));
+  setContext(context: RowContext<any>) {
+    this.__rowCtx = context;
+  }
+
+  setColumn(column: PblColumn) {
+    const prev = this.column;
+    if (prev !== column) {
+      if (prev) {
+        unrx.kill(this, prev);
+      }
+
+      this.column = column;
+      this.colIndex = this.column.columnDef.grid.columnApi.indexOf(column);
+
+      column.columnDef.applyWidth(this.el);
+      initCellElement(this.el, column, prev);
+      initDataCellElement(this.el, column, prev);
+
+      /*  Apply width changes to this data cell
+          We don't update "update" events because they are followed by a resize event which will update the absolute value (px) */
+      column.columnDef.widthChange
+        .pipe(
+          filter( event => event.reason !== 'update'),
+          unrx(this, column),
+        )
+        .subscribe(event => this.column.columnDef.applyWidth(this.el));
+    }
   }
 
   ngDoCheck(): void {
+    this._rowCtx = this.__rowCtx?.pblRowContext as any;
     if (this._rowCtx) {
       const cellContext = this.cellCtx = this._rowCtx.cell(this.colIndex);
+
+      this.template = cellContext.editing ? this.column.editorTpl : this.column.cellTpl;
 
       if (cellContext.focused !== this.focused) {
 

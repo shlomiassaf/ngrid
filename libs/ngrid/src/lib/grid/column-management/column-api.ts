@@ -23,10 +23,13 @@ export class ColumnApi<T> {
     return instance;
   }
 
-  get visibleColumnIds(): string[] { return this.store.columnIds; }
+  get visibleColumnIds(): string[] { return this.store.visibleColumnIds; }
   get hiddenColumnIds(): string[] { return this.store.hiddenColumnIds; }
-  get visibleColumns(): PblColumn[] { return this.store.columns; }
+  get visibleColumns(): PblColumn[] { return this.store.visibleColumns; }
   get columns(): PblColumn[] { return this.store.allColumns; }
+  get columnsIds(): string[] { return this.store.columnIds; }
+  get visibleChanged$() { return this.store.visibleChanged$; }
+
 
   get totalColumnWidthChange(): Observable<number> {
     if (!this._totalColumnWidthChange) {
@@ -50,7 +53,7 @@ export class ColumnApi<T> {
    * Returns the `PblColumn` at the specified index from the list of rendered columns (i.e. not hidden).
    */
   findColumnAt(renderColumnIndex: number): PblColumn | undefined {
-    return this.store.columns[renderColumnIndex];
+    return this.store.visibleColumns[renderColumnIndex];
   }
 
   /**
@@ -72,7 +75,7 @@ export class ColumnApi<T> {
   */
   renderIndexOf(column: string | PblColumn): number {
     const c = typeof column === 'string' ? this.findColumn(column) : column;
-    return this.store.columns.indexOf(c);
+    return this.store.visibleColumns.indexOf(c);
   }
 
   /**
@@ -285,7 +288,7 @@ export class ColumnApi<T> {
   }
 
   private afterColumnPositionChange(): void {
-    this.extApi.contextApi.clear();
+    this.extApi.contextApi.clear(true);
     this.store.updateGroups();
     this.grid.resetColumnsWidth();
     this.grid.resizeColumns();
