@@ -24,24 +24,23 @@ export function registerColumnOrderHandlers() {
       const { extApi, grid } = ctx;
       let lastMove: [PblColumn, PblColumn];
 
-      if (columnOrder?.length === grid.columnApi.visibleColumnIds.length) {
+      if (columnOrder?.length === grid.columnApi.visibleColumns.length) {
         for (let i = 0, len = columnOrder.length; i < len; i++) {
-          if (columnOrder[i] !== grid.columnApi.visibleColumnIds[i]) {
+          const anchor = grid.columnApi.visibleColumns[i];
+          if (columnOrder[i] !== anchor.id) {
             const column = grid.columnApi.findColumn(columnOrder[i]);
             if (!column) {
               return;
             }
-            const anchor = grid.columnApi.findColumn(grid.columnApi.visibleColumnIds[i]);
             lastMove = [column, anchor];
-            grid.columnApi.moveColumn(column, anchor, true);
-            extApi.columnStore.updateGroups();
+            grid.columnApi.moveColumn(column, anchor);
           }
         }
       }
       // With this revert/redo of the last move we just trigger a redraw.
       if (lastMove) {
-        grid.columnApi.moveColumn(lastMove[1], lastMove[0], true);
-        grid.columnApi.moveColumn(lastMove[0], lastMove[1], (ctx.options as PblNgridStateLoadOptions).avoidRedraw);
+        grid.columnApi.moveColumn(lastMove[1], lastMove[0]);
+        grid.columnApi.moveColumn(lastMove[0], lastMove[1]);
       }
     })
     .register();

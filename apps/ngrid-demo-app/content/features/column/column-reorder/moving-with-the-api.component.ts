@@ -18,6 +18,7 @@ export class MovingWithTheApiExample {
     .table(
       { prop: 'id', width: '40px' },
       { prop: 'name' },
+      { prop: 'language', width: '120px' },
       { prop: 'gender', width: '50px' },
       { prop: 'birthdate', type: 'date' }
     )

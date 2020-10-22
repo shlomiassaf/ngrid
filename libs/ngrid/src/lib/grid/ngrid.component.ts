@@ -51,6 +51,15 @@ export function internalApiFactory(grid: { _extApi: PblNgridExtensionApi; }) { r
 export function pluginControllerFactory(grid: { _plugin: PblNgridPluginContext; }) { return grid._plugin.controller; }
 export function metaRowServiceFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi.metaRowService; }
 
+declare module '../ext/types' {
+  interface OnPropChangedSources {
+    grid: PblNgridComponent;
+  }
+  interface OnPropChangedProperties {
+    grid: Pick<PblNgridComponent, 'showFooter' | 'showHeader' | 'rowClassUpdate' | 'rowClassUpdateFreq'>;
+  }
+}
+
 @Component({
   selector: 'pbl-ngrid',
   templateUrl: './ngrid.component.html',
@@ -84,7 +93,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    */
   @Input() get showHeader(): boolean { return this._showHeader; };
   set showHeader(value: boolean) {
-    this._showHeader = coerceBooleanProperty(value);
+    this._extApi.notifyPropChanged(this, 'showHeader', this._showHeader, this._showHeader = coerceBooleanProperty(value));
   }
   _showHeader: boolean;
 
@@ -94,7 +103,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    */
   @Input() get showFooter(): boolean { return this._showFooter; };
   set showFooter(value: boolean) {
-    this._showFooter = coerceBooleanProperty(value);
+    this._extApi.notifyPropChanged(this, 'showFooter', this._showFooter, this._showFooter = coerceBooleanProperty(value));
   }
   _showFooter: boolean;
 
@@ -233,7 +242,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
 
-  get metaColumnIds(): PblColumnStore['metaColumnIds'] { return this._store.metaColumnIds; }
+  get metaHeaderRows() { return this._store.metaHeaderRows; }
+  get metaFooterRows() { return this._store.metaFooterRows; }
   get metaColumns(): PblColumnStore['metaColumns'] { return this._store.metaColumns; }
   get columnRowDef() { return { header: this._store.headerColumnDef, footer: this._store.footerColumnDef }; }
   /**
@@ -265,12 +275,12 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               public registry: PblNgridRegistryService,
               @Attribute('id') public readonly id: string,
               @Optional() dir?: Directionality) {
+    this._extApi = createApis(this, { ngZone, injector, vcRef, elRef, cdRef: cdr, dir });
     const gridConfig = config.get('table');
     this.showHeader = gridConfig.showHeader;
     this.showFooter = gridConfig.showFooter;
     this.noFiller = gridConfig.noFiller;
 
-    this._extApi = createApis(this, { ngZone, injector, vcRef, elRef, cdRef: cdr, dir });
     this._extApi.onConstructed(() => {
       this._viewport = this._extApi.viewport;
       this._cdkTable = this._extApi.cdkTable;
@@ -596,16 +606,16 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
         Invalidating the store will result in new `PblColumn` instances (cloned or completely new) held inside a new array (all arrays in the store are re-created on invalidate)
         New array and new instances will also result in new directive instances of `PblNgridColumnDef` for every column.
 
-        Each data row has data cells with the `PblNgridCellDirective` directive (`pbl-ngrid-cell`).
-        `PblNgridCellDirective` has a reference to `PblNgridColumnDef` through dependency injection, i.e. it will not update through change detection!
+        Each data row has data cells with the `PblNgridCellComponent` directive (`pbl-ngrid-cell`).
+        `PblNgridCellComponent` has a reference to `PblNgridColumnDef` through dependency injection, i.e. it will not update through change detection!
 
         Now, the problem:
         The `CdkTable` will cache rows and their cells, reusing them for performance.
         This means that the `PblNgridColumnDef` instance inside each cell will not change.
         So, creating new columns and columnDefs will result in stale cells with reference to dead instances of `PblColumn` and `PblNgridColumnDef`.
 
-        One solution is to refactor `PblNgridCellDirective` to get the `PblNgridColumnDef` through data binding.
-        While this will work it will put more work on each cell while doing CD and will require complex logic to handle each change because `PblNgridCellDirective`
+        One solution is to refactor `PblNgridCellComponent` to get the `PblNgridColumnDef` through data binding.
+        While this will work it will put more work on each cell while doing CD and will require complex logic to handle each change because `PblNgridCellComponent`
         also create a context which has reference to a column thus a new context is required.
         Keeping track for all references will be difficult and bugs are likely to occur, which are hard to track.
 

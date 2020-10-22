@@ -9,7 +9,6 @@ import {
   NgModuleRef,
   ModuleWithProviders,
   Self,
-  ComponentFactoryResolver,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -23,15 +22,16 @@ import {
   PblCdkTableComponent,
   PblNgridComponent,
 
-  PblNgridRowComponent,
+  PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
   PblNgridMetaRowContainerComponent, PblMetaRowDirective,
   PblNgridColumnDef,
   PblNgridHeaderCellDefDirective,
   PblNgridFooterCellDefDirective,
   PblNgridCellDefDirective, PblNgridEditorCellDefDirective,
   PblNgridHeaderCellComponent,
-  PblNgridCellDirective,
-  PblNgridFooterCellDirective,
+  PblNgridCellComponent,
+  PblNgridFooterCellComponent,
+  PblNgridMetaCellComponent,
 
   PblNgridCellStyling,
   PblNgridOuterSectionDirective,
@@ -46,12 +46,11 @@ import {
   PblNgridCellEditAutoFocusDirective,
 
   PblNgridConfigService,
-  NGRID_CELL_FACTORY,
 } from './grid/index';
+import { PROVIDERS } from './di-factories';
 
 export const COMMON_TABLE_TEMPLATE_INIT = new InjectionToken('COMMON TABLE TEMPLATE INIT');
 
-export function ngridCellFactory(cfr: ComponentFactoryResolver) { return cfr.resolveComponentFactory(PblNgridCellDirective); }
 
 export interface CommonTemplateInit {
   component: Type<any>;
@@ -78,7 +77,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridMetaRowContainerComponent, PblMetaRowDirective,
     PblCdkTableComponent,
     PblNgridColumnDef,
-    PblNgridRowComponent,
+    PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
     PblNgridCellStyling,
     PblNgridOuterSectionDirective,
     PblNgridHeaderExtensionRefDirective,
@@ -88,8 +87,9 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridFooterCellDefDirective,
     PblNgridCellDefDirective, PblNgridEditorCellDefDirective,
     PblNgridHeaderCellComponent,
-    PblNgridCellDirective,
-    PblNgridFooterCellDirective,
+    PblNgridCellComponent,
+    PblNgridFooterCellComponent,
+    PblNgridMetaCellComponent,
 
     PblNgridHideColumns,
     PblColumnSizeObserver,
@@ -100,14 +100,10 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridComponent,
   ],
   providers: [
-    {
-      provide: NGRID_CELL_FACTORY,
-      useFactory: ngridCellFactory,
-      deps: [ComponentFactoryResolver],
-    },
+    ...PROVIDERS,
   ],
   exports: [
-    PblNgridRowComponent,
+    PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
     PblNgridCellStyling,
     PblNgridOuterSectionDirective,
     PblNgridHeaderExtensionRefDirective,
@@ -117,8 +113,9 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridFooterCellDefDirective,
     PblNgridCellDefDirective, PblNgridEditorCellDefDirective, PblNgridScrolling,
     PblNgridHeaderCellComponent,
-    PblNgridCellDirective,
-    PblNgridFooterCellDirective,
+    PblNgridCellComponent,
+    PblNgridFooterCellComponent,
+    PblNgridMetaCellComponent,
 
     PblNgridHideColumns,
     PblColumnSizeObserver,

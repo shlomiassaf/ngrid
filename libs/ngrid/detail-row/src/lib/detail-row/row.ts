@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  Inject,
   ElementRef,
   OnDestroy, Optional,
   ViewEncapsulation,
@@ -11,7 +10,7 @@ import {
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CdkRow } from '@angular/cdk/table';
 
-import { PblNgridRowComponent, PblNgridExtensionApi, EXT_API_TOKEN, utils, PBL_NGRID_ROW_TEMPLATE } from '@pebula/ngrid';
+import { PblNgridRowComponent, utils, PBL_NGRID_ROW_TEMPLATE, PblNgridComponent } from '@pebula/ngrid';
 import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY } from './detail-row-plugin';
 
 @Component({
@@ -43,10 +42,10 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   private opened = false;
   private plugin: PblNgridDetailRowPluginDirective<any>;
 
-  constructor(@Optional() @Inject(EXT_API_TOKEN) private extApi: PblNgridExtensionApi<any>,
+  constructor(@Optional() grid: PblNgridComponent,
               el: ElementRef<HTMLElement>,
               private vcRef: ViewContainerRef) {
-    super(extApi, el);
+    super(grid, el);
   }
 
   ngOnDestroy(): void {
@@ -106,12 +105,12 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     }
   }
 
-  protected setGrid(extApi?: PblNgridExtensionApi) {
-    super.setGrid(extApi);
+  protected init() {
+    super.init();
 
-    this.plugin = extApi.pluginCtrl.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
+    this.plugin = this._extApi.pluginCtrl.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
-    const tradeEvents = extApi.pluginCtrl.getPlugin('targetEvents');
+    const tradeEvents = this._extApi.pluginCtrl.getPlugin('targetEvents');
     tradeEvents.cellClick
       .pipe(utils.unrx(this))
       .subscribe( event => {

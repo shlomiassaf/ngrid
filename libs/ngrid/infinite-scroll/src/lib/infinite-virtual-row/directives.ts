@@ -1,14 +1,11 @@
 // tslint:disable:use-host-property-decorator
 import {
   Directive,
-  IterableDiffers,
   OnInit,
   OnDestroy,
-  TemplateRef,
 } from '@angular/core';
-import { CdkRowDef } from '@angular/cdk/table';
 
-import { PblNgridRegistryService, PblNgridRowContext } from '@pebula/ngrid';
+import { PblNgridRowDef } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/grid/registry/types' {
   interface PblNgridSingleRegistryMap {
@@ -17,22 +14,10 @@ declare module '@pebula/ngrid/lib/grid/registry/types' {
 }
 
 @Directive({
-  selector: '[pblNgridInfiniteVirtualRowRef]',
-  inputs: ['columns: pblNgridInfiniteVirtualRowRefColumns', 'when: pblNgridInfiniteVirtualRowRefWhen'],
+  selector: '[pblNgridInfiniteVirtualRowDef]',
+  inputs: ['columns: pblNgridInfiniteVirtualRowDefColumns', 'when: pblNgridInfiniteVirtualRowDefWhen'],
 })
-export class PblNgridInfiniteVirtualRowRefDirective<T = any> extends CdkRowDef<T> implements OnInit, OnDestroy {
-
-  constructor(template: TemplateRef<PblNgridRowContext<T>>, _differs: IterableDiffers, protected registry: PblNgridRegistryService) {
-    super(template, _differs);
-  }
-
-  clone(): PblNgridInfiniteVirtualRowRefDirective<T> {
-    const clone = Object.create(this);
-    clone.columns = this.columns;
-    clone._columnsDiffer = undefined;
-    // this._columnsDiffer = this.columns = undefined;
-    return clone;
-  }
+export class PblNgridInfiniteVirtualRowRefDirective<T = any> extends PblNgridRowDef<T> implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.registry.setSingle('infiniteVirtualRow', this as any);

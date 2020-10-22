@@ -29,7 +29,7 @@ export interface PblNgridGroupColumnState extends PblNgridBaseColumnState,
   PickPNP <
     PblColumnGroupDefinition,
     never,
-    'prop' | 'rowIndex' | 'span'
+    'rowIndex' | 'columnIds'
   > { }
 
 export interface PblNgridColumnState extends PblNgridBaseColumnState,

@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { PblColumn } from '@pebula/ngrid';
 
 /**
- * Use to set the a default `pblNgridInfiniteVirtualRowRef` if the user did not set one.
+ * Use to set the a default `pblNgridInfiniteVirtualRowDef` if the user did not set one.
  */
 @Component({
   selector: 'pbl-ngrid-default-infinite-virtual-row',

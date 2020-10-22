@@ -364,18 +364,15 @@ export class PblColumn implements PblColumnDefinition {
       }
 
       return g;
-    }
-    // STATE: The group IS a slave and it is set AFTER an item that belongs to the group it is slave of.
-    else if (gCurr.slaveOf && gPrev) {
+    } else if (gCurr?.slaveOf) {
+      // STATE: The group IS a slave and it is set AFTER an item that belongs to the group it is slave of.
       if (gCurr.slaveOf === gPrev) {
         return gCurr.slaveOf;
       }
-      if (gCurr.slaveOf === gPrev.slaveOf) {
+      if (gCurr.slaveOf === gPrev?.slaveOf) {
         return gPrev;
       }
-    }
-    // STATE: The group IS a slave and it is set BEFORE an item that belongs to the group it is slave of.
-    else if (gCurr.slaveOf && gNext) {
+      // STATE: The group IS a slave and it is set BEFORE an item that belongs to the group it is slave of.
       if (gCurr.slaveOf === gNext) {
         return gCurr.slaveOf;
       }

@@ -176,16 +176,16 @@ export interface PblNgridContextApi<T = any> {
   unselectCells(cellRefs?: CellReference[] | boolean, markForCheck?: boolean): void;
 
   /**
-   * Clear the current context.
+   * Clears the entire context, including view cache and memory cache (rows out of view).
    * This method will reset the context of all cells.
    *
    * In most cases, you do not need to run this method because it will automatically run when
    * the datasource is replaced (entire datasource instance).
-   *
-   * However, if you are keeping the same datasource but switching data internally (onTrigger)
-   * you can clear the context using this method.
+   * @param syncView If true will sync the view and the context right after clearing which will ensure the view cache is hot and synced with the actual rendered rows
+   * Some plugins will expect a row to have a context so this might be required.
+   * The view and context are synced every time rows are rendered so make sure you set this to true only when you know there is no rendering call coming down the pipe.
    */
-  clear(): void;
+  clear(syncView?: boolean)
 
     /**
    * Try to find a specific row context, using the row identity, in the current view.

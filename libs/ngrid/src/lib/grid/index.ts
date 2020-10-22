@@ -27,7 +27,16 @@ export {
 } from './column/model';
 export { AutoSizeToFitOptions, ColumnApi } from './column/management';
 
-export { RowsApi, NGRID_CELL_FACTORY, PBL_NGRID_ROW_TEMPLATE, PblNgridRowComponent } from './row';
+export {
+  GridRowType,
+  RowsApi,
+  PblNgridRowDef,
+  NGRID_CELL_FACTORY, PblNgridCellFactoryResolver, PblNgridCellFactoryMap,
+  PBL_NGRID_ROW_TEMPLATE,
+  PblNgridRowComponent,
+  PblNgridColumnRowComponent,
+  PblNgridMetaRowComponent,
+} from './row';
 
 export {
   PblNgridRegistryService,
@@ -41,14 +50,15 @@ export {
 export {
   PblNgridCellStyling,
   PblNgridHeaderCellComponent,
-  PblNgridCellDirective,
-  PblNgridFooterCellDirective,
+  PblNgridCellComponent,
+  PblNgridFooterCellComponent,
   PblNgridCellEditAutoFocusDirective,
 
   PblNgridHeaderCellDefDirective,
   PblNgridCellDefDirective,
   PblNgridEditorCellDefDirective,
   PblNgridFooterCellDefDirective,
+  PblNgridMetaCellComponent,
 } from './cell';
 
 export {

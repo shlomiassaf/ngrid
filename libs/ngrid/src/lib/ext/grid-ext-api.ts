@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
+import { Direction, Directionality } from '@angular/cdk/bidi';
 
 import { PblCdkTableComponent } from '../grid/pbl-cdk-table/pbl-cdk-table.component';
 import { ContextApi } from '../grid/context/api';
@@ -7,7 +8,7 @@ import { PblNgridComponent } from '../grid/ngrid.component';
 import { ColumnApi, PblColumnStore } from '../grid/column/management';
 import { DynamicColumnWidthLogic } from '../grid/column/width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from '../grid/features/virtual-scroll/virtual-scroll-viewport.component'
-import { PblNgridEvents } from './types';
+import { NotifyPropChangeMethod, OnPropChangedEvent, PblNgridEvents } from './types';
 import { PblNgridMetaRowService } from '../grid/meta-rows/index';
 import { RowsApi, PblRowsApi } from '../grid/row';
 import { PblNgridPluginContext, PblNgridPluginController } from './plugin-control';
@@ -17,6 +18,7 @@ export const EXT_API_TOKEN = new InjectionToken('PBL_NGRID_EXTERNAL_API');
 export interface PblNgridExtensionApi<T = any> {
   grid: PblNgridComponent<T>;
   element: HTMLElement;
+  propChanged: Observable<OnPropChangedEvent>;
   cdkTable: PblCdkTableComponent<T>;
   columnStore: PblColumnStore;
   contextApi: ContextApi<T>;
@@ -28,6 +30,7 @@ export interface PblNgridExtensionApi<T = any> {
   onConstructed(fn: () => void): void;
   onInit(fn: () => void): void;
   dynamicColumnWidthFactory(): DynamicColumnWidthLogic;
+  getDirection(): Direction;
 }
 
 export interface PblNgridInternalExtensionApi<T = any> extends PblNgridExtensionApi<T> {
@@ -36,4 +39,5 @@ export interface PblNgridInternalExtensionApi<T = any> extends PblNgridExtension
   rowsApi: PblRowsApi<T>;
   setViewport(viewport: PblCdkVirtualScrollViewportComponent): void;
   setCdkTable(cdkTable: PblCdkTableComponent<T>): void;
+  notifyPropChanged: NotifyPropChangeMethod;
 }

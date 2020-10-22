@@ -1,4 +1,6 @@
-import { PblMetaColumn, PblColumn, PblColumnGroup, PblColumnSet, PblMetaColumnDefinition, PblColumnGroupDefinition } from '../model';
+import { IterableChanges } from '@angular/core';
+import { PblMetaColumn, PblColumn, PblColumnGroup, PblColumnSet, PblMetaColumnDefinition, PblColumnGroupDefinition, COLUMN } from '../model';
+import { GridRowType } from '../../row/types';
 
 export interface PblMetaColumnStore {
   id: string;
@@ -11,7 +13,21 @@ export interface PblMetaColumnStore {
 export interface PblColumnStoreMetaRow {
   rowDef: PblColumnSet<PblMetaColumnDefinition | PblColumnGroupDefinition>,
   keys: string[];
+  kind: 'header' | 'footer';
   isGroup?: boolean;
+}
+
+export type PblRowTypeToColumnTypeMap<T extends GridRowType> =
+  T extends 'header' ? PblColumn
+  : T extends 'data' ? PblColumn
+  : T extends 'footer' ? PblColumn
+  : T extends 'meta-header' ? PblMetaColumn | PblColumnGroup
+  : T extends 'meta-footer' ? PblMetaColumn | PblColumnGroup
+  : COLUMN;
+
+export interface PblRowColumnsChangeEvent<TCol extends COLUMN> {
+  columns: TCol[];
+  changes: IterableChanges<TCol>;
 }
 
 export interface AutoSizeToFitOptions {
