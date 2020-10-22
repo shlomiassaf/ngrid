@@ -26,7 +26,11 @@ export {
   PblColumn, PblMetaColumn, PblColumnGroup, PblColumnFactory, COLUMN, columnFactory,
   isPblMetaColumn, isPblColumnGroup, isPblColumn,
 
-  RowsApi, NGRID_CELL_FACTORY, PBL_NGRID_ROW_TEMPLATE, PblNgridRowComponent,
+  GridRowType,
+  RowsApi,
+  NGRID_CELL_FACTORY,
+  PBL_NGRID_ROW_TEMPLATE,
+  PblNgridRowComponent, PblNgridHeaderRowComponent,
 
   PblNgridComponent,
   PblNgridRegistryService,

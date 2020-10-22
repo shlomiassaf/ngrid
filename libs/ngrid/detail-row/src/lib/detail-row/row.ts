@@ -43,7 +43,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   private opened = false;
   private plugin: PblNgridDetailRowPluginDirective<any>;
 
-  constructor(@Optional() @Inject(EXT_API_TOKEN) private extApi: PblNgridExtensionApi<any>,
+  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: PblNgridExtensionApi<any>,
               el: ElementRef<HTMLElement>,
               private vcRef: ViewContainerRef) {
     super(extApi, el);
@@ -106,12 +106,12 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     }
   }
 
-  protected setGrid(extApi?: PblNgridExtensionApi) {
-    super.setGrid(extApi);
+  protected init(initAtConstructor: boolean) {
+    super.init(initAtConstructor);
 
-    this.plugin = extApi.pluginCtrl.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
+    this.plugin = this._extApi.pluginCtrl.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.plugin.addDetailRow(this);
-    const tradeEvents = extApi.pluginCtrl.getPlugin('targetEvents');
+    const tradeEvents = this._extApi.pluginCtrl.getPlugin('targetEvents');
     tradeEvents.cellClick
       .pipe(utils.unrx(this))
       .subscribe( event => {

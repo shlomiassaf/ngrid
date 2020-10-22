@@ -1,16 +1,14 @@
 <!-- GRID HEADER ROW DEF - THE MAIN HEADER OF THE GRID -->
-<cdk-header-row *cdkHeaderRowDef="columnApi.visibleColumnIds; sticky: columnRowDef.header?.type === 'sticky'"
-                [pblMetaRow]="columnRowDef.header"
-                data-rowtype="header"
-                class="pbl-ngrid-header-row pbl-ngrid-header-row-main"
-                [class.pbl-ngrid-row-hidden]="!showHeader"></cdk-header-row>
+<pbl-ngrid-header-row *cdkHeaderRowDef="[]; sticky: columnRowDef.header?.type === 'sticky'"
+                      [row]="columnRowDef.header"
+                      class="pbl-ngrid-header-row-main"></pbl-ngrid-header-row>
 
 <!-- DUPLICATE HEADER FOR THE MAIN HEADER, NEVER SEEN (NOT VISUAL), USED FOR RESIZING -->
-<cdk-header-row *cdkHeaderRowDef="columnApi.visibleColumnIds;"
-                [pblMetaRow]="columnRowDef.header" gridWidthRow
-                data-rowtype="header"
-                style="visibility: hidden !important;"
-                class="pbl-ngrid-header-row pbl-ngrid-row-visually-hidden"></cdk-header-row>
+<pbl-ngrid-header-row *cdkHeaderRowDef="[];"
+                      [row]="columnRowDef.header"
+                      gridWidthRow
+                      style="visibility: hidden !important;"
+                      class="pbl-ngrid-row-visually-hidden"></pbl-ngrid-header-row>
 
 <!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
 <ng-container *ngFor="let row of metaColumnIds.header;">
@@ -21,18 +19,16 @@
 </ng-container>
 
 <!-- GRID FOOTER ROW DEF -->
-<cdk-footer-row *cdkFooterRowDef="columnApi.visibleColumnIds; sticky: columnRowDef.footer?.type === 'sticky'"
-                [pblMetaRow]="columnRowDef.footer"
-                data-rowtype="footer"
-                class="pbl-ngrid-footer-row"
-                [class.pbl-ngrid-row-hidden]="!showFooter"></cdk-footer-row> <!-- GRID FOOTER ROW DEF -->
+<pbl-ngrid-header-row *cdkFooterRowDef="[]; sticky: columnRowDef.footer?.type === 'sticky'"
+                      footer [row]="columnRowDef.footer"></pbl-ngrid-header-row>
+<!-- GRID FOOTER ROW DEF -->
 <!-- MULTI-FOOTER ROW DEF -->
-<ng-container *ngFor="let row of metaColumnIds.footer">   <!-- MULTI-FOOTER ROW DEF -->
+<!-- <ng-container *ngFor="let row of metaColumnIds.footer">
   <cdk-footer-row *cdkFooterRowDef="row.keys; sticky: row.rowDef.type === 'sticky'"
                   [pblMetaRow]="row.rowDef"
                   data-rowtype="meta-footer" class="pbl-ngrid-footer-row"
                   [class.pbl-meta-group-row]="row.isGroup"></cdk-footer-row>
-</ng-container>
+</ng-container> -->
 
 <div class="pbl-ngrid-container">
   <ng-container #beforeTable></ng-container>
@@ -47,30 +43,16 @@
         <ng-container *ngIf="(meta.header || meta.headerGroup) as c" [pblNgridColumnDef]="c">
           <!-- For heder cells, we create the internal content programmatically and not via declarations -->
           <pbl-ngrid-header-cell #hCell="ngridHeaderCell" *cdkHeaderCellDef></pbl-ngrid-header-cell>
+          <div></div>
         </ng-container>
         <ng-container *ngIf="meta.footer as c" [pblNgridColumnDef]="c">
-          <pbl-ngrid-footer-cell #fCell="ngridFooterCell" *cdkFooterCellDef>
+          <pbl-ngrid-footer-cell *cdkFooterCellDef>
             <ng-container *ngTemplateOutlet="c.template; context: fCell.cellCtx"></ng-container>
           </pbl-ngrid-footer-cell>
+          <div></div>
         </ng-container>
       </ng-container>
       <!-- MULTI-HEADER/FOOTER CELL DEF -->
-
-      <!-- HEADER-RECORD-FOOTER CELL DEF -->
-      <ng-container *ngFor="let c of columnApi.visibleColumns;" [pblNgridColumnDef]="c">
-        <!-- GRID HEADER CELL DEF -->
-        <pbl-ngrid-header-cell *cdkHeaderCellDef="let row" [observeSize]="c"></pbl-ngrid-header-cell>
-
-        <!-- RECORD CELL DEF -->
-        <!-- We don't need to define a template for data cell (cdkCellDef)
-             Because we generate the cells internally in the row component (pbl-ngrid-row) -->
-
-        <!-- GRID FOOTER CELL DEF -->
-        <pbl-ngrid-footer-cell #fCell="ngridFooterCell" *cdkFooterCellDef>
-          <ng-container *ngTemplateOutlet="c.footerCellTpl; context: fCell.cellCtx"></ng-container>
-        </pbl-ngrid-footer-cell>
-      </ng-container>
-      <!-- HEADER-RECORD-FOOTER CELL DEF -->
 
       <!-- GRID RECORD ROW DEFINITION TEMPLATES -->
       <!-- We dont need columns because we implement them internally -->
@@ -83,7 +65,6 @@
   <ng-container #beforeContent>
     <!-- This dummy row is used to extract an initial row height -->
     <div role="row" row="" class="pbl-ngrid-row cdk-row" style="display: none;"></div>
-    <pbl-ngrid-row row style="display: none"></pbl-ngrid-row>
   </ng-container>
   <ng-content></ng-content>
   <ng-container #afterContent></ng-container>

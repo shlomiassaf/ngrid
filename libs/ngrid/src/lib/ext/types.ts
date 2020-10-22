@@ -1,4 +1,6 @@
-import { PblDataSource } from '../data-source';
+import { zip } from 'rxjs';
+
+export * from './event.types';
 
 export interface PblNgridPlugin { }
 
@@ -6,51 +8,25 @@ export interface PblNgridPluginExtension { }
 
 export interface PblNgridPluginExtensionFactories { }
 
-/**
- * This event is fired after the grid has constructed, including the main internal grid component and the viewport.
- * > Note that the components we're constructed, not initialized!
- */
-export interface PblNgridOnConstructedEvent {
-  kind: 'onConstructed';
+export interface OnPropChangedEvent<T extends (keyof OnPropChangedSources & keyof OnPropChangedProperties) = keyof OnPropChangedSources,
+                                    P extends keyof OnPropChangedProperties[T] = keyof OnPropChangedProperties[T]> {
+  type: T;
+  source: OnPropChangedSources[T];
+  key: P;
+  prev: OnPropChangedProperties[T][P];
+  curr: OnPropChangedProperties[T][P];
 }
 
-/**
- * This event is fired after the grid has initialized
- */
-export interface PblNgridOnInitEvent {
-  kind: 'onInit';
-}
+export interface OnPropChangedSources { }
 
-export interface PblNgridOnResizeRowEvent {
-  kind: 'onResizeRow';
-}
+export interface OnPropChangedProperties { }
 
-export interface PblNgridOnInvalidateHeadersEvent {
-  kind: 'onInvalidateHeaders';
-}
-
-export interface PblNgridBeforeInvalidateHeadersEvent {
-  kind: 'beforeInvalidateHeaders';
-}
-
-export interface PblNgridOnDestroyEvent {
-  kind: 'onDestroy';
-  wait(p: Promise<void>): void;
-}
-
-export interface PblNgridOnDataSourceEvent {
-  kind: 'onDataSource';
-  prev: PblDataSource<any>;
-  curr: PblDataSource<any>;
-}
-
-export type PblNgridEvents =
-  | PblNgridOnConstructedEvent
-  | PblNgridOnInitEvent
-  | PblNgridOnResizeRowEvent
-  | PblNgridBeforeInvalidateHeadersEvent
-  | PblNgridOnInvalidateHeadersEvent
-  | PblNgridOnDataSourceEvent
-  | PblNgridOnDestroyEvent;
+type FilterFlags<Base, Condition> = {
+  [Key in keyof Base]:
+      Base[Key] extends Condition ? Key : never
+};
+type AllowedNames<Base, Condition> =
+      FilterFlags<Base, Condition>[keyof Base];
 
 
+export type NotifyPropChangeMethod = <T extends OnPropChangedSources[keyof OnPropChangedSources], TP extends OnPropChangedProperties[AllowedNames<OnPropChangedSources, T>], P extends keyof TP>(source: T, key: P, prev: TP[P], curr: TP[P]) => void;
