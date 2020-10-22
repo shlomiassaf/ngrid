@@ -1,4 +1,4 @@
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, of } from 'rxjs';
 import { isDevMode, IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core';
 import { PblNgridComponent } from '../../ngrid.component';
 import { findCellDef } from '../../cell/cell-def/utils';
@@ -14,8 +14,10 @@ import {
 } from '../model';
 import { StaticColumnWidthLogic } from '../width-logic/static-column-width';
 import { resetColumnWidths } from '../../utils/helpers';
-import { PblColumnStoreMetaRow, PblMetaColumnStore } from './types';
+import { PblColumnStoreMetaRow, PblMetaColumnStore, PblRowColumnsChangeEvent, PblRowTypeToColumnTypeMap } from './types';
 import { HiddenColumns } from './hidden-columns';
+import { GridRowType } from '../../row/types';
+import { PblNgridBaseRowComponent } from '../../row/base-row.component';
 
 export class PblColumnStore {
   metaColumnIds: { header: Array<PblColumnStoreMetaRow>; footer: Array<PblColumnStoreMetaRow>; };
@@ -31,7 +33,7 @@ export class PblColumnStore {
   get primary(): PblColumn | undefined { return this._primary; }
   get groupStore(): PblColumnGroupStore { return this._groupStore; }
 
-  readonly visibleChanged$: Observable<{ columns: PblColumn[]; columnIds: string[]; changes: IterableChanges<PblColumn>; }>;
+  readonly visibleChanged$: Observable<PblRowColumnsChangeEvent<PblColumn>>;
   readonly columnDefObjectChanged$: Observable<{ op: 'attach' | 'detach'; column: COLUMN; columnDef: PblNgridColumnDef; }>;
 
   private _primary: PblColumn | undefined;
@@ -41,7 +43,7 @@ export class PblColumnStore {
   private lastSet: PblNgridColumnSet;
   private hiddenColumns = new HiddenColumns();
   private differ: IterableDiffer<PblColumn>;
-  private _visibleChanged$ = new Subject<{ columns: PblColumn[]; columnIds: string[]; changes: IterableChanges<PblColumn>; }>();
+  private _visibleChanged$ = new Subject<PblRowColumnsChangeEvent<PblColumn>>();
   private _columnDefObjectChanged$ = new Subject<{ op: 'attach' | 'detach'; column: COLUMN; columnDef: PblNgridColumnDef; }>();
 
   constructor(private readonly grid: PblNgridComponent, private readonly differs: IterableDiffers) {
@@ -49,6 +51,26 @@ export class PblColumnStore {
     this.resetColumns();
     this.visibleChanged$ = this._visibleChanged$.asObservable();
     this.columnDefObjectChanged$ = this._columnDefObjectChanged$.asObservable();
+  }
+
+  getColumnsOf<TRowType extends GridRowType>(row: PblNgridBaseRowComponent<TRowType>): PblRowTypeToColumnTypeMap<TRowType>[] {
+    switch (row.rowType) {
+      case 'data':
+      case 'header':
+      case 'footer':
+        return this.visibleColumns as any;
+    }
+    return [];
+  }
+
+  getChangeStreamOf<TRowType extends GridRowType>(row: PblNgridBaseRowComponent<TRowType>): Observable<PblRowColumnsChangeEvent<PblRowTypeToColumnTypeMap<TRowType>>> {
+    switch (row.rowType) {
+      case 'data':
+      case 'header':
+      case 'footer':
+        return this._visibleChanged$ as any;
+    }
+    return of() ;
   }
 
   isColumnHidden(column: PblColumn) {
@@ -430,7 +452,7 @@ export class PblColumnStore {
         this.hiddenColumnIds = Array.from(this.hiddenColumns.hidden);
         this.visibleColumnIds = Array.from(this.visibleColumns).map( c => c.id );
         this.columnIds = Array.from(this.allColumns).map( c => c.id );
-        this._visibleChanged$.next({ columns: this.visibleColumns, columnIds: this.visibleColumnIds, changes });
+        this._visibleChanged$.next({ columns: this.visibleColumns, changes });
       }
     }
     // no differ means we did not invalidate yet, so nothing will change until it start showing
@@ -461,7 +483,10 @@ export function moveItemInArray<T = any>(array: T[], fromIndex: number, toIndex:
   array[to] = target;
 }
 
-export function moveItemInArrayExt<T = any>(array: T[], fromIndex: number, toIndex: number, fn: (newVal: T, oldVal: T) => void): void {
+export function moveItemInArrayExt<T = any>(array: T[],
+                                            fromIndex: number,
+                                            toIndex: number,
+                                            fn: (previousItem: T, currentItem: T, previousIndex: number, currentIndex: number) => void): void {
   const from = clamp(fromIndex, array.length - 1);
   const to = clamp(toIndex, array.length - 1);
 
@@ -473,11 +498,12 @@ export function moveItemInArrayExt<T = any>(array: T[], fromIndex: number, toInd
   const delta = to < from ? -1 : 1;
 
   for (let i = from; i !== to; i += delta) {
-    fn(array[i + delta], array[i]);
-    array[i] = array[i + delta];
+    const next = i + delta;
+    fn(array[i], array[next], i, next);
+    array[i] = array[next];
   }
 
-  fn(target, array[to]);
+  fn(array[to], target, to, from);
   array[to] = target;
 }
 

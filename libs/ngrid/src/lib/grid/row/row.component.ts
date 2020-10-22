@@ -1,15 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EmbeddedViewRef, Inject, Input, ViewEncapsulation, SimpleChanges, OnChanges, Optional, DoCheck, OnDestroy, ViewContainerRef, ViewChild, ComponentRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ComponentRef, EmbeddedViewRef, Input, ViewEncapsulation } from '@angular/core';
 import { CdkRow, RowContext } from '@angular/cdk/table';
 
-import { PblNgridPluginController } from '../../ext/plugin-control';
-import { EXT_API_TOKEN, PblNgridExtensionApi, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblRowContext } from '../context/index';
-import { PblNgridComponent } from '../ngrid.component';
 import { StylingDiffer, StylingDifferOptions } from '../utils/styling.differ';
-import { PblNgridCellDirective } from '../cell/cell.component';
+import { PblNgridCellComponent } from '../cell/cell.component';
 import { PblColumn } from '../column/model';
 import { unrx } from '../utils/unrx';
-import { moveItemInArrayExt } from '../column/management/column-store';
+import { PblNgridBaseRowComponent } from './base-row.component';
 
 export const PBL_NGRID_ROW_TEMPLATE  = `<ng-content select=".pbl-ngrid-row-prefix"></ng-content><ng-container #viewRef></ng-container><ng-content select=".pbl-ngrid-row-suffix"></ng-content>`;
 
@@ -17,7 +14,7 @@ export const PBL_NGRID_ROW_TEMPLATE  = `<ng-content select=".pbl-ngrid-row-prefi
   selector: 'pbl-ngrid-row[row]',
   template: PBL_NGRID_ROW_TEMPLATE,
   host: { // tslint:disable-line:use-host-property-decorator
-    'class': 'pbl-ngrid-row',
+    'class': 'cdk-row pbl-ngrid-row',
     'role': 'row',
   },
   providers: [
@@ -27,32 +24,15 @@ export const PBL_NGRID_ROW_TEMPLATE  = `<ng-content select=".pbl-ngrid-row-prefi
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridRowComponent<T = any> extends CdkRow implements OnChanges, DoCheck, OnDestroy {
+export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'data', T> {
 
   @Input() set row(value: T) { value && this.updateRow(); }
-
-  /**
-   * Optional grid instance, required only if the row is declared outside the scope of the grid.
-   */
-  @Input() grid: PblNgridComponent<T>;
 
   rowRenderIndex: number;
   context: PblRowContext<T>;
 
-  @ViewChild('viewRef', { read: ViewContainerRef }) _viewRef: ViewContainerRef;
-
   private _classDiffer: StylingDiffer<{ [klass: string]: boolean }>;
   private _lastClass: Set<string>;
-  private _extApi: PblNgridInternalExtensionApi<T>;
-  private _cells: ComponentRef<PblNgridCellDirective>[] = [];
-
-  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: PblNgridExtensionApi<T>,
-              public readonly el: ElementRef<HTMLElement>) {
-    super();
-    if (extApi) {
-      this.setGrid(extApi);
-    }
-  }
 
   updateRow(): void {
     if (this._extApi) {
@@ -70,38 +50,6 @@ export class PblNgridRowComponent<T = any> extends CdkRow implements OnChanges, 
     }
   }
 
-  ngDoCheck(): void {
-    if (this.grid) {
-      if (this.grid.rowClassUpdate && this.grid.rowClassUpdateFreq === 'ngDoCheck') {
-        this.updateHostClass();
-      }
-      for (const cell of this._cells) {
-        // TODO: the cells are created through code which mean's that they don't belong
-        // to the CD tree and we need to manually mark them for checking
-        // We can customize the diffing, detect context changes internally and only trigger these cells which have changed!
-        cell.instance.setContext(this.context);
-        cell.changeDetectorRef.markForCheck();
-      }
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this._extApi) {
-      if (!this.grid) {
-        throw new Error('"pbl-ngrid-row" is used outside the scope of a grid, you must provide a grid instance.');
-      }
-      this.setGrid(PblNgridPluginController.find(this.grid).extApi);
-      this.updateRow();
-    }
-  }
-
-  ngAfterViewInit(): void {
-    for (const c of this._extApi.columnApi.visibleColumns) {
-      this._createCell(c);
-    }
-    this.ngDoCheck();
-  }
-
   getRend(): void {
     const vcRef = this._extApi.cdkTable._rowOutlet.viewContainer;
     const len = vcRef.length - 1;
@@ -114,15 +62,25 @@ export class PblNgridRowComponent<T = any> extends CdkRow implements OnChanges, 
     }
   }
 
-  ngOnDestroy(): void {
-    unrx.kill(this);
-    this._extApi.rowsApi.removeRow(this);
+  protected getRowType() { return 'data' as const; }
+
+  protected init(initAtConstructor: boolean) {
+    if (!initAtConstructor) {
+      this.updateRow();
+    }
   }
 
-  protected setGrid(extApi?: PblNgridExtensionApi<T>) {
-    this._extApi = extApi as PblNgridInternalExtensionApi<T>;
-    this.grid = extApi.grid;
-    this._extApi.rowsApi.addRow(this)
+  protected detectChanges() {
+    if (this.grid.rowClassUpdate && this.grid.rowClassUpdateFreq === 'ngDoCheck') {
+      this.updateHostClass();
+    }
+    for (const cell of this._cells) {
+      // TODO: the cells are created through code which mean's that they don't belong
+      // to the CD tree and we need to manually mark them for checking
+      // We can customize the diffing, detect context changes internally and only trigger these cells which have changed!
+      cell.instance.setContext(this.context);
+      cell.changeDetectorRef.markForCheck();
+    }
   }
 
   protected updateHostClass(): void {
@@ -177,10 +135,7 @@ export class PblNgridRowComponent<T = any> extends CdkRow implements OnChanges, 
     }
   }
 
-  _createCell(column: PblColumn, atIndex?: number) {
-    const cell = this._viewRef.createComponent(this._extApi.rowsApi._factory, atIndex);
-    this._cells.push(cell);
-    cell.onDestroy(() => this._destroyCell(column));
+  protected cellCreated(column: PblColumn, cell: ComponentRef<PblNgridCellComponent>) {
     if (!column.columnDef) {
       cell.changeDetectorRef.detach();
       this._extApi.columnStore.columnDefObjectChanged$
@@ -197,30 +152,15 @@ export class PblNgridRowComponent<T = any> extends CdkRow implements OnChanges, 
       cell.instance.setColumn(column);
       cell.instance.setContext(this.context);
     }
-
   }
 
-  _destroyCell(column: PblColumn, killView?: boolean) {
-    const i = this._cells.findIndex( c => c.instance.column === column );
-    if (i > -1) {
-      unrx.kill(this, column);
-      this._cells.slice(i, 1);
-      if (killView) {
-        const cmp = this._cells.find( c => c.instance.column === column );
-        cmp.destroy();
-      }
-    }
+  protected cellDestroyed(cell: ComponentRef<PblNgridCellComponent>) {
+    unrx.kill(this, cell.instance.column);
   }
 
-  _moveCell(fromIndex: number, toIndex: number) {
-    const cmp = this._cells[fromIndex];
-    if (cmp) {
-      this._viewRef.move(cmp.hostView, toIndex);
-      moveItemInArrayExt(this._cells, fromIndex, toIndex, (newVal, oldVal) => {
-        newVal.instance.syncColumn();
-        this.context.updateCell(oldVal.instance.cellCtx.clone(newVal.instance.column));
-        newVal.changeDetectorRef.markForCheck();
-      });
-    }
+  protected cellMoved(previousItem: ComponentRef<PblNgridCellComponent>, currentItem: ComponentRef<PblNgridCellComponent>, previousIndex: number, currentIndex: number) {
+    currentItem.instance.syncColumn();
+    this.context.updateCell(previousItem.instance.cellCtx.clone(currentItem.instance.column));
+    currentItem.changeDetectorRef.markForCheck();
   }
 }

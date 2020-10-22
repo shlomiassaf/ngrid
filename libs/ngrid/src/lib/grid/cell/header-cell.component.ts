@@ -2,7 +2,7 @@
 // tslint:disable:directive-selector
 import { first, filter } from 'rxjs/operators';
 import {
-  OnInit, OnDestroy,
+  Optional,
   Component,
   ElementRef,
   ChangeDetectionStrategy,
@@ -11,9 +11,10 @@ import {
   ViewChild,
   NgZone,
   EmbeddedViewRef,
+  Inject,
 } from '@angular/core';
-import { CdkHeaderCell } from '@angular/cdk/table';
 
+import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { unrx } from '../utils';
 import { PblNgridComponent } from '../ngrid.component';
 import { COLUMN, PblMetaColumn, PblColumn, PblColumnGroup, isPblColumn, isPblColumnGroup } from '../column/model';
@@ -21,6 +22,8 @@ import { MetaCellContext, PblNgridMetaCellContext } from '../context/index';
 import { PblNgridMultiRegistryMap, PblNgridDataHeaderExtensionContext, PblNgridMultiComponentRegistry, PblNgridMultiTemplateRegistry } from '../registry';
 import { PblNgridColumnDef, WidthChangeEvent } from '../column/directives/column-def';
 import { applySourceWidth, applyWidth, initCellElement } from './utils';
+import { PblNgridBaseCell } from './base-cell';
+import { PblColumnSizeObserver } from '../features/column-size-observer/column-size-observer.directive';
 
 const HEADER_GROUP_CSS = `pbl-header-group-cell`;
 const HEADER_GROUP_PLACE_HOLDER_CSS = `pbl-header-group-cell-placeholder`;
@@ -38,7 +41,7 @@ const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRe
 @Component({
   selector: 'pbl-ngrid-header-cell',
   host: {
-    class: 'pbl-ngrid-header-cell',
+    class: 'cdk-header-cell pbl-ngrid-header-cell',
     role: 'columnheader',
   },
   exportAs: 'ngridHeaderCell',
@@ -46,58 +49,77 @@ const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRe
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends CdkHeaderCell implements OnInit, OnDestroy {
+export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblNgridBaseCell {
   @ViewChild('vcRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
 
-  private el: HTMLElement;
-
+  column: PblColumn;
   cellCtx: PblNgridDataHeaderExtensionContext | MetaCellContext;
 
-  constructor(public readonly columnDef: PblNgridColumnDef<T>,
-              public readonly grid: PblNgridComponent<any>,
-              public readonly elementRef: ElementRef,
+  get columnDef(): PblNgridColumnDef<PblColumn> { return this.column?.columnDef; }
+  get grid(): PblNgridComponent { return this.extApi.grid; }
+
+  private resizeObserver: PblColumnSizeObserver;
+
+  constructor(@Optional() @Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi,
+              elementRef: ElementRef,
               private zone: NgZone) {
-    super(columnDef, elementRef);
+    super(elementRef);
+  }
 
-    const column = columnDef.column;
-    const el = this.el = elementRef.nativeElement;
-
-    if (isPblColumnGroup(column)) {
-      el.classList.add(HEADER_GROUP_CSS);
-      if (column.placeholder) {
-        el.classList.add(HEADER_GROUP_PLACE_HOLDER_CSS);
+  setColumn(column: PblColumn) {
+    const prev = this.column;
+    if (prev !== column) {
+      if (prev) {
+        unrx.kill(this, prev);
       }
+
+      this.column = column;
+
+      if (!column.columnDef) {
+        new PblNgridColumnDef(this.extApi).column = column;
+        column.columnDef.name = column.id;
+      }
+
+      let predicate: (event: WidthChangeEvent) => boolean;
+      let view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblMetaColumn | PblColumn>>
+      let widthUpdater: (...args: any[]) => void;
+
+      if (isPblColumn(column)) {
+        const gridWidthRow = this.el.parentElement.hasAttribute('gridWidthRow');
+        widthUpdater = gridWidthRow ? applySourceWidth : applyWidth;
+        predicate = event => (!gridWidthRow && event.reason !== 'update') || (gridWidthRow && event.reason !== 'resize');
+        view = !gridWidthRow ? this.initMainHeaderColumnView(column) : undefined;
+        if (gridWidthRow && !this.resizeObserver) {
+          this.resizeObserver = new PblColumnSizeObserver({ nativeElement: this.el }, this.extApi.grid);
+          this.resizeObserver.column = column;
+        }
+      } else {
+        widthUpdater = applySourceWidth;
+        predicate = event => event.reason !== 'resize';
+        view = this.initMetaHeaderColumnView(column);
+        if (isPblColumnGroup(column)) {
+          this.el.classList.add(HEADER_GROUP_CSS);
+          // if (column.placeholder) {
+          //   this.el.classList.add(HEADER_GROUP_PLACE_HOLDER_CSS);
+          // }
+        }
+      }
+
+      this.columnDef.widthChange
+        .pipe(filter(predicate), unrx(this, column))
+        .subscribe(widthUpdater.bind(this));
+
+      view && view.detectChanges();
+      widthUpdater.call(this);
+      initCellElement(this.el, column);
     }
   }
 
-  ngOnInit(): void {
-    const col: COLUMN = this.columnDef.column;
-    let predicate: (event: WidthChangeEvent) => boolean;
-    let view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblMetaColumn | PblColumn>>
-    let widthUpdater: (...args: any[]) => void;
-
-    if (isPblColumn(col)) {
-      const gridWidthRow = this.el.parentElement.hasAttribute('gridWidthRow');
-      widthUpdater = gridWidthRow ? applySourceWidth : applyWidth;
-      predicate = event => (!gridWidthRow && event.reason !== 'update') || (gridWidthRow && event.reason !== 'resize');
-      view = !gridWidthRow ? this.initMainHeaderColumnView(col) : undefined;
-    } else {
-      widthUpdater = applySourceWidth;
-      predicate = event => event.reason !== 'resize';
-      view = this.initMetaHeaderColumnView(col);
+  ngOnDestroy() {
+    if (this.resizeObserver) {
+      this.resizeObserver.ngOnDestroy();
     }
-
-    this.columnDef.widthChange
-      .pipe(filter(predicate), unrx(this))
-      .subscribe(widthUpdater.bind(this));
-
-    view && view.detectChanges();
-    widthUpdater.call(this);
-    initCellElement(this.el, col);
-  }
-
-  ngOnDestroy(): void {
-    unrx.kill(this);
+    super.ngOnDestroy();
   }
 
   protected initMainHeaderColumnView(col: PblColumn) {

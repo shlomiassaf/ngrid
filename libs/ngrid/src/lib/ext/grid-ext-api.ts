@@ -7,7 +7,7 @@ import { PblNgridComponent } from '../grid/ngrid.component';
 import { ColumnApi, PblColumnStore } from '../grid/column/management';
 import { DynamicColumnWidthLogic } from '../grid/column/width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from '../grid/features/virtual-scroll/virtual-scroll-viewport.component'
-import { PblNgridEvents } from './types';
+import { NotifyPropChangeMethod, OnPropChangedEvent, PblNgridEvents } from './types';
 import { PblNgridMetaRowService } from '../grid/meta-rows/index';
 import { RowsApi, PblRowsApi } from '../grid/row';
 import { PblNgridPluginContext, PblNgridPluginController } from './plugin-control';
@@ -17,6 +17,7 @@ export const EXT_API_TOKEN = new InjectionToken('PBL_NGRID_EXTERNAL_API');
 export interface PblNgridExtensionApi<T = any> {
   grid: PblNgridComponent<T>;
   element: HTMLElement;
+  propChanged: Observable<OnPropChangedEvent>;
   cdkTable: PblCdkTableComponent<T>;
   columnStore: PblColumnStore;
   contextApi: ContextApi<T>;
@@ -36,4 +37,5 @@ export interface PblNgridInternalExtensionApi<T = any> extends PblNgridExtension
   rowsApi: PblRowsApi<T>;
   setViewport(viewport: PblCdkVirtualScrollViewportComponent): void;
   setCdkTable(cdkTable: PblCdkTableComponent<T>): void;
+  notifyPropChanged: NotifyPropChangeMethod;
 }

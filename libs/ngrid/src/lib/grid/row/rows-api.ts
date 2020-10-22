@@ -1,11 +1,10 @@
-import { EmbeddedViewRef, ViewContainerRef, NgZone, ComponentFactory, InjectionToken } from '@angular/core';
+import { EmbeddedViewRef, ViewContainerRef, NgZone, ComponentFactory } from '@angular/core';
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
-import { PblNgridCellDirective } from '../cell/cell.component';
 import { PblCdkTableComponent } from '../pbl-cdk-table/pbl-cdk-table.component';
 import { unrx } from '../utils/unrx';
-import { PblNgridRowComponent } from './row.component';
-
-export const NGRID_CELL_FACTORY = new InjectionToken<ComponentFactory<PblNgridCellDirective>>('ComponentFactory<PblNgridCellDirective>');
+import { PblNgridBaseRowComponent } from './base-row.component';
+import { PblNgridCellFactoryResolver } from './cell-factory.service';
+import { GridRowType, PblRowTypeToCellTypeMap } from './types';
 
 export interface RowsApi<T = any> {
   cdkTable: PblCdkTableComponent<T>;
@@ -19,22 +18,23 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
 
   cdkTable: PblCdkTableComponent<T>;
 
-  private dataRows = new Set<PblNgridRowComponent<T>>();
+  private rows = new Map<GridRowType, Set<PblNgridBaseRowComponent<any, T>>>();
+  private visibleChangedRows = new Set<PblNgridBaseRowComponent<any, T>>();
 
   constructor(private readonly extApi: PblNgridExtensionApi<T>,
               private readonly zone: NgZone,
-              public readonly _factory: ComponentFactory<PblNgridCellDirective>) {
+              public readonly cellFactory: PblNgridCellFactoryResolver) {
     extApi.onConstructed(() => this.cdkTable = extApi.cdkTable);
 
     extApi.columnStore.visibleChanged$
       .pipe(unrx(this))
       .subscribe( event => {
         event.changes.forEachOperation((record, previousIndex, currentIndex) => {
-          for (const r of this.dataRows) {
+          for (const r of this.visibleChangedRows) {
             if (record.previousIndex == null) {
               r._createCell(record.item, currentIndex);
             } else if (currentIndex == null) {
-              r._destroyCell(record.item, true);
+              r._destroyCell(previousIndex);
             } else {
               r._moveCell(previousIndex, currentIndex);
             }
@@ -43,12 +43,29 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
       });
   }
 
-  addRow(row: PblNgridRowComponent<T>) {
-    this.dataRows.add(row);
+  addRow(row: PblNgridBaseRowComponent<GridRowType, T>) {
+    let rows = this.rows.get(row.rowType);
+    if (!rows) {
+      rows = new Set<PblNgridBaseRowComponent<any, T>>();
+      this.rows.set(row.rowType, rows);
+    }
+    rows.add(row);
+
+    switch (row.rowType) {
+      case 'data':
+      case 'header':
+      case 'footer':
+        this.visibleChangedRows.add(row);
+        break;
+    }
   }
 
-  removeRow(row: PblNgridRowComponent<T>) {
-    this.dataRows.delete(row);
+  removeRow(row: PblNgridBaseRowComponent<any, T>) {
+    const rows = this.rows.get(row.rowType);
+    if (rows) {
+      rows.delete(row);
+    }
+    this.visibleChangedRows.delete(row);
   }
 
   /**
