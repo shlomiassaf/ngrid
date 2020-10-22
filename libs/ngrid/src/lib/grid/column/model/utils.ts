@@ -19,11 +19,11 @@ export function initDefinitions<T extends PblBaseColumnDefinition>(def: PblBaseC
 
 export function isColumnDefinition(obj: any): obj is PblColumnDefinition {
   // TODO: Get rid of this duck-type type matching. Accept solid instances in PblTable.columns instead of interfaces.
-  return !!obj.prop && !obj.hasOwnProperty('span');
+  return !!obj.prop && !obj.hasOwnProperty('columnIds');
 }
 
 
 export function isColumnGroupDefinition(obj: any): obj is PblColumnGroupDefinition {
   // TODO: Get rid of this duck-type type matching. Accept solid instances in PblTable.columns instead of interfaces.
-  return !!obj.prop && obj.hasOwnProperty('span');
+  return !!obj.prop && obj.hasOwnProperty('columnIds');
 }

@@ -53,9 +53,8 @@ export class SellerDemoExample {
     .headerGroup(
       { type: 'fixed' },
       {
-        prop: 'name',
-        span: 3,
-        label: 'Marketing'
+        label: 'Marketing',
+        columnIds: ['name', 'email', 'country', 'rating']
       }
     )
     .build();

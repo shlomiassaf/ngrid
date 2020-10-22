@@ -123,7 +123,7 @@ export class PblNgridTargetEventsPlugin<T = any> {
           (event as Events.PblNgridDataMatrixPoint<T>).context = this.pluginCtrl.extApi.contextApi.getCell(event.rowIndex, columnIndex);
         } else {
           const store = this.pluginCtrl.extApi.columnStore;
-          const rowInfo = store.metaColumnIds[matrixPoint.type][event.rowIndex];
+          const rowInfo = (matrixPoint.type === 'header' ? store.metaHeaderRows : store.metaFooterRows)[event.rowIndex];
           const record = store.find(rowInfo.keys[event.colIndex]);
           if (rowInfo.isGroup) {
             event.subType = 'meta-group';
@@ -170,7 +170,9 @@ export class PblNgridTargetEventsPlugin<T = any> {
               NOTE: When subType is not 'data' the ype can only be `header` or `footer`.
           */
           if (matrixPoint.subType !== 'data') {
-            const rowInfo = this.pluginCtrl.extApi.columnStore.metaColumnIds[matrixPoint.type][event.rowIndex];
+            const store = this.pluginCtrl.extApi.columnStore;
+
+            const rowInfo = (matrixPoint.type === 'header' ? store.metaHeaderRows : store.metaFooterRows)[event.rowIndex];
             if (rowInfo.isGroup) {
               event.subType = 'meta-group';
             }

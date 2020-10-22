@@ -38,6 +38,18 @@ export class GroupColumnsLockExample {
         lockColumns: true,
       }
     )
+    .headerGroup(
+      {
+        prop: 'gender',
+        span: 2,
+        label: 'Gender, Email & Country'
+      },
+      {
+        prop: 'birthdate',
+        span: 1,
+        label: 'Birthday & Balance',
+      }
+    )
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
 

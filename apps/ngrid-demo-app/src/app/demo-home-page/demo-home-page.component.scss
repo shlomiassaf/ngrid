@@ -61,6 +61,7 @@ app-search-results {
     color: white;
   }
 }
+
 .ng-custom-logo {
   position: relative;
   height: $top-nav-bar-height - (2 * $nav-top-bottom-padding);
@@ -76,6 +77,12 @@ app-search-results {
     width: 18px;
     font-size: 18px;
     color: #2196f3;
+  }
+}
+
+.pbl-ngrid-rtl-layout .ng-custom-logo {
+  & > mat-icon {
+    transform: translate(50%, -50%);
   }
 }
 

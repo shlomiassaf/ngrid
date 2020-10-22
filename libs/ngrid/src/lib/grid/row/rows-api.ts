@@ -1,15 +1,15 @@
-import { EmbeddedViewRef, ViewContainerRef, NgZone, ComponentFactory, InjectionToken } from '@angular/core';
+import { EmbeddedViewRef, ViewContainerRef, NgZone } from '@angular/core';
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
-import { PblNgridCellDirective } from '../cell/cell.component';
 import { PblCdkTableComponent } from '../pbl-cdk-table/pbl-cdk-table.component';
 import { unrx } from '../utils/unrx';
+import { PblNgridBaseRowComponent } from './base-row.component';
+import { PblNgridCellFactoryResolver } from './cell-factory.service';
+import { PblNgridColumnRowComponent } from './columns-row.component';
+import { PblNgridMetaRowComponent } from './meta-row.component';
 import { PblNgridRowComponent } from './row.component';
-
-export const NGRID_CELL_FACTORY = new InjectionToken<ComponentFactory<PblNgridCellDirective>>('ComponentFactory<PblNgridCellDirective>');
+import { GridRowType } from './types';
 
 export interface RowsApi<T = any> {
-  cdkTable: PblCdkTableComponent<T>;
-
   syncRows(rowType?: 'all' | boolean, detectChanges?: boolean): void;
   syncRows(rowType: 'header' | 'data' | 'footer', detectChanges: boolean, ...rows: number[]): void;
   syncRows(rowType: 'header' | 'data' | 'footer', ...rows: number[]): void;
@@ -19,36 +19,119 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
 
   cdkTable: PblCdkTableComponent<T>;
 
-  private dataRows = new Set<PblNgridRowComponent<T>>();
+  private rows = new Map<GridRowType, Set<PblNgridBaseRowComponent<any, T>>>();
+  private columnRows = new Set<PblNgridRowComponent<T> | PblNgridColumnRowComponent>();
+  private metaHeaderRows = new Set<PblNgridMetaRowComponent>();
+  private metaFooterRows = new Set<PblNgridMetaRowComponent>();
+  private gridWidthRow: PblNgridColumnRowComponent;
 
   constructor(private readonly extApi: PblNgridExtensionApi<T>,
               private readonly zone: NgZone,
-              public readonly _factory: ComponentFactory<PblNgridCellDirective>) {
+              public readonly cellFactory: PblNgridCellFactoryResolver) {
     extApi.onConstructed(() => this.cdkTable = extApi.cdkTable);
 
-    extApi.columnStore.visibleChanged$
+    extApi.columnStore.columnRowChange()
       .pipe(unrx(this))
       .subscribe( event => {
+        const gridWidthRow = this.gridWidthRow;
+        let requireSizeUpdate = false;
+
         event.changes.forEachOperation((record, previousIndex, currentIndex) => {
-          for (const r of this.dataRows) {
-            if (record.previousIndex == null) {
+          if (record.previousIndex == null) {
+            for (const r of this.columnRows) {
               r._createCell(record.item, currentIndex);
-            } else if (currentIndex == null) {
-              r._destroyCell(record.item, true);
-            } else {
+            }
+          } else if (currentIndex == null) {
+            for (const r of this.columnRows) {
+              r._destroyCell(previousIndex);
+            }
+          } else {
+            for (const r of this.columnRows) {
               r._moveCell(previousIndex, currentIndex);
+            }
+            if (!requireSizeUpdate && gridWidthRow) {
+              const lastIndex = gridWidthRow.cellsLength - 1;
+              requireSizeUpdate = currentIndex === lastIndex || previousIndex === lastIndex;
             }
           }
         });
+        if (requireSizeUpdate) {
+          this.gridWidthRow.updateSize();
+        }
+      });
+
+    extApi.columnStore.metaRowChange()
+      .pipe(unrx(this))
+      .subscribe( event => {
+        const rows = event.metaRow.kind === 'header' ? this.metaHeaderRows : this.metaFooterRows;
+        for (const r of rows) {
+          if (r.row.rowDef.rowIndex === event.metaRow.rowDef.rowIndex) {
+            event.changes.forEachOperation((record, previousIndex, currentIndex) => {
+              if (record.previousIndex == null) {
+                const columns = this.extApi.columnStore.find(record.item);
+                const col = event.metaRow.kind === 'header' ?
+                  event.metaRow.isGroup ? columns.headerGroup : columns.header
+                  : event.metaRow.isGroup ? columns.footerGroup : columns.footer;
+                r._createCell(col as any, currentIndex);
+              } else if (currentIndex == null) {
+                r._destroyCell(previousIndex);
+              } else {
+                r._moveCell(previousIndex, currentIndex);
+              }
+            });
+            break;
+          }
+        }
       });
   }
 
-  addRow(row: PblNgridRowComponent<T>) {
-    this.dataRows.add(row);
+  addRow(row: PblNgridBaseRowComponent<GridRowType, T>) {
+    let rows = this.rows.get(row.rowType);
+    if (!rows) {
+      rows = new Set<PblNgridBaseRowComponent<any, T>>();
+      this.rows.set(row.rowType, rows);
+    }
+    rows.add(row);
+
+    switch (row.rowType) {
+      case 'header':
+        if ((row as unknown as PblNgridColumnRowComponent).gridWidthRow) {
+          this.gridWidthRow = row as unknown as PblNgridColumnRowComponent;
+        }
+      case 'data':
+      case 'footer':
+        this.columnRows.add(row as any);
+        break;
+      case 'meta-header':
+        this.metaHeaderRows.add(row as any);
+        break;
+      case 'meta-footer':
+        this.metaFooterRows.add(row as any);
+        break;
+    }
   }
 
-  removeRow(row: PblNgridRowComponent<T>) {
-    this.dataRows.delete(row);
+  removeRow(row: PblNgridBaseRowComponent<any, T>) {
+    const rows = this.rows.get(row.rowType);
+    if (rows) {
+      rows.delete(row);
+    }
+    switch (row.rowType) {
+      case 'header':
+        if ((row as unknown as PblNgridColumnRowComponent).gridWidthRow && (row as unknown as PblNgridColumnRowComponent) === this.gridWidthRow) {
+          this.gridWidthRow = undefined;
+        }
+      case 'data':
+      case 'footer':
+        this.columnRows.delete(row as any);
+        break;
+      case 'meta-header':
+        this.metaHeaderRows.delete(row as any);
+        break;
+      case 'meta-footer':
+        this.metaFooterRows.delete(row as any);
+        break;
+    }
   }
 
   /**

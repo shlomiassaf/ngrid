@@ -217,9 +217,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
       let detailRow = grid.registry.getSingle('detailRowParent');
       if (detailRow) {
         this._detailRowDef = detailRow = detailRow.clone();
-        Object.defineProperty(detailRow, 'columns', { enumerable: true,  get: () => grid.columnApi.visibleColumnIds });
         Object.defineProperty(detailRow, 'when', { enumerable: true,  get: () => this._isDetailRow });
-        detailRow.ngOnChanges({ columns: { isFirstChange: () => true, firstChange: true, currentValue: detailRow.columns, previousValue: null }});
       } else if (!this._defaultParentRef) {
         // TODO: move to module? set in root registry? put elsewhere to avoid grid sync (see event of registry change)...
         this._defaultParentRef = this.injector.get(ComponentFactoryResolver)
@@ -242,8 +240,8 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   }
 
   /**
-   * Update the grid with detail row infor.
-   * Instead of calling for a change detection cycle we can assign the new predicates directly to the cdkRowDef instances.
+   * Update the grid with detail row info.
+   * Instead of calling for a change detection cycle we can assign the new predicates directly to the pblNgridRowDef instances.
    */
   private updateTable(): void {
     this.grid._tableRowDef.when = this._isSimpleRow;

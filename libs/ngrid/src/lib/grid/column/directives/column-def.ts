@@ -243,7 +243,6 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
         this._column = column;
         (column as any).attach(this);
         this.name = column.id.replace(/ /g, '_');
-        this.extApi.columnStore.notifyColumnDefBind(column, this);
         if (isPblColumn(column)) {
           this.updatePin(column.pin);
         }
@@ -256,7 +255,6 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
       const col = this._column;
       this._column = undefined;
       col.detach();
-      this.extApi.columnStore.notifyColumnDefBind(col, this);
     }
   }
 }

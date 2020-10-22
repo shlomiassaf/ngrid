@@ -5,7 +5,7 @@ import { Injectable, Inject } from '@angular/core';
 
 import { PblNgridExtensionApi, EXT_API_TOKEN } from '../../ext/grid-ext-api';
 import { PblMetaRowDefinitions } from '../column/model/types';
-import { PblMetaRowDirective } from './meta-row.directive';
+import { PblMetaRow } from './meta-row.directive';
 
 function metaRowSectionFactory(): MetaRowSection {
   return { fixed: [], row: [], sticky: [], all: [] };
@@ -61,17 +61,18 @@ export class PblNgridMetaRowService<T = any> {
     });
   }
 
-  addMetaRow(metaRow: PblMetaRowDirective): void {
+  addMetaRow(metaRow: PblMetaRow): void {
     const { columnStore } = this.extApi;
-    const { header, footer } = columnStore.metaColumnIds;
+    const header = columnStore.metaHeaderRows;
+    const footer = columnStore.metaFooterRows;
 
     const rowDef = metaRow.meta;
     if (rowDef === columnStore.headerColumnDef) {
       if (metaRow.gridWidthRow === true) {
-        this.gridWidthRow = { rowDef, el: metaRow.elRef.nativeElement };
+        this.gridWidthRow = { rowDef, el: metaRow.element };
         this.header.all.push(rowDef);
       } else {
-        this.addToSection(this.header, metaRow, columnStore.metaColumnIds.header.length);
+        this.addToSection(this.header, metaRow, columnStore.metaFooterRows.length);
       }
     } else if (rowDef === columnStore.footerColumnDef) {
       this.addToSection(this.footer, metaRow, 0);
@@ -91,7 +92,7 @@ export class PblNgridMetaRowService<T = any> {
     this.sync$.next();
   }
 
-  removeMetaRow(metaRow: PblMetaRowDirective): void {
+  removeMetaRow(metaRow: PblMetaRow): void {
     const rowDef = metaRow.meta;
     let index = this.header.all.indexOf(metaRow.meta);
     if (index > -1) {
@@ -105,9 +106,9 @@ export class PblNgridMetaRowService<T = any> {
     }
   }
 
-  private addToSection(section: MetaRowSection, metaRow: PblMetaRowDirective, index: number): void {
+  private addToSection(section: MetaRowSection, metaRow: PblMetaRow, index: number): void {
     const rowDef = metaRow.meta;
-    section[rowDef.type].push( { index, rowDef, el: metaRow.elRef.nativeElement } );
+    section[rowDef.type].push( { index, rowDef, el: metaRow.element } );
     section.all.push(rowDef);
   }
 }

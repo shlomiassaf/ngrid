@@ -7,6 +7,7 @@ import { COLUMN_EDITABLE_CELL_CLASS } from '../utils/unique-column-css';
 import { PblRowContext, PblCellContext } from '../context/index';
 import { PblColumn } from '../column/model';
 import { initCellElement } from './utils';
+import { PblNgridBaseCell } from './base-cell';
 
 
 function initDataCellElement(el: HTMLElement, column: PblColumn, prev?: PblColumn): void {
@@ -30,9 +31,9 @@ function initDataCellElement(el: HTMLElement, column: PblColumn, prev?: PblColum
   },
   exportAs: 'pblNgridCell',
 })
-export class PblNgridCellDirective implements DoCheck, OnDestroy {
+export class PblNgridCellComponent extends PblNgridBaseCell implements DoCheck {
 
-  public column: PblColumn;
+  column: PblColumn;
   cellCtx: PblCellContext | undefined;
   template: TemplateRef<any>;
 
@@ -43,13 +44,8 @@ export class PblNgridCellDirective implements DoCheck, OnDestroy {
    * The position of the column def among all columns regardless of visibility.
    */
   private colIndex: number;
-  private el: HTMLElement;
   private focused = false;
   private selected = false;
-
-  constructor(private elementRef: ElementRef) {
-    this.el = this.elementRef.nativeElement;
-  }
 
   syncColumn() {
     if (this.column) {
@@ -110,9 +106,4 @@ export class PblNgridCellDirective implements DoCheck, OnDestroy {
       }
     }
   }
-
-  ngOnDestroy(): void {
-    unrx.kill(this);
-  }
-
 }

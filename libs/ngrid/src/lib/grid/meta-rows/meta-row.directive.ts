@@ -3,10 +3,16 @@ import { Directive, Input, ElementRef, OnDestroy, Attribute } from '@angular/cor
 import { PblMetaRowDefinitions } from '../column/model/types';
 import { PblNgridMetaRowService } from './meta-row.service';
 
+export interface PblMetaRow {
+  element: HTMLElement;
+  meta: PblMetaRowDefinitions;
+  gridWidthRow: any;
+}
+
 @Directive({
   selector: '[pblMetaRow]',
 })
-export class PblMetaRowDirective implements OnDestroy {
+export class PblMetaRowDirective implements PblMetaRow, OnDestroy {
 
   // tslint:disable-next-line:no-input-rename
   @Input('pblMetaRow') get meta(): PblMetaRowDefinitions { return this._meta; }
@@ -16,14 +22,16 @@ export class PblMetaRowDirective implements OnDestroy {
     }
   }
 
-  public readonly gridWidthRow: boolean;
+  readonly element: HTMLElement;
+  readonly gridWidthRow: boolean;
 
   private _meta: PblMetaRowDefinitions;
 
   constructor(public readonly metaRows: PblNgridMetaRowService,
-              public elRef: ElementRef<HTMLElement>,
+              elRef: ElementRef<HTMLElement>,
               @Attribute('gridWidthRow') gridWidthRow: any) {
     this.gridWidthRow = gridWidthRow !== null;
+    this.element = elRef.nativeElement;
   }
 
   ngOnDestroy(): void {
@@ -35,14 +43,14 @@ export class PblMetaRowDirective implements OnDestroy {
 
     if (oldMeta) {
       if(oldMeta.rowClassName) {
-        this.elRef.nativeElement.classList.remove(oldMeta.rowClassName);
+        this.element.classList.remove(oldMeta.rowClassName);
       }
       this.metaRows.removeMetaRow(this);
     }
     this._meta = meta;
     if (meta) {
       if (meta.rowClassName) {
-        this.elRef.nativeElement.classList.add(meta.rowClassName);
+        this.element.classList.add(meta.rowClassName);
       }
       this.metaRows.addMetaRow(this);
     }
