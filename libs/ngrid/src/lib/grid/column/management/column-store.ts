@@ -1,10 +1,9 @@
 import { Subject, Observable, of } from 'rxjs';
-import { isDevMode, IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core';
+import { isDevMode, IterableDiffer, IterableDiffers } from '@angular/core';
 import { PblNgridComponent } from '../../ngrid.component';
 import { findCellDef } from '../../cell/cell-def/utils';
-import { PblNgridColumnDef } from '../directives/column-def'
 import {
-  COLUMN, PblColumnFactory,
+  PblColumnFactory,
   PblColumnGroup, PblColumnGroupStore,
   isPblColumn, PblColumn, PblMetaColumn,
   PblNgridColumnDefinitionSet,
@@ -18,6 +17,7 @@ import { PblColumnStoreMetaRow, PblMetaColumnStore, PblRowColumnsChangeEvent, Pb
 import { HiddenColumns } from './hidden-columns';
 import { GridRowType } from '../../row/types';
 import { PblNgridBaseRowComponent } from '../../row/base-row.component';
+import { MetaRowsStore } from './meta-rows-store';
 
 export class PblColumnStore {
   metaColumnIds: { header: Array<PblColumnStoreMetaRow>; footer: Array<PblColumnStoreMetaRow>; };
@@ -33,24 +33,19 @@ export class PblColumnStore {
   get primary(): PblColumn | undefined { return this._primary; }
   get groupStore(): PblColumnGroupStore { return this._groupStore; }
 
-  readonly visibleChanged$: Observable<PblRowColumnsChangeEvent<PblColumn>>;
-  readonly columnDefObjectChanged$: Observable<{ op: 'attach' | 'detach'; column: COLUMN; columnDef: PblNgridColumnDef; }>;
-
   private _primary: PblColumn | undefined;
-  private _metaRows: { header: Array<PblColumnStoreMetaRow & { allKeys?: string[] }>; footer: Array<PblColumnStoreMetaRow & { allKeys?: string[] }>; };
   private byId = new Map<string, PblMetaColumnStore & { data?: PblColumn }>();
   private _groupStore: PblColumnGroupStore;
   private lastSet: PblNgridColumnSet;
   private hiddenColumns = new HiddenColumns();
   private differ: IterableDiffer<PblColumn>;
   private _visibleChanged$ = new Subject<PblRowColumnsChangeEvent<PblColumn>>();
-  private _columnDefObjectChanged$ = new Subject<{ op: 'attach' | 'detach'; column: COLUMN; columnDef: PblNgridColumnDef; }>();
+  private metaRowsStore: MetaRowsStore;
 
   constructor(private readonly grid: PblNgridComponent, private readonly differs: IterableDiffers) {
+    this.metaRowsStore = new MetaRowsStore(differs);
     this.resetIds();
     this.resetColumns();
-    this.visibleChanged$ = this._visibleChanged$.asObservable();
-    this.columnDefObjectChanged$ = this._columnDefObjectChanged$.asObservable();
   }
 
   getColumnsOf<TRowType extends GridRowType>(row: PblNgridBaseRowComponent<TRowType>): PblRowTypeToColumnTypeMap<TRowType>[] {
@@ -59,18 +54,19 @@ export class PblColumnStore {
       case 'header':
       case 'footer':
         return this.visibleColumns as any;
+      case 'meta-header':
+      case 'meta-footer':
+        return (row as any)._row.rowDef.cols;
     }
     return [];
   }
 
-  getChangeStreamOf<TRowType extends GridRowType>(row: PblNgridBaseRowComponent<TRowType>): Observable<PblRowColumnsChangeEvent<PblRowTypeToColumnTypeMap<TRowType>>> {
-    switch (row.rowType) {
-      case 'data':
-      case 'header':
-      case 'footer':
-        return this._visibleChanged$ as any;
-    }
-    return of() ;
+  columnRowChange(): Observable<PblRowColumnsChangeEvent<PblRowTypeToColumnTypeMap<'data'>>> {
+    return this._visibleChanged$ as any;
+  }
+
+  metaRowChange() {
+    return this.metaRowsStore.visibleChanged$.asObservable();
   }
 
   isColumnHidden(column: PblColumn) {
@@ -227,7 +223,7 @@ export class PblColumnStore {
         const column = metaCol.header || (metaCol.header = new PblMetaColumn(def));
         keys.push(column.id);
       }
-      this._metaRows.header[rowDef.rowIndex] = { rowDef, keys };
+      this.metaRowsStore.setHeader({ rowDef, keys, kind: 'header' });
     }
 
     for (const rowDef of headerGroup) {
@@ -241,7 +237,7 @@ export class PblColumnStore {
         const column = metaCol.footer || (metaCol.footer = new PblMetaColumn(def));
         keys.push(column.id);
       }
-      this._metaRows.footer.push({ rowDef, keys });
+      this.metaRowsStore.setFooter({ rowDef, keys, kind: 'footer' });
     }
     resetColumnWidths(rowWidth, this.visibleColumns, this.metaColumns);
     this.differ = this.differs.find(this.visibleColumns).create((i, c) => c.id);
@@ -328,20 +324,6 @@ export class PblColumnStore {
 
   dispose() {
     this._visibleChanged$.complete();
-    this._columnDefObjectChanged$.complete();
-  }
-
-  /**
-   * Notify that the column def has been attached or detached from a column
-   * @param column The column (if no columnDef -> detached, otherwise attach)
-   * @param columnDef The subject of change
-   */
-  notifyColumnDefBind(column: COLUMN, columnDef: PblNgridColumnDef) {
-    this._columnDefObjectChanged$.next({
-      op: column.columnDef ? 'attach' : 'detach',
-      column,
-      columnDef,
-    })
   }
 
   private _updateGroup(columnSet: PblColumnSet<PblColumnGroup>): void {
@@ -394,13 +376,7 @@ export class PblColumnStore {
         this._groupStore.remove(ghost);
       }
     }
-    this.updateMetaRow('header', columnSet.rowIndex, { rowDef: columnSet, keys, allKeys, isGroup: true })
-  }
-
-
-  private updateMetaRow<P extends keyof PblColumnStore['_metaRows']>(type: P, rowIndex: number, value: PblColumnStore['_metaRows'][P][0]): void {
-    const curr = this._metaRows[type][rowIndex] || {};
-    this._metaRows[type][rowIndex] = Object.assign(curr, value);
+    this.metaRowsStore.updateHeader({ rowDef: columnSet, keys, allKeys, isGroup: true, kind: 'header' });
   }
 
   private getColumnRecord<T extends PblMetaColumnStore & { data?: PblColumn }>(id: string, collection?: T[]): T  {
@@ -423,7 +399,7 @@ export class PblColumnStore {
         this.visibleColumns.push(c);
       }
     }
-    for (const h of this._metaRows.header) {
+    for (const h of this.metaRowsStore.headers) {
       if (h.isGroup) {
         h.keys = h.allKeys.filter( key => this.find(key).headerGroup.isVisible );
       }
@@ -442,7 +418,8 @@ export class PblColumnStore {
     this.columnIds = [];
     this.visibleColumnIds = [];
     this.hiddenColumnIds = [];
-    this._metaRows = this.metaColumnIds = { header: [], footer: [] };
+    this.metaRowsStore.clear();
+    this.metaColumnIds = { header: this.metaRowsStore.headers, footer: this.metaRowsStore.footers };
   }
 
   private checkVisibleChanges() {

@@ -11,7 +11,7 @@ import {
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { unrx } from '../utils';
 import { PblNgridComponent } from '../ngrid.component';
-import { PblMetaColumn,PblColumnGroup, PblColumn } from '../column/model';
+import { PblColumn } from '../column/model';
 import { MetaCellContext } from '../context/index';
 import { PblNgridColumnDef } from '../column/directives/column-def';
 import { applyWidth, initCellElement } from './utils';
@@ -48,7 +48,6 @@ export class PblNgridFooterCellComponent extends PblNgridBaseCell {
       this.column = column;
 
       if (!column.columnDef) {
-        console.log(column.prop);
         new PblNgridColumnDef(this.extApi).column = column;
         column.columnDef.name = column.id;
       }
@@ -67,4 +66,10 @@ export class PblNgridFooterCellComponent extends PblNgridBaseCell {
     }
   }
 
+  ngOnDestroy() {
+    if (this.column) {
+      unrx(this, this.column);
+    }
+    super.ngOnDestroy();
+  }
 }

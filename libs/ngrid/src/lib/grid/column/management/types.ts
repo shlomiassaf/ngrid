@@ -13,6 +13,7 @@ export interface PblMetaColumnStore {
 export interface PblColumnStoreMetaRow {
   rowDef: PblColumnSet<PblMetaColumnDefinition | PblColumnGroupDefinition>,
   keys: string[];
+  kind: 'header' | 'footer';
   isGroup?: boolean;
 }
 

@@ -279,7 +279,7 @@ export class PblColumnFactory {
       const idx = defs.findIndex( d => d.prop === orgProp);
       const columnGroupDef: PblColumnGroupDefinition = idx !== -1
         ? defs.splice(idx, 1)[0]
-        : defs.find( d => !d.prop ) || { prop: orgProp, rowIndex, span: undefined }
+        : defs.find( d => !d.prop ) || { prop: orgProp, rowIndex, span: undefined, kind: 'header' }
       ;
 
       const placeholder = idx === -1 && !!columnGroupDef.prop;

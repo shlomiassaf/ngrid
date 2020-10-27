@@ -3,6 +3,7 @@ import {
   PblNgridHeaderCellComponent,
   PblNgridCellComponent,
   PblNgridFooterCellComponent,
+  PblNgridMetaCellComponent,
 } from './grid/cell';
 import { NGRID_CELL_FACTORY, PblNgridCellFactoryMap, PblNgridCellFactoryResolver } from './grid/row/cell-factory.service';
 
@@ -11,8 +12,8 @@ export function ngridCellFactory(cfr: ComponentFactoryResolver): PblNgridCellFac
     'data': cfr.resolveComponentFactory(PblNgridCellComponent),
     'header': cfr.resolveComponentFactory(PblNgridHeaderCellComponent),
     'footer': cfr.resolveComponentFactory(PblNgridFooterCellComponent),
-    'meta-header': cfr.resolveComponentFactory(PblNgridHeaderCellComponent),
-    'meta-footer': cfr.resolveComponentFactory(PblNgridFooterCellComponent),
+    'meta-header': cfr.resolveComponentFactory(PblNgridMetaCellComponent),
+    'meta-footer': cfr.resolveComponentFactory(PblNgridMetaCellComponent),
   }
 }
 

@@ -28,8 +28,6 @@ export class ColumnApi<T> {
   get visibleColumns(): PblColumn[] { return this.store.visibleColumns; }
   get columns(): PblColumn[] { return this.store.allColumns; }
   get columnIds(): string[] { return this.store.columnIds; }
-  get visibleChanged$() { return this.store.visibleChanged$; }
-
 
   get totalColumnWidthChange(): Observable<number> {
     if (!this._totalColumnWidthChange) {

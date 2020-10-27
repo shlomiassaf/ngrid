@@ -30,10 +30,12 @@ export { AutoSizeToFitOptions, ColumnApi } from './column/management';
 export {
   GridRowType,
   RowsApi,
+  PblNgridRowDef,
   NGRID_CELL_FACTORY, PblNgridCellFactoryResolver, PblNgridCellFactoryMap,
   PBL_NGRID_ROW_TEMPLATE,
   PblNgridRowComponent,
-  PblNgridHeaderRowComponent,
+  PblNgridColumnRowComponent,
+  PblNgridMetaRowComponent,
 } from './row';
 
 export {
@@ -56,6 +58,7 @@ export {
   PblNgridCellDefDirective,
   PblNgridEditorCellDefDirective,
   PblNgridFooterCellDefDirective,
+  PblNgridMetaCellComponent,
 } from './cell';
 
 export {

@@ -1,50 +1,53 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EmbeddedViewRef, Inject, Input, ViewEncapsulation, SimpleChanges, OnChanges, Optional, DoCheck, OnDestroy, ViewContainerRef, ViewChild, ComponentRef, Attribute } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, ComponentRef, Attribute } from '@angular/core';
 import { CdkHeaderRow } from '@angular/cdk/table';
 
-import { EXT_API_TOKEN, PblNgridExtensionApi } from '../../ext/grid-ext-api';
-import { PblNgridComponent } from '../ngrid.component';
 import { unrx } from '../utils/unrx';
+import { PblNgridComponent } from '../ngrid.component';
 import { PblNgridBaseRowComponent, PBL_NGRID_BASE_ROW_TEMPLATE } from './base-row.component';
 import { PblColumn, PblMetaRowDefinitions } from '../column/model';
 import { PblNgridMetaRowService, PblMetaRow } from '../meta-rows';
 import { PblNgridHeaderCellComponent } from '../cell/header-cell.component';
+import { applyMetaRowClass, initColumnOrMetaRow, setRowVisibility } from './utils';
 
+/**
+ * The row that represents the columns of the grid.
+ * There are only 2 column rows in a grid, the top (header) and bottom (footer), both optional.
+ */
 @Component({
-  selector: 'pbl-ngrid-header-row',
+  selector: 'pbl-ngrid-column-row',
   template: PBL_NGRID_BASE_ROW_TEMPLATE,
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: {
     'role': 'row',
   },
   providers: [
-    { provide: CdkHeaderRow, useExisting: PblNgridHeaderRowComponent }
+    { provide: CdkHeaderRow, useExisting: PblNgridColumnRowComponent }
   ],
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridHeaderRowComponent extends PblNgridBaseRowComponent<'header' | 'footer', PblMetaRowDefinitions> implements PblMetaRow {
+export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header' | 'footer', PblMetaRowDefinitions> implements PblMetaRow {
 
   @Input() set row(value: PblMetaRowDefinitions) { this.updateRow(value); }
 
   get meta(): PblMetaRowDefinitions { return this._meta; }
-  set meta(value: PblMetaRowDefinitions) { this.row = value; }
+  set meta(value: PblMetaRowDefinitions) { this._meta = value; } // TODO: remove when removing pblMetaRow
 
+  readonly rowType: 'header' | 'footer';
   readonly element: HTMLElement;
   readonly isFooter: boolean;
   readonly gridWidthRow: boolean;
   private _meta: PblMetaRowDefinitions;
 
-  constructor(@Optional() @Inject(EXT_API_TOKEN) extApi: PblNgridExtensionApi,
-              el: ElementRef<HTMLElement>,
+  constructor(@Optional() grid: PblNgridComponent,
+               el: ElementRef<HTMLElement>,
               private readonly metaRows: PblNgridMetaRowService,
               @Attribute('footer') isFooter: any,
               @Attribute('gridWidthRow') gridWidthRow: any) {
-    super(extApi, el);
+    super(grid, el);
     this.element = el.nativeElement;
     this.gridWidthRow = gridWidthRow !== null;
     this.isFooter = isFooter !== null;
-    if (this._extApi) {
-      this.handleVisibility();
-    }
+    this.rowType = this.isFooter ? 'footer' : 'header';
   }
 
   ngOnDestroy(): void {
@@ -52,12 +55,8 @@ export class PblNgridHeaderRowComponent extends PblNgridBaseRowComponent<'header
     super.ngOnDestroy();
   }
 
-  protected getRowType() { return this.el.nativeElement.hasAttribute('footer') ? 'footer' : 'header' as const; }
-
-  protected init(initAtConstructor: boolean) {
-    if (!initAtConstructor) {
-      this.handleVisibility();
-    }
+  protected init() {
+    this.handleVisibility();
   }
 
   protected detectChanges() {
@@ -71,21 +70,7 @@ export class PblNgridHeaderRowComponent extends PblNgridBaseRowComponent<'header
 
   protected updateRow(value: PblMetaRowDefinitions) {
     if (value !== this._meta) {
-      const oldMeta = this._meta;
-
-      if (oldMeta) {
-        if(oldMeta.rowClassName) {
-          this.el.nativeElement.classList.remove(oldMeta.rowClassName);
-        }
-        this.metaRows.removeMetaRow(this);
-      }
-      this._meta = value;
-      if (value) {
-        if (value.rowClassName) {
-          this.el.nativeElement.classList.add(value.rowClassName);
-        }
-        this.metaRows.addMetaRow(this);
-      }
+      applyMetaRowClass(this.metaRows, this, this.element, this._meta, value);
     }
   }
 
@@ -93,23 +78,22 @@ export class PblNgridHeaderRowComponent extends PblNgridBaseRowComponent<'header
     cell.instance.setColumn(column);
   }
 
+  protected cellDestroyed(cell: ComponentRef<PblNgridHeaderCellComponent>) {
+    unrx.kill(this, cell.instance.column);
+  }
+
   private handleVisibility() {
-    const classList = this.element.classList;
-    classList.add(...(this.isFooter ? ['cdk-footer-row', 'pbl-ngrid-footer-row'] : ['cdk-header-row', 'pbl-ngrid-header-row']));
+    initColumnOrMetaRow(this.element, this.isFooter);
     const key = this.isFooter ? 'showFooter' : 'showHeader';
     if (!this._extApi.grid[key]) {
-      classList.add('pbl-ngrid-row-hidden');
+      setRowVisibility(this.element, false);
     }
 
     this._extApi.propChanged
       .pipe(unrx(this))
       .subscribe( event => {
-        if (event.type === 'grid' && event.key === key) {
-          if (event.prev === false) {
-            classList.remove('pbl-ngrid-row-hidden');
-          } else {
-            classList.add('pbl-ngrid-row-hidden');
-          }
+        if (event.source === this._extApi.grid && event.key === key) {
+          setRowVisibility(this.element, event.prev === false)
         }
       });
   }

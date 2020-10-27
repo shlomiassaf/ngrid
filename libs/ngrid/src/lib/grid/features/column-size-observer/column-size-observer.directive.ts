@@ -101,7 +101,6 @@ export class PblColumnSizeObserver extends ColumnSizeInfo implements AfterViewIn
   constructor(el: ElementRef, table: PblNgridComponent<any>) {
     super(el.nativeElement);
     this.controller = PblNgridGroupHeaderSizeController.get(table);
-    this.controller.add(this);
   }
 
   attachColumn(column: PblColumn): void {
@@ -114,9 +113,9 @@ export class PblColumnSizeObserver extends ColumnSizeInfo implements AfterViewIn
   }
 
   ngAfterViewInit(): void {
-    // if (!this.column || !this.controller.hasColumn(this.column)) {
-    //   this.controller.add(this);
-    // }
+    if (!this.column || !this.controller.hasColumn(this.column)) {
+      this.controller.add(this);
+    }
   }
 
   ngOnDestroy() {

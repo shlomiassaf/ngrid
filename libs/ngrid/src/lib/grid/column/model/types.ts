@@ -94,6 +94,8 @@ export interface PblColumnGroupDefinition extends PblBaseColumnDefinition {
    */
   id?: string;
 
+  kind: 'header' | 'footer';
+
    /**
    * The index (zero based) of the header row this header group column is attached to, used for multi-header setup.
    */

@@ -9,7 +9,6 @@ import {
   NgModuleRef,
   ModuleWithProviders,
   Self,
-  ComponentFactoryResolver,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -23,7 +22,7 @@ import {
   PblCdkTableComponent,
   PblNgridComponent,
 
-  PblNgridRowComponent, PblNgridHeaderRowComponent,
+  PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
   PblNgridMetaRowContainerComponent, PblMetaRowDirective,
   PblNgridColumnDef,
   PblNgridHeaderCellDefDirective,
@@ -32,6 +31,7 @@ import {
   PblNgridHeaderCellComponent,
   PblNgridCellComponent,
   PblNgridFooterCellComponent,
+  PblNgridMetaCellComponent,
 
   PblNgridCellStyling,
   PblNgridOuterSectionDirective,
@@ -77,7 +77,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridMetaRowContainerComponent, PblMetaRowDirective,
     PblCdkTableComponent,
     PblNgridColumnDef,
-    PblNgridRowComponent, PblNgridHeaderRowComponent,
+    PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
     PblNgridCellStyling,
     PblNgridOuterSectionDirective,
     PblNgridHeaderExtensionRefDirective,
@@ -89,6 +89,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridHeaderCellComponent,
     PblNgridCellComponent,
     PblNgridFooterCellComponent,
+    PblNgridMetaCellComponent,
 
     PblNgridHideColumns,
     PblColumnSizeObserver,
@@ -102,7 +103,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     ...PROVIDERS,
   ],
   exports: [
-    PblNgridRowComponent, PblNgridHeaderRowComponent,
+    PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
     PblNgridCellStyling,
     PblNgridOuterSectionDirective,
     PblNgridHeaderExtensionRefDirective,
@@ -114,6 +115,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridHeaderCellComponent,
     PblNgridCellComponent,
     PblNgridFooterCellComponent,
+    PblNgridMetaCellComponent,
 
     PblNgridHideColumns,
     PblColumnSizeObserver,
