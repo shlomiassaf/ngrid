@@ -4,11 +4,10 @@ import { PblCdkTableComponent } from '../pbl-cdk-table/pbl-cdk-table.component';
 import { unrx } from '../utils/unrx';
 import { PblNgridBaseRowComponent } from './base-row.component';
 import { PblNgridCellFactoryResolver } from './cell-factory.service';
+import { PblNgridMetaRowComponent } from './meta-row.component';
 import { GridRowType, PblRowTypeToCellTypeMap } from './types';
 
 export interface RowsApi<T = any> {
-  cdkTable: PblCdkTableComponent<T>;
-
   syncRows(rowType?: 'all' | boolean, detectChanges?: boolean): void;
   syncRows(rowType: 'header' | 'data' | 'footer', detectChanges: boolean, ...rows: number[]): void;
   syncRows(rowType: 'header' | 'data' | 'footer', ...rows: number[]): void;
@@ -19,18 +18,19 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
   cdkTable: PblCdkTableComponent<T>;
 
   private rows = new Map<GridRowType, Set<PblNgridBaseRowComponent<any, T>>>();
-  private visibleChangedRows = new Set<PblNgridBaseRowComponent<any, T>>();
+  private columnRows = new Set<PblNgridBaseRowComponent<any, T>>();
+  private metaRows = new Set<PblNgridMetaRowComponent>();
 
   constructor(private readonly extApi: PblNgridExtensionApi<T>,
               private readonly zone: NgZone,
               public readonly cellFactory: PblNgridCellFactoryResolver) {
     extApi.onConstructed(() => this.cdkTable = extApi.cdkTable);
 
-    extApi.columnStore.visibleChanged$
+    extApi.columnStore.columnRowChange()
       .pipe(unrx(this))
       .subscribe( event => {
         event.changes.forEachOperation((record, previousIndex, currentIndex) => {
-          for (const r of this.visibleChangedRows) {
+          for (const r of this.columnRows) {
             if (record.previousIndex == null) {
               r._createCell(record.item, currentIndex);
             } else if (currentIndex == null) {
@@ -40,6 +40,21 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
             }
           }
         });
+      });
+
+    extApi.columnStore.metaRowChange()
+      .pipe(unrx(this))
+      .subscribe( event => {
+        for (const r of this.metaRows) {
+          if (r.rowType === 'meta-header' && event.metaRow.kind === 'header') {
+            if (r.row.rowDef.rowIndex === event.metaRow.rowDef.rowIndex) {
+              event.changes.forEachOperation((record, previousIndex, currentIndex) => {
+
+              });
+              break;
+            }
+          }
+        }
       });
   }
 
@@ -55,7 +70,10 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
       case 'data':
       case 'header':
       case 'footer':
-        this.visibleChangedRows.add(row);
+        this.columnRows.add(row);
+        break;
+      default:
+        this.metaRows.add(row as any);
         break;
     }
   }
@@ -65,7 +83,16 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
     if (rows) {
       rows.delete(row);
     }
-    this.visibleChangedRows.delete(row);
+    switch (row.rowType) {
+      case 'data':
+      case 'header':
+      case 'footer':
+        this.columnRows.delete(row);
+        break;
+      default:
+        this.metaRows.delete(row);
+        break;
+    }
   }
 
   /**

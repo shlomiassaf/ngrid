@@ -2,14 +2,12 @@
 import {
   Component,
   Directive,
-  IterableDiffers,
   OnInit,
   OnDestroy,
   TemplateRef,
 } from '@angular/core';
-import { CdkRowDef } from '@angular/cdk/table';
 
-import { PblNgridRegistryService, PblNgridSingleTemplateRegistry, PblNgridRowContext } from '@pebula/ngrid';
+import { PblNgridRegistryService, PblNgridSingleTemplateRegistry, PblNgridRowContext, PblNgridRowDef } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/grid/registry/types' {
   interface PblNgridSingleRegistryMap {
@@ -31,24 +29,16 @@ export class PblNgridDetailRowDefDirective extends PblNgridSingleTemplateRegistr
   selector: '[pblNgridDetailRowParentRef]',
   inputs: ['columns: pblNgridDetailRowParentRef', 'when: pblNgridDetailRowParentRefWhen'],
 })
-export class PblNgridDetailRowParentRefDirective<T> extends CdkRowDef<T> implements OnInit, OnDestroy {
-
-  constructor(template: TemplateRef<PblNgridRowContext<T>>, _differs: IterableDiffers, protected registry: PblNgridRegistryService) {
-    super(template, _differs);
-  }
-
-  clone(): PblNgridDetailRowParentRefDirective<T> {
-    const clone = Object.create(this);
-    this._columnsDiffer = this.columns = undefined;
-    return clone;
-  }
+export class PblNgridDetailRowParentRefDirective<T> extends PblNgridRowDef<T> implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.registry.setSingle('detailRowParent', this as any);
   }
 
   ngOnDestroy(): void {
-    this.registry.setSingle('detailRowParent',  undefined);
+    if (this.registry.getSingle('detailRowParent') === this) {
+      this.registry.setSingle('detailRowParent',  undefined);
+    }
   }
 }
 

@@ -26,6 +26,8 @@ export const PBL_NGRID_ROW_TEMPLATE  = `<ng-content select=".pbl-ngrid-row-prefi
 })
 export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'data', T> {
 
+  readonly rowType = 'data' as const;
+
   @Input() set row(value: T) { value && this.updateRow(); }
 
   rowRenderIndex: number;
@@ -62,12 +64,8 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
     }
   }
 
-  protected getRowType() { return 'data' as const; }
-
-  protected init(initAtConstructor: boolean) {
-    if (!initAtConstructor) {
-      this.updateRow();
-    }
+  protected init() {
+    this.updateRow();
   }
 
   protected detectChanges() {
@@ -136,22 +134,8 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   }
 
   protected cellCreated(column: PblColumn, cell: ComponentRef<PblNgridCellComponent>) {
-    if (!column.columnDef) {
-      cell.changeDetectorRef.detach();
-      this._extApi.columnStore.columnDefObjectChanged$
-        .pipe(unrx(this, column))
-        .subscribe( event => {
-          if (column === event.column && event.op === 'attach') {
-            cell.changeDetectorRef.reattach();
-            unrx.kill(this, column);
-            cell.instance.setColumn(column);
-            cell.instance.setContext(this.context);
-          }
-        });
-    } else {
-      cell.instance.setColumn(column);
-      cell.instance.setContext(this.context);
-    }
+    cell.instance.setColumn(column);
+    cell.instance.setContext(this.context);
   }
 
   protected cellDestroyed(cell: ComponentRef<PblNgridCellComponent>) {

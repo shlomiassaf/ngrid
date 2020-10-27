@@ -84,11 +84,7 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
       let infiniteVirtualRow = grid.registry.getSingle('infiniteVirtualRow');
       if (infiniteVirtualRow) {
         this._infiniteVirtualRowDef = infiniteVirtualRow = infiniteVirtualRow.clone();
-        if (!infiniteVirtualRow.columns) {
-          Object.defineProperty(infiniteVirtualRow, 'columns', { enumerable: true,  get: () => grid.columnApi.visibleColumnIds });
-        }
         Object.defineProperty(infiniteVirtualRow, 'when', { enumerable: true,  get: () => IS_INFINITE_VIRTUAL_ROW });
-        infiniteVirtualRow.ngOnChanges({ columns: { isFirstChange: () => true, firstChange: true, currentValue: infiniteVirtualRow.columns, previousValue: null }});
       } else if (!this._infiniteVirtualRowRef) {
         // TODO: move to module? set in root registry? put elsewhere to avoid grid sync (see event of registry change)...
         this._infiniteVirtualRowRef = this.injector.get(ComponentFactoryResolver)
@@ -113,7 +109,7 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
 
   /**
    * Update the grid with detail row infor.
-   * Instead of calling for a change detection cycle we can assign the new predicates directly to the cdkRowDef instances.
+   * Instead of calling for a change detection cycle we can assign the new predicates directly to the pblNgridRowDef instances.
    */
   private updateTable(): void {
     this.grid._tableRowDef.when = !!this._enabled ? IS_NOT_INFINITE_VIRTUAL_ROW : undefined;

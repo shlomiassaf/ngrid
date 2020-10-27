@@ -10,7 +10,6 @@ export interface PblNgridPluginExtensionFactories { }
 
 export interface OnPropChangedEvent<T extends (keyof OnPropChangedSources & keyof OnPropChangedProperties) = keyof OnPropChangedSources,
                                     P extends keyof OnPropChangedProperties[T] = keyof OnPropChangedProperties[T]> {
-  type: T;
   source: OnPropChangedSources[T];
   key: P;
   prev: OnPropChangedProperties[T][P];

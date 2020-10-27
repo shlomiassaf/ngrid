@@ -41,6 +41,10 @@ export function initCellElement(el: HTMLElement, column: COLUMN, prev?: COLUMN):
   }
 }
 
+export function initCellHeaderFooter(element: HTMLElement, isFooter: boolean) {
+  element.classList.add(...(isFooter ? ['cdk-footer-cell', 'pbl-ngrid-footer-cell'] : ['cdk-header-cell', 'pbl-ngrid-header-cell']));
+}
+
 export function applyWidth(this: { columnDef: PblNgridColumnDef; el: HTMLElement }) {
   this.columnDef.applyWidth(this.el);
 }

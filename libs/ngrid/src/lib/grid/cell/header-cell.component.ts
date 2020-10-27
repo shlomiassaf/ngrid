@@ -25,9 +25,6 @@ import { applySourceWidth, applyWidth, initCellElement } from './utils';
 import { PblNgridBaseCell } from './base-cell';
 import { PblColumnSizeObserver } from '../features/column-size-observer/column-size-observer.directive';
 
-const HEADER_GROUP_CSS = `pbl-header-group-cell`;
-const HEADER_GROUP_PLACE_HOLDER_CSS = `pbl-header-group-cell-placeholder`;
-
 const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRegistryMap['dataHeaderExtensions'][]>();
 
 /**
@@ -84,25 +81,13 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
       let view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblMetaColumn | PblColumn>>
       let widthUpdater: (...args: any[]) => void;
 
-      if (isPblColumn(column)) {
-        const gridWidthRow = this.el.parentElement.hasAttribute('gridWidthRow');
-        widthUpdater = gridWidthRow ? applySourceWidth : applyWidth;
-        predicate = event => (!gridWidthRow && event.reason !== 'update') || (gridWidthRow && event.reason !== 'resize');
-        view = !gridWidthRow ? this.initMainHeaderColumnView(column) : undefined;
-        if (gridWidthRow && !this.resizeObserver) {
-          this.resizeObserver = new PblColumnSizeObserver({ nativeElement: this.el }, this.extApi.grid);
-          this.resizeObserver.column = column;
-        }
-      } else {
-        widthUpdater = applySourceWidth;
-        predicate = event => event.reason !== 'resize';
-        view = this.initMetaHeaderColumnView(column);
-        if (isPblColumnGroup(column)) {
-          this.el.classList.add(HEADER_GROUP_CSS);
-          // if (column.placeholder) {
-          //   this.el.classList.add(HEADER_GROUP_PLACE_HOLDER_CSS);
-          // }
-        }
+      const gridWidthRow = this.el.parentElement.hasAttribute('gridWidthRow');
+      widthUpdater = gridWidthRow ? applySourceWidth : applyWidth;
+      predicate = event => (!gridWidthRow && event.reason !== 'update') || (gridWidthRow && event.reason !== 'resize');
+      view = !gridWidthRow ? this.initMainHeaderColumnView(column) : undefined;
+      if (gridWidthRow && !this.resizeObserver) {
+        this.resizeObserver = new PblColumnSizeObserver({ nativeElement: this.el }, this.extApi.grid);
+        this.resizeObserver.updateSize();
       }
 
       this.columnDef.widthChange
@@ -115,9 +100,19 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
     }
   }
 
+  ngAfterViewInit() {
+    if (this.resizeObserver) {
+      this.resizeObserver.column = this.column;
+      this.resizeObserver.ngAfterViewInit();
+    }
+  }
+
   ngOnDestroy() {
     if (this.resizeObserver) {
       this.resizeObserver.ngOnDestroy();
+    }
+    if (this.column) {
+      unrx(this, this.column);
     }
     super.ngOnDestroy();
   }
@@ -137,11 +132,6 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
         }
       });
     return view;
-  }
-
-  protected initMetaHeaderColumnView(col: PblMetaColumn | PblColumnGroup) {
-    this.cellCtx = MetaCellContext.create(col, this.grid);
-    return this.vcRef.createEmbeddedView(col.template, this.cellCtx);
   }
 
   protected runHeaderExtensions(context: PblNgridDataHeaderExtensionContext, view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblColumn>>): void {
