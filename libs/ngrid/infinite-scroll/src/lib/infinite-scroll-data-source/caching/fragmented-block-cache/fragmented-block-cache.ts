@@ -4,7 +4,7 @@ import { Fragment } from './fragment';
 import { Fragments } from './fragments';
 import { findIntersectionType, IntersectionType } from './utils';
 
-const LOG = msg => { console.log(msg); }
+// const LOG = msg => { console.log(msg); }
 
 export interface FragmentedBlockCacheOptions extends CacheAdapterOptions {
   /**
@@ -80,7 +80,7 @@ export class FragmentedBlockCache implements PblNgridCacheAdapter<FragmentedBloc
   createBlock(startIndex: number, endIndex: number, totalLength = 0): CacheBlock | undefined {
     const [ direction, start, end ] = this.matchBlock(startIndex, endIndex) || [];
 
-    LOG(`CREATE BLOCK: [${startIndex}, ${endIndex}] => [${direction}, ${start}, ${end}]`)
+    // LOG(`CREATE BLOCK: [${startIndex}, ${endIndex}] => [${direction}, ${start}, ${end}]`)
     if (!direction) {
       return undefined;
     }
