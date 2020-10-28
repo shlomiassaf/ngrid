@@ -35,6 +35,15 @@ export class PblInfiniteScrollDataSourceCache<T, TData = any> {
     return this.cacheAdapter.createBlock(start, end, totalLength);
   }
 
+  createInitialBlock() {
+    const ds = this.context.getDataSource();
+    const totalLength = this.context.totalLength;
+    const renderEnd = ds.renderLength;
+    const start =0;
+    const end = totalLength ? Math.min(renderEnd, totalLength) : renderEnd;
+    return this.cacheAdapter.createBlock(start, end, totalLength);
+  }
+
   update(startRow: number, endRow: number, direction: StartOrEnd) {
     return this.cacheAdapter.update(startRow, endRow, direction);
   }

@@ -29,6 +29,16 @@ const DEFAULT_INITIAL_CACHE_STATE: PblDataSourceTriggerCache<any> = { filter: EM
  * An adapter that handles changes
  */
 export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSourceTriggerChangedEvent<TData> = PblDataSourceTriggerChangedEvent<TData>> {
+
+  static hasCustomBehavior(config: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>): boolean {
+    return CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( key => !!config[key] );
+  }
+
+  /** Returns true if the event is triggered from a custom behavior (filter, sort and/or pagination and the configuration allows it) */
+  static isCustomBehaviorEvent(event: PblDataSourceTriggerChangedEvent, config: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>) {
+    return CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( k => !!config[k] && event[k].changed);
+  }
+
   onSourceChanged: Observable<T[]>;
   onSourceChanging: Observable<void>;
 
@@ -144,7 +154,7 @@ export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSo
       this._refresh$.pipe( map( value => fromRefreshDataWrapper(createChangeContainer('data', value, this.cache)) ), filter(changedFilter) ),
     ];
 
-    const hasCustomBehavior = CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( key => !!this.config[key] );
+    const hasCustomBehavior = PblDataSourceAdapter.hasCustomBehavior(this.config);
 
     return combineLatest([combine[0], combine[1], combine[2], combine[3]])
       .pipe(
@@ -163,6 +173,7 @@ export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSo
             sort,
             pagination,
             data,
+            eventSource: data.changed ? 'data' : 'customTrigger',
             isInitial: updates === 0,
             updateTotalLength: (totalLength) => {
               if (this.paginator) {
@@ -173,7 +184,7 @@ export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSo
           this.onStartOfEvent(event);
 
           const runHandle = data.changed
-            || ( hasCustomBehavior && CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( k => !!this.config[k] && event[k].changed) );
+            || ( hasCustomBehavior && PblDataSourceAdapter.isCustomBehaviorEvent(event, this.config) );
 
           const response$ = runHandle
             ? this.runHandle(event as TEvent)
@@ -249,7 +260,7 @@ export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSo
 
                 // we check if filter was asked, but also if we have a filter we re-run
                 // Only sorting is cached at this point filtering is always calculated
-                if (withChanges.filter || (event.filter.curr && event.filter.curr.filter)) {
+                if (withChanges.filter || (!config.filter && event.filter.curr && event.filter.curr.filter)) {
                   data = this._lastFilteredSource = this.applyFilter(data, event.filter.curr || event.filter.prev);
                 }
 

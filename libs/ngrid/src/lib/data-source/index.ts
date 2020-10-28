@@ -3,6 +3,7 @@ export {
   PblDataSourceTriggers,
   PblDataSourceTriggerChange,
   PblDataSourceTriggerChangedEvent,
+  PblDataSourceTriggerChangedEventSource,
   PblDataSourceAdapterProcessedResult,
   PblDataSourceTriggerChangeHandler,
 } from './data-source-adapter.types';

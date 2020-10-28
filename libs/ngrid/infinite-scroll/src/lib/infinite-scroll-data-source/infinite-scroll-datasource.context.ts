@@ -1,6 +1,6 @@
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { tap, finalize, take, filter, map } from 'rxjs/operators';
-import { PblDataSourceTriggerChangedEvent, DataSourceOf } from '@pebula/ngrid';
+import { PblDataSourceTriggerChangedEvent, DataSourceOf, PblDataSourceConfigurableTriggers } from '@pebula/ngrid';
 import { PblInfiniteScrollFactoryOptions, PblInfiniteScrollDsOptions, PblInfiniteScrollTriggerChangedEvent } from './infinite-scroll-datasource.types';
 import { PblInfiniteScrollDataSourceCache } from './infinite-scroll-datasource.cache';
 import { normalizeOptions, shouldTriggerInvisibleScroll, tryAddVirtualRowsBlock, updateCacheAndDataSource, upgradeChangeEventToInfinite } from './utils';
@@ -11,6 +11,15 @@ import { CacheBlock } from './caching';
 import { EventState } from './event-state';
 
 // const LOG = msg => { console.log(msg); }
+
+declare module '@pebula/ngrid/lib/data-source/data-source-adapter.types' {
+  interface PblDataSourceTriggerChangedEventSource {
+   /**
+    * The source of the event was from a scroll that reached into a group of rows that the grid needs to fetch.
+    */
+    infiniteScroll: true;
+  }
+}
 
 export class PblInfiniteScrollDSContext<T, TData = any> {
 
@@ -25,6 +34,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
   private onVirtualLoading = new BehaviorSubject<boolean>(false);
   private virtualLoadingSessions = 0;
   private pendingTrigger$: Observable<T[]>;
+  private customTriggers: false | Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>;
   private timeoutCancelTokens = new Set<number>();
   private ignoreScrolling: boolean = false;
   private lastEventState = new EventState<T>();
@@ -39,19 +49,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
 
   onTrigger(rawEvent: PblDataSourceTriggerChangedEvent<TData>): false | DataSourceOf<T> {
     if (rawEvent.isInitial) {
-      const event = this.tryGetInfiniteEvent(rawEvent, this.cache.matchNewBlock());
-      const result = this.queue.execute(event);
-
-      return result && result.pipe(
-        this.wrapEventState(event),
-        tap( values => {
-          this.cache.clear();
-          if(values.length > 1) {
-            this.cache.update(0, values.length - 1, 1);
-          }
-          PblInfiniteScrollDataSource.updateVirtualSize(this.options.initialVirtualSize, values);
-        }),
-      );
+      return this.invokeInitialOnTrigger(rawEvent);
     }
 
     rawEvent[SKIP_SOURCE_CHANGING_EVENT] = true;
@@ -107,14 +105,21 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
       }
     }
 
+    if (this.customTriggers && PblInfiniteScrollDataSourceAdapter.isCustomBehaviorEvent(rawEvent, this.customTriggers)) {
+      this.cache.clear();
+      return this.invokeInitialOnTrigger(rawEvent);
+    }
+
     return false;
     // throw new Error('Invalid');
   }
 
   getAdapter(): PblInfiniteScrollDataSourceAdapter<T, TData> {
     if (!this.adapter) {
-      const customTriggers = this.factoryOptions.customTriggers || false;
-      this.adapter = new PblInfiniteScrollDataSourceAdapter<T, TData>(this, customTriggers, this.onVirtualLoading);
+      this.customTriggers = this.factoryOptions.customTriggers || false;
+      // we can't allow any internal trigger handlers to run
+      // It will throw the entire datasource out of sync, infinite ds can't do that
+      this.adapter = new PblInfiniteScrollDataSourceAdapter<T, TData>(this, { filter: true, sort: true, pagination: true }, this.onVirtualLoading);
     }
     return this.adapter;
   }
@@ -261,6 +266,25 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
       });
   }
 
+  private invokeInitialOnTrigger(rawEvent: PblDataSourceTriggerChangedEvent<TData>): false | DataSourceOf<T> {
+    const event = this.tryGetInfiniteEvent(rawEvent, rawEvent.isInitial ? this.cache.createInitialBlock() : this.cache.createInitialBlock());
+    const result = this.queue.execute(event);
+    return result && result.pipe(
+      this.wrapEventState(event),
+      tap( values => {
+        this.cache.clear();
+        if(values.length > 1) {
+          this.cache.update(0, values.length - 1, 1);
+        }
+
+        PblInfiniteScrollDataSource.updateVirtualSize(this.options.initialVirtualSize, values);
+        if (!rawEvent.isInitial) {
+          this.ds.hostGrid.viewport.scrollToOffset(0);
+        }
+      }),
+    );
+  }
+
   private invokeRuntimeOnTrigger(rawEvent: PblDataSourceTriggerChangedEvent<TData>): { result?: Observable<T[]>; event: false | PblInfiniteScrollTriggerChangedEvent<TData> } {
     const newBlock = this.cache.matchNewBlock();
     const event = newBlock ? this.tryGetInfiniteEvent(rawEvent, newBlock) : false as const;
@@ -269,6 +293,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
       if (this.lastEventState.isDone() && this.lastEventState.rangeEquals(event)) {
         return { event: false };
       }
+      event.eventSource = 'infiniteScroll';
       const triggerResult = this.queue.execute(event, true);
       if (triggerResult !== false) {
         return {

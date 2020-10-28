@@ -193,7 +193,7 @@ export default function(options: { name: string; add?: string; }): Rule {
         const addSelector = buildSelector(addParsedPath.name);
         const addTitle = strings.underscore(addParsedPath.name).split('_').map(strings.capitalize).join(' ');
         const addTemplateSource = apply(url('./files'), [
-          filter(path => !path.endsWith('.module.ts.template')),
+          filter(path => !path.endsWith('.module.ts.template') && !path.endsWith('.md.template')),
           applyTemplates({
             ...strings,
             ...stringsExtensions,
