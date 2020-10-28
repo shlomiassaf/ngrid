@@ -23,6 +23,7 @@ import { applyMetaRowClass, initColumnOrMetaRow } from './utils';
 })
 export class PblNgridMetaRowComponent extends PblNgridBaseRowComponent<'meta-header' | 'meta-footer'> implements PblMetaRow {
 
+  get row() { return this._row; }
   @Input() set row(value: PblColumnStoreMetaRow) { this.updateRow(value); }
 
   get meta(): PblMetaRowDefinitions { return this._meta; }

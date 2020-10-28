@@ -19,7 +19,8 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
 
   private rows = new Map<GridRowType, Set<PblNgridBaseRowComponent<any, T>>>();
   private columnRows = new Set<PblNgridBaseRowComponent<any, T>>();
-  private metaRows = new Set<PblNgridMetaRowComponent>();
+  private metaHeaderRows = new Set<PblNgridMetaRowComponent>();
+  private metaFooterRows = new Set<PblNgridMetaRowComponent>();
 
   constructor(private readonly extApi: PblNgridExtensionApi<T>,
               private readonly zone: NgZone,
@@ -45,14 +46,24 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
     extApi.columnStore.metaRowChange()
       .pipe(unrx(this))
       .subscribe( event => {
-        for (const r of this.metaRows) {
-          if (r.rowType === 'meta-header' && event.metaRow.kind === 'header') {
-            if (r.row.rowDef.rowIndex === event.metaRow.rowDef.rowIndex) {
-              event.changes.forEachOperation((record, previousIndex, currentIndex) => {
-
-              });
-              break;
-            }
+        const rows = event.metaRow.kind === 'header' ? this.metaHeaderRows : this.metaFooterRows;
+        for (const r of rows) {
+          if (r.row.rowDef.rowIndex === event.metaRow.rowDef.rowIndex) {
+            event.changes.forEachOperation((record, previousIndex, currentIndex) => {
+              if (record.previousIndex == null) {
+                const columns = this.extApi.columnStore.find(record.item);
+                const col = event.metaRow.kind === 'header' ?
+                  event.metaRow.isGroup ? columns.headerGroup : columns.header
+                  : event.metaRow.isGroup ? columns.footerGroup : columns.footer;
+                r.row.rowDef.cols.splice(currentIndex, 0, col);
+                r._createCell(col as any, currentIndex);
+              } else if (currentIndex == null) {
+                r._destroyCell(previousIndex);
+              } else {
+                r._moveCell(previousIndex, currentIndex);
+              }
+            });
+            break;
           }
         }
       });
@@ -72,8 +83,11 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
       case 'footer':
         this.columnRows.add(row);
         break;
-      default:
-        this.metaRows.add(row as any);
+      case 'meta-header':
+        this.metaHeaderRows.add(row as any);
+        break;
+      case 'meta-footer':
+        this.metaFooterRows.add(row as any);
         break;
     }
   }
@@ -89,8 +103,11 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
       case 'footer':
         this.columnRows.delete(row);
         break;
-      default:
-        this.metaRows.delete(row);
+      case 'meta-header':
+        this.metaHeaderRows.delete(row as any);
+        break;
+      case 'meta-footer':
+        this.metaFooterRows.delete(row as any);
         break;
     }
   }

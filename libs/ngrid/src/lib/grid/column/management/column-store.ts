@@ -217,13 +217,17 @@ export class PblColumnStore {
     }
 
     for (const rowDef of header) {
+      // TODO: this is shady, if we add objects to reoDef type later they will be copied by ref, need proper class with clone() method
+      const newRowDef = { ...rowDef };
+      newRowDef.cols = [];
       const keys: string[] = [];
       for (const def of rowDef.cols) {
         const metaCol = this.getColumnRecord(def.id, this.metaColumns);
         const column = metaCol.header || (metaCol.header = new PblMetaColumn(def));
         keys.push(column.id);
+        newRowDef.cols.push(column);
       }
-      this.metaRowsStore.setHeader({ rowDef, keys, kind: 'header' });
+      this.metaRowsStore.setHeader({ rowDef: newRowDef, keys, kind: 'header' });
     }
 
     for (const rowDef of headerGroup) {
@@ -231,13 +235,17 @@ export class PblColumnStore {
     }
 
     for (const rowDef of footer) {
+      // TODO: this is shady, if we add objects to reoDef type later they will be copied by ref, need proper class with clone() method
+      const newRowDef = { ...rowDef };
+      newRowDef.cols = [];
       const keys: string[] = [];
       for (const def of rowDef.cols) {
         const metaCol = this.getColumnRecord(def.id, this.metaColumns);
         const column = metaCol.footer || (metaCol.footer = new PblMetaColumn(def));
         keys.push(column.id);
+        newRowDef.cols.push(column);
       }
-      this.metaRowsStore.setFooter({ rowDef, keys, kind: 'footer' });
+      this.metaRowsStore.setFooter({ rowDef: newRowDef, keys, kind: 'footer' });
     }
     resetColumnWidths(rowWidth, this.visibleColumns, this.metaColumns);
     this.differ = this.differs.find(this.visibleColumns).create((i, c) => c.id);
@@ -422,17 +430,37 @@ export class PblColumnStore {
     this.metaColumnIds = { header: this.metaRowsStore.headers, footer: this.metaRowsStore.footers };
   }
 
+  private columnUpdateInProgress: boolean;
   private checkVisibleChanges() {
     if (this.differ) {
-      const changes = this.differ.diff(this.visibleColumns);
-      if (changes) {
-        this.hiddenColumnIds = Array.from(this.hiddenColumns.hidden);
-        this.visibleColumnIds = Array.from(this.visibleColumns).map( c => c.id );
-        this.columnIds = Array.from(this.allColumns).map( c => c.id );
-        this._visibleChanged$.next({ columns: this.visibleColumns, changes });
+      if (!this.columnUpdateInProgress) {
+        this.columnUpdateInProgress = true;
+        Promise.resolve()
+          .then(() => {
+            this.columnUpdateInProgress = false;
+            const changes = this.differ.diff(this.visibleColumns);
+            if (changes) {
+              this.hiddenColumnIds = Array.from(this.hiddenColumns.hidden);
+              this.visibleColumnIds = Array.from(this.visibleColumns).map( c => c.id );
+              this.columnIds = Array.from(this.allColumns).map( c => c.id );
+              this._visibleChanged$.next({ columns: this.visibleColumns, changes });
+              this.updateGroups();
+              this.afterColumnPositionChange();
+            }
+          });
       }
     }
     // no differ means we did not invalidate yet, so nothing will change until it start showing
+  }
+
+  private afterColumnPositionChange(): void {
+    this.columnUpdateInProgress = false;
+    // TODO: This shouldn't be here, it should be the responsibility of the caller to clear the context
+    // Because now there is not option to control it.
+    this.grid.contextApi.clear(true);
+    this.updateGroups();
+    this.grid.resetColumnsWidth();
+    this.grid.resizeColumns();
   }
 }
 
