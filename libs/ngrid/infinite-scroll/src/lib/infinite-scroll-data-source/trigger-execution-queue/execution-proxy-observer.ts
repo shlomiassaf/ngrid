@@ -17,7 +17,7 @@ import { PblInfiniteScrollTriggerChangedEvent } from '../infinite-scroll-datasou
  * it will keep asking for it, hence the need to keep it alive.
  * Each execution must return an observable or it will get canceled, so we return the currently executed trigger
  * instead of running it again...
- * @private
+ * @internal
  */
 export class TriggerExecutionProxyObservable<T> extends Observable<T> {
   readonly onKilled = new Subject<void>();

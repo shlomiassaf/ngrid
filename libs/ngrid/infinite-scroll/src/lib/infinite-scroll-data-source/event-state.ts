@@ -3,7 +3,7 @@ import { tap } from 'rxjs/operators';
 import { PblInfiniteScrollTriggerChangedEvent } from './infinite-scroll-datasource.types';
 
 /**
- * @private
+ * @internal
  */
 export class EventState<T> {
   private done: boolean;
