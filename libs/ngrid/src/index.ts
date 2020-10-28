@@ -11,7 +11,7 @@ export {
 export {
   PblDataSourceConfigurableTriggers,
   PblDataSourceTriggers,
-  PblDataSourceTriggerChange, PblDataSourceTriggerChangedEvent, PblDataSourceTriggerChangeHandler,
+  PblDataSourceTriggerChange, PblDataSourceTriggerChangedEvent, PblDataSourceTriggerChangedEventSource, PblDataSourceTriggerChangeHandler,
   PblDataSourceAdapter,
   PblDataSource, PblDataSourceOptions,
   PblNgridSortInstructions, PblNgridSortDefinition, PblNgridSorter, applySort, PblNgridSortOrder,

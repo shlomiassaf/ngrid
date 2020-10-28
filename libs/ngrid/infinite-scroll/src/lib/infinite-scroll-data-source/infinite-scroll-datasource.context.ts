@@ -1,6 +1,6 @@
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { tap, finalize, take, filter, map } from 'rxjs/operators';
-import { PblDataSourceTriggerChangedEvent, DataSourceOf } from '@pebula/ngrid';
+import { PblDataSourceTriggerChangedEvent, DataSourceOf, PblDataSourceConfigurableTriggers } from '@pebula/ngrid';
 import { PblInfiniteScrollFactoryOptions, PblInfiniteScrollDsOptions, PblInfiniteScrollTriggerChangedEvent } from './infinite-scroll-datasource.types';
 import { PblInfiniteScrollDataSourceCache } from './infinite-scroll-datasource.cache';
 import { normalizeOptions, shouldTriggerInvisibleScroll, tryAddVirtualRowsBlock, updateCacheAndDataSource, upgradeChangeEventToInfinite } from './utils';
@@ -8,8 +8,18 @@ import { PblInfiniteScrollDataSource } from './infinite-scroll-datasource';
 import { SKIP_SOURCE_CHANGING_EVENT, PblInfiniteScrollDataSourceAdapter } from './infinite-scroll-datasource-adapter';
 import { TriggerExecutionQueue } from './trigger-execution-queue';
 import { CacheBlock } from './caching';
+import { EventState } from './event-state';
 
-const LOG = msg => { console.log(msg); }
+// const LOG = msg => { console.log(msg); }
+
+declare module '@pebula/ngrid/lib/data-source/data-source-adapter.types' {
+  interface PblDataSourceTriggerChangedEventSource {
+   /**
+    * The source of the event was from a scroll that reached into a group of rows that the grid needs to fetch.
+    */
+    infiniteScroll: true;
+  }
+}
 
 export class PblInfiniteScrollDSContext<T, TData = any> {
 
@@ -24,7 +34,10 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
   private onVirtualLoading = new BehaviorSubject<boolean>(false);
   private virtualLoadingSessions = 0;
   private pendingTrigger$: Observable<T[]>;
+  private customTriggers: false | Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>;
   private timeoutCancelTokens = new Set<number>();
+  private ignoreScrolling: boolean = false;
+  private lastEventState = new EventState<T>();
 
   constructor(private factoryOptions: PblInfiniteScrollFactoryOptions<T, TData>) {
     this.options = normalizeOptions(factoryOptions.infiniteOptions);
@@ -36,17 +49,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
 
   onTrigger(rawEvent: PblDataSourceTriggerChangedEvent<TData>): false | DataSourceOf<T> {
     if (rawEvent.isInitial) {
-      const result = this.queue.execute(this.tryGetInfiniteEvent(rawEvent, this.cache.matchNewBlock()));
-
-      return result && result.pipe(
-        tap(values => {
-          this.cache.clear();
-          if(values.length > 1) {
-            this.cache.update(0, values.length - 1, 1);
-          }
-          PblInfiniteScrollDataSource.updateVirtualSize(this.options.initialVirtualSize, values);
-        })
-      );
+      return this.invokeInitialOnTrigger(rawEvent);
     }
 
     rawEvent[SKIP_SOURCE_CHANGING_EVENT] = true;
@@ -57,7 +60,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
         return pendingTrigger$
           .pipe(
             finalize(() => {
-              LOG(`PENDING - RESULT DONE`);
+              // LOG(`PENDING - RESULT DONE`);
               this.deferSyncRows(16, () => this.tickVirtualLoading(-1));
               this.currentSessionToken = undefined;
             }));
@@ -72,7 +75,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
 
       const { result, event } = this.invokeRuntimeOnTrigger(rawEvent);
       if (!result || !event) { // !event for type gate, because if we have "result: then "event" is always set
-        LOG('NO SCROLL - FALSE TRIGGER!');
+        // LOG('NO SCROLL - FALSE TRIGGER!');
         this.currentSessionToken = undefined;
         return false;
       } else {
@@ -80,21 +83,21 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
         if (tryAddVirtualRowsBlock(source, event, this.options.blockSize)) {
           this.pendingTrigger$ = result;
           this.tickVirtualLoading(1);
-          LOG('NO SCROLL - VIRTUAL ROWS ADDED');
+          // LOG('NO SCROLL - VIRTUAL ROWS ADDED');
           return of(source)
             .pipe(
               finalize(() => {
                 this.deferSyncRows();
-                LOG('NO SCROLL - VIRTUAL ROWS RENDERED');
+                // LOG('NO SCROLL - VIRTUAL ROWS RENDERED');
                 this.currentSessionToken = undefined;
                 this.ds.refresh(result as any);
               }));
         } else {
-          LOG('NO SCROLL - NO VIRTUAL ROWS ADDED');
+          // LOG('NO SCROLL - NO VIRTUAL ROWS ADDED');
           return result
             .pipe(
               finalize(() => {
-                LOG(`NO SCROLL - RESULT DONE`);
+                // LOG(`NO SCROLL - RESULT DONE`);
                 this.deferSyncRows(16);
                 this.currentSessionToken = undefined;
               }));
@@ -102,52 +105,21 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
       }
     }
 
+    if (this.customTriggers && PblInfiniteScrollDataSourceAdapter.isCustomBehaviorEvent(rawEvent, this.customTriggers)) {
+      this.cache.clear();
+      return this.invokeInitialOnTrigger(rawEvent);
+    }
+
     return false;
     // throw new Error('Invalid');
   }
 
-  onRenderedDataChanged() {
-    if (!this.currentSessionToken) {
-      if (shouldTriggerInvisibleScroll(this)) {
-        LOG(`RENDER DATA CHANGED FROM ROW ${this.ds.renderStart}`);
-        const t = this.currentSessionToken = {};
-        this.safeAsyncOp(() => {
-          if (this.currentSessionToken === t) {
-            this.ds.refresh(t as any);
-          }
-        }, 16);
-      }
-    } else {
-      LOG(`RENDER DATA WITH SESSION FROM ROW ${this.ds.renderStart}`);
-      if (!this.ds.hostGrid.viewport.isScrolling) {
-        LOG(`SESSION OVERRIDE`);
-        this.ds.refresh(this.currentSessionToken = {} as any);
-      } else {
-        if (!this.a) {
-          this.a = true;
-          this.ds.hostGrid.viewport.scrolling
-            .pipe(
-              filter( d => d === 0),
-              take(1),
-            )
-            .subscribe(d => {
-              this.a = false;
-              if (shouldTriggerInvisibleScroll(this)) {
-                LOG(`OVERRIDING AFTER SCROLL SESSION`);
-                this.currentSessionToken = undefined;
-                this.onRenderedDataChanged();
-              }
-            });
-        }
-      }
-    }
-  }
-  private a = false;
-
   getAdapter(): PblInfiniteScrollDataSourceAdapter<T, TData> {
     if (!this.adapter) {
-      const customTriggers = this.factoryOptions.customTriggers || false;
-      this.adapter = new PblInfiniteScrollDataSourceAdapter<T, TData>(this, customTriggers, this.onVirtualLoading);
+      this.customTriggers = this.factoryOptions.customTriggers || false;
+      // we can't allow any internal trigger handlers to run
+      // It will throw the entire datasource out of sync, infinite ds can't do that
+      this.adapter = new PblInfiniteScrollDataSourceAdapter<T, TData>(this, { filter: true, sort: true, pagination: true }, this.onVirtualLoading);
     }
     return this.adapter;
   }
@@ -169,6 +141,65 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
     for (const t of this.timeoutCancelTokens.values()) {
       clearTimeout(t);
     }
+  }
+
+  /**
+   * This is where we detect if we need to internally invoke a trigger because we've reached an area
+   * in the grid where row's does not exists but we show the dummy row, hence we need to fetch them.
+   * The grid will never trigger an event here since from the grid's perspective a row is showing...
+   * This detection also handle's scrolling and session so we don't invoke the trigger to much.
+   */
+  private onRenderedDataChanged() {
+    if (this.lastEventState.skipNextRender()) {
+      // if the current event returned items that did not occupy the whole range of the event
+      // stop, we don't want to check anything cause we already know we are missing items.
+      // since we know we're missing items, we also know we're going to call the same range again which
+      // did not return anyway, so it is useless and in the worst case might cause infinite loop
+      return;
+    }
+    if (!this.currentSessionToken) {
+      if (shouldTriggerInvisibleScroll(this)) {
+        // LOG(`RENDER DATA CHANGED FROM ROW ${this.ds.renderStart}`);
+        const t = this.currentSessionToken = {};
+        this.safeAsyncOp(() => {
+          if (this.currentSessionToken === t) {
+            this.ds.refresh(t as any);
+          }
+        }, 16);
+      }
+    } else {
+      // LOG(`RENDER DATA WITH SESSION FROM ROW ${this.ds.renderStart}`);
+      if (!this.ds.hostGrid.viewport.isScrolling) {
+        // LOG(`SESSION OVERRIDE`);
+        this.ds.refresh(this.currentSessionToken = {} as any);
+      } else {
+        if (!this.ignoreScrolling) {
+          this.ignoreScrolling = true;
+          this.ds.hostGrid.viewport.scrolling
+            .pipe(
+              filter( d => d === 0),
+              take(1),
+            )
+            .subscribe(d => {
+              this.ignoreScrolling = false;
+              if (shouldTriggerInvisibleScroll(this)) {
+                // LOG(`OVERRIDING AFTER SCROLL SESSION`);
+                this.currentSessionToken = undefined;
+                this.onRenderedDataChanged();
+              }
+            });
+        }
+      }
+    }
+  }
+
+  /**
+   * Create a new event state for the given event, store it in the lastEventState property
+   * and returns a pipe that will sync the state of the event as the call progress.
+   * @param event
+   */
+  private wrapEventState(event: PblInfiniteScrollTriggerChangedEvent<TData>) {
+    return (this.lastEventState = new EventState<T>(event)).pipe();
   }
 
   private deferSyncRows(ms = 0, runBefore?: () => void, runAfter?: () => void) {
@@ -211,7 +242,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
     const event = newBlock ? this.tryGetInfiniteEvent(rawEvent, newBlock) : false as const;
     if (event !== false) {
       if (tryAddVirtualRowsBlock(this.ds.source, event, this.options.blockSize)) {
-        LOG('SCROLL - VIRTUAL ROWS ADDED');
+        // LOG('SCROLL - VIRTUAL ROWS ADDED');
       }
     }
 
@@ -235,19 +266,42 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
       });
   }
 
+  private invokeInitialOnTrigger(rawEvent: PblDataSourceTriggerChangedEvent<TData>): false | DataSourceOf<T> {
+    const event = this.tryGetInfiniteEvent(rawEvent, rawEvent.isInitial ? this.cache.createInitialBlock() : this.cache.createInitialBlock());
+    const result = this.queue.execute(event);
+    return result && result.pipe(
+      this.wrapEventState(event),
+      tap( values => {
+        this.cache.clear();
+        if(values.length > 1) {
+          this.cache.update(0, values.length - 1, 1);
+        }
+
+        PblInfiniteScrollDataSource.updateVirtualSize(this.options.initialVirtualSize, values);
+        if (!rawEvent.isInitial) {
+          this.ds.hostGrid.viewport.scrollToOffset(0);
+        }
+      }),
+    );
+  }
+
   private invokeRuntimeOnTrigger(rawEvent: PblDataSourceTriggerChangedEvent<TData>): { result?: Observable<T[]>; event: false | PblInfiniteScrollTriggerChangedEvent<TData> } {
     const newBlock = this.cache.matchNewBlock();
     const event = newBlock ? this.tryGetInfiniteEvent(rawEvent, newBlock) : false as const;
 
     if(event !== false) {
+      if (this.lastEventState.isDone() && this.lastEventState.rangeEquals(event)) {
+        return { event: false };
+      }
+      event.eventSource = 'infiniteScroll';
       const triggerResult = this.queue.execute(event, true);
       if (triggerResult !== false) {
-
         return {
           event,
           result: triggerResult
             .pipe(
-              tap( () => LOG(`TRIGGER[${event.id}]: ${event.fromRow} - ${event.toRow}`)),
+              // tap( () => LOG(`TRIGGER[${event.id}]: ${event.fromRow} - ${event.toRow}`)),
+              this.wrapEventState(event),
               map( values => updateCacheAndDataSource(this, event, values) ),
             ),
         };

@@ -72,19 +72,11 @@ with data required to manage the lifecycle of an infinite scroll grid.
 The event handler has the following additional properties:
 
 ```typescript
-export interface PblInfiniteScrollTriggerChangedEvent<T = any> extends PblDataSourceTriggerChangedEvent<T> {
+export interface PblInfiniteScrollTriggerChangedEvent<TData = any> extends PblDataSourceTriggerChangedEvent<TData> {
   /**
    * The total length currently defined
    */
   totalLength: number;
-
-  /**
-   * When true, indicates that the event has originated from an infinite scrolling logic.
-   * The is a need to add more rows.
-   *
-   * Note that events can come from multiple sources, for example: changing a datasource or calling `DataSource.refresh()`
-   */
-  isInfiniteScroll?: boolean;
 
   /**
    * When true, indicates that the fetching is done for the last block / page in the datasource.
@@ -111,8 +103,28 @@ export interface PblInfiniteScrollTriggerChangedEvent<T = any> extends PblDataSo
    * Where 1 means scrolling down and -1 means scrolling up.
    */
   direction: -1 | 1;
+
 }
 ```
 
 In addition, there is an optional infinite scroll options object you can define which controls the behavior of the infinite scroll.
 
+## Event Source
+
+As with all triggers, the `eventSource` property indicates the source of the trigger.
+In an infinite scroll datasource the first trigger will always be `data`.
+
+The infinite scroll datasource adds a new event source type called **infiniteScroll**.
+It will fire when the grid reach an area with empty rows and it needs to get the rows from the server.
+It will then trigger an event with the `eventSource` being `infiniteScroll`.
+
+## Custom Triggers
+
+The classic custom triggers filter, sort and pagination behave differently when used in an infinite scroll data source.
+
+First, there is no filter, sort or pagination done by the client, all custom triggers requires server interaction.
+If you don't register for a custom trigger it is simply ignored.
+
+If you do register, it will trigger an event as before with the `eventSource` property set to `customTrigger`.
+
+<div pbl-example-view="pbl-custom-triggers-example"></div>

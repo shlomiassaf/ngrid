@@ -10,17 +10,18 @@ import { ExampleCommonModule } from '@pebula/apps/example-common';
 import { InfiniteScrollExample } from './infinite-scroll.component';
 import { InfiniteScrollDataSourceExample } from './infinite-scroll-data-source.component';
 import { IndexBasedPagingExample } from './index-based-paging.component';
+import { CustomTriggersExample } from './custom-triggers.component';
 
 @NgModule({
-  declarations: [ InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample ],
+  declarations: [ InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample ],
   imports: [
     CommonModule,
     ExampleCommonModule,
     MatProgressBarModule,
     PblNgridModule, PblNgridTargetEventsModule, PblNgridInfiniteScrollModule,
   ],
-  exports: [ InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample ],
+  exports: [ InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample ],
   entryComponents: [InfiniteScrollDataSourceExample, IndexBasedPagingExample],
 })
-@BindNgModule(InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample)
+@BindNgModule(InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample)
 export class InfiniteScrollExampleModule { }

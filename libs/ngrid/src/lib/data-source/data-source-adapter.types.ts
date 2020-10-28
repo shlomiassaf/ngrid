@@ -42,6 +42,17 @@ export interface PblDataSourceTriggerChange<T> {
   curr?: T;
 }
 
+export interface PblDataSourceTriggerChangedEventSource {
+  /**
+   * The source of the event was a data request. Either via `refresh()` or the initial data request.
+   */
+  data: true;
+  /**
+   * The source of the event was a change in the filter, sort, pagination or a combination of them.
+   */
+  customTrigger: true;
+}
+
 export interface PblDataSourceTriggerChangedEvent<TData = any> {
   id: number,
   filter: PblDataSourceTriggerChange<DataSourceFilter>;
@@ -58,6 +69,12 @@ export interface PblDataSourceTriggerChangedEvent<TData = any> {
    * When true this is the first emission of data since the last connection.
    */
   isInitial: boolean;
+
+  /**
+   * The origin of this event, whether it is from a data request or from a custom trigger request (filter, sort and/or pagination).
+   * Additional types might be added by plugins.
+   */
+  eventSource: keyof PblDataSourceTriggerChangedEventSource;
 
   /**
    * Set the total amount of data items.

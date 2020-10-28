@@ -1,3 +1,15 @@
+## 2.2.2 (2020-10-28)
+
+
+### Bug Fixes
+
+* **ngrid:** remove deep covariance generic constraint ([110ccd4](https://github.com/shlomiassaf/ngrid/commit/110ccd42de1f28841224c804f77bf5a51a384f67)), closes [#121](https://github.com/shlomiassaf/ngrid/issues/121)
+* **ngrid:** remove duplicate rendering of header cells ([be9036d](https://github.com/shlomiassaf/ngrid/commit/be9036dcd46abbd82c67a1c7e0467431cfbd17a6))
+* **ngrid/infinite-scroll:** handle partial range results ([c104069](https://github.com/shlomiassaf/ngrid/commit/c104069f0486bd8cb8d5da2ad19224ae9bdbb3e9)), closes [#125](https://github.com/shlomiassaf/ngrid/issues/125)
+* **ngrid/infinite-scroll:** proper handling of custom triggers ([0e32499](https://github.com/shlomiassaf/ngrid/commit/0e3249968c0e036daadf68d3cf6f46eb2c36a0fe)), closes [#124](https://github.com/shlomiassaf/ngrid/issues/124)
+
+
+
 ## 2.2.1 (2020-10-13)
 
 

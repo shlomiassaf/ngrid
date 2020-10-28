@@ -128,6 +128,7 @@ export class InfiniteScrollPerformanceDemoExample {
         initialVirtualSize: 100,
       })
       .withCacheOptions('sequenceBlocks')
+      .setCustomTriggers('filter')
       .onTrigger( event => {
         if (event.isInitial) {
           return this.datasource.getCountries()
