@@ -11,7 +11,7 @@ data is loaded in incremental steps, every time the grid is scrolling to the end
 
 We've covered the 2 datasource modes and how we can use them, let's recap:
 
-1. **Client Mode** 
+1. **Client Mode**
 The entire dataset is provided once. Sorting, pagination and filtering are done on the client without calling an external source.
 
 2. **Server Mode**

@@ -138,7 +138,7 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     loadChildren: () => import('./features/grid/virtual-scroll/virtual-scroll.module').then( m => m.VirtualScrollExampleModule ),
   },
   {
-    path: 'features-grid-infinite-scroll.module',
+    path: 'grid-infinite-scroll.module',
     pathMatch: 'full',
     loadChildren: () => import('./features/grid/infinite-scroll/infinite-scroll.module').then( m => m.InfiniteScrollExampleModule ),
   },

@@ -17,8 +17,8 @@ export class CustomTriggersExample {
   columns = columnFactory()
   .table(
     { prop: 'id', width: '100px', pIndex: true },
-    { prop: 'name', width: '100px', sort: true },
-    { prop: 'gender', width: '50px', sort: true },
+    { prop: 'name', width: '100px' },
+    { prop: 'gender', width: '50px' },
     { prop: 'birthdate', type: 'date', width: '25%' },
   )
   .build();

@@ -21,7 +21,7 @@ import { CustomTriggersExample } from './custom-triggers.component';
     PblNgridModule, PblNgridTargetEventsModule, PblNgridInfiniteScrollModule,
   ],
   exports: [ InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample ],
-  entryComponents: [InfiniteScrollDataSourceExample, IndexBasedPagingExample],
+  entryComponents: [InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample ],
 })
 @BindNgModule(InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample)
 export class InfiniteScrollExampleModule { }
