@@ -15,5 +15,13 @@ jobs:
           node-version: 12
       - run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
-      - run: npm run gh-pages
+      - run: npm run gh-pages:build
+
+      - uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist/browser
+          CLEAN: true
+
 
