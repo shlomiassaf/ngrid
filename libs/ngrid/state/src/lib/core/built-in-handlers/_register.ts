@@ -5,7 +5,7 @@ import { registerColumnDefHandlers } from './column-def/index';
 
 export function registerBuiltInHandlers() {
   registerGridHandlers();
-  registerColumnOrderHandlers();
-  registerColumnVisibilityHandlers();
   registerColumnDefHandlers();
+  registerColumnVisibilityHandlers(); // order is important, we want visibility set before ordering
+  registerColumnOrderHandlers();
 }

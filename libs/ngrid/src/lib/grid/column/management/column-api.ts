@@ -238,19 +238,15 @@ export class ColumnApi<T> {
    * The new location of the anchor column will be it's original location plus or minus 1, depending on the delta between
    * the columns. If the origin of the `column` is before the `anchor` then the anchor's new position is minus one, otherwise plus 1.
    */
-  moveColumn(column: PblColumn, anchor: PblColumn, skipRedraw?: boolean): boolean;
+  moveColumn(column: PblColumn, anchor: PblColumn): boolean;
     /**
    * Move the provided `column` to the position of the column at `renderColumnIndex`.
    * `renderColumnIndex` must be a visible column (i.e. not hidden)
    */
-  moveColumn(column: PblColumn, renderColumnIndex: number, skipRedraw?: boolean): boolean; // tslint:disable-line:unified-signatures
-  moveColumn(column: PblColumn, anchor: PblColumn | number, skipRedraw?: boolean): boolean {
+  moveColumn(column: PblColumn, renderColumnIndex: number): boolean; // tslint:disable-line:unified-signatures
+  moveColumn(column: PblColumn, anchor: PblColumn | number): boolean {
     if (isPblColumn(anchor)) {
-      const result = column === anchor ? false : this.store.moveColumn(column, anchor);
-      if (result && skipRedraw !== true) {
-        this.afterColumnPositionChange();
-      }
-      return result;
+      return column === anchor ? false : this.store.moveColumn(column, anchor);
     } else {
       const a = this.findColumnAt(anchor);
       return a ? this.moveColumn(column, a) : false;
@@ -260,12 +256,8 @@ export class ColumnApi<T> {
   /**
    * Swap positions between 2 existing columns.
    */
-  swapColumns(col1: PblColumn, col2: PblColumn, skipRedraw?: boolean): boolean {
-    const result = this.store.swapColumns(col1, col2);
-    if (result && skipRedraw !== true) {
-      this.afterColumnPositionChange();
-    }
-    return result;
+  swapColumns(col1: PblColumn, col2: PblColumn): boolean {
+    return this.store.swapColumns(col1, col2);
   }
 
   addGroupBy(...column: PblColumn[]): void { this.store.addGroupBy(...column); }
@@ -283,12 +275,5 @@ export class ColumnApi<T> {
       }
     }
     return size;
-  }
-
-  private afterColumnPositionChange(): void {
-    this.extApi.contextApi.clear(true);
-    this.store.updateGroups();
-    this.grid.resetColumnsWidth();
-    this.grid.resizeColumns();
   }
 }

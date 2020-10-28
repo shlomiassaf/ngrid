@@ -33,15 +33,15 @@ export function registerColumnOrderHandlers() {
             }
             const anchor = grid.columnApi.findColumn(grid.columnApi.visibleColumnIds[i]);
             lastMove = [column, anchor];
-            grid.columnApi.moveColumn(column, anchor, true);
+            grid.columnApi.moveColumn(column, anchor);
             extApi.columnStore.updateGroups();
           }
         }
       }
       // With this revert/redo of the last move we just trigger a redraw.
       if (lastMove) {
-        grid.columnApi.moveColumn(lastMove[1], lastMove[0], true);
-        grid.columnApi.moveColumn(lastMove[0], lastMove[1], (ctx.options as PblNgridStateLoadOptions).avoidRedraw);
+        grid.columnApi.moveColumn(lastMove[1], lastMove[0]);
+        grid.columnApi.moveColumn(lastMove[0], lastMove[1]);
       }
     })
     .register();
