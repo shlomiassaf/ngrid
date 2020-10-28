@@ -15,7 +15,7 @@ export abstract class PblDataSourceBaseFactory<T,
                                                TData = any,
                                                TEvent extends PblDataSourceTriggerChangedEvent<TData> = PblDataSourceTriggerChangedEvent<TData>,
                                                TDataSourceAdapter extends PblDataSourceAdapter<T, TData, TEvent> = PblDataSourceAdapter<T, TData, TEvent>,
-                                               TDataSource extends PblDataSource<T, TData> = PblDataSource<T, TData, TDataSourceAdapter>,
+                                               TDataSource extends PblDataSource<T, TData> = PblDataSource<T, TData>,
                                               > {
   protected _adapter: AdapterParams<T, TEvent> = { };
   protected _dsOptions: PblDataSourceOptions = { };
