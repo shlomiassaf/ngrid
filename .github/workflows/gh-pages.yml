@@ -13,5 +13,6 @@ jobs:
         with:
           node-version: 12
       - run: npm install
+      - run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - run: npm run gh-pages
 
