@@ -31,12 +31,22 @@ const DEFAULT_INITIAL_CACHE_STATE: PblDataSourceTriggerCache<any> = { filter: EM
 export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSourceTriggerChangedEvent<TData> = PblDataSourceTriggerChangedEvent<TData>> {
 
   static hasCustomBehavior(config: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>): boolean {
-    return CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( key => !!config[key] );
+    for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
+      if (!!config[key]) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Returns true if the event is triggered from a custom behavior (filter, sort and/or pagination and the configuration allows it) */
   static isCustomBehaviorEvent(event: PblDataSourceTriggerChangedEvent, config: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>) {
-    return CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( k => !!config[k] && event[k].changed);
+    for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
+      if (!!config[key] && event[key].changed) {
+        return true;
+      }
+    }
+    return false;
   }
 
   onSourceChanged: Observable<T[]>;
