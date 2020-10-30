@@ -1,3 +1,41 @@
+## 2.2.2 (2020-10-28)
+
+
+### Bug Fixes
+
+* **ngrid:** remove deep covariance generic constraint ([110ccd4](https://github.com/shlomiassaf/ngrid/commit/110ccd42de1f28841224c804f77bf5a51a384f67)), closes [#121](https://github.com/shlomiassaf/ngrid/issues/121)
+* **ngrid:** remove duplicate rendering of header cells ([be9036d](https://github.com/shlomiassaf/ngrid/commit/be9036dcd46abbd82c67a1c7e0467431cfbd17a6))
+* **ngrid/infinite-scroll:** handle partial range results ([c104069](https://github.com/shlomiassaf/ngrid/commit/c104069f0486bd8cb8d5da2ad19224ae9bdbb3e9)), closes [#125](https://github.com/shlomiassaf/ngrid/issues/125)
+* **ngrid/infinite-scroll:** proper handling of custom triggers ([0e32499](https://github.com/shlomiassaf/ngrid/commit/0e3249968c0e036daadf68d3cf6f46eb2c36a0fe)), closes [#124](https://github.com/shlomiassaf/ngrid/issues/124)
+
+
+
+## 2.2.1 (2020-10-13)
+
+
+### Bug Fixes
+
+* **ngrid-material/selection-column:** disable animation to prevent flickering ([7b45329](https://github.com/shlomiassaf/ngrid/commit/7b4532985855cfe43e4b0fce6ca6f0fec615e1fc))
+* **ngrid-material/selection-column:** reset listeners when bulk mode changes ([e802997](https://github.com/shlomiassaf/ngrid/commit/e8029973901881846b49ff920d8b27c0a90244e9))
+* **ngrid** columnDef override error ([e6dbf9c](https://github.com/shlomiassaf/ngrid/commit/e6dbf9c48f9459006215c7c0d2219f113e23c978)), closes [#118](https://github.com/shlomiassaf/ngrid/issues/118)
+
+
+
+# 2.2.0 (2020-10-13)
+
+
+### Bug Fixes
+
+* **ngrid:** detect edge case where row index might be out of sync ([5ac6496](https://github.com/shlomiassaf/ngrid/commit/5ac6496f82f1459b114de2b4efb418df4205d018))
+* **ngrid:** fix memory leak when registering for create ([db003dd](https://github.com/shlomiassaf/ngrid/commit/db003dd6f3dec763f2559508718b67cf617a70b1))
+
+
+### Features
+
+* **ngrid/infinite-scroll:** implement infinite scroll ([a08c977](https://github.com/shlomiassaf/ngrid/commit/a08c97740c4a33b870828d5443e3edb40fb0ed6e))
+
+
+
 # 2.1.0 (2020-09-24)
 
 

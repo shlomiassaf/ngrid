@@ -1,0 +1,66 @@
+$background: #f6f7f8;
+$grey-nuance-lighter: #eeeeee;
+$grey-nuance-darker: #dddddd;
+$fade-grey: #e8e8e8;
+$duration: 2s;
+
+.pbl-ngrid-infinite-virtual-row .pbl-ngrid-cell {
+  position: relative;
+
+  &:before {
+    // width: 100%;
+    // height: 100%;
+    position: absolute;
+    top: 12px; left: 12px; right: 12px; bottom: 12px;
+    content: " ";
+
+    -webkit-animation-duration: $duration;
+    animation-duration: $duration;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-name: placeload;
+    animation-name: placeload;
+    -webkit-animation-timing-function: ease;
+    animation-timing-function: ease;
+    background: $background;
+    background: $grey-nuance-lighter;
+    background: -webkit-gradient(
+      linear,
+      left top,
+      right top,
+      color-stop(8%, $grey-nuance-lighter),
+      color-stop(18%, $grey-nuance-darker),
+      color-stop(33%, $grey-nuance-lighter)
+    );
+    background: -webkit-linear-gradient(
+      left,
+      #eeeeee 8%,
+      #dddddd 18%,
+      #eeeeee 33%
+    );
+    background: linear-gradient(to right, $grey-nuance-lighter 8%, $grey-nuance-darker 18%, $grey-nuance-lighter 33%);
+    -webkit-background-size: 200px 100%;
+    background-size: 200px 100%;
+    border-radius: 4px;
+  }
+}
+
+@-webkit-keyframes placeload{
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+@keyframes placeload {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}

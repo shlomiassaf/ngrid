@@ -530,7 +530,10 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
         // This is required because `onRenderDataChanging` is fired async, just before the data is emitted.
         // Its not enough to clear the context when `setDataSource` is called, we also need to handle `refresh` calls which will not
         // trigger this method.
-        value.onSourceChanging.pipe(unrx(this, value)).subscribe( () => this._extApi.contextApi.clear() );
+        value.onSourceChanging.pipe(unrx(this, value))
+          .subscribe( () => {
+            this._extApi.contextApi.clear();
+          });
 
         // Run CD, scheduled as a micro-task, after each rendering
         value.onRenderDataChanging

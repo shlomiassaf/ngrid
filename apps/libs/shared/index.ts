@@ -4,6 +4,7 @@ export { MarkdownPageContainerComponent } from './lib/components/markdown-page-c
 export { MarkdownPageViewerComponent } from './lib/components/markdown-page-viewer/markdown-page-viewer.component';
 export { EXAMPLE_COMPONENTS_TOKEN } from './lib/components/exapmle-view/example-view.component';
 export { LiveContentChunk, CONTENT_CHUNKS_COMPONENTS } from './lib/components/content-chunk-view/content-chunk-view.component';
+export { ViewLayoutObserver } from './lib/services/view-layout-observer.service';
 export { MarkdownPagesService } from './lib/services/markdown-pages.service';
 export { MarkdownPagesMenuService } from './lib/services/markdown-pages-menu.service';
 export { LocationService } from './lib/services/location.service';

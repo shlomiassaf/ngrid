@@ -66,7 +66,7 @@ This folder contains an internal library which is an angular module used by the 
 This module contains components and services used to display compiled markdown content, menu and dynamic components (with source code or without).
 It also contains other directives, services, pipes used by the docs app.
 
-### apps/libs/ngrid-examples
+### apps/ngrid-demo-app/content
 
 This folder contains feature modules with each module showcasing one or more components.
 

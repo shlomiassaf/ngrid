@@ -1,7 +1,6 @@
 import { Observable, Subject, combineLatest, of, from, isObservable, asapScheduler } from 'rxjs';
 import { filter, map, switchMap, tap, debounceTime, observeOn } from 'rxjs/operators';
 
-import { DataSourceOf } from './data-source';
 import { PblPaginator, PblPaginatorChangeEvent } from '../paginator';
 import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
 import { filter as filteringFn } from './filtering';
@@ -15,6 +14,7 @@ import {
   PblDataSourceTriggerChangedEvent,
   TriggerChangedEventFor,
   PblDataSourceAdapterProcessedResult,
+  PblDataSourceTriggerChangeHandler,
 } from './data-source-adapter.types';
 
 import { createChangeContainer, fromRefreshDataWrapper, EMPTY } from './data-source-adapter.helpers';
@@ -28,9 +28,31 @@ const DEFAULT_INITIAL_CACHE_STATE: PblDataSourceTriggerCache<any> = { filter: EM
 /**
  * An adapter that handles changes
  */
-export class PblDataSourceAdapter<T = any, TData = any> {
+export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSourceTriggerChangedEvent<TData> = PblDataSourceTriggerChangedEvent<TData>> {
+
+  static hasCustomBehavior(config: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>): boolean {
+    for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
+      if (!!config[key]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Returns true if the event is triggered from a custom behavior (filter, sort and/or pagination and the configuration allows it) */
+  static isCustomBehaviorEvent(event: PblDataSourceTriggerChangedEvent, config: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>) {
+    for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
+      if (!!config[key] && event[key].changed) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   onSourceChanged: Observable<T[]>;
   onSourceChanging: Observable<void>;
+
+  get inFlight() { return this._inPreFlight || this._inFlight.size > 0; }
 
   protected paginator?: PblPaginator<any>;
   private readonly config: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>;
@@ -40,6 +62,8 @@ export class PblDataSourceAdapter<T = any, TData = any> {
   private _lastSource: T[];
   private _lastSortedSource: T[];
   private _lastFilteredSource: T[];
+  private _inFlight = new Set<TEvent>();
+  private _inPreFlight = false;
 
   /**
    * A Data Source adapter contains flow logic for the datasource and subsequent emissions of datasource instances.
@@ -83,7 +107,7 @@ export class PblDataSourceAdapter<T = any, TData = any> {
    * When `sourceFactory` returns false the entire trigger cycle is skipped.
    * @param config - A configuration object describing how this adapter should behave.
    */
-  constructor(public sourceFactory: (event: PblDataSourceTriggerChangedEvent) => (false | DataSourceOf<T>),
+  constructor(public sourceFactory: PblDataSourceTriggerChangeHandler<T, TEvent>,
               config?: false | Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>) {
     this.config = Object.assign({}, config || {});
     this.initStreams();
@@ -140,128 +164,149 @@ export class PblDataSourceAdapter<T = any, TData = any> {
       this._refresh$.pipe( map( value => fromRefreshDataWrapper(createChangeContainer('data', value, this.cache)) ), filter(changedFilter) ),
     ];
 
-    const hasCustomBehavior = CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( key => !!this.config[key] );
+    const hasCustomBehavior = PblDataSourceAdapter.hasCustomBehavior(this.config);
 
-    return combineLatest(combine[0], combine[1], combine[2], combine[3])
+    return combineLatest([combine[0], combine[1], combine[2], combine[3]])
       .pipe(
+        tap( () => this._inPreFlight = true),
         // Defer to next loop cycle, until no more incoming.
         // We use an async schedular here (instead of asapSchedular) because we want to have the largest debounce window without compromising integrity
         // With an async schedular we know we will run after all micro-tasks but before "real" async operations.
         debounceTime(0),
-        switchMap( ([filter, sort, pagination, data ]) => {
+        switchMap( ([filterInput, sort, pagination, data ]) => {
+          this._inPreFlight = false;
+
           updates++; // if first, will be 0 now (starts from -1).
-          const event: PblDataSourceTriggerChangedEvent<TData> = {
-            filter,
+          const event: TEvent = {
+            id: Math.random() * 10,
+            filter: filterInput,
             sort,
             pagination,
             data,
+            eventSource: data.changed ? 'data' : 'customTrigger',
             isInitial: updates === 0,
             updateTotalLength: (totalLength) => {
               if (this.paginator) {
                 this.paginator.total = totalLength;
               }
             }
-          };
+          } as TEvent;
+          this.onStartOfEvent(event);
 
           const runHandle = data.changed
-            || ( hasCustomBehavior && CUSTOM_BEHAVIOR_TRIGGER_KEYS.some( k => !!this.config[k] && event[k].changed) );
+            || ( hasCustomBehavior && PblDataSourceAdapter.isCustomBehaviorEvent(event, this.config) );
 
-          if (runHandle) {
-            return this.runHandle(event).pipe(
-              tap( () => event.data.changed = true ), // if the user didn't return "false" from his handler, we infer data was changed!
-              map( data => ({ event, data })),
-            );
-          } else {
-            return of({ event, data: this._lastSource });
-          }
-        }),
-        map( response => {
-          const config = this.config;
-          const event = response.event;
-
-          // mark which of the triggers has changes
-          // The logic is based on the user's configuration and the incoming event
-          const withChanges: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>> = {};
-          for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
-            if (!config[key] && (event.isInitial || event[key].changed)) {
-              withChanges[key] = true;
-            }
-          }
-
-          // When data changed, apply some logic (caching, operational, etc...)
-          if (event.data.changed) {
-            // cache the data when it has changed.
-            this._lastSource = response.data;
-
-            if (config.sort) {
-              // When the user is sorting (i.e. server sorting), the last sort cached is always the last source we get from the user.
-              this._lastSortedSource = this._lastSource;
-            } else {
-              // When user is NOT sorting (we sort locally) AND the data has changed we need to apply sorting on it
-              // this might already be true (if sorting was the trigger)...
-              withChanges.sort = true;
-
-              // because we sort and then filter, filtering updates are also triggered by sort updated
-              withChanges.filter = true;
-            }
-
-            if (config.filter) {
-              // When the user is filtering (i.e. server filtering), the last filter cached is always the last source we get from the user.
-              this._lastFilteredSource = this._lastSource;
-            } else {
-              // When user is NOT filtering (we filter locally) AND the data has changed we need to apply filtering on it
-              // this might already be true (if filtering was the trigger)...
-              withChanges.filter = true;
-            }
-          }
-
-          // When user is NOT applying pagination (we paginate locally) AND if we (sort OR filter) locally we also need to paginate locally
-          if (!config.pagination && (withChanges.sort || withChanges.filter)) {
-            withChanges.pagination = true;
-          }
-
-          // Now, apply: sort --> filter --> pagination     ( ORDER MATTERS!!! )
-
-          if (withChanges.sort) {
-            this._lastSortedSource = this.applySort(this._lastSource, event.sort.curr || event.sort.prev);
-          }
-
-          let data: T[] = this._lastSortedSource;
-
-          // we check if filter was asked, but also if we have a filter we re-run
-          // Only sorting is cached at this point filtering is always calculated
-          if (withChanges.filter || (event.filter.curr && event.filter.curr.filter)) {
-            data = this._lastFilteredSource = this.applyFilter(data, event.filter.curr || event.filter.prev);
-          }
-
-          if (withChanges.pagination) {
-            data = this.applyPagination(data);
-          }
-
-          const clonedEvent: PblDataSourceTriggerChangedEvent<TData> = { ...event };
-
-          // We use `combineLatest` which caches pervious events, only new events are replaced.
-          // We need to mark everything as NOT CHANGED, so subsequent calls will not have their changed flag set to true.
-          //
-          // We also clone the object so we can pass on the proper values.
-          // We create shallow clones so complex objects (column in sort, user data in data) will not throw on circular.
-          // For pagination we deep clone because it contains primitives and we need to also clone the internal change objects.
-          for (const k of TRIGGER_KEYS) {
-            clonedEvent[k] = k === 'pagination'
-              ? JSON.parse(JSON.stringify(event[k]))
-              : { ...event[k] }
+          const response$ = runHandle
+            ? this.runHandle(event as TEvent)
+                .pipe(
+                  map( data => {
+                    if (data !== false) { // if the user didn't return "false" from his handler, we infer data was changed!
+                      event.data.changed = true;
+                    }
+                    return { event, data };
+                  }),
+                )
+              : of({ event, data: this._lastSource })
             ;
-            event[k].changed = false;
-          }
-          event.pagination.page.changed = event.pagination.perPage.changed = false;
 
-          return {
-            event: clonedEvent,
-            data,
-            sorted: this._lastSortedSource,
-            filtered: this._lastFilteredSource,
-          };
-        })
+          return response$
+            .pipe(
+              map( response => {
+                // If runHandle() returned false, we do not process and return undefined.
+                if (response.data === false) {
+                  return;
+                }
+                const config = this.config;
+                const event = response.event;
+
+                // mark which of the triggers has changes
+                // The logic is based on the user's configuration and the incoming event
+                const withChanges: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>> = {};
+                for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
+                  if (!config[key] && (event.isInitial || event[key].changed)) {
+                    withChanges[key] = true;
+                  }
+                }
+
+                // When data changed, apply some logic (caching, operational, etc...)
+                if (event.data.changed) {
+                  // cache the data when it has changed.
+                  this._lastSource = response.data;
+
+                  if (config.sort) {
+                    // When the user is sorting (i.e. server sorting), the last sort cached is always the last source we get from the user.
+                    this._lastSortedSource = this._lastSource;
+                  } else {
+                    // When user is NOT sorting (we sort locally) AND the data has changed we need to apply sorting on it
+                    // this might already be true (if sorting was the trigger)...
+                    withChanges.sort = true;
+
+                    // because we sort and then filter, filtering updates are also triggered by sort updated
+                    withChanges.filter = true;
+                  }
+
+                  if (config.filter) {
+                    // When the user is filtering (i.e. server filtering), the last filter cached is always the last source we get from the user.
+                    this._lastFilteredSource = this._lastSource;
+                  } else {
+                    // When user is NOT filtering (we filter locally) AND the data has changed we need to apply filtering on it
+                    // this might already be true (if filtering was the trigger)...
+                    withChanges.filter = true;
+                  }
+                }
+
+                // When user is NOT applying pagination (we paginate locally) AND if we (sort OR filter) locally we also need to paginate locally
+                if (!config.pagination && (withChanges.sort || withChanges.filter)) {
+                  withChanges.pagination = true;
+                }
+
+                // Now, apply: sort --> filter --> pagination     ( ORDER MATTERS!!! )
+
+                if (withChanges.sort) {
+                  this._lastSortedSource = this.applySort(this._lastSource, event.sort.curr || event.sort.prev);
+                }
+
+                let data: T[] = this._lastSortedSource;
+
+                // we check if filter was asked, but also if we have a filter we re-run
+                // Only sorting is cached at this point filtering is always calculated
+                if (withChanges.filter || (!config.filter && event.filter.curr && event.filter.curr.filter)) {
+                  data = this._lastFilteredSource = this.applyFilter(data, event.filter.curr || event.filter.prev);
+                }
+
+                if (withChanges.pagination) {
+                  data = this.applyPagination(data);
+                }
+
+                const clonedEvent: TEvent = { ...event };
+
+                // We use `combineLatest` which caches pervious events, only new events are replaced.
+                // We need to mark everything as NOT CHANGED, so subsequent calls will not have their changed flag set to true.
+                //
+                // We also clone the object so we can pass on the proper values.
+                // We create shallow clones so complex objects (column in sort, user data in data) will not throw on circular.
+                // For pagination we deep clone because it contains primitives and we need to also clone the internal change objects.
+                for (const k of TRIGGER_KEYS) {
+                  clonedEvent[k] = k === 'pagination'
+                    ? JSON.parse(JSON.stringify(event[k]))
+                    : { ...event[k] }
+                  ;
+                  event[k].changed = false;
+                }
+                event.pagination.page.changed = event.pagination.perPage.changed = false;
+
+                return {
+                  event: clonedEvent,
+                  data,
+                  sorted: this._lastSortedSource,
+                  filtered: this._lastFilteredSource,
+                };
+              }),
+              tap( () => this.onEndOfEvent(event) ),
+              // If runHandle() returned false, we will get undefined here, we do not emit these to the grid, nothing to do.
+              filter( r => !!r ),
+            );
+        }),
       );
   }
 
@@ -294,17 +339,20 @@ export class PblDataSourceAdapter<T = any, TData = any> {
     }
   }
 
-  /* Note:  Currently this is only used in the constructor.
-            However, if called elsewhere (i.e. if we can re-init the adapter) we need to track all code that is using
-            `onSourceChanged` and or `onSourceChanging` and make it support the replacement of the observable.
-            Because the API is public it will probably won't work so the best solution might be to switch
-            `onSourceChanged` and `onSourceChanging` to subjects that are alive always and emit them internally in this class. */
-  private initStreams(): void {
-    this._onSourceChange$ = new Subject<T[]>();
-    this.onSourceChanged = this._onSourceChange$.pipe(filter( d => d !== SOURCE_CHANGING_TOKEN ));
-    this.onSourceChanging = this._onSourceChange$.pipe(filter( d => d === SOURCE_CHANGING_TOKEN ));
-    this._refresh$ = new Subject<RefreshDataWrapper<TData>>();
-    this._lastSource = undefined;
+  protected onStartOfEvent(event: TEvent): void {
+    this._inFlight.add(event);
+  }
+
+  protected onEndOfEvent(event: TEvent): void {
+    this._inFlight.delete(event);
+  }
+
+  protected emitOnSourceChanging(event: TEvent) {
+    this._onSourceChange$.next(SOURCE_CHANGING_TOKEN);
+  }
+
+  protected emitOnSourceChanged(event: TEvent, data: T[]) {
+    this._onSourceChange$.next(data);
   }
 
   /**
@@ -325,26 +373,38 @@ export class PblDataSourceAdapter<T = any, TData = any> {
    * When the response is false that handler wants to skip this cycle, this means that onSourceChanged will not emit and
    * a dead-end observable is returned (observable that will never emit).
    */
-  private runHandle(event: PblDataSourceTriggerChangedEvent<TData>): Observable<T[]> {
-    this._onSourceChange$.next(SOURCE_CHANGING_TOKEN);
+  private runHandle(event: TEvent): Observable<false | T[]> {
 
     const result = this.sourceFactory(event);
     if (result === false) {
-      return of(false).pipe(filter( () => false )) as any; // stop emissions if got false.
+      return of(false);
     }
 
-    const obs: Observable<T[]> = isObservable(result)
-      ? result
-      : Array.isArray(result)
-        ? of(result)
-        : from(result) // promise...
+    this.emitOnSourceChanging(event);
+
+    const obs: Observable<T[]> = Array.isArray(result)
+      ? of(result)
+      // else ->            observable : promise
+      : (isObservable(result) ? result : from(result))
+          .pipe(map( data => Array.isArray(data) ? data : [] )) // TODO: should we error? warn? notify?
     ;
 
     return obs.pipe(
-      // run as a micro-task
-      observeOn(asapScheduler, 0),
-      map( data => Array.isArray(data) ? data : [] ),
-      tap( data => this._onSourceChange$.next(data) )
+      observeOn(asapScheduler, 0), // run as a micro-task
+      tap( data => this.emitOnSourceChanged(event, data as T[]) ),
     );
+  }
+
+  /* Note:  Currently this is only used in the constructor.
+            However, if called elsewhere (i.e. if we can re-init the adapter) we need to track all code that is using
+            `onSourceChanged` and or `onSourceChanging` and make it support the replacement of the observable.
+            Because the API is public it will probably won't work so the best solution might be to switch
+            `onSourceChanged` and `onSourceChanging` to subjects that are alive always and emit them internally in this class. */
+  private initStreams(): void {
+    this._onSourceChange$ = new Subject<T[]>();
+    this.onSourceChanged = this._onSourceChange$.pipe(filter( d => d !== SOURCE_CHANGING_TOKEN ));
+    this.onSourceChanging = this._onSourceChange$.pipe(filter( d => d === SOURCE_CHANGING_TOKEN ));
+    this._refresh$ = new Subject<RefreshDataWrapper<TData>>();
+    this._lastSource = undefined;
   }
 }

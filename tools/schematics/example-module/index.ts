@@ -12,16 +12,14 @@ import {
   filter,
   mergeWith,
   move,
-  noop,
   url,
 } from '@angular-devkit/schematics';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import { parseName } from '@schematics/angular/utility/parse-name';
 import { Change, InsertChange } from '@schematics/angular/utility/change';
-import { findNodes, getSourceNodes, addImportToModule, addDeclarationToModule, addEntryComponentToModule, addExportToModule } from '@schematics/angular/utility/ast-utils';
+import { getSourceNodes, addDeclarationToModule, addExportToModule } from '@schematics/angular/utility/ast-utils';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 
-const ROOT = '/apps/libs/ngrid-examples';
+const ROOT = '/apps/ngrid-demo-app/content';
 
 const stringsExtensions = {
   moduleFile: (name: string) => `${strings.dasherize(name)}.module`,
@@ -40,32 +38,33 @@ function readIntoSourceFile(host: Tree, modulePath: string): ts.SourceFile {
   return ts.createSourceFile(modulePath, sourceText, ts.ScriptTarget.Latest, true);
 }
 
-function addImportOfModuleToNgModule(parsedPath: ReturnType<typeof createPath>): Rule {
+function addLazyLoadingRouteItem(parsedPath: ReturnType<typeof createPath>): Rule {
   return (host: Tree) => {
-    const modulePath = `${ROOT}/example-module.ts`;
+    const modulePath = `${ROOT}/lazy-modules-as-routes.ts`;
     const exampleModulePath = `/${parsedPath.path}/${stringsExtensions.moduleFile(parsedPath.name)}`;
     const relativePath = buildRelativePath(modulePath, exampleModulePath);
-    const classifiedName = stringsExtensions.moduleClassName(parsedPath.name);
     const source = readIntoSourceFile(host, modulePath);
 
-    const importChanges = addImportToModule(source,
-                                            modulePath,
-                                            classifiedName,
-                                            relativePath);
+    const node = getSourceNodes(source)
+      .filter(node => node.kind == ts.SyntaxKind.ArrayLiteralExpression )[0];
+    const text = node.getFullText(source);
 
+    const code = `{
+    path: '${parsedPath.path.substr(ROOT.length + 1).split('/').join('-')}.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./${parsedPath.path.substr(ROOT.length + 1)}/${stringsExtensions.moduleFile(parsedPath.name)}').then( m => m.${stringsExtensions.moduleClassName(parsedPath.name)} ),
+  }`;
+
+    const change = new InsertChange(modulePath, node.getEnd() - 2, `,\n  ${code}`);
     const declarationRecorder = host.beginUpdate(modulePath);
-    for (const change of importChanges) {
-      if (change instanceof InsertChange) {
-        declarationRecorder.insertLeft(change.pos, change.toAdd);
-      }
-    }
+    declarationRecorder.insertLeft(change.pos, change.toAdd);
     host.commitUpdate(declarationRecorder);
 
     return host;
   };
 }
 
-export function addComponentToBindNgModule(source: ts.SourceFile,
+function addComponentToBindNgModule(source: ts.SourceFile,
                                            ngModulePath: string,
                                            symbolName: string,): Change[] {
   const nodes = getSourceNodes(source)
@@ -122,15 +121,6 @@ function addDeclarationToNgModule(parsedPath: ReturnType<typeof createPath>, com
     // Need to refresh the AST because we overwrote the file in the host.
     source = readIntoSourceFile(host, modulePath);
 
-    const entryComponentRecorder = host.beginUpdate(modulePath);
-    const entryComponentChanges = addEntryComponentToModule(source, modulePath, classifiedName, relativePath);
-    for (const change of entryComponentChanges) {
-      if (change instanceof InsertChange) {
-        entryComponentRecorder.insertLeft(change.pos, change.toAdd);
-      }
-    }
-    host.commitUpdate(entryComponentRecorder);
-
     // Need to refresh the AST because we overwrote the file in the host.
     source = readIntoSourceFile(host, modulePath);
     const bindNgModuleRecorder = host.beginUpdate(modulePath);
@@ -157,24 +147,8 @@ function buildSelector(name: string) {
   return `pbl-${strings.dasherize(name)}-example`;
 }
 
-function createMarkdown(title: string, selector: string, path: string) {
-  const parent = path.substr(0, path.lastIndexOf('/'));
-  return `---
-title: ${title}
-path: ${path}
-parent: ${parent}
----
-# ${title}
-
-<div pbl-example-view="${selector}"></div>
-
-`;
-}
-
 export default function(options: { name: string; add?: string; }): Rule {
   return async (tree: Tree, _context: SchematicContext) => {
-    // const workspace = await getWorkspace(tree);
-    // const project = workspace.projects.get(options.project as string);
 
     const parsedPath = createPath(options.name);
     const fullPath = Path.join(parsedPath.path, stringsExtensions.componentFile(parsedPath.name) + '.ts');
@@ -190,6 +164,8 @@ export default function(options: { name: string; add?: string; }): Rule {
     if (!componentFileExists) {
       const selector = buildSelector(parsedPath.name);
       const title = strings.underscore(parsedPath.name).split('_').map(strings.capitalize).join(' ');
+      const urlPath = parsedPath.path.substr(ROOT.length + 1);
+
       const templateSource = apply(url('./files'), [
         applyTemplates({
           ...strings,
@@ -198,22 +174,14 @@ export default function(options: { name: string; add?: string; }): Rule {
           selector,
           style: 'scss',
           title,
+          path: urlPath,
+          parent: urlPath.substr(0, urlPath.lastIndexOf('/')),
         }),
         move(parsedPath.path),
       ]);
 
-      console.log(createMarkdown(title, selector, parsedPath.path.substr(ROOT.length + 1)));
-
-      console.log(`
-      {
-        path: '${parsedPath.path.substr(ROOT.length + 1).split('/').join('-')}.module',
-        pathMatch: 'full',
-        loadChildren: () => import('@pebula/apps/ngrid-examples/${parsedPath.path.substr(ROOT.length + 1)}/${stringsExtensions.moduleFile(parsedPath.name)}').then( m => m.${stringsExtensions.moduleClassName(parsedPath.name)} ),
-      }
-      `);
-
       rules.push(
-        // addImportOfModuleToNgModule(parsedPath),
+        addLazyLoadingRouteItem(parsedPath),
         mergeWith(templateSource),
       );
     }
@@ -225,7 +193,7 @@ export default function(options: { name: string; add?: string; }): Rule {
         const addSelector = buildSelector(addParsedPath.name);
         const addTitle = strings.underscore(addParsedPath.name).split('_').map(strings.capitalize).join(' ');
         const addTemplateSource = apply(url('./files'), [
-          filter(path => !path.endsWith('.module.ts.template')),
+          filter(path => !path.endsWith('.module.ts.template') && !path.endsWith('.md.template')),
           applyTemplates({
             ...strings,
             ...stringsExtensions,

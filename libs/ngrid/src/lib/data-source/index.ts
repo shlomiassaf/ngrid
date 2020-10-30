@@ -3,7 +3,9 @@ export {
   PblDataSourceTriggers,
   PblDataSourceTriggerChange,
   PblDataSourceTriggerChangedEvent,
+  PblDataSourceTriggerChangedEventSource,
   PblDataSourceAdapterProcessedResult,
+  PblDataSourceTriggerChangeHandler,
 } from './data-source-adapter.types';
 export { PblDataSourceAdapter } from './data-source-adapter';
 export {
@@ -14,8 +16,9 @@ export {
   DataSourceColumnPredicate,
   PblNgridSorter,
   PblNgridDataSourceSortChange,
-  PblNgridSortOrder
+  PblNgridSortOrder,
 } from './types';
 export { PblDataSource, PblDataSourceOptions, DataSourceOf } from './data-source';
+export { PblDataSourceBaseFactory } from './data-source-base-factory';
 export { PblDataSourceFactory, createDS } from './factory';
 export { applySort, } from './sorting';

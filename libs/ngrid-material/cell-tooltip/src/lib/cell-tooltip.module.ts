@@ -32,16 +32,12 @@ export class PblNgridCellTooltipModule {
         const cellTooltipConfig = configService.get(PblNgridCellTooltipDirective.PLUGIN_KEY);
         if (cellTooltipConfig && cellTooltipConfig.autoSetAll === true) {
           const pluginCtrl = event.controller;
-          let subscription = pluginCtrl.events
-            .subscribe( evt => {
-              if (evt.kind === 'onInit') {
-                if (!pluginCtrl.hasPlugin(PblNgridCellTooltipDirective.PLUGIN_KEY)) {
-                  pluginCtrl.createPlugin(PblNgridCellTooltipDirective.PLUGIN_KEY);
-                }
-                subscription.unsubscribe();
-                subscription = undefined;
-              }
-            });
+          pluginCtrl.onInit()
+          .subscribe( evt => {
+            if (!pluginCtrl.hasPlugin(PblNgridCellTooltipDirective.PLUGIN_KEY)) {
+              pluginCtrl.createPlugin(PblNgridCellTooltipDirective.PLUGIN_KEY);
+            }
+          });
         }
       });
   }

@@ -133,11 +133,8 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   constructor(private grid: PblNgridComponent<any>, pluginCtrl: PblNgridPluginController<T>, private injector: Injector) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    let subscription = pluginCtrl.events.subscribe( event => {
-      if (event.kind === 'onInit') {
-        subscription.unsubscribe();
-        subscription = undefined;
-
+    pluginCtrl.onInit()
+      .subscribe(() => {
         // Depends on target-events plugin
         // if it's not set, create it.
         if (!pluginCtrl.hasPlugin('targetEvents')) {
@@ -168,8 +165,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
         } else {
           this.setupDetailRowParent();
         }
-      }
-    });
+      });
   }
 
   addDetailRow(detailRow: PblNgridDetailRowComponent): void {

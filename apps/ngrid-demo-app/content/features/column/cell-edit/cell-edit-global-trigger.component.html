@@ -1,0 +1,13 @@
+<pbl-ngrid (cellClick)="$event.context.startEdit()"
+           [dataSource]="ds" [columns]="columns">
+
+  <div *pblNgridCellEditorDef="'name'; let ctx">
+    <input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
+  </div>
+  <div *pblNgridCellEditorDef="'lead'; let ctx">
+    <input #cb type="checkbox" [checked]="ctx.value"
+           [pblCellEditAutoFocus]="ctx"
+           (change)="changeCheckbox(cb, ctx)"
+           (blur)="ctx.stopEdit()" />
+  </div>
+</pbl-ngrid>

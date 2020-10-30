@@ -14,9 +14,11 @@ import {
   Type,
   Optional,
   HostListener,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ComponentPortal, DomPortalHost } from '@angular/cdk/portal';
+import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { MetaService } from '@ngx-meta/core';
 
 import { utils } from '@pebula/ngrid';
@@ -35,23 +37,27 @@ import { MarkdownPageContainerComponent } from '../markdown-page-container/markd
   host: {
     class: 'markdown-body',
     '[class.no-parent-container]': '!hasContainer',
-  }
+    '[class.hide-primary-header]': 'hidePrimaryHeader',
+  },
+  encapsulation: ViewEncapsulation.None,
 })
 export class MarkdownPageViewerComponent implements OnDestroy {
 
+  @Input() hidePrimaryHeader: boolean;
   @Input() set documentUrl(url: string) { this.updateDocument(url); }
   @Output() contentRendered = new EventEmitter<void>();
+  @ViewChild('pageDiv') elementRef: ElementRef<HTMLDivElement>;
 
   page: PageFileAsset;
+
   readonly hasContainer: boolean;
 
-  private _portalHosts: DomPortalHost[] = [];
+  private _portalHosts: DomPortalOutlet[] = [];
 
   constructor(private mdPages: MarkdownPagesService,
               private meta: MetaService,
               private locationService: LocationService,
               route: ActivatedRoute,
-              private _elementRef: ElementRef,
               private _appRef: ApplicationRef,
               private _componentFactoryResolver: ComponentFactoryResolver,
               private _injector: Injector,
@@ -82,19 +88,19 @@ export class MarkdownPageViewerComponent implements OnDestroy {
   }
 
   private updateDocument(url: string) {
+    this.page = undefined;
     this._clearLiveExamples();
     if (!url) {
       this.meta.setTitle(``);
-      this._elementRef.nativeElement.innerHTML = '';
       return;
     }
     this.mdPages.getPage(url)
       .then( p => {
         this.page = p;
         this.meta.setTitle(`NGrid: ${p.title}`);
-        this._elementRef.nativeElement.innerHTML = p.contents;
+        this.elementRef.nativeElement.innerHTML = p.contents;
 
-        if (typeof this._elementRef.nativeElement.getBoundingClientRect === 'function') {
+        if (typeof this.elementRef.nativeElement.getBoundingClientRect === 'function') {
           this._loadComponents('pbl-example-view', ExampleViewComponent);
           this._loadComponents('pbl-app-content-chunk', ContentChunkViewComponent);
         }
@@ -104,7 +110,7 @@ export class MarkdownPageViewerComponent implements OnDestroy {
   }
 
   private _loadComponents<T extends MarkdownDynamicComponentPortal>(componentName: string, componentClass: Type<T>) {
-    let exampleElements = this._elementRef.nativeElement.querySelectorAll(`[${componentName}]`);
+    let exampleElements = this.elementRef.nativeElement.querySelectorAll(`[${componentName}]`);
 
     Array.prototype.slice.call(exampleElements).forEach((element: Element) => {
       const ident = element.getAttribute(componentName);
@@ -112,7 +118,7 @@ export class MarkdownPageViewerComponent implements OnDestroy {
       const inputs = element.getAttribute('inputs');
       const exampleStyle = element.getAttribute('exampleStyle');
 
-      const portalHost = new DomPortalHost(element, this._componentFactoryResolver, this._appRef, this._injector);
+      const portalHost = new DomPortalOutlet(element, this._componentFactoryResolver, this._appRef, this._injector);
       const cmpPortal = new ComponentPortal(componentClass, this._viewContainerRef);
       const cmpRef = portalHost.attach(cmpPortal);
 

@@ -4,3 +4,9 @@
   flex: 0 0 24px;
   overflow: visible;
 }
+
+// We cancel the the background animation of the checkbox because it does not
+// play well with virtual scroll, on fast context switch of rows it will cause flicker due to animation delays
+.pbl-ngrid-selection-checkbox .mat-checkbox-background {
+  transition: none;
+}

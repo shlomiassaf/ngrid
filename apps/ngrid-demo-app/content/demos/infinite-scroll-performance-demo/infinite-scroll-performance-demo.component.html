@@ -1,0 +1,39 @@
+<div fxLayout="column" class="pbl-fill-absolute" fxLayoutGap='16px'>
+  <div fxLayout="row" style="width: 100%" fxLayoutGap="16px">
+    <mat-radio-group [value]="wheelModeState" (change)="wheelModeChange($event)" fxLayout="row" fxLayoutGap="8px">
+      <mat-radio-button value="passive">Passive</mat-radio-button>
+      <mat-radio-button value="blocking">Blocking</mat-radio-button>
+      <mat-radio-button value="threshold">Threshold{{ wheelModeState === 'threshold' ? ' (' + wheelMode + ')' : ''}}</mat-radio-button>
+    </mat-radio-group>
+    <mat-slider *ngIf="wheelModeState === 'threshold'" thumbLabel min="1" max="55" [value]="wheelMode" (change)="wheelMode = $event.value"></mat-slider>
+  </div>
+  <mat-checkbox [value]="plainColumns" (change)="togglePlainColumns()">Use plain columns (higher frame rate)</mat-checkbox>
+  <div style="flex: 1 1 100%; display: flex; min-height: 0px">
+    <pbl-ngrid *ngIf="showTable" class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis" style="height: 100%; width: 100%;"
+                [dataSource]="ds" [columns]="columns"
+                vScrollAuto maxBufferPx="100" minBufferPx="50" [wheelMode]="wheelMode"
+                showHeader showFooter
+                [hideColumns]="hideColumns"
+                rowReorder
+                columnReorder
+                blockUi
+                matSort
+                cellTooltip
+                matCheckboxSelection="selection">
+      <pbl-demo-action-row filter label="Virtual Scroll Performance" showFps></pbl-demo-action-row>
+      <div *pblNgridCellTypeDef="'accountBalance'; let ctx; value as value; col as col; row as row"
+            [ngridCellClass]="value < 0 ? col.type.data.pbl : col.type.data.pos">{{ value | currency:col.type.data.meta.currency(row):'symbol':col.type.data.format }}</div>
+      <div *pblNgridCellTypeDef="'flagAndCountry'; col as col; row as row">{{ col.type.data.flagAndCountry(row) }}</div>
+
+      <div *pblNgridCellDef="'id'; value as value;">
+        <mat-spinner *ngIf="!value" diameter="24"></mat-spinner>
+        <span *ngIf="value">{{value}}</span>
+      </div>
+
+      <pbl-ngrid-row *pblNgridInfiniteVirtualRowRef="let row; columns: ['id']; gridInstance as gridInstance" [grid]="gridInstance" [row]="row">
+      </pbl-ngrid-row>
+
+    </pbl-ngrid>
+  </div>
+</div>
+

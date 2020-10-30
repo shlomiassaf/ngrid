@@ -114,10 +114,6 @@ export class PblColumnGroup extends PblMetaColumn implements PblColumnGroupDefin
   get isVisible(): boolean {
     return this.columns.some( c => !c.hidden );
   }
-    /**
-   * The column def for this column.
-   */
-  columnDef: PblNgridColumnDef<PblColumnGroup>;
 
   /**
    * When set, this column is a cloned column of an existing column caused by a split.

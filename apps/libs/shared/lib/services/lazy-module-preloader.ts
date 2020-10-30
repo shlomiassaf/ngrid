@@ -40,9 +40,13 @@ export class LazyModulePreloader extends PreloadAllModules {
             }),
           ).subscribe(
             factory => {
-              const ngModule = factory.create(this.ngModule.injector);
-              b.next({ module: factory.moduleType, ngModule });
-              this.onCompile.next(b.getValue());
+              try {
+                const ngModule = factory.create(this.ngModule.injector);
+                b.next({ module: factory.moduleType, ngModule });
+                this.onCompile.next(b.getValue());
+              } catch (err) {
+                console.log(`Could not build module for ${factory.moduleType.name}`);
+              }
             },
             error => {
               b.next({ module: moduleType, error });

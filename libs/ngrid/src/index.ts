@@ -11,12 +11,11 @@ export {
 export {
   PblDataSourceConfigurableTriggers,
   PblDataSourceTriggers,
-  PblDataSourceTriggerChange,
-  PblDataSourceTriggerChangedEvent,
+  PblDataSourceTriggerChange, PblDataSourceTriggerChangedEvent, PblDataSourceTriggerChangedEventSource, PblDataSourceTriggerChangeHandler,
   PblDataSourceAdapter,
   PblDataSource, PblDataSourceOptions,
   PblNgridSortInstructions, PblNgridSortDefinition, PblNgridSorter, applySort, PblNgridSortOrder,
-  PblDataSourceFactory, createDS, DataSourceOf,
+  PblDataSourceBaseFactory, PblDataSourceFactory, createDS, DataSourceOf,
   DataSourceFilterToken, DataSourcePredicate, DataSourceColumnPredicate,
   PblDataSourceAdapterProcessedResult,
 } from './lib/data-source/index';

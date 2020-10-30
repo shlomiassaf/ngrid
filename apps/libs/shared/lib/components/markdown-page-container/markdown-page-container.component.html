@@ -1,48 +1,76 @@
-<div class="example-group-container" fxLayout="row" fxLayoutAlign="space-between start" #el>
-  <ng-container *ngIf="menu$ | async as navEntry">
-    <div *ngIf="navEntry.children"  fxFlex="0 0 260px" class="example-sticky-container">
-      <mat-nav-list>
-        <ng-container *ngFor="let entry of navEntry.children">
-          <ng-container *ngTemplateOutlet="entry.children ? containerEntry : linkEntry; context: { $implicit: entry }"></ng-container>
-        </ng-container>
-      </mat-nav-list>
-    </div>
-  </ng-container>
-  <div fxFlex="*" style="height: 100%">
-    <div style="min-height: 100%;">
-      <div fxFlex="*" class="example-container" pblContentTocArea #tocArea="pblContentTocArea"
-           [scrollContainer]="el"
-           staticHtmlMode
-           selector="h1[id], h2[id], h3[id], h4[id]">
-        <pbl-markdown-page-viewer [documentUrl]="documentUrl" (contentRendered)="contentRendered()"></pbl-markdown-page-viewer>
+<div class="example-group-container" fxLayout="row" fxLayoutAlign="space-between start">
+  <mat-drawer-container class="example-group-container" [hasBackdrop]="viewLayout.isMobile$ | async">
+    <mat-drawer #drawer [mode]="mode" opened (closed)="sideMenuClosed()" fxFlex="0 0 260px">
+      <ng-container *ngIf="menu$ | async as navEntry">
+        <mat-nav-list dense>
+          <ng-container *ngFor="let entry of navEntry.children">
+            <ng-container *ngTemplateOutlet="entry.children ? containerEntry : linkEntry; context: { $implicit: entry }"></ng-container>
+          </ng-container>
+        </mat-nav-list>
+      </ng-container>
+    </mat-drawer>
+
+    <mat-drawer-content style="width: 100%;">
+      <div fxFlex="*" class="example-group-container" style="height: 100%" #el>
+        <div style="min-height: 100%;">
+          <div fxFlex="*" class="example-container" pblContentTocArea #tocArea="pblContentTocArea"
+              [scrollContainer]="el"
+              staticHtmlMode
+              selector="h1[id], h2[id], h3[id], h4[id]">
+            <mat-toolbar *ngIf="menu$ | async" color="primary" style="margin-left: -24px; width: calc(100% + 48px);">
+              <div *ngIf="!pageRendered">
+                Loading document...
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              </div>
+              <div *ngIf="pageRendered && active" fxLayout="row" fxLayoutAlign="start center">
+                <button *ngIf="!!active.parent && viewLayout.isMobile$ | async" mat-icon-button (click)="toggleMobileMenu()">
+                  <mat-icon>menu</mat-icon>
+                </button>
+                <div fxLayout="column">
+                  <sub *ngIf="viewLayout.isMobile$ | async" style="font-size: 0.6em; line-height: 0;">{{active.parent?.entry.title}}</sub>
+                  <span>{{ active.entry.title }}</span>
+                </div>
+              </div>
+            </mat-toolbar>
+            <pbl-markdown-page-viewer [documentUrl]="documentUrl" [hidePrimaryHeader]="!!active" (contentRendered)="contentRendered()"></pbl-markdown-page-viewer>
+          </div>
+          <ng-container *ngIf="viewLayout.isWeb$ | async as isWeb">
+            <div *ngIf="isWeb && tocArea.hasLinks | async" fxFlex="0 0 18%" class="example-sticky-container example-toc-container">
+              <pbl-content-toc class="pbl-demo-app-style" [tocArea]="tocArea">
+                <a *pblContentTocLinkTemplate="let ctx;"
+                  [routerLink]="[ctx.rootUrl]"
+                  queryParamsHandling="preserve"
+                  [fragment]="ctx.link.id">{{ ctx.link.name }}</a>
+              </pbl-content-toc>
+            </div>
+          </ng-container>
+        </div>
+        <footer class="pbl-bg-color-primary">
+          <div>
+            <p class="pbl-color-primary-contrast">Shlomi Assaf © 2019. Code licensed under an MIT-style License. Documentation licensed under CC BY 4.0.</p>
+            <p class="pbl-color-primary-contrast">Version {{ ngridVersion }} using angular {{ ngVersion }} and cdk {{ cdkVersion }} (hash: {{buildVersion}})</p>
+          </div>
+        </footer>
       </div>
-      <div *ngIf="tocArea.hasLinks | async" fxFlex="0 0 18%" class="example-sticky-container example-toc-container">
-        <pbl-content-toc class="pbl-demo-app-style" [tocArea]="tocArea">
-          <a *pblContentTocLinkTemplate="let ctx;"
-             [routerLink]="[ctx.rootUrl]"
-             queryParamsHandling="preserve"
-             [fragment]="ctx.link.id">{{ ctx.link.name }}</a>
-        </pbl-content-toc>
-      </div>
-    </div>
-    <footer class="pbl-bg-color-primary">
-      <div>
-        <p class="pbl-color-primary-contrast">Shlomi Assaf © 2019. Code licensed under an MIT-style License. Documentation licensed under CC BY 4.0.</p>
-        <p class="pbl-color-primary-contrast">Version {{ ngridVersion }} using angular {{ ngVersion }} and cdk {{ cdkVersion }} (hash: {{buildVersion}})</p>
-      </div>
-    </footer>
-  </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
 </div>
 
 <ng-template #containerEntry let-entry>
-  <h3 mat-subheader>{{ entry.title }}</h3>
-  <ng-container *ngFor="let childEntry of entry.children">
-    <ng-container *ngTemplateOutlet="childEntry.children ? containerEntry : linkEntry; context: { $implicit: childEntry }"></ng-container>
-  </ng-container>
+  <mat-accordion>
+    <mat-expansion-panel style="box-shadow: none" [expanded]="isExpanded(entry)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ entry.title }}</mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-container *ngFor="let childEntry of entry.children">
+        <ng-container *ngTemplateOutlet="childEntry.children ? containerEntry : linkEntry; context: { $implicit: childEntry }"></ng-container>
+      </ng-container>
+    </mat-expansion-panel>
+  </mat-accordion>
 </ng-template>
 
 <ng-template #linkEntry let-entry>
-  <mat-list-item (click)="a.click($event)">
-    <a #a [routerLink]="getRouterLink(entry.path)" matLine>{{ entry.title }}</a>
+  <mat-list-item (click)="a.click($event)" style="padding: 0;">
+    <a #a [routerLink]="getRouterLink(entry.path)" [style]="active === entry ? 'font-weight: 500' : ''">{{ entry.title }}</a>
   </mat-list-item>
 </ng-template>

@@ -1,4 +1,5 @@
 import { PblPaginatorChangeEvent } from '../paginator';
+import { DataSourceOf } from './data-source';
 import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
 
 /** @internal */
@@ -41,7 +42,19 @@ export interface PblDataSourceTriggerChange<T> {
   curr?: T;
 }
 
-export interface PblDataSourceTriggerChangedEvent<T = any> {
+export interface PblDataSourceTriggerChangedEventSource {
+  /**
+   * The source of the event was a data request. Either via `refresh()` or the initial data request.
+   */
+  data: true;
+  /**
+   * The source of the event was a change in the filter, sort, pagination or a combination of them.
+   */
+  customTrigger: true;
+}
+
+export interface PblDataSourceTriggerChangedEvent<TData = any> {
+  id: number,
   filter: PblDataSourceTriggerChange<DataSourceFilter>;
   sort: PblDataSourceTriggerChange<PblNgridDataSourceSortChange>;
   pagination: {
@@ -49,13 +62,19 @@ export interface PblDataSourceTriggerChangedEvent<T = any> {
     page: PblDataSourceTriggerChange<any>;
     perPage: PblDataSourceTriggerChange<number>;
   }
-  data: PblDataSourceTriggerChange<T>;
+  data: PblDataSourceTriggerChange<TData>;
 
 
   /**
    * When true this is the first emission of data since the last connection.
    */
   isInitial: boolean;
+
+  /**
+   * The origin of this event, whether it is from a data request or from a custom trigger request (filter, sort and/or pagination).
+   * Additional types might be added by plugins.
+   */
+  eventSource: keyof PblDataSourceTriggerChangedEventSource;
 
   /**
    * Set the total amount of data items.
@@ -76,3 +95,5 @@ export interface PblDataSourceAdapterProcessedResult<T = any, TData = any>  {
   sorted?: T[];
   filtered?: T[];
 }
+
+export type PblDataSourceTriggerChangeHandler<T, TEvent extends PblDataSourceTriggerChangedEvent<any>> = (event: TEvent) => (false | DataSourceOf<T>)
