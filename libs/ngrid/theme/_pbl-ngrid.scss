@@ -129,8 +129,16 @@
   $row-spacing: map-get($spacingTheme, row-spacing);
   $cell-spacing: map-get($spacingTheme, cell-spacing);
 
-  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
-      min-height: $header-row-height;
+  .pbl-ngrid-header-row {
+    min-height: $header-row-height;
+  }
+
+  .pbl-ngrid-row {
+    min-height: $row-height;
+  }
+
+  .pbl-ngrid-footer-row {
+    min-height: $footer-row-height;
   }
 
   .pbl-ngrid-cell, .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
