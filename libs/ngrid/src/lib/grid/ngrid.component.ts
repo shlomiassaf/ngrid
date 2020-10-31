@@ -21,7 +21,7 @@ import {
   ViewContainerRef,
   EmbeddedViewRef,
   NgZone,
-  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck, Attribute,
+  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck, Attribute, Optional
 } from '@angular/core';
 
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
@@ -45,7 +45,8 @@ import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/
 import { PblNgridMetaRowService } from './meta-rows/index';
 
 import { bindToDataSource } from './bind-to-datasource';
-import './bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
+import './bind-to-datasource';
+import { Directionality } from '@angular/cdk/bidi'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
 
 export function internalApiFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi; }
 export function pluginControllerFactory(grid: { _plugin: PblNgridPluginContext; }) { return grid._plugin.controller; }
@@ -271,7 +272,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               private cdr: ChangeDetectorRef,
               private config: PblNgridConfigService,
               public registry: PblNgridRegistryService,
-              @Attribute('id') public readonly id: string) {
+              @Attribute('id') public readonly id: string,
+              @Optional() public dir?: Directionality) {
     const gridConfig = config.get('table');
     this.showHeader = gridConfig.showHeader;
     this.showFooter = gridConfig.showFooter;

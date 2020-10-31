@@ -67,6 +67,14 @@
       left: 0;
       height: 100%;
       border-right: 1px solid $border-color;
+
+      [dir='rtl'] & {
+        left: unset;
+        right: 0;
+        border-right: none;
+        border-left: 1px solid $border-color;
+
+      }
     }
   }
 
@@ -81,6 +89,13 @@
       right: -1px;
       height: 100%;
       border-right: 1px solid $border-color;
+
+      [dir='rtl'] & {
+        right: unset;
+        left: -1px;
+        border-right: none;
+        border-left: 1px solid $border-color;
+      }
     }
   }
 
@@ -93,6 +108,13 @@
     left: 0;
     height: 100%;
     border-right: 1px solid $border-color;
+
+    [dir='rtl'] & {
+      left: unset;
+      right: 0;
+      border-right: none;
+      border-left: 1px solid $border-color;
+    }
   }
 
   @include pbl-ngrid-drag-plugin-theme($theme);
@@ -107,38 +129,35 @@
   $row-spacing: map-get($spacingTheme, row-spacing);
   $cell-spacing: map-get($spacingTheme, cell-spacing);
 
-  .pbl-ngrid-header-row {
-    min-height: $header-row-height;
-  }
-
-  .pbl-ngrid-row {
-    min-height: $row-height;
-  }
-
-  .pbl-ngrid-footer-row {
-    min-height: $footer-row-height;
-  }
-
-  .pbl-ngrid-cell:first-of-type, .pbl-ngrid-header-cell:first-of-type, .pbl-ngrid-footer-cell:first-of-type {
-    padding-left: $row-spacing;
-
-    [dir='rtl'] & {
-      padding-left: 0;
-      padding-right: $row-spacing;
-    }
-  }
-
-  .pbl-ngrid-cell:last-of-type, .pbl-ngrid-header-cell:last-of-type, .pbl-ngrid-footer-cell:last-of-type {
-    padding-right: $row-spacing;
-
-    [dir='rtl'] & {
-      padding-right: 0;
-      padding-left: $row-spacing;
-    }
+  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+      min-height: $header-row-height;
   }
 
   .pbl-ngrid-cell, .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
     padding-left: $cell-spacing;
+
+    [dir='rtl'] & {
+      padding-left: 0;
+      padding-right: $cell-spacing;
+    }
+
+    &:first-of-type {
+      padding-left: $row-spacing;
+
+      [dir='rtl'] & {
+        padding-left: 0;
+        padding-right: $row-spacing;
+      }
+    }
+
+    &:last-of-type {
+      padding-right: $row-spacing;
+
+      [dir='rtl'] & {
+        padding-right: $cell-spacing;
+        padding-left: $row-spacing;
+      }
+    }
 
     &.cdk-table-sticky {
       background: inherit;

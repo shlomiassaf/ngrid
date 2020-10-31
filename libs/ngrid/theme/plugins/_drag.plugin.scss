@@ -18,6 +18,13 @@
       height: 16px;
       right: 0;
       border-right: 0px solid darken($border-color, 25%);
+
+      [dir='rtl'] & {
+        right: unset;
+        left: 0;
+        border-right: none;
+        border-left: 0px solid darken($border-color, 25%);
+      }
     }
 }
 
@@ -25,12 +32,25 @@
     &:after {
       right: 2px;
       border-right-width: 2px;
+
+      [dir='rtl'] & {
+        right: unset;
+        left: 2px;
+        border-right-width: 0;
+        border-left-width: 2px;
+      }
     }
     &:last-child {
       &:after {
         right: 0px;
         width: 3px;
         border-left: 2px solid darken($border-color, 25%);
+
+        [dir='rtl'] & {
+          right: unset;
+          left: 0px;
+          border-right: 2px solid darken($border-color, 25%);
+        }
       }
     }
 
@@ -40,6 +60,11 @@
         top: calc(50% - 8px);
         height: 16px;
         border-right: 2px solid darken($border-color, 25%);
+
+        [dir='rtl'] & {
+          border-right: none;
+          border-left: 2px solid darken($border-color, 25%);
+        }
       }
     }
   }

@@ -14,9 +14,9 @@ pbl-ngrid {
   border-top: 0;
   border-bottom: 0;
   clip: rect(0 0 0 0);
-  height: 0px;
-  min-height: 0px;
-  max-height: 0px;
+  height: 0px !important;
+  min-height: 0px !important;
+  max-height: 0px !important;
   overflow: hidden !important;
   visibility: collapse !important;
 
