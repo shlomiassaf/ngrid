@@ -917,7 +917,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       columnStore: this._store,
       setViewport: (viewport) => this._viewport = viewport,
       dynamicColumnWidthFactory: (): DynamicColumnWidthLogic => {
-        return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY);
+        return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY, this.dir?.value);
       }
     };
     this._extApi = extApi;
