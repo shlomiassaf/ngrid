@@ -83,6 +83,10 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     });
   }
 
+  getDirection() {
+    return this.dir?.value ?? 'ltr';
+  }
+
   onConstructed(fn: () => void) {
     if (!this._create) {
       of(false);

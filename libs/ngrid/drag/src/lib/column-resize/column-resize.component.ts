@@ -18,7 +18,7 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DragDropConfig, DragDropRegistry, CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
 
-import { PblNgridComponent, PblColumn, PblNgridMetaCellContext, isPblColumn } from '@pebula/ngrid';
+import { PblNgridComponent, PblColumn, PblNgridMetaCellContext, isPblColumn, PblNgridPluginController, PblNgridExtensionApi } from '@pebula/ngrid';
 import { toggleNativeDragInteractions } from './cdk-encapsulated-code';
 
 declare module '@pebula/ngrid/lib/ext/types' {
@@ -55,10 +55,11 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
       if (isPblColumn(col)) {
         this.column = col;
         this.grid = grid;
+        this._extApi = PblNgridPluginController.find(grid).extApi;
         return;
       }
     }
-    this.column = this.grid = undefined;
+    this.column = this._extApi = this.grid = undefined;
   }
 
   /**
@@ -79,7 +80,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
   private _pickupPositionOnPage: Point;
   private _initialWidth: number;
   private _lastWidth: number;
-
+  private _extApi: PblNgridExtensionApi;
   private _rootElementInitSubscription = Subscription.EMPTY;
 
   constructor(public element: ElementRef<HTMLElement>,
@@ -188,7 +189,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
 
-    const dir = this.grid.dir?.value === 'rtl' ? -1 : 1;
+    const dir = this._extApi.getDirection() === 'rtl' ? -1 : 1;
     let newWidth = Math.max(0, this._initialWidth + (distanceX * dir));
 
     if (newWidth > this.column.maxWidth) {
