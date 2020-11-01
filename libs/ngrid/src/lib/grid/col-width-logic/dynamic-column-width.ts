@@ -1,9 +1,10 @@
 import { PblColumnSizeInfo } from '../types';
+import { Direction } from '@angular/cdk/bidi';
 
 export interface BoxModelSpaceStrategy {
   cell(col: PblColumnSizeInfo): number;
   groupCell(col: PblColumnSizeInfo): number;
-  group(cols: PblColumnSizeInfo[]): number;
+  group(cols: PblColumnSizeInfo[], dir?: Direction): number;
 }
 
 /**
@@ -36,7 +37,7 @@ export class DynamicColumnWidthLogic {
   private readonly cols = new Map<PblColumnSizeInfo, number>();
   private _minimumRowWidth = 0;
 
-  constructor(public readonly strategy: BoxModelSpaceStrategy) { }
+  constructor(public readonly strategy: BoxModelSpaceStrategy, public dir?: Direction) { }
 
   /**
    * Returns a breakout of the width of the column, breaking it into the width of the content and the rest of the width
@@ -91,7 +92,7 @@ export class DynamicColumnWidthLogic {
       this.addColumn(c);
       sum += c.width;
     }
-   sum -= this.strategy.group(columnInfos);
+   sum -= this.strategy.group(columnInfos, this.dir);
    return sum;
   }
 
@@ -116,8 +117,8 @@ export const DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY: BoxModelSpaceStrategy = {
   groupCell(col: PblColumnSizeInfo): number {
     return 0;
   },
-  group(cols: PblColumnSizeInfo[]): number {
+  group(cols: PblColumnSizeInfo[], dir?: Direction): number {
     const len = cols.length;
-    return len > 0 ? parseInt(cols[0].style.paddingLeft) + parseInt(cols[len - 1].style.paddingRight) : 0;
+    return len > 0 ? parseInt(cols[0].style[dir === 'rtl' ? 'paddingRight' : 'paddingLeft']) + parseInt(cols[len - 1].style[dir === 'rtl' ? 'paddingLeft' : 'paddingRight']) : 0;
   }
 };

@@ -49,12 +49,13 @@ export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if ('type' in changes) {
       const scrollContainerElement = this.element;
-      scrollContainerElement.scrollLeft = this.metaRows.extApi.grid.viewport.measureScrollOffset('start');
+      const dir = this.metaRows.extApi.grid.dir?.value === 'rtl' ? -1 : 1;
+      scrollContainerElement.scrollLeft = this.metaRows.extApi.grid.viewport.measureScrollOffset('start') * dir;
 
       if (changes.type.isFirstChange) {
         this.metaRows.hzScroll
           .pipe(unrx(this))
-          .subscribe( offset => scrollContainerElement.scrollLeft = offset );
+          .subscribe( offset => scrollContainerElement.scrollLeft = offset * dir );
 
         this.metaRows.extApi.cdkTable.onRenderRows
           .pipe(unrx(this))

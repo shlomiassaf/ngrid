@@ -229,5 +229,10 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     path: 'extending-ngrid-copy-selection.module',
     pathMatch: 'full',
     loadChildren: () => import('./extending-ngrid/copy-selection/copy-selection.module').then( m => m.CopySelectionExampleModule ),
+  },
+  {
+    path: 'demos-rtl-demo.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./demos/rtl-demo/rtl-demo.module').then( m => m.RtlDemoExampleModule ),
   }
 ];

@@ -14,7 +14,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import { Directionality } from '@angular/cdk/bidi';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DragDropConfig, DragDropRegistry, CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
@@ -87,8 +86,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
               private _ngZone: NgZone,
               private _viewportRuler: ViewportRuler,
               private _dragDropRegistry: DragDropRegistry<PblNgridDragResizeComponent, any>,
-              @Optional() @Inject(CDK_DRAG_CONFIG) private _config: DragDropConfig,
-              @Optional() private _dir: Directionality) {
+              @Optional() @Inject(CDK_DRAG_CONFIG) private _config: DragDropConfig) {
     this._config = {
       dragStartThreshold: _config && _config.dragStartThreshold != null ? _config.dragStartThreshold : 5,
       pointerDirectionChangeThreshold: _config && _config.pointerDirectionChangeThreshold != null ? _config.pointerDirectionChangeThreshold : 5,
@@ -190,7 +188,8 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
 
-    let newWidth = Math.max(0, this._initialWidth + distanceX);
+    const dir = this.grid.dir?.value === 'rtl' ? -1 : 1;
+    let newWidth = Math.max(0, this._initialWidth + (distanceX * dir));
 
     if (newWidth > this.column.maxWidth) {
       newWidth = this.column.maxWidth;

@@ -21,9 +21,10 @@ import {
   ViewContainerRef,
   EmbeddedViewRef,
   NgZone,
-  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck, Attribute,
+  isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck, Attribute, Optional
 } from '@angular/core';
 
+import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
@@ -271,7 +272,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               private cdr: ChangeDetectorRef,
               private config: PblNgridConfigService,
               public registry: PblNgridRegistryService,
-              @Attribute('id') public readonly id: string) {
+              @Attribute('id') public readonly id: string,
+              @Optional() public dir?: Directionality) {
     const gridConfig = config.get('table');
     this.showHeader = gridConfig.showHeader;
     this.showFooter = gridConfig.showFooter;
@@ -915,7 +917,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       columnStore: this._store,
       setViewport: (viewport) => this._viewport = viewport,
       dynamicColumnWidthFactory: (): DynamicColumnWidthLogic => {
-        return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY);
+        return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY, this.dir?.value);
       }
     };
     this._extApi = extApi;
