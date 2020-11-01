@@ -444,7 +444,6 @@ export class PblColumnStore {
               this.visibleColumnIds = Array.from(this.visibleColumns).map( c => c.id );
               this.columnIds = Array.from(this.allColumns).map( c => c.id );
               this._visibleChanged$.next({ columns: this.visibleColumns, changes });
-              this.updateGroups();
               this.afterColumnPositionChange();
             }
           });
@@ -454,7 +453,6 @@ export class PblColumnStore {
   }
 
   private afterColumnPositionChange(): void {
-    this.columnUpdateInProgress = false;
     // TODO: This shouldn't be here, it should be the responsibility of the caller to clear the context
     // Because now there is not option to control it.
     this.grid.contextApi.clear(true);
