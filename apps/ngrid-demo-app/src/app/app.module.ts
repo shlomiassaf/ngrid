@@ -9,6 +9,7 @@ import { Angulartics2Module } from 'angulartics2';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { MetaModule } from '@ngx-meta/core';
 import { CacheModule } from '@ngx-cache/core';
+import { BidiModule } from '@angular/cdk/bidi';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -16,6 +17,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { NxModule } from '@nrwl/angular';
 
@@ -63,6 +65,7 @@ export const REQ_KEY = makeStateKey<string>('req');
     NxModule.forRoot(),
     PblDemoAppSharedModule,
     AppContentChunksModule,
+    BidiModule,
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
@@ -70,6 +73,7 @@ export const REQ_KEY = makeStateKey<string>('req');
     MatTooltipModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatSlideToggleModule,
     LazyCodePartsModule.forRoot(),
     RouterModule.forRoot(
       [

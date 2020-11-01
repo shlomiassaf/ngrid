@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Component } from '@angular/core';
 import { RouterLinkWithHref, RouterLink } from '@angular/router';
+import { Dir } from '@angular/cdk/bidi';
 import { MatMenu } from '@angular/material/menu';
 import { MatSelect } from '@angular/material/select';
 
@@ -23,15 +24,24 @@ export class DemoHomePageComponent {
 
   topMenuItems: ReturnType<MarkdownPagesMenuService['ofType']>;
   demoLinks: Promise<Array<{ cmd: any[], text: string }>>;
+
+  isRtl: boolean;
+
   private _demoLinks: Array<{ cmd: any[], text: string }>;
 
   constructor(public readonly viewLayout: ViewLayoutObserver,
               public readonly mdMenu: MarkdownPagesMenuService,
               private searchService: SearchService,
-              private locationService: LocationService) {
+              private locationService: LocationService,
+              private readonly dir: Dir) {
     // Delay initialization by up to 2 seconds
     this.searchService.loadIndex(this.searchService.hasWorker ? 2000 : 0)
       .subscribe( event => console.log('Search index loaded'))
+  }
+
+  rtlToggleChanged() {
+    this.isRtl = !this.isRtl;
+    this.dir.dir = this.isRtl ? 'rtl' : 'ltr';
   }
 
   handleMobileTopMenuSubMenu(select: MatSelect, menu: MatMenu, event: MouseEvent) {
