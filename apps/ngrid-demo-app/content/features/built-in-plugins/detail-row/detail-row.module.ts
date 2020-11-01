@@ -11,6 +11,7 @@ import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridDetailRowModule } from '@pebula/ngrid/detail-row';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridPaginatorModule } from '@pebula/ngrid-material/paginator';
+import { PblNgridMatSortModule } from '@pebula/ngrid-material/sort';
 
 import { BindNgModule } from '@pebula/apps/shared';
 import { ExampleCommonModule } from '@pebula/apps/example-common';
@@ -26,7 +27,7 @@ import { MultiPageExample } from './multi-page.component';
     CommonModule,
     MatRippleModule, MatCheckboxModule, MatRadioModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule,
     ExampleCommonModule,
-    PblNgridModule, PblNgridDetailRowModule, PblNgridBlockUiModule, PblNgridPaginatorModule,
+    PblNgridModule, PblNgridDetailRowModule, PblNgridBlockUiModule, PblNgridPaginatorModule, PblNgridMatSortModule,
   ],
   exports: [ DetailRowExample, CustomParentExample, SingleAndExcludeModeExample, PredicateExample, MultiPageExample ],
 })
