@@ -1,3 +1,17 @@
+# 2.3.0 (2020-11-01)
+
+
+### Bug Fixes
+
+* **ngrid/infinite-scroll:** proper handling of refresh with infinite scroll ([9532b71](https://github.com/shlomiassaf/ngrid/commit/9532b71733dda034903f76e06bf058b38668a4d9)), closes [#124](https://github.com/shlomiassaf/ngrid/issues/124)
+
+
+### Features
+
+* **ngrid:** add RTL support ([5488ad9](https://github.com/shlomiassaf/ngrid/commit/5488ad94a1a2864d51fd460d81b92c18c3414543))
+
+
+
 ## 2.2.2 (2020-10-28)
 
 
