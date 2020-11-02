@@ -16,7 +16,7 @@ jobs:
           node-version: 12
       - run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
-      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /v3/ngrid/ --deploy-url /v3/ngrid/
+      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/v3/ --deploy-url /ngrid/v3/
       - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ngrid-demo-app:server:production --bundleDependencies all
       - run: npm run compile:server
       - run: node dist/server
@@ -27,4 +27,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist/browser
+          TARGET_FOLDER: v3
           CLEAN: false
