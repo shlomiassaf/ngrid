@@ -63,7 +63,7 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
     super(elementRef);
   }
 
-  setColumn(column: PblColumn) {
+  setColumn(column: PblColumn, gridWidthRow: boolean) {
     const prev = this.column;
     if (prev !== column) {
       if (prev) {
@@ -81,7 +81,6 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
       let view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblMetaColumn | PblColumn>>
       let widthUpdater: (...args: any[]) => void;
 
-      const gridWidthRow = this.el.parentElement.hasAttribute('gridWidthRow');
       widthUpdater = gridWidthRow ? applySourceWidth : applyWidth;
       predicate = event => (!gridWidthRow && event.reason !== 'update') || (gridWidthRow && event.reason !== 'resize');
       view = !gridWidthRow ? this.initMainHeaderColumnView(column) : undefined;
@@ -97,6 +96,12 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
       view && view.detectChanges();
       widthUpdater.call(this);
       initCellElement(this.el, column);
+    }
+  }
+
+  updateSize() {
+    if (this.resizeObserver) {
+      this.resizeObserver.updateSize();
     }
   }
 

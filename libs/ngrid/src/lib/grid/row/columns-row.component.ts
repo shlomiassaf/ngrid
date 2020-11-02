@@ -50,6 +50,13 @@ export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header
     this.rowType = this.isFooter ? 'footer' : 'header';
   }
 
+  updateSize() {
+    if (this.gridWidthRow) {
+      for (const c of this._cells as ComponentRef<PblNgridHeaderCellComponent>[]) {
+        c.instance.updateSize();
+      }
+    }
+  }
   ngOnDestroy(): void {
     this.metaRows.removeMetaRow(this);
     super.ngOnDestroy();
@@ -75,7 +82,7 @@ export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header
   }
 
   protected cellCreated(column: PblColumn, cell: ComponentRef<PblNgridHeaderCellComponent>) {
-    cell.instance.setColumn(column);
+    cell.instance.setColumn(column, this.gridWidthRow);
   }
 
   protected cellDestroyed(cell: ComponentRef<PblNgridHeaderCellComponent>, previousIndex: number) {

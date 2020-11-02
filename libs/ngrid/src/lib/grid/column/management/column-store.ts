@@ -46,6 +46,23 @@ export class PblColumnStore {
     this.metaRowsStore = new MetaRowsStore(differs);
     this.resetIds();
     this.resetColumns();
+
+    this.metaRowsStore.visibleChanged$
+      .subscribe(event => {
+        event.changes.forEachOperation((record, previousIndex, currentIndex) => {
+          if (record.previousIndex == null) {
+            const columns = this.find(record.item);
+            const col = event.metaRow.kind === 'header' ?
+              event.metaRow.isGroup ? columns.headerGroup : columns.header
+              : event.metaRow.isGroup ? columns.footerGroup : columns.footer;
+            event.metaRow.rowDef.cols.splice(currentIndex, 0, col);
+          } else if (currentIndex == null) {
+            event.metaRow.rowDef.cols.splice(previousIndex, 1);
+          } else {
+            moveItemInArray(event.metaRow.rowDef.cols, previousIndex, currentIndex);
+          }
+        });
+      });
   }
 
   getColumnsOf<TRowType extends GridRowType>(row: PblNgridBaseRowComponent<TRowType>): PblRowTypeToColumnTypeMap<TRowType>[] {
@@ -332,6 +349,7 @@ export class PblColumnStore {
 
   dispose() {
     this._visibleChanged$.complete();
+    this.metaRowsStore.dispose();
   }
 
   private _updateGroup(columnSet: PblColumnSet<PblColumnGroup>): void {

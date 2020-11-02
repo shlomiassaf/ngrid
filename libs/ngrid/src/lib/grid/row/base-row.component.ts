@@ -39,6 +39,8 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
 
   @ViewChild('viewRef', { read: ViewContainerRef }) _viewRef: ViewContainerRef;
 
+  get cellsLength() { return this._cells.length; }
+
   abstract readonly rowType: TRowType;
 
   protected _extApi: PblNgridInternalExtensionApi<T>;

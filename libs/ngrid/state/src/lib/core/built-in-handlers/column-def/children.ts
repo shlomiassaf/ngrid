@@ -140,7 +140,7 @@ export function registerColumnDefChildHandlers() {
   /* ====================================================================================================================================================== */
 
   createStateChunkHandler('metaGroupColumn')
-    .requiredKeys('prop', 'rowIndex', 'span')
+    .requiredKeys('columnIds', 'rowIndex')
     .handleKeys(
       'id', 'label', 'css', 'type', 'width', 'minWidth', 'maxWidth',        // PblNgridBaseColumnState (all optional)
     )

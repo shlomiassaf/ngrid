@@ -59,4 +59,8 @@ export class MetaRowsStore {
     this.headers = [];
     this.footers = [];
   }
+
+  dispose() {
+    this.visibleChanged$.complete();
+  }
 }
