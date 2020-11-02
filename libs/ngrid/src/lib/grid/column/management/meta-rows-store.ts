@@ -1,22 +1,6 @@
-import { Subject, Observable, of } from 'rxjs';
-import { isDevMode, IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core';
-import { PblNgridComponent } from '../../ngrid.component';
-import { findCellDef } from '../../cell/cell-def/utils';
-import {
-  PblColumnFactory,
-  PblColumnGroup, PblColumnGroupStore,
-  isPblColumn, PblColumn, PblMetaColumn,
-  PblNgridColumnDefinitionSet,
-  PblNgridColumnSet,
-  PblColumnSet,
-  PblMetaRowDefinitions,
-} from '../model';
-import { StaticColumnWidthLogic } from '../width-logic/static-column-width';
-import { resetColumnWidths } from '../../utils/helpers';
-import { PblColumnStoreMetaRow, PblMetaColumnStore, PblRowColumnsChangeEvent, PblRowTypeToColumnTypeMap } from './types';
-import { HiddenColumns } from './hidden-columns';
-import { GridRowType } from '../../row/types';
-import { PblNgridBaseRowComponent } from '../../row/base-row.component';
+import { Subject } from 'rxjs';
+import { IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core';
+import { PblColumnStoreMetaRow } from './types';
 
 export interface PblMetaRowColumnsChangeEvent {
   metaRow: PblColumnStoreMetaRow;

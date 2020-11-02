@@ -68,6 +68,14 @@ export class PblNgridMetaRowComponent extends PblNgridBaseRowComponent<'meta-hea
     cell.instance.setColumn(column, this.isFooter);
   }
 
+  protected cellDestroyed?(cell: ComponentRef<PblNgridMetaCellComponent>, previousIndex: number) {
+
+  }
+
+  protected cellMoved?(previousItem: ComponentRef<PblNgridMetaCellComponent>, currentItem: ComponentRef<PblNgridMetaCellComponent>, previousIndex: number, currentIndex: number) {
+
+  }
+
   protected updateRow(value: PblColumnStoreMetaRow) {
     if (value !== this._row) {
       applyMetaRowClass(this.metaRows, this, this.element, this._meta, value?.rowDef);
