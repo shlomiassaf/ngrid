@@ -1,5 +1,5 @@
   
-name: GH Pages on release
+name: GH Pages V3
 
 on:
   workflow_dispatch:
