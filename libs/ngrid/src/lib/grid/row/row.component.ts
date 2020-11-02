@@ -138,7 +138,7 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
     cell.instance.setContext(this.context);
   }
 
-  protected cellDestroyed(cell: ComponentRef<PblNgridCellComponent>) {
+  protected cellDestroyed(cell: ComponentRef<PblNgridCellComponent>, previousIndex: number) {
     unrx.kill(this, cell.instance.column);
   }
 

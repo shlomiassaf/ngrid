@@ -78,7 +78,7 @@ export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header
     cell.instance.setColumn(column);
   }
 
-  protected cellDestroyed(cell: ComponentRef<PblNgridHeaderCellComponent>) {
+  protected cellDestroyed(cell: ComponentRef<PblNgridHeaderCellComponent>, previousIndex: number) {
     unrx.kill(this, cell.instance.column);
   }
 

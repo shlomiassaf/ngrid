@@ -458,6 +458,9 @@ export class PblColumnStore {
     this.grid.contextApi.clear(true);
     this.updateGroups();
     this.grid.resetColumnsWidth();
+    // now, any newly added column cells must first spin up to get a size
+    // and most importantly have their ngAfterViewInit fired so the resize column will update the sizeInfo of the column!
+    this.grid.rowsApi.syncRows('header', true);
     this.grid.resizeColumns();
   }
 }

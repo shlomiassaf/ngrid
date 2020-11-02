@@ -1,5 +1,6 @@
 import { EmbeddedViewRef, ViewContainerRef, NgZone, ComponentFactory } from '@angular/core';
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
+import { moveItemInArrayExt } from '../column/management/column-store';
 import { PblCdkTableComponent } from '../pbl-cdk-table/pbl-cdk-table.component';
 import { unrx } from '../utils/unrx';
 import { PblNgridBaseRowComponent } from './base-row.component';
@@ -55,11 +56,14 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
                 const col = event.metaRow.kind === 'header' ?
                   event.metaRow.isGroup ? columns.headerGroup : columns.header
                   : event.metaRow.isGroup ? columns.footerGroup : columns.footer;
-                r.row.rowDef.cols.splice(currentIndex, 0, col);
+                event.metaRow.rowDef.cols.splice(currentIndex, 0, col);
                 r._createCell(col as any, currentIndex);
               } else if (currentIndex == null) {
+                event.metaRow.rowDef.cols.splice(previousIndex, 1);
                 r._destroyCell(previousIndex);
               } else {
+                // moveItemInArrayExt(event.metaRow.rowDef.cols, previousIndex, currentIndex, (previousItem, currentItem, previousIndex, currentIndex) => {
+                // });
                 r._moveCell(previousIndex, currentIndex);
               }
             });

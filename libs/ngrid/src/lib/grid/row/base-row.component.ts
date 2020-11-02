@@ -97,7 +97,7 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
         this._viewRef.remove(index);
         this._cells.splice(index, 1);
         if (this.cellDestroyed) {
-          this.cellDestroyed(cell);
+          this.cellDestroyed(cell, index);
         }
       }
     }
@@ -125,7 +125,7 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
   protected canDestroyCell?(cell: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>): boolean;
   protected canMoveCell?(fromIndex: number, toIndex: number, cell: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>): boolean;
   protected cellCreated?(column: PblRowTypeToColumnTypeMap<TRowType>, cell: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>);
-  protected cellDestroyed?(cell: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>);
+  protected cellDestroyed?(cell: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>, previousIndex: number);
   protected cellMoved?(previousItem: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>, currentItem: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>, previousIndex: number, currentIndex: number);
 
   protected createComponent(column: PblRowTypeToColumnTypeMap<TRowType>, atIndex?: number) {
@@ -133,8 +133,9 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
     if (!atIndex && atIndex !== 0) {
       atIndex = viewRefLength;
     }
-    const cell = this._viewRef.createComponent(this._extApi.rowsApi.cellFactory.getComponentFactory(this), Math.min(viewRefLength, atIndex));
-    this._cells.push(cell);
+    atIndex = Math.min(viewRefLength, atIndex);
+    const cell = this._viewRef.createComponent(this._extApi.rowsApi.cellFactory.getComponentFactory(this), atIndex);
+    this._cells.splice(atIndex, 0, cell);
     cell.onDestroy(() => this._cells.splice(this._cells.indexOf(cell), 1));
     return cell;
   }
