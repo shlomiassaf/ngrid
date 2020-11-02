@@ -1,12 +1,13 @@
-import { EmbeddedViewRef, ViewContainerRef, NgZone, ComponentFactory } from '@angular/core';
+import { EmbeddedViewRef, ViewContainerRef, NgZone } from '@angular/core';
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
-import { moveItemInArrayExt } from '../column/management/column-store';
 import { PblCdkTableComponent } from '../pbl-cdk-table/pbl-cdk-table.component';
 import { unrx } from '../utils/unrx';
 import { PblNgridBaseRowComponent } from './base-row.component';
 import { PblNgridCellFactoryResolver } from './cell-factory.service';
+import { PblNgridColumnRowComponent } from './columns-row.component';
 import { PblNgridMetaRowComponent } from './meta-row.component';
-import { GridRowType, PblRowTypeToCellTypeMap } from './types';
+import { PblNgridRowComponent } from './row.component';
+import { GridRowType } from './types';
 
 export interface RowsApi<T = any> {
   syncRows(rowType?: 'all' | boolean, detectChanges?: boolean): void;
@@ -19,9 +20,10 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
   cdkTable: PblCdkTableComponent<T>;
 
   private rows = new Map<GridRowType, Set<PblNgridBaseRowComponent<any, T>>>();
-  private columnRows = new Set<PblNgridBaseRowComponent<any, T>>();
+  private columnRows = new Set<PblNgridRowComponent<T> | PblNgridColumnRowComponent>();
   private metaHeaderRows = new Set<PblNgridMetaRowComponent>();
   private metaFooterRows = new Set<PblNgridMetaRowComponent>();
+  private gridWidthRow: PblNgridColumnRowComponent;
 
   constructor(private readonly extApi: PblNgridExtensionApi<T>,
               private readonly zone: NgZone,
@@ -31,17 +33,31 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
     extApi.columnStore.columnRowChange()
       .pipe(unrx(this))
       .subscribe( event => {
+        const gridWidthRow = this.gridWidthRow;
+        let requireSizeUpdate = false;
+
         event.changes.forEachOperation((record, previousIndex, currentIndex) => {
-          for (const r of this.columnRows) {
-            if (record.previousIndex == null) {
+          if (record.previousIndex == null) {
+            for (const r of this.columnRows) {
               r._createCell(record.item, currentIndex);
-            } else if (currentIndex == null) {
+            }
+          } else if (currentIndex == null) {
+            for (const r of this.columnRows) {
               r._destroyCell(previousIndex);
-            } else {
+            }
+          } else {
+            for (const r of this.columnRows) {
               r._moveCell(previousIndex, currentIndex);
+            }
+            if (!requireSizeUpdate && gridWidthRow) {
+              const lastIndex = gridWidthRow.cellsLength - 1;
+              requireSizeUpdate = currentIndex === lastIndex || previousIndex === lastIndex;
             }
           }
         });
+        if (requireSizeUpdate) {
+          this.gridWidthRow.updateSize();
+        }
       });
 
     extApi.columnStore.metaRowChange()
@@ -56,14 +72,10 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
                 const col = event.metaRow.kind === 'header' ?
                   event.metaRow.isGroup ? columns.headerGroup : columns.header
                   : event.metaRow.isGroup ? columns.footerGroup : columns.footer;
-                event.metaRow.rowDef.cols.splice(currentIndex, 0, col);
                 r._createCell(col as any, currentIndex);
               } else if (currentIndex == null) {
-                event.metaRow.rowDef.cols.splice(previousIndex, 1);
                 r._destroyCell(previousIndex);
               } else {
-                // moveItemInArrayExt(event.metaRow.rowDef.cols, previousIndex, currentIndex, (previousItem, currentItem, previousIndex, currentIndex) => {
-                // });
                 r._moveCell(previousIndex, currentIndex);
               }
             });
@@ -82,10 +94,13 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
     rows.add(row);
 
     switch (row.rowType) {
-      case 'data':
       case 'header':
+        if ((row as unknown as PblNgridColumnRowComponent).gridWidthRow) {
+          this.gridWidthRow = row as unknown as PblNgridColumnRowComponent;
+        }
+      case 'data':
       case 'footer':
-        this.columnRows.add(row);
+        this.columnRows.add(row as any);
         break;
       case 'meta-header':
         this.metaHeaderRows.add(row as any);
@@ -102,10 +117,13 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
       rows.delete(row);
     }
     switch (row.rowType) {
-      case 'data':
       case 'header':
+        if ((row as unknown as PblNgridColumnRowComponent).gridWidthRow && (row as unknown as PblNgridColumnRowComponent) === this.gridWidthRow) {
+          this.gridWidthRow = undefined;
+        }
+      case 'data':
       case 'footer':
-        this.columnRows.delete(row);
+        this.columnRows.delete(row as any);
         break;
       case 'meta-header':
         this.metaHeaderRows.delete(row as any);

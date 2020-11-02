@@ -90,20 +90,7 @@ export class PblColumnGroupStore {
 
 export class PblColumnGroup extends PblMetaColumn implements PblColumnGroupDefinition {
 
-  //#region PblColumnGroupDefinition
-  /**
-   * The grid's column that is the first child column for this group.
-   */
-  prop: string;
-  /**
-   * The total span of the group (excluding the first child - i.e. prop).
-   * The span and prop are used to get the child columns of this group.
-   * The span is not dynamic, once the columns are set they don't change.
-   *
-   * For example, if a we have a span of 2 and the column at the 2nd position is hidden it will still count as
-   * being spanned although the UI will span only 1 column... (because the 2nd is hidden...)
-   */
-  span: number;
+  columnIds: string[];
   //#endregion PblColumnGroupDefinition
 
   /**
@@ -126,12 +113,12 @@ export class PblColumnGroup extends PblMetaColumn implements PblColumnGroupDefin
   constructor(def: PblColumnGroup | PblColumnGroupDefinition, columns: PblColumn[], public readonly placeholder = false) {
     super(isPblColumnGroup(def)
       ? def
-      : { id: `group-${def.prop}-span-${def.span}-row-${def.rowIndex}`, kind: 'header' as 'header', ...(def as any) }
+      : { id: `group-${def.columnIds.join('.')}-row-${def.rowIndex}`, kind: 'header' as 'header', ...(def as any) }
     );
     this[PBL_NGRID_COLUMN_GROUP_MARK] = true;
-    this.prop = def.prop;
-    this.span = def.span;
+    this.columnIds = def.columnIds;
     this.columns = columns;
+
     for (const c of columns) {
       c.markInGroup(this);
     }
@@ -150,10 +137,9 @@ export class PblColumnGroup extends PblMetaColumn implements PblColumnGroupDefin
   }
 
   createSlave(columns: PblColumn[] = []): PblColumnGroup {
-    const slave = new PblColumnGroup(this, columns);
-    slave.id += '-slave' + Date.now();
+    const slave = new PblColumnGroup({...this, id: this.id + '-slave' + Date.now()}, columns);
     slave.slaveOf = this;
-    slave.template = this.template;
+    Object.defineProperty(slave, 'template', { get: function() { return this.slaveOf.template; }, set: function(value) {} } );
     return slave;
   }
 

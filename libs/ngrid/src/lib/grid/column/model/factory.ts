@@ -274,36 +274,90 @@ export class PblColumnFactory {
     const tableDefs = table.slice();
     const defs = headerGroupDefs.slice();
 
-    for (let i = 0, len = tableDefs.length; i < len; i++) {
-      const orgProp = tableDefs[i].orgProp;
-      const idx = defs.findIndex( d => d.prop === orgProp);
-      const columnGroupDef: PblColumnGroupDefinition = idx !== -1
-        ? defs.splice(idx, 1)[0]
-        : defs.find( d => !d.prop ) || { prop: orgProp, rowIndex, span: undefined, kind: 'header' }
-      ;
+    for (const d of defs) {
+      // TODO: remove in V4, when prop & span are deprecated
+      if (d.prop) {
+        const start = tableDefs.findIndex( c => c.orgProp === d.prop );
+        d.columnIds = tableDefs.slice(start, start + d.span + 1).map( c => c.id );
+        delete d.prop;
+        delete d.span;
+      }
+      d.rowIndex = rowIndex;
+      const group = new PblColumnGroup(d, tableDefs.filter( c => d.columnIds.indexOf(c.orgProp) > -1 ), false);
+      headerGroup.push(group);
+    }
 
-      const placeholder = idx === -1 && !!columnGroupDef.prop;
-
-      columnGroupDef.prop = orgProp;
-      columnGroupDef.rowIndex = rowIndex;
-
-      let take = columnGroupDef.span;
-      if (! (take >= 0) ) {
-        take = 0;
-        for (let z = i+1; z < len; z++) {
-          if (defs.findIndex( d => d.prop === tableDefs[z].orgProp) === -1) {
-            take++;
+    let marker = 0;
+    while (tableDefs.length) {
+      const column = tableDefs.shift();
+      const orgProp = column.orgProp;
+      const existingGroupIndex = headerGroup.findIndex( hg => hg.columnIds.indexOf(orgProp) > -1 );
+      if (existingGroupIndex > -1) {
+        const hg = headerGroup[existingGroupIndex];
+        if (existingGroupIndex < marker) {
+          const columns = [column];
+          while (hg.columnIds.indexOf(tableDefs[0]?.orgProp) > -1) {
+            columns.push(tableDefs.shift());
           }
-          else {
-            break;
+          headerGroup[marker] = hg.createSlave(columns);
+          marker += 1;
+        } else {
+          headerGroup.splice(existingGroupIndex, 1);
+          headerGroup[marker] = hg
+          marker += 1;
+          while (hg.columnIds.indexOf(tableDefs[0]?.orgProp) > -1) {
+            tableDefs.shift();
           }
         }
+      } else {
+        const prev = headerGroup[marker - 1];
+        if (prev && prev.placeholder) {
+          const clone = Object.keys(prev).reduce( (p, c) => {
+            p[c] = prev[c];
+            return p;
+          }, {} as PblColumnGroupDefinition);
+          clone.columnIds = [...clone.columnIds, orgProp];
+          delete clone.id;
+          headerGroup[marker - 1] = new PblColumnGroup(clone, [...prev.columns, column], true);
+        } else {
+          const d: PblColumnGroupDefinition = { rowIndex, kind: 'header', columnIds: [orgProp]};
+          headerGroup.splice(marker, 0, new PblColumnGroup(d, [column], true))
+          marker += 1;
+        }
       }
-      columnGroupDef.span = take;
-      const group = new PblColumnGroup(columnGroupDef, tableDefs.slice(i, i + take + 1), placeholder);
-      headerGroup.push(group);
-      i += take;
     }
+
+
+    // for (let i = 0, len = tableDefs.length; i < len; i++) {
+    //   const orgProp = tableDefs[i].orgProp;
+    //   const idx = defs.findIndex( d => d.prop === orgProp);
+    //   const columnGroupDef: PblColumnGroupDefinition = idx !== -1
+    //     ? defs.splice(idx, 1)[0]
+    //     : defs.find( d => !d.prop ) || { prop: orgProp, rowIndex, span: undefined, kind: 'header' }
+    //   ;
+
+    //   const placeholder = idx === -1 && !!columnGroupDef.prop;
+
+    //   columnGroupDef.prop = orgProp;
+    //   columnGroupDef.rowIndex = rowIndex;
+
+    //   let take = columnGroupDef.span;
+    //   if (! (take >= 0) ) {
+    //     take = 0;
+    //     for (let z = i+1; z < len; z++) {
+    //       if (defs.findIndex( d => d.prop === tableDefs[z].orgProp) === -1) {
+    //         take++;
+    //       }
+    //       else {
+    //         break;
+    //       }
+    //     }
+    //   }
+    //   columnGroupDef.span = take;
+    //   const group = new PblColumnGroup(columnGroupDef, tableDefs.slice(i, i + take + 1), placeholder);
+    //   headerGroup.push(group);
+    //   i += take;
+    // }
 
     return headerGroup;
   }

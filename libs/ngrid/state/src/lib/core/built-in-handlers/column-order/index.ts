@@ -24,17 +24,16 @@ export function registerColumnOrderHandlers() {
       const { extApi, grid } = ctx;
       let lastMove: [PblColumn, PblColumn];
 
-      if (columnOrder?.length === grid.columnApi.visibleColumnIds.length) {
+      if (columnOrder?.length === grid.columnApi.visibleColumns.length) {
         for (let i = 0, len = columnOrder.length; i < len; i++) {
-          if (columnOrder[i] !== grid.columnApi.visibleColumnIds[i]) {
+          const anchor = grid.columnApi.visibleColumns[i];
+          if (columnOrder[i] !== anchor.id) {
             const column = grid.columnApi.findColumn(columnOrder[i]);
             if (!column) {
               return;
             }
-            const anchor = grid.columnApi.findColumn(grid.columnApi.visibleColumnIds[i]);
             lastMove = [column, anchor];
             grid.columnApi.moveColumn(column, anchor);
-            extApi.columnStore.updateGroups();
           }
         }
       }

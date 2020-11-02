@@ -100,10 +100,12 @@ export interface PblColumnGroupDefinition extends PblBaseColumnDefinition {
    * The index (zero based) of the header row this header group column is attached to, used for multi-header setup.
    */
   rowIndex: number;
+
   /**
    * The grid's column that is the first child column for this group.
+   * @deprecated Removed in 4.0.0, use columnIds instead
    */
-  prop: string;
+  prop?: string;
 
   /**
    * The total span of the group (excluding the first child - i.e. prop).
@@ -112,8 +114,12 @@ export interface PblColumnGroupDefinition extends PblBaseColumnDefinition {
    *
    * For example, if a we have a span of 2 and the column at the 2nd position is hidden it will still count as
    * being spanned although the UI will span only 1 column... (because the 2nd is hidden...)
+   *
+   * @deprecated Removed in 4.0.0, use columnIds instead
    */
-  span: number;
+  span?: number;
+
+  columnIds?: string[];
 }
 
 export interface PblColumnDefinition extends PblBaseColumnDefinition {
