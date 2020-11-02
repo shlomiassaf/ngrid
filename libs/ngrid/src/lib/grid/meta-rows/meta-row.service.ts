@@ -63,7 +63,8 @@ export class PblNgridMetaRowService<T = any> {
 
   addMetaRow(metaRow: PblMetaRow): void {
     const { columnStore } = this.extApi;
-    const { header, footer } = columnStore.metaColumnIds;
+    const header = columnStore.metaHeaderRows;
+    const footer = columnStore.metaFooterRows;
 
     const rowDef = metaRow.meta;
     if (rowDef === columnStore.headerColumnDef) {
@@ -71,7 +72,7 @@ export class PblNgridMetaRowService<T = any> {
         this.gridWidthRow = { rowDef, el: metaRow.element };
         this.header.all.push(rowDef);
       } else {
-        this.addToSection(this.header, metaRow, columnStore.metaColumnIds.header.length);
+        this.addToSection(this.header, metaRow, columnStore.metaFooterRows.length);
       }
     } else if (rowDef === columnStore.footerColumnDef) {
       this.addToSection(this.footer, metaRow, 0);

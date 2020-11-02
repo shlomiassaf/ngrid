@@ -242,7 +242,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
 
-  get metaColumnIds(): PblColumnStore['metaColumnIds'] { return this._store.metaColumnIds; }
+  get metaHeaderRows() { return this._store.metaHeaderRows; }
+  get metaFooterRows() { return this._store.metaFooterRows; }
   get metaColumns(): PblColumnStore['metaColumns'] { return this._store.metaColumns; }
   get columnRowDef() { return { header: this._store.headerColumnDef, footer: this._store.footerColumnDef }; }
   /**

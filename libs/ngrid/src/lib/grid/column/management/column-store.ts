@@ -20,8 +20,9 @@ import { PblNgridBaseRowComponent } from '../../row/base-row.component';
 import { MetaRowsStore } from './meta-rows-store';
 
 export class PblColumnStore {
-  metaColumnIds: { header: Array<PblColumnStoreMetaRow>; footer: Array<PblColumnStoreMetaRow>; };
   metaColumns: PblMetaColumnStore[];
+  get metaHeaderRows() { return this.metaRowsStore.headers; }
+  get metaFooterRows() { return this.metaRowsStore.footers; }
   columnIds: string[];
   visibleColumnIds: string[];
   hiddenColumnIds: string[];
@@ -445,7 +446,6 @@ export class PblColumnStore {
     this.visibleColumnIds = [];
     this.hiddenColumnIds = [];
     this.metaRowsStore.clear();
-    this.metaColumnIds = { header: this.metaRowsStore.headers, footer: this.metaRowsStore.footers };
   }
 
   private columnUpdateInProgress: boolean;
