@@ -28,5 +28,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist/browser
+          BASE_BRANCH: v3
           TARGET_FOLDER: v3
           CLEAN: false
