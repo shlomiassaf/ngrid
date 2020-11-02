@@ -11,7 +11,7 @@
                       class="pbl-ngrid-row-visually-hidden"></pbl-ngrid-column-row>
 
 <!-- MULTI-HEADER ROW DEF & MULTI-HEADER GROUP ROW DEFINITION TEMPLATES -->
-<ng-container *ngFor="let row of metaColumnIds.header;">
+<ng-container *ngFor="let row of metaHeaderRows;">
   <pbl-ngrid-meta-row *cdkHeaderRowDef="[]; sticky: row.rowDef.type === 'sticky'" [row]="row"></pbl-ngrid-meta-row>
 </ng-container>
 
@@ -20,7 +20,7 @@
                       footer [row]="columnRowDef.footer"></pbl-ngrid-column-row>
 <!-- GRID FOOTER ROW DEF -->
 <!-- MULTI-FOOTER ROW DEF -->
-<ng-container *ngFor="let row of metaColumnIds.footer;">
+<ng-container *ngFor="let row of metaFooterRows;">
   <pbl-ngrid-meta-row footer *cdkFooterRowDef="[]; sticky: row.rowDef.type === 'sticky'" [row]="row"></pbl-ngrid-meta-row>
 </ng-container>
 

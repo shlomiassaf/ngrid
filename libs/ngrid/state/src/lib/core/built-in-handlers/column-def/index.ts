@@ -86,7 +86,6 @@ export function registerColumnDefHandlers() {
           if (source && source.length > 0) {
             const rows = [];
             for (const row of source) {
-              const active = ctx.extApi.columnStore.metaColumnIds[key].find( r => !r.isGroup && r.rowDef.rowIndex === row.rowIndex );
               const r: PblNgridMetaRowSetState<PblNgridMetaColumnState> = {} as any;
               ctx.runChildChunk('metaRow', r, row);
               r.cols = runChildChunksForRowMetaColumns('metaColumn', ctx, row.cols);
@@ -100,7 +99,6 @@ export function registerColumnDefHandlers() {
           if (headerGroupSource && headerGroupSource.length > 0) {
             const rows = [];
             for (const row of headerGroupSource) {
-              const active = ctx.extApi.columnStore.metaColumnIds.header.find( r => !r.isGroup && r.rowDef.rowIndex === row.rowIndex );
               const r: PblNgridMetaRowSetState<PblNgridGroupColumnState> = {} as any;
               ctx.runChildChunk('metaGroupRow', r, row);
               r.cols = runChildChunksForRowMetaColumns('metaColumn', ctx, row.cols);
@@ -126,13 +124,11 @@ export function registerColumnDefHandlers() {
             for (const rowState of metaRowsState) {
               const row = source.find( r => r.rowIndex === rowState.rowIndex );
               if (row) {
-                const active = ctx.extApi.columnStore.metaColumnIds[key].find( r => !r.isGroup && r.rowDef.rowIndex === rowState.rowIndex );
                 ctx.runChildChunk('metaRow', rowState, row);
                 for (const colState of rowState.cols) {
                   const col = row.cols.find( r => r.id === colState.id);
                   if (col) {
                     const activeColStore = ctx.extApi.columnStore.find(colState.id);
-                    const activeCol = activeColStore && activeColStore.header;
                     ctx.runChildChunk('metaColumn', colState, col);
                   }
                 }
