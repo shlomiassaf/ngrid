@@ -1,10 +1,10 @@
-  
+
 name: GH Pages V3
 
 on:
   workflow_dispatch:
   push:
-    branches: v3
+    branches: [v3]
 jobs:
   build:
     runs-on: ubuntu-latest
