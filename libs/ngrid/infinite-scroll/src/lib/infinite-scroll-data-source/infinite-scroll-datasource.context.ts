@@ -5,7 +5,7 @@ import { PblInfiniteScrollFactoryOptions, PblInfiniteScrollDsOptions, PblInfinit
 import { PblInfiniteScrollDataSourceCache } from './infinite-scroll-datasource.cache';
 import { normalizeOptions, shouldTriggerInvisibleScroll, tryAddVirtualRowsBlock, updateCacheAndDataSource, upgradeChangeEventToInfinite } from './utils';
 import { PblInfiniteScrollDataSource } from './infinite-scroll-datasource';
-import { SKIP_SOURCE_CHANGING_EVENT, PblInfiniteScrollDataSourceAdapter } from './infinite-scroll-datasource-adapter';
+import { PblInfiniteScrollDataSourceAdapter } from './infinite-scroll-datasource-adapter';
 import { TriggerExecutionQueue } from './trigger-execution-queue';
 import { CacheBlock } from './caching';
 import { EventState } from './event-state';
@@ -52,7 +52,6 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
       return this.invokeInitialOnTrigger(rawEvent);
     }
 
-    rawEvent[SKIP_SOURCE_CHANGING_EVENT] = true;
     if (this.pendingTrigger$) {
       const pendingTrigger$ = this.pendingTrigger$;
       this.pendingTrigger$ = undefined;
@@ -107,7 +106,6 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
 
     if (rawEvent.data.changed || (this.customTriggers && PblInfiniteScrollDataSourceAdapter.isCustomBehaviorEvent(rawEvent, this.customTriggers))) {
       this.cache.clear();
-      delete rawEvent[SKIP_SOURCE_CHANGING_EVENT];
       return this.invokeInitialOnTrigger(rawEvent);
     }
 

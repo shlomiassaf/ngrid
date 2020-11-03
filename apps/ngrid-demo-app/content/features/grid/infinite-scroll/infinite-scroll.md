@@ -128,3 +128,6 @@ If you don't register for a custom trigger it is simply ignored.
 If you do register, it will trigger an event as before with the `eventSource` property set to `customTrigger`.
 
 <div pbl-example-view="pbl-custom-triggers-example"></div>
+
+W> If you've enabled the global configuration `clearContextOnSourceChanging` (disabled by default) note that it does not play nicely with infinite scroll
+and the context will get cleared every time data is fetched!
