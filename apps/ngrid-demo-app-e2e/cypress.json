@@ -3,7 +3,7 @@
   "fixturesFolder": "./src/fixtures",
   "integrationFolder": "./src/integration",
   "pluginsFile": "./src/plugins/index",
-  "supportFile": false,
+  "supportFile": "./src/support/index",
   "video": true,
   "videosFolder": "../../dist/cypress/apps/ngrid-demo-app-e2e/videos",
   "screenshotsFolder": "../../dist/cypress/apps/ngrid-demo-app-e2e/screenshots",
