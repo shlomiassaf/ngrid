@@ -1,10 +1,7 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
+  Directive,
   ElementRef,
-  Inject,
   Input,
-  ViewEncapsulation,
   SimpleChanges,
   OnChanges,
   Optional,
@@ -12,7 +9,7 @@ import {
   OnDestroy,
   ViewContainerRef,
   ViewChild,
-  ComponentRef
+  ComponentRef,
 } from '@angular/core';
 
 import { PblNgridPluginController } from '../../ext/plugin-control';
@@ -25,11 +22,7 @@ import { PblRowTypeToColumnTypeMap } from '../column/management';
 
 export const PBL_NGRID_BASE_ROW_TEMPLATE  = `<ng-container #viewRef></ng-container>`;
 
-@Component({
-  template: PBL_NGRID_BASE_ROW_TEMPLATE,
-  changeDetection: ChangeDetectionStrategy.Default,
-  encapsulation: ViewEncapsulation.None,
-})
+@Directive()
 export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T = any> implements OnChanges, DoCheck, OnDestroy {
 
   /**

@@ -267,7 +267,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   private _cdkTable: PblCdkTableComponent<T>;
   private _viewport: PblCdkVirtualScrollViewportComponent;
 
-  constructor(injector: Injector, vcRef: ViewContainerRef,
+  constructor(injector: Injector,
+              vcRef: ViewContainerRef,
               private elRef: ElementRef<HTMLElement>,
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
