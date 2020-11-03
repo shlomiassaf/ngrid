@@ -4,8 +4,6 @@ import { PblInfiniteScrollTriggerChangedEvent } from './infinite-scroll-datasour
 import { PblInfiniteScrollDSContext } from './infinite-scroll-datasource.context';
 import { debounceTime } from 'rxjs/operators';
 
-export const SKIP_SOURCE_CHANGING_EVENT = Symbol('SKIP_SOURCE_CHANGING_EVENT');
-
 export class PblInfiniteScrollDataSourceAdapter<T = any, TData = any> extends PblDataSourceAdapter<T, TData, PblInfiniteScrollTriggerChangedEvent<TData>> {
 
   readonly virtualRowsLoading: Observable<boolean>;
@@ -20,12 +18,6 @@ export class PblInfiniteScrollDataSourceAdapter<T = any, TData = any> extends Pb
   dispose() {
     this.context.dispose();
     super.dispose();
-  }
-
-  protected emitOnSourceChanging(event: PblInfiniteScrollTriggerChangedEvent<TData>) {
-    if (event[SKIP_SOURCE_CHANGING_EVENT] !== true) {
-      super.emitOnSourceChanging(event);
-    }
   }
 
 }
