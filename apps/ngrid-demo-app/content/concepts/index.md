@@ -8,7 +8,7 @@ searchGroup: content
 ---
 # NGrid concepts
 
-The core concept of n**Grid** is **simplicity**, creating a table should be simple and straight-forward.
+The core concept of n**Grid** is **simplicity**, creating a grid should be simple and straight-forward.
 As more features are added, complexity grows but at all times **the basic operation should remain simple**.
 
 ## Principles to Simplicity
