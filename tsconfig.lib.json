@@ -1,11 +1,9 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "@pebula/*": [
-        "dist/@pebula/*"
-      ]
+      "@pebula/*": ["dist/@pebula/*"]
     }
   },
   "angularCompilerOptions": {

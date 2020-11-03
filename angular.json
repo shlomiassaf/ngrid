@@ -86,8 +86,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/ngrid-demo-app/jest.config.js",
-            "tsConfig": "apps/ngrid-demo-app/tsconfig.spec.json",
-            "setupFile": "apps/ngrid-demo-app/src/test-setup.ts",
             "passWithNoTests": true
           }
         },
@@ -150,7 +148,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": ["apps/ngrid-demo-app-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/ngrid-demo-app-e2e/**"]
+            "exclude": ["**/node_modules/**", "!apps/ngrid-demo-app-e2e/**/*"]
           }
         }
       }
@@ -220,8 +218,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ngrid/jest.config.js",
-            "tsConfig": "libs/ngrid/tsconfig.spec.json",
-            "setupFile": "libs/ngrid/src/test-setup.ts",
             "passWithNoTests": true
           }
         },
@@ -232,7 +228,7 @@
               "libs/ngrid/tsconfig.lib.json",
               "libs/ngrid/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ngrid/**"]
+            "exclude": ["**/node_modules/**", "!libs/ngrid/**/*"]
           }
         }
       }
@@ -297,8 +293,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ngrid-material/jest.config.js",
-            "tsConfig": "libs/ngrid-material/tsconfig.spec.json",
-            "setupFile": "libs/ngrid-material/src/test-setup.ts",
             "passWithNoTests": true
           }
         },
@@ -309,7 +303,7 @@
               "libs/ngrid-material/tsconfig.lib.json",
               "libs/ngrid-material/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ngrid-material/**"]
+            "exclude": ["**/node_modules/**", "!libs/ngrid-material/**/*"]
           }
         }
       }
