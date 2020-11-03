@@ -1,0 +1,10 @@
+<pbl-ngrid usePagination matSort [dataSource]="ds" [columns]="columns"
+          (cellClick)="$event.context.startEdit()">
+  <div *pblNgridCellEditorDef="'name'; let ctx">
+    <input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" />
+    <button (click)="ctx.stopEdit()">X</button>
+  </div>
+  <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
+                       [table]="table"
+                       [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
+</pbl-ngrid>

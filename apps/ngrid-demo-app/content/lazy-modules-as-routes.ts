@@ -239,5 +239,10 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     path: 'features-built-in-plugins-drag-drop-container.module',
     pathMatch: 'full',
     loadChildren: () => import('./features/built-in-plugins/drag/drop-container/drop-container.module').then( m => m.DropContainerExampleModule ),
+  },
+  {
+    path: 'concepts-context-context-example.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./concepts/context/context-example/context-example.module').then( m => m.ContextExampleExampleModule ),
   }
 ];
