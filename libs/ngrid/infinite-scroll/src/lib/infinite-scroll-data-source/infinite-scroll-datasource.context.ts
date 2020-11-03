@@ -106,6 +106,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
 
     if (rawEvent.data.changed || (this.customTriggers && PblInfiniteScrollDataSourceAdapter.isCustomBehaviorEvent(rawEvent, this.customTriggers))) {
       this.cache.clear();
+      rawEvent.isInitial = true;
       return this.invokeInitialOnTrigger(rawEvent);
     }
 
