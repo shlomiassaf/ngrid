@@ -3,7 +3,7 @@ import { RowContext } from '@angular/cdk/table';
 import { PblColumn } from '../column/model';
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridComponent } from '../ngrid.component';
-import { CellContextState, RowContextState, PblNgridRowContext } from './types';
+import { CellContextState, RowContextState, PblNgridRowContext, ExternalRowContextState } from './types';
 import { PblCellContext } from './cell';
 
 declare module '@angular/cdk/table/row.d' {
@@ -39,6 +39,7 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   outOfView: boolean;
 
   readonly grid: PblNgridComponent<T>;
+  private external: any = {};
 
   /**
    * Returns the length of cells context stored in this row
@@ -88,7 +89,18 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
     for (let i = 0; i < cellsCount; i++) {
       cells.push(PblCellContext.defaultState());
     }
-    return { identity, dataIndex, cells, firstRender: true };
+    return { identity, dataIndex, cells, firstRender: true, external: {} };
+  }
+
+  getExternal<P extends keyof ExternalRowContextState>(key: P): ExternalRowContextState[P] {
+    return this.external[key];
+  }
+
+  setExternal<P extends keyof ExternalRowContextState>(key: P, value: ExternalRowContextState[P], saveState = false) {
+    this.external[key] = value;
+    if (saveState) {
+      this.saveState();
+    }
   }
 
   getState(): RowContextState<T> {
@@ -97,6 +109,7 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
       dataIndex: this.dataIndex,
       firstRender: this.firstRender,
       cells: this.cells.map( c => c.getState() ),
+      external: this.external,
     };
   }
 
@@ -104,9 +117,14 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
     this.identity = state.identity;
     this.firstRender = state.firstRender;
     this.dataIndex = state.dataIndex;
+    this.external = state.external;
     for (let i = 0, len = this.cells.length; i < len; i++) {
       this.cells[i].fromState(state.cells[i], this);
     }
+  }
+
+  saveState() {
+    this.extApi.contextApi.saveState(this);
   }
 
   updateContext(context: RowContext<T>): void {
