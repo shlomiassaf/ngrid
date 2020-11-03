@@ -373,6 +373,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
     if ( processColumns === true ) {
       this.invalidateColumns();
+      this.ngZone.onStable.pipe(take(1)).subscribe(() => this.rowsApi.syncRows('all', true));
     }
   }
 
@@ -570,6 +571,11 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
               // UPDATE: This will not work because it will cause the width to be incorrect when used with vScrollNone
               // TODO: Check why?
+            }
+
+            // We need to trigger CD when not using virtual scroll or else the rows won't show on initial loan, only after user interactions
+            if (!this.viewport.enabled) {
+              this.rowsApi.syncRows(true);
             }
           });
       }
