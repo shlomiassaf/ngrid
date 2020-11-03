@@ -11,17 +11,26 @@ declare module '@angular/cdk/table/table.d' {
   }
 }
 
-export interface CellContextState<T = any> {
-  editing: boolean;
-  focused: boolean;
-  selected: boolean;
-}
-
 export interface RowContextState<T = any> {
   identity: any;
   dataIndex: number;
   cells: CellContextState<T>[];
   firstRender: boolean;
+  external: any;
+}
+
+export interface CellContextState<T = any> {
+  editing: boolean;
+  focused: boolean;
+  selected: boolean;
+  external: any;
+}
+
+export interface ExternalRowContextState {
+
+}
+export interface ExternalCellContextState {
+
 }
 
 /**
@@ -186,6 +195,8 @@ export interface PblNgridContextApi<T = any> {
    * The view and context are synced every time rows are rendered so make sure you set this to true only when you know there is no rendering call coming down the pipe.
    */
   clear(syncView?: boolean)
+
+  saveState(context: PblNgridRowContext<T>);
 
     /**
    * Try to find a specific row context, using the row identity, in the current view.

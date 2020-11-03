@@ -17,7 +17,7 @@ export class MultiPageExample {
     .default({minWidth: 100})
     .table(
       { prop: 'detailRowHandle', label: ' ', type: 'detailRowHandle', minWidth: 48, maxWidth: 48 },
-      { prop: 'id', sort: true, width: '40px' },
+      { prop: 'id', pIndex: true, sort: true, width: '40px' },
       { prop: 'name', sort: true },
       { prop: 'gender', width: '50px' },
       { prop: 'birthdate', type: 'date' }

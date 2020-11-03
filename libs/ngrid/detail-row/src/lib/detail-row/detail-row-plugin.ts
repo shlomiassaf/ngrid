@@ -84,13 +84,14 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   @Input() excludeToggleFrom: string[];
 
   /**
-   * Set the behavior when the row's context is changed while the detail row is opened (another row is displayed in place of the current row).
+   * Set the behavior when the row's context is changed while the detail row is opened  (another row is displayed in place of the current row) or closed.
    *
+   * - context: use the context to determine if to open or close the detail row
    * - ignore: don't do anything, leave as is (for manual intervention)
    * - close: close the detail row
    * - render: re-render the row with the new context
    *
-   * The default behavior is `render`
+   * The default behavior is `context`
    *
    * This scenario will pop-up when using pagination and the user move between pages or change the page size.
    * It might also happen when the data is updated due to custom refresh calls on the datasource or any other scenario that might invoke a datasource update.
@@ -100,9 +101,13 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
    * toggle the row (mimic `close`) or update the context manually. For example, if toggling open the detail row invokes a "fetch" operation that retrieves data for the detail row
    * this will allow updates on context change.
    *
+   * Usually, what you will want is "context" (the default) which will remember the last state of the row and open it based on it.
+   *
+   * > Note that for "context" to work you need to use a datasource in client side mode and it must have a primary/identity column (pIndex) or it will not be able to identify the rows.
+   *
    * > Note that `toggledRowContextChange` fires regardless of the value set in `whenContextChange`
    */
-  @Input() whenContextChange: 'ignore' | 'close' | 'render' = 'render';
+  @Input() whenContextChange: 'ignore' | 'close' | 'render' | 'context' = 'context';
 
   /**
    * Emits whenever a detail row instance is toggled on/off

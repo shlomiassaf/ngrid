@@ -67,6 +67,7 @@ export {
   PblNgridContextApi,
   PblRowContext,
   CellReference, GridDataPoint,
+  ExternalRowContextState, ExternalCellContextState,
  } from './context/index';
 
 export { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';

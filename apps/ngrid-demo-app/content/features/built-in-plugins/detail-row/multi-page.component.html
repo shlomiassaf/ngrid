@@ -22,6 +22,7 @@
 <mat-form-field>
   <mat-select placeholder="whenContextChange" [value]="detailRow?.whenContextChange" (selectionChange)="detailRow.whenContextChange = $event.value">
     <mat-option value="ignore">Ignore</mat-option>
+    <mat-option value="context">Context</mat-option>
     <mat-option value="render">Render</mat-option>
     <mat-option value="close">Close</mat-option>
   </mat-select>
