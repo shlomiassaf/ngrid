@@ -258,6 +258,12 @@ export class ContextApi<T = any> {
     }
   }
 
+  saveState(context: PblNgridRowContext<T>) {
+    if (context instanceof PblRowContext) {
+      this.cache.set(context.identity, context.getState());
+    }
+  }
+
   getRow(row: number | HTMLElement): PblNgridRowContext<T> | undefined {
     const index = typeof row === 'number' ? row : findRowRenderedIndex(row);
     return this.rowContext(index);

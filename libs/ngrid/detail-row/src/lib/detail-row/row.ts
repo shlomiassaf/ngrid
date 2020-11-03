@@ -13,6 +13,12 @@ import { CdkRow } from '@angular/cdk/table';
 import { PblNgridRowComponent, utils, PBL_NGRID_ROW_TEMPLATE, PblNgridComponent } from '@pebula/ngrid';
 import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY } from './detail-row-plugin';
 
+declare module '@pebula/ngrid/lib/grid/context/types' {
+  interface ExternalRowContextState {
+    detailRow: boolean;
+  }
+}
+
 @Component({
   selector: 'pbl-ngrid-row[detailRow]',
   exportAs: 'pblNgridDetailRow',
@@ -41,6 +47,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   private get _element(): HTMLElement { return this.el.nativeElement; }
   private opened = false;
   private plugin: PblNgridDetailRowPluginDirective<any>;
+  private prevIdentity: any;
 
   constructor(@Optional() grid: PblNgridComponent,
               el: ElementRef<HTMLElement>,
@@ -55,14 +62,26 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   }
 
   updateRow(): void {
-    const prevIdentity = this.context && this.context.$implicit;
+    const prevIdentity = this.prevIdentity;
     super.updateRow();
-    if (this.opened) {
-      const currIdentity = this.context && this.context.$implicit;
-      if (currIdentity !== prevIdentity && currIdentity) {
+    this.prevIdentity = this.context?.identity;
+    if (this.plugin?.whenContextChange === 'context') {
+      if (this.context.getExternal('detailRow')) {
+        if (this.opened) {
+          this.render();
+        } else {
+          this.toggle(true);
+        }
+      } else {
+        if (this.opened) {
+          this.toggle(false);
+        }
+      }
+    } else if (this.opened) {
+      if (this.prevIdentity !== prevIdentity && this.prevIdentity) {
         switch (this.plugin.whenContextChange) {
           case 'render':
-              this.render();
+            this.render();
             break;
           case 'close':
             this.toggle(false);
@@ -87,6 +106,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
         this._element.classList.add('pbl-row-detail-opened');
       }
 
+      this.context.setExternal('detailRow', this.opened, true);
       this.plugin.detailRowToggled(this.createEvent());
     }
   }

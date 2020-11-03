@@ -81,9 +81,14 @@ It might also occur when the data is updated due to custom refresh calls on the 
 
 The default behavior is such case is to re-render the detail row with the data of the new row but you can control this behavior using the input `whenContextChange` with 3 options:
 
+- **context**: use the context to determine if to open or close the detail row
 - **ignore**: don't do anything, leave as is (for manual intervention)
 - **close**: close the detail row
 - **render**: re-render the row with the new context (default)
+
+Usually, what you will want is **context** (the default) which will remember the last state of the row and open it based on it.
+
+W> Note that for "context" to work you need to use a datasource in client side mode and it must have a primary/identity column (pIndex) or it will not be able to identify the rows.
 
 <div pbl-example-view="pbl-multi-page-example"></div>
 

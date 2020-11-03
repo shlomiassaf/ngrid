@@ -1,6 +1,6 @@
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridComponent } from '../ngrid.component';
-import { CellContextState, PblNgridCellContext, PblNgridMetaCellContext, PblNgridRowContext } from './types';
+import { CellContextState, ExternalCellContextState, PblNgridCellContext, PblNgridMetaCellContext, PblNgridRowContext } from './types';
 import { PblColumn, PblMetaColumn } from '../column/model';
 import { PblRowContext } from './row';
 
@@ -41,6 +41,7 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
   private _editing = false;
   private _focused = false;
   private _selected = false;
+  private _external = {};
 
   private _rowContext: PblRowContext<T>;
   public col: PblColumn;
@@ -68,7 +69,7 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
   }
 
   static defaultState<T = any>(): CellContextState<T> {
-    return { editing: false, focused: false, selected: false };
+    return { editing: false, focused: false, selected: false, external: {} };
   }
 
   clone(col?: PblColumn): PblCellContext<T> {
@@ -77,11 +78,23 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
     return ctx;
   }
 
+  getExternal<P extends keyof ExternalCellContextState>(key: P): ExternalCellContextState[P] {
+    return this._external[key];
+  }
+
+  setExternal<P extends keyof ExternalCellContextState>(key: P, value: ExternalCellContextState[P], saveState = false) {
+    this._external[key] = value;
+    if (saveState) {
+      this._rowContext.saveState();
+    }
+  }
+
   getState(): CellContextState<T> {
     return {
       editing: this._editing,
       focused: this._focused,
       selected: this._selected,
+      external: this._external,
     };
   }
 
@@ -92,6 +105,7 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
     this._editing = state.editing;
     this._focused = state.focused;
     this._selected = state.selected;
+    this._external = state.external;
 
     if (requiresReset) {
       rowContext.updateCell(this);
