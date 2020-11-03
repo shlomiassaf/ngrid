@@ -7,6 +7,7 @@ export interface PblNgridConfig {
     showHeader?: boolean;
     showFooter?: boolean;
     noFiller?: boolean;
+    clearContextOnSourceChanging?: boolean;
   }
 }
 
@@ -14,6 +15,7 @@ const DEFAULT_TABLE_CONFIG: PblNgridConfig['table'] = {
   showHeader: true,
   showFooter: false,
   noFiller: false,
+  clearContextOnSourceChanging: false,
 };
 
 export const PEB_NGRID_CONFIG = new InjectionToken<PblNgridConfig>('PEB_NGRID_CONFIG');
