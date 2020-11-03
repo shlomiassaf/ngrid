@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "nx",
     "start": "ng serve",
-    "build-grid": "ng build ngrid --prod && ng build ngrid-material --prod",
+    "build-grid": "ng build ngrid --prod && ng build ngrid-material --prod && ng build ngrid-cypress -- prod",
     "test": "ng test",
     "lint": "./node_modules/.bin/nx workspace-lint && ng lint",
     "e2e": "ng e2e",
