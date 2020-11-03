@@ -20,4 +20,9 @@ export class PblInfiniteScrollDataSourceAdapter<T = any, TData = any> extends Pb
     super.dispose();
   }
 
+  protected emitOnSourceChanging(event: PblInfiniteScrollTriggerChangedEvent<TData>) {
+    if (event.isInitial) {
+      super.emitOnSourceChanging(event);
+    }
+  }
 }

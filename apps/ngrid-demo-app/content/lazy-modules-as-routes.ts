@@ -244,5 +244,10 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     path: 'concepts-context-context-example.module',
     pathMatch: 'full',
     loadChildren: () => import('./concepts/context/context-example/context-example.module').then( m => m.ContextExampleExampleModule ),
+  },
+  {
+    path: 'features-grid-rtl-support.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./features/grid/rtl-support/rtl-support.module').then( m => m.RtlSupportExampleModule ),
   }
 ];
