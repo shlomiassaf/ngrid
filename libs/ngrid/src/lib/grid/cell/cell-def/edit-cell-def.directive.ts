@@ -2,7 +2,7 @@ import { Directive, TemplateRef } from '@angular/core';
 
 import { PblColumnTypeDefinitionDataMap } from '../../column/model';
 import { PblNgridCellContext } from '../../context/index';
-import { PblNgridRegistryService } from '../../registry';
+import { PblNgridRegistryService } from '../../registry/registry.service';
 import { PblNgridBaseCellDef } from './base-cell-def.directive';
 
 @Directive({
@@ -23,5 +23,11 @@ export class PblNgridEditorCellDefDirective<T, P extends keyof PblColumnTypeDefi
 
   ngOnDestroy(): void {
     this.registry.removeMulti('editorCell', this);
+  }
+}
+
+declare module '../../registry/types' {
+  interface PblNgridMultiRegistryMap {
+    editorCell?: PblNgridEditorCellDefDirective<any>;
   }
 }

@@ -38,7 +38,7 @@ import { resetColumnWidths } from './utils';
 import { PblColumn, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './column/model';
 import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column/management';
 import { PblNgridCellContext, PblNgridMetaCellContext, PblNgridContextApi, PblNgridRowContext } from './context/index';
-import { PblNgridRegistryService } from './registry';
+import { PblNgridRegistryService } from './registry/registry.service';
 import { PblNgridConfigService } from './services/config';
 import { DynamicColumnWidthLogic } from './column/width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';

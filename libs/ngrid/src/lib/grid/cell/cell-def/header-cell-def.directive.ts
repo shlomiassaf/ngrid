@@ -2,7 +2,7 @@
 import { Directive, TemplateRef } from '@angular/core';
 
 import { PblNgridMetaCellContext } from '../../context/index';
-import { PblNgridRegistryService } from '../../registry';
+import { PblNgridRegistryService } from '../../registry/registry.service';
 import { PblNgridBaseCellDef } from './base-cell-def.directive';
 
 /**
@@ -37,5 +37,11 @@ export class PblNgridHeaderCellDefDirective<T> extends PblNgridBaseCellDef<PblNg
 
   ngOnDestroy(): void {
     this.registry.removeMulti('headerCell', this);
+  }
+}
+
+declare module '../../registry/types' {
+  interface PblNgridMultiRegistryMap {
+    headerCell?: PblNgridHeaderCellDefDirective<any>;
   }
 }
