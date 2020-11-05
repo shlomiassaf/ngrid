@@ -31,7 +31,10 @@ export interface PblDataSourceOptions {
   skipInitial?: boolean;
 }
 
-export class PblDataSource<T = any, TData = any, TDataSourceAdapter extends PblDataSourceAdapter<T, TData> = PblDataSourceAdapter<T, TData>> extends DataSource<T> {
+export class PblDataSource<T = any,
+                           TData = any,
+                           TEvent extends PblDataSourceTriggerChangedEvent<TData> = PblDataSourceTriggerChangedEvent<TData>,
+                           TDataSourceAdapter extends PblDataSourceAdapter<T, TData, TEvent> = PblDataSourceAdapter<T, TData, TEvent>> extends DataSource<T> {
 
   get pagination(): PblNgridPaginatorKind | false { return this._pagination; }
   set pagination(value: PblNgridPaginatorKind | false) {
