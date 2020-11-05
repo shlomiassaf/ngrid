@@ -119,7 +119,7 @@ export interface PblNgridMetaCellTemplateContext<T> {
 The default re-order template in `PblNgridDragModule.withDefaultTemplates()` is fairly simple:
 
 ```html
-<span *pblNgridCellDraggerRef="let ctx" [pblNgridColumnDrag]="ctx"></span>
+<span *pblNgridCellDraggerRef="let ctx" [pblNgridColumnDrag]="ctx.col"></span>
 ```
 
 We use `*pblNgridCellDraggerRef` to instruct the table which template to use pass the context to `[pblNgridColumnDrag]` which does all the reordering business.

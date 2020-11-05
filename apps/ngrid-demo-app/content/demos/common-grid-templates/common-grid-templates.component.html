@@ -11,7 +11,7 @@
 <pbl-ngrid-drag-resize *pblNgridCellResizerRef="let ctx" [context]="ctx" [grabAreaWidth]="8">
   <span class="pbl-ngrid-column-resizer-handle"></span>
 </pbl-ngrid-drag-resize>
-<span *pblNgridCellDraggerRef="let ctx" [pblNgridColumnDrag]="ctx" cdkDragRootElementClass="cdk-drag column-reorder-handle" ></span>
+<span *pblNgridCellDraggerRef="let ctx" [pblNgridColumnDrag]="ctx.col" cdkDragRootElementClass="cdk-drag column-reorder-handle" ></span>
 
 <!-- DEFINING DEFAULT ADMIN MODULE WIDE COLUMNS FOR PBL-NGRID -->
 <div *pblNgridCellDef="'*'; value as value;">{{value}}</div>
