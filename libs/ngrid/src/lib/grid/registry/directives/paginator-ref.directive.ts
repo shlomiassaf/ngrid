@@ -12,3 +12,9 @@ export class PblNgridPaginatorRefDirective extends PblNgridSingleTemplateRegistr
   readonly kind: 'paginator' = 'paginator';
   constructor(tRef: TemplateRef<{ $implicit: PblNgridComponent<any> }>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
+
+declare module '../types' {
+  interface PblNgridSingleRegistryMap {
+    paginator?: PblNgridPaginatorRefDirective;
+  }
+}

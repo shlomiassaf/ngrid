@@ -21,3 +21,9 @@ export class PblNgridNoDataRefDirective extends PblNgridSingleTemplateRegistry<{
   readonly kind: 'noData' = 'noData';
   constructor(tRef: TemplateRef<{ $implicit: PblNgridComponent<any> }>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
+
+declare module '../types' {
+  interface PblNgridSingleRegistryMap {
+    noData?: PblNgridNoDataRefDirective;
+  }
+}

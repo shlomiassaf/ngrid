@@ -3,7 +3,7 @@ import { Directive, TemplateRef } from '@angular/core';
 
 import { PblColumnTypeDefinitionDataMap } from '../../column/model';
 import { PblNgridCellContext } from '../../context/index';
-import { PblNgridRegistryService } from '../../registry';
+import { PblNgridRegistryService } from '../../registry/registry.service';
 import { PblNgridBaseCellDef } from './base-cell-def.directive';
 
 /**
@@ -38,5 +38,11 @@ export class PblNgridCellDefDirective<T, P extends keyof PblColumnTypeDefinition
 
   ngOnDestroy(): void {
     this.registry.removeMulti('tableCell', this);
+  }
+}
+
+declare module '../../registry/types' {
+  interface PblNgridMultiRegistryMap {
+    tableCell?: PblNgridCellDefDirective<any>;
   }
 }
