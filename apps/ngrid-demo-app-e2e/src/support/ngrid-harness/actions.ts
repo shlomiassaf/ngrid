@@ -1,4 +1,4 @@
-import { NGridHarness } from './ngrid-harness';
+import { NGridCypressHarness } from './ngrid-harness';
 
 function getCoords(el: Element) {
   const domRect = el.getBoundingClientRect()
@@ -24,11 +24,11 @@ export interface DragOptions {
   smooth?: boolean;
 }
 
-export class NGridHarnessActions {
-  constructor(private readonly harness: NGridHarness) { }
+export class NGridCypressHarnessActions {
+  constructor(private readonly harness: NGridCypressHarness) { }
 
 
-  dragMoveColumns(sourceColumnId: string, targetColumnId: string, opts?: DragOptions): Cypress.Chainable<NGridHarness> {
+  dragMoveColumns(sourceColumnId: string, targetColumnId: string, opts?: DragOptions): Cypress.Chainable<NGridCypressHarness> {
     const sourceEl = this.harness.element.querySelector(`.cdk-column-${sourceColumnId}.cdk-drag`);
     const targetEl = this.harness.element.querySelector(`.cdk-column-${targetColumnId}.cdk-drag`);
 

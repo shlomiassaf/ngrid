@@ -1,7 +1,7 @@
-import { NGridHarnessActions } from './actions';
+import { NGridCypressHarnessActions } from './actions';
 
-export class NGridHarness {
-  public readonly actions = new NGridHarnessActions(this);
+export class NGridCypressHarness {
+  public readonly actions = new NGridCypressHarnessActions(this);
 
   constructor(public readonly element: HTMLElement) {
     const fixedMetaRows = element.querySelector('div[pbl-ngrid-fixed-meta-row-container="header"');
