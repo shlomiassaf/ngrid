@@ -5,6 +5,7 @@ import { MetaCellContext } from '../../context/index';
 import { PblNgridHeaderCellComponent } from '../../cell/header-cell.component'
 import { PblNgridRegistryService } from '../registry.service';
 import { PblNgridMultiTemplateRegistry } from './multi-template.directives';
+import { PblNgridMultiComponentRegistry } from './multi-component';
 
 export class PblNgridDataHeaderExtensionContext<T = any> extends MetaCellContext<T, PblColumn> {
   readonly injector: Injector
@@ -77,4 +78,11 @@ export class PblNgridHeaderExtensionRefDirective extends PblNgridMultiTemplateRe
   @Input('pblNgridHeaderExtensionRef') shouldRender?: (context: PblNgridDataHeaderExtensionContext) => boolean;
 
   constructor(tRef: TemplateRef<PblNgridDataHeaderExtensionContext>, registry: PblNgridRegistryService) { super(tRef, registry); }
+}
+
+declare module '../types' {
+  interface PblNgridMultiRegistryMap {
+    dataHeaderExtensions?: (PblNgridMultiTemplateRegistry<PblNgridDataHeaderExtensionContext, 'dataHeaderExtensions'> & PblNgridDataHeaderExtensionRef)
+      | (PblNgridMultiComponentRegistry<any, 'dataHeaderExtensions'> & PblNgridDataHeaderExtensionRef);
+  }
 }

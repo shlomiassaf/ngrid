@@ -1,7 +1,7 @@
 import { Directive, TemplateRef } from '@angular/core';
 
 import { PblNgridMetaCellContext } from '../../context/index';
-import { PblNgridRegistryService } from '../../registry';
+import { PblNgridRegistryService } from '../../registry/registry.service';
 import { PblNgridBaseCellDef } from './base-cell-def.directive';
 
 @Directive({
@@ -24,3 +24,8 @@ export class PblNgridFooterCellDefDirective<T> extends PblNgridBaseCellDef<PblNg
   }
 }
 
+declare module '../../registry/types' {
+  interface PblNgridMultiRegistryMap {
+    footerCell?: PblNgridFooterCellDefDirective<any>;
+  }
+}
