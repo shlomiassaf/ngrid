@@ -21,6 +21,9 @@
     },
     "ngrid-material": {
       "tags": ["name:material", "type:child-lib", "parent:ngrid"]
+    },
+    "ngrid-cypress": {
+      "tags": []
     }
   },
   "nx-enforce-module-boundaries": [
