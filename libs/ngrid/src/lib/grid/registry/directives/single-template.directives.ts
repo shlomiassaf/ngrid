@@ -1,7 +1,7 @@
 // tslint:disable:use-host-property-decorator
 
 import { Directive, TemplateRef, OnInit, OnDestroy } from '@angular/core';
-import { PblNgridSingleRegistryMap, PblNgridMultiRegistryMap } from '../types';
+import { PblNgridSingleRegistryMap } from '../types';
 import { PblNgridRegistryService } from '../registry.service';
 
 @Directive()

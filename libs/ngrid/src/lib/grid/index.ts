@@ -1,5 +1,4 @@
 export * from './services/index';
-export * from './directives/index';
 export * from './meta-rows/index';
 
 export {
@@ -33,6 +32,7 @@ export {
   PblNgridRowDef,
   NGRID_CELL_FACTORY, PblNgridCellFactoryResolver, PblNgridCellFactoryMap,
   PBL_NGRID_ROW_TEMPLATE,
+  PblNgridBaseRowComponent,
   PblNgridRowComponent,
   PblNgridColumnRowComponent,
   PblNgridMetaRowComponent,
@@ -73,6 +73,8 @@ export {
 export { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 
 export { PblNgridComponent } from './ngrid.component';
+
+export { PblNgridOuterSectionDirective } from './directives/index';
 
 export { PblColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';
 export * from './features/virtual-scroll/index';

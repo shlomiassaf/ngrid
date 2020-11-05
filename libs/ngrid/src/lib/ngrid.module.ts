@@ -18,7 +18,6 @@ import { CdkTableModule } from '@angular/cdk/table';
 
 import {
   PEB_NGRID_CONFIG, PblNgridConfig,
-  PblNgridRegistryService,
   PblCdkTableComponent,
   PblNgridComponent,
 
@@ -45,6 +44,7 @@ import {
 
   PblNgridCellEditAutoFocusDirective,
 
+  PblNgridRegistryService,
   PblNgridConfigService,
 } from './grid/index';
 import { PROVIDERS } from './di-factories';

@@ -307,6 +307,68 @@
           }
         }
       }
+    },
+    "ngrid-cypress": {
+      "root": "libs/ngrid-cypress",
+      "sourceRoot": "libs/ngrid-cypress/src",
+      "projectType": "library",
+      "prefix": "pbl",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "ng-cli-packagr-tasks:build",
+          "options": {
+            "tsConfig": "libs/ngrid-cypress/tsconfig.lib.json",
+            "project": "libs/ngrid-cypress/ng-package.json",
+            "tasks": {
+              "config": "tools/ng-packagr.transformers/ngrid.transformers.ts",
+              "tsConfig": "tools/tsconfig.json",
+              "data": {
+                "copyFile": {
+                  "assets": [
+                    {
+                      "glob": "README.md",
+                      "input": ".",
+                      "output": "dist/@pebula/ngrid-cypress"
+                    },
+                    {
+                      "glob": "LICENSE",
+                      "input": ".",
+                      "output": "dist/@pebula/ngrid-cypress"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "configurations": {
+            "production": {
+              "project": "libs/ngrid-cypress/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ngrid-cypress/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ngrid-cypress/tsconfig.lib.json",
+              "libs/ngrid-cypress/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ngrid-cypress/**/*"]
+          }
+        }
+      }
     }
   },
   "cli": {

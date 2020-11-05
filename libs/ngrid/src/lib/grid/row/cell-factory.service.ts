@@ -8,8 +8,11 @@ export type PblNgridCellFactoryMap = { [P in GridRowType]: ComponentFactory<PblR
 
 @Injectable()
 export class PblNgridCellFactoryResolver<T = any> {
+  private readonly factoryMap: PblNgridCellFactoryMap;
 
-  constructor(@Inject(NGRID_CELL_FACTORY) private factoryMap: PblNgridCellFactoryMap) { }
+  constructor(@Inject(NGRID_CELL_FACTORY) factoryMap: any) {
+    this.factoryMap = factoryMap;
+  }
 
   getComponentFactory<TRowType extends GridRowType>(row: PblNgridBaseRowComponent<TRowType, T>): ComponentFactory<PblRowTypeToCellTypeMap<TRowType>> {
     return this.factoryMap[row.rowType] as any;

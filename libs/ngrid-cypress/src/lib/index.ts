@@ -13,5 +13,9 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+/// <reference types="./extend-cypress" />
+
 // Import commands.js using ES2015 syntax:
 import './commands';
+
+export * from './ngrid-harness/index';
