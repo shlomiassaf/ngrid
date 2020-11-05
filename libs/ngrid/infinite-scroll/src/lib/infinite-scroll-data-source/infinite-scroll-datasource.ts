@@ -3,8 +3,12 @@ import { PblDataSource, PblDataSourceOptions, PblNgridRowContext } from '@pebula
 import { PblInfiniteScrollDSContext } from './infinite-scroll-datasource.context';
 import { INFINITE_SCROLL_DEFFERED_ROW } from './infinite-scroll-deffered-row';
 import { PblInfiniteScrollDataSourceAdapter } from './infinite-scroll-datasource-adapter';
+import { PblInfiniteScrollTriggerChangedEvent } from './infinite-scroll-datasource.types';
 
-export class PblInfiniteScrollDataSource<T = any, TData = any> extends PblDataSource<T, TData, PblInfiniteScrollDataSourceAdapter<T, TData>> {
+export class PblInfiniteScrollDataSource<T = any, TData = any> extends PblDataSource<T,
+                                                                                     TData,
+                                                                                     PblInfiniteScrollTriggerChangedEvent<TData>,
+                                                                                     PblInfiniteScrollDataSourceAdapter<T, TData>> {
 
   get maxCacheSize() { return this.context.cache.maxSize; }
   get cacheSize() { return this.context.cache.size; }
