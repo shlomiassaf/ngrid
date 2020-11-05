@@ -24,7 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-import { NGridHarness } from './ngrid-harness';
+import { NGridCypressHarness } from './ngrid-harness';
 
 Cypress.Commands.add('nGrid', { prevSubject: 'element' }, (subject: any, options: any = {}) => {
   if (subject.get().length > 1) throw new Error(`Selector "${subject.selector}" returned more than 1 grid instance.`)
@@ -34,5 +34,5 @@ Cypress.Commands.add('nGrid', { prevSubject: 'element' }, (subject: any, options
     throw new Error(`Invalid nGrid element provided, got ${nGrid.tagName} but expected 'pbl-ngrid'`);
   }
 
-  return new NGridHarness(nGrid) as any;
+  return new NGridCypressHarness(nGrid) as any;
 });
