@@ -8,12 +8,12 @@ import { PblColumn } from '../column/model';
 import { unrx } from '../utils/unrx';
 import { PblNgridBaseRowComponent } from './base-row.component';
 
-export const PBL_NGRID_ROW_TEMPLATE  = `<ng-content select=".pbl-ngrid-row-prefix"></ng-content><ng-container #viewRef></ng-container><ng-content select=".pbl-ngrid-row-suffix"></ng-content>`;
+export const PBL_NGRID_ROW_TEMPLATE = '<ng-content select=".pbl-ngrid-row-prefix"></ng-content><ng-container #viewRef></ng-container><ng-content select=".pbl-ngrid-row-suffix"></ng-content>';
 
 @Component({
   selector: 'pbl-ngrid-row[row]',
   template: PBL_NGRID_ROW_TEMPLATE,
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line:no-host-metadata-property
     'class': 'cdk-row pbl-ngrid-row',
     'role': 'row',
   },

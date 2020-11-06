@@ -1,4 +1,5 @@
 import { isPblColumn, isPblMetaColumn, isPblColumnGroup, unrx } from './lib/grid/index';
+import './lib/grid/bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
 
 export {
   PblNgridPaginatorKind,
