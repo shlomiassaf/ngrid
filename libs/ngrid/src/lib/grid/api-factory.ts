@@ -17,8 +17,6 @@ import { OnPropChangedEvent, OnPropChangedProperties, PblNgridEvents } from '../
 import { bindToDataSource } from './bind-to-datasource';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 
-import './bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
-
 export interface RequiredAngularTokens {
   ngZone: NgZone;
   injector: Injector;

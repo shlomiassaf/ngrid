@@ -9,7 +9,7 @@ import { ColumnApi, PblColumnStore } from '../grid/column/management';
 import { DynamicColumnWidthLogic } from '../grid/column/width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from '../grid/features/virtual-scroll/virtual-scroll-viewport.component'
 import { NotifyPropChangeMethod, OnPropChangedEvent, PblNgridEvents } from './types';
-import { PblNgridMetaRowService } from '../grid/meta-rows/index';
+import { PblNgridMetaRowService } from '../grid/meta-rows/meta-row.service';
 import { RowsApi, PblRowsApi } from '../grid/row';
 import { PblNgridPluginContext, PblNgridPluginController } from './plugin-control';
 
