@@ -42,7 +42,7 @@ import { PblNgridRegistryService } from './registry/registry.service';
 import { PblNgridConfigService } from './services/config';
 import { DynamicColumnWidthLogic } from './column/width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
-import { PblNgridMetaRowService } from './meta-rows/index';
+import { PblNgridMetaRowService } from './meta-rows/meta-row.service';
 
 import { RowsApi } from './row';
 import { createApis } from './api-factory';
