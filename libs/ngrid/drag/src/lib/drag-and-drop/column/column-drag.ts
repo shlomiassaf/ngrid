@@ -10,7 +10,7 @@ import { COL_DRAG_CONTAINER_PLUGIN_KEY, PblNgridColumnDragContainerDirective } f
 @Directive({
   selector: '[pblNgridColumnDrag]',
   exportAs: 'pblNgridColumnDrag',
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line:no-host-metadata-property
     'class': 'cdk-drag',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },

@@ -5,7 +5,8 @@ import { unrx } from '../utils/unrx';
 import { PblNgridComponent } from '../ngrid.component';
 import { PblNgridBaseRowComponent, PBL_NGRID_BASE_ROW_TEMPLATE } from './base-row.component';
 import { PblColumn, PblMetaRowDefinitions } from '../column/model';
-import { PblNgridMetaRowService, PblMetaRow } from '../meta-rows';
+import { PblNgridMetaRowService } from '../meta-rows/meta-row.service';
+import { PblMetaRow } from '../meta-rows/meta-row.directive';
 import { PblNgridHeaderCellComponent } from '../cell/header-cell.component';
 import { applyMetaRowClass, initColumnOrMetaRow, setRowVisibility } from './utils';
 
@@ -16,7 +17,7 @@ import { applyMetaRowClass, initColumnOrMetaRow, setRowVisibility } from './util
 @Component({
   selector: 'pbl-ngrid-column-row',
   template: PBL_NGRID_BASE_ROW_TEMPLATE,
-  host: {
+  host: { // tslint:disable-line:no-host-metadata-property
     'role': 'row',
   },
   providers: [

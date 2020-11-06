@@ -16,41 +16,48 @@ import { ScrollingModule as ScrollingModuleExp } from '@angular/cdk-experimental
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
 
-import {
-  PEB_NGRID_CONFIG, PblNgridConfig,
-  PblCdkTableComponent,
-  PblNgridComponent,
-
-  PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
-  PblNgridMetaRowContainerComponent, PblMetaRowDirective,
-  PblNgridColumnDef,
-  PblNgridHeaderCellDefDirective,
-  PblNgridFooterCellDefDirective,
-  PblNgridCellDefDirective, PblNgridEditorCellDefDirective,
-  PblNgridHeaderCellComponent,
-  PblNgridCellComponent,
-  PblNgridFooterCellComponent,
-  PblNgridMetaCellComponent,
-
-  PblNgridCellStyling,
-  PblNgridOuterSectionDirective,
-  PblNgridHeaderExtensionRefDirective,
-  PblNgridNoDataRefDirective,
-  PblNgridPaginatorRefDirective,
-
-  PblNgridHideColumns,
-  PblColumnSizeObserver,
-  PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblNgridScrolling,
-
-  PblNgridCellEditAutoFocusDirective,
-
-  PblNgridRegistryService,
-  PblNgridConfigService,
-} from './grid/index';
+/**
+ * NOTE ABOUT IMPORTS
+ *
+ * DO NOT IMPORT FROM BARREL MODULES OR ANY MODULE THAT AGGREGATE AND EXPORT SYMBOLS
+ * THE ANGULAR NGC COMPILER DOES NOT HANDLE IT WELL AND THE EXPORTED CODE MIGHT NOT WORK (METADATA ISSUE)
+ *
+ * THE CIRCULAR RUNTIME DETECTION DOES NOT WORK IN THIS CASE BECAUSE THERE IS NO ACTUAL CIRCULAR REFERENCE
+ * IT HAPPENS BECAUSE OF THE WAY ANGULAR RE-BUILDS THE D.TS FILES AND METADATA FILES
+ */
+import { PblNgridRegistryService } from './grid/registry/registry.service';
+import { PblCdkTableComponent }  from './grid/pbl-cdk-table/pbl-cdk-table.component';
+import { PblNgridRowDef } from './grid/row/row-def.directive';
+import { PblNgridRowComponent } from './grid/row/row.component';
+import { PblNgridColumnRowComponent } from './grid/row/columns-row.component';
+import { PblNgridMetaRowComponent } from './grid/row/meta-row.component';
+import { PblNgridMetaRowContainerComponent } from './grid/meta-rows/meta-row-container';
+import { PblMetaRowDirective } from './grid/meta-rows/meta-row.directive';
+import { PblNgridColumnDef } from './grid/column/directives/column-def';
+import { PblNgridHeaderCellDefDirective } from './grid/cell/cell-def/header-cell-def.directive';
+import { PblNgridFooterCellDefDirective } from './grid/cell/cell-def/footer-cell-def.directive';
+import { PblNgridCellDefDirective } from './grid/cell/cell-def/cell-def.directive';
+import { PblNgridEditorCellDefDirective } from './grid/cell/cell-def/edit-cell-def.directive';
+import { PblNgridHeaderCellComponent } from './grid/cell/header-cell.component';
+import { PblNgridCellComponent } from './grid/cell/cell.component';
+import { PblNgridFooterCellComponent } from './grid/cell/footer-cell.component';
+import { PblNgridMetaCellComponent } from './grid/cell/meta-cell.component';
+import { PblNgridCellEditAutoFocusDirective } from './grid/cell/cell-edit-auto-focus.directive';
+import { PblNgridCellStyling } from './grid/cell/cell-styling.directive';
+import { PblNgridOuterSectionDirective } from './grid/directives/directives';
+import { PblNgridHeaderExtensionRefDirective } from './grid/registry/directives/data-header-extensions';
+import { PblNgridNoDataRefDirective } from './grid/registry/directives/no-data-ref.directive';
+import { PblNgridPaginatorRefDirective } from './grid/registry/directives/paginator-ref.directive';
+import { PblNgridHideColumns } from './grid/features/hide-columns.directive';
+import { PblColumnSizeObserver } from './grid/features/column-size-observer/column-size-observer.directive';
+import { PblCdkVirtualScrollViewportComponent } from './grid/features/virtual-scroll/virtual-scroll-viewport.component';
+import { PblCdkVirtualScrollDirective } from './grid/features/virtual-scroll/strategies';
+import { PblNgridScrolling } from './grid/features/virtual-scroll/scrolling-plugin.directive';
+import { PblNgridComponent } from './grid/ngrid.component';
+import { PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService } from './grid/services/config';
 import { PROVIDERS } from './di-factories';
 
 export const COMMON_TABLE_TEMPLATE_INIT = new InjectionToken('COMMON TABLE TEMPLATE INIT');
-
 
 export interface CommonTemplateInit {
   component: Type<any>;

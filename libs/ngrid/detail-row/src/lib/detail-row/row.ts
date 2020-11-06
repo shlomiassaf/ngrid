@@ -6,11 +6,12 @@ import {
   OnDestroy, Optional,
   ViewEncapsulation,
   ViewContainerRef,
+  ViewChild,
 } from '@angular/core';
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CdkRow } from '@angular/cdk/table';
 
-import { PblNgridRowComponent, utils, PBL_NGRID_ROW_TEMPLATE, PblNgridComponent } from '@pebula/ngrid';
+import { PblNgridRowComponent, utils, PblNgridComponent } from '@pebula/ngrid';
 import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY } from './detail-row-plugin';
 
 declare module '@pebula/ngrid/lib/grid/context/types' {
@@ -19,10 +20,12 @@ declare module '@pebula/ngrid/lib/grid/context/types' {
   }
 }
 
+export const PBL_NGRID_ROW_TEMPLATE = '<ng-content select=".pbl-ngrid-row-prefix"></ng-content><ng-container #viewRef></ng-container><ng-content select=".pbl-ngrid-row-suffix"></ng-content>';
+
 @Component({
   selector: 'pbl-ngrid-row[detailRow]',
   exportAs: 'pblNgridDetailRow',
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line:no-host-metadata-property
     class: 'pbl-ngrid-row pbl-row-detail-parent',
     role: 'row',
     '[attr.tabindex]': 'grid?.rowFocus',
@@ -41,6 +44,15 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   get expended(): boolean {
     return this.opened;
   }
+
+  // We must explicitly define the inherited properties which have angular annotations
+  // Because angular will not detect them when building this library.
+  // TODO: When moving up to IVY see if this one get fixed
+  /**
+   * Optional grid instance, required only if the row is declared outside the scope of the grid.
+   */
+  @Input() grid: PblNgridComponent;
+  @ViewChild('viewRef', { read: ViewContainerRef }) _viewRef: ViewContainerRef;
 
   @Input('detailRow') set row(value: any) { this.updateRow(); }
 
