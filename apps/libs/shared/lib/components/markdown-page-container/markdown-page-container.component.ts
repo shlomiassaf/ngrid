@@ -2,6 +2,7 @@ import { Observable, Subject } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
 import { Component, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Directionality } from '@angular/cdk/bidi';
 import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
 
 import { utils } from '@pebula/ngrid';
@@ -49,6 +50,7 @@ export class MarkdownPageContainerComponent implements OnDestroy {
 
   constructor(public readonly viewLayout: ViewLayoutObserver,
               public readonly mdPagesMenu: MarkdownPagesMenuService,
+              public readonly dir: Directionality,
               private route: ActivatedRoute,
               private cdr: ChangeDetectorRef) { }
 

@@ -1,9 +1,9 @@
 {
   "name": "@pebula/ngrid-material",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "peerDependencies": {
     "@angular/material": "^10.2.2",
-    "@pebula/ngrid": "2.2.2"
+    "@pebula/ngrid": "2.3.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"

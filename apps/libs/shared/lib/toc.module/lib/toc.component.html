@@ -1,10 +1,11 @@
-<div class="pbl-content-toc-container">
+<div class="pbl-content-toc-container" [class.pbl-content-toc-rtl]="dir === 'rtl'">
   <div *ngIf="linksChanged | async as links" class="pbl-content-toc-inner">
     <div *ngIf="tocArea.tocTitle" class="pbl-content-toc-heading">{{ tocArea.tocTitle }}</div>
     <ul class="pbl-content-toc-list">
       <li *ngFor="let l of links; let i = index"
           class="pbl-content-toc-link pbl-content-toc-level-{{l.link.level}}"
-          [class.active]="l === activeLink">
+          [class.active]="l === activeLink"
+          [class.pbl-content-toc-rtl]="dir === 'rtl'">
         <ng-container *ngTemplateOutlet="linkTemplate || defaultLinkTemplate; context: { $implicit: { rootUrl: rootUrl, link: l.link } }"></ng-container>
       </li>
     </ul>

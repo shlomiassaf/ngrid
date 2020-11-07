@@ -231,8 +231,8 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     loadChildren: () => import('./extending-ngrid/copy-selection/copy-selection.module').then( m => m.CopySelectionExampleModule ),
   },
   {
-    path: 'demos-rtl-demo.module',
+    path: 'features-grid-rtl-support.module',
     pathMatch: 'full',
-    loadChildren: () => import('./demos/rtl-demo/rtl-demo.module').then( m => m.RtlDemoExampleModule ),
+    loadChildren: () => import('./features/grid/rtl-support/rtl-support.module').then( m => m.RtlSupportExampleModule ),
   }
 ];

@@ -18,6 +18,7 @@
         <mat-icon>arrow_drop_down</mat-icon>
       </a>
       <div style="flex:1 0 auto"></div>
+      <mat-slide-toggle [checked]="isRtl" (toggleChange)="rtlToggleChanged()">RTL</mat-slide-toggle>
       <app-search-input (onSearch)="doSearch($event)"></app-search-input>
       <app-search-results *ngIf="showSearchResults" [searchResults]="searchResults | async" (resultSelected)="hideSearchResults()"></app-search-results>
 
@@ -30,7 +31,7 @@
 
     <ng-container *ngIf="viewLayout.isMobile$ | async">
       <div style="flex:1 0 auto"></div>
-
+      <mat-slide-toggle [checked]="isRtl" (toggleChange)="rtlToggleChanged()">RTL</mat-slide-toggle>
       <mat-form-field *ngIf="topMenuItems | async as menuItems" class="mobile-top-menu" appearance="legacy">
         <mat-select #select (routerLinkActiveNotify)="mobileTopMenuRouteActivated(select, menuItems, $event)"
                     placeholder="Select Topic">

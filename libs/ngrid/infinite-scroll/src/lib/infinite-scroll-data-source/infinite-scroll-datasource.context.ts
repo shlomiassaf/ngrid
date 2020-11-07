@@ -105,8 +105,9 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
       }
     }
 
-    if (this.customTriggers && PblInfiniteScrollDataSourceAdapter.isCustomBehaviorEvent(rawEvent, this.customTriggers)) {
+    if (rawEvent.data.changed || (this.customTriggers && PblInfiniteScrollDataSourceAdapter.isCustomBehaviorEvent(rawEvent, this.customTriggers))) {
       this.cache.clear();
+      delete rawEvent[SKIP_SOURCE_CHANGING_EVENT];
       return this.invokeInitialOnTrigger(rawEvent);
     }
 

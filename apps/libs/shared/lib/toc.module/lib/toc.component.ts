@@ -44,10 +44,10 @@ export class TocComponent implements OnDestroy {
    */
   activeLink: TocHeadDirective;
 
-  @Input()
-  get tocArea(): TocAreaDirective {
-    return this._tocArea;
-  }
+  // We don't want to depend on any CDK here...
+  @Input() dir: 'ltr' | 'rtl';
+
+  @Input() get tocArea(): TocAreaDirective { return this._tocArea; }
   set tocArea(value: TocAreaDirective) {
     if (this._tocArea !== value) {
       this._tocArea = value;

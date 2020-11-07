@@ -11,13 +11,13 @@
     </mat-drawer>
 
     <mat-drawer-content style="width: 100%;">
-      <div fxFlex="*" class="example-group-container" style="height: 100%" #el>
+      <div fxFlex="*" class="example-group-container" [ngClass]="dir.value === 'ltr' ? 'ngrid-demo-ltr' : 'ngrid-demo-rtl'" style="height: 100%" #el>
         <div style="min-height: 100%;">
           <div fxFlex="*" class="example-container" pblContentTocArea #tocArea="pblContentTocArea"
               [scrollContainer]="el"
               staticHtmlMode
               selector="h1[id], h2[id], h3[id], h4[id]">
-            <mat-toolbar *ngIf="menu$ | async" color="primary" style="margin-left: -24px; width: calc(100% + 48px);">
+            <mat-toolbar *ngIf="menu$ | async" color="primary">
               <div *ngIf="!pageRendered">
                 Loading document...
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -36,7 +36,7 @@
           </div>
           <ng-container *ngIf="viewLayout.isWeb$ | async as isWeb">
             <div *ngIf="isWeb && tocArea.hasLinks | async" fxFlex="0 0 18%" class="example-sticky-container example-toc-container">
-              <pbl-content-toc class="pbl-demo-app-style" [tocArea]="tocArea">
+              <pbl-content-toc class="pbl-demo-app-style" [dir]="dir.value" [tocArea]="tocArea">
                 <a *pblContentTocLinkTemplate="let ctx;"
                   [routerLink]="[ctx.rootUrl]"
                   queryParamsHandling="preserve"
