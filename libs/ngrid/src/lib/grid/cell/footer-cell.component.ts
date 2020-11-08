@@ -47,11 +47,6 @@ export class PblNgridFooterCellComponent extends PblNgridBaseCell {
 
       this.column = column;
 
-      if (!column.columnDef) {
-        new PblNgridColumnDef(this.extApi).column = column;
-        column.columnDef.name = column.id;
-      }
-
       this.cellCtx = MetaCellContext.create(column, this.grid);
 
       applyWidth.call(this);
