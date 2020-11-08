@@ -72,11 +72,6 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
 
       this.column = column;
 
-      if (!column.columnDef) {
-        new PblNgridColumnDef(this.extApi).column = column;
-        column.columnDef.name = column.id;
-      }
-
       let predicate: (event: WidthChangeEvent) => boolean;
       let view: EmbeddedViewRef<PblNgridMetaCellContext<any, PblMetaColumn | PblColumn>>
       let widthUpdater: (...args: any[]) => void;
