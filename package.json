@@ -149,6 +149,7 @@
     "prettier": "2.0.4",
     "prismjs": "^1.15.0",
     "protractor": "~7.0.0",
+    "puppeteer": "^5.4.1",
     "remark": "^10.0.1",
     "remark-attr": "^0.8.1",
     "remark-highlight.js": "^5.1.0",
