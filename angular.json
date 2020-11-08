@@ -327,11 +327,16 @@
             "tsConfig": "libs/ngrid-cypress/tsconfig.lib.json",
             "project": "libs/ngrid-cypress/ng-package.json",
             "tasks": {
-              "config": "tools/ng-packagr.transformers/ngrid.transformers.ts",
+              "config": "tools/ng-packagr.transformers/ngrid-cypress.transformers.ts",
               "tsConfig": "tools/tsconfig.json",
               "data": {
                 "copyFile": {
                   "assets": [
+                    {
+                      "glob": "**/*.d.ts",
+                      "input": "libs/ngrid-cypress/src",
+                      "output": "dist/@pebula/ngrid-cypress/"
+                    },
                     {
                       "glob": "README.md",
                       "input": ".",
@@ -343,12 +348,21 @@
                       "output": "dist/@pebula/ngrid-cypress"
                     }
                   ]
+                },
+                "nodeLib": {
+                  "compilerOptions": {
+                    "sourceMap": false,
+                    "inlineSourceMap": true,
+                    "inlineSources": true
+                  }
                 }
               }
             }
+
           },
           "configurations": {
             "production": {
+              "tsConfig": "libs/ngrid-cypress/tsconfig.lib.prod.json",
               "project": "libs/ngrid-cypress/ng-package.prod.json"
             }
           }
