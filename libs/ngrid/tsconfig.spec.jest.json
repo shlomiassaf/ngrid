@@ -5,6 +5,6 @@
     "module": "commonjs",
     "types": ["jest", "node"]
   },
-  "files": ["src/test-setup.ts"],
+  "files": ["src/__test-runners/jest-test-setup.ts"],
   "include": ["**/*.spec.ts", "**/*.d.ts"]
 }

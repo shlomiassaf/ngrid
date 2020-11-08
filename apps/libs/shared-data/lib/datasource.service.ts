@@ -109,12 +109,7 @@ export class DemoDataSource {
   private adapter: WorkerStoreAdapter | WindowStoreAdapter;
 
   constructor() {
-    if (typeof Worker !== 'undefined') {
-      this.adapter = new WorkerStoreAdapter();
-    } else {
-      this.adapter = new WindowStoreAdapter();
-    }
-    this.ready = this.adapter.ready;
+    this.createAdapter();
   }
 
   reset(...collections: Array<DATA_TYPES>): void { this.adapter.reset(...collections); }
@@ -133,6 +128,15 @@ export class DemoDataSource {
   }
 
   dispose(): void { this.adapter.dispose(); }
+
+  protected createAdapter() {
+    if (typeof Worker !== 'undefined') {
+      this.adapter = new WorkerStoreAdapter();
+    } else {
+      this.adapter = new WindowStoreAdapter();
+    }
+    this.ready = this.adapter.ready;
+  }
 }
 
 /**

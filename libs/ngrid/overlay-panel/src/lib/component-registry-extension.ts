@@ -10,7 +10,7 @@ export class PblNgridOverlayPanelComponentExtension<T> extends PblNgridMultiComp
   constructor(name: string,
               public component: Type<T>,
               public cfr?: ComponentFactoryResolver,
-              public injector?: Injector,) {
+              public injector?: Injector) {
     super();
     this.name = name;
   }

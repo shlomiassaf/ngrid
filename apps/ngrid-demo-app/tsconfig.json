@@ -10,6 +10,14 @@
     "./build/**/*.ts"
   ],
   "include": [
-    "**/*.ts",
+    "**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.spec.jest.json"
+    },
+    {
+      "path": "./tsconfig.spec.karma.json"
+    }
   ]
 }

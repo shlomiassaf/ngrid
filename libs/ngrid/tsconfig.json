@@ -1,13 +1,19 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["jest", "node"]
+    "types": [
+      "jest",
+      "node"
+    ]
   },
   "files": [],
   "include": [],
   "references": [
     {
-      "path": "./tsconfig.spec.json"
+      "path": "./tsconfig.spec.jest.json"
+    },
+    {
+      "path": "./tsconfig.spec.karma.json"
     }
   ]
 }

@@ -9,6 +9,7 @@ import { PblNgridMetaRowService } from '../meta-rows/meta-row.service';
 import { PblMetaRow } from '../meta-rows/meta-row.directive';
 import { PblNgridHeaderCellComponent } from '../cell/header-cell.component';
 import { applyMetaRowClass, initColumnOrMetaRow, setRowVisibility } from './utils';
+import { PblNgridColumnDef } from '../column/directives/column-def';
 
 /**
  * The row that represents the columns of the grid.
@@ -58,6 +59,7 @@ export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header
       }
     }
   }
+
   ngOnDestroy(): void {
     this.metaRows.removeMetaRow(this);
     super.ngOnDestroy();
@@ -83,6 +85,10 @@ export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header
   }
 
   protected cellCreated(column: PblColumn, cell: ComponentRef<PblNgridHeaderCellComponent>) {
+    if (!column.columnDef) {
+      new PblNgridColumnDef(this._extApi).column = column;
+      column.columnDef.name = column.id;
+    }
     cell.instance.setColumn(column, this.gridWidthRow);
   }
 

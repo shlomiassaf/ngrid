@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, EmbeddedViewRef, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ComponentRef, EmbeddedViewRef, Input, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { CdkRow, RowContext } from '@angular/cdk/table';
 
 import { PblRowContext } from '../context/index';
@@ -7,6 +7,8 @@ import { PblNgridCellComponent } from '../cell/cell.component';
 import { PblColumn } from '../column/model';
 import { unrx } from '../utils/unrx';
 import { PblNgridBaseRowComponent } from './base-row.component';
+import { PblNgridComponent } from '../ngrid.component';
+import { PblNgridColumnDef } from '../column/directives/column-def';
 
 export const PBL_NGRID_ROW_TEMPLATE = '<ng-content select=".pbl-ngrid-row-prefix"></ng-content><ng-container #viewRef></ng-container><ng-content select=".pbl-ngrid-row-suffix"></ng-content>';
 
@@ -25,6 +27,13 @@ export const PBL_NGRID_ROW_TEMPLATE = '<ng-content select=".pbl-ngrid-row-prefix
   encapsulation: ViewEncapsulation.None,
 })
 export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'data', T> {
+
+    /**
+   * Optional grid instance, required only if the row is declared outside the scope of the grid.
+   */
+  @Input() grid: PblNgridComponent<T>;
+
+  @ViewChild('viewRef', { read: ViewContainerRef }) _viewRef: ViewContainerRef;
 
   readonly rowType = 'data' as const;
 
@@ -77,7 +86,7 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
       // to the CD tree and we need to manually mark them for checking
       // We can customize the diffing, detect context changes internally and only trigger these cells which have changed!
       cell.instance.setContext(this.context);
-      cell.changeDetectorRef.markForCheck();
+      cell.changeDetectorRef.detectChanges();
     }
   }
 
@@ -134,6 +143,10 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   }
 
   protected cellCreated(column: PblColumn, cell: ComponentRef<PblNgridCellComponent>) {
+    if (!column.columnDef) {
+      new PblNgridColumnDef(this._extApi).column = column;
+      column.columnDef.name = column.id;
+    }
     cell.instance.setColumn(column);
     cell.instance.setContext(this.context);
   }
