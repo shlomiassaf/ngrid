@@ -1,12 +1,20 @@
 import { DemoDataSource } from '@pebula/apps/shared-data';
 
-const demoDataSource = new DemoDataSource(true);
+class TestDemoDataSource extends DemoDataSource {
+  protected createAdapter() {
+    const workerConstructor = Worker;
+    (global || window).Worker = undefined;
+    super.createAdapter();
+    (global || window).Worker = workerConstructor;
+  }
+}
+const testDemoDataSource = new TestDemoDataSource();
 
 export async function getDataSourceProvider() {
-  await demoDataSource.ready;
-  return { provide: DemoDataSource, useValue: demoDataSource };
+  await testDemoDataSource.ready;
+  return { provide: DemoDataSource, useValue: testDemoDataSource };
 }
 
 export function getDataSource() {
-  return demoDataSource;
+  return testDemoDataSource;
 }
