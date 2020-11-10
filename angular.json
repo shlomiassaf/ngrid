@@ -96,6 +96,13 @@
             ],
             "scripts": [],
             "assets": []
+          },
+          "configurations": {
+            "ci": {
+              "watch": false,
+              "progress": false,
+              "browsers": "ChromeHeadlessCI"
+            }
           }
         },
         "testJest": {
@@ -247,6 +254,13 @@
             "main": "libs/ngrid/src/test.ts",
             "tsConfig": "libs/ngrid/tsconfig.spec.karma.json",
             "karmaConfig": "libs/ngrid/karma.conf.js"
+          },
+          "configurations": {
+            "ci": {
+              "watch": false,
+              "progress": false,
+              "browsers": "ChromeHeadlessCI"
+            }
           }
         },
         "testJest": {
@@ -334,6 +348,13 @@
           "options": {
             "jestConfig": "libs/ngrid-material/jest.config.js",
             "passWithNoTests": true
+          },
+          "configurations": {
+            "ci": {
+              "watch": false,
+              "progress": false,
+              "browsers": "ChromeHeadlessCI"
+            }
           }
         },
         "lint": {
@@ -412,6 +433,13 @@
           "options": {
             "jestConfig": "libs/ngrid-cypress/jest.config.js",
             "passWithNoTests": true
+          },
+          "configurations": {
+            "ci": {
+              "watch": false,
+              "progress": false,
+              "browsers": "ChromeHeadlessCI"
+            }
           }
         },
         "lint": {
