@@ -48,9 +48,10 @@ export class PblNgridDataCellHarness extends PblNgridColumnCellHarness {
   }
 }
 
-function getColumnCellPredicate<T extends PblNgridColumnCellHarness>(type: ComponentHarnessConstructor<T>,
-                                                                     options: ColumnCellHarnessFilters): HarnessPredicate<T> {
-  return new HarnessPredicate(type, options)
-    .addOption('columnIds', options.columnIds,
-        (harness, columnIds) => harness.getColumnId().then(columnId => columnIds.includes(columnId)));
+export function getColumnCellPredicate<T extends PblNgridColumnCellHarness>(type: ComponentHarnessConstructor<T>,
+                                                                            options: ColumnCellHarnessFilters): HarnessPredicate<T> {
+  // We can't use FluentApi here because ngc will cry
+  const predicate = new HarnessPredicate(type, options);
+  predicate.addOption('columnIds', options.columnIds, (harness, columnIds) => harness.getColumnId().then(columnId => columnIds.indexOf(columnId) !== -1));
+  return predicate;
 }
