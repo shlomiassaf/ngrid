@@ -1,3 +1,4 @@
+import { TestElement } from '@angular/cdk/testing';
 import { UnitTestElement } from '@angular/cdk/testing/testbed';
 import { PblNgridHarness } from './ngrid-component-harness';
 
@@ -27,11 +28,19 @@ declare module './ngrid-component-harness' {
      */
     waitForRenderChanged<T = undefined>(fn?: () => Promise<T>, timeoutMs?: number, frequency?: number): Promise<T>;
 
+    scrollToLocation(location: ScrollToLocation): Promise<void>;
+    scrollTo(x: number, y: number): Promise<void>;
 
-    scrollToEnd(): Promise<void>;
     getColumnIds(): Promise<string[]>;
     getViewPortData(): Promise<string[][]>;
   }
+}
+
+export enum ScrollToLocation {
+  VerticalStart,
+  VerticalEnd,
+  HorizontalStart,
+  HorizontalEnd,
 }
 
 class PblNgridHarnessActions extends PblNgridHarness {
@@ -81,12 +90,39 @@ class PblNgridHarnessActions extends PblNgridHarness {
       .then( rows => Promise.all(rows.map( pRow => pRow.then( row => Promise.all(row) ))));
   }
 
-  async scrollToEnd(waitForChange = true) {
-    const viewPort = await this.locatorFor('pbl-cdk-virtual-scroll-viewport')();
+  async scrollTo(x: number, y: number) {
     // TODO: support protractor env
-    const element = (viewPort as UnitTestElement).element;
-    element.scroll(0, element.scrollHeight);
+    scrollDom(await this.locatorFor('pbl-cdk-virtual-scroll-viewport')(), x, y)
   }
+
+  async scrollToLocation(location: ScrollToLocation) {
+    // TODO: support protractor env
+    const viewPort = await this.locatorFor('pbl-cdk-virtual-scroll-viewport')();
+    const element = (viewPort as UnitTestElement).element;
+    let x = element.scrollLeft;
+    let y = element.scrollTop;
+
+    switch (location) {
+      case ScrollToLocation.HorizontalStart:
+        x = 0;
+        break;
+      case ScrollToLocation.HorizontalEnd:
+        x = element.scrollWidth;
+        break;
+      case ScrollToLocation.VerticalStart:
+        y = 0;
+        break;
+      case ScrollToLocation.VerticalEnd:
+        y = element.scrollHeight;
+        break;
+    }
+    scrollDom(viewPort, x, y);
+  }
+}
+
+async function scrollDom(viewPort: TestElement, x: number, y: number) {
+  const element = (viewPort as UnitTestElement).element;
+  element.scroll(x, y);
 }
 
 const keys = Object.getOwnPropertyNames(PblNgridHarnessActions.prototype) as Array<keyof PblNgridHarnessActions>;
