@@ -15,6 +15,12 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/v3/ --deploy-url /ngrid/v3/
