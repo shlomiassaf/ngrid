@@ -32,12 +32,20 @@ jobs:
             ${{ runner.os }}-node-
       - name: Install dependencies
         run: npm install
-      - run: mkdir /home/runner/work/ngrid/ngrid/.cache
+      - name: Create Cache Directory
+        run: mkdir /home/runner/work/ngrid/ngrid/.cache
+      - name: Get git history
+        shell: bash
+        run: |
+          export PUSH_COMMIT_COUNT=$(($(git rev-list --count ${{ github.event.before }}..${{ github.event.after }})))
+          echo "Commit Count => $PUSH_COMMIT_COUNT"
+          echo ::set-env name=PUSH_COMMIT_COUNT::$PUSH_COMMIT_COUNT
+          git fetch --no-tags --prune --depth=$PUSH_COMMIT_COUNT origin v3
       - name: Test
-        # run: ./node_modules/.bin/nx affected:test --base=${{ github.event.before }} --head=${{ github.event.after }} --configuration=ci
-        run: ./node_modules/.bin/nx test --configuration=ci
+        run: ./node_modules/.bin/nx affected:test --base=${{ github.event.before }} --head=${{ github.event.after }} --configuration=ci
+        # run: ./node_modules/.bin/nx test --configuration=ci
       - name: E2E
-        # run: ./node_modules/.bin/nx affected:e2e --base=${{ github.event.before }} --head=${{ github.event.after }}
-        run: ./node_modules/.bin/nx e2e
+        run: ./node_modules/.bin/nx affected:e2e --base=${{ github.event.before }} --head=${{ github.event.after }}
+        # run: ./node_modules//.bin/nx e2e
       - name: Build Libraries
         run: npm run build-grid
