@@ -60,11 +60,16 @@ export class PblNgridDataRowHarness extends PblNgridColumnRowHarness {
   }
 }
 
-function getDataRowPredicate<T extends PblNgridDataRowHarness>(type: ComponentHarnessConstructor<T>,
+export function getDataRowPredicate<T extends PblNgridDataRowHarness>(type: ComponentHarnessConstructor<T>,
                                                                options: PblNgridDataRowHarnessFilters): HarnessPredicate<T> {
-  return new HarnessPredicate(type, options)
+  // We can't use FluentApi here because ngc will cry
+  const predicate = new HarnessPredicate(type, options);
+
+  predicate
     .addOption('rowIndex', options.rowIndex,
         (harness, rowIndex) => harness.getRowIndex().then( result => result === rowIndex))
     .addOption('rowIdentity', options.rowIdentity,
         (harness, rowIdentity) => HarnessPredicate.stringMatches(harness.getRowIdentity(), rowIdentity));
+
+  return predicate;
 }
