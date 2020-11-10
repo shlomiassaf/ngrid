@@ -22,22 +22,14 @@ describe('demo-app/datasource/simple-model', () => {
   });
 
   it('should have the columns provided', async () => {
-    const columnIds = await loader.getHarness(PblNgridHarness)
-      .then( grid => grid.getColumnHeaderRow() )
-      .then( header => header.getCells() )
-      .then( columns => Promise.all(columns.map( c => c.getColumnId() )) );
-
+    const columnIds = await (await loader.getHarness(PblNgridHarness)).getColumnIds();
     expect(columnIds).toEqual(['id', 'name', 'email']);
   });
 
   it('should show the data provided', async () => {
-    const data = await loader.getHarness(PblNgridHarness)
-      .then( grid => grid.getDataRows() )
-      .then( rows => rows.map( r => r.getCells().then( cells => cells.map(c => c.getText() )) ) )
-      .then( rows => Promise.all(rows.map( pRow => pRow.then( row => Promise.all(row) ))));
+    const data = await (await loader.getHarness(PblNgridHarness)).getViewPortData();
 
-      console.log(fixture.elementRef.nativeElement.getBoundingRect());
-      expect(data).toEqual([
+    expect(data).toEqual([
       ['10', 'John Doe', 'john.doe@anonymous.com']
     ]);
   });

@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { Example } from '@pebula/apps/shared';
+import { createDS } from '@pebula/ngrid';
+import { of, timer } from 'rxjs';
+import { mapTo } from 'rxjs/operators';
 
 @Component({
   selector: 'pbl-datasource-introduction-simple-model-example',
@@ -21,5 +24,5 @@ export class DatasourceIntroductionSimpleModelExample {
     },
   };
 
-  ds = [ { id: 10, name: 'John Doe', email: 'john.doe@anonymous.com' }];
+  ds = timer(1000).pipe(mapTo([ { id: 10, name: 'John Doe', email: 'john.doe@anonymous.com' }]));
 }
