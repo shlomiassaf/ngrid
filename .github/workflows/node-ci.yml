@@ -15,10 +15,16 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - run: npm run build-grid
-      - run: npm run test --browsers ChromeHeadless --watch=false
-      - run: npm run e2e
+      - run: npm run test -- --configuration=ci
+      - run: npm run e2e -- --configuration=ci
         env:
           CI: true
