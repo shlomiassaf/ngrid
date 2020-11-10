@@ -8,6 +8,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo -e "\033[31;1;4mDump GitHub context\033[0m"
+          echo -e "$GITHUB_CONTEXT\n"
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
