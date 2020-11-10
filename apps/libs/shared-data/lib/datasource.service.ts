@@ -108,8 +108,8 @@ export class DemoDataSource {
   private countries: any;
   private adapter: WorkerStoreAdapter | WindowStoreAdapter;
 
-  constructor() {
-    if (typeof Worker !== 'undefined') {
+  constructor(forceMainThread = false) {
+    if (!forceMainThread && typeof Worker !== 'undefined') {
       this.adapter = new WorkerStoreAdapter();
     } else {
       this.adapter = new WindowStoreAdapter();

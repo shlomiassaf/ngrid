@@ -6,4 +6,3 @@ tags: internalPlugin
 empty: true
 ---
 # Drag & Drop Plugin
-

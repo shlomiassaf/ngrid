@@ -85,6 +85,20 @@
           }
         },
         "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/ngrid-demo-app/src/testing/karma-test.ts",
+            "tsConfig": "apps/ngrid-demo-app/tsconfig.spec.karma.json",
+            "karmaConfig": "apps/ngrid-demo-app/karma.conf.js",
+            "polyfills": "apps/ngrid-demo-app/src/polyfills.ts",
+            "styles": [
+              "apps/ngrid-demo-app/src/testing/main-test.scss"
+            ],
+            "scripts": [],
+            "assets": []
+          }
+        },
+        "testJest": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/ngrid-demo-app/jest.config.js",
@@ -98,6 +112,7 @@
               "apps/ngrid-demo-app/tsconfig.app.json",
               "apps/ngrid-demo-app/tsconfig.spec.json",
               "apps/ngrid-demo-app/tsconfig.worker.json",
+              "apps/ngrid-demo-app/tsconfig.spec.json",
               "apps/ngrid-demo-app/tsconfig.spec.json"
             ],
             "exclude": [

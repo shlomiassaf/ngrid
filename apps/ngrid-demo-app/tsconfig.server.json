@@ -4,7 +4,7 @@
     "outDir": "../../dist/out-tsc"
   },
   "exclude": [
-    "src/test-setup.ts",
+    "src/testing/*.ts",
     "**/*.spec.ts",
     "./build/**/*.ts",
     "../libs/shared-data/**/*.worker.ts"
