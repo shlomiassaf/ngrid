@@ -4,6 +4,7 @@ name: Pull Request
 on:
   workflow_dispatch:
   pull_request:
+    branches: [ master ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,7 +18,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          ref: v3
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
       - name: Install Node
         uses: actions/setup-node@v1
         with:
@@ -29,14 +31,16 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
+      - name: Restore git history
+        run: git fetch --no-tags --prune --depth=5 origin ${{ github.event.pull_request.base.ref }}
       - name: Install dependencies
         run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - name: Test
-        run: ./node_modules/.bin/nx affected:test --base=origin/master --head=${{ github.head_ref }} --configuration=ci
+        run: ./node_modules/.bin/nx affected:test --base=origin/${{ github.event.pull_request.base.ref }} --configuration=ci
         # run: ./node_modules/.bin/nx test --configuration=ci
       - name: E2E
-        run: ./node_modules/.bin/nx affected:e2e --base=origin/master --head=${{ github.head_ref }}
+        run: ./node_modules/.bin/nx affected:e2e --base=origin/${{ github.event.pull_request.base.ref }}
         # run: ./node_modules/.bin/nx e2e
       - name: Build Libraries
         run: npm run build-grid
