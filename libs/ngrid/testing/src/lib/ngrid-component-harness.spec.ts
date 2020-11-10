@@ -5,7 +5,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { createDS, columnFactory } from '@pebula/ngrid';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PblNgridModule } from '@pebula/ngrid';
-import { PblNgridHarness } from './ngrid-component-harness';
+import { PblNgridHarness } from './grid';
 
 describe('test', () => {
   let fixture: ComponentFixture<PblNgridComponentTest>;
