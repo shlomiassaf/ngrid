@@ -9,6 +9,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo -e "\033[31;1;4mDump GitHub context\033[0m"
+          echo -e "$GITHUB_CONTEXT\n"
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
@@ -28,8 +34,8 @@ jobs:
         run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - name: Test
-        run: npm run nx -- affected:test --base=${{ github.event.before }} --head=${{ github.event.after }} --configuration=ci
+        run: ./node_modules/.bin/nx affected:test --base=${{ github.event.before }} --head=${{ github.event.after }} --configuration=ci
       - name: E2E
-        run: npm run nx -- affected:e2e --base=${{ github.event.before }} --head=${{ github.event.after }} --configuration=ci
+        run: ./node_modules/.bin/nx affected:e2e --base=${{ github.event.before }} --head=${{ github.event.after }} --configuration=ci
       - name: Build Libraries
         run: npm run build-grid
