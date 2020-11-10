@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { PblNgridModule } from '@pebula/ngrid';
-import { PblNgridHarness } from '@pebula/ngrid/testing';
+import { PblNgridHarness, ScrollToLocation } from '@pebula/ngrid/testing';
 import { WorkingWithPblDataSourceExample } from './working-with-pbl-datasource.component';
 import { getDataSourceProvider, getDataSource } from '../../../../../src/testing/test-datasource';
 
@@ -34,7 +34,7 @@ describe('demo-app/datasource/working-with-pbl-datasource', () => {
   });
 
   it('should show the data provided scrolling to the end (vScroll)', async () => {
-    await nGridHarness.waitForRenderChanged(() => nGridHarness.scrollToEnd())
+    await nGridHarness.waitForRenderChanged(() => nGridHarness.scrollToLocation(ScrollToLocation.VerticalEnd))
     const data = await nGridHarness.getViewPortData();
     expect(data.length).toBeGreaterThanOrEqual(1);
     const dsData = await getDataSource().getPeople(0, 500);
