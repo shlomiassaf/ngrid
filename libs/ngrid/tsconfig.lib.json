@@ -14,5 +14,5 @@
     "types": [],
     "lib": ["dom", "es2015"]
   },
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts", "karma.conf.ts"]
+  "exclude": ["src/test.ts", "src/test-setup.ts", "**/*.spec.ts", "karma.conf.ts"]
 }

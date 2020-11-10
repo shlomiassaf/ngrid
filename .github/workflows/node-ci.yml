@@ -18,6 +18,7 @@ jobs:
       - run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - run: npm run build-grid
+      - run: npm run test
       - run: npm run e2e
         env:
           CI: true

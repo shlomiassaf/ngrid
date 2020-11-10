@@ -242,6 +242,14 @@
           }
         },
         "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/ngrid/src/test.ts",
+            "tsConfig": "libs/ngrid/tsconfig.spec.karma.json",
+            "karmaConfig": "libs/ngrid/karma.conf.js"
+          }
+        },
+        "testJest": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ngrid/jest.config.js",
@@ -253,6 +261,7 @@
           "options": {
             "tsConfig": [
               "libs/ngrid/tsconfig.lib.json",
+              "libs/ngrid/tsconfig.spec.json",
               "libs/ngrid/tsconfig.spec.json"
             ],
             "exclude": [
