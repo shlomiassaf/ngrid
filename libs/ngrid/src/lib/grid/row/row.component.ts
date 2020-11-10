@@ -86,7 +86,7 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
       // to the CD tree and we need to manually mark them for checking
       // We can customize the diffing, detect context changes internally and only trigger these cells which have changed!
       cell.instance.setContext(this.context);
-      cell.changeDetectorRef.markForCheck();
+      cell.changeDetectorRef.detectChanges();
     }
   }
 

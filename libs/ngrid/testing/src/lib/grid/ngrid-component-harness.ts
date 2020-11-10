@@ -1,11 +1,13 @@
 import { ContentContainerComponentHarness, HarnessPredicate } from '@angular/cdk/testing';
-import { PblNgridColumnHeaderRowHarness, PblNgridDataRowHarness } from './row/ngrid-column-row-harness';
-import { PblNgridHarnessFilters } from './ngrid-harness-filters';
-
-export interface PblNgridHarnessCommands { } // tslint:disable-line: no-empty-interface
+import { PblNgridColumnHeaderRowHarness, PblNgridDataRowHarness } from '../row/ngrid-column-row-harness';
+import { PblNgridHarnessFilters } from '../ngrid-harness-filters';
 
 export class PblNgridHarness extends ContentContainerComponentHarness {
   static hostSelector = 'pbl-ngrid';
+
+  static register<P extends keyof PblNgridHarness>(key: P, method: PblNgridHarness[P]) {
+    PblNgridHarness.prototype[key] = method;
+  }
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a nGrid with specific attributes.
@@ -35,3 +37,4 @@ export class PblNgridHarness extends ContentContainerComponentHarness {
     return this.locatorForAll(PblNgridDataRowHarness)();
   }
 }
+

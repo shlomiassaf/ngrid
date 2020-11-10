@@ -29,7 +29,9 @@
               "apps/ngrid-demo-app/src/google1a0455c97ead32c8.html",
               "apps/ngrid-demo-app/src/assets"
             ],
-            "styles": ["apps/ngrid-demo-app/src/styles/main.scss"],
+            "styles": [
+              "apps/ngrid-demo-app/src/styles/main.scss"
+            ],
             "scripts": [
               {
                 "input": "node_modules/document-register-element/build/document-register-element.js"
@@ -95,9 +97,13 @@
             "tsConfig": [
               "apps/ngrid-demo-app/tsconfig.app.json",
               "apps/ngrid-demo-app/tsconfig.spec.json",
-              "apps/ngrid-demo-app/tsconfig.worker.json"
+              "apps/ngrid-demo-app/tsconfig.worker.json",
+              "apps/ngrid-demo-app/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/ngrid-demo-app/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/ngrid-demo-app/**"
+            ]
           }
         },
         "server": {
@@ -147,8 +153,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/ngrid-demo-app-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/ngrid-demo-app-e2e/**/*"]
+            "tsConfig": [
+              "apps/ngrid-demo-app-e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/ngrid-demo-app-e2e/**/*"
+            ]
           }
         }
       }
@@ -229,7 +240,10 @@
               "libs/ngrid/tsconfig.lib.json",
               "libs/ngrid/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ngrid/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ngrid/**/*"
+            ]
           }
         }
       }
@@ -305,7 +319,10 @@
               "libs/ngrid-material/tsconfig.lib.json",
               "libs/ngrid-material/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ngrid-material/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ngrid-material/**/*"
+            ]
           }
         }
       }
@@ -358,7 +375,6 @@
                 }
               }
             }
-
           },
           "configurations": {
             "production": {
@@ -381,7 +397,10 @@
               "libs/ngrid-cypress/tsconfig.lib.json",
               "libs/ngrid-cypress/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ngrid-cypress/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ngrid-cypress/**/*"
+            ]
           }
         }
       }
