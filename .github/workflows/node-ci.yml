@@ -21,10 +21,14 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - run: npm install
+      - name: Install dependencies
+        run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
-      - run: npm run build-grid
-      - run: npm run test -- --configuration=ci
-      - run: npm run e2e -- --configuration=ci
+      - name: Build Libraries
+        run: npm run build-grid
+      - name: Test
+        run: npm run test -- --configuration=ci
+      - name: E2E
+        run: npm run e2e -- --configuration=ci
         env:
           CI: true
