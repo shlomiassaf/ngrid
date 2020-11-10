@@ -9,10 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
@@ -31,9 +27,9 @@ jobs:
       - name: Install dependencies
         run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
+      - name: Test
+        run: nx affected:test --base=${{ github.event.before }} --head=${{ github.event.after }} --configuration=ci
+      - name: E2E
+        run: nx affected:e2e --base=${{ github.event.before }} --head=${{ github.event.after }} --configuration=ci
       - name: Build Libraries
         run: npm run build-grid
-      - name: Test
-        run: npm run test -- --configuration=ci
-      - name: E2E
-        run: npm run e2e
