@@ -474,7 +474,7 @@ export class ContextApi<T = any> {
   }
 
   private getViewRect(): ClientRect | DOMRect {
-    return this.extApi.grid.viewport.elementRef.nativeElement.getBoundingClientRect();
+    return this.extApi.grid.viewport.element.getBoundingClientRect();
   }
 
   private emitFocusChanged(curr: PblNgridFocusChangedEvent['curr']): void {

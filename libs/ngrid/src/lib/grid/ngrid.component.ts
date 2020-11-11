@@ -342,6 +342,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this.listenToResize();
 
     // The following code will catch context focused events, find the HTML element of the cell and focus it.
+    // TODO: Move to use rowApi with Cells instead of accessing the view
     this.contextApi.focusChanged
       .subscribe( event => {
         if (event.curr) {
@@ -350,9 +351,20 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
             const view = this._cdkTable._rowOutlet.viewContainer.get(rowContext.index) as EmbeddedViewRef<any>;
             if (view) {
               const cellViewIndex = this.columnApi.renderIndexOf(this.columnApi.columns[event.curr.colIndex])
-              const cellElement = view.rootNodes[0].querySelectorAll('pbl-ngrid-cell')[cellViewIndex];
+              const cellElement: HTMLElement = view.rootNodes[0].querySelectorAll('pbl-ngrid-cell')[cellViewIndex];
               if (cellElement) {
-                cellElement.focus();
+                cellElement.focus({preventScroll: true});
+                if (this.viewport.enabled) {
+                  const elBox = cellElement.getBoundingClientRect();
+                  const viewBox = this.viewport.element.getBoundingClientRect();
+                  if (elBox.top < viewBox.top) { // out from top
+                    const offset = elBox.top - viewBox.top;
+                    this.viewport.scrollToOffset(this.viewport.measureScrollOffset() + offset);
+                  } else if (elBox.bottom > viewBox.bottom) { // out from bottom
+                    const offset = elBox.bottom - (viewBox.bottom - this.viewport.getScrollBarThickness('horizontal'));
+                    this.viewport.scrollToOffset(this.viewport.measureScrollOffset() + offset);
+                  }
+                }
               }
             }
           }
@@ -561,7 +573,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
             unrx(this, value)
           )
           .subscribe(() => {
-            const el = this.viewport.elementRef.nativeElement;
+            const el = this.viewport.element;
             if (this.ds.renderLength > 0 && this._fallbackMinHeight > 0) {
               const h = Math.min(this._fallbackMinHeight, this.viewport.measureRenderedContentSize());
               el.style.minHeight = h + 'px';

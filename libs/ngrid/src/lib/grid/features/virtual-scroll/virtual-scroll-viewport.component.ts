@@ -9,6 +9,7 @@ import {
   Inject,
   Input,
   ChangeDetectorRef,
+  ViewChild,
   ViewEncapsulation,
   NgZone,
   Output,
@@ -60,7 +61,7 @@ function resolveScrollStrategy(config: PblNgridConfigService, scrollStrategy?: V
   selector: 'pbl-cdk-virtual-scroll-viewport',
   templateUrl: 'virtual-scroll-viewport.component.html',
   styleUrls: [ './virtual-scroll-viewport.component.scss' ],
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line: no-host-metadata-property
     class: 'cdk-virtual-scroll-viewport',
     '[class.cdk-virtual-scroll-disabled]': '!enabled',
     '[class.cdk-virtual-scroll-orientation-horizontal]': 'orientation === "horizontal"',
@@ -73,6 +74,9 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   get isScrolling(): boolean { return this._isScrolling; }
   readonly enabled: boolean;
+
+  /** @internal */
+  @ViewChild('innerBoxHelper', { static: true }) _innerBoxHelper: ElementRef<HTMLElement>;
 
   /**
    * Emits the offset (in pixels) of the rendered content every time it changes.
@@ -138,28 +142,38 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     return (this.pblScrollStrategy as PblCdkVirtualScrollDirective).wheelMode || this.wheelModeDefault || 'passive';
   }
 
+  get getBoundingClientRects() {
+    const innerBox = this._innerBoxHelper.nativeElement.getBoundingClientRect();
+    const outerBox = this.element.getBoundingClientRect();
+    return {
+      innerBox,
+      outerBox,
+      scrollBarWidth: outerBox.width - innerBox.width,
+      scrollBarHeight: outerBox.height - innerBox.height,
+    }
+  }
+
   get innerWidth(): number {
-    const innerWidthHelper = this.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-inner-width') as HTMLElement;
-    return innerWidthHelper.getBoundingClientRect().width;
+    return this._innerBoxHelper.nativeElement.getBoundingClientRect().width;
   }
 
   get outerWidth(): number {
-    return this.elementRef.nativeElement.getBoundingClientRect().width;
+    return this.element.getBoundingClientRect().width;
   }
 
   get innerHeight(): number {
-    const innerWidthHelper = this.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-inner-width') as HTMLElement;
-    return innerWidthHelper.getBoundingClientRect().height;
+    return this._innerBoxHelper.nativeElement.getBoundingClientRect().height;
   }
 
   get outerHeight(): number {
-    return this.elementRef.nativeElement.getBoundingClientRect().height;
+    return this.element.getBoundingClientRect().height;
   }
 
   get scrollWidth(): number {
-    return this.elementRef.nativeElement.scrollWidth;
+    return this.element.scrollWidth;
   }
 
+  readonly element: HTMLElement;
   readonly _minWidth$: Observable<number>;
 
   private offsetChange$ = new Subject<number>();
@@ -186,6 +200,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
           dir,
           scrollDispatcher,
           viewportRuler);
+    this.element = elementRef.nativeElement;
 
     if (config.has('virtualScroll')) {
       this.wheelModeDefault = config.get('virtualScroll').wheelMode;
@@ -246,7 +261,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
     // TODO(shlomiassaf)[perf, 3]: run this once... (aggregate all calls within the same animation frame)
     requestAnimationFrame(() => {
-      this.scrollHeight = this.elementRef.nativeElement.scrollHeight; //size;
+      this.scrollHeight = this.element.scrollHeight; //size;
       this.updateFiller();
       // We must trigger a change detection cycle because the filler div element is updated through bindings
       this.cdr.markForCheck();
@@ -327,6 +342,14 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     }
   }
 
+  getScrollBarThickness(location: 'horizontal' | 'vertical') {
+    switch (location) {
+      case 'horizontal':
+        return this.outerHeight - this.innerHeight;
+      case 'vertical':
+        return this.outerWidth - this.innerWidth;
+    }
+  }
   /**
    * Init the scrolling watcher which track scroll events an emits `scrolling` and `scrollFrameRate` events.
    */
