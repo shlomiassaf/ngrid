@@ -65,33 +65,39 @@ function createHandlers(targetEvents: PblNgridTargetEventsPlugin) {
       const sourceCell = event.cellTarget;
 
       let coeff: 1 | -1 = 1;
-      let axis: 'h' | 'v';
+      let isHorizontal = false;
 
       switch (source.keyCode) {
         case UP_ARROW:
           coeff = -1;
         case DOWN_ARROW: // tslint:disable-line: no-switch-case-fall-through
-          axis = 'v';
           break;
         case LEFT_ARROW:
           coeff = -1;
         case RIGHT_ARROW: // tslint:disable-line: no-switch-case-fall-through
-          axis = 'h';
+          isHorizontal = true;
           break;
         default:
           return;
       }
 
-      const cellContext = contextApi.getCell(sourceCell);
-      const activeFocus = contextApi.focusedCell || {
-        rowIdent: cellContext.rowContext.identity,
-        colIndex: cellContext.index,
-      };
+      event.source.preventDefault();
+      event.source.stopPropagation();
+
+
+      let activeFocus: GridDataPoint = contextApi.focusedCell;
+      if (!activeFocus) {
+        const cellContext = contextApi.getCell(sourceCell);
+        activeFocus = {
+          rowIdent: cellContext.rowContext.identity,
+          colIndex: cellContext.index,
+        };
+      }
 
       if (!!source.shiftKey) {
-        handleSelectionChangeByArrows(activeFocus, axis === 'h' ? [coeff, 0] : [0, coeff]);
+        handleSelectionChangeByArrows(activeFocus, isHorizontal ? [coeff, 0] : [0, coeff]);
       } else {
-        handleSingleItemFocus(activeFocus, axis === 'h' ? [coeff, 0] : [0, coeff])
+        handleSingleItemFocus(activeFocus, isHorizontal ? [coeff, 0] : [0, coeff])
       }
     }
   }

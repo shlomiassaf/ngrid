@@ -1,6 +1,6 @@
 import { fromEvent, timer, Observer, ReplaySubject } from 'rxjs';
 import { bufferWhen, debounce, map, filter, takeUntil } from 'rxjs/operators';
-import { Directive, EventEmitter, OnDestroy, ChangeDetectorRef, Injector } from '@angular/core';
+import { Directive, EventEmitter, OnDestroy, Injector } from '@angular/core';
 
 import { PblNgridComponent, PblNgridPluginController, PblColumn } from '@pebula/ngrid';
 

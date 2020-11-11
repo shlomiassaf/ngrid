@@ -92,7 +92,7 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
 
     if (FIXED_HEADER_MODE) {
       let offset = 0;
-      const viewPort = this.viewport.elementRef.nativeElement;
+      const viewPort = this.viewport.element;
       const metaRowStickyScroll = new MetaRowStickyScroll(this.viewport, viewPort, { header: this.header, footer: this.footer });
       let scrollPosition: number;
 
