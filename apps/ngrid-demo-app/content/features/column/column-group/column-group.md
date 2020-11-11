@@ -55,7 +55,7 @@ A table can host multiple header rows including multiple group rows, when settin
 
 <p>This can become hard to track, luckily for us the <a [routerLink]="['../', 'column-factory']">columns factory</a>  will strip the complexity for us.</p>
 
-<div pbl-example-view="pbl-multi-header-column-group-example"></div>
+<div pbl-example-view="pbl-multi-header-column-group-example" containerClass="mat-elevation-z7"></div>
 
 ## Complex Group Hierarchy
 

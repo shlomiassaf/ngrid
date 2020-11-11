@@ -6,72 +6,94 @@ ordinal: 2
 ---
 # Height And Scrolling
 
-In the layout introduction we covered the different sections of the table, how meta rows (header, footer, etc...) differ by type (fixed, row, sticky)
-and how they interact with each section and with the data rows.
+In the layout introduction we covered the different sections of the grid.  
+How meta rows (header, footer, etc...) differ by type (fixed, row, sticky) and how they interact with each section and with the data rows.
 
-Height and scrolling refer to:
+All of the components in the layout are stacked vertically, one after the other.  
+This vertical stack affect and is affected by the height.
 
-- Total grid height (the height of `<pbl-ngrid>`)
-- The height of the data rows section
-- The data rows section scroll bar
-- The grid's scrollbar (`<pbl-ngrid>`)
+In this section we will explain how height affect the vertical stack and how it is affected by the stack itself.  
+To simplify things we will only refer to 2 categories in the stack:
+
+- **Data Viewport** - The section containing data rows
+- **Metadata Viewport** - All other sections (before and after)
+
+When the grid create the layout, it will first let all of the components in the **Metadata Viewport** occupy the height they need.  
+Once done, the remaining height will be occupied by the **Data Viewport**, assuming there is height left to occupy.
+
+In other words, by default, the data viewport has no size and it will grow based on the available space it has left in the container.
 
 The following effects the height and scrolling:
 
 - CSS style of the grid (`<pbl-ngrid>`) (height)
-- Virtual scroll mode
-- The layout of meta rows (fixed VS row VS sticky)
-- `PblNgridComponent.fallbackMinHeight`
+- The layout of meta rows (fixed VS row VS sticky) and size of items in the **Metadata Viewport**
+- The value defined in `PblNgridComponent.minDataViewHeight`
 
-All of the above is user defined and different combinations create different height and scrolling layouts.
+The height provided, will effect the **Data Viewport** and if no height is set, it will be set by the layout itself.
+
+All of the above is user defined and different combinations will create different height and scrolling layouts.
 We will not cover all possible combination, instead we will explain the effect of each definition.
 
-I> To best visualize the effects we will use a column definition set with multiple meta rows (fixed)
+I> To best visualize the effects we will use a column definition set with multiple meta rows (fixed), i.e meta rows are **outside** of the data viewport
 
-<div pbl-example-view="pbl-grid-height-grid-example"></div>
+<div pbl-example-view="pbl-grid-height-grid-example" containerClass="mat-elevation-z7"></div>
 
-## fallbackMinHeight
+## minDataViewHeight
 
-The `fallbackMinHeight` input defines the absolute minimum height (in pixels) to assign to the data row section container (not the grid).
+When the container height is fixed and there is no height left for the data viewport then it will get no height (0 height).
 
-When not set, no minimum height is defined to the data row section container which can lead to different outcomes depending on the virtual scroll mode.
+To simulate this in the example, set the **Explicit Grid Height** to `300` and the **minDataViewHeight** to `None`.  
+The items in the **Metadata Viewport** occupy more then 300px, leaving no space for the data rows.
 
-### fallbackMinHeight with virtual scroll
+To solve this, we need a way to tell the grid to assign a minimum height to the **Data Viewport**.
 
-When **virtual scroll** is enabled the data row section's height is based on the grid's height.  
-This means that if there is not explicit height set to the grid the data row's section will have a height of 0.
+We do this by setting the `@Input` property **minDataViewHeight** which accepts a `number` in 2 variations:
 
-To work around that you can either:
+A. Default minimum height in explicit pixels  
+B. Default minimum height based on an initial amount of rows, multiplied by the row height.
 
-- Set a height to the grid (%, px, flex or any other method).
-- Set the **fallbackMinHeight** input property of the grid
+For variation **A**, provide a positive value, for **B** provide a negative value.
 
-In the example above you can see that setting the grid's height is not enough (**Explicit grid height**) and you also need to check **Set fallbackMinHeight to 150**.
-This happen because the explicit grid height set is **300px** but we have a lot of meta rows which take more then 300px, so data rows get no height.
+For example:
 
-If the total height of all meta rows would have been 100px the data rows section would have been 200px.
+A. Minimum data viewport of 100 pixels: `<pbl-ngrid minDataViewHeight="100"></pbl-ngrid>`  
+B. Minimum data viewport of 2 ros: `<pbl-ngrid minDataViewHeight="-2"></pbl-ngrid>`
 
-If virtual scroll is enabled and **Set fallbackMinHeight to 150** is set to true the total height of the grid will be 150px (data rows) plus the total height of all meta rows.
+**Notes when using the row variation**
 
-### fallbackMinHeight without virtual scroll
+- The row height is calculated based on an initial row pre-loaded by the grid, this row will get it's height from the CSS theme defined.
+- The final amount of rows is the lower value between the row count input and the total rows to render.  
+i.e. If the input is 1,000,000 rows and there are only 2, the height occupied will reflect 2 rows.
 
-When **virtual scroll** is disabled the data row section will take all the space it needs to render all rows.
+I> Once height is assigned to the **Data Viewport** the user can view all of the data using the scrollbar.
 
-If the grid has an explicit height set the grid will show a single scroll bar that will scroll all rows, including meta rows of type fixed.
+## Examples
 
-However, when **virtual scroll** is disabled and **fallbackMinHeight** is set, the behavior of **fallbackMinHeight** is a bit different.
-In such case, the data row section is limited to the height set in **fallbackMinHeight**.
+Let's explore some scenarios and understand the result.
 
-#### Multiple scroll bars
+### Auto Size of the Data Viewport
 
-Multiple bar scroll bars are something you should avoid.
+When the **minDataViewHeight** is set to `None`, items in the **Data Viewport** will occupy space
+**only** if there is any left.
 
-To reproduce them in the example above:
+In the example above, setting the **Explicit Grid Height** to `300` is not enough, we need a value which is greater then the total
+height of the **Metadata Viewport**. If you set it to `500` or above, you will see data rows.
 
-- Disable virtual scroll
-- Enable explicit grid height & fallbackMinHeight
+The **Data Viewport** will grow as much as it is allowed to, when no **minDataViewHeight** is set
 
-The reason for having 2 scroll bars is the fact that we have a grid height limit of 300px that contains a data row section of 150px plus multiple meta rows that
-take more then the remaining 150px.
+### Container Overflow
 
-The result is a scroll bar for the entire gris and a scroll bar for the data rows section.
+If we set the **Explicit Grid Height** to `300` and the **minDataViewHeight** to `10 Rows` we end up with a strange layout, containing 2 vertical scroll bars.
+
+This happen because the calculated minimum height of the **Data Viewport** PLUS the total height of the **Metadata Viewport** is greater then the
+fixed height we set (300) causing it to overflow and forcing the container to show the scroll bar.
+
+Since there are more rows to render then available height in the **Data Viewport** it also show a scroll bar.
+
+This is something to avoid, the best approach (when possible) is not to limit the size of the grid (or limit with a big enough value) so this won't happen.
+
+## Remember, it is minimum
+
+If we set the **Explicit Grid Height** to `750` and the **minDataViewHeight** to `3 Rows` we end up with more then 3 data rows rendered.
+
+This is because **minDataViewHeight** set's the minimum height, if there is space, it will be occupied.

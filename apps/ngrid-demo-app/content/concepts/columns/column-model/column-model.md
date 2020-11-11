@@ -77,7 +77,7 @@ I> If you're unfamiliar with meta-row or data/table rows read the [quick-through
 
 And now a live example:
 
-<div pbl-example-view="pbl-columns-simple-model-example" containerClass="table-height-300 mat-elevation-z7"></div>
+<div pbl-example-view="pbl-columns-simple-model-example" containerClass="mat-elevation-z7"></div>
 
 We got 2 rows for 1 instance. The first row represents headers for the data columns and the 2nd row the data itself.
 
