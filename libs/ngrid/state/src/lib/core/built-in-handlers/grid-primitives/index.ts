@@ -6,7 +6,7 @@ import { stateVisor } from '../../state-visor';
 export interface PblNgridSurfaceState extends
   PickPNP <
     PblNgridComponent,
-    'showHeader' | 'showFooter' | 'focusMode' | 'usePagination' | 'fallbackMinHeight',
+    'showHeader' | 'showFooter' | 'focusMode' | 'usePagination' | 'minDataViewHeight',
     never
   > { }
 
@@ -20,7 +20,7 @@ export function registerGridHandlers() {
   );
 
   createStateChunkHandler('grid')
-    .handleKeys('showHeader', 'showFooter', 'focusMode', 'usePagination', 'fallbackMinHeight')
+    .handleKeys('showHeader', 'showFooter', 'focusMode', 'usePagination', 'minDataViewHeight')
     .serialize((key, ctx) => {
       switch (key) {
         default:

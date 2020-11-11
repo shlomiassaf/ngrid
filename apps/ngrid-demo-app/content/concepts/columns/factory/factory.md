@@ -68,7 +68,7 @@ Let's take this made up requirement for a table:
 
 And: All columns must be at least 40px wide.
 
-<div pbl-example-view="pbl-columns-factory-example"></div>
+<div pbl-example-view="pbl-columns-factory-example" containerClass="mat-elevation-z7"></div>
 
 All meta rows are set in the order they we're added.
 

@@ -62,4 +62,4 @@ The plugin is used the ContextApi to support mouse & keyboard behavior, you can 
 
 <div pbl-example-view="pbl-target-events-example"></div>
 
-<div pbl-example-view="pbl-enter-and-leave-events-example"></div>
+<div pbl-example-view="pbl-enter-and-leave-events-example" containerClass="mat-elevation-z7"></div>

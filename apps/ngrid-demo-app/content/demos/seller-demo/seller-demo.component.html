@@ -7,10 +7,8 @@
            cellTooltip
            focusMode="cell"
            matCheckboxSelection="selection" matCheckboxSelectionColor="primary"
-           [stickyHeader]="['table']"
            [dataSource]="ds"
            [columns]="columns"
-           (cellClick)="$event.context && $event.context.startEdit()"
            style="height: 500px"
            class=" pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
   <pbl-demo-action-row filter (refresh)="refresh()" ></pbl-demo-action-row>

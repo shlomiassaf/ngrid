@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
 import { Example } from '@pebula/apps/shared';
 import { Person, DemoDataSource } from '@pebula/apps/shared-data';
@@ -11,7 +11,7 @@ import { Person, DemoDataSource } from '@pebula/apps/shared-data';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Example('pbl-grid-height-grid-example', { title: 'Grid Height Example' })
-export class GridHeightGridExample {
+export class GridHeightGridExample implements OnDestroy {
 
   columns = columnFactory()
     .default({ minWidth: 40 })
@@ -51,14 +51,12 @@ export class GridHeightGridExample {
     .onTrigger( () => this.datasource.getPeople(0, 500) )
     .create();
 
-  explicitGridHeight = true;
-  fallbackMinHeight = true;
-  vScroll = true;
+  explicitGridHeight = '';
+  minDataViewHeight = '-3';
 
   settings: {
-    explicitGridHeight: boolean;
-    fallbackMinHeight: number;
-    vScroll: boolean;
+    explicitGridHeight: string;
+    minDataViewHeight: number;
   }
 
   constructor(private datasource: DemoDataSource, private cdr: ChangeDetectorRef) {
@@ -68,6 +66,7 @@ export class GridHeightGridExample {
   ngOnDestroy(): void {
     this.ds.dispose();
   }
+
   redraw(): void {
     this.settings = undefined;
     setTimeout(() => {
@@ -78,9 +77,8 @@ export class GridHeightGridExample {
 
   private createSettings(): void {
     this.settings = {
-      explicitGridHeight: this.explicitGridHeight,
-      fallbackMinHeight: this.fallbackMinHeight ? 150 : 0,
-      vScroll: this.vScroll,
+      explicitGridHeight: this.explicitGridHeight ? this.explicitGridHeight + 'px' : null,
+      minDataViewHeight: Number(this.minDataViewHeight),
     }
   }
 }

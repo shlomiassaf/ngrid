@@ -194,42 +194,72 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    */
   @Input() columns: PblNgridColumnSet | PblNgridColumnDefinitionSet;
 
-  /**
-   * A fallback height for "the inner scroll container".
-   * The fallback is used only when it LOWER than the rendered height, so no empty gaps are created when setting the fallback.
-   *
-   * The "inner scroll container" is the area in which all data rows are rendered and all meta (header/footer) rows that are of type "row" or "sticky".
-   * The "inner scroll container" is defined to consume all the height left after all external objects are rendered.
-   * External objects can be fixed meta rows (header/footer), pagination row, action row etc...
-   *
-   * If the grid does not have a height (% or px) the "inner scroll container" will always have no height (0).
-   * If the grid has a height, the "inner scroll container" will get the height left, which can also be 0 if there are a lot of external objects.
-   *
-   * To solve the no-height problem we use the fallbackMinHeight property.
-   *
-   * When virtual scroll is disabled and fallbackMinHeight is not set the grid will set the "inner scroll container" height to show all rows.
-   *
-   * Note that when using a fixed (px) height for the grid, if the height of all external objects + the height of the "inner scroll container" is greater then
-   * the grid's height a vertical scroll bar will show.
-   * If the "inner scroll container"s height will be lower then it's rendered content height and additional vertical scroll bar will appear, which is, usually, not good.
-   *
-   * To avoid this, don't use fallbackMinHeight together with a fixed height for the grid. Instead use fallbackMinHeight together with a min height for the grid.
-   */
-  @Input() get fallbackMinHeight(): number { return this._fallbackMinHeight; }
-  set fallbackMinHeight(value: number) {
-    value = coerceNumberProperty(value);
-    if (this._fallbackMinHeight !== value) {
-      this._fallbackMinHeight = value;
-    }
-  }
-
   @Input() rowClassUpdate: undefined | ( (context: PblNgridRowContext<T>) => ( string | string[] | Set<string> | { [klass: string]: any } ));
   @Input() rowClassUpdateFreq: 'item' | 'ngDoCheck' | 'none' = 'item';
 
   rowFocus: 0 | '' = '';
   cellFocus: 0 | '' = '';
 
-  private _fallbackMinHeight = 0;
+  /**
+   * The minimum height to assign to the data viewport (where data rows are shown)
+   *
+   * The data viewport is the scrollable area where all data rows are visible, and some metadata rows might also be there
+   * depending on their type (fixed/row/sticky) as well as outer section items.
+   *
+   * By default, the data viewport has no size and it will grow based on the available space it has left within the container.
+   * The container will first assign height to any fixed rows and dynamic content (before/after) provided.
+   *
+   * If the container height is fixed (e.g. `<pbl-ngrid style="height: 500px"></pbl-ngrid>`) and there is no height left
+   * for the data viewport then it will get no height (0 height).
+   *
+   * To deal with this issue there are 2 options:
+   *
+   * 1. Do not limit the height of the container
+   * 2. Provide a default minimum height for the data viewport
+   *
+   * Option number 1 is not practical, it will disable all scrolling in the table, making it a long box scrollable by the host container.
+   *
+   * This is where we use option number 2.
+   * By defining a default minimum height we ensure visibility and since there's a scroll there, the user can view all of the data.
+   *
+   * There are 2 types of inputs:
+   *
+   * A. Default minimum height in PX
+   * B. Default minimum height in ROW COUNT
+   *
+   * For A, provide a positive value, for B provide a negative value.
+   *
+   * For example:
+   *
+   *  - Minimum data viewport of 100 pixels: `<pbl-ngrid minDataViewHeight="100"></pbl-ngrid>`
+   *  - Minimum data viewport of 2 ros: `<pbl-ngrid minDataViewHeight="-2"></pbl-ngrid>`
+   *
+   * Notes when using rows:
+   *  - The row height is calculated based on an initial row pre-loaded by the grid, this row will get it's height from the CSS theme defined.
+   *  - The ROW COUNT is the lower value between the actual row count provided and the total rows to render.
+   *
+   * ## Container Overflow:
+   *
+   * Note that when using a default minimum height, if the minimum height of the data viewport PLUS the height of all other elements in the container EXCEEDS any fixed
+   * height assigned to the container, the container will render a scrollbar which results in the possibility of 2 scrollbars, 1 for the container and the seconds
+   * for the data viewport, if it has enough data rows.
+   */
+  @Input() get minDataViewHeight(): number { return this.minDataViewHeight; }
+  set minDataViewHeight(value: number) {
+    value = coerceNumberProperty(value);
+    if (this._minDataViewHeight !== value) {
+      this._minDataViewHeight = value;
+    }
+  }
+
+  /**
+   * @deprecated see `minDataViewHeight`
+   */
+  // TODO: remove in v4.0.0
+  @Input() get fallbackMinHeight(): number { return this._minDataViewHeight > 0 ? this._minDataViewHeight : undefined; }
+  set fallbackMinHeight(value: number) { this.minDataViewHeight = value; }
+
+  private _minDataViewHeight = 0;
   private _dataSource: PblDataSource<T>;
 
   @ViewChild('beforeTable', { read: ViewContainerRef, static: true }) _vcRefBeforeTable: ViewContainerRef;
@@ -342,7 +372,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this.listenToResize();
 
     // The following code will catch context focused events, find the HTML element of the cell and focus it.
-    // TODO: Move to use rowApi with Cells instead of accessing the view
+    // TODO(REFACTOR_REF 1): Move to use rowApi with Cells instead of accessing the view
     this.contextApi.focusChanged
       .subscribe( event => {
         if (event.curr) {
@@ -353,18 +383,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               const cellViewIndex = this.columnApi.renderIndexOf(this.columnApi.columns[event.curr.colIndex])
               const cellElement: HTMLElement = view.rootNodes[0].querySelectorAll('pbl-ngrid-cell')[cellViewIndex];
               if (cellElement) {
-                cellElement.focus({preventScroll: true});
-                if (this.viewport.enabled) {
-                  const elBox = cellElement.getBoundingClientRect();
-                  const viewBox = this.viewport.element.getBoundingClientRect();
-                  if (elBox.top < viewBox.top) { // out from top
-                    const offset = elBox.top - viewBox.top;
-                    this.viewport.scrollToOffset(this.viewport.measureScrollOffset() + offset);
-                  } else if (elBox.bottom > viewBox.bottom) { // out from bottom
-                    const offset = elBox.bottom - (viewBox.bottom - this.viewport.getScrollBarThickness('horizontal'));
-                    this.viewport.scrollToOffset(this.viewport.measureScrollOffset() + offset);
-                  }
-                }
+                cellElement.focus({ preventScroll: true });
+                this.viewport._scrollIntoView(cellElement);
               }
             }
           }
@@ -574,24 +594,20 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
           )
           .subscribe(() => {
             const el = this.viewport.element;
-            if (this.ds.renderLength > 0 && this._fallbackMinHeight > 0) {
-              const h = Math.min(this._fallbackMinHeight, this.viewport.measureRenderedContentSize());
+            if (this.ds.renderLength > 0 && this._minDataViewHeight) {
+              let h: number;
+              if (this._minDataViewHeight > 0) {
+                h = Math.min(this._minDataViewHeight, this.viewport.measureRenderedContentSize());
+              } else {
+                const rowHeight = this.findInitialRowHeight();
+                const rowCount = Math.min(this.ds.renderLength, this._minDataViewHeight * -1);
+                h = rowHeight * rowCount;
+              }
               el.style.minHeight = h + 'px';
-            } else {
-              el.style.minHeight = this.viewport.enabled ? null : this.viewport.measureRenderedContentSize() + 'px';
-              // TODO: When viewport is disabled, we can skip the call to measureRenderedContentSize() and let the browser
-              // do the job by setting `contain: unset` in `pbl-cdk-virtual-scroll-viewport`
-
-              // el.style.minHeight = null;
-              // el.style.contain = this.viewport.enabled ? null : 'unset';
-
-              // UPDATE: This will not work because it will cause the width to be incorrect when used with vScrollNone
-              // TODO: Check why?
-            }
-
-            // We need to trigger CD when not using virtual scroll or else the rows won't show on initial loan, only after user interactions
-            if (!this.viewport.enabled) {
-              this.rowsApi.syncRows(true);
+              // We need to trigger CD when not using virtual scroll or else the rows won't show on initial load, only after user interactions
+              if (!this.viewport.enabled) {
+                this.rowsApi.syncRows(true);
+              }
             }
           });
       }

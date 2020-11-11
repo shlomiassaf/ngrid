@@ -1,6 +1,6 @@
 <div *ngIf="section === 1" fxLayoutAlign="start stretch">
   <div fxFlex="0 1 332px" class="col-quickthrough-table1">
-    <pbl-ngrid showFooter [columns]="columns" vScrollNone
+    <pbl-ngrid showFooter [columns]="columns" vScrollNone [minDataViewHeight]="-999"
               [dataSource]="[ { id: 1, name: 'John', age: 25 }, { id: 2, name: 'Tom', age: 44 } ]"></pbl-ngrid>
   </div>
   <div fxLayoutAlign="center center">

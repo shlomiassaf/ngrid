@@ -24,5 +24,5 @@ export class DatasourceIntroductionSimpleModelExample {
     },
   };
 
-  ds = timer(1000).pipe(mapTo([ { id: 10, name: 'John Doe', email: 'john.doe@anonymous.com' }]));
+  ds = [{ id: 10, name: 'John Doe', email: 'john.doe@anonymous.com' }];
 }

@@ -292,6 +292,39 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     return this.ngeRenderedContentSize = size;
   }
 
+  /**
+   * TODO(REFACTOR_REF 1): Move to use rowApi so we can accept rows/cells and not html elements.
+   * It will allow us to bring into view rows as well.
+   * This will change the methods signature!
+   * @internal
+   */
+  _scrollIntoView(cellElement: HTMLElement) {
+    const container = this.element;
+    const elBox = cellElement.getBoundingClientRect();
+    const containerBox = container.getBoundingClientRect();
+
+    // Vertical handling.
+    // We have vertical virtual scroll, so here we use the virtual scroll API to scroll into the target
+    if (elBox.top < containerBox.top) { // out from top
+      const offset = elBox.top - containerBox.top;
+      this.scrollToOffset(this.measureScrollOffset() + offset);
+    } else if (elBox.bottom > containerBox.bottom) { // out from bottom
+      const offset = elBox.bottom - (containerBox.bottom - this.getScrollBarThickness('horizontal'));
+      this.scrollToOffset(this.measureScrollOffset() + offset);
+    }
+
+    // Horizontal handling.
+    // We DON'T have horizontal virtual scroll, so here we use the DOM API to scroll into the target
+    // TODO: When implementing horizontal virtual scroll, refactor this as well.
+    if (elBox.left < containerBox.left) { // out from left
+      const offset = elBox.left - containerBox.left;
+      container.scroll(container.scrollLeft + offset, container.scrollTop);
+    } else if (elBox.right > containerBox.right) { // out from right
+      const offset = elBox.right - (containerBox.right - this.getScrollBarThickness('vertical'));
+      container.scroll(container.scrollLeft + offset, container.scrollTop);
+    }
+  }
+
   private updateFiller(): void {
     this.measureRenderedContentSize();
     if (this.grid.noFiller) {

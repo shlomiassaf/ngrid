@@ -1,11 +1,26 @@
 <div fxLayout="row" fxLayoutGap="16px" style="width: 100%; padding: 16px">
-  <mat-checkbox [checked]="explicitGridHeight" (change)="explicitGridHeight = $event.checked">Explicit grid height</mat-checkbox>
-  <mat-checkbox [checked]="fallbackMinHeight" (change)="fallbackMinHeight = $event.checked">Set fallbackMinHeight to 150</mat-checkbox>
-  <mat-checkbox [checked]="vScroll" (change)="vScroll = $event.checked">Virtual Scroll Enabled</mat-checkbox>
+  <mat-form-field appearance="legacy">
+    <mat-label>Set Explicit Grid Height</mat-label>
+    <mat-select [value]="explicitGridHeight" (selectionChange)="explicitGridHeight = $event.value">
+      <mat-option value="300">300 Pixels</mat-option>
+      <mat-option value="500">500 Pixels</mat-option>
+      <mat-option value="750">750 Pixels</mat-option>
+      <mat-option value="">None</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="legacy">
+    <mat-label>Set minDataViewHeight</mat-label>
+    <mat-select [value]="minDataViewHeight" (selectionChange)="minDataViewHeight = $event.value">
+      <mat-option value="150">150 Pixels</mat-option>
+      <mat-option value="-3">3 Rows</mat-option>
+      <mat-option value="-10">10 Rows</mat-option>
+      <mat-option value="0">None</mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <div fxFlex="*"></div>
   <button fxFlex="noshrink" mat-flat-button (click)="redraw()">Redraw</button>
 </div>
-<div *ngIf="settings" [class.table-height-300]="settings.explicitGridHeight">
-  <pbl-ngrid *ngIf="settings.vScroll" [dataSource]="ds" [columns]="columns" [fallbackMinHeight]="settings.fallbackMinHeight" vScrollAuto></pbl-ngrid>
-  <pbl-ngrid *ngIf="!settings.vScroll" [dataSource]="ds" [columns]="columns" [fallbackMinHeight]="settings.fallbackMinHeight" vScrollNone></pbl-ngrid>
+<div *ngIf="settings">
+  <pbl-ngrid [dataSource]="ds" [columns]="columns" [minDataViewHeight]="settings.minDataViewHeight" [style.height]="settings.explicitGridHeight" vScrollAuto></pbl-ngrid>
 </div>

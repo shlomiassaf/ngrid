@@ -33,7 +33,7 @@ const dataSource = [
 ];
 ```
 
-<div pbl-example-view="pbl-datasource-introduction-simple-model-example"></div>
+<div pbl-example-view="pbl-datasource-introduction-simple-model-example" containerClass="mat-elevation-z7"></div>
 
 Using a **Promise** adds async functionality and using an **Observable** adds streaming capabilities on top of that.
 
