@@ -3,7 +3,7 @@ import { join } from 'path';
 
 // These imports lack of type definitions.
 const gulpSass = require('gulp-sass');
-const nodeSass = require('node-sass');
+const nodeSass = require('sass');
 const gulpIf = require('gulp-if');
 const gulpCleanCss = require('gulp-clean-css');
 const tildeImporter = require('node-sass-tilde-importer');

@@ -62,6 +62,7 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   webpackConfig.plugins.push(dynamicModule);
 
   webpackConfig.plugins.push(new MarkdownPagesWebpackPlugin({
+    context: __dirname,
     docsPath: '**/*.md',
     docsRoot: './content',
     outputAssetPathRoot: 'md-content',
@@ -84,6 +85,7 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   webpackConfig.plugins.push(new MarkdownAppSearchWebpackPlugin({ }));
 
   webpackConfig.plugins.push(new MarkdownCodeExamplesWebpackPlugin({
+    context: __dirname,
     docsPath: './content/**/*.ts',
   }));
 

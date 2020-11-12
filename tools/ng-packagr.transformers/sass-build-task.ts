@@ -29,8 +29,8 @@ async function sassBundleTask(context: EntryPointTaskContext) {
     return;
   }
 
-  const { builderContext, workspace, root, projectRoot, sourceRoot, options } = globalContext;
-  const host = new virtualFs.AliasHost(workspace.host as virtualFs.Host<FS.Stats>);
+  const { builderContext, root, projectRoot, sourceRoot, options } = globalContext;
+  const host = new virtualFs.AliasHost(globalContext.host as virtualFs.Host<FS.Stats>);
   const syncHost = new virtualFs.SyncDelegateHost<FS.Stats>(host);
 
   if (!options.tasks.data.sassBundle) {
@@ -88,8 +88,8 @@ async function sassCompileTask(context: EntryPointTaskContext) {
     return;
   }
 
-  const { builderContext, workspace, root, projectRoot, sourceRoot, options } = globalContext;
-  const host = new virtualFs.AliasHost(workspace.host as virtualFs.Host<FS.Stats>);
+  const { builderContext, root, projectRoot, sourceRoot, options } = globalContext;
+  const host = new virtualFs.AliasHost(globalContext.host as virtualFs.Host<FS.Stats>);
   const syncHost = new virtualFs.SyncDelegateHost<FS.Stats>(host);
 
   if (!options.tasks.data.sassCompile) {
@@ -164,7 +164,7 @@ async function bundleScss(root: string, src: string, dest: string) {
   log.info(`= Dest: ${dest}`);
   log.info(`=`);
 
-	const { found, bundledContent, imports } = await new Bundler(undefined, root).Bundle(src, ["./!(dist|node_modules)/**/*.scss"], undefined, ["^~"]);
+	const { found, bundledContent, imports } = await new Bundler(undefined, root).bundle(src, ["./!(dist|node_modules)/**/*.scss"], undefined, ["^~"]);
 
 	if (imports) {
 		const filesNotFound = imports
