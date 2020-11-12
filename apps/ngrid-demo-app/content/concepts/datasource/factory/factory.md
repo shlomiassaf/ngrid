@@ -158,17 +158,19 @@ const dataSource = createDS<Person>()
   .create();
 ```
 
+Now, the datasource will not fetch data on load and the grid will remain empty until the `refresh()` method is called on the datasource.
+
 ## Keep Alive
 
-By default the datasource will be bound to the table, once the table component is destroyed the datasource is destroyed.
-This is usually the preferred behavior as it automatically manages memory cleanup for the datasource.
+By default the datasource will be bound to the grid, once the grid component is destroyed the datasource is destroyed.  
+This is usually the preferred behavior as it automatically manage memory cleanup for the datasource.
 
-We can change the default behavior and keep the datasource around even if the table is destroyed. This will require that
-we destroy the datasource manually or we will experience memory leaks.
+We can change the default behavior and keep the datasource around even if the grid is destroyed.  
+This means that we must destroy the datasource manually or we will experience memory leaks.
 
-This is behavior is useful when moving a datasource between tables, e.g. `*ngIf`
+This behavior is useful when moving a datasource between grids, e.g. `*ngIf`
 
-To persist the datasource between tables we use `keepAlive()`:
+To persist the datasource between grid we use `keepAlive()`:
 
 ```typescript
 const dataSource = createDS<Person>()

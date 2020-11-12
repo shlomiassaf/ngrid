@@ -14,7 +14,8 @@ When **rows** (data items) meet **columns** we get a matrix of **cells** we call
 
 Before we dive, let's take a minute to understand the role of columns, rows and cells.
 
-A table is a visual display of a data model, we describe the data model through columns. Let's illustrate using a class as (our data model) and matching column definitions:
+A table is a visual display of a data model, we describe the data model through columns.  
+Let's illustrate using a class as (our data model) and matching column definitions:
 
 <div style="display: flex">
   <div style="flex: 1 1 auto">
