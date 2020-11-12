@@ -88,10 +88,11 @@ export const REQ_KEY = makeStateKey<string>('req');
         }
       ],
       {
-        useHash: false,
-        initialNavigation: 'enabled',
-        preloadingStrategy: LazyModulePreloader
-      }
+    useHash: false,
+    initialNavigation: 'enabled',
+    preloadingStrategy: LazyModulePreloader,
+    relativeLinkResolution: 'legacy'
+}
     ),
     Angulartics2Module.forRoot({
       developerMode: !environment.production,

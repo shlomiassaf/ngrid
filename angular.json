@@ -32,11 +32,7 @@
             "styles": [
               "apps/ngrid-demo-app/src/styles/main.scss"
             ],
-            "scripts": [
-              {
-                "input": "node_modules/document-register-element/build/document-register-element.js"
-              }
-            ],
+            "scripts": [],
             "webWorkerTsConfig": "apps/ngrid-demo-app/tsconfig.worker.json",
             "allowedCommonJsDependencies": [
               "country-data",

@@ -32,6 +32,7 @@ declare module '@pebula-internal/webpack-dynamic-module/plugin' {
 const pluginName = 'markdown-pages-webpack-plugin';
 
 export interface MarkdownPagesWebpackPluginOptions {
+  context: string;
   docsPath: string | string[];
   docsRoot?: string;
   outputAssetPathRoot?: string;
@@ -67,8 +68,8 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
   }
 
   apply(compiler: webpack.Compiler): void {
-    const { docsRoot } = this.options;
-    this.root = compiler.options.context;
+    const { docsRoot, context } = this.options;
+    this.root = context;
     if (docsRoot) {
       if (Path.isAbsolute(docsRoot)) {
         this.root = docsRoot;

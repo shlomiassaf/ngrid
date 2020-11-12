@@ -20,6 +20,7 @@ declare module '@pebula-internal/webpack-dynamic-module/plugin' {
 const pluginName = 'markdown-code-examples-webpack-plugin';
 
 export interface MarkdownCodeExamplesWebpackPluginOptions {
+  context: string;
   docsPath: string | string[];
 }
 
@@ -130,7 +131,7 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
 
   private async run(compiler: webpack.Compiler) {
     const paths = await globby(this.options.docsPath, {
-      cwd: compiler.options.context
+      cwd: this.options.context
     });
 
     for (const p of paths) {
@@ -141,7 +142,7 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
   }
 
   private processFile(file: string) {
-    const fullPath = Path.join(this.compiler.options.context, file);
+    const fullPath = Path.join(this.options.context, file);
     const source = FS.readFileSync(fullPath, { encoding: 'utf-8' });
     const root = Path.dirname(fullPath);
     const primary = parseExampleTsFile(fullPath, source);
