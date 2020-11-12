@@ -55,7 +55,7 @@ With `"pbl-columns-app-content-chunk` being the selector of the angular componen
 
 ## Application Code
 
-The application code is located in `apps/ngrid-demo-app/src`.
+The application code is located in `apps/ngrid-docs-app/src`.
 The application itself is lightweight, containing small amounts of angular code while most of the code is
 located in the `apps/libs` folder.
 
@@ -66,7 +66,7 @@ This folder contains an internal library which is an angular module used by the 
 This module contains components and services used to display compiled markdown content, menu and dynamic components (with source code or without).
 It also contains other directives, services, pipes used by the docs app.
 
-### apps/ngrid-demo-app/content
+### apps/ngrid-docs-app/content
 
 This folder contains feature modules with each module showcasing one or more components.
 

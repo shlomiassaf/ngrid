@@ -3,9 +3,9 @@
   "version": 1,
   "newProjectRoot": "",
   "projects": {
-    "ngrid-demo-app": {
-      "root": "apps/ngrid-demo-app/",
-      "sourceRoot": "apps/ngrid-demo-app/src",
+    "ngrid-docs-app": {
+      "root": "apps/ngrid-docs-app/",
+      "sourceRoot": "apps/ngrid-docs-app/src",
       "projectType": "application",
       "prefix": "pbl",
       "schematics": {
@@ -18,22 +18,20 @@
           "builder": "ngx-build-plus:build",
           "options": {
             "aot": false,
-            "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin",
+            "plugin": "~apps/ngrid-docs-app/ngx-build-plus-plugin",
             "outputPath": "dist/browser",
-            "index": "apps/ngrid-demo-app/src/index.html",
-            "main": "apps/ngrid-demo-app/src/main.ts",
-            "polyfills": "apps/ngrid-demo-app/src/polyfills.ts",
-            "tsConfig": "apps/ngrid-demo-app/tsconfig.app.json",
+            "index": "apps/ngrid-docs-app/src/index.html",
+            "main": "apps/ngrid-docs-app/src/main.ts",
+            "polyfills": "apps/ngrid-docs-app/src/polyfills.ts",
+            "tsConfig": "apps/ngrid-docs-app/tsconfig.app.json",
             "assets": [
-              "apps/ngrid-demo-app/src/favicon.ico",
-              "apps/ngrid-demo-app/src/google1a0455c97ead32c8.html",
-              "apps/ngrid-demo-app/src/assets"
+              "apps/ngrid-docs-app/src/favicon.ico",
+              "apps/ngrid-docs-app/src/google1a0455c97ead32c8.html",
+              "apps/ngrid-docs-app/src/assets"
             ],
-            "styles": [
-              "apps/ngrid-demo-app/src/styles/main.scss"
-            ],
+            "styles": ["apps/ngrid-docs-app/src/styles/main.scss"],
             "scripts": [],
-            "webWorkerTsConfig": "apps/ngrid-demo-app/tsconfig.worker.json",
+            "webWorkerTsConfig": "apps/ngrid-docs-app/tsconfig.worker.json",
             "allowedCommonJsDependencies": [
               "country-data",
               "currency-symbol-map",
@@ -45,8 +43,8 @@
               "aot": true,
               "fileReplacements": [
                 {
-                  "replace": "apps/ngrid-demo-app/src/environments/environment.ts",
-                  "with": "apps/ngrid-demo-app/src/environments/environment.prod.ts"
+                  "replace": "apps/ngrid-docs-app/src/environments/environment.ts",
+                  "with": "apps/ngrid-docs-app/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -70,26 +68,24 @@
         "serve": {
           "builder": "ngx-build-plus:dev-server",
           "options": {
-            "browserTarget": "ngrid-demo-app:build",
+            "browserTarget": "ngrid-docs-app:build",
             "port": 4201,
-            "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin"
+            "plugin": "~apps/ngrid-docs-app/ngx-build-plus-plugin"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngrid-demo-app:build:production"
+              "browserTarget": "ngrid-docs-app:build:production"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "apps/ngrid-demo-app/src/__test-runners/karma-test.ts",
-            "tsConfig": "apps/ngrid-demo-app/tsconfig.spec.karma.json",
-            "karmaConfig": "apps/ngrid-demo-app/karma.conf.js",
-            "polyfills": "apps/ngrid-demo-app/src/polyfills.ts",
-            "styles": [
-              "apps/ngrid-demo-app/src/__test-runners/main-test.scss"
-            ],
+            "main": "apps/ngrid-docs-app/src/__test-runners/karma-test.ts",
+            "tsConfig": "apps/ngrid-docs-app/tsconfig.spec.karma.json",
+            "karmaConfig": "apps/ngrid-docs-app/karma.conf.js",
+            "polyfills": "apps/ngrid-docs-app/src/polyfills.ts",
+            "styles": ["apps/ngrid-docs-app/src/__test-runners/main-test.scss"],
             "scripts": [],
             "assets": []
           },
@@ -104,7 +100,7 @@
         "testJest": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/ngrid-demo-app/jest.config.js",
+            "jestConfig": "apps/ngrid-docs-app/jest.config.js",
             "passWithNoTests": true
           }
         },
@@ -112,32 +108,29 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "apps/ngrid-demo-app/tsconfig.app.json",
-              "apps/ngrid-demo-app/tsconfig.spec.json",
-              "apps/ngrid-demo-app/tsconfig.worker.json",
-              "apps/ngrid-demo-app/tsconfig.spec.json",
-              "apps/ngrid-demo-app/tsconfig.spec.json"
+              "apps/ngrid-docs-app/tsconfig.app.json",
+              "apps/ngrid-docs-app/tsconfig.spec.json",
+              "apps/ngrid-docs-app/tsconfig.worker.json",
+              "apps/ngrid-docs-app/tsconfig.spec.json",
+              "apps/ngrid-docs-app/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ngrid-demo-app/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/ngrid-docs-app/**"]
           }
         },
         "server": {
           "builder": "./tools/ngx-build-plus.server:server",
           "options": {
-            "plugin": "~apps/ngrid-demo-app/ngx-build-plus-plugin",
+            "plugin": "~apps/ngrid-docs-app/ngx-build-plus-plugin",
             "outputPath": "dist/server",
-            "main": "apps/ngrid-demo-app/src/main.server.ts",
-            "tsConfig": "apps/ngrid-demo-app/tsconfig.server.json"
+            "main": "apps/ngrid-docs-app/src/main.server.ts",
+            "tsConfig": "apps/ngrid-docs-app/tsconfig.server.json"
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/ngrid-demo-app/src/environments/environment.ts",
-                  "with": "apps/ngrid-demo-app/src/environments/environment.prod.ts"
+                  "replace": "apps/ngrid-docs-app/src/environments/environment.ts",
+                  "with": "apps/ngrid-docs-app/src/environments/environment.prod.ts"
                 }
               ],
               "sourceMap": false,
@@ -150,34 +143,29 @@
         }
       }
     },
-    "ngrid-demo-app-e2e": {
-      "root": "apps/ngrid-demo-app-e2e",
-      "sourceRoot": "apps/ngrid-demo-app-e2e/src",
+    "ngrid-docs-app-e2e": {
+      "root": "apps/ngrid-docs-app-e2e",
+      "sourceRoot": "apps/ngrid-docs-app-e2e/src",
       "projectType": "application",
       "architect": {
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/ngrid-demo-app-e2e/cypress.json",
-            "tsConfig": "apps/ngrid-demo-app-e2e/tsconfig.e2e.json",
-            "devServerTarget": "ngrid-demo-app:serve"
+            "cypressConfig": "apps/ngrid-docs-app-e2e/cypress.json",
+            "tsConfig": "apps/ngrid-docs-app-e2e/tsconfig.e2e.json",
+            "devServerTarget": "ngrid-docs-app:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ngrid-demo-app:serve:production"
+              "devServerTarget": "ngrid-docs-app:serve:production"
             }
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/ngrid-demo-app-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ngrid-demo-app-e2e/**/*"
-            ]
+            "tsConfig": ["apps/ngrid-docs-app-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/ngrid-docs-app-e2e/**/*"]
           }
         }
       }
@@ -274,10 +262,7 @@
               "libs/ngrid/tsconfig.spec.json",
               "libs/ngrid/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ngrid/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/ngrid/**/*"]
           }
         }
       }
@@ -360,10 +345,7 @@
               "libs/ngrid-material/tsconfig.lib.json",
               "libs/ngrid-material/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ngrid-material/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/ngrid-material/**/*"]
           }
         }
       }
@@ -445,10 +427,140 @@
               "libs/ngrid-cypress/tsconfig.lib.json",
               "libs/ngrid-cypress/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ngrid-cypress/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/ngrid-cypress/**/*"]
+          }
+        }
+      }
+    },
+    "ngrid-dev-app": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/ngrid-dev-app",
+      "sourceRoot": "apps/ngrid-dev-app/src",
+      "prefix": "pebula",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/ngrid-dev-app",
+            "index": "apps/ngrid-dev-app/src/index.html",
+            "main": "apps/ngrid-dev-app/src/main.ts",
+            "polyfills": "apps/ngrid-dev-app/src/polyfills.ts",
+            "tsConfig": "apps/ngrid-dev-app/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/ngrid-dev-app/src/favicon.ico",
+              "apps/ngrid-dev-app/src/assets"
+            ],
+            "styles": ["apps/ngrid-dev-app/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/ngrid-dev-app/src/environments/environment.ts",
+                  "with": "apps/ngrid-dev-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ngrid-dev-app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ngrid-dev-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ngrid-dev-app:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/ngrid-dev-app/tsconfig.app.json",
+              "apps/ngrid-dev-app/tsconfig.spec.json",
+              "apps/ngrid-dev-app/tsconfig.editor.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/ngrid-dev-app/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/ngrid-dev-app/src/test.ts",
+            "tsConfig": "apps/ngrid-dev-app/tsconfig.spec.json",
+            "karmaConfig": "apps/ngrid-dev-app/karma.conf.js",
+            "polyfills": "apps/ngrid-dev-app/src/polyfills.ts",
+            "styles": [],
+            "scripts": [],
+            "assets": []
+          },
+          "configurations": {
+            "ci": {
+              "watch": false,
+              "progress": false,
+              "browsers": "ChromeHeadlessCI"
+            }
+          }
+        }
+      }
+    },
+    "ngrid-dev-app-e2e": {
+      "root": "apps/ngrid-dev-app-e2e",
+      "sourceRoot": "apps/ngrid-dev-app-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/ngrid-dev-app-e2e/cypress.json",
+            "tsConfig": "apps/ngrid-dev-app-e2e/tsconfig.e2e.json",
+            "devServerTarget": "ngrid-dev-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ngrid-dev-app:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/ngrid-dev-app-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/ngrid-dev-app-e2e/**/*"]
           }
         }
       }
@@ -460,11 +572,12 @@
     },
     "defaultCollection": "@nrwl/angular"
   },
-  "defaultProject": "ngrid-demo-app",
+  "defaultProject": "ngrid-docs-app",
   "schematics": {
     "@nrwl/angular:application": {
       "unitTestRunner": "jest",
-      "e2eTestRunner": "cypress"
+      "e2eTestRunner": "cypress",
+      "strict": true
     },
     "@nrwl/angular:library": {
       "unitTestRunner": "jest"

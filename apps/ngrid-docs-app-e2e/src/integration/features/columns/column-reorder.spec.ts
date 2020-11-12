@@ -1,4 +1,4 @@
-describe('ngrid-demo-app', () => {
+describe('ngrid-docs-app', () => {
   beforeEach(() => cy.visit('/features/column/column-reorder'));
 
   it('should reorder dragged columns with groups', () => {
