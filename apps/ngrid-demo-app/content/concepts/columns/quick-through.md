@@ -16,7 +16,7 @@ There are 2 roles: **Data Column**{style="color:green"} and **Meta Column**{styl
 {style="color:green"}
 
 - All **green cells**{style="color:green"} belong to the column `name`.
-- They all share most of the column definitions (e.g. `width`).
+- They all share the column definitions (e.g. `width`).
 - They differ based on the column **sub-role**
 
 There are 3 **sub-roles**, here in visual order of appearance:
@@ -56,3 +56,5 @@ I> A data column is the only column that span over a **vertical** series of cell
 Each **sub-role** is hosted in a meta row of the same type, having columns from the same **sub-role**.
 
 I> The **`Meta Header Group`**{style="color:purple"} has it's own class `PblColumnGroup`, extending `PblMetaColumn`
+
+I> Currently, Footer groups are not supported, this will be added in the future.
