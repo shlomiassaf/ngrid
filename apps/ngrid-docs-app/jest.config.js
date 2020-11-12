@@ -1,6 +1,6 @@
 module.exports = {
   preset: '../../jest.preset.js',
-  coverageDirectory: '../../coverage/apps/ngrid-demo-app',
+  coverageDirectory: '../../coverage/apps/ngrid-docs-app',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',
@@ -17,5 +17,5 @@ module.exports = {
       ],
     },
   },
-  displayName: 'ngrid-demo-app',
+  displayName: 'ngrid-docs-app',
 };

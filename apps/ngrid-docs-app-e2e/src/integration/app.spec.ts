@@ -1,4 +1,4 @@
-describe('ngrid-demo-app', () => {
+describe('ngrid-docs-app', () => {
   beforeEach(() => cy.visit('/'));
 
   it('should display welcome message', () => {

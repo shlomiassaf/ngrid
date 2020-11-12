@@ -19,7 +19,7 @@ import { Change, InsertChange } from '@schematics/angular/utility/change';
 import { getSourceNodes, addDeclarationToModule, addExportToModule } from '@schematics/angular/utility/ast-utils';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 
-const ROOT = '/apps/ngrid-demo-app/content';
+const ROOT = '/apps/ngrid-docs-app/content';
 
 const stringsExtensions = {
   moduleFile: (name: string) => `${strings.dasherize(name)}.module`,

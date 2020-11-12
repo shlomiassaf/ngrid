@@ -50,7 +50,7 @@ module.exports = function(config) {
     ...baseConfig,
     coverageIstanbulReporter: {
       ...baseConfig.coverageIstanbulReporter,
-      dir: join(__dirname, '../../coverage/apps/ngrid-demo-app/')
+      dir: join(__dirname, '../../coverage/apps/ngrid-docs-app/')
     }
   });
 };

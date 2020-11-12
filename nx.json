@@ -9,12 +9,12 @@
     ".eslintrc.json": "*"
   },
   "projects": {
-    "ngrid-demo-app": {
-      "tags": ["type:app", "ngrid-demo-app"]
+    "ngrid-docs-app": {
+      "tags": ["type:app", "ngrid-docs-app"]
     },
-    "ngrid-demo-app-e2e": {
-      "tags": ["type:e2e-app", "parent:ngrid-demo-app"],
-      "implicitDependencies": ["ngrid-demo-app"]
+    "ngrid-docs-app-e2e": {
+      "tags": ["type:e2e-app", "parent:ngrid-docs-app"],
+      "implicitDependencies": ["ngrid-docs-app"]
     },
     "ngrid": {
       "tags": ["name:ngrid", "type:lib"]
@@ -24,6 +24,13 @@
     },
     "ngrid-cypress": {
       "tags": []
+    },
+    "ngrid-dev-app": {
+      "tags": []
+    },
+    "ngrid-dev-app-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ngrid-dev-app"]
     }
   },
   "nx-enforce-module-boundaries": [

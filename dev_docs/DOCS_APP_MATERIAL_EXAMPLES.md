@@ -1,6 +1,6 @@
 # Examples
 
-The folder `apps/ngrid-demo-app/content` contains examples used in the documentation app alongside the MD documentation files.
+The folder `apps/ngrid-docs-app/content` contains examples used in the documentation app alongside the MD documentation files.
 
 Each example is a standalone component that is dynamically rendered into the HTML
 
@@ -44,7 +44,7 @@ E.G: If the example name is **SelectionColumn** it will create
 ### Prefixing with a path
 
 By default, the directory for the module and component will be created
-in the root of `apps/ngrid-demo-app/content` but you can append a path
+in the root of `apps/ngrid-docs-app/content` but you can append a path
 
 ```bash
 ./node_modules/.bin/nx workspace-schematic example-module my/path/SelectionColumn

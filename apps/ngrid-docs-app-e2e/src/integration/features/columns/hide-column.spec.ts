@@ -1,4 +1,4 @@
-describe('ngrid-demo-app', () => {
+describe('ngrid-docs-app', () => {
   beforeEach(() => cy.visit('/features/column/hide-column'));
 
   it('should hide and show columns', () => {
