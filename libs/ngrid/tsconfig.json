@@ -6,8 +6,6 @@
       "node"
     ]
   },
-  "files": [],
-  "include": [],
   "references": [
     {
       "path": "./tsconfig.spec.jest.json"
