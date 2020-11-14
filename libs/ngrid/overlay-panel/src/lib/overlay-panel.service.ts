@@ -1,4 +1,4 @@
-import { Injectable, ViewContainerRef, ElementRef, Injector, EmbeddedViewRef, TemplateRef } from '@angular/core';
+import { Injectable, ViewContainerRef, ElementRef, Injector, TemplateRef, NgZone } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import {
   FlexibleConnectedPositionStrategy,
@@ -10,7 +10,6 @@ import {
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import { TemplatePortal, ComponentPortal } from '@angular/cdk/portal';
-import { RowContext } from '@angular/cdk/table';
 import { PblNgridPluginController, PblNgridComponent, PblNgridMultiTemplateRegistry } from '@pebula/ngrid';
 
 import { PblNgridOverlayPanelComponentExtension } from './component-registry-extension';
@@ -42,10 +41,10 @@ const DEFAULT_OVERLAY_PANEL_CONFIG: PblNgridOverlayPanelConfig = {
 
 @Injectable()
 export class PblNgridOverlayPanelFactory {
-  constructor(private _overlay: Overlay, private _dir: Directionality) { }
+  constructor(private _overlay: Overlay, private _dir: Directionality, private zone: NgZone) { }
 
   create<T>(grid: PblNgridComponent<T>): PblNgridOverlayPanel<T> {
-    return new PblNgridOverlayPanel<T>(this._overlay, this._dir, grid);
+    return new PblNgridOverlayPanel<T>(this._overlay, this._dir, this.zone, grid);
   }
 }
 
@@ -57,6 +56,7 @@ export class PblNgridOverlayPanel<T = any> {
 
   constructor(private _overlay: Overlay,
               private _dir: Directionality,
+              private zone: NgZone,
               public readonly grid: PblNgridComponent<T>) {
     const controller = PblNgridPluginController.find(grid);
     this.injector = controller.injector;
@@ -115,23 +115,25 @@ export class PblNgridOverlayPanel<T = any> {
       throw new Error('Could not find the overlay panel with the name ' + extName);
     }
 
-    const overlayRef = this._createOverlay(source, config);
-    const overlayPanelRef = new PblNgridOverlayPanelRef(overlayRef, data);
-    this._setPosition(overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy, config);
+    return this.zone.run(() => {
+      const overlayRef = this._createOverlay(source, config);
+      const overlayPanelRef = new PblNgridOverlayPanelRef(overlayRef, data);
+      this._setPosition(overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy, config);
 
-    if (match instanceof PblNgridMultiTemplateRegistry) {
-      const tPortal = this._getTemplatePortal(match.tRef, overlayPanelRef);
-      const viewRef = overlayRef.attach(tPortal);
-      viewRef.markForCheck();
-      viewRef.detectChanges();
-    } else {
-      const cPortal = this._getComponentPortal(overlayPanelRef, match)
-      const cmpRef = overlayRef.attach(cPortal);
-      match.onCreated(null, cmpRef);
-    }
+      if (match instanceof PblNgridMultiTemplateRegistry) {
+        const tPortal = this._getTemplatePortal(match.tRef, overlayPanelRef);
+        const viewRef = overlayRef.attach(tPortal);
+        viewRef.markForCheck();
+        viewRef.detectChanges();
+      } else {
+        const cPortal = this._getComponentPortal(overlayPanelRef, match)
+        const cmpRef = overlayRef.attach(cPortal);
+        match.onCreated(null, cmpRef);
+      }
 
-    overlayRef.updatePosition();
-    return overlayPanelRef;
+      overlayRef.updatePosition();
+      return overlayPanelRef;
+    });
   }
 
   /**
