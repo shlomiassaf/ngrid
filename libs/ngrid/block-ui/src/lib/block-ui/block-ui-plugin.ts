@@ -53,10 +53,12 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
         utils.unrx.kill(this, this._blockUi);
       }
       this._blockUi = value;
-      value.pipe(utils.unrx(this, this._blockUi)).subscribe( state => {
-        this._blockInProgress = state;
-        this.setupBlocker();
-      });
+      value
+        .pipe(utils.unrx(this, this._blockUi))
+        .subscribe( state => {
+          this._blockInProgress = state;
+          this.setupBlocker();
+        });
     } else if (this._blockUi !== coerced) {
       this._blockUi = coerced;
       if (coerced !== 'auto') {
@@ -66,7 +68,7 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
     }
   }
 
-  private _blockInProgress: boolean = false;
+  private _blockInProgress = false;
   private _blockUi: boolean | 'auto' | Observable<boolean>;
   private _blockerEmbeddedVRef: EmbeddedViewRef<any>;
   private _removePlugin: (grid: PblNgridComponent<any>) => void;
@@ -83,6 +85,13 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
         }
       }
     });
+
+    pluginCtrl.onInit()
+      .subscribe( isInitNow => {
+        if (isInitNow && this._blockUi && typeof this._blockUi === 'boolean') {
+          this.setupBlocker();
+        }
+      });
 
     pluginCtrl.events
       .subscribe( event => {
@@ -111,25 +120,26 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
       });
   }
 
-
   ngOnDestroy(): void {
     utils.unrx.kill(this);
     this._removePlugin(this.grid);
   }
 
   private setupBlocker(): void {
-    const state = this._blockInProgress;
-    if (state) {
-      if (!this._blockerEmbeddedVRef) {
-        const blockerTemplate = this.grid.registry.getSingle('blocker');
-        if (blockerTemplate) {
-          this._blockerEmbeddedVRef = this.grid.createView('afterContent', blockerTemplate.tRef, { $implicit: this.grid });
-          this._blockerEmbeddedVRef.detectChanges();
+    if (this.grid.isInit) {
+      const state = this._blockInProgress;
+      if (state) {
+        if (!this._blockerEmbeddedVRef) {
+          const blockerTemplate = this.grid.registry.getSingle('blocker');
+          if (blockerTemplate) {
+            this._blockerEmbeddedVRef = this.grid.createView('afterContent', blockerTemplate.tRef, { $implicit: this.grid });
+            this._blockerEmbeddedVRef.detectChanges();
+          }
         }
-      }
-    } else if (this._blockerEmbeddedVRef) {
-      this.grid.removeView(this._blockerEmbeddedVRef, 'afterContent');
-      this._blockerEmbeddedVRef = undefined;
+      } else if (this._blockerEmbeddedVRef) {
+        this.grid.removeView(this._blockerEmbeddedVRef, 'afterContent');
+        this._blockerEmbeddedVRef = undefined;
+      } 
     }
   }
 }
