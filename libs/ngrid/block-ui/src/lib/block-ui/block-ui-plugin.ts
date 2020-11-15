@@ -1,12 +1,12 @@
 import { Observable, isObservable } from 'rxjs';
 import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, BooleanInput } from '@angular/cdk/coercion';
 
 import { PblNgridComponent, PblNgridPluginController, utils } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
-    blockUi?: { blockUi: boolean | 'auto' | Observable<boolean> };
+    blockUi?: { blockUi: BooleanInput | 'auto' | Observable<boolean> };
   }
 }
 
@@ -41,8 +41,8 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
    * For example, sending the returned value from `HttpClient` will probably result in 2 HTTP calls, if you already subscribed to it
    * > The default value is `auto` which means that `<pbl-ngrid blockUi>` is similar to `<pbl-ngrid blockUi="auto">`
    */
-  @Input() get blockUi(): boolean | 'auto' | Observable<boolean> { return this._blockUi; }
-  set blockUi(value: boolean | 'auto' | Observable<boolean>) {
+  @Input() get blockUi(): BooleanInput | 'auto' | Observable<boolean> { return this._blockUi; }
+  set blockUi(value: BooleanInput | 'auto' | Observable<boolean>) {
     let coerced: boolean | 'auto' = coerceBooleanProperty(value);
     if (coerced && (value === 'auto' || (value as any) === '')) {
       coerced = 'auto';
