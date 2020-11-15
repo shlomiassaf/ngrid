@@ -6,12 +6,6 @@
       "jest"
     ]
   },
-  "exclude": [
-    "./build/**/*.ts"
-  ],
-  "include": [
-    "**/*.ts"
-  ],
   "references": [
     {
       "path": "./tsconfig.spec.jest.json"

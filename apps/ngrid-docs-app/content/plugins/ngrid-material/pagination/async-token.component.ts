@@ -3,10 +3,10 @@ import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory, PblTokenPaginator } from '@pebula/ngrid';
 
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
-function emulateServerSidePageNumberPaginationCall(datasource: DemoDataSource, page: number, perPage: number) {
+function emulateServerSidePageNumberPaginationCall(datasource: DynamicClientApi, page: number, perPage: number) {
   return rxFrom(datasource.getPeople(500, 5000)).pipe(map( data => {
     const start = (page - 1) * perPage;
     const end = Math.min(data.length, start + perPage);
@@ -17,7 +17,7 @@ function emulateServerSidePageNumberPaginationCall(datasource: DemoDataSource, p
   }));
 }
 
-function emulateServerSideTokenPaginationCall(datasource: DemoDataSource, tokenOrPerPage: string | number) {
+function emulateServerSideTokenPaginationCall(datasource: DynamicClientApi, tokenOrPerPage: string | number) {
   const createToken = (page: number, perPage: number) => btoa(JSON.stringify({ page, perPage }));
 
   if (typeof tokenOrPerPage === 'string') {
@@ -79,5 +79,5 @@ export class AsyncTokenExample {
     .setCustomTriggers('pagination')
     .create();
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DynamicClientApi) { }
 }

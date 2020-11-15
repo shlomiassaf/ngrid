@@ -12,7 +12,7 @@
     "src/app/ssr/**/*.ts",
     "**/*.spec.ts",
     "./build/**/*.ts",
-    "../libs/shared-data/**/*.worker.ts"
+    "../libs/**/*.worker.ts"
   ],
   "include": ["src/**/*.ts"]
 }

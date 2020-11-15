@@ -6,8 +6,7 @@ import { Dir } from '@angular/cdk/bidi';
 import { MatMenu } from '@angular/material/menu';
 import { MatSelect } from '@angular/material/select';
 
-import { MarkdownPagesMenuService, LocationService, ViewLayoutObserver } from '@pebula/apps/shared';
-import { SearchService, SearchResults } from '@pebula/apps/shared-data';
+import { MarkdownPagesMenuService, LocationService, ViewLayoutObserver, SearchService, SearchResults } from '@pebula/apps/docs-app-lib';
 import { PageAssetNavEntry } from '@pebula-internal/webpack-markdown-pages/models';
 
 @Component({

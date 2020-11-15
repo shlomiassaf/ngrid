@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
 
-import { Seller, Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Seller, Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 function buildColumns(mode: 'person' | 'seller') {
   if (mode === 'person') {
@@ -30,7 +30,7 @@ function buildColumns(mode: 'person' | 'seller') {
   }
 }
 
-function createSource(mode: 'person' | 'seller', datasource: DemoDataSource) {
+function createSource(mode: 'person' | 'seller', datasource: DynamicClientApi) {
   if (mode === 'person') {
     return createDS<Person>().onTrigger(() => {
       return datasource.getPeople(1000, 15);
@@ -64,7 +64,7 @@ export class ReuseExample {
 
   viewMode: 'person' | 'seller' = 'person';
 
-  constructor(private datasource: DemoDataSource) {
+  constructor(private datasource: DynamicClientApi) {
     this.toggleViewMode();
   }
 

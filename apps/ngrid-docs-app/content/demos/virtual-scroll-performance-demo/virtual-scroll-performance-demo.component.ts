@@ -3,8 +3,8 @@ import { MatRadioChange } from '@angular/material/radio';
 
 import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
 
-import { Customer, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Customer, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 
 const COUNTRY_GETTER = {
@@ -86,7 +86,7 @@ export class VirtualScrollPerformanceDemoExample {
 
   @ViewChild(PblNgridComponent) pblTable: PblNgridComponent<any>;
 
-  constructor(private datasource: DemoDataSource, private cdr: ChangeDetectorRef) {
+  constructor(private datasource: DynamicClientApi, private cdr: ChangeDetectorRef) {
     datasource.getCountries().then( c => COUNTRY_GETTER.data = c );
   }
 

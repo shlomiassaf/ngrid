@@ -1,6 +1,6 @@
-import { DemoDataSource } from '@pebula/apps/shared-data';
+import { DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
 
-class TestDemoDataSource extends DemoDataSource {
+class TestDynamicClientApi extends DynamicClientApi {
   protected createAdapter() {
     const workerConstructor = Worker;
     (global || window).Worker = undefined;
@@ -8,13 +8,13 @@ class TestDemoDataSource extends DemoDataSource {
     (global || window).Worker = workerConstructor;
   }
 }
-const testDemoDataSource = new TestDemoDataSource();
+const testDynamicClientApi = new TestDynamicClientApi();
 
 export async function getDataSourceProvider() {
-  await testDemoDataSource.ready;
-  return { provide: DemoDataSource, useValue: testDemoDataSource };
+  await testDynamicClientApi.ready;
+  return { provide: DynamicClientApi, useValue: testDynamicClientApi };
 }
 
 export function getDataSource() {
-  return testDemoDataSource;
+  return testDynamicClientApi;
 }

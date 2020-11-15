@@ -4,8 +4,8 @@ import { MatRadioChange } from '@angular/material/radio';
 import { columnFactory, PblNgridComponent } from '@pebula/ngrid';
 import { createInfiniteScrollDS } from '@pebula/ngrid/infinite-scroll';
 
-import { Customer, DemoDataSource, NgridDemoRestApiClient } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Customer, DynamicClientApi, DynamicRestClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 
 const COUNTRY_GETTER = {
@@ -85,7 +85,7 @@ export class InfiniteScrollPerformanceDemoExample {
 
   @ViewChild(PblNgridComponent) pblTable: PblNgridComponent<any>;
 
-  constructor(private datasource: DemoDataSource, private client: NgridDemoRestApiClient, private cdr: ChangeDetectorRef) {
+  constructor(private datasource: DynamicClientApi, private client: DynamicRestClientApi, private cdr: ChangeDetectorRef) {
   }
 
   toggleColumn(coll: string[], id: string): void {

@@ -4,8 +4,8 @@ import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 
-import { BindNgModule } from '@pebula/apps/shared';
-import { ExampleCommonModule } from '@pebula/apps/example-common';
+import { BindNgModule } from '@pebula/apps/docs-app-lib';
+import { ExampleCommonModule } from '@pebula/apps/docs-app-lib/example-common.module';
 import { TargetEventsExample } from './target-events.component';
 import { FocusAndRangeSelectionExample } from './focus-and-range-selection.component';
 import { EnterAndLeaveEventsExample } from './enter-and-leave-events.component';

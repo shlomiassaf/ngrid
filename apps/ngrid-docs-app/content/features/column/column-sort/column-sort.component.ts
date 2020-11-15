@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory, PblNgridSortOrder } from '@pebula/ngrid';
 
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 const COLUMNS = columnFactory()
   .default({minWidth: 100})
@@ -26,7 +26,7 @@ export class ColumnSortExample {
   columns = COLUMNS;
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(500) ).create();
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DynamicClientApi) { }
 
   clear(): void {
     this.ds.setSort();

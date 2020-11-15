@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS } from '@pebula/ngrid';
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 @Component({
   selector: 'pbl-enabling-custom-triggers-example-component',
@@ -38,6 +38,6 @@ export class EnablingCustomTriggersExample {
     })
     .create();
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DynamicClientApi) { }
 
 }

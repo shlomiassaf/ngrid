@@ -1,0 +1,17 @@
+import { NgModule } from '@angular/core';
+import { PblNgridModule } from '@pebula/ngrid';
+
+import { BindNgModule } from '@pebula/apps/docs-app-lib';
+import { ExampleCommonModule } from '@pebula/apps/docs-app-lib/example-common.module';
+import { <%= componentClassName(name) %> } from './<%= componentFile(name) %>';
+
+@NgModule({
+  declarations: [ <%= componentClassName(name) %> ],
+  imports: [
+    ExampleCommonModule,
+    PblNgridModule,
+  ],
+  exports: [ <%= componentClassName(name) %> ],
+})
+@BindNgModule(<%= componentClassName(name) %>)
+export class <%= moduleClassName(name) %> { }

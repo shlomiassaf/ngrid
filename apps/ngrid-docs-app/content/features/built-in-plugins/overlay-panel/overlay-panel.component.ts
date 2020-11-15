@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, ViewChild } from
 import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
 import { PblNgridOverlayPanelFactory } from '@pebula/ngrid/overlay-panel';
 
-import { Seller, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Seller, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 @Component({
   selector: 'pbl-overlay-panel-example',
@@ -29,7 +29,7 @@ export class OverlayPanelExample {
 
   @ViewChild(PblNgridComponent, { static: true }) ngrid: PblNgridComponent;
 
-  constructor(private datasource: DemoDataSource,
+  constructor(private datasource: DynamicClientApi,
               private overlayPanelFactory: PblNgridOverlayPanelFactory) { }
 
   show(): void {

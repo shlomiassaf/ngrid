@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory, PblColumn } from '@pebula/ngrid';
 
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 @Component({
   selector: 'pbl-multi-column-filter-example',
@@ -51,7 +51,7 @@ export class MultiColumnFilterExample {
     }
   }
 
-  constructor(private datasource: DemoDataSource) {
+  constructor(private datasource: DynamicClientApi) {
     this.ds.setFilter(this.myPredicate);
   }
 

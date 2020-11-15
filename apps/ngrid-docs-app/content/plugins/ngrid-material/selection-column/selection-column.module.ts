@@ -7,8 +7,8 @@ import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridStickyModule } from '@pebula/ngrid/sticky';
 import { PblNgridCheckboxModule } from '@pebula/ngrid-material/selection-column';
 
-import { BindNgModule } from '@pebula/apps/shared';
-import { ExampleCommonModule } from '@pebula/apps/example-common';
+import { BindNgModule } from '@pebula/apps/docs-app-lib';
+import { ExampleCommonModule } from '@pebula/apps/docs-app-lib/example-common.module';
 import { SelectionColumnExample } from './selection-column.component';
 import { BulkModeAndVirtualScrollExample } from './bulk-mode-and-virtual-scroll.component';
 import { CheckboxColorExample } from './checkbox-color.component';

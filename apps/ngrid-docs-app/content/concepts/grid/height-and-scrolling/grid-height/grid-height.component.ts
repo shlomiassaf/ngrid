@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
-import { Example } from '@pebula/apps/shared';
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
+import { Example } from '@pebula/apps/docs-app-lib';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
 
 @Component({
   selector: 'pbl-grid-height-grid-example',
@@ -59,7 +59,7 @@ export class GridHeightGridExample implements OnDestroy {
     minDataViewHeight: number;
   }
 
-  constructor(private datasource: DemoDataSource, private cdr: ChangeDetectorRef) {
+  constructor(private datasource: DynamicClientApi, private cdr: ChangeDetectorRef) {
     this.createSettings();
   }
 

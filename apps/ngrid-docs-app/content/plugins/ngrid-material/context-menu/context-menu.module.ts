@@ -5,8 +5,8 @@ import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridOverlayPanelModule } from '@pebula/ngrid/overlay-panel';
 import { PblNgridContextMenuModule } from '@pebula/ngrid-material/context-menu';
 
-import { BindNgModule } from '@pebula/apps/shared';
-import { ExampleCommonModule } from '@pebula/apps/example-common';
+import { BindNgModule } from '@pebula/apps/docs-app-lib';
+import { ExampleCommonModule } from '@pebula/apps/docs-app-lib/example-common.module';
 import { ContextMenuExample } from './context-menu.component';
 import { CustomHeaderExample } from './custom-header.component';
 

@@ -72,20 +72,6 @@
       ]
     },
     {
-      "type": "node",
-      "request": "launch",
-      "name": "node: nx schematics",
-      "program": "${workspaceFolder}/node_modules/.bin/nx",
-      "cwd": "${workspaceFolder}",
-      "args": [
-        "workspace-schematic",
-        "example-module",
-        "features/column/CellEdit",
-        "--add",
-        "MyTestRun"
-      ]
-    },
-    {
       "name": "[Node] Current TS File",
       "type": "node",
       "request": "launch",

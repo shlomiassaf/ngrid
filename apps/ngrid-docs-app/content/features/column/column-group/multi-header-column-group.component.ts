@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
 
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 @Component({
   selector: 'pbl-multi-header-column-group-example',
@@ -38,5 +38,5 @@ export class MultiHeaderColumnGroupExample {
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DynamicClientApi) { }
 }

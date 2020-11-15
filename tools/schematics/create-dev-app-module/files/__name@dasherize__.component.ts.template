@@ -1,0 +1,26 @@
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { createDS, columnFactory } from '@pebula/ngrid';
+import { Seller, DynamicRestClientApi } from '../../dev-app/datasource';
+
+@Component({
+  selector: '<%= selector %>',
+  templateUrl: './<%= componentFile(name) %>.html',
+  styleUrls: ['./<%= componentFile(name) %>.<%= style %>'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class <%= componentClassName(name) %> {
+  columns = columnFactory()
+    .table(
+      { prop: 'id' },
+      { prop: 'name' },
+      { prop: 'email' },
+      { prop: 'address' }
+    )
+    .build();
+
+  ds = createDS<Seller>()
+    .onTrigger( () => this.clientApi.getAllSellers() )
+    .create();
+
+  constructor(private clientApi: DynamicRestClientApi) { }
+}

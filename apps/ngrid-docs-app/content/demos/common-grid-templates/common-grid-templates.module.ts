@@ -8,7 +8,7 @@ import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridDragModule } from '@pebula/ngrid/drag';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 
-import { ExampleCommonModule } from '@pebula/apps/example-common';
+import { ExampleCommonModule } from '@pebula/apps/docs-app-lib/example-common.module';
 import { CommonGridTemplatesComponent } from './common-grid-templates.component';
 
 @NgModule({

@@ -1,0 +1,16 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { PblNgridModule } from '@pebula/ngrid';
+
+import { <%= componentClassName(name) %> } from './<%= componentFile(name) %>';
+
+@NgModule({
+  declarations: [ <%= componentClassName(name) %> ],
+  imports: [
+    CommonModule,
+    PblNgridModule,
+    RouterModule.forChild([{path: '', component: <%= componentClassName(name) %>}]),
+  ]
+})
+export class <%= moduleClassName(name) %> { }

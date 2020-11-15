@@ -2,15 +2,7 @@
 
 These are the steps take should be taken before releasing a new version.
 
-> Valid for **ngrid** family libraries (i.e. not for utils)
-
-- Run Tests
-
-```bash
-npm run test
-
-npm run e2e
-```
+- Run CI (PR, CI run through github actions)
 
 - Bump version & create changelog:
 
@@ -42,12 +34,6 @@ git push origin master --tags
 ```
 
 > Replace [VERSION] with version number
-
-- Push documentation site build to **gh-pages**
-
-```bash
-npm run gh-pages
-```
 
 ## Updating Related Repositories
 

@@ -1,0 +1,32 @@
+<mat-sidenav-container class="demo-container">
+  <mat-sidenav #start role="navigation">
+    <mat-nav-list>
+      <a *ngFor="let navItem of navItems"
+         mat-list-item
+         (click)="start.close()"
+         routerLinkActive
+         #routerLinkActiveInstance="routerLinkActive"
+         [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
+         [routerLink]="['/', navItem.path]">
+        {{navItem.data?.name}}
+      </a>
+    </mat-nav-list>
+    <button mat-button tabindex="-1" (click)="start.close()">CLOSE</button>
+  </mat-sidenav>
+  <main>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="start.open('mouse')">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div class="demo-toolbar">
+        <h1>NGrid Demos</h1>
+        <div>
+        </div>
+      </div>
+    </mat-toolbar>
+
+    <div class="demo-content mat-app-background">
+      <ng-content></ng-content>
+    </div>
+  </main>
+</mat-sidenav-container>

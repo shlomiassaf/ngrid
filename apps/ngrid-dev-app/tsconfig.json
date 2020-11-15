@@ -1,7 +1,5 @@
 {
   "extends": "../../tsconfig.base.json",
-  "files": [],
-  "include": [],
   "references": [
     {
       "path": "./tsconfig.app.json"
@@ -15,9 +13,9 @@
   ],
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    // "strict": true,
+    // "noImplicitReturns": true,
+    // "noFallthroughCasesInSwitch": true
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,

@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { columnFactory } from '@pebula/ngrid';
 import { createInfiniteScrollDS } from '@pebula/ngrid/infinite-scroll';
 
-import { Person, NgridDemoRestApiClient, Response } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicRestClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 /**
  * In this example we use a simulated REST API that returns a pagination object with fixed item count and a page number.
@@ -89,5 +89,5 @@ export class InfiniteScrollDataSourceExample {
     })
     .create();
 
-  constructor(private client: NgridDemoRestApiClient) { }
+  constructor(private client: DynamicRestClientApi) { }
 }
