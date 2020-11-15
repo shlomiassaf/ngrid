@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from
 import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
 import { PblColumnDragDropContainerEnter, PblColumnDragDropContainerExit, PblColumnDragDropContainerDrop } from '@pebula/ngrid/drag';
 
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 @Component({
   selector: 'pbl-drop-container-example',
@@ -25,7 +25,7 @@ export class DropContainerExample {
 
   @ViewChild(PblNgridComponent) grid: PblNgridComponent<Person>;
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DynamicClientApi) { }
 
   columnEntered(event: PblColumnDragDropContainerEnter) {
   }

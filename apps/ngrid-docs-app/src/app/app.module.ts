@@ -22,21 +22,20 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NxModule } from '@nrwl/angular';
 
 import {
-  PblDemoAppSharedModule,
+  PblDocsAppSharedModule,
   MarkdownPageContainerComponent,
-  MarkdownPageViewerComponent,
   EXAMPLE_COMPONENTS,
   EXAMPLE_COMPONENTS_TOKEN,
   CONTENT_CHUNKS_COMPONENTS,
   LocationService,
   LazyModuleStoreService,
   LazyModulePreloader
-} from '@pebula/apps/shared';
+} from '@pebula/apps/docs-app-lib';
 
 import {
   AppContentChunksModule,
   APP_CONTENT_CHUNKS
-} from '@pebula/apps/app-content-chunks';
+} from '@pebula/apps/docs-app-lib/app-content-chunks.module';
 
 import { environment } from '../environments/environment';
 import { DemoHomePageComponent } from './demo-home-page/demo-home-page.component';
@@ -63,7 +62,7 @@ export const REQ_KEY = makeStateKey<string>('req');
     MetaModule.forRoot(),
     CacheModule.forRoot(),
     NxModule.forRoot(),
-    PblDemoAppSharedModule,
+    PblDocsAppSharedModule,
     AppContentChunksModule,
     BidiModule,
     MatIconModule,
@@ -88,11 +87,11 @@ export const REQ_KEY = makeStateKey<string>('req');
         }
       ],
       {
-    useHash: false,
-    initialNavigation: 'enabled',
-    preloadingStrategy: LazyModulePreloader,
-    relativeLinkResolution: 'legacy'
-}
+          useHash: false,
+          initialNavigation: 'enabled',
+          preloadingStrategy: LazyModulePreloader,
+          relativeLinkResolution: 'legacy'
+      },
     ),
     Angulartics2Module.forRoot({
       developerMode: !environment.production,

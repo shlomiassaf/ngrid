@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
 
-import { Customer, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Customer, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 const ACCOUNT_BALANCE_TYPE = { name: 'accountBalance', data: { neg: 'rgba(255, 0, 0, 0.33)', pos: 'rgba(0, 128, 0, 0.33)', format: '1.0-2' } };
 
@@ -32,5 +32,5 @@ export class ColumnHeaderMenuExample {
 
   ds = createDS<Customer>().onTrigger( () => this.datasource.getCustomers(500) ).create();
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DynamicClientApi) { }
 }

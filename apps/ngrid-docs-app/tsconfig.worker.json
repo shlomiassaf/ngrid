@@ -5,5 +5,5 @@
     "lib": ["es2018", "webworker"],
     "types": []
   },
-  "include": ["../libs/shared-data/**/*.worker.ts"]
+  "include": ["../libs/**/*.worker.ts"]
 }

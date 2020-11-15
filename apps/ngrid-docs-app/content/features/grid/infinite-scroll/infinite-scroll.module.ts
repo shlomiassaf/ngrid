@@ -5,8 +5,8 @@ import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PblNgridInfiniteScrollModule } from '@pebula/ngrid/infinite-scroll';
 
-import { BindNgModule } from '@pebula/apps/shared';
-import { ExampleCommonModule } from '@pebula/apps/example-common';
+import { BindNgModule } from '@pebula/apps/docs-app-lib';
+import { ExampleCommonModule } from '@pebula/apps/docs-app-lib/example-common.module';
 import { InfiniteScrollExample } from './infinite-scroll.component';
 import { InfiniteScrollDataSourceExample } from './infinite-scroll-data-source.component';
 import { IndexBasedPagingExample } from './index-based-paging.component';

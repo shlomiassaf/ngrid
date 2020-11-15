@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridDragModule } from '@pebula/ngrid/drag';
 
-import { BindNgModule } from '@pebula/apps/shared';
-import { ExampleCommonModule } from '@pebula/apps/example-common';
+import { BindNgModule } from '@pebula/apps/docs-app-lib';
+import { ExampleCommonModule } from '@pebula/apps/docs-app-lib/example-common.module';
 import { ColumnReorderExample } from './column-reorder.component';
 import { MovingWithTheApiExample } from './moving-with-the-api.component';
 import { LockingColumnsExample } from './locking-columns.component';

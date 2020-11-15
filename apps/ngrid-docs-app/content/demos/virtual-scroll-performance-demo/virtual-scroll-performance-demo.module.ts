@@ -16,8 +16,8 @@ import { PblNgridMatSortModule } from '@pebula/ngrid-material/sort';
 import { PblNgridCellTooltipModule } from '@pebula/ngrid-material/cell-tooltip';
 import { PblNgridCheckboxModule } from '@pebula/ngrid-material/selection-column';
 
-import { BindNgModule } from '@pebula/apps/shared';
-import { ExampleCommonModule } from '@pebula/apps/example-common';
+import { BindNgModule } from '@pebula/apps/docs-app-lib';
+import { ExampleCommonModule } from '@pebula/apps/docs-app-lib/example-common.module';
 import { CommonGridTemplatesModule, CommonGridTemplatesComponent } from '../common-grid-templates';
 import { VirtualScrollPerformanceDemoExample } from './virtual-scroll-performance-demo.component';
 

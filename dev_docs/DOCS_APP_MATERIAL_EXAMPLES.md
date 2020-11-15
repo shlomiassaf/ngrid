@@ -20,14 +20,14 @@ This is why all examples are contained.
 
 ## Adding examples
 
-Examples are added through a local dedicated schematic called **example-module**
+Examples are added through a local dedicated schematic called **create-docs-app-module**
 
 The schematic will create a dedicated module for each example
 and attach a component to it.
 
 > You can create multiple components for the same module.
 
-`./node_modules/.bin/nx workspace-schematic example-module <EXAMPLE NAME>`
+`./node_modules/.bin/nx workspace-schematic create-docs-app-module <EXAMPLE NAME>`
 
 Where `<EXAMPLE NAME>` is the name of the example.
 
@@ -47,7 +47,7 @@ By default, the directory for the module and component will be created
 in the root of `apps/ngrid-docs-app/content` but you can append a path
 
 ```bash
-./node_modules/.bin/nx workspace-schematic example-module my/path/SelectionColumn
+./node_modules/.bin/nx workspace-schematic create-docs-app-module my/path/SelectionColumn
 ```
 
 The command above will create the folders `my/path/selection-column` and inside it will generate the module and component files.
@@ -56,7 +56,7 @@ The command above will create the folders `my/path/selection-column` and inside 
 
 You can use the argument `--add` to create additional components.
 
-`./node_modules/.bin/nx workspace-schematic example-module <EXAMPLE NAME> --add <OTHER_NAME1>,<OTHER_NAME2>`
+`./node_modules/.bin/nx workspace-schematic create-docs-app-module <EXAMPLE NAME> --add <OTHER_NAME1>,<OTHER_NAME2>`
 
 Names are comma separated.
 
@@ -110,7 +110,7 @@ As stated, example components come inside an example module with a module having
 To identify an example, it is prefixed with the `@Example` decorator, allowing custom metadata attached to the example:
 
 ```ts
-import { Example } from '@pebula/apps/shared';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 @Component({ /* ANGULAR METADATA */ })
 @Example('pbl-my-example', { title: 'CMy Example' })
@@ -122,7 +122,7 @@ export class MyExample { }
 In addition, we need to map each component to it's module:
 
 ```ts
-import { BindNgModule } from '@pebula/apps/shared';
+import { BindNgModule } from '@pebula/apps/docs-app-lib';
 
 @NgModule({
   declarations: [ MyExample ],

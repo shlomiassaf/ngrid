@@ -1,8 +1,8 @@
 import { Component, ViewChild,  ChangeDetectionStrategy } from '@angular/core';
 
 import { PblNgridComponent, createDS, columnFactory } from '@pebula/ngrid';
-import { Seller, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Seller, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 // A function that returns the currency value placed in a `SecurityWithMarketDataDto` object.
 // implementation is an IIFE that returns the getValue method bound to an PblColumn instance of the currency column...
@@ -65,7 +65,7 @@ export class SellerDemoExample {
 
   @ViewChild(PblNgridComponent, { static: true }) table: PblNgridComponent<Seller>;
 
-  constructor(private datasource: DemoDataSource) {
+  constructor(private datasource: DynamicClientApi) {
     datasource.getCountries().then( c => COUNTRY_GETTER.data = c );
   }
 

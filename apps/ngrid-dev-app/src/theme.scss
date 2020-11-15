@@ -1,0 +1,26 @@
+@import '~@angular/material/theming';
+@import '../../../libs/ngrid/theming';
+@import '../../../libs/ngrid-material/theming';
+
+$typography-config: mat-typography-config();
+$ngrid-material-starter-primary: mat-palette($mat-indigo);
+$ngrid-material-starter-accent: mat-palette($mat-pink, A200, A100, A400);
+$ngrid-material-starter-warn: mat-palette($mat-red);
+$ngrid-material-starter-theme: mat-light-theme($ngrid-material-starter-primary, $ngrid-material-starter-accent, $ngrid-material-starter-warn);
+$ngrid-material-starter-theme: pbl-light-theme($ngrid-material-starter-theme);
+
+@include mat-core($typography-config);
+@include pbl-ngrid-typography($typography-config);
+@include angular-material-theme($ngrid-material-starter-theme);
+@include pbl-ngrid-theme($ngrid-material-starter-theme);
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.fixed-height-grid-300 {
+  height: 300px;
+}
+
+.fixed-height-grid-500 {
+  height: 500px;
+}

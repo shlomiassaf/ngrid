@@ -3,8 +3,8 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
 
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 @Component({
   selector: 'pbl-action-row-example',
@@ -28,7 +28,7 @@ export class ActionRowExample {
     .onTrigger( () => this.datasource.getPeople(500, 500) )
     .create();
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DynamicClientApi) { }
 }
 
 @Component({

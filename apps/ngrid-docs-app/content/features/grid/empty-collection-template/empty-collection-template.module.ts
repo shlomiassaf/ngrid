@@ -5,8 +5,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 
-import { BindNgModule } from '@pebula/apps/shared';
-import { ExampleCommonModule } from '@pebula/apps/example-common';
+import { BindNgModule } from '@pebula/apps/docs-app-lib';
+import { ExampleCommonModule } from '@pebula/apps/docs-app-lib/example-common.module';
 import { EmptyCollectionTemplateExample } from './empty-collection-template.component';
 import { AsynchronousEmptySetExample } from './asynchronous-empty-set.component';
 import { DynamicSetExample } from './dynamic-set.component';

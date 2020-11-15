@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory } from '@pebula/ngrid';
 
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 @Component({
   selector: 'pbl-predicate-example',
@@ -30,7 +30,7 @@ export class PredicateExample {
   detailRowPredicate: ( (index: number, rowData: Person) => boolean ) | true | undefined;
   private detailRowEvenPredicate = (index: number, rowData: Person) => index % 2 !== 0;
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DynamicClientApi) { }
 
   onDetailRowChange(value: 'on' | 'off' | 'predicate') : void {
     switch(value) {

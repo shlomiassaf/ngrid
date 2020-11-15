@@ -13,8 +13,8 @@ import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridPaginatorModule } from '@pebula/ngrid-material/paginator';
 import { PblNgridMatSortModule } from '@pebula/ngrid-material/sort';
 
-import { BindNgModule } from '@pebula/apps/shared';
-import { ExampleCommonModule } from '@pebula/apps/example-common';
+import { BindNgModule } from '@pebula/apps/docs-app-lib';
+import { ExampleCommonModule } from '@pebula/apps/docs-app-lib/example-common.module';
 import { DetailRowExample } from './detail-row.component';
 import { CustomParentExample } from './custom-parent.component';
 import { SingleAndExcludeModeExample } from './single-and-exclude-mode.component';

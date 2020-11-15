@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { createDS, columnFactory, PblNgridSortOrder } from '@pebula/ngrid';
 
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 const numericFilter = (filterValue: number, colValue: number) => filterValue === colValue
 const numericRangeFilter = (filterValue: { min: number, max: number }, colValue: number) => colValue > filterValue.min && colValue < filterValue.max
@@ -30,7 +30,7 @@ export class ColumnFilterExample {
   columns = COLUMNS;
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(500) ).create();
 
-  constructor(private datasource: DemoDataSource) { }
+  constructor(private datasource: DynamicClientApi) { }
 
   clearFilter(): void {
     this.ds.setFilter();

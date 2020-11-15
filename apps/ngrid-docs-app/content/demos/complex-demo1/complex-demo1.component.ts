@@ -5,8 +5,8 @@ import { PblNgridComponent, createDS, columnFactory, PblNgridPaginatorKind, Auto
 import { toggleDetailRow } from '@pebula/ngrid/detail-row';
 import { setStickyRow, setStickyColumns } from '@pebula/ngrid/sticky';
 
-import { Person, DemoDataSource } from '@pebula/apps/shared-data';
-import { Example } from '@pebula/apps/shared';
+import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
+import { Example } from '@pebula/apps/docs-app-lib';
 
 // A function that returns the currency value placed in a `SecurityWithMarketDataDto` object.
 // implementation is an IIFE that returns the getValue method bound to an PblColumn instance of the currency column...
@@ -130,7 +130,7 @@ export class ComplexDemo1Example {
 
   private detailRowEvenPredicate = (index: number, rowData: Person) => index % 2 !== 0;
 
-  constructor(private datasource: DemoDataSource) {
+  constructor(private datasource: DynamicClientApi) {
     datasource.getCountries().then( c => COUNTRY_GETTER.data = c );
   }
 
