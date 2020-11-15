@@ -289,6 +289,12 @@
               "devServerTarget": "",
               "baseUrl": "http://localhost:4200/"
             },
+            "update": {
+              "headless": true,
+              "env": {
+                "updateSnapshots": true
+              }
+            },
             "production": {
               "devServerTarget": "ngrid-dev-app:serve:production"
             }
