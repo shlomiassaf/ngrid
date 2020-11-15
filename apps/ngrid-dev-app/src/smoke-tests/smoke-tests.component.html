@@ -1,0 +1,7 @@
+<pbl-ngrid class="fixed-height-grid-500"
+           [dataSource]="ds" [columns]="columns"
+           #blockUi="blockUi" blockUi="true">
+
+  <div *pblNgridCellDef="'email'; value as value;"><u><strong>{{value}}</strong></u></div>
+
+</pbl-ngrid>

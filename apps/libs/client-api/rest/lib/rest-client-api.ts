@@ -62,7 +62,7 @@ export abstract class BaseRestClientApi {
   }
 
   protected getDelay() {
-    return 200 + Math.random() * 1000;
+    return 0; //00 + Math.random() * 1000;
   }
 
   protected calcPagination(pagination: PaginationQuery, maxItems: number) {

@@ -1,0 +1,31 @@
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR PBL-NGRID -->
+<div *pblNgridBlockUiDef class="pbl-ngrid-ui-block">
+  <h1>Smoke Test Loading...</h1>
+</div>
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE UI BLOCKER (BUSY) FOR PBL-NGRID -->
+
+<!-- DEFINING DEFAULT NO DATA TEMPLATE -->
+<div *pblNgridNoDataRef class="pbl-ngrid-no-data"><span>No Results</span></div>
+<!-- DEFINING DEFAULT NO DATA TEMPLATE -->
+
+<!-- DEFINING DEFAULT ADMIN MODULE WIDE COLUMNS FOR PBL-NGRID -->
+<div *pblNgridCellTypeDef="'visualBool'; value as value;">{{ value ? '✅' : '🚫' }}</div>
+<div *pblNgridCellTypeDef="'date'; value as value;">{{value | date: 'MMM dd, yyyy'}}</div>
+<div *pblNgridCellTypeDef="'number'; value as value;">{{value | number: '1.0-2'}}</div>
+<!-- Set's the currency based on a predefined currency in ISO format, provided in the `type.data` property of the column -->
+<div *pblNgridCellTypeDef="'currency'; value as value; col as col;">{{value | currency:col.type.data:'symbol':'1.0-2'}}</div>
+<div *pblNgridCellTypeDef="'datetime'; value as value;">{{value | date: 'MMM dd, yyyy  HH:mm'}}</div>
+
+<!-- START RATINGS -->
+<div *pblNgridCellTypeDef="'starRatings'; value as value">
+  {{ value >= 1 ? '★' : '☆' }}
+  {{ value >= 2 ? '★' : '☆' }}
+  {{ value >= 3 ? '★' : '☆' }}
+  {{ value >= 4 ? '★' : '☆' }}
+  {{ value === 5 ? '★' : '☆' }}
+</div>
+
+<div *pblNgridCellTypeDef="'progressBar'; value as value; col as col"
+     [ngStyle]="col.type.data.style(value)" [style.width]="value + '%'">
+  <div>{{ value }}%</div>
+</div>

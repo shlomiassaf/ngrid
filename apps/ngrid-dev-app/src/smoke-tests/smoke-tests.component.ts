@@ -3,18 +3,18 @@ import { createDS, columnFactory } from '@pebula/ngrid';
 import { Seller, StaticRestClientApi } from '@pebula/apps/dev-app-lib/client-api';
 
 @Component({
-  selector: '<%= selector %>',
-  templateUrl: './<%= componentFile(name) %>.html',
-  styleUrls: ['./<%= componentFile(name) %>.<%= style %>'],
+  selector: 'pbl-smoke-example',
+  templateUrl: './smoke-tests.component.html',
+  styleUrls: ['./smoke-tests.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class <%= componentClassName(name) %> {
+export class SmokeTestsExample {
   columns = columnFactory()
     .table(
       { prop: 'id' },
       { prop: 'name' },
       { prop: 'email' },
-      { prop: 'address' }
+      { prop: 'rating', type: 'starRatings' },
     )
     .build();
 

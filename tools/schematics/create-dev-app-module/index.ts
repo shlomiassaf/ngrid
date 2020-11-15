@@ -48,7 +48,7 @@ function addRouteItem(parsedPath: ReturnType<typeof createPath>, title: string):
     const code = `{
     path: '${parsedPath.path.substr(ROOT.length + 1).split('/').join('-')}',
     pathMatch: 'full',
-    loadChildren: () => import('./${parsedPath.path.substr(ROOT.length + 1)}/${stringsExtensions.moduleFile(parsedPath.name)}').then(m => m.${stringsExtensions.moduleClassName(parsedPath.name)})',
+    loadChildren: () => import('./${parsedPath.path.substr(ROOT.length + 1)}/${stringsExtensions.moduleFile(parsedPath.name)}').then(m => m.${stringsExtensions.moduleClassName(parsedPath.name)}),
     data: { name: '${title}' },
   }`;
 
