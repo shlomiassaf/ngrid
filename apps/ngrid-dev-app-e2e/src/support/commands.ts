@@ -1,20 +1,24 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
+import '@pebula/ngrid-cypress';
+import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
 
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+declare global {
+  namespace Cypress {
+    interface ResolvedConfigOptions {
+      isInteractive: boolean;
+    }
+  }
+}
+
+// if (Cypress.config('isInteractive')) {
+//   Cypress.Commands.add('matchImageSnapshot', () => {
+//     cy.log('Skipping snapshot 👀')
+//   })
+// } else {
+//   addMatchImageSnapshotCommand({
+//     customSnapshotsDir: './src/__snapshots__',
+//     failureThreshold: 0.03, // threshold for entire image
+//     failureThresholdType: 'percent', // percent of image or number of pixels
+//     customDiffConfig: { threshold: 0.1 }, // threshold for each pixel
+//     capture: 'viewport', // capture viewport in screenshot
+//   });
+// }

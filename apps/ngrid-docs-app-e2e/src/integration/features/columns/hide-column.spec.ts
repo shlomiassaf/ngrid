@@ -30,7 +30,7 @@ describe('ngrid-docs-app', () => {
       .nGrid()
       .should( ngrid => {
         expect(ngrid.getColumns()).to.deep.eq(['id', 'name', 'gender', 'birthdate', 'bio', 'email', 'country', 'language']);
-        const headerRows = ngrid.getHeaderMetRows();
+        const headerRows = ngrid.getHeaderMgetHeaderMetaRowsetRows();
         expect(headerRows.length).to.eq(1);
         const hr = headerRows[0];
         expect(hr.isGroup).to.eq(true);
@@ -50,7 +50,7 @@ describe('ngrid-docs-app', () => {
         cy.wait(100).should(() => {
           expect(ngrid.getColumns()).to.deep.eq(['id', 'bio', 'email', 'country', 'language']);
 
-          const headerRows1 = ngrid.getHeaderMetRows();
+          const headerRows1 = ngrid.getHeaderMetaRows();
           expect(headerRows1.length).to.eq(1);
           const hr1 = headerRows1[0];
           expect(hr1.isGroup).to.eq(true);

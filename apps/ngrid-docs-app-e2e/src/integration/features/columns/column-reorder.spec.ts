@@ -7,7 +7,7 @@ describe('ngrid-docs-app', () => {
       .nGrid()
       .should( ngrid => {
         expect(ngrid.getColumns()).to.deep.eq(['id', 'name', 'gender', 'email', 'country', 'language', 'birthdate', 'balance']);
-        const headerRows = ngrid.getHeaderMetRows();
+        const headerRows = ngrid.getHeaderMetaRows();
         expect(headerRows.length).to.eq(2);
         const [hr0, hr1] = headerRows;
 
@@ -36,7 +36,7 @@ describe('ngrid-docs-app', () => {
     .wait(500)
     .should( ngrid => {
       expect(ngrid.getColumns()).to.deep.eq(['id', 'name', 'email', 'gender', 'language', 'country', 'birthdate', 'balance']);
-      const headerRows = ngrid.getHeaderMetRows();
+      const headerRows = ngrid.getHeaderMetaRows();
       expect(headerRows.length).to.eq(2);
       const [hr0, hr1] = headerRows;
 

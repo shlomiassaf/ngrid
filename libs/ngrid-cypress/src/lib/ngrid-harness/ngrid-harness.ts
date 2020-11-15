@@ -9,7 +9,7 @@ export class NGridCypressHarness {
     const cdkTable = viewPort.querySelector('pbl-cdk-table');
   }
 
-  getHeaderMetRows() {
+  getHeaderMetaRows() {
     const fixedMetaRows = this.element.querySelector('div[pbl-ngrid-fixed-meta-row-container="header"');
     const fixedHeaderMetaRows = fixedMetaRows.querySelectorAll('pbl-ngrid-meta-row');
 
