@@ -1,6 +1,7 @@
 {
   "name": "pebula",
   "version": "3.0.0-alpha.1",
+  "description": "Angular Grid",
   "license": "MIT",
   "scripts": {
     "ng": "nx",
@@ -160,5 +161,19 @@
   },
   "resolutions": {
     "**/fsevents": "^1.2.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shlomiassaf/ngrid.git"
+  },
+  "keywords": [
+    "angular",
+    "grid",
+    "table"
+  ],
+  "author": "Shlomi Assaf",
+  "homepage": "https://github.com/shlomiassaf/ngrid",
+  "bugs": {
+    "url": "https://github.com/shlomiassaf/ngrid/issues"
   }
 }
