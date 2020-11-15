@@ -285,6 +285,10 @@
             "devServerTarget": "ngrid-dev-app:serve"
           },
           "configurations": {
+            "nodev": {
+              "devServerTarget": "",
+              "baseUrl": "http://localhost:4200/"
+            },
             "production": {
               "devServerTarget": "ngrid-dev-app:serve:production"
             }

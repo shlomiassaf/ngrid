@@ -9,16 +9,15 @@ declare global {
   }
 }
 
-// if (Cypress.config('isInteractive')) {
-//   Cypress.Commands.add('matchImageSnapshot', () => {
-//     cy.log('Skipping snapshot 👀')
-//   })
-// } else {
-//   addMatchImageSnapshotCommand({
-//     customSnapshotsDir: './src/__snapshots__',
-//     failureThreshold: 0.03, // threshold for entire image
-//     failureThresholdType: 'percent', // percent of image or number of pixels
-//     customDiffConfig: { threshold: 0.1 }, // threshold for each pixel
-//     capture: 'viewport', // capture viewport in screenshot
-//   });
-// }
+if (false && Cypress.config('isInteractive')) {
+  Cypress.Commands.add('matchImageSnapshot', () => {
+    cy.log('Skipping snapshot 👀')
+  })
+} else {
+  
+  addMatchImageSnapshotCommand({
+    customSnapshotsDir: './src/__snapshots__',
+    customDiffDir: '../../dist/cypress/apps/ngrid-dev-app-e2e/snapshots_diffs',
+    capture: 'viewport', // capture viewport in screenshot
+  });
+}
