@@ -1,0 +1,58 @@
+
+name: Node CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [v3]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo -e "\033[31;1;4mDump GitHub context\033[0m"
+          echo -e "$GITHUB_CONTEXT\n"
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: v3
+          fetch-depth: 0
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Restore Cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: npm install
+      - name: Create Cache Directory
+        run: mkdir /home/runner/work/ngrid/ngrid/.cache
+      - name: Test (Diff)
+        if: ${{ github.event_name == 'push' }}
+        run: ./node_modules/.bin/nx affected:test --base=${{ github.event.before }} --head=${{ github.event.after }} --configuration=ci
+      - name: Test (ALL)
+        if: ${{ github.event_name != 'push' }}
+        run: ./node_modules/.bin/nx test --configuration=ci
+      - name: E2E (Diff)
+        if: ${{ github.event_name == 'push' }}
+        run: ./node_modules/.bin/nx affected:e2e --base=${{ github.event.before }} --head=${{ github.event.after }}
+      - name: E2E (ALL)
+        if: ${{ github.event_name != 'push' }}
+        run: ./node_modules//.bin/nx e2e
+      - name: E2E Upload Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-artifacts
+          path: dist/cypress/**/*.png
+          retention-days: 30
+      - name: Build Libraries
+        run: npm run build-grid
