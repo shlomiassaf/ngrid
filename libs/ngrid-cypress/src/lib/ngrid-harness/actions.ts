@@ -32,10 +32,17 @@ export class NGridCypressHarnessActions {
     const sourceEl = this.harness.element.querySelector(`.cdk-column-${sourceColumnId}.cdk-drag`);
     const targetEl = this.harness.element.querySelector(`.cdk-column-${targetColumnId}.cdk-drag`);
 
+    if (!sourceEl) {
+      throw new Error(`Invalid column: ${sourceColumnId}`);
+    }
+    if (!targetEl) {
+      throw new Error(`Invalid column: ${targetColumnId}`);
+    }
+
     opts = Cypress._.defaults(opts, { delay: 0, steps: 0, smooth: false });
 
     if (opts.smooth) {
-      opts.steps = Math.max(opts.steps, 10);
+      opts.steps = Math.max(opts.steps || 0, 10);
     }
 
     const defaultView = sourceEl.ownerDocument.defaultView;
