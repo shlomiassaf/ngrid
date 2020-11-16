@@ -1,0 +1,44 @@
+
+name: Cypress Update Snapshots
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: v3
+          fetch-depth: 0
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Restore Cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: npm install
+      - name: Create Cache Directory
+        run: mkdir /home/runner/work/ngrid/ngrid/.cache
+      - name: E2E
+        run: ./node_modules/.bin/nx run-many --configuration=updateSnapshots --target=e2e --all 
+      - name: Create Pull Request
+        if: success()
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: Update E2E Snapshots
+          branch: update-e2e-snapshots
+          delete-branch: true
+          title: 'Update E2E Snapshots'
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
