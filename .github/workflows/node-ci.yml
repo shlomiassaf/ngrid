@@ -40,13 +40,13 @@ jobs:
         run: ./node_modules/.bin/nx affected:test --base=${{ github.event.before }} --head=${{ github.event.after }} --configuration=ci
       - name: Test (ALL)
         if: ${{ github.event_name != 'push' }}
-        run: ./node_modules/.bin/nx test --configuration=ci
+        run: ./node_modules/.bin/nx run-many --target=test --all --configuration=ci
       - name: E2E (Diff)
         if: ${{ github.event_name == 'push' }}
         run: ./node_modules/.bin/nx affected:e2e --base=${{ github.event.before }} --head=${{ github.event.after }}
       - name: E2E (ALL)
         if: ${{ github.event_name != 'push' }}
-        run: ./node_modules/.bin/nx e2e
+        run: ./node_modules/.bin/nx run-many --target=e2e --all
       - name: E2E Upload Artifacts
         if: failure()
         uses: actions/upload-artifact@v2
