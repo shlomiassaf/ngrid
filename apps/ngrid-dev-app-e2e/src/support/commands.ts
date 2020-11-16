@@ -9,12 +9,12 @@ declare global {
   }
 }
 
-if (false && Cypress.config('isInteractive')) {
+if (Cypress.config('isInteractive')) {
   Cypress.Commands.add('matchImageSnapshot', () => {
     cy.log('Skipping snapshot 👀')
   })
 } else {
-  
+
   addMatchImageSnapshotCommand({
     customSnapshotsDir: './src/__snapshots__',
     customDiffDir: '../../dist/cypress/apps/ngrid-dev-app-e2e/snapshots_diffs',

@@ -229,6 +229,10 @@
             "browserTarget": "ngrid-dev-app:build"
           },
           "configurations": {
+            "docker": {
+              "host": "0.0.0.0",
+              "disableHostCheck": true
+            },
             "production": {
               "browserTarget": "ngrid-dev-app:build:production"
             }
@@ -285,9 +289,9 @@
             "devServerTarget": "ngrid-dev-app:serve"
           },
           "configurations": {
-            "nodev": {
+            "docker": {
               "devServerTarget": "",
-              "baseUrl": "http://localhost:4200/"
+              "baseUrl": "http://host.docker.internal:4200"
             },
             "updateSnapshots": {
               "headless": true,

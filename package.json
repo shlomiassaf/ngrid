@@ -11,6 +11,7 @@
     "lint": "./node_modules/.bin/nx workspace-lint && ng lint",
     "e2e": "ng e2e",
     "e2e:watch": "ng e2e --watch",
+    "e2e:docker": "docker run -it -v $PWD:/workspace -w /workspace --entrypoint=./node_modules/.bin/nx cypress/included:4.12.1 e2e ngrid-dev-app-e2e --configuration=docker",
     "stage-release": "./node_modules/.bin/ts-node -P ./tsconfig.node.json tools/tasks/release/stage-release.ts",
     "affected:apps": "./node_modules/.bin/nx affected:apps",
     "affected:build": "./node_modules/.bin/nx affected:build",
