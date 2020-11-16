@@ -32,20 +32,21 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
   private options: MarkdownCodeExamplesWebpackPluginOptions;
   private cache = new Map<string, ParsedExampleMetadata>();
   private firstRun = true;
-  private compiler: webpack.Compiler;
+  private compiler: webpack.Compiler & { watchMode?: boolean };
+  private watchMode?: boolean;
 
   constructor(options: MarkdownCodeExamplesWebpackPluginOptions) {
     this.options = { ...options };
   }
 
-  apply(compiler: webpack.Compiler): void {
+  apply(compiler: webpack.Compiler & { watchMode?: boolean }): void {
     this.compiler = compiler;
     compiler.hooks.pebulaDynamicModuleUpdater.tap(pluginName, notifier => {
       compiler.hooks.run.tapPromise(pluginName, async () => { await this.run(compiler); });
       compiler.hooks.watchRun.tapPromise(pluginName, async () => { await this.run(compiler); });
       compiler.hooks.compilation.tap(pluginName, compilation => { this.emit(compilation, notifier) });
       compiler.hooks.afterCompile.tapPromise(pluginName, async compilation => {
-        for (let obj of Array.from(this.cache.values())) {
+        for (const obj of Array.from(this.cache.values())) {
           for (const fullPath of Array.from(obj.pathAssets.keys())) {
             compilation.fileDependencies.add(fullPath);
           }
@@ -59,7 +60,7 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
   private emit(compilation: webpack.compilation.Compilation, notifier: DynamicModuleUpdater) {
     let changedFiles: Set<string>;
 
-    if (!this.firstRun && this.compiler.options.watch) {
+    if (!this.firstRun && this.watchMode) {
       changedFiles = new Set<string>();
       for (const watchFile of Array.from(compilation.fileTimestamps.keys())) {
         if ( (this.prevTimestamps.get(watchFile) || this.startTime) < (compilation.fileTimestamps.get(watchFile) || Infinity) ) {
@@ -129,7 +130,9 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
     this.firstRun = false;
   }
 
-  private async run(compiler: webpack.Compiler) {
+  private async run(compiler: webpack.Compiler & { watchMode?: boolean }) {
+    // Store watch mode; assume true if not present (webpack < 4.23.0)
+    this.watchMode = compiler.watchMode ?? true;
     const paths = await globby(this.options.docsPath, {
       cwd: this.options.context
     });

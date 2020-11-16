@@ -47,7 +47,9 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
   private options: MarkdownPagesWebpackPluginOptions;
   private cache = new Map<string, ParsedPage>();
   private firstRun = true;
-  private compiler: webpack.Compiler;
+  private compiler: webpack.Compiler & { watchMode?: boolean };
+  private watchMode?: boolean;
+
   private get remarkCompiler() {
     if (!this.__remarkCompiler) {
       this.__remarkCompiler =  unified()
@@ -67,7 +69,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
     this.options = { ...options };
   }
 
-  apply(compiler: webpack.Compiler): void {
+  apply(compiler: webpack.Compiler & { watchMode?: boolean }): void {
     const { docsRoot, context } = this.options;
     this.root = context;
     if (docsRoot) {
@@ -80,12 +82,13 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
     this.outputAssetPathRoot = this.options.outputAssetPathRoot || '';
 
     this.compiler = compiler;
+
     compiler.hooks.pebulaDynamicModuleUpdater.tap(pluginName, notifier => {
       compiler.hooks.run.tapPromise(pluginName, async () => { await this.run(compiler); });
       compiler.hooks.watchRun.tapPromise(pluginName, async () => { await this.run(compiler); });
       compiler.hooks.compilation.tap(pluginName, compilation => { this.emit(compilation, notifier) });
       compiler.hooks.afterCompile.tapPromise(pluginName, async compilation => {
-        for (let obj of Array.from(this.cache.values())) {
+        for (const obj of Array.from(this.cache.values())) {
           compilation.fileDependencies.add(obj.fullPath);
         }
         this.prevTimestamps = compilation.fileTimestamps;
@@ -100,7 +103,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
   private emit(compilation: webpack.compilation.Compilation, notifier: DynamicModuleUpdater) {
     let changedFiles: Set<string>;
 
-    if (!this.firstRun && this.compiler.options.watch) {
+    if (!this.firstRun && this.watchMode) {
       changedFiles = new Set<string>();
       for (const watchFile of Array.from(compilation.fileTimestamps.keys())) {
         if ( (this.prevTimestamps.get(watchFile) || this.startTime) < (compilation.fileTimestamps.get(watchFile) || Infinity) ) {
@@ -228,7 +231,9 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
     this.firstRun = false;
   }
 
-  private async run(compiler: webpack.Compiler) {
+  private async run(compiler: webpack.Compiler & { watchMode?: boolean }) {
+    // Store watch mode; assume true if not present (webpack < 4.23.0)
+    this.watchMode = compiler.watchMode ?? true;
     const paths = await globby(this.options.docsPath, {
       cwd: this.root,
     });
