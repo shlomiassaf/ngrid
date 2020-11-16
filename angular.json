@@ -289,7 +289,7 @@
               "devServerTarget": "",
               "baseUrl": "http://localhost:4200/"
             },
-            "update": {
+            "updateSnapshots": {
               "headless": true,
               "env": {
                 "updateSnapshots": true
