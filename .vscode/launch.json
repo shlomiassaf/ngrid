@@ -7,33 +7,21 @@
       "request": "launch",
       "preLaunchTask": "npm: start",
       "url": "http://localhost:4201/#",
-      "webRoot": "${workspaceFolder}/apps/ngrid-docs-app",
-      "sourceMapPathOverrides": {
-        "webpack:////*": "/*",
-        "webpack:/*": "${webRoot}/*"
-      }
+      "webRoot": "${workspaceFolder}"
     },
     {
       "name": "browser: ng serve",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:4201/#",
-      "webRoot": "${workspaceFolder}/apps/ngrid-docs-app",
-      "sourceMapPathOverrides": {
-        "webpack:///*": "*",
-        "webpack:/*": "${webRoot}/*"
-      },
+      "webRoot": "${workspaceFolder}"
     },
     {
       "name": "browser: ng serve (attach only)",
       "type": "chrome",
       "request": "attach",
       "urlFilter": "http://localhost:4201*",
-      "webRoot": "${workspaceFolder}/apps/ngrid-docs-app",
-      "sourceMapPathOverrides": {
-        "webpack:////*": "/*",
-        "webpack:/*": "${webRoot}/*"
-      },
+      "webRoot": "${workspaceFolder}",
       "port": 9222
     },
     {
