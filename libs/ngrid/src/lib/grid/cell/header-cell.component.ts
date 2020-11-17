@@ -37,6 +37,7 @@ const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRe
  */
 @Component({
   selector: 'pbl-ngrid-header-cell',
+  // tslint:disable-next-line: no-host-metadata-property
   host: {
     class: 'cdk-header-cell pbl-ngrid-header-cell',
     role: 'columnheader',
@@ -57,10 +58,10 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
 
   private resizeObserver: PblColumnSizeObserver;
 
-  constructor(@Optional() @Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi,
+  constructor(@Inject(EXT_API_TOKEN) extApi: PblNgridInternalExtensionApi,
               elementRef: ElementRef,
               private zone: NgZone) {
-    super(elementRef);
+    super(extApi, elementRef);
   }
 
   setColumn(column: PblColumn, gridWidthRow: boolean) {

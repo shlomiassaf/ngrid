@@ -23,6 +23,7 @@ function initDataCellElement(el: HTMLElement, column: PblColumn, prev?: PblColum
 @Component({
   selector: 'pbl-ngrid-cell',
   template: `<ng-container *ngTemplateOutlet="template; context: cellCtx"></ng-container>`,
+  // tslint:disable-next-line: no-host-metadata-property
   host: {
     'class': 'pbl-ngrid-cell',
     'role': 'gridcell',

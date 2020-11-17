@@ -25,7 +25,9 @@ export class WorkerStoreAdapter {
 
   constructor() {
     const worker = this.worker = new Worker('./datastore/datastore.worker', { name: 'dataSourceWorker', type: 'module' });
-    this.ready = eventWaitUntil(worker, 'message', msg => msg === 'ready')
+    worker.onerror = (errorEvent: ErrorEvent) => { console.error(errorEvent.message) };
+    worker.onmessageerror = event => { console.log(event) };
+    this.ready = eventWaitUntil(worker, 'message', event => event.data === 'ready')
       .then( () => this.worker.addEventListener('message', this.messageEventListener ) );
   }
 
@@ -105,7 +107,7 @@ export class WindowStoreAdapter {
 /**
  * Wait until an event matches given conditions
  */
-export function eventWaitUntil(target: any, event: string, comparer: any): Promise<Event> {
+export function eventWaitUntil(target: any, event: string, comparer: (event: MessageEvent) => boolean): Promise<Event> {
   return new Promise((resolve) => {
     target.addEventListener(event, function handler(evt) {
       if (comparer(evt)) {

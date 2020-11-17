@@ -92,37 +92,32 @@ export class ContextApi<T = any> {
    * Focus the provided cell.
    * If a cell is not provided will un-focus (blur) the currently focused cell (if there is one).
    * @param cellRef A Reference to the cell
-   * @param markForCheck Mark the row for change detection
    */
-  focusCell(cellRef?: CellReference | boolean, markForCheck?: boolean): void {
-    if (!cellRef || cellRef === true) {
+  focusCell(cellRef?: CellReference): void {
+    if (!cellRef) {
       if (this.activeFocused) {
         const { rowIdent, colIndex } = this.activeFocused;
         this.activeFocused = undefined;
         this.updateState(rowIdent, colIndex, { focused: false });
         this.emitFocusChanged(this.activeFocused);
-        if (markForCheck) {
-          const rowContext = this.findRowInView(rowIdent);
-          if (rowContext) {
-            this.extApi.grid.rowsApi.syncRows('data', rowContext.index);
-          }
+        const rowContext = this.findRowInView(rowIdent);
+        if (rowContext) {
+          this.extApi.grid.rowsApi.syncRows('data', rowContext.index);
         }
       }
     } else {
       const ref = resolveCellReference(cellRef, this as any);
       if (ref) {
-        this.focusCell(markForCheck);
+        this.focusCell();
         if (ref instanceof PblCellContext) {
           if (!ref.focused && !this.extApi.grid.viewport.isScrolling) {
             this.updateState(ref.rowContext.identity, ref.index, { focused: true });
 
             this.activeFocused = { rowIdent: ref.rowContext.identity, colIndex: ref.index };
 
-            this.selectCells( [ this.activeFocused ], markForCheck, true);
+            this.selectCells( [ this.activeFocused ], true);
 
-            if (markForCheck) {
-              this.extApi.grid.rowsApi.syncRows('data', ref.rowContext.index);
-            }
+            this.extApi.grid.rowsApi.syncRows('data', ref.rowContext.index);
           }
         } else {
           this.updateState(ref[0].identity, ref[1], { focused: true });
@@ -136,11 +131,10 @@ export class ContextApi<T = any> {
   /**
    * Select all provided cells.
    * @param cellRef A Reference to the cell
-   * @param markForCheck Mark the row for change detection
    * @param clearCurrent Clear the current selection before applying the new selection.
    * Default to false (add to current).
    */
-  selectCells(cellRefs: CellReference[], markForCheck?: boolean, clearCurrent?: boolean): void {
+  selectCells(cellRefs: CellReference[], clearCurrent?: boolean): void {
     const toMarkRendered = new Set<number>();
 
     if (clearCurrent) {
@@ -161,9 +155,7 @@ export class ContextApi<T = any> {
           this.activeSelected.push(dataPoint);
           added.push(dataPoint);
 
-          if (markForCheck) {
-            toMarkRendered.add(ref.rowContext.index);
-          }
+          toMarkRendered.add(ref.rowContext.index);
         }
       } else if (ref) {
         const [ rowState, colIndex ] = ref;
@@ -185,9 +177,8 @@ export class ContextApi<T = any> {
    * Unselect all provided cells.
    * If cells are not provided will un-select all currently selected cells.
    * @param cellRef A Reference to the cell
-   * @param markForCheck Mark the row for change detection
    */
-  unselectCells(cellRefs?: CellReference[] | boolean, markForCheck?: boolean): void {
+  unselectCells(cellRefs?: CellReference[]): void {
     const toMarkRendered = new Set<number>();
     let toUnselect: CellReference[] = this.activeSelected;
     let removeAll = true;
@@ -196,7 +187,6 @@ export class ContextApi<T = any> {
       toUnselect = cellRefs;
       removeAll = false;
     } else {
-      markForCheck = !!cellRefs;
       this.activeSelected = [];
     }
 
@@ -215,9 +205,7 @@ export class ContextApi<T = any> {
               removed.push({ rowIdent, colIndex })
             }
           }
-          if (markForCheck) {
-            toMarkRendered.add(ref.rowContext.index);
-          }
+          toMarkRendered.add(ref.rowContext.index);
         }
       } else if (ref) {
         const [ rowState, colIndex ] = ref;

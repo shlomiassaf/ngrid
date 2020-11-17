@@ -1,14 +1,10 @@
 import { filter } from 'rxjs/operators';
 import {
-  Optional,
   Component,
-  ElementRef,
-  Inject,
   ChangeDetectionStrategy,
   ViewEncapsulation,
 } from '@angular/core';
 
-import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { unrx } from '../utils';
 import { PblNgridComponent } from '../ngrid.component';
 import { PblColumn } from '../column/model';
@@ -33,10 +29,6 @@ export class PblNgridFooterCellComponent extends PblNgridBaseCell {
   cellCtx: MetaCellContext<any, PblColumn>;
   get columnDef(): PblNgridColumnDef { return this.column?.columnDef; }
   get grid(): PblNgridComponent { return this.extApi.grid; }
-
-  constructor(@Optional() @Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi, elementRef: ElementRef) {
-    super(elementRef);
-  }
 
   setColumn(column: PblColumn) {
     const prev = this.column;

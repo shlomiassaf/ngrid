@@ -29,7 +29,7 @@ export class FocusAndSelectionExample {
 
   applyRange(gridInstance: PblNgridComponent<Seller>, size: number): void {
     if (!size) {
-      gridInstance.contextApi.unselectCells(true);
+      gridInstance.contextApi.unselectCells();
     } else {
       const focused = gridInstance.contextApi.focusedCell;
       if (focused) {
@@ -45,7 +45,7 @@ export class FocusAndSelectionExample {
             }
           }
         }
-        gridInstance.contextApi.selectCells(toFocus, true, true);
+        gridInstance.contextApi.selectCells(toFocus, true);
       }
     }
   }

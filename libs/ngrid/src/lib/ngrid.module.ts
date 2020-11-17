@@ -51,7 +51,7 @@ import { PblNgridPaginatorRefDirective } from './grid/registry/directives/pagina
 import { PblNgridHideColumns } from './grid/features/hide-columns.directive';
 import { PblColumnSizeObserver } from './grid/features/column-size-observer/column-size-observer.directive';
 import { PblCdkVirtualScrollViewportComponent } from './grid/features/virtual-scroll/virtual-scroll-viewport.component';
-import { PblCdkVirtualScrollDirective } from './grid/features/virtual-scroll/strategies';
+import { PblCdkVirtualScrollDirective } from './grid/features/virtual-scroll/strategies/v-scroll.directive';
 import { PblNgridScrolling } from './grid/features/virtual-scroll/scrolling-plugin.directive';
 import { PblNgridComponent } from './grid/ngrid.component';
 import { PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService } from './grid/services/config';

@@ -3,7 +3,7 @@ import { PblNgridPluginController } from '../../../ext/plugin-control';
 import { PblNgridComponent } from '../../ngrid.component';
 
 @Directive({
-  selector: 'pbl-ngrid[scrolling]'
+  selector: 'pbl-ngrid[scrolling]' // tslint:disable-line: directive-selector
 })
 export class PblNgridScrolling<T = any> {
 

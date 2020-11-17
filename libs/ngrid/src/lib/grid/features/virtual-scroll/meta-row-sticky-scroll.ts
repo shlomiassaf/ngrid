@@ -1,5 +1,4 @@
 
-import { ViewContainerRef } from '@angular/core';
 import { PblCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import { updateStickyRows } from './utils';
 

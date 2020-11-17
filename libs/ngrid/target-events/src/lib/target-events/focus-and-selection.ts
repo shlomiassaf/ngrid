@@ -42,7 +42,7 @@ function createHandlers(targetEvents: PblNgridTargetEventsPlugin) {
   const { contextApi } = targetEvents.grid;
 
   function focusCell(rowIdent: any, colIndex: number, markForCheck?: boolean): void {
-    contextApi.focusCell({ rowIdent, colIndex }, markForCheck);
+    contextApi.focusCell({ rowIdent, colIndex });
   }
 
   function handleMouseDown(event: PblNgridDataCellEvent<any, MouseEvent>): void {
@@ -188,7 +188,7 @@ function createHandlers(targetEvents: PblNgridTargetEventsPlugin) {
     }
 
     const innerCells = getInnerCellsInRect(contextApi, hCells, vCells);
-    contextApi.selectCells([ sourceCellRef, ...hCells, ...vCells, ...innerCells ], false, true);
+    contextApi.selectCells([ sourceCellRef, ...hCells, ...vCells, ...innerCells ], true);
   }
 
   function handleSelectionChangeByMouseClickAndMove(event: PblNgridDataCellEvent<any, MouseEvent>) {
@@ -214,7 +214,7 @@ function createHandlers(targetEvents: PblNgridTargetEventsPlugin) {
       vCells.push({ rowIdent: state.identity, colIndex: activeFocus.colIndex });
     }
     const innerCells = getInnerCellsInRect(contextApi, hCells, vCells);
-    contextApi.selectCells([ activeFocus, ...hCells, ...vCells, ...innerCells ], false, true);
+    contextApi.selectCells([ activeFocus, ...hCells, ...vCells, ...innerCells ], true);
   }
 
   /**
@@ -227,7 +227,7 @@ function createHandlers(targetEvents: PblNgridTargetEventsPlugin) {
   function handleSingleItemFocus(sourceCellRef: GridDataPoint, direction: [0, 1 | -1] | [1 | -1, 0]) {
     const rowState = contextApi.findRowInCache(sourceCellRef.rowIdent, direction[1], true);
     if (rowState) {
-      contextApi.focusCell({ rowIdent: rowState.identity, colIndex: sourceCellRef.colIndex + direction[0] }, true);
+      contextApi.focusCell({ rowIdent: rowState.identity, colIndex: sourceCellRef.colIndex + direction[0] });
     }
   }
 

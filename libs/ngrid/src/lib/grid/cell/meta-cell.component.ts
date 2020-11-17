@@ -1,8 +1,6 @@
 import { filter } from 'rxjs/operators';
 import {
-  Optional,
   Component,
-  ElementRef,
   ChangeDetectionStrategy,
   ViewEncapsulation,
   ViewContainerRef,
@@ -10,7 +8,6 @@ import {
   Inject,
 } from '@angular/core';
 
-import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { unrx } from '../utils';
 import { PblNgridComponent } from '../ngrid.component';
 import { PblMetaColumn, PblColumnGroup, isPblColumnGroup } from '../column/model';
@@ -32,6 +29,7 @@ const HEADER_GROUP_PLACE_HOLDER_CSS = `pbl-header-group-cell-placeholder`;
  */
 @Component({
   selector: 'pbl-ngrid-meta-cell',
+  // tslint:disable-next-line: no-host-metadata-property
   host: {
     role: 'cell',
   },
@@ -48,11 +46,6 @@ export class PblNgridMetaCellComponent<T extends PblMetaColumn | PblColumnGroup 
 
   get columnDef(): PblNgridColumnDef<PblMetaColumn> { return this.column.columnDef; }
   get grid(): PblNgridComponent { return this.extApi.grid; }
-
-  constructor(@Optional() @Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi,
-              elementRef: ElementRef) {
-    super(elementRef);
-  }
 
   setColumn(column: T, isFooter: boolean) {
     const prev = this.column;

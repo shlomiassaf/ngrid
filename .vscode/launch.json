@@ -20,7 +20,7 @@
       "url": "http://localhost:4201/#",
       "webRoot": "${workspaceFolder}/apps/ngrid-docs-app",
       "sourceMapPathOverrides": {
-        "webpack:////*": "/*",
+        "webpack:///*": "*",
         "webpack:/*": "${webRoot}/*"
       },
     },
