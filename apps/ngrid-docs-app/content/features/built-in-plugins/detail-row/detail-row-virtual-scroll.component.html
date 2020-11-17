@@ -1,0 +1,8 @@
+<pbl-ngrid [dataSource]="ds" [columns]="columns" detailRow>
+  <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
+    <div>
+      <h1>Detail Row</h1>
+      <pre>{{row | json}}</pre>
+    </div>
+  </div>
+</pbl-ngrid>

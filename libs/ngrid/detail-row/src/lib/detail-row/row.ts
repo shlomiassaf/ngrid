@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
   ViewContainerRef,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CdkRow } from '@angular/cdk/table';
@@ -56,20 +57,20 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
 
   @Input('detailRow') set row(value: any) { this.updateRow(); }
 
-  private get _element(): HTMLElement { return this.el.nativeElement; }
   private opened = false;
   private plugin: PblNgridDetailRowPluginDirective<any>;
   private prevIdentity: any;
 
   constructor(@Optional() grid: PblNgridComponent,
+              cdRef: ChangeDetectorRef,
               el: ElementRef<HTMLElement>,
               private vcRef: ViewContainerRef) {
-    super(grid, el);
+    super(grid, cdRef, el);
   }
 
   ngOnDestroy(): void {
     utils.unrx.kill(this);
-    this.plugin.removeDetailRow(this);
+    this.plugin?.removeDetailRow(this);
     super.ngOnDestroy();
   }
 
@@ -108,14 +109,14 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     if (this.opened !== forceState) {
       if ( this.opened ) {
         this.vcRef.clear();
-        this._element.classList.remove('pbl-row-detail-opened');
+        this.element.classList.remove('pbl-row-detail-opened');
       } else {
         this.render();
       }
       this.opened = this.vcRef.length > 0;
 
       if (this.opened) {
-        this._element.classList.add('pbl-row-detail-opened');
+        this.element.classList.add('pbl-row-detail-opened');
       }
 
       this.context.setExternal('detailRow', this.opened, true);
@@ -127,7 +128,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
    * @internal
    */
   handleKeydown(event: KeyboardEvent): void {
-    if ( event.target === this._element ) {
+    if ( event.target === this.element ) {
       const keyCode = event.keyCode;
       const isToggleKey = keyCode === ENTER || keyCode === SPACE;
       if ( isToggleKey ) {

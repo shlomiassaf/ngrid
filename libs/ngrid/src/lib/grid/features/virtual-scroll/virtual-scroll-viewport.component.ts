@@ -30,12 +30,15 @@ import {
 } from '@angular/cdk/scrolling';
 
 import { unrx } from '../../utils';
-import { PblNgridPluginController } from '../../../ext/plugin-control';
 import { PblNgridConfigService } from '../../services/config';
 import { PblNgridComponent } from '../../ngrid.component';
-import { PblCdkVirtualScrollDirective, NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy } from './strategies';
-import { NgeVirtualTableRowInfo } from './virtual-scroll-for-of';
+import { PblCdkVirtualScrollDirective } from './strategies/v-scroll.directive'
+import { TableAutoSizeVirtualScrollStrategy } from './strategies/auto-size'
+import { NoVirtualScrollStrategy } from './strategies/noop'
+import { NgeVirtualTableRowInfo, PblVirtualScrollForOf } from './virtual-scroll-for-of';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
+import { createScrollWatcherFn } from './virtual-scroll-watcher';
+import { ListRange } from '@angular/cdk/collections';
 
 declare module '../../services/config' {
   interface PblNgridConfig {
@@ -182,25 +185,27 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   private _isScrolling = false;
 
   private wheelModeDefault:  PblCdkVirtualScrollDirective['wheelMode'];
+  private grid: PblNgridComponent<any>;
+  private forOf?: PblVirtualScrollForOf<any>;
 
-  constructor(elementRef: ElementRef<HTMLElement>,
+  constructor(elRef: ElementRef<HTMLElement>,
               private cdr: ChangeDetectorRef,
               ngZone: NgZone,
               config: PblNgridConfigService,
               @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) public pblScrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher,
-              @Optional() viewportRuler: ViewportRuler,
-              @Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi,
-              private grid: PblNgridComponent<any>) {
-    super(elementRef,
+              viewportRuler: ViewportRuler,
+              @Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi) {
+    super(elRef,
           cdr,
           ngZone,
           pblScrollStrategy = resolveScrollStrategy(config, pblScrollStrategy),
           dir,
           scrollDispatcher,
           viewportRuler);
-    this.element = elementRef.nativeElement;
+    this.element = elRef.nativeElement;
+    this.grid = extApi.grid;
 
     if (config.has('virtualScroll')) {
       this.wheelModeDefault = config.get('virtualScroll').wheelMode;
@@ -215,7 +220,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     extApi.setViewport(this);
     this.offsetChange = this.offsetChange$.asObservable();
 
-    this._minWidth$ = grid.columnApi.totalColumnWidthChange;
+    this._minWidth$ = this.grid.columnApi.totalColumnWidthChange;
   }
 
   ngOnInit(): void {
@@ -224,7 +229,9 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     } else {
       CdkScrollable.prototype.ngOnInit.call(this);
     }
-    this.ngZone.runOutsideAngular( () => this.initScrollWatcher() );
+
+    // Init the scrolling watcher which track scroll events an emits `scrolling` and `scrollFrameRate` events.
+    this.ngZone.runOutsideAngular( () => this.elementScrolled().subscribe(createScrollWatcherFn(this)) );
   }
 
   ngAfterViewInit(): void {
@@ -235,7 +242,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     // Additionally, the host itself (viewport) is set to contain: strict.
     const { grid } = this;
     if (this.enabled) {
-      this.extApi.cdkTable.attachViewPort();
+      this.forOf = new PblVirtualScrollForOf<any>(this.extApi, this.ngZone);
     }
 
     this.scrolling
@@ -252,6 +259,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
+    this.detachViewPort();
     this.offsetChange$.complete();
     unrx.kill(this);
   }
@@ -290,6 +298,13 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
       }
     }
     return this.ngeRenderedContentSize = size;
+  }
+
+  detachViewPort(): void {
+    if (this.forOf) {
+      this.forOf.destroy();
+      this.forOf = undefined;
+    }
   }
 
   /**
@@ -353,6 +368,10 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     }
   }
 
+  setRenderedRange(range: ListRange) {
+    super.setRenderedRange(range);
+  }
+
   setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
     super.setRenderedContentOffset(offset, to);
     if (this.enabled) {
@@ -382,64 +401,6 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
       case 'vertical':
         return this.outerWidth - this.innerWidth;
     }
-  }
-  /**
-   * Init the scrolling watcher which track scroll events an emits `scrolling` and `scrollFrameRate` events.
-   */
-  private initScrollWatcher(): void {
-    let scrolling = 0;
-    let lastOffset = this.measureScrollOffset();
-    this.elementScrolled()
-      .subscribe(() => {
-        /*  `scrolling` is a boolean flag that turns on with the first `scroll` events and ends after 2 browser animation frames have passed without a `scroll` event.
-            This is an attempt to detect a scroll end event, which does not exist.
-
-            `scrollFrameRate` is a number that represent a rough estimation of the frame rate by measuring the time passed between each request animation frame
-            while the `scrolling` state is true. The frame rate value is the average frame rate from all measurements since the scrolling began.
-            To estimate the frame rate, a significant number of measurements is required so value is emitted every 500 ms.
-            This means that a single scroll or short scroll bursts will not result in a `scrollFrameRate` emissions.
-
-        */
-        if (scrolling === 0) {
-          /*  The measure array holds values required for frame rate measurements.
-              [0] Storage for last timestamp taken
-              [1] The sum of all measurements taken (a measurement is the time between 2 snapshots)
-              [2] The count of all measurements
-              [3] The sum of all measurements taken WITHIN the current buffer window. This buffer is flushed into [1] every X ms (see buggerWindow const).
-          */
-          const bufferWindow = 499;
-          const measure = [ performance.now(), 0, 0, 0 ];
-          const offset = this.measureScrollOffset();
-          if (lastOffset === offset) { return; }
-          const delta = lastOffset < offset ? 1 : -1;
-
-          this.scrolling.next(delta);
-
-          const raf = () => {
-            const time = -measure[0] + (measure[0] = performance.now());
-            if (time > 5) {
-              measure[1] += time;
-              measure[2] += 1;
-            }
-            if (scrolling === -1) {
-              scrolling = 0;
-              lastOffset = this.measureScrollOffset();
-              this.scrolling.next(0);
-            }
-            else {
-              if (measure[1] > bufferWindow) {
-                measure[3] += measure[1];
-                measure[1] = 0;
-                this.scrollFrameRate.emit(1000 / (measure[3]/measure[2]));
-              }
-              scrolling = scrolling === 1 ? -1 : 1;
-              requestAnimationFrame(raf);
-            }
-          };
-          requestAnimationFrame(raf);
-        }
-        scrolling++;
-      });
   }
 }
 

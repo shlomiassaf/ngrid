@@ -1,12 +1,11 @@
 import { Observable, Subject, fromEvent, race, timer } from 'rxjs';
-import { filter, startWith, pairwise, take, tap, takeUntil, map, debounceTime } from 'rxjs/operators';
+import { filter, startWith, pairwise, take, takeUntil, map, debounceTime } from 'rxjs/operators';
 
 import { NgZone, ViewContainerRef } from '@angular/core';
 import { CollectionViewer, ListRange } from '@angular/cdk/collections';
 
 import { PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
 import { PblNgridComponent } from '../../ngrid.component';
-import { PblNgridPluginController } from '../../../ext/plugin-control';
 import { PblDataSource } from '../../../data-source/data-source';
 import { PblCdkTableComponent } from '../../pbl-cdk-table/pbl-cdk-table.component';
 import { PblCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
@@ -65,7 +64,7 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
 
     this.viewChange = this.cdkTable.viewChange;
 
-    PblNgridPluginController.find(extApi.grid).events
+    extApi.events
       .pipe( takeUntil(this.destroyed) )
       .subscribe( event => {
         if (event.kind === 'onDataSource') {

@@ -19,11 +19,13 @@ import { unrx } from '../utils/unrx';
 import { moveItemInArrayExt } from '../column/management/column-store';
 import { GridRowType, PblRowTypeToCellTypeMap } from './types';
 import { PblRowTypeToColumnTypeMap } from '../column/management';
+import { AfterViewInit, ChangeDetectorRef } from '@angular/core';
 
 export const PBL_NGRID_BASE_ROW_TEMPLATE  = `<ng-container #viewRef></ng-container>`;
 
+// tslint:disable-next-line: no-conflicting-lifecycle
 @Directive()
-export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T = any> implements OnChanges, DoCheck, OnDestroy {
+export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T = any> implements OnChanges, DoCheck, AfterViewInit, OnDestroy {
 
   /**
    * Optional grid instance, required only if the row is declared outside the scope of the grid.
@@ -32,14 +34,19 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
 
   @ViewChild('viewRef', { read: ViewContainerRef }) _viewRef: ViewContainerRef;
 
+  readonly element: HTMLElement;
+
   get cellsLength() { return this._cells.length; }
 
   abstract readonly rowType: TRowType;
 
+  abstract get rowIndex(): number;
+
   protected _extApi: PblNgridInternalExtensionApi<T>;
   protected _cells: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>[] = [];
 
-  constructor(@Optional() grid: PblNgridComponent<T>, public readonly el: ElementRef<HTMLElement>) {
+  constructor(@Optional() grid: PblNgridComponent<T>, protected readonly cdRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>) {
+    this.element = elementRef.nativeElement;
     if (grid) {
       this.grid = grid;
     }
@@ -138,6 +145,6 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
   private _init() {
     this.init()
     this._extApi.rowsApi.addRow(this)
-    this.el.nativeElement.setAttribute('data-rowtype', this.rowType);
+    this.element.setAttribute('data-rowtype', this.rowType);
   }
 }

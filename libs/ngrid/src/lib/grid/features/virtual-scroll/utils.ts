@@ -102,5 +102,5 @@ function getSize(orientation: 'horizontal' | 'vertical', node: Node): number {
     return 0;
   }
   const rect = el.getBoundingClientRect();
-  return orientation == 'horizontal' ? rect.width : rect.height;
+  return orientation === 'horizontal' ? rect.width : rect.height;
 }

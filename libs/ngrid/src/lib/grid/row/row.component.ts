@@ -37,6 +37,8 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
 
   readonly rowType = 'data' as const;
 
+  get rowIndex(): number { return this.context.index; }
+
   @Input() set row(value: T) { value && this.updateRow(); }
 
   rowRenderIndex: number;
@@ -52,8 +54,8 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
       }
       this.context = this._extApi.contextApi.rowContext(this.rowRenderIndex);
 
-      this.el.nativeElement.setAttribute('row-id', this.context.dataIndex as any);
-      this.el.nativeElement.setAttribute('row-key', this.context.identity);
+      this.element.setAttribute('row-id', this.context.dataIndex as any);
+      this.element.setAttribute('row-key', this.context.identity);
 
       if (this.grid?.rowClassUpdate && this.grid.rowClassUpdateFreq === 'item') {
         this.updateHostClass();
@@ -66,11 +68,20 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
     const len = vcRef.length - 1;
     for (let i = len; i > -1; i--) {
       const viewRef = vcRef.get(i) as EmbeddedViewRef<RowContext<T>>;
-      if (viewRef.rootNodes[0] === this.el.nativeElement) {
+      if (viewRef.rootNodes[0] === this.element) {
         this.rowRenderIndex = i;
         break;
       }
     }
+  }
+
+  getCell(index: number): PblNgridCellComponent | undefined {
+    return this._cells[index]?.instance;
+  }
+
+  getCellById(id: string): PblNgridCellComponent | undefined {
+    const cellViewIndex = this._extApi.columnApi.renderIndexOf(id);
+    return this._cells[cellViewIndex]?.instance;
   }
 
   protected init() {
@@ -92,7 +103,7 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
 
   protected updateHostClass(): void {
     if (this.context) {
-      const el = this.el.nativeElement;
+      const el = this.element;
 
       // if there is an updater, work with it
       // otherwise, clear previous classes that got applied (assumed a live binding change of the updater function)

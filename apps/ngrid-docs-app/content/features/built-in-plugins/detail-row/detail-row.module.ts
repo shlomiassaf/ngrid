@@ -20,16 +20,17 @@ import { CustomParentExample } from './custom-parent.component';
 import { SingleAndExcludeModeExample } from './single-and-exclude-mode.component';
 import { PredicateExample } from './predicate.component';
 import { MultiPageExample } from './multi-page.component';
+import { DetailRowVirtualScrollExample } from './detail-row-virtual-scroll.component';
 
 @NgModule({
-  declarations: [ DetailRowExample, CustomParentExample, SingleAndExcludeModeExample, PredicateExample, MultiPageExample ],
+  declarations: [ DetailRowExample, CustomParentExample, SingleAndExcludeModeExample, PredicateExample, MultiPageExample, DetailRowVirtualScrollExample ],
   imports: [
     CommonModule,
     MatRippleModule, MatCheckboxModule, MatRadioModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule,
     ExampleCommonModule,
     PblNgridModule, PblNgridDetailRowModule, PblNgridBlockUiModule, PblNgridPaginatorModule, PblNgridMatSortModule,
   ],
-  exports: [ DetailRowExample, CustomParentExample, SingleAndExcludeModeExample, PredicateExample, MultiPageExample ],
+  exports: [ DetailRowExample, CustomParentExample, SingleAndExcludeModeExample, PredicateExample, MultiPageExample, DetailRowVirtualScrollExample ],
 })
-@BindNgModule(DetailRowExample, CustomParentExample, SingleAndExcludeModeExample, PredicateExample, MultiPageExample)
+@BindNgModule(DetailRowExample, CustomParentExample, SingleAndExcludeModeExample, PredicateExample, MultiPageExample, DetailRowVirtualScrollExample)
 export class DetailRowExampleModule { }

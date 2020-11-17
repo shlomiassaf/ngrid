@@ -7,7 +7,7 @@
     "src/__test-runners/*.ts",
     "**/*.spec.ts",
     "./build/**/*.ts",
-    "../libs/**/*.worker.ts"
+    "../libs/docs-app-lib/**/*.worker.ts"
   ],
   "angularCompilerOptions": {
     "entryModule": "./src/app/app.server.module#AppServerModule"

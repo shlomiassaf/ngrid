@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, ComponentRef, Attribute } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, ComponentRef, Attribute, ChangeDetectorRef } from '@angular/core';
 import { CdkHeaderRow } from '@angular/cdk/table';
 
 import { unrx } from '../utils/unrx';
@@ -31,6 +31,8 @@ export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header
 
   @Input() set row(value: PblMetaRowDefinitions) { this.updateRow(value); }
 
+  get rowIndex(): number { return 0; }
+
   get meta(): PblMetaRowDefinitions { return this._meta; }
   set meta(value: PblMetaRowDefinitions) { this._meta = value; } // TODO: remove when removing pblMetaRow
 
@@ -41,11 +43,12 @@ export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header
   private _meta: PblMetaRowDefinitions;
 
   constructor(@Optional() grid: PblNgridComponent,
-               el: ElementRef<HTMLElement>,
+              cdRef: ChangeDetectorRef,
+              el: ElementRef<HTMLElement>,
               private readonly metaRows: PblNgridMetaRowService,
               @Attribute('footer') isFooter: any,
               @Attribute('gridWidthRow') gridWidthRow: any) {
-    super(grid, el);
+    super(grid, cdRef, el);
     this.element = el.nativeElement;
     this.gridWidthRow = gridWidthRow !== null;
     this.isFooter = isFooter !== null;

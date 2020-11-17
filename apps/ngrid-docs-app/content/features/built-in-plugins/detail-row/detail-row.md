@@ -102,3 +102,5 @@ In such scenario, the `render` behavior will not help, we need to use the `ignor
 The `toggledRowContextChange` emits whenever the row context has changed while the row is toggled open.
 
 I> `toggledRowContextChange` emits the save event handler emitted by `toggleChange`
+
+<div pbl-example-view="pbl-detail-row-virtual-scroll-example"></div>

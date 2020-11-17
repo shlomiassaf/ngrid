@@ -166,7 +166,7 @@ export interface PblNgridContextApi<T = any> {
    * @param cellRef A Reference to the cell
    * @param markForCheck Mark the row for change detection
    */
-  focusCell(cellRef?: CellReference | boolean, markForCheck?: boolean): void;
+  focusCell(cellRef?: CellReference): void;
 
   /**
    * Select all provided cells.
@@ -175,14 +175,14 @@ export interface PblNgridContextApi<T = any> {
    * @param clearCurrent Clear the current selection before applying the new selection.
    * Default to false (add to current).
    */
-  selectCells(cellRefs: CellReference[], markForCheck?: boolean, clearCurrent?: boolean): void;
+  selectCells(cellRefs: CellReference[], clearCurrent?: boolean): void;
   /**
    * Unselect all provided cells.
    * If cells are not provided will un-select all currently selected cells.
    * @param cellRef A Reference to the cell
    * @param markForCheck Mark the row for change detection
    */
-  unselectCells(cellRefs?: CellReference[] | boolean, markForCheck?: boolean): void;
+  unselectCells(cellRefs?: CellReference[]): void;
 
   /**
    * Clears the entire context, including view cache and memory cache (rows out of view).

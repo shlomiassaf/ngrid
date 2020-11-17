@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, Attribute, ComponentRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, Attribute, ComponentRef, ChangeDetectorRef } from '@angular/core';
 import { CdkHeaderRow } from '@angular/cdk/table';
 
 import { PblNgridComponent } from '../ngrid.component';
@@ -13,6 +13,7 @@ import { applyMetaRowClass, initColumnOrMetaRow } from './utils';
 @Component({
   selector: 'pbl-ngrid-meta-row',
   template: PBL_NGRID_BASE_ROW_TEMPLATE,
+  // tslint:disable-next-line: no-host-metadata-property
   host: {
     'role': 'row',
   },
@@ -27,6 +28,8 @@ export class PblNgridMetaRowComponent extends PblNgridBaseRowComponent<'meta-hea
   get row() { return this._row; }
   @Input() set row(value: PblColumnStoreMetaRow) { this.updateRow(value); }
 
+  get rowIndex(): number { return this._row.rowDef.rowIndex; }
+
   get meta(): PblMetaRowDefinitions { return this._meta; }
   set meta(value: PblMetaRowDefinitions) { this._meta = value; } // TODO: remove when removing pblMetaRow
 
@@ -38,10 +41,11 @@ export class PblNgridMetaRowComponent extends PblNgridBaseRowComponent<'meta-hea
   private _row: PblColumnStoreMetaRow;
 
   constructor(@Optional() grid: PblNgridComponent,
+              cdRef: ChangeDetectorRef,
                el: ElementRef<HTMLElement>,
               private readonly metaRows: PblNgridMetaRowService,
               @Attribute('footer') isFooter: any) {
-    super(grid, el);
+    super(grid, cdRef, el);
     this.element = el.nativeElement;
     this.isFooter = isFooter !== null;
     this.rowType = this.isFooter ? 'meta-footer' : 'meta-header';

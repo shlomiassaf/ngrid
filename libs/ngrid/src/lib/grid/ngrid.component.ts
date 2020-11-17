@@ -366,23 +366,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this.setupPaginator();
     this.listenToResize();
 
-    // The following code will catch context focused events, find the HTML element of the cell and focus it.
-    // TODO(REFACTOR_REF 1): Move to use rowApi with Cells instead of accessing the view
     this.contextApi.focusChanged
       .subscribe( event => {
         if (event.curr) {
-          const rowContext = this.contextApi.findRowInView(event.curr.rowIdent);
-          if (rowContext) {
-            const view = this._cdkTable._rowOutlet.viewContainer.get(rowContext.index) as EmbeddedViewRef<any>;
-            if (view) {
-              const cellViewIndex = this.columnApi.renderIndexOf(this.columnApi.columns[event.curr.colIndex])
-              const cellElement: HTMLElement = view.rootNodes[0].querySelectorAll('pbl-ngrid-cell')[cellViewIndex];
-              if (cellElement) {
-                cellElement.focus({ preventScroll: true });
-                this.viewport._scrollIntoView(cellElement);
-              }
-            }
-          }
+          this.rowsApi
+            .findDataRowByIdentity(event.curr.rowIdent)
+            ?.getCellById(this.columnApi.columnIds[event.curr.colIndex])
+            ?.focus();
         }
       });
   }
@@ -409,9 +399,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this._store.dispose();
     const destroy = () => {
       this._plugin.destroy();
-      if (this.viewport) {
-        this._cdkTable.detachViewPort();
-      }
+      this.viewport.detachViewPort();
       unrx.kill(this);
     };
 
@@ -787,10 +775,9 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
   findInitialRowHeight(): number {
     let rowElement: HTMLElement;
-    if (this._cdkTable._rowOutlet.viewContainer.length) {
-      const viewRef = this._cdkTable._rowOutlet.viewContainer.get(0) as EmbeddedViewRef<any>;
-      rowElement = viewRef.rootNodes[0];
-      const height = getComputedStyle(rowElement).height;
+    const row = this.rowsApi.findDataRowByIndex(0);
+    if (row) {
+      const height = getComputedStyle(row.element).height;
       return parseInt(height, 10);
     } else if (this._vcRefBeforeContent) {
       rowElement = this._vcRefBeforeContent.length > 0

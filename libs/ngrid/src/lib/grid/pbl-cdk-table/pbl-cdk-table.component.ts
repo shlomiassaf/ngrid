@@ -13,7 +13,6 @@ import {
   Optional,
   ViewEncapsulation,
   Injector,
-  NgZone,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
@@ -25,7 +24,6 @@ import { Directionality } from '@angular/cdk/bidi';
 import { PblNgridComponent } from '../ngrid.component';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridColumnDef } from '../column/directives/column-def';
-import { PblVirtualScrollForOf } from '../features/virtual-scroll/virtual-scroll-for-of';
 import { BypassCellRenderDisposeViewRepeaterStrategy } from './bypass-cdk-cell rendering-repeater-strategy';
 
 /**
@@ -40,7 +38,7 @@ import { BypassCellRenderDisposeViewRepeaterStrategy } from './bypass-cdk-cell r
   exportAs: 'pblCdkTable',
   template: CDK_TABLE_TEMPLATE,
   styleUrls: ['./pbl-cdk-table.component.scss'],
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line: no-host-metadata-property
     'class': 'pbl-cdk-table',
   },
   providers: [
@@ -129,7 +127,6 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     if (this.onRenderRows$) {
       this.onRenderRows$.complete();
     }
-    this.virtualScrollDestroy();
   }
 
   //#region CSS-CLASS-CONTROL
@@ -177,27 +174,6 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     footer.clear();
   }
   //#endregion CLEAR-ROW-DEFS
-
-  //#region VIRTUAL-SCROLL
-  private forOf: PblVirtualScrollForOf<T>; //tslint:disable-line
-
-  attachViewPort(): void {
-    this.detachViewPort();
-    this.forOf = new PblVirtualScrollForOf<T>(this.extApi, this.injector.get(NgZone));
-  }
-
-  detachViewPort(): void {
-    if (this.forOf) {
-      this.forOf.destroy();
-      this.forOf = undefined;
-    }
-  }
-
-  private virtualScrollDestroy(): void {
-    super.ngOnDestroy();
-    this.detachViewPort();
-  }
-  //#endregion VIRTUAL-SCROLL
 
   /**
    * An alias for `_cacheRowDefs()`
