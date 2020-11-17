@@ -58,10 +58,6 @@ pbl-ngrid {
   overflow: hidden;
 }
 
-.pbl-ngrid-empty-spacer {
-  display: none;
-}
-
 .pbl-ngrid-empty {
   .cdk-virtual-scroll-content-wrapper {
     min-height: 100%;
@@ -75,11 +71,6 @@ pbl-ngrid {
 
       & > * {
         flex: 0 0 auto;
-      }
-
-      & > .pbl-ngrid-empty-spacer {
-        display: block;
-        flex: 1 1 auto;
       }
     }
   }

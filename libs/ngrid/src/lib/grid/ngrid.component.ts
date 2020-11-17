@@ -364,11 +364,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this._plugin.emitEvent({ kind: 'onInit' });
 
     this.setupPaginator();
-
-    // Adding a div before the footer row view reference, this div will be used to fill up the space between header & footer rows
-    const div = document.createElement('div');
-    div.classList.add('pbl-ngrid-empty-spacer')
-    this._cdkTable._element.insertBefore(div, this._cdkTable._footerRowOutlet.elementRef.nativeElement);
     this.listenToResize();
 
     // The following code will catch context focused events, find the HTML element of the cell and focus it.
