@@ -32,7 +32,6 @@ import { PblNgridRowComponent } from './grid/row/row.component';
 import { PblNgridColumnRowComponent } from './grid/row/columns-row.component';
 import { PblNgridMetaRowComponent } from './grid/row/meta-row.component';
 import { PblNgridMetaRowContainerComponent } from './grid/meta-rows/meta-row-container';
-import { PblMetaRowDirective } from './grid/meta-rows/meta-row.directive';
 import { PblNgridColumnDef } from './grid/column/directives/column-def';
 import { PblNgridHeaderCellDefDirective } from './grid/cell/cell-def/header-cell-def.directive';
 import { PblNgridFooterCellDefDirective } from './grid/cell/cell-def/footer-cell-def.directive';
@@ -80,7 +79,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     CdkTableModule,
   ],
   declarations: [
-    PblNgridMetaRowContainerComponent, PblMetaRowDirective,
+    PblNgridMetaRowContainerComponent,
     PblCdkTableComponent,
     PblNgridColumnDef,
     PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
