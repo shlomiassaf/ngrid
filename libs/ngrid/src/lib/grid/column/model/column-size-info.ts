@@ -1,6 +1,18 @@
 import { PblColumnSizeInfo } from './types';
 import { PblColumn } from './column';
 
+/**
+ * A class that represents the dimensions and style of a column cell.
+ * The class is bound to an element and a column.
+ *
+ * Calling `updateSize()` will sync the layout from the DOM element to the class properties
+ * and trigger a resize event on the column's column definition object.
+ *
+ * > Note that `updateSize()` only works when a column is attached
+ *
+ * This class shouldn't be used directly. In NGrid, it is wrapped by `PblColumnSizeObserver` which automatically triggers
+ * update size events using the `ResizeObserver` API.
+ */
 export class ColumnSizeInfo implements PblColumnSizeInfo {
   get column(): PblColumn { return this._column; }
   set column(value: PblColumn) { this.attachColumn(value); }
@@ -24,7 +36,7 @@ export class ColumnSizeInfo implements PblColumnSizeInfo {
 
   constructor(public readonly target: HTMLElement) { }
 
-  attachColumn(column: PblColumn): void {
+  protected attachColumn(column: PblColumn): void {
     this.detachColumn();
 
     if (column) {
@@ -34,7 +46,7 @@ export class ColumnSizeInfo implements PblColumnSizeInfo {
     this._column = column;
   }
 
-  detachColumn(): void {
+  protected detachColumn(): void {
     if (this._column) {
       this._column.sizeInfo = undefined;
       this._column = undefined;

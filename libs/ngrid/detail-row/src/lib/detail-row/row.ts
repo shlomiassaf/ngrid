@@ -175,7 +175,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     if (this.context.$implicit) {
       const detailRowDef = this.context.grid.registry.getSingle('detailRow');
       if ( detailRowDef ) {
-        this.vcRef.createEmbeddedView(detailRowDef.tRef, this.context);
+        this.vcRef.createEmbeddedView(detailRowDef.tRef, this.context).detectChanges();
       }
     }
   }
