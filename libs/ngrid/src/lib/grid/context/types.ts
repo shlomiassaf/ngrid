@@ -5,12 +5,6 @@ import { PblNgridComponent } from '../ngrid.component';
 import { PblColumnTypeDefinitionDataMap, PblMetaColumn, PblColumn } from '../column/model';
 import { PblRowContext } from './row';
 
-declare module '@angular/cdk/table/table.d' {
-  interface RowContext<T> {
-    gridInstance: PblNgridComponent<T>;
-  }
-}
-
 export interface RowContextState<T = any> {
   identity: any;
   dataIndex: number;
@@ -26,12 +20,10 @@ export interface CellContextState<T = any> {
   external: any;
 }
 
-export interface ExternalRowContextState {
-
-}
-export interface ExternalCellContextState {
-
-}
+// tslint:disable: no-empty-interface
+export interface ExternalRowContextState { }
+export interface ExternalCellContextState { }
+// tslint:enable: no-empty-interface
 
 /**
  * A reference to a data cell on the grid.

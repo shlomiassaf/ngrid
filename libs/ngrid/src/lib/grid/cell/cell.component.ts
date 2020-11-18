@@ -54,8 +54,8 @@ export class PblNgridCellComponent extends PblNgridBaseCell implements DoCheck {
     }
   }
 
-  setContext(context: RowContext<any>) {
-    this.__rowCtx = context;
+  setContext(context: PblRowContext<any>) {
+    this._rowCtx = context;
   }
 
   setColumn(column: PblColumn) {
@@ -84,7 +84,6 @@ export class PblNgridCellComponent extends PblNgridBaseCell implements DoCheck {
   }
 
   ngDoCheck(): void {
-    this._rowCtx = this.__rowCtx?.pblRowContext as any;
     if (this._rowCtx) {
       const cellContext = this.cellCtx = this._rowCtx.cell(this.colIndex);
 

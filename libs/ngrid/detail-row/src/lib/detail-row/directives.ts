@@ -48,6 +48,6 @@ export class PblNgridDetailRowParentRefDirective<T> extends PblNgridRowDef<T> im
  */
 @Component({
   selector: 'pbl-ngrid-default-detail-row-parent',
-  template: `<pbl-ngrid-row *pblNgridDetailRowParentRef="let row; gridInstance as gridInstance" [grid]="gridInstance" [detailRow]="row"></pbl-ngrid-row>`,
+  template: `<pbl-ngrid-row *pblNgridDetailRowParentRef="let row; grid as grid" [grid]="grid" [detailRow]="row"></pbl-ngrid-row>`,
 })
 export class PblNgridDefaultDetailRowParentComponent { }

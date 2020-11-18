@@ -5,19 +5,17 @@ import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridComponent } from '../ngrid.component';
 import { CellContextState, RowContextState, PblNgridRowContext, ExternalRowContextState } from './types';
 import { PblCellContext } from './cell';
-
-declare module '@angular/cdk/table/row.d' {
-  export interface CdkCellOutletRowContext<T> {
-    pblRowContext: PblNgridRowContext<T>;
-  }
-  export interface CdkCellOutletMultiRowContext<T> {
-    pblRowContext: PblNgridRowContext<T>;
-  }
-}
+import { PblNgridRowComponent } from '../row/row.component';
 
 export class PblRowContext<T> implements PblNgridRowContext<T> {
   /** Data for the row that this cell is located within. */
-  $implicit?: T;
+  get $implicit(): T | undefined { return this._$implicit; }
+  set $implicit(value: T) {
+    if (this._$implicit !== value) {
+      this.updateRowData(value);
+    }
+  };
+
   /** Index of the data object in the provided data array. */
   index?: number;
   /** Index location of the rendered row that this cell is located within. */
@@ -33,27 +31,24 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   /** True if this cell is contained in a row with an odd-numbered index. */
   odd?: boolean;
 
-  gridInstance: PblNgridComponent<T>;
-
+  identity: any;
   firstRender: boolean;
   outOfView: boolean;
 
   readonly grid: PblNgridComponent<T>;
+  _attachedRow: PblNgridRowComponent<T>;
   private external: any = {};
 
   /**
    * Returns the length of cells context stored in this row
    */
-  get length(): number {
-    return (this.cells && this.cells.length) || 0;
-  }
-
-  get pblRowContext(): PblNgridRowContext<T> { return this; }
-  set pblRowContext(value: PblNgridRowContext<T>) { }
+  get length(): number { return this.cells?.length ?? 0; }
 
   private cells: PblCellContext<T>[];
 
-  constructor(public identity: any, public dataIndex: number, private extApi: PblNgridExtensionApi<T>) {
+  private _$implicit?: T;
+
+  constructor(_data: T, public dataIndex: number, private extApi: PblNgridExtensionApi<T>) {
     /*  TODO: material2#14198
         The row context come from the `cdk` and it can be of 2 types, depending if multiple row templates are used or not.
         `index` is used for single row template mode and `renderIndex` for multi row template mode.
@@ -72,6 +67,9 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
     if (applyWorkaround) {
       Object.defineProperty(this, 'index', { get: function() { return this.renderIndex; } });
     }
+
+    this._$implicit = _data;
+    this.identity = this.extApi.contextApi.getRowIdentity(dataIndex, _data);
 
     this.grid = extApi.grid;
     const cells = this.cells = [];
@@ -114,7 +112,6 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   }
 
   fromState(state: RowContextState<T>): void {
-    this.identity = state.identity;
     this.firstRender = state.firstRender;
     this.dataIndex = state.dataIndex;
     this.external = state.external;
@@ -153,5 +150,23 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
    */
   updateOutOfViewState(): void {
     this.extApi.contextApi.updateOutOfViewState(this);
+  }
+
+  attachRow(row: PblNgridRowComponent<T>) {
+    this.detachRow(this._attachedRow);
+    this._attachedRow = row;
+    this.updateOutOfViewState();
+  }
+
+  detachRow(row: PblNgridRowComponent<T>) {
+    if (row && this._attachedRow === row) {
+      this.saveState();
+      this._attachedRow = undefined;
+    }
+  }
+
+  private updateRowData(data: T) {
+    this._$implicit = data;
+    this.extApi.contextApi._updateRowContext(this, this._attachedRow.rowIndex);
   }
 }

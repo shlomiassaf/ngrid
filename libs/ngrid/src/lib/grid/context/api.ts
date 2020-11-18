@@ -2,9 +2,8 @@ import { BehaviorSubject, Subject, Observable, asapScheduler } from 'rxjs';
 import { debounceTime, buffer, map, filter, take } from 'rxjs/operators';
 
 import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
-import { RowContext } from '@angular/cdk/table';
 
-import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
+import { PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblColumn } from '../column/model';
 import { ColumnApi } from '../column/management';
 import {
@@ -24,6 +23,7 @@ import { PblCellContext } from './cell';
 
 export class ContextApi<T = any> {
   private viewCache = new Map<number, PblRowContext<T>>();
+  private viewCacheGhost = new Set<any>();
   private cache = new Map<any, RowContextState<T>>();
   private vcRef: ViewContainerRef;
   private columnApi: ColumnApi<T>;
@@ -71,7 +71,7 @@ export class ContextApi<T = any> {
     return this.activeSelected.slice();
   }
 
-  constructor(private extApi: PblNgridExtensionApi<T>) {
+  constructor(private extApi: PblNgridInternalExtensionApi<T>) {
     this.columnApi = extApi.columnApi;
     extApi.events
       .pipe(
@@ -235,14 +235,19 @@ export class ContextApi<T = any> {
    * The view and context are synced every time rows are rendered so make sure you set this to true only when you know there is no rendering call coming down the pipe.
    */
   clear(syncView?: boolean): void {
-    for (let i = 0, len = this.vcRef.length; i < len; i++) {
-      const viewRef = this.findViewRef(i);
-      viewRef.context.pblRowContext = undefined;
-    }
     this.viewCache.clear();
+    this.viewCacheGhost.clear();
     this.cache.clear();
     if (syncView === true) {
-      this.syncViewAndContext();
+      for (const r of this.extApi.rowsApi.dataRows()) {
+        this.viewCache.set(r.rowIndex, r.context);
+        // we're clearing the existing view state on the component
+        // If in the future we want to update state and not clear, remove this one
+        // and instead just take the state and put it in the cache.
+        // e.g. if on column swap we want to swap cells in the context...
+        r.context.fromState(this.getCreateState(r.context));
+        this.syncViewAndContext();
+      }
     }
   }
 
@@ -301,14 +306,13 @@ export class ContextApi<T = any> {
 
   updateOutOfViewState(rowContext: PblRowContext<T>): void {
     const viewPortRect = this.getViewRect();
-    const viewRef = this.findViewRef(rowContext.index);
     // This is check should not happen but it turns out it might
     // When rendering and updating the grid multiple times and in async it might occur while fast scrolling
     // The index of the row is updated to something out-of bounds and the viewRef is null.
     // The current known scenario for this is when doing fast infinite scroll and having an open edit cell with `pblCellEditAutoFocus`
     // The auto-focus fires after all CD is done but in the meanwhile, if fast scrolling the in-edit cell, it might happen
-    if (viewRef) {
-      processOutOfView(viewRef, viewPortRect);
+    if (rowContext._attachedRow) {
+      processOutOfView(rowContext, viewPortRect);
     }
   }
 
@@ -383,11 +387,11 @@ export class ContextApi<T = any> {
     }
   }
 
-  getRowIdentity(dataIndex: number, context?: RowContext<any>): string | number | null {
+  getRowIdentity(dataIndex: number, rowData?: T): string | number | null {
     const { ds } = this.extApi.grid;
     const { primary } = this.extApi.columnStore;
 
-    const row = context ? context.$implicit : ds.source[dataIndex];
+    const row = rowData || ds.source[dataIndex];
     if (!row) {
       return null;
     } else {
@@ -395,70 +399,39 @@ export class ContextApi<T = any> {
     }
   }
 
-  private findViewRef(index: number): EmbeddedViewRef<RowContext<T>> {
-    return this.vcRef.get(index) as EmbeddedViewRef<RowContext<T>>;
+  /** @internal */
+  _createRowContext(data: T, renderRowIndex: number): PblRowContext<T> {
+    const context = new PblRowContext<T>(data, this.extApi.grid.ds.renderStart + renderRowIndex, this.extApi);
+    context.fromState(this.getCreateState(context));
+    this.addToViewCache(renderRowIndex, context);
+    return context;
   }
 
-  /**
-   * Find/Update/Create the `RowContext` for the provided `EmbeddedViewRef` at the provided render position.
-   *
-   * A `RowContext` object is a wrapper for the internal context of a row in `CdkTable` with the purpose of
-   * extending it for the grid features.
-   *
-   * The process has 2 layers of cache:
-   *
-   * - `RowContext` objects are stored in a view cache which is synced with the `CdkTable` row outlet viewRefs.
-   * Each view ref (row) has a matching record in the `RowContext` view cache.
-   *
-   * - `RowContextState` object are stored in a cache which is synced with the items in the data source.
-   * Each item in the datasource has a matching row `RowContextState` item (lazy), which is used to persist context
-   * when `RowContext` goes in/out of the viewport.
-   *
-   * @param viewRef The `EmbeddedViewRef` holding the context that the returned `RowContext` should wrap
-   * @param renderRowIndex The position of the view, relative to other rows.
-   * The position is required for caching the context state when a specific row is thrown out of the viewport (virtual scroll).
-   * Each `RowContext` gets a unique identity using the position relative to the current render range in the data source.
-   */
-  private findRowContext(viewRef: EmbeddedViewRef<RowContext<T>>, renderRowIndex: number): PblRowContext<T> | undefined {
-    const { context } = viewRef;
+  _updateRowContext(rowContext: PblRowContext<T>, renderRowIndex: number) {
     const dataIndex = this.extApi.grid.ds.renderStart + renderRowIndex;
-    const identity = this.getRowIdentity(dataIndex, viewRef.context);
-
-    let rowContext = context.pblRowContext as PblRowContext<T>;
-
-    if (!this.cache.has(identity)) {
-      this.cache.set(identity, PblRowContext.defaultState(identity, dataIndex, this.columnApi.columns.length));
+    const identity = this.getRowIdentity(dataIndex, rowContext.$implicit);
+    if (rowContext.identity !== identity) {
+      rowContext.saveState();
+      rowContext.dataIndex = dataIndex;
+      rowContext.identity = identity;
+      rowContext.fromState(this.getCreateState(rowContext));
+      rowContext.updateOutOfViewState();
+      this.addToViewCache(rowContext._attachedRow.rowIndex, rowContext)
     }
+  }
 
-    if (!rowContext) {
-      rowContext = context.pblRowContext = new PblRowContext<T>(identity, dataIndex, this.extApi);
-      rowContext.updateContext(context);
+  private addToViewCache(rowIndex: number, rowContext: PblRowContext<T>) {
+    this.viewCache.set(rowIndex, rowContext);
+    this.viewCacheGhost.delete(rowContext.identity);
+  }
 
-      viewRef.onDestroy(() => {
-        this.viewCache.delete(renderRowIndex);
-        context.pblRowContext = undefined;
-      });
-
-    } else if (rowContext.identity !== identity) {
-      // save old state before applying new state
-      this.cache.set(rowContext.identity, rowContext.getState());
-      rowContext.updateContext(context);
-
-      // We
-      const gap = dataIndex - rowContext.dataIndex;
-      if (gap > 0) {
-        const siblingViewRef = this.findViewRef(renderRowIndex + gap);
-        const siblingRowContext = siblingViewRef && siblingViewRef.context.pblRowContext as PblRowContext<T>;
-        if (siblingRowContext) {
-          this.cache.set(siblingRowContext.identity, siblingRowContext.getState());
-        }
-      }
-    } else {
-      return rowContext;
+  private getCreateState(context: PblRowContext<T>) {
+    let state = this.cache.get(context.identity);
+    if (!state) {
+      state = PblRowContext.defaultState(context.identity, context.dataIndex, this.columnApi.columns.length);
+      this.cache.set(context.identity, state);
     }
-    rowContext.fromState(this.cache.get(identity));
-
-    return rowContext;
+    return state;
   }
 
   private getViewRect(): ClientRect | DOMRect {
@@ -478,133 +451,41 @@ export class ContextApi<T = any> {
   }
 
   private syncViewAndContext() {
-    const viewPortRect = this.getViewRect();
-    const lastView = new Set(Array.from(this.viewCache.values()).map( v => v.identity ));
-    const unmatchedRefs = new Map<T, [number, number]>();
-
-    let keepProcessOutOfView = !!viewPortRect;
-    for (let i = 0, len = this.vcRef.length; i < len; i++) {
-      const viewRef = this.findViewRef(i);
-      const rowContext = this.findRowContext(viewRef, i);
-      this.viewCache.set(i, rowContext);
-      lastView.delete(rowContext.identity);
-
-      // Identity did not change but context did change
-      // This is probably due to trackBy with index reference or that matched data on some property but the actual data reference changed.
-      // We log these and handle them later, they come in pair and we need to switch the context between the values in the pair.
-
-      // The pair is a 2 item tuple - 1st item is new index, 2nd item is the old index.
-      // We build the pairs, each pair is a switch
-      if (viewRef.context.$implicit !== rowContext.$implicit) {
-        let pair = unmatchedRefs.get(rowContext.$implicit) || [-1, -1];
-        pair[1] = i;
-        unmatchedRefs.set(rowContext.$implicit, pair);
-
-        pair = unmatchedRefs.get(viewRef.context.$implicit) || [-1, -1];
-        pair[0] = i;
-        unmatchedRefs.set(viewRef.context.$implicit, pair);
+    this.viewCacheGhost.forEach( ident => {
+      if (!this.findRowInView(ident)) {
+        this.cache.get(ident).firstRender = false
       }
-
-      if (keepProcessOutOfView) {
-        keepProcessOutOfView = processOutOfView(viewRef, viewPortRect, 'top');
-      }
-    }
-
-    if (unmatchedRefs.size > 0) {
-      // We have pairs but we can't just start switching because when the items move or swap we need
-      // to update their values and so we need to cache one of them.
-      // The operation will effect all items (N) between then origin and destination.
-      // When N === 2 its a swap, when N > 2 its a move.
-      // In both cases the first and last operations share the same object.
-      // Also, we need to make sure that the order of operations does not use the same row as the source more then once.
-      // For example, If I copy row 5 to to row 4 and then 4 to 3 I need to start from 3->4->5, if I do 5->4->3 I will get 5 in all rows.
-      //
-      // We use the source (pair[1]) for sorting, the sort order depends on the direction of the move (up/down).
-      const arr = Array.from(unmatchedRefs.entries()).filter( entry => {
-        const pair = entry[1];
-        if (pair[0] === -1) {
-          return false;
-        } else if (pair[1] === -1) {
-          const to = this.viewCache.get(pair[0]);
-          to.$implicit = entry[0];
-          return false;
-        }
-        return true;
-      }).map( entry => entry[1] );
-
-      unmatchedRefs.clear();
-
-      if (arr.length) {
-        const sortFn = arr[arr.length - 1][0] - arr[arr.length - 1][1] > 0 // check sort direction
-          ? (a,b) => b[1] - a[1]
-          : (a,b) => a[1] - b[1]
-        ;
-        arr.sort(sortFn);
-
-        const lastOp = {
-          data: this.viewCache.get(arr[0][0]).$implicit,
-          state: this.viewCache.get(arr[0][0]).getState(),
-          pair: arr.pop(),
-        };
-
-        for (const pair of arr) {
-          // What we're doing here is switching the context wrapped by `RotContext` while the `RowContext` preserve it's identity.
-          // Each row context has a state, which is valid for it's current context, if we switch context we must switch state as well and also
-          // cache it.
-          const to = this.viewCache.get(pair[0]);
-          const from = this.viewCache.get(pair[1]);
-          const state = from.getState();
-          state.identity = to.identity;
-          this.cache.set(to.identity, state);
-          to.fromState(state);
-          to.$implicit = from.$implicit;
-        }
-
-        const to = this.viewCache.get(lastOp.pair[0]);
-        lastOp.state.identity = to.identity;
-        this.cache.set(to.identity, lastOp.state);
-        to.fromState(lastOp.state);
-        to.$implicit = lastOp.data;
-      }
-    }
-
-    if(viewPortRect) {
-      for (let i = this.vcRef.length -1; i > -1; i--) {
-        if (!processOutOfView(this.findViewRef(i), viewPortRect, 'bottom')) {
-          break;
-        }
-      }
-    }
-
-    lastView.forEach( ident => this.cache.get(ident).firstRender = false );
+    });
+    this.viewCacheGhost = new Set(Array.from(this.viewCache.values()).filter( v => v.firstRender ).map( v => v.identity ));
   }
 }
 
-function processOutOfView(viewRef: EmbeddedViewRef<RowContext<any>>, viewPortRect: ClientRect | DOMRect, location?: 'top' | 'bottom'): boolean {
-  const el: HTMLElement = viewRef.rootNodes[0];
-  const rowContext = viewRef.context.pblRowContext;
-  const elRect = el.getBoundingClientRect();
+function processOutOfView(rowContext: PblRowContext<any>, viewPortRect: ClientRect | DOMRect, location?: 'top' | 'bottom'): boolean {
+  const el = rowContext._attachedRow?.element;
+  if (el) {
+    const elRect = el.getBoundingClientRect();
 
-  let isInsideOfView: boolean;
-  switch (location){
-    case 'top':
-      isInsideOfView = elRect.bottom >= viewPortRect.top;
-      break;
-    case 'bottom':
-      isInsideOfView = elRect.top <= viewPortRect.bottom;
-      break;
-    default:
-      isInsideOfView = (elRect.bottom >= viewPortRect.top && elRect.top <= viewPortRect.bottom)
-      break;
-  }
-
-  if (isInsideOfView) {
-    if (!rowContext.outOfView) {
-      return false;
+    let isInsideOfView: boolean;
+    switch (location){
+      case 'top':
+        isInsideOfView = elRect.bottom >= viewPortRect.top;
+        break;
+      case 'bottom':
+        isInsideOfView = elRect.top <= viewPortRect.bottom;
+        break;
+      default:
+        isInsideOfView = (elRect.bottom >= viewPortRect.top && elRect.top <= viewPortRect.bottom)
+        break;
     }
-    rowContext.outOfView = false;
-  } else {
-    rowContext.outOfView = true;
+
+    if (isInsideOfView) {
+      if (!rowContext.outOfView) {
+        return false;
+      }
+      rowContext.outOfView = false;
+    } else {
+      rowContext.outOfView = true;
+    }
+    return true;
   }
-  return true;
 }
