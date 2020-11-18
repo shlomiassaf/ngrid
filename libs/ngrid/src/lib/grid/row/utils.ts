@@ -1,6 +1,5 @@
 import { PblMetaRowDefinitions } from '../column/model';
-import { PblMetaRow } from '../meta-rows/meta-row.directive';
-import { PblNgridMetaRowService } from '../meta-rows/meta-row.service';
+import { PblNgridMetaRowService, PblMetaRow } from '../meta-rows/meta-row.service';
 
 export function initColumnOrMetaRow(element: HTMLElement, isFooter: boolean) {
   element.classList.add(...(isFooter ? ['cdk-footer-row', 'pbl-ngrid-footer-row'] : ['cdk-header-row', 'pbl-ngrid-header-row']));
