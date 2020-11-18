@@ -76,7 +76,6 @@ export { PblNgridComponent } from './ngrid.component';
 
 export { PblNgridOuterSectionDirective } from './directives/index';
 
-export { PblColumnSizeObserver } from './features/column-size-observer/column-size-observer.directive';
 export * from './features/virtual-scroll/index';
 export * from './features/hide-columns.directive';
 

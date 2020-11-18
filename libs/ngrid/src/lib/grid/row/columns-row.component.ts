@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, ComponentRef, Attribute, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, ComponentRef, Attribute, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CdkHeaderRow } from '@angular/cdk/table';
 
 import { unrx } from '../utils/unrx';
@@ -27,7 +27,7 @@ import { PblNgridColumnDef } from '../column/directives/column-def';
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header' | 'footer', PblMetaRowDefinitions> implements PblMetaRow {
+export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header' | 'footer', PblMetaRowDefinitions> implements PblMetaRow, OnDestroy {
 
   @Input() set row(value: PblMetaRowDefinitions) { this.updateRow(value); }
 

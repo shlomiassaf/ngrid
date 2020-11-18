@@ -49,7 +49,6 @@ import { PblNgridHeaderExtensionRefDirective } from './grid/registry/directives/
 import { PblNgridNoDataRefDirective } from './grid/registry/directives/no-data-ref.directive';
 import { PblNgridPaginatorRefDirective } from './grid/registry/directives/paginator-ref.directive';
 import { PblNgridHideColumns } from './grid/features/hide-columns.directive';
-import { PblColumnSizeObserver } from './grid/features/column-size-observer/column-size-observer.directive';
 import { PblCdkVirtualScrollViewportComponent } from './grid/features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblCdkVirtualScrollDirective } from './grid/features/virtual-scroll/strategies/v-scroll.directive';
 import { PblNgridScrolling } from './grid/features/virtual-scroll/scrolling-plugin.directive';
@@ -99,7 +98,6 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridMetaCellComponent,
 
     PblNgridHideColumns,
-    PblColumnSizeObserver,
     PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblNgridScrolling,
 
     PblNgridCellEditAutoFocusDirective,
@@ -125,7 +123,6 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridMetaCellComponent,
 
     PblNgridHideColumns,
-    PblColumnSizeObserver,
     PblCdkVirtualScrollDirective,
 
     PblNgridCellEditAutoFocusDirective,

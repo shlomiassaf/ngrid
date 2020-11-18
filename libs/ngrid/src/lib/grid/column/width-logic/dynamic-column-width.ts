@@ -112,13 +112,13 @@ export function widthBreakout(strategy: BoxModelSpaceStrategy, columnInfo: PblCo
 export const DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY: BoxModelSpaceStrategy = {
   cell(col: PblColumnSizeInfo): number {
     const style = col.style;
-    return parseInt(style.paddingLeft) + parseInt(style.paddingRight)
+    return parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10)
   },
   groupCell(col: PblColumnSizeInfo): number {
     return 0;
   },
   group(cols: PblColumnSizeInfo[], dir?: Direction): number {
     const len = cols.length;
-    return len > 0 ? parseInt(cols[0].style[dir === 'rtl' ? 'paddingRight' : 'paddingLeft']) + parseInt(cols[len - 1].style[dir === 'rtl' ? 'paddingLeft' : 'paddingRight']) : 0;
+    return len > 0 ? parseInt(cols[0].style[dir === 'rtl' ? 'paddingRight' : 'paddingLeft'], 10) + parseInt(cols[len - 1].style[dir === 'rtl' ? 'paddingLeft' : 'paddingRight'], 10) : 0;
   }
 };

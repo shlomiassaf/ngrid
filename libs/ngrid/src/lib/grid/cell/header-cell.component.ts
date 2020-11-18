@@ -2,7 +2,8 @@
 // tslint:disable:directive-selector
 import { first, filter } from 'rxjs/operators';
 import {
-  Optional,
+  AfterViewInit,
+  OnDestroy,
   Component,
   ElementRef,
   ChangeDetectionStrategy,
@@ -23,7 +24,7 @@ import { PblNgridMultiRegistryMap, PblNgridDataHeaderExtensionContext, PblNgridM
 import { PblNgridColumnDef, WidthChangeEvent } from '../column/directives/column-def';
 import { applySourceWidth, applyWidth, initCellElement } from './utils';
 import { PblNgridBaseCell } from './base-cell';
-import { PblColumnSizeObserver } from '../features/column-size-observer/column-size-observer.directive';
+import { PblColumnSizeObserver } from '../features/column-size-observer/column-size-observer';
 
 const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRegistryMap['dataHeaderExtensions'][]>();
 
@@ -47,7 +48,7 @@ const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRe
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblNgridBaseCell {
+export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblNgridBaseCell implements AfterViewInit, OnDestroy {
   @ViewChild('vcRef', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
 
   column: PblColumn;
@@ -81,15 +82,17 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
       predicate = event => (!gridWidthRow && event.reason !== 'update') || (gridWidthRow && event.reason !== 'resize');
       view = !gridWidthRow ? this.initMainHeaderColumnView(column) : undefined;
       if (gridWidthRow && !this.resizeObserver) {
-        this.resizeObserver = new PblColumnSizeObserver({ nativeElement: this.el }, this.extApi.grid);
-        this.resizeObserver.updateSize();
+        this.resizeObserver = new PblColumnSizeObserver(this.el, this.extApi.grid);
       }
 
       this.columnDef.widthChange
         .pipe(filter(predicate), unrx(this, column))
         .subscribe(widthUpdater.bind(this));
 
-      view && view.detectChanges();
+      if (view) {
+        view.detectChanges();
+      }
+
       widthUpdater.call(this);
       initCellElement(this.el, column);
     }
@@ -104,14 +107,11 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
   ngAfterViewInit() {
     if (this.resizeObserver) {
       this.resizeObserver.column = this.column;
-      this.resizeObserver.ngAfterViewInit();
     }
   }
 
   ngOnDestroy() {
-    if (this.resizeObserver) {
-      this.resizeObserver.ngOnDestroy();
-    }
+    this.resizeObserver?.destroy();
     if (this.column) {
       unrx(this, this.column);
     }
