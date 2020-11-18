@@ -142,6 +142,10 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
   }
 
 
+  dataRows() {
+    return Array.from(this.rows.get('data')) as PblNgridRowComponent<T>[];
+  }
+
   findDataRowByIndex(index: number): PblNgridRowComponent<T> | undefined {
     for (const r of Array.from(this.rows.get('data')) as PblNgridRowComponent<T>[]) {
       if (r.rowIndex === index) {

@@ -184,18 +184,6 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
 
   renderRows(): void {
     super.renderRows();
-
-    // The problem of inheritance right at your face
-    // Because material does not allow us to control the context generation for a row we need to get clever.
-    // https://github.com/angular/components/issues/14199
-    // TODO: If they do allow controlling context generation, remove this and apply their solution.
-    const viewContainer = this._rowOutlet.viewContainer;
-    for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
-      const viewRef = viewContainer.get(renderIndex) as EmbeddedViewRef<RowContext<T>>;
-      const context = viewRef.context;
-      context.gridInstance = this.grid;
-    }
-
     if (this.onRenderRows$) {
       this.onRenderRows$.next(this._rowOutlet);
     }

@@ -20,7 +20,7 @@ export class BypassCellRenderDisposeViewRepeaterStrategy<T, R extends RenderRow<
   private renderer: { _renderCellTemplateForItem: (rowDef: BaseRowDef, context: RowContext<T>) => void; };
   private _cachedRenderDefMap = new Map<number, CdkRowDef<T>>();
 
-  constructor(@Inject(EXT_API_TOKEN) extApi: PblNgridInternalExtensionApi<T>) {
+  constructor(@Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi<T>) {
     super();
     extApi.pluginCtrl.onInit()
       .subscribe(() => {
@@ -32,9 +32,16 @@ export class BypassCellRenderDisposeViewRepeaterStrategy<T, R extends RenderRow<
 
   applyChanges(changes: IterableChanges<R>,
                viewContainerRef: ViewContainerRef,
-               itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C>,
+               __itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C>,
                itemValueResolver: _ViewRepeaterItemValueResolver<T, R>,
-               itemViewChanged?: _ViewRepeaterItemChanged<R, C>): void {
+               __itemViewChanged?: _ViewRepeaterItemChanged<R, C>): void {
+
+    const itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C> = (record: IterableChangeRecord<R>, adjustedPreviousIndex: number | null, currentIndex: number | null) => {
+      const insertArgs = __itemContextFactory(record, adjustedPreviousIndex, currentIndex);
+      insertArgs.context = this.extApi.contextApi._createRowContext(record.item.data, currentIndex) as any;
+      return insertArgs;
+    }
+
     super.applyChanges(changes, viewContainerRef, itemContextFactory, itemValueResolver, (change: _ViewRepeaterItemChange<R, C>) => {
       if (this.workaroundEnabled) {
         switch (change.operation) {

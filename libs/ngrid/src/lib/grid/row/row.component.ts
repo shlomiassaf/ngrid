@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, EmbeddedViewRef, Input, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ComponentRef, EmbeddedViewRef, Input, ViewChild, ViewContainerRef, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { CdkRow, RowContext } from '@angular/cdk/table';
 
 import { PblRowContext } from '../context/index';
@@ -26,9 +26,9 @@ export const PBL_NGRID_ROW_TEMPLATE = '<ng-content select=".pbl-ngrid-row-prefix
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'data', T> {
+export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'data', T> implements OnDestroy {
 
-    /**
+  /**
    * Optional grid instance, required only if the row is declared outside the scope of the grid.
    */
   @Input() grid: PblNgridComponent<T>;
@@ -37,40 +37,42 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
 
   readonly rowType = 'data' as const;
 
-  get rowIndex(): number { return this.context.index; }
+  get rowIndex(): number { return this._rowIndex; }
 
-  @Input() set row(value: T) { value && this.updateRow(); }
+  @Input() set row(value: T) {
+    this.updateRow();
+    if (this.context) {
+      this.identityUpdated();
+    }
+  }
 
-  rowRenderIndex: number;
   context: PblRowContext<T>;
 
   private _classDiffer: StylingDiffer<{ [klass: string]: boolean }>;
   private _lastClass: Set<string>;
+  private _rowIndex: number;
 
   updateRow(): void {
     if (this._extApi) {
-      if (! (this.rowRenderIndex >= 0) ) {
-        this.getRend();
-      }
-      this.context = this._extApi.contextApi.rowContext(this.rowRenderIndex);
 
-      this.element.setAttribute('row-id', this.context.dataIndex as any);
-      this.element.setAttribute('row-key', this.context.identity);
+      if (!this.context) {
+        const vcRef = this._extApi.cdkTable._rowOutlet.viewContainer;
+        const len = vcRef.length - 1;
+        for (let i = len; i > -1; i--) {
+          const viewRef = vcRef.get(i) as EmbeddedViewRef<PblRowContext<T>>;
+          if (viewRef.rootNodes[0] === this.element) {
+            this._rowIndex = i;
+            this.context = viewRef.context;
+            this.context.attachRow(this);
+            break;
+          }
+        }
 
-      if (this.grid?.rowClassUpdate && this.grid.rowClassUpdateFreq === 'item') {
-        this.updateHostClass();
-      }
-    }
-  }
+        this.identityUpdated();
 
-  getRend(): void {
-    const vcRef = this._extApi.cdkTable._rowOutlet.viewContainer;
-    const len = vcRef.length - 1;
-    for (let i = len; i > -1; i--) {
-      const viewRef = vcRef.get(i) as EmbeddedViewRef<RowContext<T>>;
-      if (viewRef.rootNodes[0] === this.element) {
-        this.rowRenderIndex = i;
-        break;
+        if (this.grid.rowClassUpdate && this.grid.rowClassUpdateFreq === 'item') {
+          this.updateHostClass();
+        }
       }
     }
   }
@@ -82,6 +84,11 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   getCellById(id: string): PblNgridCellComponent | undefined {
     const cellViewIndex = this._extApi.columnApi.renderIndexOf(id);
     return this._cells[cellViewIndex]?.instance;
+  }
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this.context?.detachRow(this);
   }
 
   protected init() {
@@ -170,5 +177,10 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
     currentItem.instance.syncColumn();
     this.context.updateCell(previousItem.instance.cellCtx.clone(currentItem.instance.column));
     currentItem.changeDetectorRef.markForCheck();
+  }
+
+  private identityUpdated() {
+    this.element.setAttribute('row-id', this.context.dataIndex as any);
+    this.element.setAttribute('row-key', this.context.identity);
   }
 }
