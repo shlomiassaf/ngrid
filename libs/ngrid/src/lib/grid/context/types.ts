@@ -7,7 +7,7 @@ import { PblRowContext } from './row';
 
 export interface RowContextState<T = any> {
   identity: any;
-  dataIndex: number;
+  dsIndex: number;
   cells: CellContextState<T>[];
   firstRender: boolean;
   external: any;
@@ -101,6 +101,9 @@ export interface PblNgridRowContext<T = any> extends RowContext<T> {
    * Note that when virtual scroll is enabled `true` indicates a buffer row.
    */
   outOfView: boolean;
+
+  /** The index at the datasource */
+  dsIndex: number;
 
   readonly grid: PblNgridComponent<T>;
 

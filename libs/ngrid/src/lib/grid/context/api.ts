@@ -288,7 +288,7 @@ export class ContextApi<T = any> {
     if (ref instanceof PblCellContext) {
       return ref.col.getValue(ref.rowContext.$implicit);
     } else if (ref) {
-      const row = this.extApi.grid.ds.source[ref[0].dataIndex];
+      const row = this.extApi.grid.ds.source[ref[0].dsIndex];
       const column = this.extApi.grid.columnApi.findColumnAt(ref[1]);
       return column.getValue(row);
     }
@@ -344,7 +344,7 @@ export class ContextApi<T = any> {
   findRowInView(rowIdentity: any): PblRowContext<T> | undefined {
     const rowState = this.cache.get(rowIdentity);
     if (rowState) {
-      const renderRowIndex = rowState.dataIndex - this.extApi.grid.ds.renderStart;
+      const renderRowIndex = rowState.dsIndex - this.extApi.grid.ds.renderStart;
       const rowContext = this.viewCache.get(renderRowIndex);
       if (rowContext && rowContext.identity === rowIdentity) {
         return rowContext;
@@ -374,12 +374,12 @@ export class ContextApi<T = any> {
     if (!offset) {
       return rowState;
     } else {
-      const dataIndex = rowState.dataIndex + offset;
-      const identity = this.getRowIdentity(dataIndex);
+      const dsIndex = rowState.dsIndex + offset;
+      const identity = this.getRowIdentity(dsIndex);
       if (identity !== null) {
         let result = this.findRowInCache(identity);
-        if (!result && create && dataIndex < this.extApi.grid.ds.length) {
-          result = PblRowContext.defaultState(identity, dataIndex, this.columnApi.columns.length);
+        if (!result && create && dsIndex < this.extApi.grid.ds.length) {
+          result = PblRowContext.defaultState(identity, dsIndex, this.columnApi.columns.length);
           this.cache.set(identity, result);
         }
         return result;
@@ -387,15 +387,15 @@ export class ContextApi<T = any> {
     }
   }
 
-  getRowIdentity(dataIndex: number, rowData?: T): string | number | null {
+  getRowIdentity(dsIndex: number, rowData?: T): string | number | null {
     const { ds } = this.extApi.grid;
     const { primary } = this.extApi.columnStore;
 
-    const row = rowData || ds.source[dataIndex];
+    const row = rowData || ds.source[dsIndex];
     if (!row) {
       return null;
     } else {
-      return primary ? primary.getValue(row) : dataIndex;
+      return primary ? primary.getValue(row) : dsIndex;
     }
   }
 
@@ -408,11 +408,11 @@ export class ContextApi<T = any> {
   }
 
   _updateRowContext(rowContext: PblRowContext<T>, renderRowIndex: number) {
-    const dataIndex = this.extApi.grid.ds.renderStart + renderRowIndex;
-    const identity = this.getRowIdentity(dataIndex, rowContext.$implicit);
+    const dsIndex = this.extApi.grid.ds.renderStart + renderRowIndex;
+    const identity = this.getRowIdentity(dsIndex, rowContext.$implicit);
     if (rowContext.identity !== identity) {
       rowContext.saveState();
-      rowContext.dataIndex = dataIndex;
+      rowContext.dsIndex = dsIndex;
       rowContext.identity = identity;
       rowContext.fromState(this.getCreateState(rowContext));
       rowContext.updateOutOfViewState();
@@ -428,7 +428,7 @@ export class ContextApi<T = any> {
   private getCreateState(context: PblRowContext<T>) {
     let state = this.cache.get(context.identity);
     if (!state) {
-      state = PblRowContext.defaultState(context.identity, context.dataIndex, this.columnApi.columns.length);
+      state = PblRowContext.defaultState(context.identity, context.dsIndex, this.columnApi.columns.length);
       this.cache.set(context.identity, state);
     }
     return state;
