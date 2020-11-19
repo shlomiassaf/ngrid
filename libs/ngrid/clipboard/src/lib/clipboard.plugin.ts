@@ -112,7 +112,7 @@ export class PblNgridClipboardPlugin implements OnDestroy {
       if (col) {
         const colIndex = columnApi.renderIndexOf(col);
         if (colIndex > -1) {
-          const rowIndex = contextApi.findRowInCache(point.rowIdent).dataIndex;
+          const rowIndex = contextApi.findRowInCache(point.rowIdent).dsIndex;
           const dataItem = col.getValue(grid.ds.source[rowIndex]);
           const row = data.get(point.rowIdent) || [];
           row[colIndex] = dataItem;
@@ -129,8 +129,8 @@ export class PblNgridClipboardPlugin implements OnDestroy {
 
     const entries = Array.from(data.entries());
     entries.sort((a, b) => {
-      const aIndex = contextApi.findRowInCache(a[0]).dataIndex;
-      const bIndex = contextApi.findRowInCache(b[0]).dataIndex;
+      const aIndex = contextApi.findRowInCache(a[0]).dsIndex;
+      const bIndex = contextApi.findRowInCache(b[0]).dsIndex;
       if (aIndex < bIndex) {
         return -1;
       } else {

@@ -12,12 +12,17 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   get $implicit(): T | undefined { return this._$implicit; }
   set $implicit(value: T) {
     if (this._$implicit !== value) {
-      this.updateRowData(value);
+      this._$implicit = value;
+      this.updateRowData();
     }
   };
 
   /** Index of the data object in the provided data array. */
   index?: number;
+  /** Index of the data object in the provided data array. */
+  get dataIndex() { return this.index; }
+  set dataIndex(value: number) { this.index = value; }
+
   /** Index location of the rendered row that this cell is located within. */
   renderIndex?: number;
   /** Length of the number of total rows. */
@@ -31,6 +36,8 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   /** True if this cell is contained in a row with an odd-numbered index. */
   odd?: boolean;
 
+  /** The index at the datasource */
+  dsIndex: number;
   identity: any;
   firstRender: boolean;
   outOfView: boolean;
@@ -47,29 +54,12 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   private cells: PblCellContext<T>[];
 
   private _$implicit?: T;
+  private _updatePending: boolean;
 
-  constructor(_data: T, public dataIndex: number, private extApi: PblNgridExtensionApi<T>) {
-    /*  TODO: material2#14198
-        The row context come from the `cdk` and it can be of 2 types, depending if multiple row templates are used or not.
-        `index` is used for single row template mode and `renderIndex` for multi row template mode.
-
-        There library and/or plugins require access to the rendered index and having 2 locations is a problem...
-        It's a bug trap, adding more complexity and some time access issue because the `CdkTable` instance is not always available.
-
-        This is a workaround for have a single location for the rendered index.
-        I chose to `index` as the single location although `renderIndex` will probably be chosen by the material team.
-        This is because it's less likely to occur as most tables does not have multi row templates (detail row)
-        A refactor will have to be done in the future.
-        There is a pending issue to do so in https://github.com/angular/material2/issues/14198
-        Also related: https://github.com/angular/material2/issues/14199
-    */
-    const applyWorkaround = extApi.cdkTable.multiTemplateDataRows;
-    if (applyWorkaround) {
-      Object.defineProperty(this, 'index', { get: function() { return this.renderIndex; } });
-    }
-
+  constructor(_data: T, dsIndex: number, private extApi: PblNgridExtensionApi<T>) {
+    this.dsIndex = dsIndex;
     this._$implicit = _data;
-    this.identity = this.extApi.contextApi.getRowIdentity(dataIndex, _data);
+    this.identity = this.extApi.contextApi.getRowIdentity(dsIndex, _data);
 
     this.grid = extApi.grid;
     const cells = this.cells = [];
@@ -82,12 +72,12 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
     }
   }
 
-  static defaultState<T = any>(identity: any, dataIndex: number, cellsCount: number): RowContextState<T> {
+  static defaultState<T = any>(identity: any, dsIndex: number, cellsCount: number): RowContextState<T> {
     const cells: CellContextState<T>[] = [];
     for (let i = 0; i < cellsCount; i++) {
       cells.push(PblCellContext.defaultState());
     }
-    return { identity, dataIndex, cells, firstRender: true, external: {} };
+    return { identity, dsIndex, cells, firstRender: true, external: {} };
   }
 
   getExternal<P extends keyof ExternalRowContextState>(key: P): ExternalRowContextState[P] {
@@ -104,7 +94,7 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   getState(): RowContextState<T> {
     return {
       identity: this.identity,
-      dataIndex: this.dataIndex,
+      dsIndex: this.dsIndex,
       firstRender: this.firstRender,
       cells: this.cells.map( c => c.getState() ),
       external: this.external,
@@ -113,7 +103,7 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
 
   fromState(state: RowContextState<T>): void {
     this.firstRender = state.firstRender;
-    this.dataIndex = state.dataIndex;
+    this.dsIndex = state.dsIndex;
     this.external = state.external;
     for (let i = 0, len = this.cells.length; i < len; i++) {
       this.cells[i].fromState(state.cells[i], this);
@@ -122,11 +112,6 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
 
   saveState() {
     this.extApi.contextApi.saveState(this);
-  }
-
-  updateContext(context: RowContext<T>): void {
-    context.dataIndex = this.dataIndex;
-    Object.assign(this, context);
   }
 
   /**
@@ -155,7 +140,11 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   attachRow(row: PblNgridRowComponent<T>) {
     this.detachRow(this._attachedRow);
     this._attachedRow = row;
-    this.updateOutOfViewState();
+    if (this._updatePending) {
+      this.updateRowData();
+    } else {
+      this.updateOutOfViewState();
+    }
   }
 
   detachRow(row: PblNgridRowComponent<T>) {
@@ -165,8 +154,12 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
     }
   }
 
-  private updateRowData(data: T) {
-    this._$implicit = data;
-    this.extApi.contextApi._updateRowContext(this, this._attachedRow.rowIndex);
+  private updateRowData() {
+    if (this._attachedRow) {
+      this._updatePending = false;
+      this.extApi.contextApi._updateRowContext(this, this._attachedRow.rowIndex);
+    } else {
+      this._updatePending = !!this._$implicit;
+    }
   }
 }

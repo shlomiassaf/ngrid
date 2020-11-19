@@ -207,8 +207,8 @@ function createHandlers(targetEvents: PblNgridTargetEventsPlugin) {
     }
     hCells.push({ rowIdent: activeFocus.rowIdent, colIndex: cellContext.index });
 
-    const rowHeight = Math.abs(cellContext.rowContext.dataIndex - focusedRowState.dataIndex);
-    const dir = focusedRowState.dataIndex > cellContext.rowContext.dataIndex ? -1 : 1;
+    const rowHeight = Math.abs(cellContext.rowContext.dsIndex - focusedRowState.dsIndex);
+    const dir = focusedRowState.dsIndex > cellContext.rowContext.dsIndex ? -1 : 1;
     for (let i = 1; i <= rowHeight; i++) {
       const state = contextApi.findRowInCache(activeFocus.rowIdent, dir * i, true);
       vCells.push({ rowIdent: state.identity, colIndex: activeFocus.colIndex });

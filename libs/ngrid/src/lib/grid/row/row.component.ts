@@ -180,7 +180,7 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   }
 
   private identityUpdated() {
-    this.element.setAttribute('row-id', this.context.dataIndex as any);
+    this.element.setAttribute('row-id', this.context.dsIndex as any);
     this.element.setAttribute('row-key', this.context.identity);
   }
 }
