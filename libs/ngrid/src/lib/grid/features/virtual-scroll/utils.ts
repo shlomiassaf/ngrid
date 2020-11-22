@@ -76,7 +76,7 @@ export function measureRangeSize(viewContainer: ViewContainerRef,
   // The index into the list of rendered views for the first item in the range.
   const renderedStartIndex = range.start - renderedRange.start;
   // The length of the range we're measuring.
-  const rangeLen = range.end - range.start;
+  const rangeLen = range.end - range.start + 1;
 
   // Loop over all root nodes for all items in the range and sum up their size.
   let totalSize = 0;
