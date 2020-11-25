@@ -1,4 +1,4 @@
-import { isPblColumn, isPblMetaColumn, isPblColumnGroup, unrx } from './lib/grid/index';
+import { isPblColumn, isPblMetaColumn, isPblColumnGroup, unrx, getRootElement } from './lib/grid/index';
 import './lib/grid/bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
 
 export {
@@ -51,7 +51,7 @@ export {
   PblColumnSet, PblMetaRowDefinitions,
   PblNgridColumnSet, PblNgridColumnDefinitionSet,
 
-  NoVirtualScrollStrategy, TableAutoSizeVirtualScrollStrategy,
+  NoVirtualScrollStrategy, PblNgridAutoSizeVirtualScrollStrategy,
 
   PblNgridFocusChangedEvent, PblNgridSelectionChangedEvent,
   PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext, PblNgridContextApi,
@@ -73,6 +73,7 @@ export { ngridPlugin, NgridPluginMetadata } from './lib/ext/grid-plugin';
 export { PblNgridPluginController } from './lib/ext/plugin-control';
 
 export const utils = {
+  getRootElement,
   isPblColumn,
   isPblMetaColumn,
   isPblColumnGroup,

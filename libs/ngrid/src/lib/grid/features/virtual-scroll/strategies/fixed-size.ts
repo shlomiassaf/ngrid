@@ -1,16 +1,28 @@
-import { CdkVirtualScrollViewport, FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
+import { PblNgridExtensionApi } from '../../../../ext/grid-ext-api';
+import { PblCdkVirtualScrollViewportComponent } from '../virtual-scroll-viewport.component';
+import { FixedSizeVirtualScrollStrategy } from './cdk/fixed-size-virtual-scroll';
+import { PblNgridVirtualScrollStrategy } from './types';
 
-export class PblNgridFixedSizeVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy {
+export class PblNgridFixedSizeVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy implements PblNgridVirtualScrollStrategy {
 
-  private _ngridViewport: CdkVirtualScrollViewport;
+  protected get ngridViewport() { return this._viewport as PblCdkVirtualScrollViewportComponent; }
+  protected extApi: PblNgridExtensionApi;
 
   constructor(private itemSize: number, minBufferPx: number, maxBufferPx: number) {
     super(itemSize, minBufferPx, maxBufferPx);
   }
 
-  attach(viewport: CdkVirtualScrollViewport) {
-    super.attach(this._ngridViewport = viewport);
+  attachExtApi(extApi: PblNgridExtensionApi): void {
+    this.extApi = extApi;
   }
+
+  attach(viewport: PblCdkVirtualScrollViewportComponent): void {
+    if (!this.extApi) {
+      throw new Error('Invalid use of attach, you must first attach `PblNgridExtensionApi`');
+    }
+    super.attach(viewport);
+  }
+
 
   onContentScrolled() {
     // https://github.com/shlomiassaf/ngrid/issues/11
@@ -34,16 +46,16 @@ export class PblNgridFixedSizeVirtualScrollStrategy extends FixedSizeVirtualScro
     // The amount of offset reduced each time is approx the size of the buffers. (mix/max Buffer).
     //
     // This strategy is here only because of this error, it will let the initial update run and catch it's subsequent scroll event.
-    if (!this._ngridViewport) {
+    if (!this.ngridViewport) {
       return;
     }
-    let { start, end } = this._ngridViewport.getRenderedRange();
+    let { start, end } = this.ngridViewport.getRenderedRange();
     const rangeLength = end - start;
-    const dataLength = this._ngridViewport.getDataLength();
+    const dataLength = this.ngridViewport.getDataLength();
     if (rangeLength < 0 && dataLength < -rangeLength) {
       start = dataLength - end;
-      this._ngridViewport.setRenderedRange({ start, end });
-      this._ngridViewport.setRenderedContentOffset(this.itemSize * start);
+      this.ngridViewport.setRenderedRange({ start, end });
+      this.ngridViewport.setRenderedContentOffset(this.itemSize * start);
       // this._scrolledIndexChange.next(Math.floor(firstVisibleIndex));
     } else {
       super.onContentScrolled();

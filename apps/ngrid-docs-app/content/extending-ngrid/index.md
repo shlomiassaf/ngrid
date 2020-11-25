@@ -274,9 +274,7 @@ Next, we call the `init()` method:
   private init(): void {
     this._removePlugin = this.pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    if (!this.pluginCtrl.hasPlugin('targetEvents')) {
-      this.pluginCtrl.createPlugin('targetEvents');
-    }
+    this.pluginCtrl.ensurePlugin('targetEvents');
 
     const targetEvents = this.pluginCtrl.getPlugin('targetEvents');
     targetEvents.keyDown
@@ -357,9 +355,7 @@ export class PblNgridClipboardPluginModule {
             first(),
           )
           .subscribe( e => {
-            if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
-              pluginCtrl.createPlugin(PLUGIN_KEY);
-            }
+            pluginCtrl.ensurePlugin(PLUGIN_KEY);
           });
       });
   }
@@ -429,9 +425,7 @@ export class PblNgridClipboardPluginModule {
               first(),
             )
             .subscribe( e => {
-              if (!pluginCtrl.hasPlugin(PLUGIN_KEY)) {
-                pluginCtrl.createPlugin(PLUGIN_KEY);
-              }
+              pluginCtrl.ensurePlugin(PLUGIN_KEY);
             });
         }
       });

@@ -179,7 +179,7 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
     currentItem.changeDetectorRef.markForCheck();
   }
 
-  private identityUpdated() {
+  protected identityUpdated() {
     this.element.setAttribute('row-id', this.context.dsIndex as any);
     this.element.setAttribute('row-key', this.context.identity);
   }

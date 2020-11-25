@@ -346,25 +346,31 @@ export class PblDataSource<T = any,
 
     unrx.kill(this, PROCESSING_SUBSCRIPTION_GROUP)
 
-    const trimToRange = (range: ListRange, data: any[]) => data.slice(range.start, range.end) ;
+    const trimToRange = (range: ListRange, data: any[]) => data.slice(range.start, range.end + 1) ;
 
+    /* We use this flag to skip handling `viewChange` events
+       This is on when a call to get data from the adapter (stream) is initiated and set off once the data arrives.
+       In this period, we don't want to update the view, instead, we save the last view range and when the data arrive we trim it to fit the view. */
     let skipViewChange: boolean;
     let lastEmittedSource: T[];
 
+    // We listen to view changes (scroll updates, practical only in virtual scroll) and trim the data displayed based on what
+    // the view change instructs us.
     cv.viewChange
       .pipe(unrx(this, PROCESSING_SUBSCRIPTION_GROUP))
       .subscribe( range => {
-        if (this._lastRange && this._lastRange.start === range.start && this._lastRange.end === range.end) {
+        if (this._lastRange?.start === range.start && this._lastRange?.end === range.end) {
           return;
         }
         this._lastRange = range;
         if (!skipViewChange) {
-          if (range && lastEmittedSource && lastEmittedSource.length) {
+          if (range && lastEmittedSource?.length) {
             this._renderData$.next(trimToRange(this._lastRange, lastEmittedSource));
           }
         }
       });
 
+    // We listen to incoming data update triggers when the data is about to change
     stream
       .pipe(
         unrx(this, PROCESSING_SUBSCRIPTION_GROUP),
@@ -376,7 +382,7 @@ export class PblDataSource<T = any,
       )
       .subscribe(
         ({data}) => {
-          if (this._lastRange && data && data.length) {
+          if (this._lastRange && data?.length) {
             data = trimToRange(this._lastRange, data);
           }
           this._renderData$.next(data);

@@ -1,10 +1,10 @@
-import { Directive, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef } from '@angular/core';
+import { Directive, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef, NgZone, ViewContainerRef } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-
 import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
 import { PblNgridDetailRowComponent } from './row';
 import { PblNgridDetailRowParentRefDirective, PblNgridDefaultDetailRowParentComponent } from './directives';
+import { DetailRowController } from './detail-row-controller';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -69,11 +69,11 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
     if (this._forceSingle !== value) {
       this._forceSingle = value;
       if (value && this._openedRow && this._openedRow.expended) {
-        this._detailRowRows.forEach( r => {
-          if (r.row !== this._openedRow.row) {
-            r.toggle(false);
+        for (const detailRow of this._detailRowRows) {
+          if (detailRow.row !== this._openedRow.row) {
+            detailRow.toggle(false);
           }
-        });
+        }
       }
     }
   }
@@ -125,28 +125,33 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
    */
   @Output() toggledRowContextChange = new EventEmitter<PblDetailsRowToggleEvent<T>>();
 
+  public readonly detailRowCtrl: DetailRowController;
+
   private _openedRow?: PblDetailsRowToggleEvent<T>;
   private _forceSingle: boolean;
   private _isSimpleRow: (index: number, rowData: T) => boolean = ROW_WHEN_TRUE;
   private _isDetailRow: (index: number, rowData: T) => boolean = ROW_WHEN_FALSE;
-  private _detailRowRows = new Map<any, PblNgridDetailRowComponent>();
+  private _detailRowRows = new Set<PblNgridDetailRowComponent>();
   private _detailRow: ( (index: number, rowData: T) => boolean ) | boolean;
   private _detailRowDef: PblNgridDetailRowParentRefDirective<T>;
   private _defaultParentRef: ComponentRef<PblNgridDefaultDetailRowParentComponent>;
   private _removePlugin: (grid: PblNgridComponent<any>) => void;
+  private _cdPending: boolean;
+  private readonly grid: PblNgridComponent<any>;
 
-  constructor(private grid: PblNgridComponent<any>, private pluginCtrl: PblNgridPluginController<T>, private injector: Injector) {
+  constructor(vcRef: ViewContainerRef,
+              private readonly pluginCtrl: PblNgridPluginController<T>,
+              private readonly ngZone: NgZone,
+              private readonly injector: Injector) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
+    this.grid = pluginCtrl.extApi.grid;
+    this.detailRowCtrl = new DetailRowController(vcRef, pluginCtrl.extApi);
 
     pluginCtrl.onInit()
       .subscribe(() => {
-        // Depends on target-events plugin
-        // if it's not set, create it.
-        if (!pluginCtrl.hasPlugin('targetEvents')) {
-          pluginCtrl.createPlugin('targetEvents');
-        }
+        pluginCtrl.ensurePlugin('targetEvents'); // Depends on target-events plugin
 
-        grid.registry.changes
+        this.grid.registry.changes
           .subscribe( changes => {
             for (const c of changes) {
               switch (c.type) {
@@ -156,7 +161,6 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
                     this._detailRowDef = undefined;
                   }
                   this.setupDetailRowParent();
-                  // grid.rowsApi.syncRows('data');
                   break;
               }
             }
@@ -174,18 +178,32 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
   }
 
   addDetailRow(detailRow: PblNgridDetailRowComponent): void {
-    this._detailRowRows.set(detailRow.row, detailRow);
+    this._detailRowRows.add(detailRow);
   }
 
   removeDetailRow(detailRow: PblNgridDetailRowComponent): void {
-    this._detailRowRows.delete(detailRow.row);
+    this._detailRowRows.delete(detailRow);
   }
 
   toggleDetailRow(row: any, forceState?: boolean): boolean | void {
-    const detailRow = this._detailRowRows.get(row);
-    if (detailRow) {
-      detailRow.toggle(forceState);
-      return detailRow.expended;
+    for (const detailRow of this._detailRowRows) {
+      if (detailRow.row === row) {
+        detailRow.toggle(forceState);
+        return detailRow.expended;
+      }
+    }
+  }
+
+  markForCheck() {
+    if (!this._cdPending) {
+      this._cdPending = true;
+      this.ngZone.runOutsideAngular(() => Promise.resolve()
+        .then(() => {
+          this.ngZone.run(() => {
+            this._cdPending = false;
+            this._defaultParentRef?.changeDetectorRef.markForCheck();
+          });
+        }));
     }
   }
 
@@ -224,11 +242,12 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
         this._detailRowDef = detailRow = detailRow.clone();
         Object.defineProperty(detailRow, 'when', { enumerable: true,  get: () => this._isDetailRow });
       } else if (!this._defaultParentRef) {
+        // We don't have a template in the registry, so we register the default component which will push a new template to the registry
         // TODO: move to module? set in root registry? put elsewhere to avoid grid sync (see event of registry change)...
         this._defaultParentRef = this.injector.get(ComponentFactoryResolver)
           .resolveComponentFactory(PblNgridDefaultDetailRowParentComponent)
           .create(this.injector);
-        this._defaultParentRef.changeDetectorRef.detectChanges();
+        this._defaultParentRef.changeDetectorRef.detectChanges(); // kick it for immediate emission of the registry value
         return;
       }
     }
