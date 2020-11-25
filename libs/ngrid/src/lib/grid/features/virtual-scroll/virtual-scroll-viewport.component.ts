@@ -32,18 +32,17 @@ import {
 import { unrx } from '../../utils';
 import { PblNgridConfigService } from '../../services/config';
 import { PblNgridComponent } from '../../ngrid.component';
-import { PblCdkVirtualScrollDirective } from './strategies/v-scroll.directive'
+import { PblNgridBaseVirtualScrollDirective } from './strategies/base-v-scroll.directive'
 import { PblNgridVirtualScrollStrategy } from './strategies/types';
-import { PblNgridAutoSizeVirtualScrollStrategy } from './strategies/auto-size'
-import { NoVirtualScrollStrategy } from './strategies/noop'
 import { NgeVirtualTableRowInfo, PblVirtualScrollForOf } from './virtual-scroll-for-of';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
 import { createScrollWatcherFn } from './scroll-logic/virtual-scroll-watcher';
+import { PblNgridAutoSizeVirtualScrollStrategy } from './strategies/cdk-wrappers/auto-size';
 
 declare module '../../services/config' {
   interface PblNgridConfig {
     virtualScroll?: {
-      wheelMode?: PblCdkVirtualScrollDirective['wheelMode'];
+      wheelMode?: PblNgridBaseVirtualScrollDirective['wheelMode'];
       defaultStrategy?(): PblNgridVirtualScrollStrategy;
     }
   }
@@ -57,6 +56,7 @@ function resolveScrollStrategy(config: PblNgridConfigService, scrollStrategy?: P
     }
   }
 
+  // TODO: Replace with `PblNgridDynamicVirtualScrollStrategy` in v4
   return scrollStrategy || new PblNgridAutoSizeVirtualScrollStrategy(100, 200);
 }
 
@@ -141,8 +141,8 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   ngeRenderedContentSize = 0;
   pblFillerHeight: string;
 
-  get wheelMode(): PblCdkVirtualScrollDirective['wheelMode'] {
-    return (this.pblScrollStrategy as PblCdkVirtualScrollDirective).wheelMode || this.wheelModeDefault || 'passive';
+  get wheelMode(): PblNgridBaseVirtualScrollDirective['wheelMode'] {
+    return (this.pblScrollStrategy as PblNgridBaseVirtualScrollDirective).wheelMode || this.wheelModeDefault || 'passive';
   }
 
   get getBoundingClientRects() {
@@ -184,7 +184,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   private isCDPending: boolean;
   private _isScrolling = false;
 
-  private wheelModeDefault:  PblCdkVirtualScrollDirective['wheelMode'];
+  private wheelModeDefault:  PblNgridBaseVirtualScrollDirective['wheelMode'];
   private grid: PblNgridComponent<any>;
   private forOf?: PblVirtualScrollForOf<any>;
 
@@ -212,11 +212,8 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     }
     config.onUpdate('virtualScroll').pipe(unrx(this)).subscribe( change => this.wheelModeDefault = change.curr.wheelMode);
 
-    if (pblScrollStrategy instanceof PblCdkVirtualScrollDirective) {
-      this.enabled = pblScrollStrategy.type !== 'vScrollNone';
-    } else {
-      this.enabled = !(pblScrollStrategy instanceof NoVirtualScrollStrategy);
-    }
+    this.enabled = pblScrollStrategy.type && pblScrollStrategy.type !== 'vScrollNone';
+
     extApi.setViewport(this);
     this.offsetChange = this.offsetChange$.asObservable();
 
@@ -364,7 +361,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   attach(forOf: CdkVirtualForOf<any> & NgeVirtualTableRowInfo) {
     super.attach(forOf);
-    const scrollStrategy = this.pblScrollStrategy instanceof PblCdkVirtualScrollDirective
+    const scrollStrategy = this.pblScrollStrategy instanceof PblNgridBaseVirtualScrollDirective
       ? this.pblScrollStrategy._scrollStrategy
       : this.pblScrollStrategy
     ;

@@ -50,6 +50,9 @@ import { PblNgridPaginatorRefDirective } from './grid/registry/directives/pagina
 import { PblNgridHideColumns } from './grid/features/hide-columns.directive';
 import { PblCdkVirtualScrollViewportComponent } from './grid/features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblCdkVirtualScrollDirective } from './grid/features/virtual-scroll/strategies/v-scroll.directive';
+// TODO: Move to an independent package in v4
+import { PblCdkAutoSizeVirtualScrollDirective }  from './grid/features/virtual-scroll/strategies/cdk-wrappers/v-scroll-auto.directive';
+import { PblCdkFixedSizedVirtualScrollDirective }  from './grid/features/virtual-scroll/strategies/cdk-wrappers/v-scroll-fixed.directive';
 import { PblNgridScrolling } from './grid/features/virtual-scroll/scrolling-plugin.directive';
 import { PblNgridComponent } from './grid/ngrid.component';
 import { PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService } from './grid/services/config';
@@ -97,7 +100,11 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridMetaCellComponent,
 
     PblNgridHideColumns,
-    PblCdkVirtualScrollViewportComponent, PblCdkVirtualScrollDirective, PblNgridScrolling,
+
+    PblCdkVirtualScrollViewportComponent, PblNgridScrolling,
+    PblCdkVirtualScrollDirective,
+    // TODO: Move to an independent package in v4
+    PblCdkAutoSizeVirtualScrollDirective, PblCdkFixedSizedVirtualScrollDirective,
 
     PblNgridCellEditAutoFocusDirective,
 
@@ -123,6 +130,8 @@ export function provideCommon(components: CommonTemplateInit[]): any {
 
     PblNgridHideColumns,
     PblCdkVirtualScrollDirective,
+    // TODO: Move to an independent package in v4
+    PblCdkAutoSizeVirtualScrollDirective, PblCdkFixedSizedVirtualScrollDirective,
 
     PblNgridCellEditAutoFocusDirective,
 

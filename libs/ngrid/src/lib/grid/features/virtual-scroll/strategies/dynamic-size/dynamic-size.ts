@@ -5,7 +5,15 @@ import { PblCdkVirtualScrollViewportComponent } from '../../virtual-scroll-viewp
 import { PblNgridVirtualScrollStrategy } from '../types';
 import { Sizer } from './sizer';
 
-export class PblNgridDynamicVirtualScrollStrategy implements PblNgridVirtualScrollStrategy {
+declare module '../types' {
+  interface PblNgridVirtualScrollStrategyMap {
+    vScrollDynamic: PblNgridDynamicVirtualScrollStrategy;
+  }
+}
+
+export class PblNgridDynamicVirtualScrollStrategy implements PblNgridVirtualScrollStrategy<'vScrollDynamic'> {
+
+  readonly type: 'vScrollDynamic' = 'vScrollDynamic';
 
   protected _scrolledIndexChange = new Subject<number>();
 
