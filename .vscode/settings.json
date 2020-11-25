@@ -24,7 +24,7 @@
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "explorer.compactFolders": false,
-  "debug.javascript.autoAttachFilter": "always",
+  "debug.javascript.autoAttachFilter": "onlyWithFlag",
   "debug.javascript.terminalOptions": {
     "autoAttachChildProcesses": true,
     "nodeVersionHint": 14

@@ -1,11 +1,19 @@
-import { PblNgridExtensionApi } from '../../../../ext/grid-ext-api';
-import { PblCdkVirtualScrollViewportComponent } from '../virtual-scroll-viewport.component';
-import { FixedSizeVirtualScrollStrategy } from './cdk/fixed-size-virtual-scroll';
-import { PblNgridVirtualScrollStrategy } from './types';
+import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
+import { PblNgridExtensionApi } from '../../../../../ext/grid-ext-api';
+import { PblCdkVirtualScrollViewportComponent } from '../../virtual-scroll-viewport.component';
+import { PblNgridVirtualScrollStrategy } from '../types';
 
-export class PblNgridFixedSizeVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy implements PblNgridVirtualScrollStrategy {
+declare module '../types' {
+  interface PblNgridVirtualScrollStrategyMap {
+    vScrollFixed: PblNgridFixedSizeVirtualScrollStrategy;
+  }
+}
 
-  protected get ngridViewport() { return this._viewport as PblCdkVirtualScrollViewportComponent; }
+export class PblNgridFixedSizeVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy implements PblNgridVirtualScrollStrategy<'vScrollFixed'> {
+
+  get type() { return 'vScrollFixed' as const; }
+
+  private viewport: PblCdkVirtualScrollViewportComponent;
   protected extApi: PblNgridExtensionApi;
 
   constructor(private itemSize: number, minBufferPx: number, maxBufferPx: number) {
@@ -20,7 +28,7 @@ export class PblNgridFixedSizeVirtualScrollStrategy extends FixedSizeVirtualScro
     if (!this.extApi) {
       throw new Error('Invalid use of attach, you must first attach `PblNgridExtensionApi`');
     }
-    super.attach(viewport);
+    super.attach(this.viewport = viewport);
   }
 
 
@@ -46,16 +54,16 @@ export class PblNgridFixedSizeVirtualScrollStrategy extends FixedSizeVirtualScro
     // The amount of offset reduced each time is approx the size of the buffers. (mix/max Buffer).
     //
     // This strategy is here only because of this error, it will let the initial update run and catch it's subsequent scroll event.
-    if (!this.ngridViewport) {
+    if (!this.viewport) {
       return;
     }
-    let { start, end } = this.ngridViewport.getRenderedRange();
+    let { start, end } = this.viewport.getRenderedRange();
     const rangeLength = end - start;
-    const dataLength = this.ngridViewport.getDataLength();
+    const dataLength = this.viewport.getDataLength();
     if (rangeLength < 0 && dataLength < -rangeLength) {
       start = dataLength - end;
-      this.ngridViewport.setRenderedRange({ start, end });
-      this.ngridViewport.setRenderedContentOffset(this.itemSize * start);
+      this.viewport.setRenderedRange({ start, end });
+      this.viewport.setRenderedContentOffset(this.itemSize * start);
       // this._scrolledIndexChange.next(Math.floor(firstVisibleIndex));
     } else {
       super.onContentScrolled();

@@ -51,7 +51,10 @@ export {
   PblColumnSet, PblMetaRowDefinitions,
   PblNgridColumnSet, PblNgridColumnDefinitionSet,
 
-  NoVirtualScrollStrategy, PblNgridAutoSizeVirtualScrollStrategy,
+  PblNgridVirtualScrollStrategy, PblNgridBaseVirtualScrollDirective,
+  NoVirtualScrollStrategy, PblNgridDynamicVirtualScrollStrategy,
+  // TODO: Move to an independent package in v4
+  PblNgridFixedSizeVirtualScrollStrategy, PblNgridAutoSizeVirtualScrollStrategy,
 
   PblNgridFocusChangedEvent, PblNgridSelectionChangedEvent,
   PblNgridMetaCellContext, PblNgridCellContext, PblNgridRowContext, PblRowContext, PblNgridContextApi,
