@@ -48,13 +48,15 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
 
   context: PblRowContext<T>;
 
+  protected prevRow: T | undefined;
+  protected currRow: T | undefined;
+
   private _classDiffer: StylingDiffer<{ [klass: string]: boolean }>;
   private _lastClass: Set<string>;
   private _rowIndex: number;
 
   updateRow(): void {
     if (this._extApi) {
-
       if (!this.context) {
         const vcRef = this._extApi.cdkTable._rowOutlet.viewContainer;
         const len = vcRef.length - 1;
@@ -70,6 +72,12 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
 
         this.identityUpdated();
 
+        this.currRow = this.context.$implicit;
+      } else {
+        this.prevRow = this.currRow;
+        this.currRow = this.context.$implicit;
+      }
+      if (this.currRow && this.currRow !== this.prevRow) {
         if (this.grid.rowClassUpdate && this.grid.rowClassUpdateFreq === 'item') {
           this.updateHostClass();
         }
@@ -92,7 +100,9 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   }
 
   protected init() {
-    this.updateRow();
+    if (!this.context) {
+      this.updateRow();
+    }
   }
 
   protected detectChanges() {

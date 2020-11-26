@@ -1,164 +1,40 @@
 ---
-title: Virtual Scroll
-path: features/grid/virtual-scroll
-parent: features/grid
-ordinal: 4
+title: What is Virtual Scroll?
+path: features/grid/virtual-scroll/what-is-virtual-scroll
+parent: features/grid/virtual-scroll
+ordinal: 0
 ---
-# Virtual Scroll
+# Virtual Scroll Basics
 
-Virtual scroll will make sure that the table will only render the rows that are visible (plus some buffer rows) and update them
-when the user scroll.
+Displaying rows, rendering and keeping them synced is an expansive task. Adding more columns equals more work.
 
-The visible rows in a table are the rows that fit in a table's **viewport**. In other words, the amount of row's we can fit
-in the total height of the table.
+If our dataset contains 100 rows & 5 columns, displaying them is not an issue.  
+Now, a new dataset with 100,000 rows. That's **at minimum** 600,000 DOM elements, 100K rows + 500K cells.
 
-To calculate the amount of rows that fit in a given height we need:
+In reality, the browser will start showing slow initial loading at 500 rows and hang at 1000+ and that's only 5 columns!  
+When we think about it, why do we need to render all rows? the user can only see several rows at a time.
 
-1. The height of the row
-2. The total height of the table
+To solve this issue we apply **virtual scrolling**, a technique that renders only the visible rows (plus additional row for buffering).  
+All other rows are emulated (virtualized) and only when the user scroll's the context of each row is swapped but we usually don't
+generate new rows.
 
-The total height is constant (when scrolling) so the height of the row will determine the amount of rows that fit.
+We only show a small portion of data at a given time.  
+Other items should be emulated (virtualized) via elements that create empty space, which are empty but have some height necessary to provide consistent scrollbar parameters.  
+Each time the user scrolls out of the set of visible items, the content is rebuilt: new items are fetched and rendered, old ones are destroyed, padding elements are recalculated, etc.
 
-## Row Height Strategy
+I> For an in-depth tutorial, see [this blog post](https://blog.logrocket.com/virtual-scrolling-core-principles-and-basic-implementation-in-react/)
 
-There are 3 strategies, 2 for finding the row height:
+As always, there are challenges. At the start, we start with 100K rows, let say we render 10 but to display the scrollbar properly
+we need to estimate the total length of the remaining 99,990 row we still didn't render. As the user scrolls we need to
+determine the next subset of rows to fetch.
 
-- **vScrollFixed**: Fixed size strategy. The height is fixed for all rows
-- **vScrollAuto**: Auto size strategy. The table will calculate the average height based on the actual rows
+If we know that all rows have a fixed height we can apply specific logic, if we need to automatically calculate the heights we will apply a different logic.  
+We call the different logics **strategies**.
 
-I> Whenever the row height in your table's is fixed, use the fixed height strategy.
+**nGrid** comes with 3 built-in strategies, suitable for different scenarios.
 
-And one for disabling virtual scroll: **vScrollNone**.
+I> You can provide a custom strategy if you have one, however this is usually complicated.
 
-## Assigning a strategy to a table
-
-Each strategy is also a directive that we can use to apply a strategy on a table
-
-```html
-<pbl-ngrid vScrollAuto></pbl-ngrid>
-
-<pbl-ngrid vScrollFixed="48"></pbl-ngrid>
-
-<pbl-ngrid vScrollNone></pbl-ngrid>
-```
+I> Logic by itself is not enough, the strategy must be able to cope with other elements in the grid, such as header, sticky rows, etc..
 
 <div pbl-example-view="pbl-virtual-scroll-example"></div>
-
-## Global Strategy (default)
-
-The global strategy for all tables is `vScrollAuto`. If a virtual scroll strategy is not set the global strategy is used.
-
-You can configure the global strategy with `PblNgridModule.forRoot`:
-
-```typescript {10,21}
-import { NgModule } from '@angular/core';
-import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
-import { PblNgridModule, NoVirtualScrollStrategy } from '@pebula/ngrid';
-
-// DISABLING VIRTUAL SCROLL
-
-@NgModule({
-  imports: [
-    PblNgridModule.forRoot({
-      defaultStrategy: () => new NoVirtualScrollStrategy()
-    })
-  ]
-})
-export class TablesWithoutVirtualScrollModule { }
-
-// FIXED SIZE VIRTUAL SCROLL
-
-@NgModule({
-  imports: [
-    PblNgridModule.forRoot({
-      wheelMode: 18, // default wheel mode
-      defaultStrategy: () => new FixedSizeVirtualScrollStrategy(48, 100, 200);
-    })
-  ]
-})
-export class TablesWithFixedVirtualScrollModule { }
-```
-
-I> `NoVirtualScrollStrategy` is a mode that disable virtual scroll
-
-## Setting the Table Height
-
-Virtual scroll requires a table with an explicit `height` value set (style/css). All valid units are good (%, px, etc..).
-
-W> If a height is not explicitly set the table's height will be 0.
-
-I> Without virtual scroll, not having a height will result in a height equal to the sum of all rows.
-With virtual scroll we calculate how many rows fit in a given height, hence **we need a the height pre-hand**. We can't
-let the row's define it.
-
-## Detecting Scrolling State
-
-When rows are scrolled vertically the *scrolling* state is turned on. Detecting changes in the scrolling state is supported through:
-
-### `(scrolling)` Event
-
-Event emitted when the scrolling state of rows in the table changes.
-
-When scrolling **starts** `true` is emitted and when the scrolling **ends** `false` is emitted.
-
-### CSS Class
-
-When scrolling starts the CSS class `pbl-ngrid-scrolling` is added to the table (`pbl-ngrid`) and when scrolling ends the CSS class is removed.
-
-I> The CSS flag is mostly used for plugins, cell template packs, etc. It requires disabling of component `encapsulation`, less suitable
-for application components.
-
-<div pbl-example-view="pbl-scrolling-state-example"></div>
-
-## Performance
-
-Without virtual scrolling, loading a datasource with 10,000 rows will takes a lot of time and will probably freeze the browser.
-
-With virtual scrolling loading is instant but it does not come for free, when scrolling the table will calculate the new scroll position matching
-it to the rows that should appear in that scroll offset and render them on page.
-
-When the offset is changing gradually the performance impact is minimal but when the change is rapid with large gaps there might be performance issues.
-
-I> Performance issues means lower frame rate, which happens when it takes more time to render new rows. This is why larger offset means less performance
-because more rows are rendered on each scroll.
-
-Rapid scrolling with large offsets can occur when scrolling with the **wheel** or in mobile with **touch move**.
-
-In most browsers, when rendering takes more time the end result is an empty table while scrolling. The rows we had at the start are long out of the view but new rows
-did not have the time to render in the frame.
-
-W> **wheelMode** works for wheel events, its does not apply for touch events. Messing around with touch behavior on mobile devices will
-make the scrolling behavior feel un-natural. Scrolling in touch devices, using touch is always passive.
-
-To tackle this the `[wheelMode]` mode directive offers 3 strategies:
-
-### Passive (default)
-
-Do nothing, let the browser handle the rendering and if no rows are shown while browsing let it be.
-
-### Blocking
-
-Do not let the browser scroll until all rows in the current offset are rendered.
-
-This will result in a lower scrolling speed with the wheel but with a scrolling UX behavior. The scrolling speed
-depends on the frame rate, at 60FPS you will not feel a thing but at 5 FPS the experience is bad.
-
-### Threshold
-
-Provide a frame rate threshold that define when to use **Passive** mode and when to use **Blocking** mode.
-
-Each scrolling events start with the **Blocking** behavior but when the frame rate drops below the threshold the behavior
-switch's to **Passive**.
-
-It is always preferred to render at 60FPS but sometimes it is not possible and we can compromise on lower frame rate in favor of a real UI scroll feel.
-
-Like all trade-offs, it is best to meet at middle ground. Provide a **threshold** within your limits, usually between 15 FPS to 25 FPS.
-
-I> Measuring performance is tricky as it depends on the CPU power of the host, the complexity of the cells, the size of the viewport (row count) and the scroll speed.
-Try to avoid complex cells, **Blocking** behavior and low **threshold** values.
-
-<p>For a live example see the <a [routerLink]="['../../', 'demos', 'virtual-scroll-performance']">virtual scroll performance</a> demo.</p>
-
-## Horizontal scrolling
-
-Virtual scroll currently support vertical scrolling, horizontal scrolling is not supported at the moment.

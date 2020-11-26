@@ -24,7 +24,9 @@ export class ScrollingStateExample {
     .build();
 
   ds = this.createDatasource();
-  isScrolling: -1 | 0 | 1 = 0;
+
+  scrollingState: -1 | 0 | 1 = 0;
+  lastScrollDirection: 'START' | 'END';
 
   constructor(private datasource: DynamicClientApi) { }
 
@@ -32,5 +34,12 @@ export class ScrollingStateExample {
     return createDS<Person>()
       .onTrigger( () => this.datasource.getPeople(0, 1500) )
       .create();
+  }
+
+  setIsScrolling(state: -1 | 0 | 1) {
+    this.scrollingState = state;
+    if (state) {
+      this.lastScrollDirection = state === 1 ? 'END' : 'START';
+    }
   }
 }

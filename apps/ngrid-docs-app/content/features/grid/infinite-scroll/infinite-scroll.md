@@ -131,3 +131,27 @@ If you do register, it will trigger an event as before with the `eventSource` pr
 
 W> If you've enabled the global configuration `clearContextOnSourceChanging` (disabled by default) note that it does not play nicely with infinite scroll
 and the context will get cleared every time data is fetched!
+
+## Row Customization `*pblNgridInfiniteVirtualRowDef`
+
+...
+
+## Infinite Scroll Options
+
+...
+
+## Infinite Scroll Cache Strategies
+
+...
+
+### Sequence Blocks
+
+...
+
+### Fragmented Blocks
+
+...
+
+#### strictPaging
+
+...
