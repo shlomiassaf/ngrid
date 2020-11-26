@@ -1,5 +1,5 @@
 import { ListRange } from '@angular/cdk/collections';
-import { AutoSizeVirtualScrollStrategy, ItemSizeAverager } from '@angular/cdk-experimental/scrolling';
+import { AutoSizeVirtualScrollStrategy, ItemSizeAverager } from './auto-size-cdk';
 import { PblNgridExtensionApi } from '../../../../../ext/grid-ext-api';
 import { NgeVirtualTableRowInfo } from '../../virtual-scroll-for-of';
 import { PblCdkVirtualScrollViewportComponent } from '../../virtual-scroll-viewport.component';

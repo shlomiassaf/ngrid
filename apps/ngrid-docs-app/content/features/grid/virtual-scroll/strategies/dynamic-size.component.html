@@ -1,0 +1,16 @@
+<pbl-ngrid class="pbl-ngrid-cell-ellipsis" [dataSource]="ds" [columns]="columns" detailRow vScrollDynamic>
+
+  <pbl-ngrid-row *pblNgridDetailRowParentRef="let row;"
+                [detailRow]="row"
+                matRipple>
+  </pbl-ngrid-row>
+  <div *pblNgridDetailRowDef="let row; animation as animation; hasAnimation: 'interaction'"
+        class="pbl-detail-row"
+        [@.disabled]="animation.fromRender" (@detailExpand.done)="animation.end()" [@detailExpand]>
+    <div>
+      <h1>Detail Row</h1>
+      <pre>{{row | json}}</pre>
+    </div>
+  </div>
+
+</pbl-ngrid>

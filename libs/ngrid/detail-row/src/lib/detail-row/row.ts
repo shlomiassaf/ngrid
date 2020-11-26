@@ -74,7 +74,6 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   private opened = false;
   private plugin: PblNgridDetailRowPluginDirective<any>;
   private controller: DetailRowController;
-  private prevRow: PblRowContext<any>;
 
   constructor(@Optional() grid: PblNgridComponent,
               cdRef: ChangeDetectorRef,
@@ -92,10 +91,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   updateRow(): void {
     super.updateRow();
     if (this.context) {
-      const prevRow = this.prevRow;
-      this.prevRow = this.context.$implicit;
-
-      if (this.context.$implicit !== prevRow) { // only if row has changed (TODO: use identity based change detection?)
+      if (this.currRow !== this.prevRow) { // only if row has changed (TODO: use identity based change detection?)
         switch (this.plugin.whenContextChange) {
           case 'context':
             const isContextOpened = !!this.context.getExternal('detailRow');
