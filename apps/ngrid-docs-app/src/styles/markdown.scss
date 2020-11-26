@@ -12,9 +12,14 @@
 
 // Font style in github's markdown-body is different in size and family, this will fix
 $font-family: map-get($typography-config, font-family);
+$foreground: map-get($pbl-shell-theme, foreground);
 
 .markdown-body {
-  @include mat-typography-level-to-styles((body-1: mat-typography-level(14px, 24px, 400, $font-family)), body-1);
+  @include mat-typography-level-to-styles((body-1: mat-typography-level(16px, 24px, 400, $font-family)), body-1);
+
+  strong {
+    letter-spacing: 0.5px;
+  }
 
   &.overflow-container {
     height: 100%;
@@ -45,20 +50,22 @@ $font-family: map-get($typography-config, font-family);
     padding: 16px;
     margin: 24px 0;
     padding-left: $block-indent;
+    color: darken(mat-color($foreground, text), 10);
 
     .icon-location {
       position: absolute;
       width: $block-indent;
       left: 0;
-      top: 22px;
+      top: 0;
       bottom: 0;
     }
 
     &.icon .icon-location:before {
       display: inline-block;
       position: absolute;
+      top: 4px;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-50%, 50%);
       color: #ffffff;
       width: 24px;
       height: 24px;
@@ -122,6 +129,12 @@ $font-family: map-get($typography-config, font-family);
     border-radius: $border-radius;
 
     br { display: none; }
+
+    .language-text {
+      padding: 0.5em;
+      border-radius: 8px;
+      color: $black;
+    }
   }
 
   del code { text-decoration: inherit; }

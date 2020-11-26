@@ -51,6 +51,7 @@ $pbl-shell-accent:  mat-palette($mat-light-green);
 
 @function shell-typography-config() {
   @return mat-typography-config(
+    // $font-family:   '-apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
     $display-3:     mat-typography-level(56px, 56px, 300),
     $display-2:     mat-typography-level(45px, 48px, 300),
     $display-1:     mat-typography-level(34px, 40px, 300),
@@ -101,8 +102,8 @@ $pbl-shell-accent:  mat-palette($mat-light-green);
   .mat-body p,
   .mat-body-1 p,
   .mat-typography p,
-  a, input, li, ol, p, ul {
-    letter-spacing: .3px;
+  input, li, ol, p, ul {
+    letter-spacing: normal;
     color: mat-color($foreground, text);
   }
 
