@@ -2,7 +2,7 @@ import {
   Component,
   InjectionToken,
   Inject,
-  OnDestroy,
+  OnDestroy, INJECTOR, Injector
 } from '@angular/core';
 
 import { utils } from '@pebula/ngrid';
@@ -25,7 +25,7 @@ export interface LiveContentChunk {
 export class ContentChunkViewComponent extends MarkdownDynamicComponentPortal implements OnDestroy {
   contentChunkData: LiveContentChunk;
 
-  constructor(@Inject(CONTENT_CHUNKS_COMPONENTS) private contentChunks: {[key: string]: LiveContentChunk} ) { super(); }
+  constructor(@Inject(INJECTOR) injector: Injector, @Inject(CONTENT_CHUNKS_COMPONENTS) private contentChunks: {[key: string]: LiveContentChunk} ) { super(injector); }
 
   getRenderTypes(selector: string) {
     this.contentChunkData = this.contentChunks[selector];

@@ -39,7 +39,8 @@ mat-toolbar {
   margin-left: -24px;
   width: calc(100% + 48px);
 }
-.ngrid-demo-rtl mat-toolbar {
+
+:host-context([dir='rtl']) mat-toolbar {
   margin-left: unset;
   margin-right: -24px;
 }

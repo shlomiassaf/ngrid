@@ -3,7 +3,7 @@ import {
   Component,
   InjectionToken,
   Inject,
-  OnDestroy,
+  OnDestroy, INJECTOR, Injector
 } from '@angular/core';
 import { trigger, transition, animate, style } from '@angular/animations'
 
@@ -12,7 +12,6 @@ import { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-example
 
 import { MarkdownDynamicComponentPortal } from '../markdown-dynamic-component-portal';
 import { MarkdownCodeExamplesService } from '../../services/markdown-code-examples.service';
-import { LazyModuleStoreService } from '../../services/lazy-module-store';
 import { LiveExample } from '../../example';
 
 export const EXAMPLE_COMPONENTS_TOKEN = new InjectionToken('EXAMPLE_COMPONENTS');
@@ -52,10 +51,10 @@ export class ExampleViewComponent extends MarkdownDynamicComponentPortal impleme
   viewSourceCode = false;
   exampleStyle: 'toolbar' | 'flow' = 'toolbar';
 
-  constructor(lazyModuleStore: LazyModuleStoreService,
+  constructor(@Inject(INJECTOR) injector: Injector,
               private exampleService: MarkdownCodeExamplesService,
               @Inject(EXAMPLE_COMPONENTS_TOKEN) private exampleComponents: {[key: string]: LiveExample} ) {
-    super(lazyModuleStore);
+    super(injector);
   }
 
   getRenderTypes(selector: string) {
