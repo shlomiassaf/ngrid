@@ -11,10 +11,10 @@ import {
   Output,
   OnDestroy,
   Optional,
-  OnInit,
+  OnInit
 } from '@angular/core';
 
-import { Directionality } from '@angular/cdk/bidi';
+import { Directionality, Direction } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   DragDrop,
@@ -50,12 +50,12 @@ let _uniqueIdCounter = 0;
     'class': 'cdk-drop-list',
     '[id]': 'id',
     '[class.cdk-drop-list-dragging]': '_dropListRef.isDragging()',
-    '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
+    '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()'
   },
   providers: [
     { provide: DragDrop, useExisting: PblDragDrop },
-    { provide: CDK_DROP_LIST, useExisting: PblNgridColumnReorderPluginDirective },
-  ],
+    { provide: CDK_DROP_LIST, useExisting: PblNgridColumnReorderPluginDirective }
+  ]
 })
 export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T> implements OnInit, OnDestroy, CdkLazyDropList<T, PblNgridColumnReorderPluginDirective<T>> {
   id = `pbl-ngrid-column-reorder-list-${_uniqueIdCounter++}`;
@@ -83,14 +83,15 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
   private lastSorted: { drag: DragRef<PblNgridColumnDragDirective<T>>; offset: number; clientRect: ClientRect; };
 
   // Stuff to workaround encapsulation in CdkDropList
-  private get pblGetItemIndexFromPointerPosition(): (item: DragRef<PblNgridColumnDragDirective<T>>, pointerX: number, pointerY: number, delta?: {x: number, y: number}) => number {
+  private get pblGetItemIndexFromPointerPosition(): (item: DragRef<PblNgridColumnDragDirective<T>>, pointerX: number, pointerY: number, delta?: { x: number, y: number }) => number {
     return (this._dropListRef as any)._getItemIndexFromPointerPosition.bind(this._dropListRef);
   }
+
   private get pblGetPositionCacheItems(): { drag: DragRef<PblNgridColumnDragDirective<T>>; offset: number; clientRect: ClientRect; }[] {
     return (this._dropListRef as any)._itemPositions;
   }
 
-  constructor(public table: PblNgridComponent<T>,
+  constructor(public grid: PblNgridComponent<T>,
               pluginCtrl: PblNgridPluginController,
               element: ElementRef<HTMLElement>,
               dragDrop: DragDrop,
@@ -101,13 +102,13 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
     this._removePlugin = pluginCtrl.setPlugin(COL_REORDER_PLUGIN_KEY, this);
 
     this.directContainerElement = '.pbl-ngrid-header-row-main';
-    this.dropped.subscribe( (event: CdkDragDrop<T, any>) => {
+    this.dropped.subscribe((event: CdkDragDrop<T, any>) => {
       if (!this.manualOverride) {
-        this.table.columnApi.moveColumn((event.item as PblNgridColumnDragDirective<T>).column, event.currentIndex);
+        this.grid.columnApi.moveColumn((event.item as PblNgridColumnDragDirective<T>).column, event.currentIndex);
       }
     });
 
-    this.dragging.subscribe( isDragging => {
+    this.dragging.subscribe(isDragging => {
       const el = element.nativeElement;
       if (isDragging) {
         el.classList.add('pbl-ngrid-column-list-dragging');
@@ -127,10 +128,11 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
    * is useful when the `cdkDropList` is not the direct parent (i.e. ancestor but not father)
    * of the draggable elements.
    */
-   // tslint:disable-next-line:no-input-rename
+    // tslint:disable-next-line:no-input-rename
   @Input('cdkDropListDirectContainerElement') directContainerElement: string;
 
   get pblDropListRef(): PblDropListRef<PblNgridColumnReorderPluginDirective<T>> { return this._dropListRef as any; }
+  get dir(): Direction { return this.grid.dir; }
   originalElement: ElementRef<HTMLElement>;
   // ngOnInit(): void { CdkLazyDropList.prototype.ngOnInit.call(this); }
   addDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.addDrag.call(this, drag); }
@@ -140,13 +142,13 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
 
   ngOnInit(): void {
     CdkLazyDropList.prototype.ngOnInit.call(this); // super.ngOnInit();
-    this.dropped.subscribe( e => this._pblReset() );
-    this.pblDropListRef.beforeExit.subscribe( e => this._pblReset() );
+    this.dropped.subscribe(e => this._pblReset());
+    this.pblDropListRef.beforeExit.subscribe(e => this._pblReset());
   }
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
-    this._removePlugin(this.table);
+    this._removePlugin(this.grid);
   }
 
   /* protected */ beforeStarted(): void {
@@ -169,7 +171,7 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
     const { _sortItem, enter } = this._dropListRef;
 
     this.pblDropListRef.enter = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number): void => {
-      const lastSorted = this.lastSorted
+      const lastSorted = this.lastSorted;
       this.lastSorted = undefined;
       if (lastSorted && lastSorted.drag === item) {
         const isHorizontal = this.orientation === 'horizontal';
@@ -179,9 +181,9 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
       enter.call(this._dropListRef, item, pointerX, pointerY);
     };
 
-    this.pblDropListRef._sortItem = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number, pointerDelta: {x: number, y: number}): void => {
+    this.pblDropListRef._sortItem = (item: Parameters<typeof enter>[0], pointerX: number, pointerY: number, pointerDelta: { x: number, y: number }): void => {
       const siblings = this.pblGetPositionCacheItems;
-      this.lastSorted = siblings.find( s => s.drag === item );
+      this.lastSorted = siblings.find(s => s.drag === item);
       const newIndex = this.pblGetItemIndexFromPointerPosition(item as DragRef<PblNgridColumnDragDirective<T>>, pointerX, pointerY, pointerDelta);
       if (newIndex === -1 && siblings.length > 0) {
         return;
@@ -196,8 +198,8 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
 
       // we now need to find if between current and new position there are items with `wontBudge`
       const itemAtOriginalPosition = this.lastSwap ? this.lastSwap : item;
-      const currentIndex = siblings.findIndex( currentItem => currentItem.drag === itemAtOriginalPosition );
-      const start = Math.min(newIndex, currentIndex)
+      const currentIndex = siblings.findIndex(currentItem => currentItem.drag === itemAtOriginalPosition);
+      const start = Math.min(newIndex, currentIndex);
       const itemsDraggedOver = siblings.slice(start, Math.abs(newIndex - currentIndex) + start);
       for (const dragItem of itemsDraggedOver) {
         if (dragItem.drag.data.column.wontBudge && dragItem.drag !== item) {
@@ -235,7 +237,7 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends CdkDropList<T
   exportAs: 'pblNgridColumnDrag',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drag',
-    '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
+    '[class.cdk-drag-dragging]': '_dragRef.isDragging()'
   },
   providers: [
     { provide: DragDrop, useExisting: PblDragDrop },
@@ -277,6 +279,7 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
   }
 
   get pblDragRef(): PblDragRef<PblNgridColumnDragDirective<T>> { return this._dragRef as any; }
+  get dir(): Direction { return this.pluginCtrl.extApi.grid.dir }
 
   @Input() get cdkDropList(): PblNgridColumnReorderPluginDirective<T> { return this.dropContainer as PblNgridColumnReorderPluginDirective<T>; }
   set cdkDropList(value: PblNgridColumnReorderPluginDirective<T>) {
@@ -302,7 +305,7 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
     CdkLazyDrag.prototype.ngAfterViewInit.call(this);
     super.ngAfterViewInit();
 
-    this._dragRef.beforeStarted.subscribe( () => {
+    this._dragRef.beforeStarted.subscribe(() => {
       const { cdkDropList } = this;
       if (cdkDropList && cdkDropList.columnReorder && this._context.col.reorder) {
         // we don't allow a new dragging session before the previous ends.
@@ -315,8 +318,8 @@ export class PblNgridColumnDragDirective<T = any> extends CdkDrag<T> implements 
         }
       }
     });
-    this.started.subscribe( () => this._context.col.columnDef.isDragging = true );
-    this.ended.subscribe( () => this._context.col.columnDef.isDragging = false );
+    this.started.subscribe(() => this._context.col.columnDef.isDragging = true);
+    this.ended.subscribe(() => this._context.col.columnDef.isDragging = false);
   }
 
   getCells(): HTMLElement[] {

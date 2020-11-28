@@ -24,7 +24,7 @@ import {
   isDevMode, forwardRef, IterableDiffers, IterableDiffer, DoCheck, Attribute, Optional
 } from '@angular/core';
 
-import { Directionality } from '@angular/cdk/bidi';
+import { Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
@@ -265,6 +265,9 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   private _plugin: PblNgridPluginContext;
   private _extApi: PblNgridExtensionApi<T>;
 
+  get dir(): Direction { return this._dir };
+  private _dir: Direction = 'ltr';
+
   constructor(injector: Injector, vcRef: ViewContainerRef,
               private elRef: ElementRef<HTMLElement>,
               private differs: IterableDiffers,
@@ -273,12 +276,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               private config: PblNgridConfigService,
               public registry: PblNgridRegistryService,
               @Attribute('id') public readonly id: string,
-              @Optional() public dir?: Directionality) {
+              @Optional() dir?: Directionality) {
     const gridConfig = config.get('table');
     this.showHeader = gridConfig.showHeader;
     this.showFooter = gridConfig.showFooter;
     this.noFiller = gridConfig.noFiller;
 
+    dir && this.initDirectionality(dir);
     this.initExtApi();
     this.columnApi = ColumnApi.create<T>(this, this._store, this._extApi);
     this.initPlugins(injector, elRef, vcRef);
@@ -881,6 +885,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this.resizeColumns();
   }
 
+  private initDirectionality(dir: Directionality): void {
+    dir.change.pipe(
+      unrx(this, 'dir'),
+      startWith(dir.value)
+    ).subscribe(value => this._dir = value);
+  }
+
   private initExtApi(): void {
     let onInit: Array<() => void> = [];
     const extApi = {
@@ -916,8 +927,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       },
       columnStore: this._store,
       setViewport: (viewport) => this._viewport = viewport,
-      dynamicColumnWidthFactory: (): DynamicColumnWidthLogic => {
-        return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY, this.dir?.value);
+      dynamicColumnWidthFactory: (dir?: Direction): DynamicColumnWidthLogic => {
+        return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY, dir ?? extApi.grid.dir);
       }
     };
     this._extApi = extApi;

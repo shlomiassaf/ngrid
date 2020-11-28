@@ -10,7 +10,7 @@ import {
   SkipSelf,
   Input
 } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
+import { Direction, Directionality } from '@angular/cdk/bidi';
 import {
   DragDrop,
   CdkDropListGroup,
@@ -76,6 +76,7 @@ export class PblNgridAggregationContainerDirective<T = any> extends CdkDropList<
   @Input('cdkDropListDirectContainerElement') directContainerElement: string;
 
   get pblDropListRef(): PblDropListRef<any> { return this._dropListRef as any; }
+  get dir(): Direction { return this.grid.dir; }
   originalElement: ElementRef<HTMLElement>;
   ngOnInit(): void {
     CdkLazyDropList.prototype.ngOnInit.call(this);

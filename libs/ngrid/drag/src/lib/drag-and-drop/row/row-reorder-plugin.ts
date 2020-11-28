@@ -5,10 +5,10 @@ import {
   Input,
   OnDestroy,
   Optional,
-  SkipSelf,
+  SkipSelf
 } from '@angular/core';
 
-import { Directionality } from '@angular/cdk/bidi';
+import { Directionality, Direction } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   DragDrop,
@@ -16,7 +16,7 @@ import {
   CdkDropListGroup,
   CdkDrag,
   CDK_DROP_LIST,
-  CdkDragDrop, CdkDragStart, CDK_DRAG_PARENT
+  CdkDragDrop, CdkDragStart, CDK_DRAG_PARENT, DragDropConfig, CDK_DRAG_CONFIG, CDK_DRAG_HANDLE, CdkDragHandle
 } from '@angular/cdk/drag-drop';
 
 import { PblNgridComponent, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
@@ -43,13 +43,13 @@ let _uniqueIdCounter = 0;
     '[id]': 'id',
     '[class.cdk-drop-list-dragging]': '_dropListRef.isDragging()',
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
-    '[class.pbl-row-reorder]': 'rowReorder && !this.grid.ds?.sort.sort?.order && !this.grid.ds?.filter?.filter',
+    '[class.pbl-row-reorder]': 'rowReorder && !this.grid.ds?.sort.sort?.order && !this.grid.ds?.filter?.filter'
   },
   providers: [
     { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CdkDropListGroup, useValue: undefined },
-    { provide: CDK_DROP_LIST, useExisting: PblNgridRowReorderPluginDirective },
-  ],
+    { provide: CDK_DROP_LIST, useExisting: PblNgridRowReorderPluginDirective }
+  ]
 })
 export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> implements OnDestroy, CdkLazyDropList<T, PblNgridRowReorderPluginDirective<T>> {
 
@@ -74,7 +74,7 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
     super(element, dragDrop, changeDetectorRef, dir, group);
     this._removePlugin = pluginCtrl.setPlugin(ROW_REORDER_PLUGIN_KEY, this);
 
-    this.dropped.subscribe( (event: CdkDragDrop<T>) => {
+    this.dropped.subscribe((event: CdkDragDrop<T>) => {
       const item = event.item as PblNgridRowDragDirective<T>;
 
       const previousIndex = grid.ds.source.indexOf(item.draggedContext.row);
@@ -97,6 +97,7 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
   @Input('cdkDropListDirectContainerElement') directContainerElement: string = '.pbl-ngrid-scroll-container'; // we need this to allow auto-scroll
 
   get pblDropListRef(): PblDropListRef<any> { return this._dropListRef as any; }
+  get dir(): Direction { return this.grid.dir; }
   originalElement: ElementRef<HTMLElement>;
   ngOnInit(): void { CdkLazyDropList.prototype.ngOnInit.call(this); }
   addDrag(drag: CdkDrag): void { return CdkLazyDropList.prototype.addDrag.call(this, drag); }
@@ -115,11 +116,11 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkDropList<T> i
   exportAs: 'pblNgridRowDrag',
   host: { // tslint:disable-line:use-host-property-decorator
     'class': 'cdk-drag',
-    '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
+    '[class.cdk-drag-dragging]': '_dragRef.isDragging()'
   },
   providers: [
     { provide: DragDrop, useExisting: PblDragDrop },
-    { provide: CDK_DRAG_PARENT, useExisting: PblNgridRowDragDirective },
+    { provide: CDK_DRAG_PARENT, useExisting: PblNgridRowDragDirective }
   ]
 })
 export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements CdkLazyDrag<T, PblNgridRowReorderPluginDirective<T>> {
@@ -170,6 +171,7 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
   }
 
   get pblDragRef(): PblDragRef<any> { return this._dragRef as any; }
+  get dir(): Direction { return this.pluginCtrl.extApi.grid.dir };
 
   @Input() get cdkDropList(): PblNgridRowReorderPluginDirective<T> { return this.dropContainer as PblNgridRowReorderPluginDirective<T>; }
   set cdkDropList(value: PblNgridRowReorderPluginDirective<T>) {
@@ -187,8 +189,8 @@ export class PblNgridRowDragDirective<T = any> extends CdkDrag<T> implements Cdk
   _rootClass: string;
   _hostNotRoot = false;
   ngOnInit(): void {
-    this.started.subscribe( (event: CdkDragStart) => {
-      const { col, row, grid, value }  = this._context;
+    this.started.subscribe((event: CdkDragStart) => {
+      const { col, row, grid, value } = this._context;
       this._draggedContext = { col, row, grid, value };
     });
     CdkLazyDrag.prototype.ngOnInit.call(this);

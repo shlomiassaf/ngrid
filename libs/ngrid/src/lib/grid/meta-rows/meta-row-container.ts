@@ -25,6 +25,11 @@ export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
   _width: number;
   readonly _width$ = new Subject<number>();
 
+
+  private get _scrollDir(): -1 | 1 {
+    return this.metaRows.extApi.grid.dir === 'rtl' ? -1 : 1;
+  }
+
   private _totalColumnWidth: number = 0;
   private element: HTMLElement;
 
@@ -49,13 +54,12 @@ export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if ('type' in changes) {
       const scrollContainerElement = this.element;
-      const dir = this.metaRows.extApi.grid.dir?.value === 'rtl' ? -1 : 1;
-      scrollContainerElement.scrollLeft = this.metaRows.extApi.grid.viewport.measureScrollOffset('start') * dir;
+      scrollContainerElement.scrollLeft = this.metaRows.extApi.grid.viewport.measureScrollOffset('start') * this._scrollDir;
 
       if (changes.type.isFirstChange) {
         this.metaRows.hzScroll
           .pipe(unrx(this))
-          .subscribe( offset => scrollContainerElement.scrollLeft = offset * dir );
+          .subscribe( offset => scrollContainerElement.scrollLeft = offset * this._scrollDir);
 
         this.metaRows.extApi.cdkTable.onRenderRows
           .pipe(unrx(this))
