@@ -11,6 +11,7 @@
     "Draggables",
     "Injectable",
     "Packagr",
+    "angulartics",
     "cacheable",
     "coeff",
     "deserialize",

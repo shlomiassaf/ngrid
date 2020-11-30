@@ -1,7 +1,7 @@
 <div *ngIf="exampleStyle === 'toolbar'" fxLayout="column" class="mat-elevation-z3">
   <mat-toolbar color="primary">
     <span class="mat-h3" style="margin: 0" fxFlex="*">{{ exampleData?.title }}</span>
-    <button mat-icon-button matTooltip="View Source" (click)="viewSourceCode = !viewSourceCode">
+    <button mat-icon-button matTooltip="View Source" (click)="toggleViewSourceCode()">
       <mat-icon>code</mat-icon>
     </button>
   </mat-toolbar>

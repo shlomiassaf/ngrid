@@ -6,6 +6,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { trigger, transition, animate, style } from '@angular/animations'
+import { Angulartics2 } from 'angulartics2';
 
 import { utils } from '@pebula/ngrid';
 import { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-examples';
@@ -18,9 +19,11 @@ import { LiveExample } from '../../example';
 export const EXAMPLE_COMPONENTS_TOKEN = new InjectionToken('EXAMPLE_COMPONENTS');
 
 @Component({
+  // tslint:disable-next-line: component-selector
   selector: 'pbl-example-view',
   templateUrl: './example-view.component.html',
   styleUrls: ['./example-view.component.scss'],
+  // tslint:disable-next-line: no-host-metadata-property
   host: {
     '[class.example-style-flow]': 'exampleStyle === "flow"',
     '[class.example-style-toolbar]': 'exampleStyle === "toolbar"',
@@ -53,6 +56,7 @@ export class ExampleViewComponent extends MarkdownDynamicComponentPortal impleme
   exampleStyle: 'toolbar' | 'flow' = 'toolbar';
 
   constructor(lazyModuleStore: LazyModuleStoreService,
+              private angulartics2: Angulartics2,
               private exampleService: MarkdownCodeExamplesService,
               @Inject(EXAMPLE_COMPONENTS_TOKEN) private exampleComponents: {[key: string]: LiveExample} ) {
     super(lazyModuleStore);
@@ -71,6 +75,19 @@ export class ExampleViewComponent extends MarkdownDynamicComponentPortal impleme
     }
     this.exampleService.getExample(this.componentName)
       .then( assets => this.sourceCode.next(assets) );
+  }
+
+  toggleViewSourceCode(): void {
+    this.viewSourceCode = !this.viewSourceCode;
+    if (this.viewSourceCode) {
+      this.angulartics2.eventTrack.next({
+        action: 'ViewSourceCode',
+        properties: {
+          category: 'SourceCodeOpen',
+          label: this.exampleData.title,
+        },
+      });
+    }
   }
 
   ngOnDestroy(): void {
