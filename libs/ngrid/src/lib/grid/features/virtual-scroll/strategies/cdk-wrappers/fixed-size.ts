@@ -1,7 +1,7 @@
-import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
 import { PblNgridExtensionApi } from '../../../../../ext/grid-ext-api';
 import { PblCdkVirtualScrollViewportComponent } from '../../virtual-scroll-viewport.component';
 import { PblNgridVirtualScrollStrategy } from '../types';
+import { FixedSizeVirtualScrollStrategy } from './fixed-size-cdk';
 
 declare module '../types' {
   interface PblNgridVirtualScrollStrategyMap {

@@ -1,6 +1,8 @@
 import { Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { PblNgridInternalExtensionApi, PblNgridExtensionApi } from '../../../../../ext/grid-ext-api';
+import { PblDataSource } from '../../../../../data-source/data-source';
+import { unrx } from '../../../../utils/unrx';
 import { PblCdkVirtualScrollViewportComponent } from '../../virtual-scroll-viewport.component';
 import { PblNgridVirtualScrollStrategy } from '../types';
 import { Sizer } from './sizer';
@@ -67,6 +69,15 @@ export class PblNgridDynamicVirtualScrollStrategy implements PblNgridVirtualScro
 
   attachExtApi(extApi: PblNgridExtensionApi): void {
     this.extApi = extApi as PblNgridInternalExtensionApi;
+    this.extApi.events
+      .subscribe( event => {
+        if (event.kind === 'onDataSource') {
+          this.onDatasource(event.curr, event.prev);
+        }
+      });
+    if (this.extApi.grid.ds) {
+      this.onDatasource(this.extApi.grid.ds);
+    }
   }
 
   attach(viewport: PblCdkVirtualScrollViewportComponent): void {
@@ -110,6 +121,19 @@ export class PblNgridDynamicVirtualScrollStrategy implements PblNgridVirtualScro
   scrollToIndex(index: number, behavior: ScrollBehavior): void {
     if (this._viewport) {
       this._viewport.scrollToOffset(this.sizer.getSizeBefore(index), behavior);
+    }
+  }
+
+  protected onDatasource(curr: PblDataSource, prev?: PblDataSource) {
+    if (prev) {
+      unrx.kill(this, prev);
+    }
+    if (curr) {
+      curr.onSourceChanging
+        .pipe(unrx(this, curr))
+        .subscribe(() => {
+          this.sizer.clear();
+        });
     }
   }
 

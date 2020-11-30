@@ -54,7 +54,7 @@ export class ComplexDemo1Example {
       { prop: 'gender', width: '50px' },
       { prop: 'birthdate', type: 'date' },
       { prop: 'bio' },
-      { prop: 'settings.avatar', width: '40px' },
+      // { prop: 'settings.avatar', width: '40px' },
       { prop: 'settings.background' },
       { prop: 'settings.timezone' },
       { prop: 'settings.emailFrequency', editable: true },
