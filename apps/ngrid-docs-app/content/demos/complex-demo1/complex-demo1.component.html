@@ -7,15 +7,10 @@
              blockUi
              matSort vScrollDynamic
              cellTooltip
-             [hideColumns]="hideColumns"
              matCheckboxSelection="selection"
-             [transpose]="toggleTranspose"
-             [usePagination]="usePagination"
              focusMode="row"
              detailRow
              [wheelMode]="'passive'"
-             [showHeader]="showHeader"
-             [showFooter]="showFooter"
              [dataSource]="ds"
              [columns]="columns"
              (cellClick)="$event.context && $event.context.startEdit()"
@@ -104,82 +99,4 @@
     <!-- SPECIFIC HEADER DEFAULT CELL TEMPLATE DEFINITION-->
 
   </pbl-ngrid>
-
-  <ng-container *ngIf="false">
-    <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
-      <div class="example-feature-title" fxFlex="50%">Features</div>
-      <div class="example-feature-action" fxFlex fxLayout="column">
-        <mat-slide-toggle (change)="usePagination = $event.checked ? 'pageNumber' : false" [checked]="usePagination">Show Paginator</mat-slide-toggle>
-        <mat-slide-toggle (change)="toggleTranspose = $event.checked" [checked]="toggleTranspose">Transpose</mat-slide-toggle>
-        <mat-slide-toggle (change)="showHeader = $event.checked" [checked]="showHeader">Show Header</mat-slide-toggle>
-        <mat-slide-toggle (change)="showFooter = $event.checked" [checked]="showFooter">Show Footer</mat-slide-toggle>
-      </div>
-    </div>
-
-    <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
-      <div class="example-feature-title" fxFlex="50%">Hide Columns</div>
-      <div class="example-feature-action" fxFlex>
-        <mat-form-field>
-          <mat-select #selectHiddenColumn>
-            <mat-option *ngFor="let o of pblTbl.columnApi.columns" [value]="o">{{o.label}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-checkbox *ngIf="selectHiddenColumn?.selected?.value as c"
-                      (change)="toggleColumn(c.id)"
-                      [checked]="hideColumns.indexOf(c.id) > -1">Sticky Start</mat-checkbox>
-      </div>
-    </div>
-
-    <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
-      <div class="example-feature-title" fxFlex="50%">Detail Row</div>
-      <div class="example-feature-action" fxFlex fxLayout="column">
-        <mat-radio-group (change)="onDetailRowChange($event.value)" [value]="detailRow">
-          <mat-radio-button value="off">Off</mat-radio-button>
-          <mat-radio-button value="on">On</mat-radio-button>
-          <mat-radio-button value="predicate">Predicate (Even rows only)</mat-radio-button>
-        </mat-radio-group>
-        <mat-slide-toggle (change)="singleDetailRow = $event.checked" [checked]="singleDetailRow">Force Single Detail Row</mat-slide-toggle>
-      </div>
-    </div>
-
-    <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
-      <div class="example-feature-title" fxFlex="50%">Enable Row Selection</div>
-      <div class="example-feature-action" fxFlex>
-        <mat-slide-toggle (change)="enableRowSelection = $event.checked" [checked]="enableRowSelection"></mat-slide-toggle>
-        <span *ngIf="enableRowSelection">
-          Selected ({{dataSource.selection.selected.length}}):
-          <span *ngFor="let item of dataSource.selection.selected; last as last">{{item.id}}<span *ngIf="!last">, </span> </span>
-        </span>
-      </div>
-    </div>
-
-    <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
-      <div class="example-feature-title" fxFlex="50%">Sticky Header</div>
-      <div class="example-feature-action" fxFlex>
-        <mat-checkbox *ngFor="let h of pblTbl._headerRowDefs; index as i" (change)="setStickyRow(pblTbl, 'header', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
-      </div>
-    </div>
-    <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
-      <div class="example-feature-title" fxFlex="50%">Sticky Footer</div>
-      <div class="example-feature-action" fxFlex>
-        <mat-checkbox *ngFor="let h of pblTbl._footerRowDefs; index as i" (change)="setStickyRow(pblTbl, 'footer', i === 0 ? 'table' : i - 1, $event.checked)">{{ i === 0 ? 'Main' : '#' + i}}</mat-checkbox>
-      </div>
-    </div>
-    <div class="example-feature-container" fxLayout="row" fxLayoutAlign="center center">
-      <div class="example-feature-title" fxFlex="50%">Sticky Column</div>
-      <div class="example-feature-action" fxFlex>
-        <mat-form-field>
-          <mat-select #selectColumn>
-            <mat-option *ngFor="let o of pblTbl.columnApi.visibleColumns" [value]="o">{{o.label}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-checkbox *ngIf="selectColumn?.selected?.value as c"
-                      (change)="setStickyColumns(pblTbl, 'start', c.orgProp, $event.checked)"
-                      [checked]="c.stickyStart">Sticky Start</mat-checkbox>
-        <mat-checkbox *ngIf="selectColumn?.selected?.value as c"
-                      (change)="setStickyColumns(pblTbl, 'end', c.orgProp, $event.checked)"
-                      [checked]="c.stickyEnd">Sticky End</mat-checkbox>
-      </div>
-    </div>
-  </ng-container>
 </div>
