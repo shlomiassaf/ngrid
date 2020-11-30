@@ -16,6 +16,7 @@ import { PblNgridPluginContext } from '../ext/plugin-control';
 import { OnPropChangedEvent, OnPropChangedProperties, PblNgridEvents } from '../ext/types';
 import { bindToDataSource } from './bind-to-datasource';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
+import { PblNgridConfigService } from './services/config';
 
 export interface RequiredAngularTokens {
   ngZone: NgZone;
@@ -23,6 +24,7 @@ export interface RequiredAngularTokens {
   vcRef: ViewContainerRef;
   cdRef: ChangeDetectorRef;
   elRef: ElementRef<HTMLElement>;
+  config: PblNgridConfigService;
   dir?: Directionality;
 }
 
@@ -31,6 +33,7 @@ export function createApis<T>(grid: PblNgridComponent<T>, tokens: RequiredAngula
 }
 
 class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
+  readonly config: PblNgridConfigService;
   readonly element: HTMLElement;
   readonly propChanged: Observable<OnPropChangedEvent>;
   readonly columnStore: PblColumnStore;
@@ -55,6 +58,7 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
   constructor(public readonly grid: PblNgridComponent<T>, tokens: RequiredAngularTokens) {
     this.propChanged = this._propChanged = new Subject<OnPropChangedEvent>();
 
+    this.config = tokens.config;
     this.element = tokens.elRef.nativeElement;
     if (tokens.dir) {
       this.dir = tokens.dir;

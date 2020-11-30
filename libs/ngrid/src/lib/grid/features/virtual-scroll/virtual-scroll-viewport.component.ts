@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-
+import { filter, take } from 'rxjs/operators';
 import {
   AfterViewInit,
   Component,
@@ -7,6 +7,7 @@ import {
   ElementRef,
   EventEmitter,
   Inject,
+  InjectionToken,
   Input,
   ChangeDetectorRef,
   ViewChild,
@@ -38,6 +39,8 @@ import { NgeVirtualTableRowInfo, PblVirtualScrollForOf } from './virtual-scroll-
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
 import { createScrollWatcherFn } from './scroll-logic/virtual-scroll-watcher';
 import { PblNgridAutoSizeVirtualScrollStrategy } from './strategies/cdk-wrappers/auto-size';
+import { RowIntersectionTracker } from './row-intersection';
+import { resolveScrollStrategy } from './utils';
 
 declare module '../../services/config' {
   interface PblNgridConfig {
@@ -48,17 +51,8 @@ declare module '../../services/config' {
   }
 }
 
-function resolveScrollStrategy(config: PblNgridConfigService, scrollStrategy?: PblNgridVirtualScrollStrategy): PblNgridVirtualScrollStrategy {
-  if (!scrollStrategy && config.has('virtualScroll')) {
-    const virtualScrollConfig = config.get('virtualScroll');
-    if (typeof virtualScrollConfig.defaultStrategy === 'function') {
-      scrollStrategy = virtualScrollConfig.defaultStrategy();
-    }
-  }
-
-  // TODO: Replace with `PblNgridDynamicVirtualScrollStrategy` in v4
-  return scrollStrategy || new PblNgridAutoSizeVirtualScrollStrategy(100, 200);
-}
+export const DISABLE_INTERSECTION_OBSERVABLE = new InjectionToken<boolean>('When found in the DI tree and resolves to true, disable the use of IntersectionObserver');
+const APP_DEFAULT_VIRTUAL_SCROLL_STRATEGY = () => new PblNgridAutoSizeVirtualScrollStrategy(100, 200);
 
 @Component({
   selector: 'pbl-cdk-virtual-scroll-viewport',
@@ -145,37 +139,56 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     return (this.pblScrollStrategy as PblNgridBaseVirtualScrollDirective).wheelMode || this.wheelModeDefault || 'passive';
   }
 
-  get getBoundingClientRects() {
-    const innerBox = this._innerBoxHelper.nativeElement.getBoundingClientRect();
-    const outerBox = this.element.getBoundingClientRect();
-    return {
-      innerBox,
-      outerBox,
-      scrollBarWidth: outerBox.width - innerBox.width,
-      scrollBarHeight: outerBox.height - innerBox.height,
+  /**
+   * Get the current bounding client rectangle boxes for the virtual scroll container
+   * Since performing these measurements impact performance the values are are cached between request animation frames.
+   * I.E 2 subsequent measurements will always return the same value, the next measurement will only take place after
+   * the next animation frame (using `requestAnimationFrame` API)
+   */
+  get getBoundingClientRects(): { clientRect: DOMRect; innerWidth: number; innerHeight: number; scrollBarWidth: number; scrollBarHeight: number; } {
+    if (!this._boundingClientRects) {
+      const innerBox = this._innerBoxHelper.nativeElement.getBoundingClientRect();
+      const clientRect = this.element.getBoundingClientRect();
+      this._boundingClientRects = {
+        clientRect,
+        innerWidth: innerBox.width,
+        innerHeight: innerBox.height,
+        scrollBarWidth: clientRect.width - innerBox.width,
+        scrollBarHeight: clientRect.height - innerBox.height,
+      }
+
+      const resetCurrentBox = () => this._boundingClientRects = undefined;
+      if (this._isScrolling) {
+        this.scrolling.pipe(filter(scrolling => scrolling === 0), take(1)).subscribe(resetCurrentBox);
+      } else {
+        requestAnimationFrame(resetCurrentBox);
+      }
     }
+
+    return this._boundingClientRects;
   }
 
   get innerWidth(): number {
-    return this._innerBoxHelper.nativeElement.getBoundingClientRect().width;
+    return this.getBoundingClientRects.innerWidth;
   }
 
   get outerWidth(): number {
-    return this.element.getBoundingClientRect().width;
+    return this.getBoundingClientRects.clientRect.width;
   }
 
   get innerHeight(): number {
-    return this._innerBoxHelper.nativeElement.getBoundingClientRect().height;
+    return this.getBoundingClientRects.innerWidth;
   }
 
   get outerHeight(): number {
-    return this.element.getBoundingClientRect().height;
+    return this.getBoundingClientRects.clientRect.height;
   }
 
   get scrollWidth(): number {
     return this.element.scrollWidth;
   }
 
+  readonly intersection: RowIntersectionTracker;
   readonly element: HTMLElement;
   readonly _minWidth$: Observable<number>;
 
@@ -187,6 +200,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   private wheelModeDefault:  PblNgridBaseVirtualScrollDirective['wheelMode'];
   private grid: PblNgridComponent<any>;
   private forOf?: PblVirtualScrollForOf<any>;
+  private _boundingClientRects: PblCdkVirtualScrollViewportComponent['getBoundingClientRects'];
 
   constructor(elRef: ElementRef<HTMLElement>,
               private cdr: ChangeDetectorRef,
@@ -196,11 +210,13 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher,
               viewportRuler: ViewportRuler,
-              @Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi) {
+              @Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi,
+              @Optional() @Inject(DISABLE_INTERSECTION_OBSERVABLE) disableIntersectionObserver?: boolean) {
     super(elRef,
           cdr,
           ngZone,
-          pblScrollStrategy = resolveScrollStrategy(config, pblScrollStrategy),
+            // TODO: Replace with `PblNgridDynamicVirtualScrollStrategy` in v4
+          pblScrollStrategy = resolveScrollStrategy(config, pblScrollStrategy, APP_DEFAULT_VIRTUAL_SCROLL_STRATEGY),
           dir,
           scrollDispatcher,
           viewportRuler);
@@ -218,6 +234,8 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     this.offsetChange = this.offsetChange$.asObservable();
 
     this._minWidth$ = this.grid.columnApi.totalColumnWidthChange;
+
+    this.intersection = new RowIntersectionTracker(this.element, !!disableIntersectionObserver);
   }
 
   ngOnInit(): void {
@@ -260,6 +278,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   }
 
   ngOnDestroy(): void {
+    this.intersection.destroy();
     super.ngOnDestroy();
     this.detachViewPort();
     this.offsetChange$.complete();
@@ -318,7 +337,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   _scrollIntoView(cellElement: HTMLElement) {
     const container = this.element;
     const elBox = cellElement.getBoundingClientRect();
-    const containerBox = container.getBoundingClientRect();
+    const containerBox = this.getBoundingClientRects.clientRect;
 
     // Vertical handling.
     // We have vertical virtual scroll, so here we use the virtual scroll API to scroll into the target
@@ -339,18 +358,6 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     } else if (elBox.right > containerBox.right) { // out from right
       const offset = elBox.right - (containerBox.right - this.getScrollBarThickness('vertical'));
       container.scroll(container.scrollLeft + offset, container.scrollTop);
-    }
-  }
-
-  private updateFiller(): void {
-    this.measureRenderedContentSize();
-    if (this.grid.noFiller) {
-      this.pblFillerHeight = undefined;
-    } else {
-      this.pblFillerHeight = this.getViewportSize() >= this.ngeRenderedContentSize ?
-        `calc(100% - ${this.ngeRenderedContentSize}px)`
-        : undefined
-      ;
     }
   }
 
@@ -401,6 +408,19 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
         return this.outerWidth - this.innerWidth;
     }
   }
+
+  private updateFiller(): void {
+    this.measureRenderedContentSize();
+    if (this.grid.noFiller) {
+      this.pblFillerHeight = undefined;
+    } else {
+      this.pblFillerHeight = this.getViewportSize() >= this.ngeRenderedContentSize ?
+        `calc(100% - ${this.ngeRenderedContentSize}px)`
+        : undefined
+      ;
+    }
+  }
+
 }
 
 declare global {

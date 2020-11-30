@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ComponentRef, EmbeddedViewRef, Input, ViewChild, ViewContainerRef, ViewEncapsulation, OnDestroy } from '@angular/core';
-import { CdkRow, RowContext } from '@angular/cdk/table';
+import { CdkRow } from '@angular/cdk/table';
 
 import { PblRowContext } from '../context/index';
 import { StylingDiffer, StylingDifferOptions } from '../utils/styling.differ';
@@ -38,6 +38,8 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   readonly rowType = 'data' as const;
 
   get rowIndex(): number { return this._rowIndex; }
+  /** Indicates if intersection observer is on, detecting outOfView state for us */
+  private observerMode = true;
 
   @Input() set row(value: T) {
     this.updateRow();
@@ -54,10 +56,12 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   private _classDiffer: StylingDiffer<{ [klass: string]: boolean }>;
   private _lastClass: Set<string>;
   private _rowIndex: number;
+  private outOfView = false;
 
   updateRow(): void {
     if (this._extApi) {
       if (!this.context) {
+        this.observerMode = this._extApi.viewport.intersection.observerMode;
         const vcRef = this._extApi.cdkTable._rowOutlet.viewContainer;
         const len = vcRef.length - 1;
         for (let i = len; i > -1; i--) {
@@ -66,6 +70,9 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
             this._rowIndex = i;
             this.context = viewRef.context;
             this.context.attachRow(this);
+            // only needed for non intersection observer mode
+            // TODO: remove when IntersectionObserver is required
+            this.updateOutOfView();
             break;
           }
         }
@@ -77,6 +84,8 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
         this.prevRow = this.currRow;
         this.currRow = this.context.$implicit;
       }
+
+
       if (this.currRow && this.currRow !== this.prevRow) {
         if (this.grid.rowClassUpdate && this.grid.rowClassUpdateFreq === 'item') {
           this.updateHostClass();
@@ -97,6 +106,40 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   ngOnDestroy(): void {
     super.ngOnDestroy();
     this.context?.detachRow(this);
+  }
+
+  /**
+   * Updates the outOfView state of this row and sync it with the context
+   * If the context's state is different from the new outOfView state, will invoke a change detection cycle.
+   * @internal
+   */
+  _setOutOfViewState(outOfView: boolean) {
+    if (this.outOfView !== outOfView) {
+      this.outOfView = outOfView;
+      if (this.context?.outOfView !== outOfView) {
+        this.context.outOfView = outOfView;
+        // TODO: If scrolling, mark the row for check and update only after scroll is done
+        this.ngDoCheck();
+      }
+    }
+  }
+
+  /**
+   * Updates the `outOfView` flag of the context attached to this row
+   *
+   * This method is backward compatible to support browser without the IntersectionObservable API.
+   *
+   * If the browser DOES NOT support IntersectionObserver it will calculate the state using bounding rect APIs (force param has no effect, always true).
+   * If the browser support IntersectionObserver it will do nothing when force is not set to true but when * set to true it will use
+   * the IntersectionObserver `takeRecords` method to update the outOfView state.
+   *
+   * > NOTE that this method has a direct impact on performance as it uses DOM apis that trigger layout reflows.
+   * Use with caution.
+   */
+  updateOutOfView(force?: boolean): void {
+    if (!this.observerMode || force) {
+      this._extApi.rowsApi.forceUpdateOutOfView(this);
+    }
   }
 
   protected init() {

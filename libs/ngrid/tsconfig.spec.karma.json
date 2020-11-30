@@ -4,7 +4,8 @@
     "outDir": "../../dist/out-tsc",
     "types": [
       "jasmine",
-      "node"
+      "node",
+      "@types/resize-observer-browser"
     ]
   },
   "files": [

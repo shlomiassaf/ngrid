@@ -1,8 +1,23 @@
 import { EmbeddedViewRef, ViewContainerRef } from '@angular/core';
 import { ListRange } from '@angular/cdk/collections';
 
+import { PblNgridConfigService } from '../../services/config';
+import { PblNgridVirtualScrollStrategy } from './strategies/types';
+
 export type StickyDirectionVt = 'top' | 'bottom';
 export type StickyDirectionHz = 'left' | 'right';
+
+export function resolveScrollStrategy(config: PblNgridConfigService,
+                                      scrollStrategy: PblNgridVirtualScrollStrategy,
+                                      fallback: () => PblNgridVirtualScrollStrategy): PblNgridVirtualScrollStrategy {
+  if (!scrollStrategy && config.has('virtualScroll')) {
+    const virtualScrollConfig = config.get('virtualScroll');
+    if (typeof virtualScrollConfig.defaultStrategy === 'function') {
+      scrollStrategy = virtualScrollConfig.defaultStrategy();
+    }
+  }
+  return scrollStrategy || fallback();
+}
 
 /**
  * Returns the split range from an aggregated range.

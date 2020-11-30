@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
-    "types": ["jest", "node"]
+    "types": ["jest", "node", "@types/resize-observer-browser"]
   },
   "files": ["src/__test-runners/jest-test-setup.ts"],
   "include": ["**/*.spec.ts", "**/*.d.ts"]

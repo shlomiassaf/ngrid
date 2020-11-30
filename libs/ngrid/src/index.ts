@@ -51,6 +51,7 @@ export {
   PblColumnSet, PblMetaRowDefinitions,
   PblNgridColumnSet, PblNgridColumnDefinitionSet,
 
+  DISABLE_INTERSECTION_OBSERVABLE,
   PblNgridVirtualScrollStrategy, PblNgridBaseVirtualScrollDirective,
   NoVirtualScrollStrategy, PblNgridDynamicVirtualScrollStrategy,
   // TODO: Move to an independent package in v4

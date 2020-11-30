@@ -90,6 +90,7 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
   _createCell(column: PblRowTypeToColumnTypeMap<TRowType>, atIndex?: number) {
     if (!this.canCreateCell || this.canCreateCell(column, atIndex)) {
       const cell = this.createComponent(column, atIndex);
+      cell.instance.setOwner(this);
       if (this.cellCreated) {
         this.cellCreated(column, cell);
       }

@@ -16,7 +16,6 @@ export class PblNgridCellEditAutoFocusDirective implements AfterViewInit, OnDest
   ngAfterViewInit(): void {
     const doFocus = () => {
       const context = this.context;
-      context.rowContext.updateOutOfViewState();
       if (context.editing && !context.rowContext.outOfView) {
         this.elRef.nativeElement.focus();
       }

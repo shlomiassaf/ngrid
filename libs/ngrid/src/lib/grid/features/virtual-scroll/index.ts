@@ -1,5 +1,5 @@
 export { PblNgridVirtualScrollStrategy, PblNgridVirtualScrollStrategyMap } from './strategies/types';
-export { PblCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component'
+export { PblCdkVirtualScrollViewportComponent, DISABLE_INTERSECTION_OBSERVABLE } from './virtual-scroll-viewport.component'
 export { NgeVirtualTableRowInfo, PblVirtualScrollForOf } from './virtual-scroll-for-of';
 export { PblNgridBaseVirtualScrollDirective } from './strategies/base-v-scroll.directive'
 export { PblCdkVirtualScrollDirective } from './strategies/v-scroll.directive'

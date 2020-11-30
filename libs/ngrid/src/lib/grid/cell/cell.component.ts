@@ -39,7 +39,6 @@ export class PblNgridCellComponent extends PblNgridBaseCell implements DoCheck {
   template: TemplateRef<any>;
 
   private _rowCtx: PblRowContext<any>;
-  private __rowCtx: RowContext<any>;
 
   /**
    * The position of the column def among all columns regardless of visibility.

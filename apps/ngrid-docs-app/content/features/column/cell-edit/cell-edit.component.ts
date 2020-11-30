@@ -21,6 +21,7 @@ export class CellEditExample {
       { prop: 'name', editable: true },
       { prop: 'gender', width: '50px' },
       { prop: 'birthdate' },
+      { prop: 'renderIndex', label: 'Render Index', width: '60px' },
       { prop: '__isFirstRender', label: 'First Render?', width: '60px' },
     )
     .build();

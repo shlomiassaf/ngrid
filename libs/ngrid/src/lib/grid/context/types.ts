@@ -96,8 +96,6 @@ export interface PblNgridRowContext<T = any> extends RowContext<T> {
    * The indicator is updated when rows are rendered (i.e. not live, on scroll events).
    * Understanding this behavior is important!!!
    *
-   * For live updated, you can use `updateOutOfViewState()` to trigger updates from a scroll stream. (keep track on performance)
-   *
    * Note that when virtual scroll is enabled `true` indicates a buffer row.
    */
   outOfView: boolean;
@@ -118,11 +116,6 @@ export interface PblNgridRowContext<T = any> extends RowContext<T> {
    * Returns a shallow copy of the current cell's context array.
    */
   getCells(): PblNgridCellContext<T>[];
-
-  /**
-   * Updates the `outOfView` property.
-   */
-  updateOutOfViewState(): void;
 }
 
 export interface PblNgridContextApi<T = any> {

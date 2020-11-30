@@ -11,6 +11,7 @@ import { PblCdkVirtualScrollViewportComponent } from '../grid/features/virtual-s
 import { NotifyPropChangeMethod, OnPropChangedEvent, PblNgridEvents } from './types';
 import { PblNgridMetaRowService } from '../grid/meta-rows/meta-row.service';
 import { RowsApi, PblRowsApi } from '../grid/row';
+import { PblNgridConfigService } from '../grid/services/config';
 import { PblNgridPluginContext, PblNgridPluginController } from './plugin-control';
 
 export const EXT_API_TOKEN = new InjectionToken('PBL_NGRID_EXTERNAL_API');
@@ -18,6 +19,7 @@ export const EXT_API_TOKEN = new InjectionToken('PBL_NGRID_EXTERNAL_API');
 export interface PblNgridExtensionApi<T = any> {
   grid: PblNgridComponent<T>;
   element: HTMLElement;
+  config: PblNgridConfigService;
   propChanged: Observable<OnPropChangedEvent>;
   cdkTable: PblCdkTableComponent<T>;
   columnStore: PblColumnStore;

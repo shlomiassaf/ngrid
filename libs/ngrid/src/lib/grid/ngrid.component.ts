@@ -1,4 +1,3 @@
-import ResizeObserver from 'resize-observer-polyfill';
 import { asapScheduler, animationFrameScheduler, fromEventPattern } from 'rxjs';
 import { filter, take, tap, observeOn, switchMap, map, mapTo, startWith, pairwise, debounceTime, skip } from 'rxjs/operators';
 import {
@@ -306,7 +305,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               public registry: PblNgridRegistryService,
               @Attribute('id') public readonly id: string,
               @Optional() dir?: Directionality) {
-    this._extApi = createApis(this, { ngZone, injector, vcRef, elRef, cdRef: cdr, dir });
+    this._extApi = createApis(this, { config, ngZone, injector, vcRef, elRef, cdRef: cdr, dir });
     const gridConfig = config.get('table');
     this.showHeader = gridConfig.showHeader;
     this.showFooter = gridConfig.showFooter;
