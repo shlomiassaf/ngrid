@@ -118,10 +118,12 @@ has switched between DOM elements and the close/open event is not in place. It w
 to the new row for us. Moreover, if an opened row was scrolled out of view into the virtual void it's height is
 stored and reflected in the total, once we scroll back into it, it will be rendered in an open state, again with no animation!
 
+W> The Dynamic Strategy will reset the total size and all size marks to 0 when filtering
+
 > Moving forward, the Dynamic Strategy will update, improving it's accuracy based on experience.
 For example, instead of using a default size we can fine-tune it to an average.
 
-## Global Strategy (default)
+## Configure A Global / Default Strategy
 
 The global strategy set by default to all instances of **nGrid** is `vScrollAuto`.  
 If a virtual scroll strategy is not set the global strategy will be used.

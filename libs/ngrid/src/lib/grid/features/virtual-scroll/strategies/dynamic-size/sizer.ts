@@ -14,6 +14,10 @@ export class Sizer {
     }
   }
 
+  clear() {
+    this.groups.clear();
+  }
+
   setSize(dsIndex: number, height: number) {
     const groupIndex = this.getGroupIndex(dsIndex);
 

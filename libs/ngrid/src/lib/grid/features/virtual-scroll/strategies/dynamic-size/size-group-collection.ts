@@ -6,7 +6,7 @@ export class SizeGroupCollection {
 
   get length() { return this._groups.length; }
 
-  private readonly _groups: SizeGroup[] = [];
+  private _groups: SizeGroup[] = [];
 
   set(group: SizeGroup) {
     const groupIndex = group.groupIndex;
@@ -42,8 +42,8 @@ export class SizeGroupCollection {
     return this.findGroupIndexIndex(groupIndex) > -1;
   }
 
-  [Symbol.iterator]() {
-
+  clear() {
+    this._groups = [];
   }
 
   protected findGroupIndexIndex(groupIndex: number, matchClosest?: boolean) {

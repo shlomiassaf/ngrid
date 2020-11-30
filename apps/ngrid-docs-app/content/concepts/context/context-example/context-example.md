@@ -46,3 +46,29 @@ I> If there is no unique column context support is available but limited.
 
 For example, if we remove the `pIndex` from the example above, each click for sort/pagination will clear the cache since
 there is no way for the context to identify and match exiting context to rows.
+
+## Context Pitfalls
+
+Some key points:
+
+- Context is state and managing state, as we all now, is **hard**.
+- **nGrid** is a composition of multiple features. Some interact with each other, some are native and some are plugins.
+
+Depending on the complexity of each feature and the areas in which it has effect on, managing the context might be tricky.  
+
+For example, filtering is an operation which modifies the existing dataset.  
+From here, things diverge based on the components used in **nGrid**.
+
+If the datasource implementation handles filtering on the **server** the entire datasource is replaced on each filtering operation.  
+However, when filtering is done on the existing datasource, it is kept in memory but only a portion of it is actually used.
+
+Each behavior impact the context differently. Filtering on the server will clear the context, filtering on the client will keep it.
+
+Additional features on top of the above? more complexity!
+
+For example, the `Dynamic Virtual Scroll` strategy is sensitive to filtering, regardless of it's origin, other virtual scroll strategies might be less sensitive.
+It is all based on the implementation.
+
+In general, virtual scroll operations and different datasource implementations (e.e. Infinite Scroll) might have context specific behaviors.  
+Read the documentation of the features you use for more information.
+

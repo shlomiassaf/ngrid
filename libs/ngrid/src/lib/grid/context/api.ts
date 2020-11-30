@@ -305,13 +305,13 @@ export class ContextApi<T = any> {
   }
 
   updateOutOfViewState(rowContext: PblRowContext<T>): void {
-    const viewPortRect = this.getViewRect();
     // This is check should not happen but it turns out it might
     // When rendering and updating the grid multiple times and in async it might occur while fast scrolling
     // The index of the row is updated to something out-of bounds and the viewRef is null.
     // The current known scenario for this is when doing fast infinite scroll and having an open edit cell with `pblCellEditAutoFocus`
     // The auto-focus fires after all CD is done but in the meanwhile, if fast scrolling the in-edit cell, it might happen
     if (rowContext._attachedRow) {
+      const viewPortRect = this.getViewRect();
       processOutOfView(rowContext, viewPortRect);
     }
   }
