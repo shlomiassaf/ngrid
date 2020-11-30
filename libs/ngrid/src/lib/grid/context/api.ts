@@ -1,7 +1,7 @@
 import { BehaviorSubject, Subject, Observable, asapScheduler } from 'rxjs';
 import { debounceTime, buffer, map, filter, take } from 'rxjs/operators';
 
-import { ViewContainerRef, EmbeddedViewRef } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
 
 import { PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblColumn } from '../column/model';
@@ -304,18 +304,6 @@ export class ContextApi<T = any> {
     return this.viewCache.get(renderRowIndex);
   }
 
-  updateOutOfViewState(rowContext: PblRowContext<T>): void {
-    // This is check should not happen but it turns out it might
-    // When rendering and updating the grid multiple times and in async it might occur while fast scrolling
-    // The index of the row is updated to something out-of bounds and the viewRef is null.
-    // The current known scenario for this is when doing fast infinite scroll and having an open edit cell with `pblCellEditAutoFocus`
-    // The auto-focus fires after all CD is done but in the meanwhile, if fast scrolling the in-edit cell, it might happen
-    if (rowContext._attachedRow) {
-      const viewPortRect = this.getViewRect();
-      processOutOfView(rowContext, viewPortRect);
-    }
-  }
-
   updateState(rowIdentity: any, columnIndex: number, cellState: Partial<CellContextState<T>>): void;
   updateState(rowIdentity: any, rowState: Partial<RowContextState<T>>): void;
   updateState(rowIdentity: any, rowStateOrCellIndex: Partial<RowContextState<T>> | number, cellState?: Partial<CellContextState<T>>): void {
@@ -415,7 +403,6 @@ export class ContextApi<T = any> {
       rowContext.dsIndex = dsIndex;
       rowContext.identity = identity;
       rowContext.fromState(this.getCreateState(rowContext));
-      rowContext.updateOutOfViewState();
       this.addToViewCache(rowContext._attachedRow.rowIndex, rowContext)
     }
   }
@@ -432,10 +419,6 @@ export class ContextApi<T = any> {
       this.cache.set(context.identity, state);
     }
     return state;
-  }
-
-  private getViewRect(): ClientRect | DOMRect {
-    return this.extApi.grid.viewport.element.getBoundingClientRect();
   }
 
   private emitFocusChanged(curr: PblNgridFocusChangedEvent['curr']): void {
@@ -460,32 +443,3 @@ export class ContextApi<T = any> {
   }
 }
 
-function processOutOfView(rowContext: PblRowContext<any>, viewPortRect: ClientRect | DOMRect, location?: 'top' | 'bottom'): boolean {
-  const el = rowContext._attachedRow?.element;
-  if (el) {
-    const elRect = el.getBoundingClientRect();
-
-    let isInsideOfView: boolean;
-    switch (location){
-      case 'top':
-        isInsideOfView = elRect.bottom >= viewPortRect.top;
-        break;
-      case 'bottom':
-        isInsideOfView = elRect.top <= viewPortRect.bottom;
-        break;
-      default:
-        isInsideOfView = (elRect.bottom >= viewPortRect.top && elRect.top <= viewPortRect.bottom)
-        break;
-    }
-
-    if (isInsideOfView) {
-      if (!rowContext.outOfView) {
-        return false;
-      }
-      rowContext.outOfView = false;
-    } else {
-      rowContext.outOfView = true;
-    }
-    return true;
-  }
-}

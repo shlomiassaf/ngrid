@@ -102,6 +102,7 @@
     "@types/jest": "26.0.8",
     "@types/marked": "^1.1.0",
     "@types/node": "^12.11.1",
+    "@types/resize-observer-browser": "^0.1.4",
     "@types/webpack": "^4.4.23",
     "angulartics2": "^7.5.2",
     "chalk": "^1.1.3",

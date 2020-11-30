@@ -7,7 +7,7 @@
     },
     "target": "es2016",
     "module": "commonjs",
-    "types": ["cypress", "node"],
+    "types": ["cypress", "node", "@types/resize-observer-browser"],
     "declaration": true,
     "sourceMap": true,
     "inlineSourceMap": false,

@@ -1,0 +1,44 @@
+<pbl-ngrid [dataSource]="ds" [columns]="columns">
+
+  <div *pblNgridCellDef="'dsIndex'; let ctx">
+    {{ctx.rowContext.dsIndex}}
+  </div>
+
+  <div *pblNgridCellDef="'index'; let ctx">
+    {{ctx.rowContext.index}}
+  </div>
+
+
+  <div *pblNgridCellDef="'firstRender'; let ctx">
+    {{!!ctx.rowContext.firstRender}}
+  </div>
+
+  <div *pblNgridCellDef="'outOfView'; let ctx">
+    {{!!ctx.rowContext.outOfView}}
+  </div>
+
+  <div *pblNgridCellDef="'count'; let ctx">
+    {{ctx.rowContext.count}}
+  </div>
+
+  <div *pblNgridCellDef="'even'; let ctx">
+    {{!!ctx.rowContext.even}}
+  </div>
+
+  <div *pblNgridCellDef="'odd'; let ctx">
+    {{!!ctx.rowContext.odd}}
+  </div>
+
+  <div *pblNgridCellDef="'first'; let ctx">
+    {{!!ctx.rowContext.first}}
+  </div>
+
+  <div *pblNgridCellDef="'last'; let ctx">
+    {{!!ctx.rowContext.last}}
+  </div>
+
+  <div *pblNgridCellDef="'identity'; let ctx">
+    {{ctx.rowContext.identity}}
+  </div>
+
+</pbl-ngrid>

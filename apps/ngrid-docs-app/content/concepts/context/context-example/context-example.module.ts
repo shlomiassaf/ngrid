@@ -7,14 +7,15 @@ import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 import { PblNgridPaginatorModule } from '@pebula/ngrid-material/paginator';
 import { PblNgridMatSortModule } from '@pebula/ngrid-material/sort';
 import { ContextExampleExample } from './context-example.component';
+import { ContextObjectExample } from './context-object.component';
 
 @NgModule({
-  declarations: [ ContextExampleExample ],
+  declarations: [ ContextExampleExample, ContextObjectExample ],
   imports: [
     ExampleCommonModule,
     PblNgridModule, PblNgridTargetEventsModule, PblNgridPaginatorModule, PblNgridMatSortModule,
   ],
-  exports: [ ContextExampleExample ],
+  exports: [ ContextExampleExample, ContextObjectExample ],
 })
-@BindNgModule(ContextExampleExample)
+@BindNgModule(ContextExampleExample, ContextObjectExample)
 export class ContextExampleExampleModule { }

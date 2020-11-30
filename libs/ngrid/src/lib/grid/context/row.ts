@@ -130,20 +130,12 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   updateCell(cell: PblCellContext<T>): void {
     this.cells[cell.index] = cell.clone();
   }
-    /**
-   * Updates the `outOfView` property.
-   */
-  updateOutOfViewState(): void {
-    this.extApi.contextApi.updateOutOfViewState(this);
-  }
 
   attachRow(row: PblNgridRowComponent<T>) {
     this.detachRow(this._attachedRow);
     this._attachedRow = row;
     if (this._updatePending) {
       this.updateRowData();
-    } else {
-      this.updateOutOfViewState();
     }
   }
 

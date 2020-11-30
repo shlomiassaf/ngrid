@@ -1,5 +1,6 @@
-import { EmbeddedViewRef, ViewContainerRef, NgZone } from '@angular/core';
-import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
+import { NgZone } from '@angular/core';
+import { PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
+import { RowIntersectionTracker } from '../features/virtual-scroll/row-intersection';
 import { PblCdkTableComponent } from '../pbl-cdk-table/pbl-cdk-table.component';
 import { unrx } from '../utils/unrx';
 import { PblNgridBaseRowComponent } from './base-row.component';
@@ -28,8 +29,9 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
   private metaHeaderRows = new Set<PblNgridMetaRowComponent>();
   private metaFooterRows = new Set<PblNgridMetaRowComponent>();
   private gridWidthRow: PblNgridColumnRowComponent;
+  private intersection?: RowIntersectionTracker;
 
-  constructor(private readonly extApi: PblNgridExtensionApi<T>,
+  constructor(private readonly extApi: PblNgridInternalExtensionApi<T>,
               private readonly zone: NgZone,
               public readonly cellFactory: PblNgridCellFactoryResolver) {
     extApi.onConstructed(() => this.cdkTable = extApi.cdkTable);
@@ -63,10 +65,10 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
             }
           }
         });
-        if (requireSizeUpdate) {
-          this.gridWidthRow.updateSize();
-        }
-      });
+      if (requireSizeUpdate) {
+        this.gridWidthRow.updateSize();
+      }
+    });
 
     extApi.columnStore.metaRowChange()
       .pipe(unrx(this))
@@ -91,6 +93,48 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
           }
         }
       });
+
+    extApi.onConstructed(() => {
+      this.intersection = extApi.viewport.intersection;
+      if (this.intersection.observerMode) {
+        this.intersection.intersectionChanged
+          .subscribe(entries => {
+            const rows = this.dataRows();
+            for (const e of entries) {
+              const row = rows.find( r => r.element === e.target);
+              row?._setOutOfViewState(!e.isIntersecting);
+            }
+          });
+      } else {
+        // only needed for non intersection observer mode
+        // TODO: remove when IntersectionObserver is required
+        let lastScrollState = extApi.viewport.isScrolling;
+        extApi.viewport.scrolling
+          .subscribe( scrolling => {
+            if (scrolling === 0 && lastScrollState) {
+              // TODO: be smarter here, start from edges, stop when both edge hit in view row
+              // use isOutOfView location (top/bottom) to speed up
+              this.forceUpdateOutOfView(...this.dataRows());
+            }
+            lastScrollState = !!scrolling;
+          });
+      }
+    });
+  }
+
+  forceUpdateOutOfView(...rows: PblNgridRowComponent<T>[]) {
+    if (this.intersection.observerMode) {
+      const entries = this.intersection.snapshot();
+      for (const e of entries) {
+        const row = rows.find( r => r.element === e.target);
+        row?._setOutOfViewState(!e.isIntersecting);
+      }
+    } else {
+      const { clientRect } = this.extApi.viewport.getBoundingClientRects;
+      for (const row of rows) {
+        row._setOutOfViewState(isOutOfView(row, clientRect));
+      }
+    }
   }
 
   addRow(row: PblNgridBaseRowComponent<GridRowType, T>) {
@@ -104,7 +148,8 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
           this.gridWidthRow = row as unknown as PblNgridColumnRowComponent;
         }
       case 'data': // tslint:disable-line: no-switch-case-fall-through
-      case 'footer':
+        this.intersection.track(row.element);
+      case 'footer': // tslint:disable-line: no-switch-case-fall-through
         this.columnRows.add(row as any);
         break;
       case 'meta-header':
@@ -129,7 +174,8 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
           this.gridWidthRow = undefined;
         }
       case 'data': // tslint:disable-line: no-switch-case-fall-through
-      case 'footer':
+        this.intersection.untrack(row.element);
+      case 'footer': // tslint:disable-line: no-switch-case-fall-through
         this.columnRows.delete(row as any);
         break;
       case 'meta-header':
@@ -220,4 +266,23 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
       }
     }
   }
+}
+
+function isOutOfView(row: PblNgridRowComponent, viewPortRect: ClientRect | DOMRect, location?: 'top' | 'bottom'): boolean {
+  const elRect = row.element.getBoundingClientRect();
+
+  let isInsideOfView: boolean;
+  switch (location){
+    case 'top':
+      isInsideOfView = elRect.bottom >= viewPortRect.top;
+      break;
+    case 'bottom':
+      isInsideOfView = elRect.top <= viewPortRect.bottom;
+      break;
+    default:
+      isInsideOfView = (elRect.bottom >= viewPortRect.top && elRect.top <= viewPortRect.bottom)
+      break;
+  }
+
+  return !isInsideOfView;
 }

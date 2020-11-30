@@ -2,7 +2,7 @@
 title: What is the Context
 path: concepts/context/what-is-the-context
 parent: concepts/context
-tags: context, contextApi
+tags: context, contextApi, IntersectionObserver
 ordinal: 1
 ---
 # What is the Context
@@ -46,6 +46,73 @@ I> If there is no unique column context support is available but limited.
 
 For example, if we remove the `pIndex` from the example above, each click for sort/pagination will clear the cache since
 there is no way for the context to identify and match exiting context to rows.
+
+## The Data Row Context
+
+The data row context is the object which holds the state of a data row (including the row's data item) and some methods to operate on the context.
+
+Let's first focus on the properties:
+
+```typescript
+export interface PblNgridRowContext<T = any> {
+  /** Data for the row that this cell is located within. */
+  $implicit?: T;
+  /** Length of the number of total rows rendered rows. */
+  count?: number;
+  /** True if this cell is contained in the first row. */
+  first?: boolean;
+  /** True if this cell is contained in the last row. */
+  last?: boolean;
+  /** True if this cell is contained in a row with an even-numbered index. */
+  even?: boolean;
+  /** True if this cell is contained in a row with an odd-numbered index. */
+  odd?: boolean;
+
+  /** The identity of this row */
+  identity: number;
+
+  /**
+   * When true, it is the first time that the row is rendered.
+   * Once the row leaves the view this will be false and will not change.
+   *
+   * Note that rendered items might appear outside of the viewport if virtual scroll is not set and
+   * when set but the row is rendered as part of the buffer.
+   *
+   * This is relevant only when virtual scroll is set.
+   */
+  firstRender: boolean;
+
+  /**
+   * When true, indicates that the row is rendered outside of the viewport.
+   *
+   * The indicator is updated when rows are rendered (i.e. not live, on scroll events).
+   * Understanding this behavior is important!!!
+   *
+   * Note that when virtual scroll is enabled `true` indicates a buffer row.
+   */
+  outOfView: boolean;
+
+  /** The index at the datasource */
+  dsIndex: number;
+
+  readonly grid: PblNgridComponent<T>;
+
+  /**
+   * Returns the length of cells context stored in this row
+   */
+  readonly length: number;
+}
+```
+
+`$implicit` is the actual data row and the default property provided by angular.  
+All other properties are straight forwards, let's see them in action:
+
+
+<div pbl-example-view="pbl-context-object-example"></div>
+
+> When using [virtual scroll](../../../features/grid/virtual-scroll/what-is-virtual-scroll), `count` represents the rendered rows, not the total rows.
+
+I> `identity` is populated based on the [identity column](../../columns/identity), if none define the data index is used.
 
 ## Context Pitfalls
 

@@ -1,5 +1,3 @@
-import ResizeObserver from 'resize-observer-polyfill';
-
 import { PblNgridComponent } from '../../ngrid.component';
 import { PblColumn } from '../../column/model/column';
 import { PblColumnSizeObserver } from './column-size-observer';
@@ -58,7 +56,7 @@ export class PblNgridColumnSizeObserverGroup {
     }
   }
 
-  private onResize(entries: ResizeObserverEntry[]): void {
+  private onResize(entries: ResizeObserverEntry[] | readonly ResizeObserverEntry[]): void {
     const resized: PblColumnSizeObserver[] = [];
     for (const entry of entries) {
       const o = this.entries.get(entry.target);

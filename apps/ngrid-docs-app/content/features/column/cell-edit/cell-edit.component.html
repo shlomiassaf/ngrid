@@ -1,4 +1,7 @@
-<pbl-ngrid #grid1 [dataSource]="ds" [columns]="columns" [hideColumns]="hideColumns">
+<pbl-ngrid #nGrid [dataSource]="ds" [columns]="columns" [hideColumns]="hideColumns">
+  <div *pblNgridCellDef="'renderIndex'; let ctx">
+    {{ctx.rowContext.index}}
+  </div>
   <div *pblNgridCellDef="'__isFirstRender'; let ctx">
     {{!!ctx.rowContext.firstRender}}
   </div>
@@ -12,5 +15,5 @@
 
 <ul>
   <li>Clicking on any cell in the column <b>name</b> will trigger an input box, leaving the input box (blur) will return to the read-only view.</li>
-  <li>Clicking on <button mat-button (click)="update(grid1)">this button</button> will trigger edit on the 4th <b>rendered</b> row and the 2nd cell (name).</li>
+  <li>Clicking on <button mat-button (click)="update(nGrid)">this button</button> will trigger edit on the 4th <b>rendered</b> row and the 2nd cell (name).</li>
 </ul>

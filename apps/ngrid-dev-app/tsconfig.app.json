@@ -2,7 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": []
+    "types": [
+      "@types/resize-observer-browser"
+    ]
   },
   "exclude": [
     "./src/test.ts",
