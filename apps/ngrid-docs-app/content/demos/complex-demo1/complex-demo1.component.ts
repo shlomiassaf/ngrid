@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
 import { PblNgridComponent, createDS, columnFactory, PblNgridPaginatorKind, AutoSizeToFitOptions } from '@pebula/ngrid';
-import { toggleDetailRow } from '@pebula/ngrid/detail-row';
-import { setStickyRow, setStickyColumns } from '@pebula/ngrid/sticky';
 
 import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
 import { Example } from '@pebula/apps/docs-app-lib';
@@ -110,54 +108,10 @@ export class ComplexDemo1Example {
 
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(500, 1000) ).create();
 
-  detailRowPredicate: ( (index: number, rowData: Person) => boolean ) | true | undefined;
-  detailRow: 'on' | 'off' | 'predicate' = 'off';
-
-  emailFrequencyToggle: boolean;
-
-  usePagination: false | PblNgridPaginatorKind = false// 'pageNumber';
-  showFooter = false;
-  showHeader = true;
-  hideColumns: string[] = [];
-  toggleTranspose = false;
-  enableRowSelection = true;
-  singleDetailRow = false;
-
   @ViewChild(PblNgridComponent, { static: true }) pblTable: PblNgridComponent<any>;
-
-  setStickyRow = setStickyRow;
-  setStickyColumns = setStickyColumns;
-
-  private detailRowEvenPredicate = (index: number, rowData: Person) => index % 2 !== 0;
 
   constructor(private datasource: DynamicClientApi) {
     datasource.getCountries().then( c => COUNTRY_GETTER.data = c );
   }
 
-  toggleColumn(id: string): void {
-    const idx = this.hideColumns.indexOf(id);
-    if (idx === -1) {
-      this.hideColumns.push(id);
-    } else {
-      this.hideColumns.splice(idx, 1);
-    }
-  }
-
-  onDetailRowChange(value: 'on' | 'off' | 'predicate') : void {
-    switch(value) {
-      case 'off':
-        this.detailRowPredicate = undefined;
-        break;
-      case 'on':
-        this.detailRowPredicate = true;
-        break;
-      case 'predicate':
-        this.detailRowPredicate = this.detailRowEvenPredicate;
-        break;
-    }
-  }
-
-  toggleDetailRow(pblTbl: PblNgridComponent<any>, item: Person): void {
-    toggleDetailRow(pblTbl, item)
-  }
 }
