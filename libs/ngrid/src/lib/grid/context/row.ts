@@ -62,14 +62,7 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
     this.identity = this.extApi.contextApi.getRowIdentity(dsIndex, _data);
 
     this.grid = extApi.grid;
-    const cells = this.cells = [];
-    const { columns } = extApi.grid.columnApi;
-    const len = columns.length;
-
-    for (let columnIndex = 0; columnIndex < len; columnIndex++) {
-      const cellContext = PblCellContext.create<T>(this, columns[columnIndex], extApi);
-      cells.push(cellContext);
-    }
+    this._rebuildCells(this.extApi.grid.columnApi.columns);
   }
 
   static defaultState<T = any>(identity: any, dsIndex: number, cellsCount: number): RowContextState<T> {
@@ -143,6 +136,16 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
     if (row && this._attachedRow === row) {
       this.saveState();
       this._attachedRow = undefined;
+    }
+  }
+
+  _rebuildCells(columns: PblColumn[]) {
+    const cells = this.cells = [];
+    const len = columns.length;
+
+    for (let columnIndex = 0; columnIndex < len; columnIndex++) {
+      const cellContext = PblCellContext.create<T>(this, columns[columnIndex], this.extApi);
+      cells.push(cellContext);
     }
   }
 
