@@ -1,18 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
-  ElementRef,
-  OnDestroy, Optional,
+  OnInit,
+  OnDestroy,
   ViewEncapsulation,
   ViewContainerRef,
   ViewChild,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CdkRow } from '@angular/cdk/table';
 
-import { PblNgridRowComponent, utils, PblNgridComponent, PblRowContext } from '@pebula/ngrid';
+import { PblNgridRowComponent, utils } from '@pebula/ngrid';
 import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY } from './detail-row-plugin';
 import { DetailRowController } from './detail-row-controller';
 
@@ -30,7 +28,7 @@ export const PBL_NGRID_ROW_TEMPLATE = '<ng-content select=".pbl-ngrid-row-prefix
   host: { // tslint:disable-line:no-host-metadata-property
     class: 'pbl-ngrid-row pbl-row-detail-parent',
     role: 'row',
-    '[attr.tabindex]': 'grid?.rowFocus',
+    '[attr.tabindex]': 'grid.rowFocus',
     '(keydown)': 'handleKeydown($event)'
   },
   template: PBL_NGRID_ROW_TEMPLATE,
@@ -41,7 +39,7 @@ export const PBL_NGRID_ROW_TEMPLATE = '<ng-content select=".pbl-ngrid-row-prefix
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridDetailRowComponent extends PblNgridRowComponent implements OnDestroy {
+export class PblNgridDetailRowComponent extends PblNgridRowComponent implements OnInit, OnDestroy, PblDetailsRowToggleEvent {
 
   get expended(): boolean {
     return this.opened;
@@ -51,67 +49,74 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     return super.height + this.controller.getDetailRowHeight(this);
   }
 
+  get row() { return this.context.$implicit; }
+
   // We must explicitly define the inherited properties which have angular annotations
   // Because angular will not detect them when building this library.
   // TODO: When moving up to IVY see if this one get fixed
-  /**
-   * Optional grid instance, required only if the row is declared outside the scope of the grid.
-   */
-  @Input() grid: PblNgridComponent;
-  @ViewChild('viewRef', { read: ViewContainerRef }) _viewRef: ViewContainerRef;
+  @ViewChild('viewRef', { read: ViewContainerRef, static: true }) _viewRef: ViewContainerRef;
 
-  get row() { return this._row; }
-  @Input('detailRow') set row(value: any) {
-    super.row = value;
-    if (this._row !== value) {
-      this._row = value;
-      this.plugin?.markForCheck();
-      this.controller?.detectChanges(this);
-    }
-  }
-
-  private _row: any;
   private opened = false;
   private plugin: PblNgridDetailRowPluginDirective<any>;
   private controller: DetailRowController;
 
-  constructor(@Optional() grid: PblNgridComponent,
-              cdRef: ChangeDetectorRef,
-              el: ElementRef<HTMLElement>) {
-    super(grid, cdRef, el);
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.plugin.addDetailRow(this);
+    const tradeEvents = this._extApi.pluginCtrl.getPlugin('targetEvents');
+
+    tradeEvents.cellClick
+      .pipe(utils.unrx(this))
+      .subscribe( event => {
+        if (event.type === 'data' && event.row === this.context.$implicit) {
+          const { excludeToggleFrom } = this.plugin;
+          if (!excludeToggleFrom || !excludeToggleFrom.some( c => event.column.id === c )) {
+            this.toggle();
+          }
+        }
+      });
+
+    tradeEvents.rowClick
+      .pipe(utils.unrx(this))
+      .subscribe( event => {
+        if (!event.root && event.type === 'data' && event.row === this.context.$implicit) {
+          this.toggle();
+        }
+      });
   }
 
   ngOnDestroy(): void {
     utils.unrx.kill(this);
-    this.plugin?.removeDetailRow(this);
+    this.plugin.removeDetailRow(this);
     this.controller.clearDetailRow(this, true);
     super.ngOnDestroy();
   }
 
-  updateRow(): void {
-    super.updateRow();
-    if (this.context) {
-      if (this.currRow !== this.prevRow) { // only if row has changed (TODO: use identity based change detection?)
-        switch (this.plugin.whenContextChange) {
-          case 'context':
-            const isContextOpened = !!this.context.getExternal('detailRow');
-            isContextOpened && this.opened
-              ? this.controller.updateDetailRow(this) // if already opened, just update the context
-              : this.toggle(isContextOpened, true) // if not opened, force to the context state
-            ;
-            break;
-          case 'render':
-            if (this.opened) {
-              this.controller.updateDetailRow(this);
-            }
-            break;
-          case 'close':
-            this.toggle(false, true);
-            break;
-        }
-        this.plugin.toggledRowContextChange.next(this);
+  updateRow() {
+    if (super.updateRow()) { // only if row has changed (TODO: use identity based change detection?)
+      switch (this.plugin.whenContextChange) {
+        case 'context':
+          const isContextOpened = !!this.context.getExternal('detailRow');
+          isContextOpened && this.opened
+            ? this.controller.updateDetailRow(this) // if already opened, just update the context
+            : this.toggle(isContextOpened, true) // if not opened, force to the context state
+          ;
+          break;
+        case 'render':
+          if (this.opened) {
+            this.controller.updateDetailRow(this);
+          }
+          break;
+        case 'close':
+          this.toggle(false, true);
+          break;
       }
+      this.plugin.markForCheck();
+      this.controller.detectChanges(this);
+      this.plugin.toggledRowContextChange.next(this);
+      return true;
     }
+    return false;
   }
 
   toggle(forceState?: boolean, fromRender = false): void {
@@ -147,32 +152,9 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     }
   }
 
-  protected init() {
+  protected onCtor() {
+    super.onCtor();
     this.plugin = this._extApi.pluginCtrl.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
     this.controller = this.plugin.detailRowCtrl;
-    if (this._row) {
-      this.plugin.markForCheck();
-    }
-    super.init();
-    this.plugin.addDetailRow(this);
-    const tradeEvents = this._extApi.pluginCtrl.getPlugin('targetEvents');
-    tradeEvents.cellClick
-      .pipe(utils.unrx(this))
-      .subscribe( event => {
-        if (event.type === 'data' && event.row === this.context.$implicit) {
-          const { excludeToggleFrom } = this.plugin;
-          if (!excludeToggleFrom || !excludeToggleFrom.some( c => event.column.id === c )) {
-            this.toggle();
-          }
-        }
-      });
-
-    tradeEvents.rowClick
-      .pipe(utils.unrx(this))
-      .subscribe( event => {
-        if (!event.root && event.type === 'data' && event.row === this.context.$implicit) {
-          this.toggle();
-        }
-      });
   }
 }

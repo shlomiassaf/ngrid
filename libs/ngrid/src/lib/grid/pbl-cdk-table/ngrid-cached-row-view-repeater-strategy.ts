@@ -1,4 +1,4 @@
-import { EmbeddedViewRef, Injectable, IterableChangeRecord, IterableChanges, ViewContainerRef } from '@angular/core';
+import { EmbeddedViewRef, Injectable, ViewContainerRef } from '@angular/core';
 import { _ViewRepeaterItemInsertArgs, _ViewRepeaterOperation } from '@angular/cdk/collections';
 import { RenderRow } from '@angular/cdk/table';
 
@@ -46,8 +46,7 @@ export class PblNgridCachedRowViewRepeaterStrategy<T, R extends RenderRow<T>, C 
       state.view.context.$implicit = state.itemValueResolver(state.record);
       state.op = _ViewRepeaterOperation.REPLACED;
     } else {
-      const itemArgs = state.itemContextFactory(state.record, adjustedPreviousIndex, currentIndex);
-      state.view = state.vcRef.createEmbeddedView(itemArgs.templateRef, itemArgs.context, itemArgs.index);
+      state.view = state.createEmbeddedView(state.record, adjustedPreviousIndex, currentIndex);
       state.op = _ViewRepeaterOperation.INSERTED;
     }
   }

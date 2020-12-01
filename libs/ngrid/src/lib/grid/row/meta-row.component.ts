@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, Attribute, ComponentRef, ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  ViewEncapsulation,
+  Optional,
+  Attribute,
+  ComponentRef,
+  ChangeDetectorRef,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { CdkHeaderRow } from '@angular/cdk/table';
 
 import { PblNgridComponent } from '../ngrid.component';
@@ -22,7 +34,7 @@ import { applyMetaRowClass, initColumnOrMetaRow } from './utils';
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridMetaRowComponent extends PblNgridBaseRowComponent<'meta-header' | 'meta-footer'> implements PblMetaRow {
+export class PblNgridMetaRowComponent extends PblNgridBaseRowComponent<'meta-header' | 'meta-footer'> implements PblMetaRow, OnInit, OnDestroy {
 
   get row() { return this._row; }
   @Input() set row(value: PblColumnStoreMetaRow) { this.updateRow(value); }
@@ -45,9 +57,13 @@ export class PblNgridMetaRowComponent extends PblNgridBaseRowComponent<'meta-hea
               private readonly metaRows: PblNgridMetaRowService,
               @Attribute('footer') isFooter: any) {
     super(grid, cdRef, el);
-    this.element = el.nativeElement;
     this.isFooter = isFooter !== null;
     this.rowType = this.isFooter ? 'meta-footer' : 'meta-header';
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.handleVisibility();
   }
 
   ngOnDestroy(): void {
@@ -55,9 +71,7 @@ export class PblNgridMetaRowComponent extends PblNgridBaseRowComponent<'meta-hea
     super.ngOnDestroy();
   }
 
-  protected init() {
-    this.handleVisibility();
-  }
+  protected onCtor() { }
 
   protected detectChanges() {
     for (const cell of this._cells) {

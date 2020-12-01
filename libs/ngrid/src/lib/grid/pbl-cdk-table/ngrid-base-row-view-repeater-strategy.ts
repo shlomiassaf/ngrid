@@ -13,10 +13,11 @@ import { CdkRowDef, RenderRow, BaseRowDef, RowContext } from '@angular/cdk/table
 
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblRowContext } from '../context/row';
+import { rowContextBridge } from '../row/row-to-repeater-bridge';
 
 export interface BaseChangeOperationState<T, R extends RenderRow<T>, C extends PblRowContext<T>> {
   vcRef: ViewContainerRef;
-  itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C>;
+  createEmbeddedView: (record: IterableChangeRecord<R>, adjustedPreviousIndex: number | null, currentIndex: number | null) => EmbeddedViewRef<C>;
   itemValueResolver: _ViewRepeaterItemValueResolver<T, R>;
 }
 
@@ -46,18 +47,24 @@ export class PblNgridBaseRowViewRepeaterStrategy<T, R extends RenderRow<T>, C ex
                itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C>,
                itemValueResolver: _ViewRepeaterItemValueResolver<T, R>,
                itemViewChanged?: _ViewRepeaterItemChanged<R, C>) {
-    const baseState: BaseChangeOperationState<T, R, C> = {
-      vcRef,
-      itemContextFactory: ( record: IterableChangeRecord<R>,
-                            adjustedPreviousIndex: number | null,
-                            currentIndex: number | null) => this.updateWithNgridContext(itemContextFactory(record, adjustedPreviousIndex, currentIndex)),
-      itemValueResolver,
+
+    const createEmbeddedView = (record: IterableChangeRecord<R>,
+                                adjustedPreviousIndex: number | null,
+                                currentIndex: number | null) => {
+      const itemArgs = itemContextFactory(record, adjustedPreviousIndex, currentIndex);
+      itemArgs.context = this.extApi.contextApi._createRowContext(itemArgs.context.$implicit, itemArgs.index) as any;
+      return rowContextBridge.bridgeContext<C>(itemArgs, () => vcRef.createEmbeddedView(itemArgs.templateRef, itemArgs.context, itemArgs.index));
     };
+
+    const baseState: BaseChangeOperationState<T, R, C> = { vcRef, createEmbeddedView, itemValueResolver };
     changes.forEachOperation((record: IterableChangeRecord<R>, adjustedPreviousIndex: number | null, currentIndex: number | null) => {
       const state: ChangeOperationState<T, R, C> = Object.create(baseState);
       state.record = record;
       if (record.previousIndex == null) {
         this.addItem(adjustedPreviousIndex, currentIndex, state);
+        if (state.op === _ViewRepeaterOperation.INSERTED) {
+
+        }
       } else if (currentIndex == null) {
         this.removeItem(adjustedPreviousIndex, state);
       } else {
@@ -72,7 +79,7 @@ export class PblNgridBaseRowViewRepeaterStrategy<T, R extends RenderRow<T>, C ex
     });
 
     if (this.workaroundEnabled) {
-      this.patch20765(vcRef, changes, itemContextFactory);
+      this.patch20765(changes, baseState);
     }
   }
 
@@ -86,20 +93,14 @@ export class PblNgridBaseRowViewRepeaterStrategy<T, R extends RenderRow<T>, C ex
 
   protected afterOperation(state: ChangeOperationState<T, R, C>) {  }
 
-  protected updateWithNgridContext(itemArgs: _ViewRepeaterItemInsertArgs<C>) {
-    itemArgs.context = this.extApi.contextApi._createRowContext(itemArgs.context.$implicit, itemArgs.index) as any;
-    return itemArgs;
-  }
-
   // See https://github.com/angular/components/pull/20765
-  protected patch20765(viewContainerRef: ViewContainerRef, changes: IterableChanges<R>, itemContextFactory: _ViewRepeaterItemContextFactory<T, R, C>,) {
+  protected patch20765(changes: IterableChanges<R>, baseState: BaseChangeOperationState<T, R, C>) {
     changes.forEachIdentityChange = (fn: (record: IterableChangeRecord<R>) => void) => {
       changes.constructor.prototype.forEachIdentityChange.call(changes, (record: IterableChangeRecord<R>) => {
         fn(record);
         if (this._cachedRenderDefMap.get(record.currentIndex) !== record.item.rowDef) {
-          viewContainerRef.remove(record.currentIndex);
-          const insertContext = this.updateWithNgridContext(itemContextFactory(record, null, record.currentIndex));
-          viewContainerRef.createEmbeddedView(insertContext.templateRef, insertContext.context, insertContext.index);
+          baseState.vcRef.remove(record.currentIndex);
+          baseState.createEmbeddedView(record, null, record.currentIndex);
           this._cachedRenderDefMap.set(record.currentIndex, record.item.rowDef);
         }
       });

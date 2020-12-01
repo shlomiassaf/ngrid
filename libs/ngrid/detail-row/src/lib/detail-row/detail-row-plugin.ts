@@ -70,7 +70,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
       this._forceSingle = value;
       if (value && this._openedRow && this._openedRow.expended) {
         for (const detailRow of this._detailRowRows) {
-          if (detailRow.row !== this._openedRow.row) {
+          if (detailRow.context.$implicit !== this._openedRow.row) {
             detailRow.toggle(false);
           }
         }
@@ -187,7 +187,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
 
   toggleDetailRow(row: any, forceState?: boolean): boolean | void {
     for (const detailRow of this._detailRowRows) {
-      if (detailRow.row === row) {
+      if (detailRow.context.$implicit === row) {
         detailRow.toggle(forceState);
         return detailRow.expended;
       }

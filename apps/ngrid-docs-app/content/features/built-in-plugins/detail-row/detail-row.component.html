@@ -1,5 +1,5 @@
 <!-- This should be declared in a top-level component (e.g. app root) -->
-
+<pbl-ngrid-row *pblNgridDetailRowParentRef="let row;" detailRow matRipple></pbl-ngrid-row>
 <pbl-ngrid blockUi [dataSource]="ds" [columns]="columns" vScrollNone
            detailRow (toggleChange)="onToggleChange($event)">
   <div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
@@ -8,8 +8,6 @@
       <pre>{{row | json}}</pre>
     </div>
   </div>
-
-  <pbl-ngrid-row *pblNgridDetailRowParentRef="let row; grid as grid" [grid]="grid" [detailRow]="row" matRipple></pbl-ngrid-row>
 </pbl-ngrid>
 
 <div>
