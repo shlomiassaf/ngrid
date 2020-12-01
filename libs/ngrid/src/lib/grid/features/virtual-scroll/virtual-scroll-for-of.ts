@@ -210,7 +210,7 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
 
     const vcRefs = [this.vcRefs.header, this.vcRefs.data, this.vcRefs.footer];
     const vcRefSizeReducer = (total: number, vcRef: ViewContainerRef, index: number): number => {
-      return total + measureRangeSize(vcRef, ranges[index], renderedRanges[index], orientation, stickyStates[index]);
+      return total + measureRangeSize(vcRef, ranges[index], renderedRanges[index], stickyStates[index]);
     };
 
     return vcRefs.reduce(vcRefSizeReducer, 0);
