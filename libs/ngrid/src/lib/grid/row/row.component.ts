@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, EmbeddedViewRef, Input, ViewChild, ViewContainerRef, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ComponentRef, ViewChild, ViewContainerRef, ViewEncapsulation, OnDestroy, OnInit } from '@angular/core';
 import { CdkRow } from '@angular/cdk/table';
 
 import { PblRowContext } from '../context/index';
@@ -7,8 +7,10 @@ import { PblNgridCellComponent } from '../cell/cell.component';
 import { PblColumn } from '../column/model';
 import { unrx } from '../utils/unrx';
 import { PblNgridBaseRowComponent } from './base-row.component';
-import { PblNgridComponent } from '../ngrid.component';
 import { PblNgridColumnDef } from '../column/directives/column-def';
+import { rowContextBridge } from './row-to-repeater-bridge';
+import { PblNgridPluginController } from '../../ext/plugin-control';
+import { PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 
 export const PBL_NGRID_ROW_TEMPLATE = '<ng-content select=".pbl-ngrid-row-prefix"></ng-content><ng-container #viewRef></ng-container><ng-content select=".pbl-ngrid-row-suffix"></ng-content>';
 
@@ -26,27 +28,15 @@ export const PBL_NGRID_ROW_TEMPLATE = '<ng-content select=".pbl-ngrid-row-prefix
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'data', T> implements OnDestroy {
+export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'data', T> implements OnInit, OnDestroy {
 
-  /**
-   * Optional grid instance, required only if the row is declared outside the scope of the grid.
-   */
-  @Input() grid: PblNgridComponent<T>;
-
-  @ViewChild('viewRef', { read: ViewContainerRef }) _viewRef: ViewContainerRef;
+  @ViewChild('viewRef', { read: ViewContainerRef, static: true }) _viewRef: ViewContainerRef;
 
   readonly rowType = 'data' as const;
 
   get rowIndex(): number { return this._rowIndex; }
   /** Indicates if intersection observer is on, detecting outOfView state for us */
   private observerMode = true;
-
-  @Input() set row(value: T) {
-    this.updateRow();
-    if (this.context) {
-      this.identityUpdated();
-    }
-  }
 
   context: PblRowContext<T>;
 
@@ -58,40 +48,32 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   private _rowIndex: number;
   private outOfView = false;
 
-  updateRow(): void {
-    if (this._extApi) {
-      if (!this.context) {
-        this.observerMode = this._extApi.viewport.intersection.observerMode;
-        const vcRef = this._extApi.cdkTable._rowOutlet.viewContainer;
-        const len = vcRef.length - 1;
-        for (let i = len; i > -1; i--) {
-          const viewRef = vcRef.get(i) as EmbeddedViewRef<PblRowContext<T>>;
-          if (viewRef.rootNodes[0] === this.element) {
-            this._rowIndex = i;
-            this.context = viewRef.context;
-            this.context.attachRow(this);
-            // only needed for non intersection observer mode
-            // TODO: remove when IntersectionObserver is required
-            this.updateOutOfView();
-            break;
-          }
-        }
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.updateRow();
+    // Doing nothing if IntersectionObserver is enable, otherwise updates the initial state
+    this.updateOutOfView();
+  }
 
-        this.identityUpdated();
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this.context?.detachRow(this);
+  }
 
-        this.currRow = this.context.$implicit;
-      } else {
-        this.prevRow = this.currRow;
-        this.currRow = this.context.$implicit;
-      }
+  updateRow() {
+    if (this.currRow !== this.context.$implicit) {
+      this.prevRow = this.currRow;
+      this.currRow = this.context.$implicit;
 
-
-      if (this.currRow && this.currRow !== this.prevRow) {
+      if (this.currRow) {
         if (this.grid.rowClassUpdate && this.grid.rowClassUpdateFreq === 'item') {
           this.updateHostClass();
         }
+        this.identityUpdated();
       }
+      return true;
     }
+    return false;
   }
 
   getCell(index: number): PblNgridCellComponent | undefined {
@@ -101,11 +83,6 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   getCellById(id: string): PblNgridCellComponent | undefined {
     const cellViewIndex = this._extApi.columnApi.renderIndexOf(id);
     return this._cells[cellViewIndex]?.instance;
-  }
-
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
-    this.context?.detachRow(this);
   }
 
   /**
@@ -174,10 +151,13 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
     }
   }
 
-  protected init() {
-    if (!this.context) {
-      this.updateRow();
-    }
+  protected onCtor() {
+    const { context, index } = rowContextBridge.bridgeRow(this);
+    this.grid = context.grid;
+    this._extApi = PblNgridPluginController.find(this.grid).extApi as PblNgridInternalExtensionApi<T>;
+    this._rowIndex = index;
+    this.context = context;
+    this.context.attachRow(this);
   }
 
   protected detectChanges() {
@@ -194,53 +174,51 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   }
 
   protected updateHostClass(): void {
-    if (this.context) {
-      const el = this.element;
+    const el = this.element;
 
-      // if there is an updater, work with it
-      // otherwise, clear previous classes that got applied (assumed a live binding change of the updater function)
-      // users should be aware to tear down the updater only when they want to stop this feature, if the goal is just to toggle on/off
-      // it's better to set the frequency to `none` and return nothing from the function (replace it) so the differ is not nuked.
-      if (this.grid.rowClassUpdate) {
-        if (!this._classDiffer) {
-          this._classDiffer = new StylingDiffer<{ [klass: string]: boolean }>(
-            'NgClass',
-            StylingDifferOptions.TrimProperties | StylingDifferOptions.AllowSubKeys | StylingDifferOptions.AllowStringValue | StylingDifferOptions.ForceAsMap,
-          );
-          this._lastClass = new Set<string>();
-        }
+    // if there is an updater, work with it
+    // otherwise, clear previous classes that got applied (assumed a live binding change of the updater function)
+    // users should be aware to tear down the updater only when they want to stop this feature, if the goal is just to toggle on/off
+    // it's better to set the frequency to `none` and return nothing from the function (replace it) so the differ is not nuked.
+    if (this.grid.rowClassUpdate) {
+      if (!this._classDiffer) {
+        this._classDiffer = new StylingDiffer<{ [klass: string]: boolean }>(
+          'NgClass',
+          StylingDifferOptions.TrimProperties | StylingDifferOptions.AllowSubKeys | StylingDifferOptions.AllowStringValue | StylingDifferOptions.ForceAsMap,
+        );
+        this._lastClass = new Set<string>();
+      }
 
-        const newValue = this.grid.rowClassUpdate(this.context);
-        this._classDiffer.setValue(newValue);
+      const newValue = this.grid.rowClassUpdate(this.context);
+      this._classDiffer.setValue(newValue);
 
-        if (this._classDiffer.hasValueChanged()) {
-          const lastClass = this._lastClass;
-          this._lastClass = new Set<string>();
+      if (this._classDiffer.hasValueChanged()) {
+        const lastClass = this._lastClass;
+        this._lastClass = new Set<string>();
 
-          const value = this._classDiffer.value || {};
-
-          for (const key of Object.keys(value)) {
-            if (value[key]) {
-              el.classList.add(key);
-              this._lastClass.add(key);
-            } else {
-              el.classList.remove(key);
-            }
-            lastClass.delete(key);
-          }
-          if (lastClass.size > 0) {
-            for (const key of lastClass.values()) {
-              el.classList.remove(key);
-            }
-          }
-        }
-      } else if (this._classDiffer) {
         const value = this._classDiffer.value || {};
-        this._classDiffer = this._lastClass = undefined;
 
         for (const key of Object.keys(value)) {
-          el.classList.remove(key);
+          if (value[key]) {
+            el.classList.add(key);
+            this._lastClass.add(key);
+          } else {
+            el.classList.remove(key);
+          }
+          lastClass.delete(key);
         }
+        if (lastClass.size > 0) {
+          for (const key of lastClass.values()) {
+            el.classList.remove(key);
+          }
+        }
+      }
+    } else if (this._classDiffer) {
+      const value = this._classDiffer.value || {};
+      this._classDiffer = this._lastClass = undefined;
+
+      for (const key of Object.keys(value)) {
+        el.classList.remove(key);
       }
     }
   }

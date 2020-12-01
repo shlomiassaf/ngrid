@@ -9,8 +9,7 @@ import { PblRowContext } from '../context/row';
 export class PblNgridDisposedRowViewRepeaterStrategy<T, R extends RenderRow<T>, C extends PblRowContext<T>> extends PblNgridBaseRowViewRepeaterStrategy<T, R, C> {
 
   protected addItem(adjustedPreviousIndex: number | null, currentIndex: number | null, state: ChangeOperationState<T, R, C>) {
-    const itemArgs = state.itemContextFactory(state.record, adjustedPreviousIndex, currentIndex);
-    state.view = state.vcRef.createEmbeddedView(itemArgs.templateRef, itemArgs.context, itemArgs.index);
+    state.view = state.createEmbeddedView(state.record, adjustedPreviousIndex, currentIndex);
     state.op = _ViewRepeaterOperation.INSERTED;
   }
 

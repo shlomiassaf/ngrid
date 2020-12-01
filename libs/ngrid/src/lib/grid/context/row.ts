@@ -43,7 +43,7 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   outOfView: boolean;
 
   readonly grid: PblNgridComponent<T>;
-  _attachedRow: PblNgridRowComponent<T>;
+  private _attachedRow: PblNgridRowComponent<T>;
   private external: any = {};
 
   /**
@@ -153,9 +153,7 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
     if (this._attachedRow) {
       this._updatePending = false;
       this.extApi.contextApi._updateRowContext(this, this._attachedRow.rowIndex);
-      if (this._attachedRow.row !== this._$implicit) {
-        this._attachedRow.row = this._$implicit;
-      }
+      this._attachedRow.updateRow();
     } else {
       this._updatePending = !!this._$implicit;
     }

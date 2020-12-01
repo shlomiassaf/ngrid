@@ -1,9 +1,8 @@
 import {
+  AfterViewInit, ChangeDetectorRef, Injector, OnInit,
   Directive,
   ElementRef,
   Input,
-  SimpleChanges,
-  OnChanges,
   Optional,
   DoCheck,
   OnDestroy,
@@ -13,26 +12,22 @@ import {
 } from '@angular/core';
 
 import { PblNgridPluginController } from '../../ext/plugin-control';
-import { PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
+import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridComponent } from '../ngrid.component';
 import { unrx } from '../utils/unrx';
 import { moveItemInArrayExt } from '../column/management/column-store';
 import { GridRowType, PblRowTypeToCellTypeMap } from './types';
 import { PblRowTypeToColumnTypeMap } from '../column/management';
-import { AfterViewInit, ChangeDetectorRef } from '@angular/core';
 
 export const PBL_NGRID_BASE_ROW_TEMPLATE  = `<ng-container #viewRef></ng-container>`;
 
 // tslint:disable-next-line: no-conflicting-lifecycle
 @Directive()
-export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T = any> implements OnChanges, DoCheck, AfterViewInit, OnDestroy {
+export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T = any> implements OnInit, DoCheck, AfterViewInit, OnDestroy {
 
-  /**
-   * Optional grid instance, required only if the row is declared outside the scope of the grid.
-   */
-  @Input() grid: PblNgridComponent<T>;
+  grid: PblNgridComponent<T>;
 
-  @ViewChild('viewRef', { read: ViewContainerRef }) _viewRef: ViewContainerRef;
+  @ViewChild('viewRef', { read: ViewContainerRef, static: true }) _viewRef: ViewContainerRef;
 
   readonly element: HTMLElement;
 
@@ -50,30 +45,32 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
   protected _extApi: PblNgridInternalExtensionApi<T>;
   protected _cells: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>[] = [];
 
-  constructor(@Optional() grid: PblNgridComponent<T>, protected readonly cdRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>) {
+  protected cellInjector: Injector;
+
+  constructor(@Optional() grid: PblNgridComponent<T>,
+              readonly cdRef: ChangeDetectorRef,
+              elementRef: ElementRef<HTMLElement>) {
     this.element = elementRef.nativeElement;
     if (grid) {
       this.grid = grid;
     }
+    this.onCtor();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this._extApi) {
-      if (!this.grid) {
-        throw new Error(`When a grid row is used outside the scope of a grid, you must provide the grid instance.`);
-      }
-      this._extApi = PblNgridPluginController.find(this.grid).extApi as PblNgridInternalExtensionApi<T>;
-      this._init();
+  ngOnInit() {
+    if (!this.grid) {
+      throw new Error(`When a grid row is used outside the scope of a grid, you must provide the grid instance.`);
     }
+    this.resolveTokens();
+    this.element.setAttribute('data-rowtype', this.rowType);
+    this._extApi.rowsApi.addRow(this)
   }
 
   ngAfterViewInit(): void {
-    if (this.grid) {
-      for (const c of this._extApi.columnStore.getColumnsOf(this)) {
-        this._createCell(c);
-      }
-      this.detectChanges();
+    for (const c of this._extApi.columnStore.getColumnsOf(this)) {
+      this._createCell(c);
     }
+    this.detectChanges();
   }
 
   ngDoCheck(): void {
@@ -125,9 +122,8 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
     }
   }
 
-  protected abstract init();
-
   protected abstract detectChanges();
+  protected abstract onCtor();
 
   protected canCreateCell?(column: PblRowTypeToColumnTypeMap<TRowType>, atIndex?: number): boolean;
   protected canDestroyCell?(cell: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>): boolean;
@@ -142,15 +138,38 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
       atIndex = viewRefLength;
     }
     atIndex = Math.min(viewRefLength, atIndex);
-    const cell = this._viewRef.createComponent(this._extApi.rowsApi.cellFactory.getComponentFactory(this), atIndex);
+    const cell = this._viewRef.createComponent(this._extApi.rowsApi.cellFactory.getComponentFactory(this), atIndex, this.cellInjector);
     this._cells.splice(atIndex, 0, cell);
     cell.onDestroy(() => this._cells.splice(this._cells.indexOf(cell), 1));
     return cell;
   }
 
-  private _init() {
-    this.init()
-    this._extApi.rowsApi.addRow(this)
-    this.element.setAttribute('data-rowtype', this.rowType);
+  /**
+   * Resolves the extensions API and the injector to be used when creating cells.
+   */
+  protected resolveTokens() {
+    // The cells require the extApi and grid to live on the DI tree.
+    // In the case of row it might not be there since the row is defined outside of the grid somewhere
+    // Row's are defined view templates so their DI tree depended on their location hence we need to verify
+    // that we can get the extApi from the viewRef's injector, if so, great if not we need to extend the injector we use
+    // to build cells.
+    const injector = this._viewRef?.injector;
+
+    const extApi = injector?.get<PblNgridInternalExtensionApi<T>>(EXT_API_TOKEN, null);
+    if (!extApi) {
+      // _extApi might be here already...
+      this._extApi = this._extApi || PblNgridPluginController.find(this.grid).extApi as PblNgridInternalExtensionApi<T>;
+      this.cellInjector = Injector.create({
+        providers: [
+          { provide: PblNgridComponent, useValue: this.grid },
+          { provide: EXT_API_TOKEN, useValue: this._extApi },
+        ],
+        parent: injector,
+      });
+    } else {
+      this._extApi = this._extApi || extApi;
+      this.cellInjector = injector;
+    }
   }
+
 }

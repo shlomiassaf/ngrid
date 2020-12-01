@@ -403,7 +403,7 @@ export class ContextApi<T = any> {
       rowContext.dsIndex = dsIndex;
       rowContext.identity = identity;
       rowContext.fromState(this.getCreateState(rowContext));
-      this.addToViewCache(rowContext._attachedRow.rowIndex, rowContext)
+      this.addToViewCache(renderRowIndex, rowContext)
     }
   }
 

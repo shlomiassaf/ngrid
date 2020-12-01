@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, ComponentRef, Attribute, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, ComponentRef, Attribute, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { CdkHeaderRow } from '@angular/cdk/table';
 
 import { unrx } from '../utils/unrx';
@@ -26,7 +26,7 @@ import { PblNgridColumnDef } from '../column/directives/column-def';
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
 })
-export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header' | 'footer', PblMetaRowDefinitions> implements PblMetaRow, OnDestroy {
+export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header' | 'footer', PblMetaRowDefinitions> implements PblMetaRow, OnInit, OnDestroy {
 
   @Input() set row(value: PblMetaRowDefinitions) { this.updateRow(value); }
 
@@ -48,10 +48,19 @@ export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header
               @Attribute('footer') isFooter: any,
               @Attribute('gridWidthRow') gridWidthRow: any) {
     super(grid, cdRef, el);
-    this.element = el.nativeElement;
     this.gridWidthRow = gridWidthRow !== null;
     this.isFooter = isFooter !== null;
     this.rowType = this.isFooter ? 'footer' : 'header';
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.handleVisibility();
+  }
+
+  ngOnDestroy(): void {
+    this.metaRows.removeMetaRow(this);
+    super.ngOnDestroy();
   }
 
   updateSize() {
@@ -62,14 +71,7 @@ export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header
     }
   }
 
-  ngOnDestroy(): void {
-    this.metaRows.removeMetaRow(this);
-    super.ngOnDestroy();
-  }
-
-  protected init() {
-    this.handleVisibility();
-  }
+  protected onCtor() { }
 
   protected detectChanges() {
     for (const cell of this._cells) {
