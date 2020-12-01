@@ -24,7 +24,9 @@ import { Directionality } from '@angular/cdk/bidi';
 import { PblNgridComponent } from '../ngrid.component';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridColumnDef } from '../column/directives/column-def';
-import { BypassCellRenderDisposeViewRepeaterStrategy } from './bypass-cdk-cell rendering-repeater-strategy';
+
+import { PblNgridDisposedRowViewRepeaterStrategy } from './ngrid-disposed-row-view-repeater-strategy';
+import { PblNgridCachedRowViewRepeaterStrategy } from './ngrid-cached-row-view-repeater-strategy';
 
 /**
  * Wrapper for the CdkTable that extends it's functionality to support various table features.
@@ -43,9 +45,7 @@ import { BypassCellRenderDisposeViewRepeaterStrategy } from './bypass-cdk-cell r
   },
   providers: [
     {provide: CDK_TABLE, useExisting: PblCdkTableComponent},
-    // TODO: Remove when and if PR https://github.com/angular/components/pull/20765 is accepted and support for
-    //       CDK version is dropped for those versions without the fix in 20765
-    {provide: _VIEW_REPEATER_STRATEGY, useClass: BypassCellRenderDisposeViewRepeaterStrategy},
+    {provide: _VIEW_REPEATER_STRATEGY, useClass: PblNgridCachedRowViewRepeaterStrategy},
     {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
   ],
   encapsulation: ViewEncapsulation.None,

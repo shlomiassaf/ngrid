@@ -225,8 +225,6 @@ export class PblNgridDynamicVirtualScrollStrategy implements PblNgridVirtualScro
     let contentOffset = this.sizer.getSizeBefore(newRange.start);
     const currentStartBuffer = scrollOffset - contentOffset;
 
-    console.log(`VP: ${viewportSize} | ITEMS: ${dataLength} | SCROLL: ${scrollOffset} | FirstVisible: ${firstVisibleIndex} | FirstRenderPx: ${contentOffset} | StartBuffer: ${currentStartBuffer}`);
-
     if (currentStartBuffer < this._minBufferPx && newRange.start !== 0) {
       let spaceToFill = this._maxBufferPx - currentStartBuffer;
       if (spaceToFill < 0) {
@@ -255,7 +253,6 @@ export class PblNgridDynamicVirtualScrollStrategy implements PblNgridVirtualScro
       const renderDataEnd = contentOffset + this.sizer.getSizeForRange(newRange.start, newRange.end);
       const currentEndBuffer = renderDataEnd - (scrollOffset + viewportSize);
       if (currentEndBuffer < this._minBufferPx && newRange.end !== dataLength) {
-        console.log(`EndBuff: ${currentEndBuffer}`);
         let spaceToFill = this._maxBufferPx - currentEndBuffer;
         if (spaceToFill < 0) {
           spaceToFill = Math.abs(spaceToFill) + this._maxBufferPx;
@@ -282,11 +279,7 @@ export class PblNgridDynamicVirtualScrollStrategy implements PblNgridVirtualScro
       }
     }
 
-    if (renderedRange.start !== newRange.start || renderedRange.end !== newRange.end) {
-      console.log(renderedRange, newRange, contentOffset);
-    }
-
-    this._lastExcessHeight = excessHeight;
+     this._lastExcessHeight = excessHeight;
     this._viewport.setRenderedRange(newRange);
     this._viewport.setRenderedContentOffset(contentOffset + excessHeight);
     this._scrolledIndexChange.next(Math.floor(firstVisibleIndex));

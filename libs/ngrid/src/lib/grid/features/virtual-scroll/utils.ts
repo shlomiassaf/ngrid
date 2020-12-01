@@ -78,7 +78,6 @@ export function updateStickyRows(offset: number, rows: HTMLElement[], stickyStat
 export function measureRangeSize(viewContainer: ViewContainerRef,
                                  range: ListRange,
                                  renderedRange: ListRange,
-                                 orientation: 'horizontal' | 'vertical',
                                  stickyState: boolean[] = []): number {
   if (range.start >= range.end) {
     return 0;
@@ -91,31 +90,41 @@ export function measureRangeSize(viewContainer: ViewContainerRef,
   // The index into the list of rendered views for the first item in the range.
   const renderedStartIndex = range.start - renderedRange.start;
   // The length of the range we're measuring.
-  const rangeLen = range.end - range.start + 1;
+  const rangeLen = range.end - range.start;
 
-  // Loop over all root nodes for all items in the range and sum up their size.
-  let totalSize = 0;
-  let i = rangeLen;
-  while (i--) {
-    const index = i + renderedStartIndex;
-    if (!stickyState[index]) {
-      const view = viewContainer.get(index) as EmbeddedViewRef<any> | null;
-      let j = view ? view.rootNodes.length : 0;
-      while (j--) {
-        totalSize += getSize(orientation, view.rootNodes[j]);
-      }
+  // Loop over all the views, find the first and land node and compute the size by subtracting
+  // the top of the first node from the bottom of the last one.
+  let firstNode: HTMLElement | undefined;
+  let lastNode: HTMLElement | undefined;
+
+  // Find the first node by starting from the beginning and going forwards.
+  for (let i = 0; i < rangeLen; i++) {
+    const view = viewContainer.get(i + renderedStartIndex) as EmbeddedViewRef<any> | null;
+    if (view && view.rootNodes.length) {
+      firstNode = lastNode = view.rootNodes[0];
+      break;
     }
   }
 
-  return totalSize;
+  // Find the last node by starting from the end and going backwards.
+  for (let i = rangeLen - 1; i > -1; i--) {
+    const view = viewContainer.get(i + renderedStartIndex) as EmbeddedViewRef<any> | null;
+    if (view && view.rootNodes.length) {
+      lastNode = view.rootNodes[view.rootNodes.length - 1];
+      break;
+    }
+  }
+
+  return firstNode && lastNode ? getOffset('end', lastNode) - getOffset('start', firstNode) : 0;
 }
 
-/** Helper to extract size from a DOM Node. */
-function getSize(orientation: 'horizontal' | 'vertical', node: Node): number {
+/** Helper to extract the offset of a DOM Node in a certain direction. */
+function getOffset(direction: 'start' | 'end', node: Node) {
   const el = node as Element;
   if (!el.getBoundingClientRect) {
     return 0;
   }
   const rect = el.getBoundingClientRect();
-  return orientation === 'horizontal' ? rect.width : rect.height;
+
+  return direction === 'start' ? rect.top : rect.bottom;
 }
