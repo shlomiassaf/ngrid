@@ -109,6 +109,38 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   }
 
   /**
+   * Rebuild the cells rendered.
+   * This should be called when the columns have changed and new columns created in the column store.
+   *
+   * The new columns are new instances, clones of the previous columns and they DONT have a column definition!
+   * This method will iterate over existing cells, updating each cell with the new column now in it's location and creating a column def for it.
+   * If there are more cells rendered then in the store, it will remove those extra cells
+   * If there are less cells rendered then in the store, it will create new ones.
+   * This will ensure we don't create or remove cells unless we need to, saving on DOM operations.
+   */
+  _rebuildCells() {
+    const columns = this._extApi.columnStore.getColumnsOf(this);
+    this.context._rebuildCells(columns);
+    const targetLen = columns.length;
+    for (let i = 0; i < targetLen; i++) {
+      const cellCmpRef = this._cells[i];
+      if (!cellCmpRef) {
+        this._createCell(columns[i]);
+      } else {
+        this.attachColumn(columns[i], cellCmpRef);
+      }
+    }
+
+    let currentLen = this.cellsLength;
+    while (currentLen > targetLen) {
+      this._destroyCell(--currentLen);
+    }
+
+    this.detectChanges();
+
+  }
+
+  /**
    * Updates the outOfView state of this row and sync it with the context
    * If the context's state is different from the new outOfView state, will invoke a change detection cycle.
    * @internal
@@ -214,12 +246,7 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   }
 
   protected cellCreated(column: PblColumn, cell: ComponentRef<PblNgridCellComponent>) {
-    if (!column.columnDef) {
-      new PblNgridColumnDef(this._extApi).column = column;
-      column.columnDef.name = column.id;
-    }
-    cell.instance.setColumn(column);
-    cell.instance.setContext(this.context);
+    this.attachColumn(column, cell);
   }
 
   protected cellDestroyed(cell: ComponentRef<PblNgridCellComponent>, previousIndex: number) {
@@ -235,5 +262,14 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   protected identityUpdated() {
     this.element.setAttribute('row-id', this.context.dsIndex as any);
     this.element.setAttribute('row-key', this.context.identity);
+  }
+
+  protected attachColumn(column: PblColumn, cell: ComponentRef<PblNgridCellComponent>) {
+    if (!column.columnDef) {
+      new PblNgridColumnDef(this._extApi).column = column;
+      column.columnDef.name = column.id;
+    }
+    cell.instance.setColumn(column);
+    cell.instance.setContext(this.context);
   }
 }

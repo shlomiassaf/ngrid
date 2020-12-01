@@ -120,6 +120,17 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
           });
       }
     });
+
+    extApi.events
+      .subscribe( event => {
+        if (event.kind === 'onInvalidateHeaders') {
+          const dataRows = this.dataRows();
+          for (const row of dataRows) {
+            row._rebuildCells();
+          }
+          // TODO: reset viewport and virtual scroll state/cache/calculations
+        }
+      });
   }
 
   forceUpdateOutOfView(...rows: PblNgridRowComponent<T>[]) {

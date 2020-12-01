@@ -602,7 +602,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   invalidateColumns(): void {
     this._plugin.emitEvent({ kind: 'beforeInvalidateHeaders' });
 
-    const rebuildRows = this._store.allColumns.length > 0;
     this._extApi.contextApi.clear();
     this._store.invalidate(this.columns);
 
@@ -619,42 +618,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this.resetFooterRowDefs();
     this.cdr.markForCheck();
 
-    /*  Now we will force clearing all data rows and creating them back again if this is not the first time we invalidate the columns...
-
-        Why? first, some background:
-
-        Invalidating the store will result in new `PblColumn` instances (cloned or completely new) held inside a new array (all arrays in the store are re-created on invalidate)
-        New array and new instances will also result in new directive instances of `PblNgridColumnDef` for every column.
-
-        Each data row has data cells with the `PblNgridCellComponent` directive (`pbl-ngrid-cell`).
-        `PblNgridCellComponent` has a reference to `PblNgridColumnDef` through dependency injection, i.e. it will not update through change detection!
-
-        Now, the problem:
-        The `CdkTable` will cache rows and their cells, reusing them for performance.
-        This means that the `PblNgridColumnDef` instance inside each cell will not change.
-        So, creating new columns and columnDefs will result in stale cells with reference to dead instances of `PblColumn` and `PblNgridColumnDef`.
-
-        One solution is to refactor `PblNgridCellComponent` to get the `PblNgridColumnDef` through data binding.
-        While this will work it will put more work on each cell while doing CD and will require complex logic to handle each change because `PblNgridCellComponent`
-        also create a context which has reference to a column thus a new context is required.
-        Keeping track for all references will be difficult and bugs are likely to occur, which are hard to track.
-
-        The simplest solution is to force the grid to render all data rows from scratch which will destroy the cache and all cell's with it, creating new one's with proper reference.
-
-        The simple solution is currently preferred because:
-
-        - It is easier to implement.
-        - It is easier to assess the impact.
-        - It effects a single operation (changing to resetting columns) that rarely happen
-
-        The only issue is with the `CdkTable` encapsulating the method `_forceRenderDataRows()` which is what we need.
-        The workaround is to assign `multiTemplateDataRows` with the same value it already has, which will cause `_forceRenderDataRows` to fire.
-        `multiTemplateDataRows` is a getter that triggers `_forceRenderDataRows` without checking the value changed, perfect fit.
-        There is a risk with `multiTemplateDataRows` being changed...
-     */
-    if (rebuildRows) {
-      this._cdkTable.multiTemplateDataRows = this._cdkTable.multiTemplateDataRows;
-    }
+    // Each row will rebuild it's own cells.
+    // This will be done in the RowsApi, which listens to `onInvalidateHeaders`
     this._plugin.emitEvent({ kind: 'onInvalidateHeaders' });
   }
 
