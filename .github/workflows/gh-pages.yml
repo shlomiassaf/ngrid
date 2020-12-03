@@ -2,6 +2,11 @@ name: GH Pages on release
 
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Define branch name'
+        required: true
+        default: 'master'
   release:
     types: [created]
 
