@@ -2,7 +2,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { PblNgridExtensionApi } from '../../../../ext/grid-ext-api';
 import { PblNgridVirtualScrollStrategy } from './types';
 
-const noop = function(nv?: any, nv1?: any) { };
+const noop = function() { };
 
 declare module './types' {
   interface PblNgridVirtualScrollStrategyMap {
