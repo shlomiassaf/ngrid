@@ -188,7 +188,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
 
-    const dir = this.grid.dir?.value === 'rtl' ? -1 : 1;
+    const dir = this.grid.dir === 'rtl' ? -1 : 1;
     let newWidth = Math.max(0, this._initialWidth + (distanceX * dir));
 
     if (newWidth > this.column.maxWidth) {

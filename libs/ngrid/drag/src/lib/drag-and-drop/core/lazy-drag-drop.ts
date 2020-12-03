@@ -4,6 +4,7 @@ import { CdkDropList, CdkDrag, CdkDragHandle, CDK_DROP_LIST, DragDrop, CDK_DRAG_
 import { PblDropListRef } from './drop-list-ref';
 import { PblDragRef } from './drag-ref';
 import { PblDragDrop } from './drag-drop';
+import { Direction } from '@angular/cdk/bidi';
 
 @Directive({
   selector: '[cdkLazyDropList]',
@@ -21,6 +22,7 @@ import { PblDragDrop } from './drag-drop';
 })
 export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> implements OnInit {
   get pblDropListRef(): PblDropListRef<DRef> { return this._dropListRef as any; }
+  dir: Direction;
 
   /**
    * Selector that will be used to determine the direct container element, starting from
@@ -61,6 +63,10 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
       this.element = this.originalElement;
     }
     this.pblDropListRef.withElement(this.element);
+
+    if (this.dir) {
+      this.pblDropListRef.withDirection(this.dir);
+    }
   }
 }
 
@@ -93,6 +99,7 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
   }
 
   get pblDragRef(): PblDragRef<DRef> { return this._dragRef as any; }
+  dir: Direction;
 
   @Input() get cdkDropList(): Z { return this.dropContainer as Z; }
   set cdkDropList(value: Z) {
@@ -114,6 +121,13 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
     if (this.pblDragRef instanceof PblDragRef === false) {
       throw new Error('Invalid `DragRef` injection, the ref is not an instance of PblDragRef')
     }
+
+    this.pblDragRef.beforeStarted.subscribe(() => {
+      if (this.dir) {
+        this.pblDragRef.withDirection(this.dir);
+      }
+    });
+
     this.pblDragRef.rootElementChanged.subscribe( event => {
       const rootElementSelectorClass = this._rootClass;
       const hostNotRoot = this.element.nativeElement !== event.curr;

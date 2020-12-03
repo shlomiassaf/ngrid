@@ -73,6 +73,7 @@ export class MarkdownPageContainerComponent implements OnDestroy {
         }
         this.layoutState.isWeb = isWeb;
         this.setMenuState();
+        this.cdr.detectChanges();
       });
   }
 
@@ -118,13 +119,9 @@ export class MarkdownPageContainerComponent implements OnDestroy {
   }
 
   private setMenuState() {
-    if (this.root?.children) {
-      if (this.layoutState.isWeb || this.layoutState.hamburger) {
-        this.drawer.open();
-      } else {
-        this.drawer.close();
-      }
-    } else {
+    if (this.root?.children && (this.layoutState.isWeb || this.layoutState.hamburger)) {
+      this.drawer.open();
+    } else if (this.drawer.opened) {
       this.drawer.close();
     }
   }
