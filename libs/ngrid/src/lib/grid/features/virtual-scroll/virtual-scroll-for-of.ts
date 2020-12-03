@@ -98,6 +98,7 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
       const wheelListen = () => viewPort.addEventListener('wheel', handler, true);
       const wheelUnListen = () => viewPort.removeEventListener('wheel', handler, true);
       const updateScrollPosition = () => scrollPosition = (this.viewport.measureScrollOffset()) / (this.viewport.scrollHeight - this.viewport.getViewportSize());
+      const scrollEnd$ = this.viewport.scrolling.pipe(filter( s => !s ));
 
       const handler = (event: WheelEvent) => {
         if (event.deltaY) {
@@ -110,50 +111,57 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
           if (newOffset !== offset) {
             offset = newOffset;
             if (metaRowStickyScroll.canMove() && metaRowStickyScroll.move(event.deltaY, viewPort.getBoundingClientRect())) {
-              const scrollEnd$ = this.viewport.scrolling.pipe(filter( s => !s ));
 
               const restore = () => {
                 metaRowStickyScroll.restore(this.renderedContentOffset);
                 updateScrollPosition();
               };
 
-              let removedEvent = false;
-              if (this.viewport.wheelMode !== 'blocking') {
-                const wheelMode = this.viewport.wheelMode;
-                if (wheelMode === 'passive') {
+              switch (this.viewport.wheelMode) {
+                case 'passive':
                   wheelUnListen();
-                  this.viewport.scrolling.pipe(debounceTime(150), filter( s => !s ), take(1))
-                    .subscribe( () => {
+                  this.viewport.scrolling
+                    .pipe(
+                      debounceTime(150),
+                      filter( s => !s ),
+                      take(1)
+                    ).subscribe( () => {
                       restore();
                       wheelListen();
                     });
-                } else {
+                  break;
+                case 'blocking':
+                  scrollEnd$.pipe(take(1)).subscribe(restore);
+                  break;
+                default:
+                  const threshold = this.viewport.wheelMode;
+                  let removedEvent = false;
+
                   this.viewport.scrollFrameRate
                     .pipe(takeUntil(scrollEnd$.pipe(take(1))))
-                    .subscribe({
-                      next: frameRate => {
-                        if (!removedEvent && frameRate < wheelMode) {
-                          wheelUnListen();
-                          removedEvent = true;
+                    .subscribe(
+                      {
+                        next: frameRate => {
+                          if (!removedEvent && frameRate < threshold) {
+                            wheelUnListen();
+                            removedEvent = true;
+                          }
+                        },
+                        complete: () => {
+                          const lastWheel$ = fromEvent(viewPort, 'wheel').pipe(debounceTime(50), take(1));
+                          race(lastWheel$, timer(51) as any)
+                            .subscribe( () => {
+                              restore();
+                              if (removedEvent) {
+                                wheelListen();
+                              }
+                            });
+                            // we restore back after 100 ms, for some reason, if it's immediate, we hit a cycle of wheel/scroll/no-scroll and not wheel/scroll/WAIIIIIT/no-scrol
+                            // TODO: maybe we can measure time between no-scrolling and wheel to find this MS value
+                            //        OR, register a temp `wheel` listener that will detect wheel end and re-register the original handler.
                         }
-                      },
-                      complete: () => {
-                        const lastWheel$ = fromEvent(viewPort, 'wheel').pipe(debounceTime(50), take(1));
-                        race(lastWheel$, timer(51) as any)
-                          .subscribe( () => {
-                            restore();
-                            if (removedEvent) {
-                              wheelListen();
-                            }
-                          });
-                          // we restore back after 100 ms, for some reason, if it's immediate, we hit a cycle of wheel/scroll/no-scroll and not wheel/scroll/WAIIIIIT/no-scrol
-                          // TODO: maybe we can measure time between no-scrolling and wheel to find this MS value
-                          //        OR, register a temp `wheel` listener that will detect wheel end and re-register the original handler.
                       }
-                    });
-                }
-              } else {
-                scrollEnd$.pipe(take(1)).subscribe(restore);
+                    );
               }
             }
           }
@@ -166,11 +174,13 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
       updateScrollPosition();
       wheelListen();
 
-      this.viewport.scrolling.subscribe( isScrolling => {
-        if (!isScrolling) {
-          offset = this.viewport.measureScrollOffset();
-        }
-      });
+      this.viewport
+        .scrolling
+        .subscribe(isScrolling => {
+          if (!isScrolling) {
+            offset = this.viewport.measureScrollOffset();
+          }
+        });
     }
 
     this.viewport.offsetChange

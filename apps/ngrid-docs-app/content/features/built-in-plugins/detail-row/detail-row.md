@@ -13,8 +13,6 @@ If the **[target-events](../target-events)** plugin is not initialized the detai
 
 ---
 
-W> Currently not compatible with virtual scroll, make sure virtual scroll is not enabling on the table when detail rows are used
-
 The detail row plugin enable the toggling of an additional row, right next to (after) a parent row.
 
 The detail row will get access to the parent row's context but it can display anything.
@@ -103,4 +101,101 @@ The `toggledRowContextChange` emits whenever the row context has changed while t
 
 I> `toggledRowContextChange` emits the save event handler emitted by `toggleChange`
 
+## Detail Rows with Virtual Scroll
+
+From the grid's perspective, dynamic rows open and close randomly, changing the total height of the grid's vertical scroll area.
+
+When a row is opened, height is added when closed height is reduced. This requires special attention when used with virtual scroll.
+
+This is why detail rows only works with dynamic virtual scroll (`vScrollDynamic`).
+
 <div pbl-example-view="pbl-detail-row-virtual-scroll-example"></div>
+
+### Detail Row with Virtual Scroll and Animations
+
+Usually, we would like to have a nice slide up/down animation whenever the detail row is toggled.  
+This is supported using the familiar angular animations or CSS animation.
+
+The only extra thing required is to:
+
+1. Notify the gird that you use animation in this detail row
+1. Notify the grid when the animation ends
+1. Disable animation when the toggle originated from a rendering operation
+
+Let's review using a simple detail row template definition...
+
+The component holding the template below will have the following animation annotation in it's component metadata:  
+
+```typescript
+animations: [
+  trigger('detailExpand', [
+    state('void', style({height: '0px', minHeight: '0', visibility: 'hidden'})),
+    state('*', style({height: '*', visibility: 'visible'})),
+    transition('void <=> *', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+  ]),
+],
+```
+
+And not the template:
+
+```html
+<div *pblNgridDetailRowDef="let row; animation as animation; hasAnimation: 'interaction'"
+      class="pbl-detail-row"
+      [@.disabled]="animation.fromRender" (@detailExpand.done)="animation.end()" [@detailExpand]>
+  <h1>I Am A Detail Row</h1>
+</div>
+```
+
+It's a simple slide UP/DOWN animation.
+
+Let's break the template into pieces:
+
+- We use `*pblNgridDetailRowDef` to declare that this is a detail row template
+- We use the expression `let row; animation as animation; hasAnimation: 'interaction'` which means:
+  - Set `row` as the variable holding the row's data (On the context's `$implicit` property)
+  - Set `animation` as the variable holding the animation object provided by the context
+  - Define the `hasAnimation` input on the directive to be `interaction`
+- `[@.disabled]="animation.fromRender"` - Disable animation when the toggle originated from a rendering operation and not a user interaction (click, programmatic)
+- `(@detailExpand.done)="animation.end()"` - When the animation is done, notify the grid.
+
+> If you're not familiar with structural directive, we recommend ramping up on that.
+
+In short, what we do here is defining a detail row template which we declare as having animations.  
+We **disable** it whenever it is toggled due to a rendering operation which is a page change, row context switch etc...  
+This is important because we don't want to animate in such scenarios.
+And of course, we notify when an animation has ended so the grid will be able to run the proper logic.
+
+If you're using CSS animation it will look something like this:
+
+```html
+<div *pblNgridDetailRowDef="let row; animation as animation; hasAnimation: 'interaction'"
+     class="pbl-detail-row" [class.detail-row-disable-animation]="animation.fromRender"
+     (animationend)="animation.end()">
+  <h1>I Am A Detail Row</h1>
+</div>
+```
+
+#### hasAnimation
+
+We set `hasAnimation` to `interaction` which indicates that there are multiple values we can provide.
+
+- `interaction`: If the toggle origin is from a user interaction (e.g. click) or a programmatic API then it **WILL NOT**
+                 measure the height until `animation.end()` is called on the detail row context.
+                 Otherwise, it will measure it immediately.  
+                 A Non-Interaction origin can happen from scrolling out of view or changing the row's context due to virtual scroll updates.  
+                 I.E: When `fromRender` is true, the grid will measure the height immediately, otherwise it will wait for you to call `animation.end()`
+
+- `always`: Will always assume animation is running when toggling the detail row and WILL NOT measure the height
+            until `animation.end()` is called on the detail row context.
+
+If you are using animation, we strongly suggest to use `interaction` mode!
+
+If you're not using the dynamic virtual scroll, your detail row does not have animation or your animation is not changing the height, you can just ignore
+everything by not setting `hasAnimation` and not using the `animation` object from the context
+
+```html
+<div *pblNgridDetailRowDef="let row" class="pbl-detail-row">
+    <h1>I Am A Detail Row</h1>
+</div>
+```
+

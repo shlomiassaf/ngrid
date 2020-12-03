@@ -36,6 +36,11 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
 
   readonly element: HTMLElement;
 
+  get height() {
+    const rect = this.element.getBoundingClientRect();
+    return rect.height;
+  }
+
   get cellsLength() { return this._cells.length; }
 
   abstract readonly rowType: TRowType;

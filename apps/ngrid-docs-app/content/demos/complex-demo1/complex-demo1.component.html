@@ -5,14 +5,15 @@
              #pblTbl
              rowReorder columnReorder
              blockUi
-             matSort vScrollFixed="48"
+             matSort vScrollDynamic
              cellTooltip
              [hideColumns]="hideColumns"
              matCheckboxSelection="selection"
              [transpose]="toggleTranspose"
              [usePagination]="usePagination"
              focusMode="row"
-             [detailRow]="detailRowPredicate" [singleDetailRow]="singleDetailRow"
+             detailRow
+             [wheelMode]="'passive'"
              [showHeader]="showHeader"
              [showFooter]="showFooter"
              [dataSource]="ds"
@@ -39,8 +40,9 @@
                   [detailRow]="row"
                   matRipple>
     </pbl-ngrid-row>
-    <div *pblNgridDetailRowDef="let row"
-        class="pbl-detail-row" [@detailExpand]>
+    <div *pblNgridDetailRowDef="let row; animation as animation; hasAnimation: 'interaction'"
+         class="pbl-detail-row"
+         [@.disabled]="animation.fromRender" (@detailExpand.done)="animation.end()" [@detailExpand]>
       <div>
         <h1>Detail Row</h1>
         <pre>{{row | json}}</pre>

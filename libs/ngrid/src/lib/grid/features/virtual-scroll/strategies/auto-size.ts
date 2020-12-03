@@ -1,8 +1,11 @@
 import { ListRange } from '@angular/cdk/collections';
-import { ItemSizeAverager, AutoSizeVirtualScrollStrategy } from '@angular/cdk-experimental/scrolling';
+import { PblNgridExtensionApi } from '../../../../ext/grid-ext-api';
 import { NgeVirtualTableRowInfo } from '../virtual-scroll-for-of';
+import { ItemSizeAverager, AutoSizeVirtualScrollStrategy } from './cdk/auto-size-virtual-scroll';
+import { PblCdkVirtualScrollViewportComponent } from '../virtual-scroll-viewport.component';
+import { PblNgridVirtualScrollStrategy } from './types';
 
-export class TableItemSizeAverager extends ItemSizeAverager {
+export class PblNgridItemSizeAverager extends ItemSizeAverager {
   private rowInfo: NgeVirtualTableRowInfo;
 
   addSample(range: ListRange, size: number) {
@@ -29,8 +32,22 @@ export class TableItemSizeAverager extends ItemSizeAverager {
 }
 
 
-export class TableAutoSizeVirtualScrollStrategy extends AutoSizeVirtualScrollStrategy {
-  constructor(minBufferPx: number, maxBufferPx: number, public readonly averager = new TableItemSizeAverager()) {
+export class PblNgridAutoSizeVirtualScrollStrategy extends AutoSizeVirtualScrollStrategy implements PblNgridVirtualScrollStrategy {
+  protected extApi: PblNgridExtensionApi;
+
+  constructor(minBufferPx: number, maxBufferPx: number, public readonly averager = new PblNgridItemSizeAverager()) {
     super(minBufferPx, maxBufferPx, averager);
+  }
+
+  attachExtApi(extApi: PblNgridExtensionApi): void {
+    this.extApi = extApi;
+  }
+
+  attach(viewport: PblCdkVirtualScrollViewportComponent): void {
+    if (!this.extApi) {
+      throw new Error('Invalid use of attach, you must first attach `PblNgridExtensionApi`');
+    }
+
+    super.attach(viewport);
   }
 }

@@ -55,6 +55,13 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
 
   get _element(): HTMLElement { return this._elementRef.nativeElement; }
 
+  get beforeRenderRows(): Observable<void> {
+    if (!this.beforeRenderRows$) {
+      this.beforeRenderRows$ = new Subject<void>();
+    }
+    return this.beforeRenderRows$.asObservable();
+  }
+
   get onRenderRows(): Observable<DataRowOutlet> {
     if (!this.onRenderRows$) {
       this.onRenderRows$ = new Subject<DataRowOutlet>();
@@ -71,6 +78,7 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
   readonly cdRef: ChangeDetectorRef;
 
   private _minWidth: number | null = null;
+  private beforeRenderRows$: Subject<void>;
   private onRenderRows$: Subject<DataRowOutlet>;
   private _lastSticky: PblNgridColumnDef;
   private _lastStickyEnd: PblNgridColumnDef;
@@ -183,6 +191,9 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
   }
 
   renderRows(): void {
+    if (this.beforeRenderRows$) {
+      this.beforeRenderRows$.next();
+    }
     super.renderRows();
     if (this.onRenderRows$) {
       this.onRenderRows$.next(this._rowOutlet);

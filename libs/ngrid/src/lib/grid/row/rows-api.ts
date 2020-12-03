@@ -146,8 +146,16 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
     return Array.from(this.rows.get('data')) as PblNgridRowComponent<T>[];
   }
 
+  findDataRowByDsIndex(index: number): PblNgridRowComponent<T> | undefined {
+    for (const r of this.dataRows()) {
+      if (r.context?.dsIndex === index) {
+        return r;
+      }
+    }
+  }
+
   findDataRowByIndex(index: number): PblNgridRowComponent<T> | undefined {
-    for (const r of Array.from(this.rows.get('data')) as PblNgridRowComponent<T>[]) {
+    for (const r of this.dataRows()) {
       if (r.rowIndex === index) {
         return r;
       }
@@ -155,7 +163,7 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
   }
 
   findDataRowByIdentity(identity: string): PblNgridRowComponent<T> | undefined {
-    for (const r of Array.from(this.rows.get('data')) as PblNgridRowComponent<T>[]) {
+    for (const r of this.dataRows()) {
       if (r.context?.identity === identity) {
         return r as PblNgridRowComponent<T>;
       }

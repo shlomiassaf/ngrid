@@ -42,7 +42,7 @@ export class ComplexDemo1Example {
   columns = columnFactory()
     .default({ width: '100px', reorder: true, resize: true})
     .table(
-      { header: { type: 'sticky' } },
+      // { header: { type: 'sticky' } },
       { prop: 'drag_and_drop_handle', type: 'drag_and_drop_handle', minWidth: 48, width: '', maxWidth: 48, wontBudge: true },
       { prop: 'selection',  minWidth: 48, width: '', maxWidth: 48, wontBudge: true },
       { prop: 'id', pIndex: true, sort: true, width: '40px', wontBudge: true },
@@ -72,7 +72,7 @@ export class ComplexDemo1Example {
       { id: 'rere123f', label: 'FOOTER2' },
     )
     .headerGroup(
-      { type: 'row' },
+      // { type: 'row' },
       {
         prop: 'name',
         span: 7,
@@ -83,7 +83,7 @@ export class ComplexDemo1Example {
       { id: 'rere123', label: 'HEADER2' },
     )
     .headerGroup(
-      { type: 'sticky' },
+      // { type: 'sticky' },
       {
         prop: 'name',
         span: 3,

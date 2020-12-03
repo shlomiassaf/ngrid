@@ -19,10 +19,10 @@ import {
 } from '@angular/core';
 
 import { Directionality } from '@angular/cdk/bidi';
+import { ListRange } from '@angular/cdk/collections';
 import {
   CdkVirtualScrollViewport,
   VIRTUAL_SCROLL_STRATEGY,
-  VirtualScrollStrategy,
   ScrollDispatcher,
   CdkVirtualForOf,
   CdkScrollable,
@@ -33,23 +33,23 @@ import { unrx } from '../../utils';
 import { PblNgridConfigService } from '../../services/config';
 import { PblNgridComponent } from '../../ngrid.component';
 import { PblCdkVirtualScrollDirective } from './strategies/v-scroll.directive'
-import { TableAutoSizeVirtualScrollStrategy } from './strategies/auto-size'
+import { PblNgridVirtualScrollStrategy } from './strategies/types';
+import { PblNgridAutoSizeVirtualScrollStrategy } from './strategies/auto-size'
 import { NoVirtualScrollStrategy } from './strategies/noop'
 import { NgeVirtualTableRowInfo, PblVirtualScrollForOf } from './virtual-scroll-for-of';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
-import { createScrollWatcherFn } from './virtual-scroll-watcher';
-import { ListRange } from '@angular/cdk/collections';
+import { createScrollWatcherFn } from './scroll-logic/virtual-scroll-watcher';
 
 declare module '../../services/config' {
   interface PblNgridConfig {
     virtualScroll?: {
       wheelMode?: PblCdkVirtualScrollDirective['wheelMode'];
-      defaultStrategy?(): VirtualScrollStrategy;
+      defaultStrategy?(): PblNgridVirtualScrollStrategy;
     }
   }
 }
 
-function resolveScrollStrategy(config: PblNgridConfigService, scrollStrategy?: VirtualScrollStrategy): VirtualScrollStrategy {
+function resolveScrollStrategy(config: PblNgridConfigService, scrollStrategy?: PblNgridVirtualScrollStrategy): PblNgridVirtualScrollStrategy {
   if (!scrollStrategy && config.has('virtualScroll')) {
     const virtualScrollConfig = config.get('virtualScroll');
     if (typeof virtualScrollConfig.defaultStrategy === 'function') {
@@ -57,7 +57,7 @@ function resolveScrollStrategy(config: PblNgridConfigService, scrollStrategy?: V
     }
   }
 
-  return scrollStrategy || new TableAutoSizeVirtualScrollStrategy(100, 200);
+  return scrollStrategy || new PblNgridAutoSizeVirtualScrollStrategy(100, 200);
 }
 
 @Component({
@@ -192,7 +192,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
               private cdr: ChangeDetectorRef,
               ngZone: NgZone,
               config: PblNgridConfigService,
-              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) public pblScrollStrategy: VirtualScrollStrategy,
+              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY) public pblScrollStrategy: PblNgridVirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher,
               viewportRuler: ViewportRuler,
@@ -224,6 +224,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   }
 
   ngOnInit(): void {
+    this.pblScrollStrategy.attachExtApi(this.extApi);
     if (this.enabled) {
       super.ngOnInit();
     } else {
@@ -255,6 +256,10 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
           grid.removeClass('pbl-ngrid-scrolling');
         }
       });
+  }
+
+  reMeasureCurrentRenderedContent() {
+    this.pblScrollStrategy.onContentRendered();
   }
 
   ngOnDestroy(): void {
@@ -363,7 +368,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
       ? this.pblScrollStrategy._scrollStrategy
       : this.pblScrollStrategy
     ;
-    if (scrollStrategy instanceof TableAutoSizeVirtualScrollStrategy) {
+    if (scrollStrategy instanceof PblNgridAutoSizeVirtualScrollStrategy) {
       scrollStrategy.averager.setRowInfo(forOf);
     }
   }
@@ -380,10 +385,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
         if (!this.isCDPending) {
           this.isCDPending = true;
 
-          const syncTransform = () => { };
-
           this.ngZone.runOutsideAngular(() => Promise.resolve()
-            .then( () => syncTransform() )
             .then( () => {
               this.isCDPending = false;
               this.offsetChange$.next(this.offset);
