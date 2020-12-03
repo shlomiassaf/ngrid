@@ -12,8 +12,9 @@ import {
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CdkRow } from '@angular/cdk/table';
 
-import { PblNgridRowComponent, utils, PblNgridComponent } from '@pebula/ngrid';
+import { PblNgridRowComponent, utils, PblNgridComponent, PblRowContext } from '@pebula/ngrid';
 import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY } from './detail-row-plugin';
+import { DetailRowController } from './detail-row-controller';
 
 declare module '@pebula/ngrid/lib/grid/context/types' {
   interface ExternalRowContextState {
@@ -46,6 +47,10 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     return this.opened;
   }
 
+  get height() {
+    return super.height + this.controller.getDetailRowHeight(this);
+  }
+
   // We must explicitly define the inherited properties which have angular annotations
   // Because angular will not detect them when building this library.
   // TODO: When moving up to IVY see if this one get fixed
@@ -55,72 +60,80 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   @Input() grid: PblNgridComponent;
   @ViewChild('viewRef', { read: ViewContainerRef }) _viewRef: ViewContainerRef;
 
-  @Input('detailRow') set row(value: any) { this.updateRow(); }
+  get row() { return this._row; }
+  @Input('detailRow') set row(value: any) {
+    super.row = value;
+    if (this._row !== value) {
+      this._row = value;
+      this.plugin?.markForCheck();
+      this.controller?.detectChanges(this);
+    }
+  }
 
+  private _row: any;
   private opened = false;
   private plugin: PblNgridDetailRowPluginDirective<any>;
-  private prevIdentity: any;
+  private controller: DetailRowController;
+  private prevRow: PblRowContext<any>;
 
   constructor(@Optional() grid: PblNgridComponent,
               cdRef: ChangeDetectorRef,
-              el: ElementRef<HTMLElement>,
-              private vcRef: ViewContainerRef) {
+              el: ElementRef<HTMLElement>) {
     super(grid, cdRef, el);
   }
 
   ngOnDestroy(): void {
     utils.unrx.kill(this);
     this.plugin?.removeDetailRow(this);
+    this.controller.clearDetailRow(this, true);
     super.ngOnDestroy();
   }
 
   updateRow(): void {
-    const prevIdentity = this.prevIdentity;
     super.updateRow();
-    this.prevIdentity = this.context?.identity;
-    if (this.plugin?.whenContextChange === 'context') {
-      if (this.context.getExternal('detailRow')) {
-        if (this.opened) {
-          this.render();
-        } else {
-          this.toggle(true);
-        }
-      } else {
-        if (this.opened) {
-          this.toggle(false);
-        }
-      }
-    } else if (this.opened) {
-      if (this.prevIdentity !== prevIdentity && this.prevIdentity) {
+    if (this.context) {
+      const prevRow = this.prevRow;
+      this.prevRow = this.context.$implicit;
+
+      if (this.context.$implicit !== prevRow) { // only if row has changed (TODO: use identity based change detection?)
         switch (this.plugin.whenContextChange) {
+          case 'context':
+            const isContextOpened = !!this.context.getExternal('detailRow');
+            isContextOpened && this.opened
+              ? this.controller.updateDetailRow(this) // if already opened, just update the context
+              : this.toggle(isContextOpened, true) // if not opened, force to the context state
+            ;
+            break;
           case 'render':
-            this.render();
+            if (this.opened) {
+              this.controller.updateDetailRow(this);
+            }
             break;
           case 'close':
-            this.toggle(false);
+            this.toggle(false, true);
             break;
         }
-        this.plugin.toggledRowContextChange.next(this.createEvent());
+        this.plugin.toggledRowContextChange.next(this);
       }
     }
   }
 
-  toggle(forceState?: boolean): void {
+  toggle(forceState?: boolean, fromRender = false): void {
     if (this.opened !== forceState) {
-      if ( this.opened ) {
-        this.vcRef.clear();
-        this.element.classList.remove('pbl-row-detail-opened');
-      } else {
-        this.render();
-      }
-      this.opened = this.vcRef.length > 0;
-
+      let opened = false;
       if (this.opened) {
+        this.controller.clearDetailRow(this, fromRender);
+        this.element.classList.remove('pbl-row-detail-opened');
+      } else if (this.controller.render(this, fromRender)) {
+        opened = true;
         this.element.classList.add('pbl-row-detail-opened');
       }
 
-      this.context.setExternal('detailRow', this.opened, true);
-      this.plugin.detailRowToggled(this.createEvent());
+      if (this.opened !== opened) {
+        this.opened = opened;
+        this.context.setExternal('detailRow', opened, true);
+        this.plugin.detailRowToggled(this);
+      }
     }
   }
 
@@ -139,9 +152,12 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   }
 
   protected init() {
-    super.init();
-
     this.plugin = this._extApi.pluginCtrl.getPlugin(PLUGIN_KEY); // TODO: THROW IF NO PLUGIN...
+    this.controller = this.plugin.detailRowCtrl;
+    if (this._row) {
+      this.plugin.markForCheck();
+    }
+    super.init();
     this.plugin.addDetailRow(this);
     const tradeEvents = this._extApi.pluginCtrl.getPlugin('targetEvents');
     tradeEvents.cellClick
@@ -162,21 +178,5 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
           this.toggle();
         }
       });
-  }
-
-  private createEvent(): PblDetailsRowToggleEvent<any> {
-    const event = Object.create(this);
-    Object.defineProperty(event, 'row', { value: this.context.$implicit });
-    return event;
-  }
-
-  private render(): void {
-    this.vcRef.clear();
-    if (this.context.$implicit) {
-      const detailRowDef = this.context.grid.registry.getSingle('detailRow');
-      if ( detailRowDef ) {
-        this.vcRef.createEmbeddedView(detailRowDef.tRef, this.context).detectChanges();
-      }
-    }
   }
 }
