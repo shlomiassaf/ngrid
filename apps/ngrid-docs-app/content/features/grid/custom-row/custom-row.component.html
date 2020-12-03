@@ -1,0 +1,3 @@
+<pbl-ngrid [dataSource]="ds" [columns]="columns">
+  <pbl-ngrid-row *pblNgridRowOverride="let row; odd as odd" row style="background-color: {{ odd ? 'lightgray' : 'inherit' }};"></pbl-ngrid-row>
+</pbl-ngrid>

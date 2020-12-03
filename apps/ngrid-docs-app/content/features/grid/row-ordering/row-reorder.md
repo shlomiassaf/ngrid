@@ -2,7 +2,7 @@
 title: Row Ordering
 path: features/grid/row-ordering
 parent: features/grid
-ordinal: 3
+ordinal: 4
 tags: drag, drop, target-events
 ---
 # Row Ordering

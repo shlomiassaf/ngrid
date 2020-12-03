@@ -27,7 +27,7 @@ import { CdkTableModule } from '@angular/cdk/table';
  */
 import { PblNgridRegistryService } from './grid/registry/registry.service';
 import { PblCdkTableComponent }  from './grid/pbl-cdk-table/pbl-cdk-table.component';
-import { PblNgridRowDef } from './grid/row/row-def.directive';
+import { PblNgridRowDef, PblNgridRowOverride } from './grid/row/row-def.directive';
 import { PblNgridRowComponent } from './grid/row/row.component';
 import { PblNgridColumnRowComponent } from './grid/row/columns-row.component';
 import { PblNgridMetaRowComponent } from './grid/row/meta-row.component';
@@ -85,7 +85,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     PblNgridMetaRowContainerComponent,
     PblCdkTableComponent,
     PblNgridColumnDef,
-    PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
+    PblNgridRowDef, PblNgridRowOverride, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
     PblNgridCellStyling,
     PblNgridOuterSectionDirective,
     PblNgridHeaderExtensionRefDirective,
@@ -114,7 +114,7 @@ export function provideCommon(components: CommonTemplateInit[]): any {
     ...PROVIDERS,
   ],
   exports: [
-    PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
+    PblNgridRowDef, PblNgridRowOverride, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
     PblNgridCellStyling,
     PblNgridOuterSectionDirective,
     PblNgridHeaderExtensionRefDirective,

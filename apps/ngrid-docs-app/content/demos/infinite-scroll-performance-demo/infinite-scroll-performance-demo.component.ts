@@ -141,6 +141,7 @@ export class InfiniteScrollPerformanceDemoExample {
             });
         } else {
           const p1 = Math.floor(event.fromRow / 100) + 1;
+          console.log(`Infinite Request - Page: ${p1} | Items: 100 `);
           return this.client.getCustomers({ pagination: { itemsPerPage: 100, page: p1 } }).then( resp => resp.items );
         }
       })
