@@ -33,11 +33,7 @@ export class PblNgridCellTooltipModule {
         if (cellTooltipConfig && cellTooltipConfig.autoSetAll === true) {
           const pluginCtrl = event.controller;
           pluginCtrl.onInit()
-          .subscribe( evt => {
-            if (!pluginCtrl.hasPlugin(PblNgridCellTooltipDirective.PLUGIN_KEY)) {
-              pluginCtrl.createPlugin(PblNgridCellTooltipDirective.PLUGIN_KEY);
-            }
-          });
+          .subscribe( evt => pluginCtrl.ensurePlugin(PblNgridCellTooltipDirective.PLUGIN_KEY) );
         }
       });
   }

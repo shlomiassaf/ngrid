@@ -129,6 +129,10 @@ export class PblNgridPluginController<T = any> {
     return this.plugins.get(name) as any;
   }
 
+  ensurePlugin<P extends keyof PblNgridPluginExtension>(name: P): PblNgridPluginExtension[P]  {
+    return this.getPlugin(name) || this.createPlugin(name);
+  }
+
   /**
    * Registers the `plugin` with the `name` with the `table`
    */
@@ -152,6 +156,8 @@ export class PblNgridPluginController<T = any> {
     return !!this.injector.get(token, null, InjectFlags.Optional);
   }
 
+  createPlugin<P extends keyof PblNgridPluginExtensionFactories>(name: P): PblNgridPluginExtension[P];
+  createPlugin<P extends keyof PblNgridPluginExtension>(name: P): PblNgridPluginExtension[P];
   createPlugin<P extends (keyof PblNgridPluginExtensionFactories & keyof PblNgridPluginExtension)>(name: P): PblNgridPluginExtension[P] {
     if (!PLUGIN_STORE.has(name)) {
       throw new Error(`Unknown plugin ${name}.`);

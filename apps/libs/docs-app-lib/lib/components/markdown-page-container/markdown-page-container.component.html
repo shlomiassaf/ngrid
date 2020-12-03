@@ -1,6 +1,6 @@
 <div class="example-group-container" fxLayout="row" fxLayoutAlign="space-between start">
   <mat-drawer-container class="example-group-container" [hasBackdrop]="viewLayout.isMobile$ | async">
-    <mat-drawer #drawer [mode]="mode" opened (closed)="sideMenuClosed()" fxFlex="0 0 260px">
+    <mat-drawer #drawer [mode]="mode" (closed)="sideMenuClosed()" fxFlex="0 0 260px">
       <ng-container *ngIf="menu$ | async as navEntry">
         <mat-nav-list dense>
           <ng-container *ngFor="let entry of navEntry.children">

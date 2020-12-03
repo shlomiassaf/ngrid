@@ -147,9 +147,7 @@ export class PblNgridClipboardPlugin implements OnDestroy {
   private init(): void {
     this._removePlugin = this.pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
-    if (!this.pluginCtrl.hasPlugin('targetEvents')) {
-      this.pluginCtrl.createPlugin('targetEvents');
-    }
+    this.pluginCtrl.ensurePlugin('targetEvents');
 
     const targetEvents = this.pluginCtrl.getPlugin('targetEvents');
     targetEvents.keyDown
