@@ -41,10 +41,10 @@ const DEFAULT_OVERLAY_PANEL_CONFIG: PblNgridOverlayPanelConfig = {
 
 @Injectable()
 export class PblNgridOverlayPanelFactory {
-  constructor(private _overlay: Overlay, private _dir: Directionality, private zone: NgZone) { }
+  constructor(private _overlay: Overlay, private zone: NgZone) { }
 
   create<T>(grid: PblNgridComponent<T>): PblNgridOverlayPanel<T> {
-    return new PblNgridOverlayPanel<T>(this._overlay, this._dir, this.zone, grid);
+    return new PblNgridOverlayPanel<T>(this._overlay, this.zone, grid);
   }
 }
 
@@ -55,7 +55,6 @@ export class PblNgridOverlayPanel<T = any> {
   private _scrollStrategy: () => ScrollStrategy;
 
   constructor(private _overlay: Overlay,
-              private _dir: Directionality,
               private zone: NgZone,
               public readonly grid: PblNgridComponent<T>) {
     const controller = PblNgridPluginController.find(grid);
@@ -166,7 +165,7 @@ export class PblNgridOverlayPanel<T = any> {
       positionStrategy,
       backdropClass: config.backdropClass || 'cdk-overlay-transparent-backdrop', // TODO: don't use the cdk's class, create it
       scrollStrategy: this._scrollStrategy(),
-      direction: this._dir
+      direction: this.grid.dir,
     });
   }
 

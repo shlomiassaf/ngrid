@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLinkWithHref, RouterLink } from '@angular/router';
 import { Dir } from '@angular/cdk/bidi';
 import { MatMenu } from '@angular/material/menu';
@@ -14,7 +14,7 @@ import { PageAssetNavEntry } from '@pebula-internal/webpack-markdown-pages/model
   templateUrl: './demo-home-page.component.html',
   styleUrls: ['./demo-home-page.component.scss']
 })
-export class DemoHomePageComponent {
+export class DemoHomePageComponent implements OnInit {
 
   showSearchResults: boolean;
   searchResults: Observable<SearchResults>;
@@ -35,7 +35,7 @@ export class DemoHomePageComponent {
               private readonly dir: Dir) {
     // Delay initialization by up to 2 seconds
     this.searchService.loadIndex(this.searchService.hasWorker ? 2000 : 0)
-      .subscribe( event => console.log('Search index loaded'))
+      .subscribe( event => console.log('Search index loaded'));
   }
 
   rtlToggleChanged() {
@@ -53,20 +53,20 @@ export class DemoHomePageComponent {
   ngOnInit() {
     this.topMenuItems = this.mdMenu.ofType('topMenuSection');
     this.demoLinks = this.mdMenu.ofType('singlePage')
-    .then( entries => {
-      const demoLinks = entries
-        .filter( e => e.subType === 'demoPage' )
-        .map( e => {
-          return {
-            cmd: e.path.split('/'),
-            text: e.title
-          }
-        });
-      return this._demoLinks = demoLinks;
-    });
+      .then( entries => {
+        const demoLinks = entries
+          .filter( e => e.subType === 'demoPage' )
+          .map( e => {
+            return {
+              cmd: e.path.split('/'),
+              text: e.title
+            }
+          });
+        return this._demoLinks = demoLinks;
+      });
   }
 
-  demoLinkStatusChanged(event: { isActive: boolean; findRouterLink: (commands: any[]|string) => RouterLinkWithHref | RouterLink | undefined; }) {
+  demoLinkStatusChanged(event: { isActive: boolean; findRouterLink: (commands: any[] | string) => RouterLinkWithHref | RouterLink | undefined; }) {
     this.selectedDemoLink = null;
     if (event.isActive) {
       if (!this._demoLinks) {
@@ -79,7 +79,7 @@ export class DemoHomePageComponent {
 
   mobileTopMenuRouteActivated(select: MatSelect,
                               items: PageAssetNavEntry[],
-                              event: { isActive: boolean; findRouterLink: (commands: any[]|string) => RouterLinkWithHref | RouterLink | undefined; }) {
+                              event: { isActive: boolean; findRouterLink: (commands: any[] | string) => RouterLinkWithHref | RouterLink | undefined; }) {
     if (event.isActive) {
       select.value = items.find( dl => !!event.findRouterLink(dl.path.split('/')) );
     } else if (this.selectedDemoLink) {

@@ -87,7 +87,7 @@
     }
     .cdk-drag-placeholder {
       position: relative;
-      &:before {
+      &:before, [dir='rtl'] &:before {
         content: ' ';
         display: block;
         position: absolute;

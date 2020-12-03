@@ -1,7 +1,7 @@
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject, EMPTY } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { ChangeDetectorRef, ElementRef, Injector, IterableDiffers, NgZone, ViewContainerRef } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
+import { Direction, Directionality } from '@angular/cdk/bidi';
 
 import { PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { ColumnApi, PblColumnStore } from './column/management';
@@ -89,6 +89,10 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     return this.dir?.value ?? 'ltr';
   }
 
+  directionChange(): Observable<Direction> {
+    return this.dir?.change.asObservable() ?? EMPTY;
+  }
+
   onConstructed(fn: () => void) {
     if (!this._create) {
       of(false);
@@ -113,8 +117,8 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     this._viewPort = viewport;
   }
 
-  dynamicColumnWidthFactory(): DynamicColumnWidthLogic {
-    return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY, this.dir?.value);
+  dynamicColumnWidthFactory(dir?: Direction): DynamicColumnWidthLogic {
+    return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY, dir ?? this.dir?.value);
   }
 
   notifyPropChanged(source, key, prev, curr) {
