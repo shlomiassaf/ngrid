@@ -274,6 +274,11 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   @ViewChildren(CdkHeaderRowDef) _headerRowDefs: QueryList<CdkHeaderRowDef>;
   @ViewChildren(CdkFooterRowDef) _footerRowDefs: QueryList<CdkFooterRowDef>;
 
+  /**
+   * When true, the virtual paging feature is enabled because the virtual content size exceed the supported height of the browser so paging is enable.
+   */
+  get virtualPagingActive() { return this.viewport.virtualPagingActive; }
+
   get metaHeaderRows() { return this._store.metaHeaderRows; }
   get metaFooterRows() { return this._store.metaFooterRows; }
   get metaColumns(): PblColumnStore['metaColumns'] { return this._store.metaColumns; }

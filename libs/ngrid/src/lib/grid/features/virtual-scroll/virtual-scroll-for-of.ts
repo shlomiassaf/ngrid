@@ -31,6 +31,8 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
   get rowLength(): number { return this.vcRefs.data.length  }
   get footerLength(): number { return this.footer.rows.length  }
 
+  readonly wheelControl: { wheelListen: () => void; wheelUnListen: () => void; readonly listening: boolean; };
+
   private destroyed = new Subject<void>();
   private ds: PblDataSource<T>;
 
@@ -89,100 +91,6 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
         updateStickyRows(this.renderedContentOffset, this.footer.rows, this.footer.sticky, 'bottom');
       });
 
-    if (FIXED_HEADER_MODE) {
-      let offset = 0;
-      const viewPort = this.viewport.element;
-      const metaRowStickyScroll = new MetaRowStickyScroll(this.viewport, viewPort, { header: this.header, footer: this.footer });
-      let scrollPosition: number;
-
-      const wheelListen = () => viewPort.addEventListener('wheel', handler, true);
-      const wheelUnListen = () => viewPort.removeEventListener('wheel', handler, true);
-      const updateScrollPosition = () => scrollPosition = (this.viewport.measureScrollOffset()) / (this.viewport.scrollHeight - this.viewport.getViewportSize());
-      const scrollEnd$ = this.viewport.scrolling.pipe(filter( s => !s ));
-
-      const handler = (event: WheelEvent) => {
-        if (event.deltaY) {
-          if ( (scrollPosition === 1 && event.deltaY > 0) || (offset === 0 && event.deltaY < 0)) {
-            return;
-          }
-          let newOffset = offset + event.deltaY;
-          newOffset = Math.min(this.viewport.scrollHeight, Math.max(0, newOffset));
-
-          if (newOffset !== offset) {
-            offset = newOffset;
-            if (metaRowStickyScroll.canMove() && metaRowStickyScroll.move(event.deltaY, viewPort.getBoundingClientRect())) {
-
-              const restore = () => {
-                metaRowStickyScroll.restore(this.renderedContentOffset);
-                updateScrollPosition();
-              };
-
-              switch (this.viewport.wheelMode) {
-                case 'passive':
-                  wheelUnListen();
-                  this.viewport.scrolling
-                    .pipe(
-                      debounceTime(150),
-                      filter( s => !s ),
-                      take(1)
-                    ).subscribe( () => {
-                      restore();
-                      wheelListen();
-                    });
-                  break;
-                case 'blocking':
-                  scrollEnd$.pipe(take(1)).subscribe(restore);
-                  break;
-                default:
-                  const threshold = this.viewport.wheelMode;
-                  let removedEvent = false;
-
-                  this.viewport.scrollFrameRate
-                    .pipe(takeUntil(scrollEnd$.pipe(take(1))))
-                    .subscribe(
-                      {
-                        next: frameRate => {
-                          if (!removedEvent && frameRate < threshold) {
-                            wheelUnListen();
-                            removedEvent = true;
-                          }
-                        },
-                        complete: () => {
-                          const lastWheel$ = fromEvent(viewPort, 'wheel').pipe(debounceTime(50), take(1));
-                          race(lastWheel$, timer(51) as any)
-                            .subscribe( () => {
-                              restore();
-                              if (removedEvent) {
-                                wheelListen();
-                              }
-                            });
-                            // we restore back after 100 ms, for some reason, if it's immediate, we hit a cycle of wheel/scroll/no-scroll and not wheel/scroll/WAIIIIIT/no-scrol
-                            // TODO: maybe we can measure time between no-scrolling and wheel to find this MS value
-                            //        OR, register a temp `wheel` listener that will detect wheel end and re-register the original handler.
-                        }
-                      }
-                    );
-              }
-            }
-          }
-          this.viewport.scrollToOffset(offset);
-          event.preventDefault();
-          event.stopPropagation();
-          return true;
-        }
-      };
-      updateScrollPosition();
-      // wheelListen();
-
-      this.viewport
-        .scrolling
-        .subscribe(isScrolling => {
-          if (!isScrolling) {
-            offset = this.viewport.measureScrollOffset();
-          }
-        });
-    }
-
     this.viewport.offsetChange
       .pipe( takeUntil(this.destroyed) )
       .subscribe( offset => {
@@ -192,6 +100,8 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
           updateStickyRows(offset, this.footer.rows, this.footer.sticky, 'bottom');
         }
       });
+
+    this.wheelControl = this.initWheelControl();
   }
 
   /**
@@ -220,6 +130,114 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
     this.detachView();
     this.destroyed.next();
     this.destroyed.complete();
+  }
+
+  private initWheelControl() {
+    let listening = false;
+    let offset = 0;
+    const viewPort = this.viewport.element;
+    const metaRowStickyScroll = new MetaRowStickyScroll(this.viewport, viewPort, { header: this.header, footer: this.footer });
+    let scrollPosition: number;
+
+    const wheelListen = () => {
+      if (!listening) {
+        viewPort.addEventListener('wheel', handler, true);
+        listening = true;
+      }
+    };
+    const wheelUnListen = () => {
+      if (listening) {
+        viewPort.removeEventListener('wheel', handler, true);
+        listening = false;
+      }
+    };
+    const updateScrollPosition = () => scrollPosition = (this.viewport.measureScrollOffset()) / (this.viewport.scrollHeight - this.viewport.getViewportSize());
+    const scrollEnd$ = this.viewport.scrolling.pipe(filter( s => !s ));
+
+    const handler = (event: WheelEvent) => {
+      if (event.deltaY) {
+        if ( (scrollPosition === 1 && event.deltaY > 0) || (offset === 0 && event.deltaY < 0)) {
+          return;
+        }
+        let newOffset = offset + event.deltaY;
+        newOffset = Math.min(this.viewport.scrollHeight, Math.max(0, newOffset));
+
+        if (newOffset !== offset) {
+          offset = newOffset;
+          if (metaRowStickyScroll.canMove() && metaRowStickyScroll.move(event.deltaY, viewPort.getBoundingClientRect())) {
+
+            const restore = () => {
+              metaRowStickyScroll.restore(this.renderedContentOffset);
+              updateScrollPosition();
+            };
+
+            switch (this.viewport.wheelMode) {
+              case 'passive':
+                wheelUnListen();
+                this.viewport.scrolling
+                  .pipe(
+                    debounceTime(150),
+                    filter( s => !s ),
+                    take(1)
+                  ).subscribe( () => {
+                    restore();
+                    wheelListen();
+                  });
+                break;
+              case 'blocking':
+                scrollEnd$.pipe(take(1)).subscribe(restore);
+                break;
+              default:
+                const threshold = this.viewport.wheelMode;
+                let removedEvent = false;
+
+                this.viewport.scrollFrameRate
+                  .pipe(takeUntil(scrollEnd$.pipe(take(1))))
+                  .subscribe(
+                    {
+                      next: frameRate => {
+                        if (!removedEvent && frameRate < threshold) {
+                          wheelUnListen();
+                          removedEvent = true;
+                        }
+                      },
+                      complete: () => {
+                        const lastWheel$ = fromEvent(viewPort, 'wheel').pipe(debounceTime(50), take(1));
+                        race(lastWheel$, timer(51) as any)
+                          .subscribe( () => {
+                            restore();
+                            if (removedEvent) {
+                              wheelListen();
+                            }
+                          });
+                          // we restore back after 100 ms, for some reason, if it's immediate, we hit a cycle of wheel/scroll/no-scroll and not wheel/scroll/WAIIIIIT/no-scrol
+                          // TODO: maybe we can measure time between no-scrolling and wheel to find this MS value
+                          //        OR, register a temp `wheel` listener that will detect wheel end and re-register the original handler.
+                      }
+                    }
+                  );
+            }
+          }
+        }
+        this.viewport.scrollToOffset(offset);
+        event.preventDefault();
+        event.stopPropagation();
+        return true;
+      }
+    };
+    updateScrollPosition();
+    // We don't auto enable, the virtual scroll viewport component will decide
+    // wheelListen();
+
+    this.viewport
+      .scrolling
+      .subscribe(isScrolling => {
+        if (!isScrolling) {
+          offset = this.viewport.measureScrollOffset();
+        }
+      });
+
+    return { wheelListen, wheelUnListen, get listening() { return listening } };
   }
 
   private attachView(ds: PblDataSource<T>): void {
