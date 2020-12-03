@@ -1,3 +1,13 @@
+## 2.3.1 (2020-12-03)
+
+
+### Bug Fixes
+
+* **ngrid:** support dynamic RTL layout change ([1520f29](https://github.com/shlomiassaf/ngrid/commit/1520f291a5280b11737edbf43d51eb06391fc76d))
+* **ngrid/overlay-panel:** change detection is disconnected when opening panels ([b95eb50](https://github.com/shlomiassaf/ngrid/commit/b95eb50348d5a74da91bd8059653384c4d5db882)), closes [#95](https://github.com/shlomiassaf/ngrid/issues/95)
+
+
+
 # 2.3.0 (2020-11-01)
 
 
