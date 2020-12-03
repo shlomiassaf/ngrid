@@ -74,14 +74,19 @@ export class PblNgridMetaRowService<T = any> {
     const rowDef = metaRow.meta;
     if (rowDef === columnStore.headerColumnDef) {
       if (metaRow.gridWidthRow === true) {
+        // This is a dummy row used to measure width and get width resize notifications
         this.gridWidthRow = { rowDef, el: metaRow.element };
         this.header.all.push(rowDef);
       } else {
-        this.addToSection(this.header, metaRow, columnStore.metaFooterRows.length);
+        // This is the main header column row, it doesn't have an index but we will assign as if it's the last
+        // so other features will be able to sort by physical location
+        this.addToSection(this.header, metaRow, columnStore.metaHeaderRows.length);
       }
     } else if (rowDef === columnStore.footerColumnDef) {
+      // This is the main footer column row
       this.addToSection(this.footer, metaRow, 0);
     } else {
+      // All meta rows
       let index = header.findIndex( h => h.rowDef === rowDef );
       if (index > -1) {
         this.addToSection(this.header, metaRow, index);
