@@ -7,9 +7,9 @@ import { PblDragDrop } from './drag-drop';
 import { CdkLazyDropList } from './drop-list';
 
 @Directive({
-  selector: '[cdkLazyDrag]',
+  selector: '[cdkLazyDrag]', // tslint:disable-line: directive-selector
   exportAs: 'cdkLazyDrag',
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line:no-host-metadata-property
     'class': 'cdk-drag',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
@@ -37,17 +37,22 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
   get pblDragRef(): PblDragRef<DRef> { return this._dragRef as any; }
 
   @Input() get cdkDropList(): Z { return this.dropContainer as Z; }
-  set cdkDropList(value: Z) {
+  set cdkDropList(dropList: Z) {
     // TO SUPPORT `cdkDropList` via string input (ID) we need a reactive registry...
     const prev = this.cdkDropList;
-    if (value !== prev) {
+    if (dropList !== prev) {
       if (prev) {
         prev.removeDrag(this);
       }
-      this.dropContainer = value;
-      if (value) {
-        this._dragRef._withDropContainer(value._dropListRef);
-        value.addDrag(this);
+      this.dropContainer = dropList;
+      if (dropList) {
+        this._dragRef._withDropContainer(dropList.pblDropListRef);
+        this._dragRef.beforeStarted.subscribe(() => {
+          if (dropList.dir) {
+            this._dragRef.withDirection(dropList.dir);
+          }
+        });
+        dropList.addDrag(this);
       }
       this.dropContainerChanged(prev);
     }

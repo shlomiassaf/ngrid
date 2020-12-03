@@ -23,7 +23,7 @@ import {
   isDevMode, forwardRef, Attribute, Optional,
 } from '@angular/core';
 
-import { Directionality } from '@angular/cdk/bidi';
+import { Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
@@ -258,6 +258,9 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   @Input() get fallbackMinHeight(): number { return this._minDataViewHeight > 0 ? this._minDataViewHeight : undefined; }
   set fallbackMinHeight(value: number) { this.minDataViewHeight = value; }
 
+  get dir(): Direction { return this._dir };
+
+  private _dir: Direction = 'ltr';
   private _minDataViewHeight = 0;
   private _dataSource: PblDataSource<T>;
 
@@ -306,6 +309,14 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               @Attribute('id') public readonly id: string,
               @Optional() dir?: Directionality) {
     this._extApi = createApis(this, { config, ngZone, injector, vcRef, elRef, cdRef: cdr, dir });
+
+    dir?.change
+      .pipe(
+        unrx(this, 'dir'),
+        startWith(dir.value)
+      )
+      .subscribe(value => this._dir = value);
+
     const gridConfig = config.get('table');
     this.showHeader = gridConfig.showHeader;
     this.showFooter = gridConfig.showFooter;

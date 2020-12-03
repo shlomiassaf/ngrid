@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { Direction } from '@angular/cdk/bidi';
 
 import { PblCdkTableComponent } from '../grid/pbl-cdk-table/pbl-cdk-table.component';
 import { ContextApi } from '../grid/context/api';
@@ -31,8 +31,9 @@ export interface PblNgridExtensionApi<T = any> {
   pluginCtrl: PblNgridPluginController<T>;
   onConstructed(fn: () => void): void;
   onInit(fn: () => void): void;
-  dynamicColumnWidthFactory(): DynamicColumnWidthLogic;
+  dynamicColumnWidthFactory(dir?: Direction): DynamicColumnWidthLogic;
   getDirection(): Direction;
+  directionChange(): Observable<Direction>;
 }
 
 export interface PblNgridInternalExtensionApi<T = any> extends PblNgridExtensionApi<T> {

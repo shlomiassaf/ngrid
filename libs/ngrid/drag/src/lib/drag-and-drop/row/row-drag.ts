@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, OnInit } from '@angular/core';
 import { DragDrop, CdkDragStart, CDK_DRAG_PARENT } from '@angular/cdk/drag-drop';
 
 import { PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
@@ -8,7 +8,7 @@ import { PblNgridRowReorderPluginDirective, ROW_REORDER_PLUGIN_KEY } from './row
 @Directive({
   selector: '[pblNgridRowDrag]',
   exportAs: 'pblNgridRowDrag',
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line:no-host-metadata-property
     'class': 'cdk-drag',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
@@ -17,7 +17,7 @@ import { PblNgridRowReorderPluginDirective, ROW_REORDER_PLUGIN_KEY } from './row
     { provide: CDK_DRAG_PARENT, useExisting: PblNgridRowDragDirective },
   ]
 })
-export class PblNgridRowDragDirective<T = any> extends CdkLazyDrag<T, PblNgridRowReorderPluginDirective<T>> {
+export class PblNgridRowDragDirective<T = any> extends CdkLazyDrag<T, PblNgridRowReorderPluginDirective<T>> implements OnInit {
   rootElementSelector = 'pbl-ngrid-row';
 
   get context(): Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>> {

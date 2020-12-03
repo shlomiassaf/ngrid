@@ -1,5 +1,5 @@
 // tslint:disable:no-output-rename
-import { Directive } from '@angular/core';
+import { Directive, OnInit } from '@angular/core';
 import { DragDrop, CDK_DROP_LIST, CDK_DROP_LIST_GROUP } from '@angular/cdk/drag-drop';
 
 import { PblColumn } from '@pebula/ngrid';
@@ -12,7 +12,7 @@ let _uniqueIdCounter = 0;
 @Directive({
   selector: '[pblAggregationContainer]',
   exportAs: 'pblAggregationContainer',
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line:no-host-metadata-property
     'class': 'cdk-drop-list',
     '[id]': 'id',
   },
@@ -22,7 +22,7 @@ let _uniqueIdCounter = 0;
     { provide: CDK_DROP_LIST, useExisting: PblNgridAggregationContainerDirective },
   ],
 })
-export class PblNgridAggregationContainerDirective<T = any> extends CdkLazyDropList<T> {
+export class PblNgridAggregationContainerDirective<T = any> extends CdkLazyDropList<T> implements OnInit {
   id = `pbl-ngrid-column-aggregation-container-${_uniqueIdCounter++}`;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 

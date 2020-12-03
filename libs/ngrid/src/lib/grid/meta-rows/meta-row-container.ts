@@ -25,12 +25,15 @@ export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
   _width: number;
   readonly _width$ = new Subject<number>();
 
-  private _totalColumnWidth: number = 0;
+  private _totalColumnWidth = 0;
   private element: HTMLElement;
+  private _hzScrollDir: -1 | 1 = 1;
 
   constructor(public readonly metaRows: PblNgridMetaRowService, elRef: ElementRef<HTMLElement>) {
     this.element = elRef.nativeElement;
+
     metaRows.sync.pipe(unrx(this)).subscribe( () => this.syncRowDefinitions() );
+
     this.metaRows.extApi.events
       .pipe(unrx(this))
       .subscribe( event => {
@@ -38,26 +41,29 @@ export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
           this.updateWidths();
         }
       });
+
     this.metaRows.extApi.grid.columnApi.totalColumnWidthChange
       .pipe(unrx(this))
       .subscribe( width => {
         this._totalColumnWidth = width;
         this.updateWidths();
       });
+
+    this._hzScrollDir = this.metaRows.extApi.getDirection() === 'rtl' ? -1 : 1
+    this.metaRows.extApi.directionChange()
+      .pipe(unrx(this))
+      .subscribe( dir => this._hzScrollDir = dir === 'rtl' ? -1 : 1 );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('type' in changes) {
       const scrollContainerElement = this.element;
-      const dir = this.metaRows.extApi.getDirection() === 'rtl' ? -1 : 1;
-      scrollContainerElement.scrollLeft = this.metaRows.extApi.grid.viewport.measureScrollOffset('start') * dir;
+      scrollContainerElement.scrollLeft = this.metaRows.extApi.grid.viewport.measureScrollOffset('start') * this._hzScrollDir;
 
       if (changes.type.isFirstChange) {
         this.metaRows.hzScroll
           .pipe(unrx(this))
-          .subscribe( offset => {
-            scrollContainerElement.scrollLeft = offset * dir;
-          }, e => console.error(e), () => console.error('COMPLETED') );
+          .subscribe( offset => scrollContainerElement.scrollLeft = offset * this._hzScrollDir);
 
         this.metaRows.extApi.cdkTable.onRenderRows
           .pipe(unrx(this))

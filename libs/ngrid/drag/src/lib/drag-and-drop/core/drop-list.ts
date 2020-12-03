@@ -8,7 +8,7 @@ import {
   SkipSelf,
   ChangeDetectorRef
 } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
+import { Direction, Directionality } from '@angular/cdk/bidi';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
   DragDrop,
@@ -26,13 +26,13 @@ import { PblDropListRef } from './drop-list-ref';
 import { PblDragDrop } from './drag-drop';
 
 @Directive({
-  selector: '[cdkLazyDropList]',
+  selector: '[cdkLazyDropList]', // tslint:disable-line: directive-selector
   exportAs: 'cdkLazyDropList',
   providers: [
     { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CDK_DROP_LIST, useClass: CdkLazyDropList },
   ],
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line:no-host-metadata-property
     'class': 'cdk-drop-list',
     '[id]': 'id',
     '[class.cdk-drop-list-dragging]': '_dropListRef.isDragging()',
@@ -46,6 +46,8 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   get grid(): PblNgridComponent<T> { return this._gridApi?.grid; }
   set grid(value: PblNgridComponent<T>) { this.updateGrid(value); }
 
+  get dir(): Direction | null { return this._gridApi?.getDirection(); }
+
   /**
    * Selector that will be used to determine the direct container element, starting from
    * the `cdkDropList` element and going down the DOM. Passing an alternate direct container element
@@ -56,7 +58,6 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   @Input('cdkDropListDirectContainerElement') directContainerElement: string;
 
   protected get gridApi(): PblNgridExtensionApi<T> { return this._gridApi; }
-
   protected readonly originalElement: ElementRef<HTMLElement>;
   private _gridApi: PblNgridExtensionApi<T>;
 
@@ -103,6 +104,9 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
       this.element = this.originalElement;
     }
     this.pblDropListRef.withElement(this.element);
+    if (this.dir) {
+      this.pblDropListRef.withDirection(this.dir);
+    }
   }
 
   protected gridChanged(prev?: PblNgridExtensionApi<T>) { }

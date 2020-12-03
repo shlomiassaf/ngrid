@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
-import { Component, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Directionality } from '@angular/cdk/bidi';
 import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
@@ -21,7 +21,7 @@ declare const BUILD_VERSION: string;
   templateUrl: './markdown-page-container.component.html',
   styleUrls: ['./markdown-page-container.component.scss']
 })
-export class MarkdownPageContainerComponent implements OnDestroy {
+export class MarkdownPageContainerComponent implements AfterViewInit, OnDestroy {
 
   entry: string;
   documentUrl: string;
@@ -118,13 +118,9 @@ export class MarkdownPageContainerComponent implements OnDestroy {
   }
 
   private setMenuState() {
-    if (this.root?.children) {
-      if (this.layoutState.isWeb || this.layoutState.hamburger) {
-        this.drawer.open();
-      } else {
-        this.drawer.close();
-      }
-    } else {
+    if (this.root?.children && (this.layoutState.isWeb || this.layoutState.hamburger)) {
+      this.drawer.open();
+    } else if (this.drawer.opened) {
       this.drawer.close();
     }
   }

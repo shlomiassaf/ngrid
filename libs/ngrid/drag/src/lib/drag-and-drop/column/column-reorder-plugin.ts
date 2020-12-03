@@ -1,5 +1,5 @@
 // tslint:disable:no-output-rename
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, OnInit } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DragDrop, CdkDragDrop, CDK_DROP_LIST } from '@angular/cdk/drag-drop';
 
@@ -18,9 +18,9 @@ declare module '@pebula/ngrid/lib/ext/types' {
 export const COL_REORDER_PLUGIN_KEY: 'columnReorder' = 'columnReorder';
 
 @Directive({
-  selector: 'pbl-ngrid[columnReorder]',
+  selector: 'pbl-ngrid[columnReorder]', // tslint:disable-line: directive-selector
   exportAs: 'pblNgridColumnReorder',
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line:no-host-metadata-property
     'class': 'cdk-drop-list',
     '[id]': 'id',
     '[class.cdk-drop-list-dragging]': '_dropListRef.isDragging()',
@@ -31,7 +31,7 @@ export const COL_REORDER_PLUGIN_KEY: 'columnReorder' = 'columnReorder';
     { provide: CDK_DROP_LIST, useExisting: PblNgridColumnReorderPluginDirective },
   ],
 })
-export class PblNgridColumnReorderPluginDirective<T = any> extends PblNgridColumnDragContainerDirective<T> {
+export class PblNgridColumnReorderPluginDirective<T = any> extends PblNgridColumnDragContainerDirective<T> implements OnInit {
 
   @Input() get columnReorder(): boolean { return this._columnReorder; };
   set columnReorder(value: boolean) {

@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   DragDrop,
@@ -22,9 +22,9 @@ export const ROW_REORDER_PLUGIN_KEY: 'rowReorder' = 'rowReorder';
 let _uniqueIdCounter = 0;
 
 @Directive({
-  selector: 'pbl-ngrid[rowReorder]',
+  selector: 'pbl-ngrid[rowReorder]', // tslint:disable-line: directive-selector
   exportAs: 'pblNgridRowReorder',
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line:no-host-metadata-property
     'class': 'cdk-drop-list',
     '[id]': 'id',
     '[class.cdk-drop-list-dragging]': '_dropListRef.isDragging()',
@@ -37,7 +37,7 @@ let _uniqueIdCounter = 0;
     { provide: CDK_DROP_LIST, useExisting: PblNgridRowReorderPluginDirective },
   ],
 })
-export class PblNgridRowReorderPluginDirective<T = any> extends CdkLazyDropList<T, PblNgridRowReorderPluginDirective<T>> {
+export class PblNgridRowReorderPluginDirective<T = any> extends CdkLazyDropList<T, PblNgridRowReorderPluginDirective<T>> implements OnDestroy {
 
   id = `pbl-ngrid-row-reorder-list-${_uniqueIdCounter++}`;
 
