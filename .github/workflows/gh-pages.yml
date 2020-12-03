@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: v3
+          ref: ${{ github.event.inputs.branch || 'master' }}"
       - uses: actions/setup-node@v1
         with:
           node-version: 14
