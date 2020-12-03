@@ -29,7 +29,7 @@ export { AutoSizeToFitOptions, ColumnApi } from './column/management';
 export {
   GridRowType,
   RowsApi,
-  PblNgridRowDef,
+  PblNgridRowDef, PblNgridRowOverride,
   NGRID_CELL_FACTORY, PblNgridCellFactoryResolver, PblNgridCellFactoryMap,
   PBL_NGRID_ROW_TEMPLATE,
   PblNgridBaseRowComponent,

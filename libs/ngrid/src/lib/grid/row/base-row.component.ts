@@ -2,7 +2,6 @@ import {
   AfterViewInit, ChangeDetectorRef, Injector, OnInit,
   Directive,
   ElementRef,
-  Input,
   Optional,
   DoCheck,
   OnDestroy,

@@ -31,7 +31,7 @@ export {
   RowsApi,
   NGRID_CELL_FACTORY,
   PBL_NGRID_ROW_TEMPLATE,
-  PblNgridRowDef, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
+  PblNgridRowDef, PblNgridRowOverride, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
 
   PblNgridComponent,
   PblNgridRegistryService,

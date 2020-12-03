@@ -19,10 +19,15 @@ export interface RowsApi<T = any> {
   findDataRowByIdentity(identity: string): PblNgridRowComponent<T> | undefined;
 }
 
+function isPblNgridRowComponent<T = any>(row: PblNgridBaseRowComponent<GridRowType, T>): row is PblNgridRowComponent {
+  return row.rowType === 'data';
+}
+
 export class PblRowsApi<T = any> implements RowsApi<T> {
 
   cdkTable: PblCdkTableComponent<T>;
 
+  private allByElement = new Map<Element, PblNgridBaseRowComponent<GridRowType, T>>();
   private allRows = new Set<PblNgridBaseRowComponent<GridRowType, T>>();
   private rows = new Map<GridRowType, Set<PblNgridBaseRowComponent<any, T>>>();
   private columnRows = new Set<PblNgridRowComponent<T> | PblNgridColumnRowComponent>();
@@ -99,10 +104,11 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
       if (this.intersection.observerMode) {
         this.intersection.intersectionChanged
           .subscribe(entries => {
-            const rows = this.dataRows();
             for (const e of entries) {
-              const row = rows.find( r => r.element === e.target);
-              row?._setOutOfViewState(!e.isIntersecting);
+              const row = this.allByElement.get(e.target);
+              if (isPblNgridRowComponent(row)) {
+                row._setOutOfViewState(!e.isIntersecting);
+              }
             }
           });
       } else {
@@ -137,8 +143,10 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
     if (this.intersection.observerMode) {
       const entries = this.intersection.snapshot();
       for (const e of entries) {
-        const row = rows.find( r => r.element === e.target);
-        row?._setOutOfViewState(!e.isIntersecting);
+        const row = this.allByElement.get(e.target);
+        if (isPblNgridRowComponent(row)) {
+          row._setOutOfViewState(!e.isIntersecting);
+        }
       }
     } else {
       const { clientRect } = this.extApi.viewport.getBoundingClientRects;
@@ -150,6 +158,7 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
 
   addRow(row: PblNgridBaseRowComponent<GridRowType, T>) {
     this.allRows.add(row);
+    this.allByElement.set(row.element, row);
     const rows = this.rows.get(row.rowType);
     rows.add(row);
 
@@ -174,6 +183,7 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
 
   removeRow(row: PblNgridBaseRowComponent<any, T>) {
     this.allRows.delete(row);
+    this.allByElement.delete(row.element);
     const rows = this.rows.get(row.rowType);
     if (rows) {
       rows.delete(row);

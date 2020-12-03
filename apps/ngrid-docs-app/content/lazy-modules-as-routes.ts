@@ -254,5 +254,10 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     path: 'features-grid-virtual-scroll-strategies.module',
     pathMatch: 'full',
     loadChildren: () => import('./features/grid/virtual-scroll/strategies/strategies.module').then( m => m.StrategiesExampleModule ),
+  },
+  {
+    path: 'features-grid-custom-row.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./features/grid/custom-row/custom-row.module').then( m => m.CustomRowExampleModule ),
   }
 ];
