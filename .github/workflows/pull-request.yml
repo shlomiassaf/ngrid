@@ -23,7 +23,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14
       - name: Restore Cache
         uses: actions/cache@v1
         with:
@@ -31,16 +31,21 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Restore git history
         run: git fetch --no-tags --prune --depth=5 origin ${{ github.event.pull_request.base.ref }}
       - name: Install dependencies
         run: npm install
-      - run: mkdir /home/runner/work/ngrid/ngrid/.cache
+      - name: Create Cache Directory
+        run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - name: Test
         run: ./node_modules/.bin/nx affected:test --base=origin/${{ github.event.pull_request.base.ref }} --configuration=ci
-        # run: ./node_modules/.bin/nx test --configuration=ci
       - name: E2E
         run: ./node_modules/.bin/nx affected:e2e --base=origin/${{ github.event.pull_request.base.ref }}
-        # run: ./node_modules/.bin/nx e2e
+      - name: E2E Upload Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-artifacts
+          path: dist/cypress/**/*.png
+          retention-days: 30
       - name: Build Libraries
         run: npm run build-grid

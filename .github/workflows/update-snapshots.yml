@@ -15,7 +15,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14
       - name: Restore Cache
         uses: actions/cache@v1
         with:
@@ -28,7 +28,7 @@ jobs:
       - name: Create Cache Directory
         run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - name: E2E
-        run: ./node_modules/.bin/nx run-many --configuration=updateSnapshots --target=e2e --all 
+        run: ./node_modules/.bin/nx run-many --configuration=updateSnapshots --target=e2e --all
       - name: Remove package-lock.json
         run: npx rimraf package-lock.json
       - name: Create Pull Request
