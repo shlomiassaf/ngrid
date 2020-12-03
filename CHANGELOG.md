@@ -1,3 +1,70 @@
+# 3.0.0-alpha.2 (2020-12-03)
+
+
+### Bug Fixes
+
+* **ngrid:** do not auto-clear context on source changing ([e49d4ff](https://github.com/shlomiassaf/ngrid/commit/e49d4ff1c3ebcbe65219e1e48bff2c1c3e18779b))
+* **ngrid:** missed a row when measuring virtual height ([cf9ebfe](https://github.com/shlomiassaf/ngrid/commit/cf9ebfe33bc62be065fcb112249568e64c71e243))
+* **ngrid:** rtl not working with live changes in direction ([2956192](https://github.com/shlomiassaf/ngrid/commit/29561925478b58bb660d198c0de64941d10cc4f4)), closes [#141](https://github.com/shlomiassaf/ngrid/issues/141)
+* **ngrid:** workaround virtual scroll height limitation in browsers ([233e3b2](https://github.com/shlomiassaf/ngrid/commit/233e3b2b4dc1f66ac8df5cc309488446c64926e6))
+* **ngrid:** wrong ds index reference in context when using multirow setup ([58ab268](https://github.com/shlomiassaf/ngrid/commit/58ab2684e695e46bf99450d274f218e1c91e40f2))
+* **ngrid/block-ui:** allow BooleanInput for strict mode ([2a9770a](https://github.com/shlomiassaf/ngrid/commit/2a9770a55c0e9a71bb6d96453dc7d876012a61f0))
+* **ngrid/block-ui:** wait for grid init before creating view ([b9d1ea3](https://github.com/shlomiassaf/ngrid/commit/b9d1ea38fb148a992a08ef3ca9a5fc503b105a4e))
+* **ngrid/infinite-scroll:** proper reflection of refresh trigger state vs infitie scroll trigger state ([3340bc9](https://github.com/shlomiassaf/ngrid/commit/3340bc98b7ceb1369ac4d2fb7a04defb3a311927))
+* **ngrid/target-events:** keyboard focus does not sync when virtual scrolling ([b488d91](https://github.com/shlomiassaf/ngrid/commit/b488d917745becc5116e95d10dfcc27b0ff40029)), closes [#117](https://github.com/shlomiassaf/ngrid/issues/117)
+
+
+### Code Refactoring
+
+* **ngrid:** refactor the cell rendering engine and refactor the group definitions ([4882e4a](https://github.com/shlomiassaf/ngrid/commit/4882e4a1064d01aefab792ea6d984ba51bb5f70e)), closes [#123](https://github.com/shlomiassaf/ngrid/issues/123) [#131](https://github.com/shlomiassaf/ngrid/issues/131)
+* **ngrid:** simplify working with rows ([a81b1af](https://github.com/shlomiassaf/ngrid/commit/a81b1afdc75f3a5c0fd8c9378a7519609c2d1dce))
+
+
+### Features
+
+* **ngrid:** 3rd party storage for context api ([#132](https://github.com/shlomiassaf/ngrid/issues/132)) ([0c9ca4c](https://github.com/shlomiassaf/ngrid/commit/0c9ca4c2a04750976e92d511b9cc8d46c85220f1)), closes [#10](https://github.com/shlomiassaf/ngrid/issues/10) [#127](https://github.com/shlomiassaf/ngrid/issues/127)
+* **ngrid:** allow minimum height based on row count ([296fe5d](https://github.com/shlomiassaf/ngrid/commit/296fe5d2f7b0c5c10800da87717ee43df6713e7e))
+* **ngrid:** cache when rendering rows ([170c2d4](https://github.com/shlomiassaf/ngrid/commit/170c2d406d6ba16bd3de30cf164984f988e7cd2c))
+* **ngrid:** custom row override ([fec9445](https://github.com/shlomiassaf/ngrid/commit/fec9445c786a83e7eddd353182aa60a7a159df65))
+* **ngrid:** implement dynamic virtual scroll strategy ([30117a3](https://github.com/shlomiassaf/ngrid/commit/30117a37223a601791ad4b0df3e78b0021f6799e))
+* **ngrid:** new api to add/remove columns ([7a79b2e](https://github.com/shlomiassaf/ngrid/commit/7a79b2e258f9125ad9375c7ea38fe56f18029de3))
+* **ngrid:** use intersection observer ([161371b](https://github.com/shlomiassaf/ngrid/commit/161371b34887ced340e2d16df1fe2438b48615a8))
+* **ngrid-cypress:** new package with cypress helpers (similar to harnesses) ([e33d638](https://github.com/shlomiassaf/ngrid/commit/e33d638fb6c459fd9094fbb07e8a8f3a6a2b4b7a))
+* **ngrid/detail-row:** implement global detail row instance manager ([f30c335](https://github.com/shlomiassaf/ngrid/commit/f30c33577d924a9ee3e171da89e93866fb02d1ba))
+* **ngrid/testing:** add test harnesses for ngrid, columns and data rows/cells ([19bbba6](https://github.com/shlomiassaf/ngrid/commit/19bbba66a7758313930fefcc8742a534159211df))
+
+
+### Performance Improvements
+
+* **ngrid:** rebuild columns/cells inside rows when invalidating ([35bbea8](https://github.com/shlomiassaf/ngrid/commit/35bbea8cd15105910f5b45584825ba3fd7848145))
+* **ngrid:** use internal row context ([f7f8367](https://github.com/shlomiassaf/ngrid/commit/f7f8367a2b30cd88a029db62040d36bd6d566ac4))
+
+
+### BREAKING CHANGES
+
+* **ngrid:** Binding `[grid]` and `[row]` is no longer required. Same for `detailRow` and `infiniteRow`
+* **ngrid:** `resize-observer-polyfill` is no longer a peerDependency and is not required by the library. If you want polyfill support please import the polyfill using polyfill.ts
+* **ngrid:** `prop` and `span` are deprecated from `PblColumnGroupDefinition` and will be removed from version 4.0.0
+
+`prop` and `span` are removed from `PblColumnGroup` and instread columnIds list is used
+* **ngrid:** If you used the hideColumns property (setter only) via code and not via html binding it will no longer work.
+Instead, use the new api to add/remove columns.
+If you used it via bindings, it will still work but it is not recommended because other plugins that use the API
+will override values from the array provided.
+
+
+
+## 2.3.1 (2020-12-03)
+
+
+### Bug Fixes
+
+* **ngrid:** support dynamic RTL layout change ([1520f29](https://github.com/shlomiassaf/ngrid/commit/1520f291a5280b11737edbf43d51eb06391fc76d))
+* **ngrid/overlay-panel:** change detection is disconnected when opening panels ([b95eb50](https://github.com/shlomiassaf/ngrid/commit/b95eb50348d5a74da91bd8059653384c4d5db882)), closes [#95](https://github.com/shlomiassaf/ngrid/issues/95)
+
+
+
+
 # 2.3.0 (2020-11-01)
 
 
