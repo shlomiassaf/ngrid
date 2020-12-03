@@ -14,9 +14,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Declare Branch
+        run: |
+          echo -e "\033[31;1;4mRunning On Branch: ${{ github.event.inputs.branch || 'master' }}\033[0m"
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.inputs.branch || 'master' }}"
+          ref: ${{ github.event.inputs.branch || 'master' }}
       - uses: actions/setup-node@v1
         with:
           node-version: 14
@@ -28,7 +31,7 @@ jobs:
             ${{ runner.os }}-node-
       - run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
-      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/v3/ --deploy-url /ngrid/v3/
+      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/ --deploy-url /ngrid/
       - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ngrid-docs-app:server:production --bundleDependencies all
       - run: npm run compile:server
       - run: node dist/server
