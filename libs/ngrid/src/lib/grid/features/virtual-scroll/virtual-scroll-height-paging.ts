@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { PblCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 
 /* Height limits
@@ -17,7 +18,9 @@ export class VirtualScrollHightPaging {
   page: number;
   afterToEnd = false;
 
-  private active = false;
+  active = false;
+
+  activeChanged = new Subject<void>();
 
   constructor(private viewport: PblCdkVirtualScrollViewportComponent) {
     const onContentScrolled = viewport.pblScrollStrategy.onContentScrolled;
@@ -76,8 +79,9 @@ export class VirtualScrollHightPaging {
   }
 
   transformTotalContentSize(totalHeight: number, scrollOffset: number): number {
+    const wasActive = !!this.active;
     if (totalHeight <= MAX_SCROLL_HEIGHT) {
-      this.active = undefined;
+      this.active = false;
     } else if (this.totalHeight !== totalHeight) {
       this.active = true;
       this.totalHeight = totalHeight;
@@ -90,6 +94,13 @@ export class VirtualScrollHightPaging {
       this.afterToEnd = !!this.afterToEnd;
       totalHeight = MAX_SCROLL_HEIGHT;
     }
+    if (wasActive !== this.active) {
+      this.activeChanged.next();
+    }
     return totalHeight;
+  }
+
+  dispose() {
+    this.activeChanged.complete();
   }
 }

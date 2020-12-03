@@ -188,6 +188,11 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     return this.element.scrollWidth;
   }
 
+  /**
+   * When true, the virtual paging feature is enabled because the virtual content size exceed the supported height of the browser so paging is enable.
+   */
+  get virtualPagingActive() { return this.heightPaging?.active ?? false; }
+
   readonly intersection: RowIntersectionTracker;
   readonly element: HTMLElement;
   readonly _minWidth$: Observable<number>;
@@ -261,6 +266,19 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     const { grid } = this;
     if (this.enabled) {
       this.forOf = new PblVirtualScrollForOf<any>(this.extApi, this.ngZone);
+      if (!this.heightPaging.active) {
+        this.forOf.wheelControl.wheelListen();
+      }
+
+      // `wheel` mode does not work well with the workaround to fix height limit, so we disable it when it's on
+      this.heightPaging.activeChanged
+        .subscribe( () => {
+          if (this.heightPaging.active) {
+            this.forOf.wheelControl.wheelUnListen();
+          } else {
+            this.forOf.wheelControl.wheelListen();
+          }
+        });
     }
 
     this.scrolling
@@ -277,6 +295,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   ngOnDestroy(): void {
     this.intersection.destroy();
+    this.heightPaging?.dispose();
     super.ngOnDestroy();
     this.detachViewPort();
     this.offsetChange$.complete();
