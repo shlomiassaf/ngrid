@@ -172,7 +172,7 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
         }
       };
       updateScrollPosition();
-      wheelListen();
+      // wheelListen();
 
       this.viewport
         .scrolling

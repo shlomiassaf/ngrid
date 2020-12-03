@@ -7,7 +7,7 @@ import { PblNgridMetaRowService } from './meta-row.service';
 @Component({
   selector: 'div[pbl-ngrid-fixed-meta-row-container]',
   template: `<div class="pbl-cdk-table" [style.width.px]="_width"></div><div class="pbl-cdk-table" [style.width.px]="_width$ | async"></div>`,
-  host: { // tslint:disable-line:use-host-property-decorator
+  host: { // tslint:disable-line:no-host-metadata-property
     style: 'flex: 0 0 auto; overflow: hidden;',
     '[style.width.px]': '_innerWidth',
   },
@@ -55,7 +55,9 @@ export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
       if (changes.type.isFirstChange) {
         this.metaRows.hzScroll
           .pipe(unrx(this))
-          .subscribe( offset => scrollContainerElement.scrollLeft = offset * dir );
+          .subscribe( offset => {
+            scrollContainerElement.scrollLeft = offset * dir;
+          }, e => console.error(e), () => console.error('COMPLETED') );
 
         this.metaRows.extApi.cdkTable.onRenderRows
           .pipe(unrx(this))

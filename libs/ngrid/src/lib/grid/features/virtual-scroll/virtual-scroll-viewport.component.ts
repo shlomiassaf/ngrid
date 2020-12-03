@@ -26,7 +26,6 @@ import {
   VIRTUAL_SCROLL_STRATEGY,
   ScrollDispatcher,
   CdkVirtualForOf,
-  CdkScrollable,
   ViewportRuler,
 } from '@angular/cdk/scrolling';
 
@@ -41,6 +40,7 @@ import { createScrollWatcherFn } from './scroll-logic/virtual-scroll-watcher';
 import { PblNgridAutoSizeVirtualScrollStrategy } from './strategies/cdk-wrappers/auto-size';
 import { RowIntersectionTracker } from './row-intersection';
 import { resolveScrollStrategy } from './utils';
+import { VirtualScrollHightPaging } from './virtual-scroll-height-paging';
 
 declare module '../../services/config' {
   interface PblNgridConfig {
@@ -193,7 +193,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   readonly _minWidth$: Observable<number>;
 
   private offsetChange$ = new Subject<number>();
-  private offset: number;
+  private offset = 0;
   private isCDPending: boolean;
   private _isScrolling = false;
 
@@ -201,6 +201,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   private grid: PblNgridComponent<any>;
   private forOf?: PblVirtualScrollForOf<any>;
   private _boundingClientRects: PblCdkVirtualScrollViewportComponent['getBoundingClientRects'];
+  private heightPaging: VirtualScrollHightPaging;
 
   constructor(elRef: ElementRef<HTMLElement>,
               private cdr: ChangeDetectorRef,
@@ -235,16 +236,17 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
     this._minWidth$ = this.grid.columnApi.totalColumnWidthChange;
 
-    this.intersection = new RowIntersectionTracker(this.element, !!disableIntersectionObserver);
+    this.intersection = new RowIntersectionTracker(this.element, !!disableIntersectionObserver || true);
   }
 
   ngOnInit(): void {
     this.pblScrollStrategy.attachExtApi(this.extApi);
     if (this.enabled) {
-      super.ngOnInit();
-    } else {
-      CdkScrollable.prototype.ngOnInit.call(this);
+      // Enabling virtual scroll event with browser height limit
+      // Based on: http://jsfiddle.net/SDa2B/263/
+      this.heightPaging = new VirtualScrollHightPaging(this);
     }
+    super.ngOnInit();
 
     // Init the scrolling watcher which track scroll events an emits `scrolling` and `scrollFrameRate` events.
     this.ngZone.runOutsideAngular( () => this.elementScrolled().subscribe(createScrollWatcherFn(this)) );
@@ -273,10 +275,6 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
       });
   }
 
-  reMeasureCurrentRenderedContent() {
-    this.pblScrollStrategy.onContentRendered();
-  }
-
   ngOnDestroy(): void {
     this.intersection.destroy();
     super.ngOnDestroy();
@@ -285,7 +283,46 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
     unrx.kill(this);
   }
 
+  reMeasureCurrentRenderedContent() {
+    this.pblScrollStrategy.onContentRendered();
+  }
+
+  measureScrollOffset(from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number {
+    const scrollOffset = super.measureScrollOffset(from);
+    return (!from || from === 'top') && this.heightPaging ? this.heightPaging.transformScrollOffset(scrollOffset) : scrollOffset;
+  }
+
+  getOffsetToRenderedContentStart(): number | null {
+    const renderedContentStart = super.getOffsetToRenderedContentStart();
+    return this.heightPaging?.transformOffsetToRenderedContentStart(renderedContentStart) ?? renderedContentStart;
+  }
+
+  setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
+    if (this.heightPaging) {
+      offset = this.heightPaging.transformRenderedContentOffset(offset, to);
+    }
+    super.setRenderedContentOffset(offset, to);
+    if (this.enabled) {
+      if (this.offset !== offset) {
+        this.offset = offset;
+        if (!this.isCDPending) {
+          this.isCDPending = true;
+
+          this.ngZone.runOutsideAngular(() => Promise.resolve()
+            .then( () => {
+              this.isCDPending = false;
+              this.offsetChange$.next(this.offset);
+            })
+          );
+        }
+      }
+    }
+  }
+
   setTotalContentSize(size: number) {
+    if (this.heightPaging) {
+      size = this.heightPaging.transformTotalContentSize(size, super.measureScrollOffset());
+    }
     super.setTotalContentSize(size);
 
     // TODO(shlomiassaf)[perf, 3]: run this once... (aggregate all calls within the same animation frame)
@@ -295,16 +332,6 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
       // We must trigger a change detection cycle because the filler div element is updated through bindings
       this.cdr.markForCheck();
     })
-  }
-
-  checkViewportSize() {
-    // TODO: Check for changes in `CdkVirtualScrollViewport` source code, when resizing is handled!
-    // see https://github.com/angular/material2/blob/28fb3abe77c5336e4739c820584ec99c23f1ae38/src/cdk/scrolling/virtual-scroll-viewport.ts#L341
-    const prev = this.getViewportSize();
-    super.checkViewportSize();
-    if (prev !== this.getViewportSize()) {
-      this.updateFiller();
-    }
   }
 
   /** Measure the combined size of all of the rendered items. */
@@ -319,6 +346,16 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
       }
     }
     return this.ngeRenderedContentSize = size;
+  }
+
+  checkViewportSize() {
+    // TODO: Check for changes in `CdkVirtualScrollViewport` source code, when resizing is handled!
+    // see https://github.com/angular/material2/blob/28fb3abe77c5336e4739c820584ec99c23f1ae38/src/cdk/scrolling/virtual-scroll-viewport.ts#L341
+    const prev = this.getViewportSize();
+    super.checkViewportSize();
+    if (prev !== this.getViewportSize()) {
+      this.updateFiller();
+    }
   }
 
   detachViewPort(): void {
@@ -379,25 +416,6 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
   setRenderedRange(range: ListRange) {
     super.setRenderedRange(range);
-  }
-
-  setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
-    super.setRenderedContentOffset(offset, to);
-    if (this.enabled) {
-      if (this.offset !== offset) {
-        this.offset = offset;
-        if (!this.isCDPending) {
-          this.isCDPending = true;
-
-          this.ngZone.runOutsideAngular(() => Promise.resolve()
-            .then( () => {
-              this.isCDPending = false;
-              this.offsetChange$.next(this.offset);
-            })
-          );
-        }
-      }
-    }
   }
 
   getScrollBarThickness(location: 'horizontal' | 'vertical') {
