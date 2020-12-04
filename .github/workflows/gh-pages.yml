@@ -7,6 +7,14 @@ on:
         description: 'Define branch name'
         required: true
         default: 'master'
+      urlSuffix:
+        description: 'URL Suffix to deploy versioned site'
+        required: true
+        default: ''
+      clean:
+        description: 'Clean the context of the existing site'
+        required: true
+        default: 'true'
   release:
     types: [created]
 
@@ -15,6 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Declare Branch
+        env:
+          URL_SUFFIX: ''
         run: |
           echo -e "\033[31;1;4mRunning On Branch: ${{ github.event.inputs.branch || 'master' }}\033[0m"
       - uses: actions/checkout@v2
@@ -31,7 +41,11 @@ jobs:
             ${{ runner.os }}-node-
       - run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
-      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/ --deploy-url /ngrid/
+      - name: Append URL Suffix
+        if: ${{ github.event.inputs.urlSuffix != '' }}
+        env:
+          URL_SUFFIX: ${{ github.event.inputs.urlSuffix }}/
+      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/$URL_SUFFIX --deploy-url /ngrid/$URL_SUFFIX
       - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ngrid-docs-app:server:production --bundleDependencies all
       - run: npm run compile:server
       - run: node dist/server
@@ -42,6 +56,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist/browser
-          CLEAN: true
+          CLEAN: ${{ github.event.inputs.clean == 'true' }}
 
 
