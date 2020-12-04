@@ -33,6 +33,12 @@ jobs:
               projectName: 'ngrid-docs-app'
             };
             const OLD_VERSIONS = {
+              '1': {
+                branch: '1.x.x-(angular-v8)',
+                nodeVer: 12,
+                urlSuffix: 'v1/',
+                projectName: 'ngrid-demo-app'
+              },
               '2': {
                 branch: '2.x.x',
                 nodeVer: 12,
