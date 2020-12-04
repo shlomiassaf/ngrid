@@ -7,10 +7,10 @@ on:
         description: 'Define branch name'
         required: true
         default: 'master'
-      urlSuffix:
-        description: 'URL Suffix to deploy versioned site'
-        required: false
-        default: ''
+      docsVersion:
+        description: 'Docs Major Version'
+        required: true
+        default: '3'
       clean:
         description: 'Clean the context of the existing site'
         required: true
@@ -26,13 +26,26 @@ jobs:
         id: workflowVariables
         with:
           script: |
-            const urlSuffix = '${{ github.event.inputs.urlSuffix }}';
-            const branch = '${{ github.event.inputs.branch}}' || 'master';
-            const nodeVer = branch === '2.x.x' ? 12 : 14;
+            const CURRENT_VERSION = {
+              branch: '${{ github.event.inputs.branch}}' || 'master',
+              nodeVer: 14,
+              urlSuffix: '',
+              projectName: 'ngrid-docs-app'
+            };
+            const OLD_VERSIONS = {
+              '2': {
+                branch: '2.x.x',
+                nodeVer: 12,
+                urlSuffix: 'v2/',
+                projectName: 'ngrid-demo-app'
+              }
+            };
+            const docsVersion = OLD_VERSIONS['${{ github.event.inputs.docsVersion }}'] || CURRENT_VERSION;
             return {
-              urlSuffix: urlSuffix ? (urlSuffix + '/') : '',
-              branch: branch,
-              nodeVer: nodeVer
+              urlSuffix: docsVersion.urlSuffix,
+              branch: docsVersion.branch,
+              nodeVer: docsVersion.nodeVer,
+              projectName: docsVersion.projectName
             };
       - name: Workflow Variables
         env:
@@ -55,7 +68,7 @@ jobs:
       - run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/${{fromJson(steps.workflowVariables.outputs.result).urlSuffix}} --deploy-url /ngrid/${{fromJson(steps.workflowVariables.outputs.result).urlSuffix}}
-      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ngrid-docs-app:server:production --bundleDependencies all
+      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ${{fromJson(steps.workflowVariables.outputs.result).projectName}}:server:production --bundleDependencies all
       - run: npm run compile:server
       - run: node dist/server
       - run: cp dist/browser/index.html dist/browser/404.html
