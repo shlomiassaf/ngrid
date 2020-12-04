@@ -36,16 +36,16 @@ jobs:
             };
       - name: Workflow Variables
         env:
-          WORKFLOW_VARS: ${{ toJson(steps.workflowVariables.outputs.result) }}
+          WORKFLOW_VARS: ${{ steps.workflowVariables.outputs.result }}
         run: |
           echo -e "\033[31;1;4mDumpWorkflow Variables\033[0m"
           echo -e "$WORKFLOW_VARS\n"
       - uses: actions/checkout@v2
         with:
-          ref: ${{ steps.workflowVariables.outputs.result.branch }}
+          ref: ${{ fromJson(steps.workflowVariables.outputs.result).branch }}
       - uses: actions/setup-node@v1
         with:
-          node-version: ${{ steps.workflowVariables.outputs.result.nodeVer }}
+          node-version: ${{ fromJson(steps.workflowVariables.outputs.result).nodeVer }}
       - uses: actions/cache@v1
         with:
           path: ~/.npm
@@ -54,7 +54,7 @@ jobs:
             ${{ runner.os }}-node-
       - run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
-      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/${{steps.workflowVariables.outputs.result.urlSuffix}} --deploy-url /ngrid/${{steps.workflowVariables.outputs.result.urlSuffix}}
+      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/${{fromJson(steps.workflowVariables.outputs.result).urlSuffix}} --deploy-url /ngrid/${{fromJson(steps.workflowVariables.outputs.result).urlSuffix}}
       - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ngrid-docs-app:server:production --bundleDependencies all
       - run: npm run compile:server
       - run: node dist/server
