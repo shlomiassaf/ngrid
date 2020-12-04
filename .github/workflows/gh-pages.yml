@@ -22,17 +22,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Declare Branch
+      - uses: actions/github-script@v3
+        id: workflowVariables
+        with:
+          script: |
+            const urlSuffix = '${{ github.event.inputs.urlSuffix }}';
+            const branch = '${{ github.event.inputs.branch}}' || 'master';
+            const nodeVer = branch === '2.x.x' ? 12 : 14;
+            return {
+              urlSuffix: urlSuffix ? (urlSuffix + '/') || '',
+              branch: branch,
+              nodeVer: nodeVer
+            };
+      - name: Workflow Variables
         env:
-          URL_SUFFIX: ''
+          WORKFLOW_VARS: ${{ toJson(steps.workflowVariables.outputs.result) }}
         run: |
-          echo -e "\033[31;1;4mRunning On Branch: ${{ github.event.inputs.branch || 'master' }}\033[0m"
+          echo -e "\033[31;1;4mDumpWorkflow Variables\033[0m"
+          echo -e "$WORKFLOW_VARS\n"
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.inputs.branch || 'master' }}
+          ref: ${{ steps.workflowVariables.outputs.result.branch }}
       - uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: ${{ steps.workflowVariables.outputs.result.nodeVer }}
       - uses: actions/cache@v1
         with:
           path: ~/.npm
@@ -41,13 +54,7 @@ jobs:
             ${{ runner.os }}-node-
       - run: npm install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
-      - name: Append URL Suffix
-        if: ${{ github.event.inputs.urlSuffix != '' }}
-        env:
-          URL_SUFFIX: ${{ github.event.inputs.urlSuffix }}/
-        run: |
-          echo -e "\033[31;1;4mUsing URL Suffix "$URL_SUFFIX"\033[0m"
-      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/$URL_SUFFIX --deploy-url /ngrid/$URL_SUFFIX
+      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/${{steps.workflowVariables.outputs.result.urlSuffix}} --deploy-url /ngrid/${{steps.workflowVariables.outputs.result.urlSuffix}}
       - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ngrid-docs-app:server:production --bundleDependencies all
       - run: npm run compile:server
       - run: node dist/server
