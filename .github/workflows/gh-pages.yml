@@ -78,6 +78,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist/browser
+          BASE_BRANCH: ${{ fromJson(steps.workflowVariables.outputs.result).branch }}
+          TARGET_FOLDER: ${{fromJson(steps.workflowVariables.outputs.result).urlSuffix}}
           CLEAN: ${{ github.event.inputs.clean == 'true' }}
 
 
