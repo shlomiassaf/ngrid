@@ -30,7 +30,7 @@ jobs:
             const branch = '${{ github.event.inputs.branch}}' || 'master';
             const nodeVer = branch === '2.x.x' ? 12 : 14;
             return {
-              urlSuffix: urlSuffix ? (urlSuffix + '/') || '',
+              urlSuffix: urlSuffix ? (urlSuffix + '/') : '',
               branch: branch,
               nodeVer: nodeVer
             };
