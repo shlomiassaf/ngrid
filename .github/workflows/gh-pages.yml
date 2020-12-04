@@ -9,7 +9,7 @@ on:
         default: 'master'
       urlSuffix:
         description: 'URL Suffix to deploy versioned site'
-        required: true
+        required: false
         default: ''
       clean:
         description: 'Clean the context of the existing site'
