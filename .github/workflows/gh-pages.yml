@@ -45,6 +45,8 @@ jobs:
         if: ${{ github.event.inputs.urlSuffix != '' }}
         env:
           URL_SUFFIX: ${{ github.event.inputs.urlSuffix }}/
+        run: |
+          echo -e "\033[31;1;4mUsing URL Suffix "$URL_SUFFIX"\033[0m"
       - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/$URL_SUFFIX --deploy-url /ngrid/$URL_SUFFIX
       - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ngrid-docs-app:server:production --bundleDependencies all
       - run: npm run compile:server
