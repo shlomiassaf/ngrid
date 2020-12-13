@@ -41,7 +41,7 @@ import { PblDragDrop } from './drag-drop';
 })
 export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> implements OnInit {
 
-  readonly pblDropListRef: PblDropListRef<DRef>;
+  get pblDropListRef(): PblDropListRef<DRef> { return this._dropListRef as any; }
 
   get grid(): PblNgridComponent<T> { return this._gridApi?.grid; }
   set grid(value: PblNgridComponent<T>) { this.updateGrid(value); }
@@ -71,7 +71,11 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
               @Optional() @Inject(CDK_DRAG_CONFIG) config?: DragDropConfig) {
     super(element, dragDrop, changeDetectorRef, _scrollDispatcher, dir, group, config);
 
-    this.pblDropListRef = this._dropListRef as any;
+    if (!(this.pblDropListRef instanceof PblDropListRef)) {
+      throw new Error('Invalid `DropListRef` injection, the ref is not an instance of PblDropListRef')
+    }
+    this.initDropListRef();
+
     // This is a workaround for https://github.com/angular/material2/pull/14153
     // Working around the missing capability for selecting a container element that is not the drop container host.
     this.originalElement = element;
@@ -82,9 +86,6 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   }
 
   ngOnInit(): void {
-    if (!(this.pblDropListRef instanceof PblDropListRef)) {
-      throw new Error('Invalid `DropListRef` injection, the ref is not an instance of PblDropListRef')
-    }
     this._dropListRef.beforeStarted.subscribe( () => this.beforeStarted() );
   }
 
@@ -95,6 +96,14 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
   removeDrag(drag: CdkDrag): void {
     this.removeItem(drag);
   }
+
+  /**
+   * A chance for inheriting implementations to change/modify the drop list ref instance
+   *
+   * We can't do this via a DragDrop service replacement as we might have multiple drop-lists on the same
+   * element which mean they must share the same DragDrop factory...
+   */
+  protected initDropListRef(): void { }
 
   protected beforeStarted(): void {
     if (this.directContainerElement) {

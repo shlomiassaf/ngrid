@@ -54,3 +54,12 @@ export class PblColumnDropListRef<T = any> extends PblDropListRef<PblNgridColumn
     }
   }
 }
+
+export function patchDropListRef<T = any>(dropListRef: PblDropListRef<PblNgridColumnReorderPluginDirective<T>>) {
+  try {
+    Object.setPrototypeOf(dropListRef, PblColumnDropListRef.prototype);
+  } catch (err) {
+    (dropListRef as any)._sortPredicate = PblColumnDropListRef.prototype._sortPredicate;
+    dropListRef._sortItem = PblColumnDropListRef.prototype._sortItem;
+  }
+}
