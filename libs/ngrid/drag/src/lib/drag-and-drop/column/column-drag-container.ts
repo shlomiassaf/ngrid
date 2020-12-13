@@ -5,8 +5,8 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DragDrop, CDK_DROP_LIST, CdkDropList } from '@angular/cdk/drag-drop';
 
 import { COLUMN, PblNgridComponent } from '@pebula/ngrid';
-import { CdkLazyDropList } from '../core/index';
-import { PblColumnDragDrop } from './column-drag-drop';
+import { CdkLazyDropList, PblDragDrop } from '../core/index';
+import { patchDropListRef } from './column-drop-list-ref';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -28,7 +28,7 @@ let _uniqueIdCounter = 0;
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
   },
   providers: [
-    { provide: DragDrop, useExisting: PblColumnDragDrop },
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CDK_DROP_LIST, useExisting: PblNgridColumnDragContainerDirective },
   ],
 })
@@ -79,6 +79,10 @@ export class PblNgridColumnDragContainerDirective<T = any> extends CdkLazyDropLi
     this.connectionsChanged.complete();
     this.dragging.complete();
     this._removePlugin(this.grid);
+  }
+
+  protected initDropListRef(): void {
+    patchDropListRef(this.pblDropListRef as any);
   }
 
   protected beforeStarted(): void {

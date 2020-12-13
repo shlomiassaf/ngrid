@@ -4,8 +4,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DragDrop, CdkDragDrop, CDK_DROP_LIST } from '@angular/cdk/drag-drop';
 
 import { PblColumn, COLUMN } from '@pebula/ngrid';
-import { PblDragRef } from '../core/index';
-import { PblColumnDragDrop } from './column-drag-drop';
+import { PblDragDrop, PblDragRef } from '../core/index';
 import { PblNgridColumnDragDirective } from './column-drag';
 import { PblNgridColumnDragContainerDirective } from './column-drag-container';
 
@@ -27,7 +26,7 @@ export const COL_REORDER_PLUGIN_KEY: 'columnReorder' = 'columnReorder';
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
   },
   providers: [
-    { provide: DragDrop, useExisting: PblColumnDragDrop },
+    { provide: DragDrop, useExisting: PblDragDrop },
     { provide: CDK_DROP_LIST, useExisting: PblNgridColumnReorderPluginDirective },
   ],
 })
