@@ -128,3 +128,21 @@ function getOffset(direction: 'start' | 'end', node: Node) {
 
   return direction === 'start' ? rect.top : rect.bottom;
 }
+
+export function calculateBrowserPxLimit() {
+  try {
+    const div = document.createElement('div');
+    div.style.position = 'absolute';
+    div.style.top = '9999999999999999px';
+    document.body.appendChild(div);
+
+    const size = Math.abs(div.getBoundingClientRect().top) * 0.85;
+    document.body.removeChild(div);
+    // We return 85% of the limit, rounded down to the closes million.
+    // E.G: if the limit is 33,554,428 then 85% is 28,521,263.8 which is rounded down to 28,000,000
+    return size - (size % 1000000)
+  } catch (err) {
+    // TODO: Either return null, or return a value based on the browser implementation which we might get as a param.
+    return 10000000;
+  }
+}

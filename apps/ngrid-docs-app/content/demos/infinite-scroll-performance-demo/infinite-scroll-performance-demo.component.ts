@@ -128,21 +128,25 @@ export class InfiniteScrollPerformanceDemoExample {
         initialVirtualSize: 100,
       })
       .withCacheOptions('sequenceBlocks')
-      .setCustomTriggers('filter')
       .onTrigger( event => {
         if (event.isInitial) {
           return this.datasource.getCountries()
             .then( c => COUNTRY_GETTER.data = c )
             .then( () => this.client.getCustomers({ pagination: { itemsPerPage: 100, page: 1 } }))
             .then( resp => {
-              this.ds.updateVirtualSize(resp.pagination.totalItems);
-              event.updateTotalLength(resp.pagination.totalItems);
+              console.log('Init Infinite Request!');
+              this.ds.updateVirtualSize(3000000); //resp.pagination.totalItems);
+              event.updateTotalLength(3000000); //resp.pagination.totalItems);
               return resp.items;
             });
         } else {
           const p1 = Math.floor(event.fromRow / 100) + 1;
           console.log(`Infinite Request - Page: ${p1} | Items: 100 `);
-          return this.client.getCustomers({ pagination: { itemsPerPage: 100, page: p1 } }).then( resp => resp.items );
+          return this.client.getCustomers({ pagination: { itemsPerPage: 100, page: 1 } })
+            .then( resp => {
+              return resp.items.map( item => Object.assign(Object.create(item), { id: item.id + ((p1-1) * 100) }));
+            } );
+          // return this.client.getCustomers({ pagination: { itemsPerPage: 100, page: p1 } }).then( resp => resp.items );
         }
       })
       .create();
