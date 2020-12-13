@@ -10,7 +10,7 @@ import { TriggerExecutionQueue } from './trigger-execution-queue';
 import { CacheBlock } from './caching';
 import { EventState } from './event-state';
 
-// const LOG = msg => { console.log(msg); }
+// const LOG = msg => console.log(msg) ;
 
 declare module '@pebula/ngrid/lib/data-source/data-source-adapter.types' {
   interface PblDataSourceTriggerChangedEventSource {
@@ -53,15 +53,18 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
     }
 
     if (this.pendingTrigger$) {
+      // LOG(`HAS pendingTrigger$`);
       const pendingTrigger$ = this.pendingTrigger$;
       this.pendingTrigger$ = undefined;
       if (rawEvent.data.changed && (rawEvent.data.curr as any) === pendingTrigger$) {
+        // LOG(`PENDING - MATCHED!`);
+        this.currentSessionToken = undefined;
         return pendingTrigger$
           .pipe(
             finalize(() => {
               // LOG(`PENDING - RESULT DONE`);
               this.deferSyncRows(16, () => this.tickVirtualLoading(-1));
-              this.currentSessionToken = undefined;
+
             }));
       }
     }
@@ -155,6 +158,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
       // stop, we don't want to check anything cause we already know we are missing items.
       // since we know we're missing items, we also know we're going to call the same range again which
       // did not return anyway, so it is useless and in the worst case might cause infinite loop
+      // LOG(`RENDER DATA SKIPPING DUE TO SKIP NEXT RENDER!`);
       return;
     }
     if (!this.currentSessionToken) {
@@ -165,7 +169,7 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
           if (this.currentSessionToken === t) {
             this.ds.refresh(t as any);
           }
-        }, 16);
+        }, 0);
       }
     } else {
       // LOG(`RENDER DATA WITH SESSION FROM ROW ${this.ds.renderStart}`);
@@ -257,10 +261,13 @@ export class PblInfiniteScrollDSContext<T, TData = any> {
           if (this.pendingTrigger$) {
             this.tickVirtualLoading(-1);
           }
+          // LOG('SCROLL DONE - HAS RESULT - HAS PENDING');
           this.ds.refresh(this.pendingTrigger$ = result as any);
         } else if (!this.pendingTrigger$) {
+          // LOG('SCROLL DONE = NO RESULT - NOT HAS PENDING');
           this.ds.refresh(this.pendingTrigger$ = of(this.ds.source) as any);
         } else {
+          // LOG('SCROLL DONE = NO RESULT - HAS PENDING');
           this.tickVirtualLoading(-1);
         }
       });
