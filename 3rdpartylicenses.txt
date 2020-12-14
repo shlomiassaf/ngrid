@@ -249,6 +249,8 @@ MIT
 
 @pebula/ngrid/clipboard
 
+@pebula/ngrid/core
+
 @pebula/ngrid/detail-row
 
 @pebula/ngrid/drag
