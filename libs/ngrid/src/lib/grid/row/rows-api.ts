@@ -1,4 +1,5 @@
 import { NgZone } from '@angular/core';
+import { ON_INVALIDATE_HEADERS } from '@pebula/ngrid/core';
 import { PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { RowIntersectionTracker } from '../features/virtual-scroll/row-intersection';
 import { PblCdkTableComponent } from '../pbl-cdk-table/pbl-cdk-table.component';
@@ -129,13 +130,35 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
     });
 
     extApi.events
+      .pipe(ON_INVALIDATE_HEADERS)
       .subscribe( event => {
-        if (event.kind === 'onInvalidateHeaders') {
-          const dataRows = this.dataRows();
-          for (const row of dataRows) {
-            row._rebuildCells();
+        const dataRows = this.dataRows();
+        for (const row of dataRows) {
+          row._rebuildCells();
+        }
+        // TODO: reset viewport and virtual scroll state/cache/calculations
+      });
+
+    // Handle item moves to update the context with the new index
+    extApi.events
+      .subscribe(event => {
+        if (event.kind === 'onBeforeMoveItem') {
+          try {
+            const { fromIndex, toIndex } = event;
+            const main = extApi.grid.rowsApi.findDataRowByDsIndex(fromIndex);
+            if (fromIndex < toIndex) {
+              for (let i = fromIndex + 1; i <= toIndex; i++) {
+                extApi.grid.rowsApi.findDataRowByDsIndex(i).context.dsIndex -= 1;
+              }
+            } else {
+              for (let i = fromIndex - 1; i >= toIndex; i--) {
+                extApi.grid.rowsApi.findDataRowByDsIndex(i).context.dsIndex += 1;
+              }
+            }
+            main.context.dsIndex = toIndex;
+          } catch (err) {
+
           }
-          // TODO: reset viewport and virtual scroll state/cache/calculations
         }
       });
   }

@@ -1,5 +1,4 @@
 import { Observable, Subject } from 'rxjs';
-
 import {
   Attribute,
   ChangeDetectionStrategy,
@@ -7,7 +6,6 @@ import {
   Component,
   Inject,
   ElementRef,
-  EmbeddedViewRef,
   IterableDiffers,
   OnDestroy,
   Optional,
@@ -15,12 +13,12 @@ import {
   Injector,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-
 import { Platform } from '@angular/cdk/platform';
 import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } from '@angular/cdk/collections';
 import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef, RowContext, CDK_TABLE, _COALESCED_STYLE_SCHEDULER, _CoalescedStyleScheduler, RenderRow } from '@angular/cdk/table';
 import { Directionality } from '@angular/cdk/bidi';
 
+import { ON_BEFORE_INVALIDATE_HEADERS } from '@pebula/ngrid/core';
 import { PblNgridComponent } from '../ngrid.component';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridColumnDef } from '../column/directives/column-def';
@@ -101,18 +99,18 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     extApi.setCdkTable(this);
     this.trackBy = this.grid.trackBy;
 
-    extApi.events.subscribe( e => {
-      if (e.kind === 'beforeInvalidateHeaders') {
-        if (this._lastSticky) {
-          this._lastSticky.queryCellElements('header', 'table', 'footer')
-            .forEach( el => el.classList.remove('pbl-ngrid-sticky-start'));
-          this._lastSticky = undefined;
-        }
-        if (this._lastStickyEnd) {
-          this._lastStickyEnd.queryCellElements('header', 'table', 'footer')
-            .forEach( el => el.classList.remove('pbl-ngrid-sticky-end'));
-          this._lastStickyEnd = undefined;
-        }
+    extApi.events
+      .pipe(ON_BEFORE_INVALIDATE_HEADERS)
+      .subscribe( e => {
+      if (this._lastSticky) {
+        this._lastSticky.queryCellElements('header', 'table', 'footer')
+          .forEach( el => el.classList.remove('pbl-ngrid-sticky-start'));
+        this._lastSticky = undefined;
+      }
+      if (this._lastStickyEnd) {
+        this._lastStickyEnd.queryCellElements('header', 'table', 'footer')
+          .forEach( el => el.classList.remove('pbl-ngrid-sticky-end'));
+        this._lastStickyEnd = undefined;
       }
     });
   }

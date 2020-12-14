@@ -3,6 +3,7 @@ import { filter, take } from 'rxjs/operators';
 import { ChangeDetectorRef, ElementRef, Injector, IterableDiffers, NgZone, ViewContainerRef } from '@angular/core';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 
+import { PblNgridEvents, ON_DESTROY, ON_CONSTRUCTED } from '@pebula/ngrid/core';
 import { PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { ColumnApi, PblColumnStore } from './column/management';
 import { PblNgridComponent } from './ngrid.component';
@@ -13,8 +14,7 @@ import { DynamicColumnWidthLogic, DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY } fro
 import { ContextApi } from './context/api';
 import { PblNgridMetaRowService } from './meta-rows/meta-row.service';
 import { PblNgridPluginContext } from '../ext/plugin-control';
-import { OnPropChangedEvent, OnPropChangedProperties, PblNgridEvents } from '../ext/types';
-import { bindToDataSource } from './bind-to-datasource';
+import { OnPropChangedEvent } from '../ext/types';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblNgridConfigService } from './services/config';
 
@@ -76,13 +76,8 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     this.columnApi = ColumnApi.create<T>(this);
     this.metaRowService = new PblNgridMetaRowService(this);
     this._contextApi = new ContextApi<T>(this);
-    bindToDataSource(this);
 
-    this.events.subscribe( e => {
-      if (e.kind === 'onDestroy') {
-        this._propChanged.complete();
-      }
-    });
+    this.events.pipe(ON_DESTROY).subscribe( e => this._propChanged.complete() );
   }
 
   getDirection() {
@@ -97,7 +92,7 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     if (!this._create) {
       of(false);
     } else {
-      this.events.pipe(filter(e => e.kind === 'onConstructed'), take(1)).subscribe(fn);
+      this.events.pipe(ON_CONSTRUCTED).subscribe(fn);
     }
   }
 
@@ -109,7 +104,7 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     this._cdkTable = cdkTable;
     const globalCreateEvent = this._create;
     delete this._create;
-    this.plugin.emitEvent({ kind: 'onConstructed' });
+    this.plugin.emitEvent({ source: 'grid', kind: 'onConstructed' });
     globalCreateEvent();
   }
 

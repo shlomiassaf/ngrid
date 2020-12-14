@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs';
 import { Component, Input, ElementRef, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { ON_RESIZE_ROW } from '@pebula/ngrid/core';
 
 import { unrx } from '../utils';
 import { PblNgridMetaRowService } from './meta-row.service';
@@ -35,12 +36,8 @@ export class PblNgridMetaRowContainerComponent implements OnChanges, OnDestroy {
     metaRows.sync.pipe(unrx(this)).subscribe( () => this.syncRowDefinitions() );
 
     this.metaRows.extApi.events
-      .pipe(unrx(this))
-      .subscribe( event => {
-        if (event.kind === 'onResizeRow') {
-          this.updateWidths();
-        }
-      });
+      .pipe(ON_RESIZE_ROW, unrx(this))
+      .subscribe( event => this.updateWidths() );
 
     this.metaRows.extApi.grid.columnApi.totalColumnWidthChange
       .pipe(unrx(this))

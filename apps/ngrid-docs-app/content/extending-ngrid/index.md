@@ -330,10 +330,10 @@ Copy to clipboard is a basic feature, how would we enable it on all grids?
 The answer is using the grid created event, which fires every time a new grid instance is created.
 
 ```typescript
-import { first, filter } from 'rxjs/operators';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { ON_INIT } from '@pebula/ngrid/core';
 import { PblNgridModule, PblNgridConfigService, PblNgridPluginController } from '@pebula/ngrid';
 import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 
@@ -350,13 +350,8 @@ export class PblNgridClipboardPluginModule {
       .subscribe( event => {
         const pluginCtrl = event.controller;
         pluginCtrl.events
-          .pipe(
-            filter( e => e.kind === 'onInit' ),
-            first(),
-          )
-          .subscribe( e => {
-            pluginCtrl.ensurePlugin(PLUGIN_KEY);
-          });
+          .pipe(ON_INIT)
+          .subscribe( e => pluginCtrl.ensurePlugin(PLUGIN_KEY) );
       });
   }
 }
@@ -420,13 +415,8 @@ export class PblNgridClipboardPluginModule {
         if (config && config.autoEnable === true) { // checking the toggle state of the autoEnable feature
           const pluginCtrl = event.controller;
           pluginCtrl.events
-            .pipe(
-              filter( e => e.kind === 'onInit' ),
-              first(),
-            )
-            .subscribe( e => {
-              pluginCtrl.ensurePlugin(PLUGIN_KEY);
-            });
+            .pipe(ON_INIT)
+            .subscribe( e => pluginCtrl.ensurePlugin(PLUGIN_KEY) );
         }
       });
   }

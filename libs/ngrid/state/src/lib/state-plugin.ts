@@ -1,7 +1,8 @@
-import { Subject, Observable, from } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { map, mapTo, filter, take, skip, debounceTime } from 'rxjs/operators';
 import { Directive, OnDestroy, Injector, Input } from '@angular/core';
 
+import { ON_INVALIDATE_HEADERS, ON_RESIZE_ROW, ON_DESTROY } from '@pebula/ngrid/core';
 import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 import { hasState, saveState, loadState, PblNgridStateLoadOptions, PblNgridStateSaveOptions } from './core/index';
 
@@ -60,10 +61,7 @@ export class PblNgridStatePlugin {
     this.onError = this._events.pipe(filter( e => !!e.error ), map( e => ({ phase: e.phase, error: e.error })) );
 
     pluginCtrl.events
-      .pipe(
-        filter( e => e.kind === 'onInvalidateHeaders'),
-        take(1),
-      )
+      .pipe(ON_INVALIDATE_HEADERS, take(1))
       .subscribe( event => {
         const initialLoadOptions = { ...(this.loadOptions || {}), avoidRedraw: true };
         hasState(grid, initialLoadOptions)
@@ -74,21 +72,16 @@ export class PblNgridStatePlugin {
           })
           .then( () => {
             pluginCtrl.events
-            .pipe(
-              filter( e => e.kind === 'onResizeRow'),
-              skip(1),
-              debounceTime(500),
-            )
-            .subscribe( event => this.save() );
+              .pipe(ON_RESIZE_ROW, skip(1), debounceTime(500))
+              .subscribe( event => this.save() );
           });
       });
 
     pluginCtrl.events
+      .pipe(ON_DESTROY)
       .subscribe( event => {
-        if (event.kind === 'onDestroy') {
-          event.wait(this.save());
-          this._events.complete();
-        }
+        event.wait(this.save());
+        this._events.complete();
       });
   }
 

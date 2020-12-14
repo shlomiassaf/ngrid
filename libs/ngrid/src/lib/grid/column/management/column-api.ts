@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
+import { ON_RESIZE_ROW } from '@pebula/ngrid/core';
 import { PblNgridExtensionApi } from '../../../ext/grid-ext-api';
 import { PblNgridComponent } from '../../ngrid.component';
 import { PblColumn, isPblColumn } from '../model/column';
@@ -33,7 +34,7 @@ export class ColumnApi<T> {
     if (!this._totalColumnWidthChange) {
       this._totalColumnWidthChange = this.extApi.events
         .pipe(
-          filter(event => event.kind === 'onResizeRow'),
+          ON_RESIZE_ROW,
           map( e => this.grid.columnApi.visibleColumns.reduce( (p, c) => p + c.sizeInfo.width, 0 ) ),
         );
     }

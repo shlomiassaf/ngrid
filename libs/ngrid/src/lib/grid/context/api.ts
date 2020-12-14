@@ -1,8 +1,8 @@
 import { BehaviorSubject, Subject, Observable, asapScheduler } from 'rxjs';
 import { debounceTime, buffer, map, filter, take } from 'rxjs/operators';
-
 import { ViewContainerRef } from '@angular/core';
 
+import { ON_DESTROY } from '@pebula/ngrid//core';
 import { PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblColumn } from '../column/model';
 import { ColumnApi } from '../column/management';
@@ -83,9 +83,7 @@ export class ContextApi<T = any> {
         extApi.cdkTable.onRenderRows.subscribe(() => this.syncViewAndContext());
       });
 
-    extApi.events
-      .pipe(filter( e => e.kind === 'onDestroy' ))
-      .subscribe( e => this.destroy() );
+    extApi.events.pipe(ON_DESTROY).subscribe( e => this.destroy() );
   }
 
   /**

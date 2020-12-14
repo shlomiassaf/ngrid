@@ -63,23 +63,6 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkLazyDropList<
 
       const previousIndex = this.grid.ds.source.indexOf(item.draggedContext.row);
       const currentIndex = event.currentIndex + this.grid.ds.renderStart;
-
-      try {
-        const main = this.grid.rowsApi.findDataRowByDsIndex(previousIndex);
-        if (previousIndex < currentIndex) {
-          for (let i = previousIndex + 1; i <= currentIndex; i++) {
-            this.grid.rowsApi.findDataRowByDsIndex(i).context.dsIndex -= 1;
-          }
-        } else {
-          for (let i = previousIndex - 1; i >= currentIndex; i--) {
-            this.grid.rowsApi.findDataRowByDsIndex(i).context.dsIndex += 1;
-          }
-        }
-        main.context.dsIndex = currentIndex;
-      } catch (err) {
-
-      }
-
       this.grid.ds.moveItem(previousIndex, currentIndex, true);
       this.grid.rowsApi.syncRows('data');
     });

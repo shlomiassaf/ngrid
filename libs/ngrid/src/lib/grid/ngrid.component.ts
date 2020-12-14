@@ -31,7 +31,7 @@ import { unrx } from './utils';
 import { EXT_API_TOKEN, PblNgridExtensionApi, PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
 import { PblNgridPaginatorKind } from '../paginator';
-import { DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS } from '../data-source/index';
+import { DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS, PblNgridOnDataSourceEvent } from '../data-source/index';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { resetColumnWidths } from './utils';
 import { PblColumn, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './column/model';
@@ -376,7 +376,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     this.invalidateColumns();
 
     Object.defineProperty(this, 'isInit', { value: true });
-    this._plugin.emitEvent({ kind: 'onInit' });
+    this._plugin.emitEvent({ source: 'grid', kind: 'onInit' });
 
     this.setupPaginator();
     this.listenToResize();
@@ -419,7 +419,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     };
 
     let p: Promise<void>;
-    this._plugin.emitEvent({ kind: 'onDestroy', wait: (_p: Promise<void>) => p = _p });
+    this._plugin.emitEvent({ source: 'grid', kind: 'onDestroy', wait: (_p: Promise<void>) => p = _p });
     if (p) {
       p.then(destroy).catch(destroy);
     } else {
@@ -525,11 +525,17 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       this.setupPaginator();
       this.setupNoData(false);
 
+      if (prev?.hostGrid === this) {
+        prev._detachGrid();
+      }
+
+      this._dataSource._attachGrid(this._plugin);
       this._plugin.emitEvent({
+        source: 'ds',
         kind: 'onDataSource',
         prev,
         curr: value
-      });
+      } as PblNgridOnDataSourceEvent);
 
       // clear the context, new datasource
       this._extApi.contextApi.clear();
@@ -616,7 +622,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    * Invalidates the header, including a full rebuild of column headers
    */
   invalidateColumns(): void {
-    this._plugin.emitEvent({ kind: 'beforeInvalidateHeaders' });
+    this._plugin.emitEvent({ source: 'grid', kind: 'beforeInvalidateHeaders' });
 
     this._extApi.contextApi.clear();
     this._store.invalidate(this.columns);
@@ -636,7 +642,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
     // Each row will rebuild it's own cells.
     // This will be done in the RowsApi, which listens to `onInvalidateHeaders`
-    this._plugin.emitEvent({ kind: 'onInvalidateHeaders' });
+    this._plugin.emitEvent({ source: 'grid', kind: 'onInvalidateHeaders' });
   }
 
   /**
@@ -710,7 +716,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
     this.ngZone.run( () => {
       this.rowsApi.syncRows('header');
-      this._plugin.emitEvent({ kind: 'onResizeRow' });
+      this._plugin.emitEvent({ source: 'grid', kind: 'onResizeRow' });
     });
   }
 

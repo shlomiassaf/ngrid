@@ -1,5 +1,4 @@
 import { isPblColumn, isPblMetaColumn, isPblColumnGroup, unrx, getRootElement } from './lib/grid/index';
-import './lib/grid/bind-to-datasource'; // LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD.
 
 export {
   PblNgridPaginatorKind,
@@ -62,15 +61,7 @@ export {
   CellReference, GridDataPoint,
 } from './lib/grid/index';
 
-export {
-  PblNgridPlugin,
-  PblNgridPluginExtension,
-  PblNgridOnInitEvent,
-  PblNgridOnResizeRowEvent,
-  PblNgridOnInvalidateHeadersEvent,
-  PblNgridOnDataSourceEvent,
-  PblNgridEvents,
- } from './lib/ext/types';
+export { PblNgridPlugin, PblNgridPluginExtension } from './lib/ext/types';
 
 export { EXT_API_TOKEN, PblNgridExtensionApi } from './lib/ext/grid-ext-api';
 export { ngridPlugin, NgridPluginMetadata } from './lib/ext/grid-plugin';
