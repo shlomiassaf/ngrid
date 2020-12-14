@@ -13,9 +13,8 @@
                 style="height: 100%; width: 100%;"
                 [dataSource]="ds" [columns]="columns"
                 vScrollAuto maxBufferPx="100" minBufferPx="50" [wheelMode]="wheelMode"
-                showHeader showFooter
+                showHeader
                 [hideColumns]="hideColumns"
-                rowReorder
                 columnReorder
                 blockUi
                 matSort
@@ -25,6 +24,8 @@
       <div *pblNgridCellTypeDef="'accountBalance'; let ctx; value as value; col as col; row as row"
             [ngridCellClass]="value < 0 ? col.type.data.pbl : col.type.data.pos">{{ value | currency:col.type.data.meta.currency(row):'symbol':col.type.data.format }}</div>
       <div *pblNgridCellTypeDef="'flagAndCountry'; col as col; row as row">{{ col.type.data.flagAndCountry(row) }}</div>
+
+      <div *pblNgridFooterCellDef="'footerPageInfo';"> Showing {{ ds.renderStart | number }} to {{ ds.renderStart + ds.renderLength | number }} out of {{ ds.length | number }}</div>
 
       <pbl-ngrid-row in *pblNgridInfiniteVirtualRowDef="let row;" class="pbl-ngrid-infinite-virtual-row" infiniteRow>
          <mat-spinner diameter="24"></mat-spinner>

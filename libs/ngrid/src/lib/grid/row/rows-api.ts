@@ -16,6 +16,7 @@ export interface RowsApi<T = any> {
   syncRows(rowType: 'header' | 'data' | 'footer', ...rows: number[]): void;
 
   findDataRowByIndex(index: number): PblNgridRowComponent<T> | undefined;
+  findDataRowByDsIndex(index: number): PblNgridRowComponent<T> | undefined;
   findDataRowByIdentity(identity: string): PblNgridRowComponent<T> | undefined;
 }
 
