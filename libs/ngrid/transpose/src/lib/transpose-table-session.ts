@@ -1,6 +1,7 @@
 import { Observable, isObservable, of as obsOf, from as obsFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
+import { ON_INVALIDATE_HEADERS } from '@pebula/ngrid/core';
 import {
   PblNgridColumnDefinitionSet,
   PblNgridComponent,
@@ -53,8 +54,8 @@ export class TransposeTableSession {
     this.headerRow = this.grid.showHeader;
     this.grid.showHeader = false;
     this.pluginCtrl.events
-      .pipe(utils.unrx(this, this.grid))
-      .subscribe( e => e.kind === 'onInvalidateHeaders' && this.onInvalidateHeaders() );
+      .pipe(ON_INVALIDATE_HEADERS, utils.unrx(this, this.grid))
+      .subscribe( e => this.onInvalidateHeaders() );
 
     this.pluginCtrl.events
       .pipe(utils.unrx(this, this.grid))

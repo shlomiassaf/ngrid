@@ -1,13 +1,13 @@
 import { Observable, of, Subject } from 'rxjs';
-import { filter, take, mapTo } from 'rxjs/operators';
+import { mapTo } from 'rxjs/operators';
 import { InjectFlags, Injector } from '@angular/core';
 
+import { PblNgridEvents, ON_INIT } from '@pebula/ngrid/core';
 import { PblNgridComponent } from '../grid/ngrid.component';
 import {
   PblNgridPlugin,
   PblNgridPluginExtension,
   PblNgridPluginExtensionFactories,
-  PblNgridEvents,
 } from './types';
 import { PblNgridExtensionApi } from './grid-ext-api';
 import { PLUGIN_STORE } from './grid-plugin';
@@ -17,8 +17,6 @@ const NGRID_PLUGIN_CONTEXT = new WeakMap<PblNgridComponent<any>, PblNgridPluginC
 const CREATED$ = new Subject<{ table: PblNgridComponent<any>, controller: PblNgridPluginController<any> }>();
 
 const REGISTERED_TO_CREATE = new WeakSet<any>();
-
-const ON_INIT_PIPE = (o: Observable<PblNgridEvents>) => o.pipe(filter( e => e.kind === 'onInit' ), take(1));
 
 /** @internal */
 export class PblNgridPluginContext<T = any> {
@@ -118,7 +116,7 @@ export class PblNgridPluginController<T = any> {
    * In other words, if you get false, it means you called this method when the grid was already initialized.
    */
   onInit() {
-    return this.grid.isInit ? of(false) : this.events.pipe(ON_INIT_PIPE, mapTo(true));
+    return this.grid.isInit ? of(false) : this.events.pipe(ON_INIT, mapTo(true));
   }
 
   hasPlugin<P extends keyof PblNgridPluginExtension>(name: P): boolean {

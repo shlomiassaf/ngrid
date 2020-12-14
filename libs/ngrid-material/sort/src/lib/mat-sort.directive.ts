@@ -1,6 +1,7 @@
 import { Directive, OnDestroy } from '@angular/core';
 import { Sort, MatSort, MatSortHeader, SortDirection } from '@angular/material/sort';
 
+import { ON_INVALIDATE_HEADERS } from '@pebula/ngrid/core';
 import { PblNgridComponent, PblNgridPluginController, PblNgridSortDefinition, PblDataSource, utils } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
@@ -54,17 +55,20 @@ export class PblNgridMatSortDirective implements OnDestroy {
     }
 
     pluginCtrl.events
+      .pipe(ON_INVALIDATE_HEADERS)
       .subscribe( e => {
-        if (e.kind === 'onInvalidateHeaders') {
-          const hasActiveSort = this.sort && this.sort.active;
-          if (table.ds && table.ds.sort) {
-            if (!table.ds.sort.column && hasActiveSort) {
-              this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' }, origin);
-            } else if (table.ds.sort.column && !hasActiveSort) {
-              setTimeout(() => handleDataSourceSortChange(table.ds.sort));
-            }
+        const hasActiveSort = this.sort && this.sort.active;
+        if (table.ds && table.ds.sort) {
+          if (!table.ds.sort.column && hasActiveSort) {
+            this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' }, origin);
+          } else if (table.ds.sort.column && !hasActiveSort) {
+            setTimeout(() => handleDataSourceSortChange(table.ds.sort));
           }
         }
+      });
+
+    pluginCtrl.events
+      .subscribe( e => {
         if (e.kind === 'onDataSource') {
           utils.unrx.kill(this, e.prev);
           if (this.sort && this.sort.active) {

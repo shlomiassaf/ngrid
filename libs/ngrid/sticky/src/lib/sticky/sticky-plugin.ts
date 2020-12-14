@@ -1,6 +1,6 @@
-import { filter } from 'rxjs/operators';
 import { Directive, Input, IterableDiffers, IterableDiffer, IterableChangeRecord, OnDestroy } from '@angular/core';
 
+import { ON_INVALIDATE_HEADERS, ON_RESIZE_ROW } from '@pebula/ngrid/core';
 import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
 
@@ -160,7 +160,7 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
     pluginCtrl.events
-      .pipe(filter( e => e.kind === 'onResizeRow'))
+      .pipe(ON_RESIZE_ROW)
       .subscribe( () => {
         const cdkTable = pluginCtrl.extApi.cdkTable;
         cdkTable.updateStickyHeaderRowStyles();
@@ -169,7 +169,7 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
       });
 
       pluginCtrl.events
-        .pipe(filter ( e => e.kind === 'onInvalidateHeaders' ))
+        .pipe(ON_INVALIDATE_HEADERS)
         .subscribe( () => {
           if (this._startDiffer && this.grid.isInit) {
             this._startDiffer.diff([]);

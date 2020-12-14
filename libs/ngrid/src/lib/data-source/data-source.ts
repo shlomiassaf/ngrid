@@ -5,8 +5,10 @@ import { SelectionModel, CollectionViewer, ListRange } from '@angular/cdk/collec
 import { DataSource } from '@angular/cdk/table';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 
+import { PblNgridPluginContext } from '../ext/plugin-control';
 import { unrx } from '../grid/utils';
 import { PblColumn } from '../grid/column/model';
+import { PblNgridComponent } from '../grid/ngrid.component';
 import { PblNgridPaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPaginator } from '../paginator';
 import { DataSourcePredicate, DataSourceFilter, DataSourceFilterToken, PblNgridSortDefinition, PblNgridDataSourceSortChange } from './types';
 import { createFilter } from './filtering';
@@ -158,6 +160,8 @@ export class PblDataSource<T = any,
   /** Represents selected items on the data source. */
   get selection(): SelectionModel<T> { return this._selection; }
 
+  get hostGrid(): PblNgridComponent<T> { return this._gridContext?.grid; }
+
   protected readonly _selection = new SelectionModel<T>(true, []);
   protected readonly _tableConnectionChange$ = new Subject<boolean>();
   protected readonly _onRenderDataChanging = new Subject<{ event: PblDataSourceTriggerChangedEvent<TData>, data: T[] }>();
@@ -176,6 +180,7 @@ export class PblDataSource<T = any,
   private _lastRefresh: TData;
   private _lastRange: ListRange;
   private _lastAdapterEvent: PblDataSourceAdapterProcessedResult<T, TData>;
+  private _gridContext: PblNgridPluginContext;
 
   constructor(adapter: TDataSourceAdapter, options?: PblDataSourceOptions) {
     super();
@@ -322,6 +327,7 @@ export class PblDataSource<T = any,
     }
 
     if (this.length > 0) {
+      this._gridContext.emitEvent({ source: 'ds', kind: 'onBeforeMoveItem', fromIndex, toIndex });
       moveItemInArray(this._source, fromIndex, toIndex)
       const data = this._lastRange
         ? this._source.slice(this._lastRange.start, this._lastRange.end)
@@ -329,6 +335,14 @@ export class PblDataSource<T = any,
       ;
       this._renderData$.next(data);
     }
+  }
+
+  _attachGrid(context: PblNgridPluginContext): void {
+    this._gridContext = context;
+  }
+
+  _detachGrid(): void {
+    this._gridContext = undefined;
   }
 
   private _updateProcessingLogic(cv: CollectionViewer): void {

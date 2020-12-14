@@ -1,7 +1,7 @@
-import { filter, take } from 'rxjs/operators';
 import { Injector, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 
-import { PblColumn, PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
+import { ON_DESTROY } from '@pebula/ngrid/core';
+import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
 import { PblNgridInfiniteVirtualRowRefDirective } from './infinite-virtual-row/directives';
 import { PblInfiniteScrollDataSource } from './infinite-scroll-data-source/infinite-scroll-datasource';
@@ -56,6 +56,15 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
         }
       });
 
+    pluginCtrl.events
+      .pipe(ON_DESTROY)
+      .subscribe(() => {
+        if (this._infiniteVirtualRowRef) {
+          this._infiniteVirtualRowRef.destroy();
+        }
+        this._removePlugin(this.grid);
+      });
+
     pluginCtrl.events.subscribe( event => {
       if (event.kind === 'onDataSource') {
         const prevState = this._enabled;
@@ -64,11 +73,6 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
         if (this._enabled !== prevState) {
           pluginCtrl.onInit().subscribe( () => this.updateTable() );
         }
-      } else if (event.kind === 'onDestroy') {
-        if (this._infiniteVirtualRowRef) {
-          this._infiniteVirtualRowRef.destroy();
-        }
-        this._removePlugin(this.grid);
       }
     });
   }
@@ -98,7 +102,6 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
   }
 
   private resetTableRowDefs(): void {
-    const grid = this.grid;
     if (this._infiniteVirtualRowDef) {
       this._enabled === false
         ? this.pluginCtrl.extApi.cdkTable.removeRowDef(this._infiniteVirtualRowDef)
