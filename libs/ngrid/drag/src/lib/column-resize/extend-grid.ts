@@ -7,7 +7,7 @@ declare module '@pebula/ngrid/lib/grid/column/model/column' {
 }
 
 
-declare module '@pebula/ngrid/lib/grid/column/model/types' {
+declare module '@pebula/ngrid/core/lib/models/column' {
   interface PblColumnDefinition {
     resize?: boolean;
   }

@@ -12,7 +12,7 @@ import { EventState } from './event-state';
 
 // const LOG = msg => console.log(msg) ;
 
-declare module '@pebula/ngrid/lib/data-source/data-source-adapter.types' {
+declare module '@pebula/ngrid/core/lib/data-source/data-source-adapter.types' {
   interface PblDataSourceTriggerChangedEventSource {
    /**
     * The source of the event was from a scroll that reached into a group of rows that the grid needs to fetch.

@@ -31,7 +31,7 @@ declare module '@pebula/ngrid/lib/grid/column/model/group-column' {
   }
 }
 
-declare module '@pebula/ngrid/lib/grid/column/model/types' {
+declare module '@pebula/ngrid/core/lib/models/column' {
   interface PblColumnDefinition {
     reorder?: boolean;
     /**

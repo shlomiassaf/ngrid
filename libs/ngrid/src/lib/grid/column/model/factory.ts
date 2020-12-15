@@ -4,9 +4,9 @@ import {
   PblColumnGroupDefinition,
   PblMetaColumnDefinition,
   PblNgridColumnDefinitionSet,
-  PblNgridColumnSet,
   PblMetaRowDefinitions
-} from './types';
+} from '@pebula/ngrid/core';
+import { PblNgridColumnSet } from './types';
 import { PblMetaColumn } from './meta-column';
 import { PblColumn } from './column';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';

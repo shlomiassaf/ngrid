@@ -1,5 +1,4 @@
 import { Observable, of, Subject, EMPTY } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
 import { ChangeDetectorRef, ElementRef, Injector, IterableDiffers, NgZone, ViewContainerRef } from '@angular/core';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 
@@ -17,6 +16,7 @@ import { PblNgridPluginContext } from '../ext/plugin-control';
 import { OnPropChangedEvent } from '../ext/types';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblNgridConfigService } from './services/config';
+import { bindGridToDataSource } from './bind-grid-to-datasource';
 
 export interface RequiredAngularTokens {
   ngZone: NgZone;
@@ -76,6 +76,8 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     this.columnApi = ColumnApi.create<T>(this);
     this.metaRowService = new PblNgridMetaRowService(this);
     this._contextApi = new ContextApi<T>(this);
+
+    bindGridToDataSource(this);
 
     this.events.pipe(ON_DESTROY).subscribe( e => this._propChanged.complete() );
   }

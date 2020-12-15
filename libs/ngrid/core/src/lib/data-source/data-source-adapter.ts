@@ -1,8 +1,7 @@
 import { Observable, Subject, combineLatest, of, from, isObservable, asapScheduler } from 'rxjs';
 import { filter, map, switchMap, tap, debounceTime, observeOn } from 'rxjs/operators';
 
-import { PblPaginator, PblPaginatorChangeEvent } from '@pebula/ngrid/core';
-
+import { PblPaginator, PblPaginatorChangeEvent } from '../paginator/types';
 import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
 import { filter as filteringFn } from './filtering';
 import { applySort } from './sorting';

@@ -1,24 +1,35 @@
-// Some symbols in `@pebula/ngrid/core` are also used by "regular" users of ngrid (as opposed to internal/plugin use) so we need to re-export them
-// from the main package so "regular" user will not have to specifically address `@pebula/ngrid/core`
-export {
-  PblNgridPaginatorKind, PblPaginator, PblPaginatorChangeEvent,
-
-
-} from '@pebula/ngrid/core';
-
+/* LEAVE THIS, WE NEED IT SO THE AUGMENTATION IN THE FILE WILL LOAD. */
+import './lib/grid/bind-grid-to-datasource';
 import { isPblColumn, isPblMetaColumn, isPblColumnGroup } from './lib/grid/index';
 
+/* Some symbols in `@pebula/ngrid/core` are also used by "regular" users of ngrid (as opposed to internal/plugin use) so we need to re-export them
+   from the main package so "regular" user will not have to specifically address `@pebula/ngrid/core` */
 export {
+  // Pagination
+  PblNgridPaginatorKind, PblPaginator, PblPaginatorChangeEvent,
+
+  // Data Source
   PblDataSourceConfigurableTriggers,
   PblDataSourceTriggers,
   PblDataSourceTriggerChange, PblDataSourceTriggerChangedEvent, PblDataSourceTriggerChangedEventSource, PblDataSourceTriggerChangeHandler,
   PblDataSourceAdapter,
   PblDataSource, PblDataSourceOptions,
-  PblNgridSortInstructions, PblNgridSortDefinition, PblNgridSorter, applySort, PblNgridSortOrder,
-  PblDataSourceBaseFactory, PblDataSourceFactory, createDS, DataSourceOf,
+  PblNgridSortInstructions, PblNgridSortDefinition, PblNgridSorter, PblNgridSortOrder,
+  PblDataSourceBaseFactory, PblDataSourceFactory, DataSourceOf,
   DataSourceFilterToken, DataSourcePredicate, DataSourceColumnPredicate,
   PblDataSourceAdapterProcessedResult,
-} from './lib/data-source/index';
+  createDS, applySort,
+
+  // Models: Column
+  PblColumnTypeDefinitionDataMap,
+  PblColumnTypeDefinition,
+  PblColumnDefinition,
+  PblMetaColumnDefinition,
+  PblColumnGroupDefinition,
+  PblColumnSet,
+  PblMetaRowDefinitions,
+  PblNgridColumnDefinitionSet,
+} from '@pebula/ngrid/core';
 
 export {
   PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService,
@@ -42,12 +53,7 @@ export {
   PblNgridFooterCellDefDirective,
   PblNgridCellStyling,
   PblNgridNoDataRefDirective,
-  PblColumnTypeDefinition, PblColumnTypeDefinitionDataMap,
-  PblColumnDefinition,
-  PblMetaColumnDefinition,
-  PblColumnGroupDefinition,
-  PblColumnSet, PblMetaRowDefinitions,
-  PblNgridColumnSet, PblNgridColumnDefinitionSet,
+  PblNgridColumnSet,
 
   DISABLE_INTERSECTION_OBSERVABLE,
   PblNgridVirtualScrollStrategy, PblNgridBaseVirtualScrollDirective,

@@ -1,8 +1,8 @@
 import { TemplateRef } from '@angular/core';
+import { PblMetaColumnDefinition, PblColumnTypeDefinition } from '@pebula/ngrid/core';
 
 import { PblNgridColumnDef } from '../directives/column-def';
 import { PblNgridMetaCellContext } from '../../context/types';
-import { PblMetaColumnDefinition, PblColumnTypeDefinition } from './types';
 import { parseStyleWidth, initDefinitions } from './utils';
 
 const PBL_NGRID_META_COLUMN_MARK = Symbol('PblMetaColumn');

@@ -5,9 +5,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import { PblNgridRegistryService } from '@pebula/ngrid/core';
-
-import { PblColumnTypeDefinitionDataMap } from '../../column/model';
+import { PblColumnTypeDefinitionDataMap, PblNgridRegistryService } from '@pebula/ngrid/core';
 import { PblNgridCellDefDirectiveBase } from './types';
 
 @Directive()

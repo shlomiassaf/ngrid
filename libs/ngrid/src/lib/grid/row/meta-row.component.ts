@@ -12,11 +12,12 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { CdkHeaderRow } from '@angular/cdk/table';
+import { PblMetaRowDefinitions } from '@pebula/ngrid/core';
 
 import { PblNgridComponent } from '../ngrid.component';
 import { PblNgridMetaCellComponent } from '../cell/meta-cell.component';
 import { PblNgridBaseRowComponent, PBL_NGRID_BASE_ROW_TEMPLATE } from './base-row.component';
-import { PblColumnGroup, PblMetaColumn, PblMetaRowDefinitions } from '../column/model';
+import { PblColumnGroup, PblMetaColumn } from '../column/model';
 import { PblNgridMetaRowService, PblMetaRow } from '../meta-rows/meta-row.service';
 import { PblColumnStoreMetaRow } from '../column/management';
 import { applyMetaRowClass, initColumnOrMetaRow } from './utils';

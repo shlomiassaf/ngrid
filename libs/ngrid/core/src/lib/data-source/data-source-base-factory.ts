@@ -1,4 +1,4 @@
-import { PblDataSource, DataSourceOf, PblDataSourceOptions } from './data-source';
+import { PblDataSource, PblDataSourceOptions } from './data-source';
 import { PblDataSourceAdapter } from './data-source-adapter';
 import {
   PblDataSourceConfigurableTriggers,

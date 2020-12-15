@@ -1,10 +1,14 @@
 import { TemplateRef } from '@angular/core';
+import {
+  DataSourceColumnPredicate, PblNgridSorter,
+  PblColumnDefinition, PblColumnTypeDefinition,
+  getValue, deepPathSet,
+} from '@pebula/ngrid/core';
 
 import { PblNgridMetaCellContext, PblNgridCellContext } from '../../context/types';
-import { DataSourceColumnPredicate, PblNgridSorter } from '../../../data-source/types';
 import { PblNgridColumnDef } from '../directives/column-def';
-import { PblColumnDefinition, PblColumnTypeDefinition, PblColumnSizeInfo } from './types';
-import { initDefinitions, parseStyleWidth, deepPathGet, deepPathSet } from './utils';
+import { PblColumnSizeInfo } from './types';
+import { initDefinitions, parseStyleWidth } from './utils';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 
 const PBL_NGRID_COLUMN_MARK = Symbol('PblColumn');
@@ -282,19 +286,12 @@ export class PblColumn implements PblColumnDefinition {
   /**
    * Get the value this column points to in the provided row
    */
-  getValue<T = any>(row: any): T {
-    if (this.transform) {
-      return this.transform(deepPathGet(row, this), row, this);
-    }
-    return deepPathGet(row, this);
-  }
+  getValue<T = any>(row: any): T { return getValue(this, row); }
 
   /**
    * Set a value in the provided row where this column points to
    */
-  setValue(row: any, value: any): void {
-    return deepPathSet(row, this, value);
-  }
+  setValue(row: any, value: any): void { return deepPathSet(row, this, value); }
 
   /**
    * Mark's that this column belong to the provided group.

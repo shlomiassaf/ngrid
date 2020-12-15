@@ -1,4 +1,4 @@
-import { PblPaginatorChangeEvent } from '@pebula/ngrid/core';
+import { PblPaginatorChangeEvent } from '../paginator/types';
 import { DataSourceOf } from './data-source';
 import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
 
@@ -6,7 +6,7 @@ import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
 export type RefreshDataWrapper<T> = { data: T };
 
 /**
- * Data source event triggers map with triggers that the user can opt in a custom behaviour.
+ * Data source event triggers map with triggers that the user can opt in a custom behavior.
  * The properties represent the trigger name/key and the value represent the event input in it's raw form.
  */
 export interface PblDataSourceConfigurableTriggers {

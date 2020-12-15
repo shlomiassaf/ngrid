@@ -5,10 +5,12 @@ import { SelectionModel, CollectionViewer, ListRange } from '@angular/cdk/collec
 import { DataSource } from '@angular/cdk/table';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 
-import { PblNgridPaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPaginator, unrx } from '@pebula/ngrid/core';
-import { PblNgridPluginContext } from '../ext/plugin-control';
-import { PblColumn } from '../grid/column/model';
-import { PblNgridComponent } from '../grid/ngrid.component';
+import { unrx } from '../utils/unrx';
+import { PblNgridPaginatorKind, PblPaginator } from '../paginator/types'
+import { PblPagingPaginator } from '../paginator/paging-paginator'
+import { PblTokenPaginator } from '../paginator/token-paginator'
+import { PblNgridEventEmitter } from '../events/events';
+import { PblColumnDefinition } from '../models/column';
 import { DataSourcePredicate, DataSourceFilter, DataSourceFilterToken, PblNgridSortDefinition, PblNgridDataSourceSortChange } from './types';
 import { createFilter } from './filtering';
 import { PblDataSourceAdapter } from './data-source-adapter';
@@ -159,8 +161,6 @@ export class PblDataSource<T = any,
   /** Represents selected items on the data source. */
   get selection(): SelectionModel<T> { return this._selection; }
 
-  get hostGrid(): PblNgridComponent<T> { return this._gridContext?.grid; }
-
   protected readonly _selection = new SelectionModel<T>(true, []);
   protected readonly _tableConnectionChange$ = new Subject<boolean>();
   protected readonly _onRenderDataChanging = new Subject<{ event: PblDataSourceTriggerChangedEvent<TData>, data: T[] }>();
@@ -179,7 +179,7 @@ export class PblDataSource<T = any,
   private _lastRefresh: TData;
   private _lastRange: ListRange;
   private _lastAdapterEvent: PblDataSourceAdapterProcessedResult<T, TData>;
-  private _gridContext: PblNgridPluginContext;
+  private _eventEmitter: PblNgridEventEmitter;
 
   constructor(adapter: TDataSourceAdapter, options?: PblDataSourceOptions) {
     super();
@@ -226,15 +226,15 @@ export class PblDataSource<T = any,
    * This means that any column specific filter, set in the column definitions is ignored, if you want to take these filters into consideration
    * use the column instance provided to identify and use these filters (the `filter` property in `PblColumn`).
    */
-  setFilter(value: DataSourcePredicate, columns?: PblColumn[]): void;
+  setFilter(value: DataSourcePredicate, columns?: PblColumnDefinition[]): void;
   /**
    * Set the filter definition for the current data set using a value to compare with and a list of columns with the values to compare to.
    *
    * When a column instance has a specific predicate set (`PblColumn.filter`) then it will be used, otherwise
    * the `genericColumnPredicate` will be used.
    */
-  setFilter(value: any, columns: PblColumn[]): void;
-  setFilter(value?: DataSourceFilterToken, columns?: PblColumn[]): void {
+  setFilter(value: any, columns: PblColumnDefinition[]): void;
+  setFilter(value?: DataSourceFilterToken, columns?: PblColumnDefinition[]): void {
     if (value && typeof value !== 'function' && (!columns || columns.length === 0)) {
       throw new Error('Invalid filter definitions, columns are mandatory when using a single value input.');
     }
@@ -271,8 +271,8 @@ export class PblDataSource<T = any,
    * @param skipUpdate When true will not update the datasource, use this when the data comes sorted and you want to sync the definitions with the current data set.
    * default to false.
    */
-  setSort(column: PblColumn, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
-  setSort(column?: PblColumn | boolean, sort?: PblNgridSortDefinition, skipUpdate = false): void {
+  setSort(column: PblColumnDefinition, sort: PblNgridSortDefinition, skipUpdate?: boolean): void;
+  setSort(column?: PblColumnDefinition | boolean, sort?: PblNgridSortDefinition, skipUpdate = false): void {
     if (!column || typeof column === 'boolean') {
       this._sort$.next({ column: null, sort: {}, skipUpdate: !!column });
     } else {
@@ -326,7 +326,7 @@ export class PblDataSource<T = any,
     }
 
     if (this.length > 0) {
-      this._gridContext.emitEvent({ source: 'ds', kind: 'onBeforeMoveItem', fromIndex, toIndex });
+      this._eventEmitter.emitEvent({ source: 'ds', kind: 'onBeforeMoveItem', fromIndex, toIndex });
       moveItemInArray(this._source, fromIndex, toIndex)
       const data = this._lastRange
         ? this._source.slice(this._lastRange.start, this._lastRange.end)
@@ -336,12 +336,12 @@ export class PblDataSource<T = any,
     }
   }
 
-  _attachGrid(context: PblNgridPluginContext): void {
-    this._gridContext = context;
+  _attachEmitter(emitter: PblNgridEventEmitter): void {
+    this._eventEmitter = emitter;
   }
 
-  _detachGrid(): void {
-    this._gridContext = undefined;
+  _detachEmitter(): void {
+    this._eventEmitter = undefined;
   }
 
   private _updateProcessingLogic(cv: CollectionViewer): void {

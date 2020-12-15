@@ -3,16 +3,14 @@ import { filter, startWith, pairwise, take, takeUntil, map, debounceTime } from 
 
 import { NgZone, ViewContainerRef } from '@angular/core';
 import { CollectionViewer, ListRange } from '@angular/cdk/collections';
+import { PblDataSource } from '@pebula/ngrid/core';
 
 import { PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
 import { PblNgridComponent } from '../../ngrid.component';
-import { PblDataSource } from '../../../data-source/data-source';
 import { PblCdkTableComponent } from '../../pbl-cdk-table/pbl-cdk-table.component';
 import { PblCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import { splitRange, updateStickyRows, measureRangeSize } from './utils';
 import { MetaRowStickyScroll } from './meta-row-sticky-scroll';
-
-const FIXED_HEADER_MODE = true;
 
 function sortByIndex(a: { index: number }, b: { index: number }) { return a.index - b.index };
 

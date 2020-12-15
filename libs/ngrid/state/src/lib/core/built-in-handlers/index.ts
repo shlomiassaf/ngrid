@@ -1,14 +1,16 @@
 import {
-  PblNgridComponent,
-  PblMetaColumnDefinition, PblMetaColumn,
-  PblColumnGroupDefinition, PblColumnGroup,
-  PblColumnDefinition, PblColumn,
+  PblMetaColumnDefinition,
+  PblColumnGroupDefinition,
+  PblColumnDefinition,
   PblMetaRowDefinitions,
   PblColumnSet,
   PblNgridColumnDefinitionSet,
+} from '@pebula/ngrid/core';
+import {
+  PblMetaColumn, PblColumn, PblColumnGroup,
+  PblNgridComponent,
   ColumnApi,
 } from '@pebula/ngrid';
-
 import { PblNgridGlobalState, StateChunkItem } from '../models/index';
 import * as C from './column-def/index';
 import { PblNgridSurfaceState } from './grid-primitives/index';

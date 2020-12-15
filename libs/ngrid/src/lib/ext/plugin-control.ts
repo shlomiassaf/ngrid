@@ -2,7 +2,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
 import { InjectFlags, Injector } from '@angular/core';
 
-import { PblNgridEvents, ON_INIT } from '@pebula/ngrid/core';
+import { PblNgridEvents, ON_INIT, PblNgridEventEmitter } from '@pebula/ngrid/core';
 import { PblNgridComponent } from '../grid/ngrid.component';
 import {
   PblNgridPlugin,
@@ -19,7 +19,7 @@ const CREATED$ = new Subject<{ table: PblNgridComponent<any>, controller: PblNgr
 const REGISTERED_TO_CREATE = new WeakSet<any>();
 
 /** @internal */
-export class PblNgridPluginContext<T = any> {
+export class PblNgridPluginContext<T = any> implements PblNgridEventEmitter {
 
   // workaround, we need a parameter-less constructor since @ngtools/webpack@8.0.4
   // Non @Injectable classes are now getting addded with hard reference to the ctor params which at the class creation point are undefined
