@@ -14,13 +14,13 @@ import {
   EmbeddedViewRef,
   Inject,
 } from '@angular/core';
-import { unrx } from '@pebula/ngrid/core';
+import { unrx, PblNgridMultiRegistryMap } from '@pebula/ngrid/core';
 
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridComponent } from '../ngrid.component';
-import { COLUMN, PblMetaColumn, PblColumn, PblColumnGroup, isPblColumn, isPblColumnGroup } from '../column/model';
+import { COLUMN, PblMetaColumn, PblColumn } from '../column/model';
 import { MetaCellContext, PblNgridMetaCellContext } from '../context/index';
-import { PblNgridMultiRegistryMap, PblNgridDataHeaderExtensionContext, PblNgridMultiComponentRegistry, PblNgridMultiTemplateRegistry } from '../registry';
+import { PblNgridDataHeaderExtensionContext, PblNgridMultiComponentRegistry, PblNgridMultiTemplateRegistry } from '../registry';
 import { PblNgridColumnDef, WidthChangeEvent } from '../column/directives/column-def';
 import { applySourceWidth, applyWidth, initCellElement } from './utils';
 import { PblNgridBaseCell } from './base-cell';

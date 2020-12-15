@@ -1,5 +1,6 @@
 import { Directive, TemplateRef, Input } from '@angular/core';
-import { PblNgridComponent, PblNgridMultiTemplateRegistry, PblNgridRegistryService } from '@pebula/ngrid';
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
+import { PblNgridComponent, PblNgridMultiTemplateRegistry } from '@pebula/ngrid';
 import { PblNgridOverlayPanelRef } from './overlay-panel-ref';
 
 export interface PblNgridOverlayPanelContext<T = any> {

@@ -13,7 +13,7 @@ import {
 } from '../model';
 import { StaticColumnWidthLogic } from '../width-logic/static-column-width';
 import { resetColumnWidths } from '../../utils/width';
-import { PblColumnStoreMetaRow, PblMetaColumnStore, PblRowColumnsChangeEvent, PblRowTypeToColumnTypeMap } from './types';
+import { PblMetaColumnStore, PblRowColumnsChangeEvent, PblRowTypeToColumnTypeMap } from './types';
 import { HiddenColumns } from './hidden-columns';
 import { GridRowType } from '../../row/types';
 import { PblNgridBaseRowComponent } from '../../row/base-row.component';

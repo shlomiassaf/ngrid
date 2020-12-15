@@ -1,12 +1,7 @@
 import { Subject, Observable } from 'rxjs';
-import {
-  Injectable,
-  Optional,
-  SkipSelf,
-  OnDestroy,
-} from '@angular/core';
-import { unrx } from '@pebula/ngrid/core';
+import { Injectable, Optional, SkipSelf, OnDestroy } from '@angular/core';
 
+import { unrx } from '../utils/unrx';
 import {
   PblNgridMultiRegistryMap,
   PblNgridSingleRegistryMap,
@@ -45,9 +40,9 @@ export class PblNgridRegistryService implements OnDestroy {
 
   protected root: PblNgridRegistryService & { bufferedData?: RegistryChangedEvent[] };
 
-  protected _multi: { [K in keyof PblNgridMultiRegistryMap]: Array<PblNgridMultiRegistryMap[K]> } = {};
-  protected _multiDefaults: PblNgridMultiRegistryMap = {};
-  protected _singles: PblNgridSingleRegistryMap = {};
+  protected _multi: { [K in keyof PblNgridMultiRegistryMap]: Array<PblNgridMultiRegistryMap[K]> } = { } as any;
+  protected _multiDefaults: PblNgridMultiRegistryMap = {}  as any;
+  protected _singles: PblNgridSingleRegistryMap = {}  as any;
 
   protected readonly changes$: Subject<RegistryChangedEvent[]>;
 

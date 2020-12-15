@@ -8,7 +8,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { PblNgridModule, PblNgridRegistryService } from '@pebula/ngrid';
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
+import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridDragModule } from '@pebula/ngrid/drag';
 import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';

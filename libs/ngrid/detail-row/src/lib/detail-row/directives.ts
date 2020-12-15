@@ -7,11 +7,11 @@ import {
   TemplateRef,
   Input,
 } from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
 
-import { PblNgridRegistryService, PblNgridSingleTemplateRegistry, PblNgridRowContext, PblNgridRowDef } from '@pebula/ngrid';
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
+import { PblNgridSingleTemplateRegistry, PblNgridRowContext, PblNgridRowDef } from '@pebula/ngrid';
 
-declare module '@pebula/ngrid/lib/grid/registry/types' {
+declare module '@pebula/ngrid/core/lib/registry/types' {
   interface PblNgridSingleRegistryMap {
     detailRowParent?: PblNgridDetailRowParentRefDirective<any>;
     detailRow?: PblNgridDetailRowDefDirective;

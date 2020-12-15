@@ -1,8 +1,8 @@
 // tslint:disable:use-input-property-decorator
 import { Directive, TemplateRef } from '@angular/core';
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
 
 import { PblNgridMetaCellContext } from '../../context/index';
-import { PblNgridRegistryService } from '../../registry/registry.service';
 import { PblNgridBaseCellDef } from './base-cell-def.directive';
 
 /**
@@ -40,7 +40,7 @@ export class PblNgridHeaderCellDefDirective<T> extends PblNgridBaseCellDef<PblNg
   }
 }
 
-declare module '../../registry/types' {
+declare module '@pebula/ngrid/core/lib/registry/types' {
   interface PblNgridMultiRegistryMap {
     headerCell?: PblNgridHeaderCellDefDirective<any>;
   }

@@ -1,7 +1,7 @@
 import { Directive, TemplateRef } from '@angular/core';
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
 
 import { PblNgridComponent } from '../../ngrid.component';
-import { PblNgridRegistryService } from '../registry.service';
 import { PblNgridSingleTemplateRegistry } from './single-template.directives';
 
 /**
@@ -22,7 +22,7 @@ export class PblNgridNoDataRefDirective extends PblNgridSingleTemplateRegistry<{
   constructor(tRef: TemplateRef<{ $implicit: PblNgridComponent<any> }>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
 
-declare module '../types' {
+declare module '@pebula/ngrid/core/lib/registry/types' {
   interface PblNgridSingleRegistryMap {
     noData?: PblNgridNoDataRefDirective;
   }
