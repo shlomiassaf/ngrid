@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, ComponentRef, Attribute, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { CdkHeaderRow } from '@angular/cdk/table';
-import { unrx } from '@pebula/ngrid/core';
+import { PblMetaRowDefinitions, unrx } from '@pebula/ngrid/core';
 
 import { PblNgridComponent } from '../ngrid.component';
 import { PblNgridBaseRowComponent, PBL_NGRID_BASE_ROW_TEMPLATE } from './base-row.component';
-import { PblColumn, PblMetaRowDefinitions } from '../column/model';
+import { PblColumn } from '../column/model';
 import { PblNgridMetaRowService, PblMetaRow } from '../meta-rows/meta-row.service';
 import { PblNgridHeaderCellComponent } from '../cell/header-cell.component';
 import { applyMetaRowClass, initColumnOrMetaRow, setRowVisibility } from './utils';

@@ -1,12 +1,10 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { unrx } from '@pebula/ngrid/core';
+import { PblColumnDefinition, PblNgridColumnDefinitionSet, unrx } from '@pebula/ngrid/core';
 import {
   columnFactory,
   PblNgridConfigService,
-  PblColumnDefinition,
-  PblNgridColumnDefinitionSet,
   PblNgridComponent,
   PblNgridPluginController,
   PblColumn,

@@ -1,9 +1,8 @@
 import { Observable, isObservable, of as obsOf, from as obsFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { ON_INVALIDATE_HEADERS, unrx } from '@pebula/ngrid/core';
+import { PblNgridColumnDefinitionSet, ON_INVALIDATE_HEADERS, unrx } from '@pebula/ngrid/core';
 import {
-  PblNgridColumnDefinitionSet,
   PblNgridComponent,
   PblNgridPluginController,
   PblDataSource,

@@ -1,8 +1,9 @@
 import { Observable } from 'rxjs';
 import { RowContext } from '@angular/cdk/table';
+import { PblColumnTypeDefinitionDataMap } from '@pebula/ngrid/core';
 
 import { PblNgridComponent } from '../ngrid.component';
-import { PblColumnTypeDefinitionDataMap, PblMetaColumn, PblColumn } from '../column/model';
+import { PblMetaColumn, PblColumn } from '../column/model';
 import { PblRowContext } from './row';
 
 export interface RowContextState<T = any> {

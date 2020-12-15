@@ -1,7 +1,7 @@
-import { PblNgridEvent } from '@pebula/ngrid/core';
+import { PblNgridEvent } from '../events/ngrid-events';
 import { PblDataSource } from './data-source';
 
-declare module '@pebula/ngrid/core/lib/events/ngrid-events' {
+declare module '../events/ngrid-events' {
   export interface PblNgridEventSourceMap {
     ds: true;
   }

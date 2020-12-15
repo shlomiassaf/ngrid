@@ -1,15 +1,13 @@
-import { Subject, Observable, of } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { isDevMode, IterableDiffer, IterableDiffers } from '@angular/core';
+import { PblNgridColumnDefinitionSet, PblColumnSet, PblMetaRowDefinitions } from '@pebula/ngrid/core';
 import { PblNgridComponent } from '../../ngrid.component';
 import { findCellDef } from '../../cell/cell-def/utils';
 import {
   PblColumnFactory,
   PblColumnGroup, PblColumnGroupStore,
   isPblColumn, PblColumn, PblMetaColumn,
-  PblNgridColumnDefinitionSet,
   PblNgridColumnSet,
-  PblColumnSet,
-  PblMetaRowDefinitions,
 } from '../model';
 import { StaticColumnWidthLogic } from '../width-logic/static-column-width';
 import { resetColumnWidths } from '../../utils/width';

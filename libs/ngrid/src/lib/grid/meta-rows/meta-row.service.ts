@@ -1,10 +1,9 @@
 import { animationFrameScheduler, Observable, Subject, asapScheduler } from 'rxjs';
 import { auditTime, filter, take, debounceTime } from 'rxjs/operators';
-
 import { Injectable, Inject } from '@angular/core';
+import { PblMetaRowDefinitions } from '@pebula/ngrid/core';
 
 import { PblNgridExtensionApi, EXT_API_TOKEN } from '../../ext/grid-ext-api';
-import { PblMetaRowDefinitions } from '../column/model/types';
 
 function metaRowSectionFactory(): MetaRowSection {
   return { fixed: [], row: [], sticky: [], all: [] };

@@ -2,3 +2,5 @@ export * from './lib/events/index';
 export * from './lib/paginator/index';
 export * from './lib/registry/index';
 export * from './lib/utils/index';
+export * from './lib/models/column';
+export * from './lib/data-source/index';

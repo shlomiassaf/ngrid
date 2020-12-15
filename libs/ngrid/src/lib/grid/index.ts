@@ -5,16 +5,7 @@ export {
   PblNgridColumnDef,
 } from './column/directives';
 export {
-  PblColumnTypeDefinition, PblColumnTypeDefinitionDataMap,
-  PblBaseColumnDefinition,
-  PblMetaColumnDefinition,
-  PblColumnDefinition,
-  PblColumnGroupDefinition,
-  PblColumnSet, PblMetaRowDefinitions,
-  PblNgridColumnSet, PblNgridColumnDefinitionSet,
-
-  META_COLUMN_TYPES,
-  COLUMN_TYPES,
+  PblNgridColumnSet,
 
   PblMetaColumn,
   PblColumn,

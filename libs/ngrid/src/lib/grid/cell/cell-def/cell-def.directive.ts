@@ -1,8 +1,7 @@
 // tslint:disable:use-input-property-decorator
 import { Directive, TemplateRef } from '@angular/core';
-import { PblNgridRegistryService } from '@pebula/ngrid/core';
+import { PblColumnTypeDefinitionDataMap, PblNgridRegistryService } from '@pebula/ngrid/core';
 
-import { PblColumnTypeDefinitionDataMap } from '../../column/model';
 import { PblNgridCellContext } from '../../context/index';
 import { PblNgridBaseCellDef } from './base-cell-def.directive';
 

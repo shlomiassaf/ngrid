@@ -1,5 +1,5 @@
 import { CdkColumnDef } from '@angular/cdk/table';
-import { PblColumnTypeDefinition } from '../column/model';
+import { PblColumnTypeDefinition } from '@pebula/ngrid/core';
 
 const COLUMN_NAME_CSS_PREFIX = 'pbl-ngrid-column';
 

@@ -1,7 +1,8 @@
-import { PblColumn } from '../grid/column/model';
+import { PblColumnDefinition } from '../models/column';
+import { getValue } from '../utils/column';
 import { DataSourceFilter, DataSourceFilterToken, DataSourcePredicate, DataSourceColumnPredicate } from './types';
 
-export function createFilter(value: DataSourceFilterToken, columns: PblColumn[]): DataSourceFilter {
+export function createFilter(value: DataSourceFilterToken, columns: PblColumnDefinition[]): DataSourceFilter {
   return value === undefined
     ? undefined
     : {
@@ -23,7 +24,7 @@ export function filter<T>(rawData: T[], filter: DataSourceFilter): T[] {
       const value = typeof filter.filter.toLowerCase === 'function' ? filter.filter.toLowerCase() : filter.filter;
       return rawData.filter( row => cols.some( col => {
         const predicate = col.filter || genericColumnPredicate;
-        return predicate(col.filter ? filter.filter : value, col.getValue(row), row, col);
+        return predicate(col.filter ? filter.filter : value, getValue(col, row), row, col);
       }));
     }
   }
@@ -33,6 +34,6 @@ export function filter<T>(rawData: T[], filter: DataSourceFilter): T[] {
 /**
  * A generic column predicate that compares the inclusion (text) of the value in the column value.
  */
-export const genericColumnPredicate: DataSourceColumnPredicate = (filterValue: any, colValue: any, row?: any, col?: PblColumn): boolean => {
+export const genericColumnPredicate: DataSourceColumnPredicate = (filterValue: any, colValue: any, row?: any, col?: PblColumnDefinition): boolean => {
   return colValue && colValue.toString().toLowerCase().includes(filterValue);
 }

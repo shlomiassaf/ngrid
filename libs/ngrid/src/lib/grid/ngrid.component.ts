@@ -27,14 +27,22 @@ import { Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
-import { PblNgridRegistryService, PblNgridPaginatorKind, unrx } from '@pebula/ngrid/core';
+import {
+  PblNgridRegistryService,
+  PblNgridPaginatorKind,
+
+  DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS, PblNgridOnDataSourceEvent,
+
+  PblNgridColumnDefinitionSet,
+
+  unrx,
+} from '@pebula/ngrid/core';
 
 import { EXT_API_TOKEN, PblNgridExtensionApi, PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
-import { DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS, PblNgridOnDataSourceEvent } from '../data-source/index';
 import { resetColumnWidths } from './utils/width';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
-import { PblColumn, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './column/model';
+import { PblColumn, PblNgridColumnSet,  } from './column/model';
 import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column/management';
 import { PblNgridCellContext, PblNgridMetaCellContext, PblNgridContextApi, PblNgridRowContext } from './context/index';
 import { PblNgridConfigService } from './services/config';
@@ -525,10 +533,10 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       this.setupNoData(false);
 
       if (prev?.hostGrid === this) {
-        prev._detachGrid();
+        prev._detachEmitter();
       }
 
-      this._dataSource._attachGrid(this._plugin);
+      this._dataSource._attachEmitter(this._plugin);
       this._plugin.emitEvent({
         source: 'ds',
         kind: 'onDataSource',

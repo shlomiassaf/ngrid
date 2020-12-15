@@ -1,17 +1,18 @@
 import {
+  PblBaseColumnDefinition,
   PblMetaColumnDefinition,
   PblColumnGroupDefinition,
   PblColumnDefinition,
   PblMetaRowDefinitions,
-  PblColumnSet,
   PblNgridColumnDefinitionSet,
- } from '@pebula/ngrid';
+  PblColumnSet,
+ } from '@pebula/ngrid/core';
 
  import { PickPNP } from '../../utils';
 
 export interface PblNgridBaseColumnState extends
-  PickPNP <
-    import('@pebula/ngrid/lib/grid/column/model/types').PblBaseColumnDefinition,
+  PickPNP<
+    PblBaseColumnDefinition,
     'id' | 'label' | 'css' | 'type' | 'width' | 'minWidth' | 'maxWidth',
     never
   > { }
