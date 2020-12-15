@@ -1,3 +1,4 @@
+import { PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
 import { PblNgridComponent } from '../../ngrid.component';
 import { PblColumn } from '../../column/model/column';
 import { PblColumnSizeObserver } from './column-size-observer';
@@ -13,18 +14,18 @@ export class PblNgridColumnSizeObserverGroup {
   private ro: ResizeObserver;
   private columns: PblColumnSizeObserver[] = [];
 
-  constructor(private grid: PblNgridComponent<any>) {
+  constructor(private extApi: PblNgridInternalExtensionApi) {
     this.entries = new WeakMap<any, PblColumnSizeObserver>();
     this.ro = new ResizeObserver( entries => {
       requestAnimationFrame(() => this.onResize(entries) );
     });
   }
 
-  static get(table: PblNgridComponent<any>): PblNgridColumnSizeObserverGroup {
-    let controller = PBL_NGRID_MAP.get(table);
+  static get(extApi: PblNgridInternalExtensionApi): PblNgridColumnSizeObserverGroup {
+    let controller = PBL_NGRID_MAP.get(extApi.grid);
     if (!controller) {
-      controller = new PblNgridColumnSizeObserverGroup(table);
-      PBL_NGRID_MAP.set(table, controller);
+      controller = new PblNgridColumnSizeObserverGroup(extApi);
+      PBL_NGRID_MAP.set(extApi.grid, controller);
     }
     return controller;
   }
@@ -52,7 +53,7 @@ export class PblNgridColumnSizeObserverGroup {
     }
     if (this.columns.length === 0) {
       this.ro.disconnect();
-      PBL_NGRID_MAP.delete(this.grid);
+      PBL_NGRID_MAP.delete(this.extApi.grid);
     }
   }
 
@@ -71,7 +72,7 @@ export class PblNgridColumnSizeObserverGroup {
         c.updateSize();
       }
       if (!isDragging) {
-        this.grid.resizeColumns(this.columns.map( c => c.column ));
+        this.extApi.widthCalc.calcColumnWidth(this.columns.map( c => c.column ));
       }
     }
   }

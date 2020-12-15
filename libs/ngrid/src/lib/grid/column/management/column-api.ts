@@ -164,7 +164,7 @@ export class ColumnApi<T> {
    * For each visible column in the table, resize the width to a proportional width relative to the total width provided.
    */
   autoSizeToFit(totalWidth: number, options: AutoSizeToFitOptions = {}): void {
-    const wLogic = this.extApi.dynamicColumnWidthFactory();
+    const wLogic = this.extApi.widthCalc.dynamicColumnWidth;
     const { visibleColumns } = this;
     const columnBehavior: AutoSizeToFitOptions['columnBehavior'] = options.columnBehavior || ( () => options ) as any;
 
@@ -230,8 +230,8 @@ export class ColumnApi<T> {
     }
     // we now reset the column widths, this will calculate a new `defaultWidth` and set it in all columns but the relevant ones are column from (3)
     // It will also mark all columnDefs for check
-    this.grid.resetColumnsWidth();
-    this.grid.resizeColumns();
+    this.extApi.widthCalc.resetColumnsWidth();
+    this.extApi.widthCalc.calcColumnWidth();
   }
 
   /**

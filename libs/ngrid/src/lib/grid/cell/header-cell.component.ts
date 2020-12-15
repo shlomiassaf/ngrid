@@ -82,7 +82,7 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
       predicate = event => (!gridWidthRow && event.reason !== 'update') || (gridWidthRow && event.reason !== 'resize');
       view = !gridWidthRow ? this.initMainHeaderColumnView(column) : undefined;
       if (gridWidthRow && !this.resizeObserver) {
-        this.resizeObserver = new PblColumnSizeObserver(this.el, this.extApi.grid);
+        this.resizeObserver = new PblColumnSizeObserver(this.el, this.extApi);
       }
 
       this.columnDef.widthChange

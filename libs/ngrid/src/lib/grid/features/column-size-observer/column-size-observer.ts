@@ -1,4 +1,4 @@
-import { PblNgridComponent } from '../../ngrid.component';
+import { PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
 import { ColumnSizeInfo } from '../../column/model/column-size-info';
 import { PblColumn } from '../../column/model/column';
 import { PblNgridColumnSizeObserverGroup } from './column-size-observer-group';
@@ -17,9 +17,9 @@ import { PblNgridColumnSizeObserverGroup } from './column-size-observer-group';
 export class PblColumnSizeObserver extends ColumnSizeInfo {
   private controller: PblNgridColumnSizeObserverGroup;
 
-  constructor(element: HTMLElement, grid: PblNgridComponent<any>) {
+  constructor(element: HTMLElement, extApi: PblNgridInternalExtensionApi) {
     super(element);
-    this.controller = PblNgridColumnSizeObserverGroup.get(grid);
+    this.controller = PblNgridColumnSizeObserverGroup.get(extApi);
   }
 
   protected attachColumn(column: PblColumn): void {
