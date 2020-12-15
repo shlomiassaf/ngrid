@@ -10,7 +10,8 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
-import { PblPagingPaginator, PblPaginatorChangeEvent, PblNgridComponent, utils } from '@pebula/ngrid';
+import { PblPagingPaginator, PblPaginatorChangeEvent } from '@pebula/ngrid/core';
+import { PblNgridComponent, utils } from '@pebula/ngrid';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
 
