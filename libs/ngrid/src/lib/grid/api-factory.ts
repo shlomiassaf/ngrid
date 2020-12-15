@@ -2,7 +2,7 @@ import { Observable, of, Subject, EMPTY } from 'rxjs';
 import { ChangeDetectorRef, ElementRef, Injector, IterableDiffers, NgZone, ViewContainerRef } from '@angular/core';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 
-import { PblNgridEvents, ON_DESTROY, ON_CONSTRUCTED } from '@pebula/ngrid/core';
+import { PblNgridConfigService, PblNgridEvents, ON_DESTROY, ON_CONSTRUCTED } from '@pebula/ngrid/core';
 import { PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { ColumnApi, PblColumnStore } from './column/management';
 import { PblNgridComponent } from './ngrid.component';
@@ -15,7 +15,6 @@ import { PblNgridMetaRowService } from './meta-rows/meta-row.service';
 import { PblNgridPluginContext } from '../ext/plugin-control';
 import { OnPropChangedEvent } from '../ext/types';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
-import { PblNgridConfigService } from './services/config';
 import { bindGridToDataSource } from './bind-grid-to-datasource';
 
 export interface RequiredAngularTokens {

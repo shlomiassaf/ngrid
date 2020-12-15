@@ -15,7 +15,10 @@ import { CommonModule } from '@angular/common';
 import { ScrollingModule as ScrollingModuleExp } from '@angular/cdk-experimental/scrolling';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
-import { PblNgridRegistryService } from '@pebula/ngrid/core';
+import {
+  PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService,
+  PblNgridRegistryService,
+} from '@pebula/ngrid/core';
 
 /**
  * NOTE ABOUT IMPORTS
@@ -55,7 +58,6 @@ import { PblCdkAutoSizeVirtualScrollDirective }  from './grid/features/virtual-s
 import { PblCdkFixedSizedVirtualScrollDirective }  from './grid/features/virtual-scroll/strategies/cdk-wrappers/v-scroll-fixed.directive';
 import { PblNgridScrolling } from './grid/features/virtual-scroll/scrolling-plugin.directive';
 import { PblNgridComponent } from './grid/ngrid.component';
-import { PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService } from './grid/services/config';
 import { PROVIDERS } from './di-factories';
 
 export const COMMON_TABLE_TEMPLATE_INIT = new InjectionToken('COMMON TABLE TEMPLATE INIT');

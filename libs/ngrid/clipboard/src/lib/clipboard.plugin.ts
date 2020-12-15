@@ -15,7 +15,7 @@ declare module '@pebula/ngrid/lib/ext/types' {
   }
 }
 
-declare module '@pebula/ngrid/lib/grid/services/config' {
+declare module '@pebula/ngrid/core/lib/configuration/type' {
   interface PblNgridConfig {
     clipboard?: {
       /** When set to true will enable the clipboard plugin on all grid instances by default. */

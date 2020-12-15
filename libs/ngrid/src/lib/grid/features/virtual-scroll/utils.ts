@@ -1,7 +1,6 @@
 import { EmbeddedViewRef, ViewContainerRef } from '@angular/core';
 import { ListRange } from '@angular/cdk/collections';
-
-import { PblNgridConfigService } from '../../services/config';
+import { PblNgridConfigService } from '@pebula/ngrid/core';
 import { PblNgridVirtualScrollStrategy } from './strategies/types';
 
 export type StickyDirectionVt = 'top' | 'bottom';

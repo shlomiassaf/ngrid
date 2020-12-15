@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { CdkTableModule } from '@angular/cdk/table';
-import { PblNgridModule, PblNgridPluginController, PblNgridConfigService, ngridPlugin } from '@pebula/ngrid';
+import { PblNgridConfigService } from '@pebula/ngrid/core';
+
+import { PblNgridModule, PblNgridPluginController, ngridPlugin } from '@pebula/ngrid';
 import { PblNgridStickyPluginDirective, setStickyRow, setStickyColumns, PLUGIN_KEY } from './sticky/sticky-plugin';
 
-declare module '@pebula/ngrid/lib/grid/services/config' {
+declare module '@pebula/ngrid/core/lib/configuration/type' {
   interface PblNgridConfig {
     stickyPlugin?: {
       headers?: Array<'table' | number>;

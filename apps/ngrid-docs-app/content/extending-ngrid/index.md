@@ -337,8 +337,8 @@ The answer is using the grid created event, which fires every time a new grid in
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ON_INIT } from '@pebula/ngrid/core';
-import { PblNgridModule, PblNgridConfigService, PblNgridPluginController } from '@pebula/ngrid';
+import { ON_INIT, PblNgridConfigService } from '@pebula/ngrid/core';
+import { PblNgridModule, PblNgridPluginController } from '@pebula/ngrid';
 import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 
 import { PLUGIN_KEY, PblNgridClipboardPlugin } from './clipboard.plugin';

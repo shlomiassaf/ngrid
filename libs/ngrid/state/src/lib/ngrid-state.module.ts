@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PblNgridPluginController, PblNgridModule, PblNgridConfigService, ngridPlugin } from '@pebula/ngrid';
+import { PblNgridConfigService } from '@pebula/ngrid/core';
+import { PblNgridPluginController, PblNgridModule, ngridPlugin } from '@pebula/ngrid';
 
 import { registerBuiltInHandlers } from './core/built-in-handlers/_register';
 import { PblNgridStatePlugin, PblNgridStatePluginDirective, PLUGIN_KEY } from './state-plugin';

@@ -28,6 +28,8 @@ import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coerci
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
 import {
+  PblNgridConfigService,
+
   PblNgridRegistryService,
   PblNgridPaginatorKind,
 
@@ -45,7 +47,6 @@ import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { PblColumn, PblNgridColumnSet,  } from './column/model';
 import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column/management';
 import { PblNgridCellContext, PblNgridMetaCellContext, PblNgridContextApi, PblNgridRowContext } from './context/index';
-import { PblNgridConfigService } from './services/config';
 import { DynamicColumnWidthLogic } from './column/width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblNgridMetaRowService } from './meta-rows/meta-row.service';
