@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
-import { PblNgridComponent, createDS, columnFactory, PblNgridPaginatorKind, AutoSizeToFitOptions } from '@pebula/ngrid';
+import { PblNgridComponent, createDS, columnFactory } from '@pebula/ngrid';
 
 import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
 import { Example } from '@pebula/apps/docs-app-lib';

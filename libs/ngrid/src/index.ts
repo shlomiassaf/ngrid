@@ -1,14 +1,6 @@
 import { isPblColumn, isPblMetaColumn, isPblColumnGroup, unrx, getRootElement } from './lib/grid/index';
 
 export {
-  PblNgridPaginatorKind,
-  PblPaginator,
-  PblPagingPaginator,
-  PblTokenPaginator,
-  PblPaginatorChangeEvent
-} from './lib/paginator/index';
-
-export {
   PblDataSourceConfigurableTriggers,
   PblDataSourceTriggers,
   PblDataSourceTriggerChange, PblDataSourceTriggerChangedEvent, PblDataSourceTriggerChangedEventSource, PblDataSourceTriggerChangeHandler,

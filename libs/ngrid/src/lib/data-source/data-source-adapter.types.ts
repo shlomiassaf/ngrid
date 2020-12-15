@@ -1,4 +1,4 @@
-import { PblPaginatorChangeEvent } from '../paginator';
+import { PblPaginatorChangeEvent } from '@pebula/ngrid/core';
 import { DataSourceOf } from './data-source';
 import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
 
