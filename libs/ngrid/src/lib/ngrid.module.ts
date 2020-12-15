@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { ScrollingModule as ScrollingModuleExp } from '@angular/cdk-experimental/scrolling';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
 
 /**
  * NOTE ABOUT IMPORTS
@@ -25,7 +26,6 @@ import { CdkTableModule } from '@angular/cdk/table';
  * THE CIRCULAR RUNTIME DETECTION DOES NOT WORK IN THIS CASE BECAUSE THERE IS NO ACTUAL CIRCULAR REFERENCE
  * IT HAPPENS BECAUSE OF THE WAY ANGULAR RE-BUILDS THE D.TS FILES AND METADATA FILES
  */
-import { PblNgridRegistryService } from './grid/registry/registry.service';
 import { PblCdkTableComponent }  from './grid/pbl-cdk-table/pbl-cdk-table.component';
 import { PblNgridRowDef, PblNgridRowOverride } from './grid/row/row-def.directive';
 import { PblNgridRowComponent } from './grid/row/row.component';

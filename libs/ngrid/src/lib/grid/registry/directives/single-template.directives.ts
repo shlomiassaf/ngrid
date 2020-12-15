@@ -1,8 +1,5 @@
-// tslint:disable:use-host-property-decorator
-
 import { Directive, TemplateRef, OnInit, OnDestroy } from '@angular/core';
-import { PblNgridSingleRegistryMap } from '../types';
-import { PblNgridRegistryService } from '../registry.service';
+import { PblNgridRegistryService, PblNgridSingleRegistryMap } from '@pebula/ngrid/core';
 
 @Directive()
 export abstract class PblNgridSingleTemplateRegistry<T, TKind extends keyof PblNgridSingleRegistryMap> implements OnInit, OnDestroy {

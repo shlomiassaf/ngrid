@@ -33,7 +33,6 @@ export {
   PblNgridRowDef, PblNgridRowOverride, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
 
   PblNgridComponent,
-  PblNgridRegistryService,
   AutoSizeToFitOptions, ColumnApi,
 
   PblNgridSingleTemplateRegistry, PblNgridMultiTemplateRegistry, PblNgridMultiComponentRegistry,

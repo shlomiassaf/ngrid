@@ -7,7 +7,7 @@ import {
 
 import { PblNgridRowDef } from '@pebula/ngrid';
 
-declare module '@pebula/ngrid/lib/grid/registry/types' {
+declare module '@pebula/ngrid/core/lib/registry/types' {
   interface PblNgridSingleRegistryMap {
     infiniteVirtualRow?: PblNgridInfiniteVirtualRowRefDirective;
   }

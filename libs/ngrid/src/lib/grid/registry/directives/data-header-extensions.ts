@@ -1,9 +1,9 @@
 import { Directive, TemplateRef, Injector, Input } from '@angular/core';
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
 
 import { PblColumn } from '../../column/model';
 import { MetaCellContext } from '../../context/index';
 import { PblNgridHeaderCellComponent } from '../../cell/header-cell.component'
-import { PblNgridRegistryService } from '../registry.service';
 import { PblNgridMultiTemplateRegistry } from './multi-template.directives';
 import { PblNgridMultiComponentRegistry } from './multi-component';
 
@@ -80,7 +80,7 @@ export class PblNgridHeaderExtensionRefDirective extends PblNgridMultiTemplateRe
   constructor(tRef: TemplateRef<PblNgridDataHeaderExtensionContext>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
 
-declare module '../types' {
+declare module '@pebula/ngrid/core/lib/registry/types' {
   interface PblNgridMultiRegistryMap {
     dataHeaderExtensions?: (PblNgridMultiTemplateRegistry<PblNgridDataHeaderExtensionContext, 'dataHeaderExtensions'> & PblNgridDataHeaderExtensionRef)
       | (PblNgridMultiComponentRegistry<any, 'dataHeaderExtensions'> & PblNgridDataHeaderExtensionRef);

@@ -1,5 +1,6 @@
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
+
 import { PblColumn, PblMetaColumn, COLUMN, isPblColumn } from '../../column/model';
-import { PblNgridRegistryService } from '../../registry';
 import { PblNgridHeaderCellDefDirective } from './header-cell-def.directive';
 import { PblNgridCellDefDirective } from './cell-def.directive';
 import { PblNgridFooterCellDefDirective } from './footer-cell-def.directive';

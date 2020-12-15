@@ -1,6 +1,6 @@
 import { Directive, TemplateRef } from '@angular/core';
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
 import {
-  PblNgridRegistryService,
   PblNgridMultiTemplateRegistry,
   PblNgridDataHeaderExtensionRef,
   PblNgridDataHeaderExtensionContext,

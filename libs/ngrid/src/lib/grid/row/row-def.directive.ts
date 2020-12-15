@@ -1,7 +1,8 @@
 import { Directive, Inject, IterableDiffers, Optional, TemplateRef, OnInit } from '@angular/core';
 import { CdkRowDef, CDK_TABLE } from '@angular/cdk/table';
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
+
 import { PblNgridRowContext } from '../context/types';
-import { PblNgridRegistryService } from '../registry/registry.service';
 import { PblNgridComponent } from '../ngrid.component';
 import { PblNgridPluginController } from '../../ext/plugin-control';
 import { EXT_API_TOKEN, PblNgridExtensionApi } from '../../ext/grid-ext-api';

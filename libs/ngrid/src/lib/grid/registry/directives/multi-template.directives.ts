@@ -1,7 +1,5 @@
 import { Directive, TemplateRef, OnInit, OnDestroy } from '@angular/core';
-
-import { PblNgridMultiRegistryMap } from '../types';
-import { PblNgridRegistryService } from '../registry.service';
+import { PblNgridRegistryService, PblNgridMultiRegistryMap } from '@pebula/ngrid/core';
 
 @Directive()
 export abstract class PblNgridMultiTemplateRegistry<T, TKind extends keyof PblNgridMultiRegistryMap> implements OnInit, OnDestroy {

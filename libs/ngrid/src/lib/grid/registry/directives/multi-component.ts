@@ -1,8 +1,8 @@
 import { ComponentFactory, ComponentRef } from '@angular/core';
+import { PblNgridMultiRegistryMap } from '@pebula/ngrid/core';
 
 import { PblColumn } from '../../column/model';
 import { PblNgridMetaCellContext } from '../../context/index';
-import { PblNgridMultiRegistryMap } from '../types';
 
 export abstract class PblNgridMultiComponentRegistry<T, TKind extends keyof PblNgridMultiRegistryMap> {
   abstract readonly name: string;

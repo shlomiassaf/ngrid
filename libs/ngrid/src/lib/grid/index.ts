@@ -39,7 +39,6 @@ export {
 } from './row';
 
 export {
-  PblNgridRegistryService,
   PblNgridHeaderExtensionRefDirective,
   PblNgridNoDataRefDirective,
   PblNgridPaginatorRefDirective,

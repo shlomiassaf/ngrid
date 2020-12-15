@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 
-import { PblNgridModule, PblNgridRegistryService } from '@pebula/ngrid';
+import { PblNgridRegistryService } from '@pebula/ngrid/core';
+import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridDragModule } from '@pebula/ngrid/drag';
 import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
