@@ -1,9 +1,9 @@
 
 import { Directive, Input } from '@angular/core';
-import { utils } from '@pebula/ngrid';
 import { DragDrop, CDK_DRAG_PARENT } from '@angular/cdk/drag-drop';
 
-import { PblColumn, PblNgridPluginController, PblNgridCellContext } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
+import { PblColumn, PblNgridPluginController } from '@pebula/ngrid';
 import { PblDragDrop, CdkLazyDrag } from '../core/index';
 import { COL_DRAG_CONTAINER_PLUGIN_KEY, PblNgridColumnDragContainerDirective } from './column-drag-container';
 
@@ -67,7 +67,7 @@ export class PblNgridColumnDragDirective<T = any> extends CdkLazyDrag<T, PblNgri
   }
 
   ngOnDestroy(): void {
-    utils.unrx.kill(this);
+    unrx.kill(this);
     super.ngOnDestroy();
   }
 
@@ -90,7 +90,7 @@ export class PblNgridColumnDragDirective<T = any> extends CdkLazyDrag<T, PblNgri
 
   protected dropContainerChanged(prev: PblNgridColumnDragContainerDirective<T>) {
     if (prev) {
-      utils.unrx.kill(this, prev);
+      unrx.kill(this, prev);
     }
 
     this.updateDisabledState();
@@ -98,7 +98,7 @@ export class PblNgridColumnDragDirective<T = any> extends CdkLazyDrag<T, PblNgri
     this.updateBoundaryElement();
     if (this.cdkDropList) {
       this.cdkDropList.connectionsChanged
-        .pipe(utils.unrx(this, this.cdkDropList))
+        .pipe(unrx(this, this.cdkDropList))
         .subscribe(() => this.updateBoundaryElement());
     }
   }

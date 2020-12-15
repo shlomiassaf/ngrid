@@ -78,5 +78,3 @@ export { PblNgridOuterSectionDirective } from './directives/index';
 
 export * from './features/virtual-scroll/index';
 export * from './features/hide-columns.directive';
-
-export * from './utils/index';

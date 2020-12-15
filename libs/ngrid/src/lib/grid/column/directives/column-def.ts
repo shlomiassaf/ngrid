@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import { CdkColumnDef } from '@angular/cdk/table';
 
+import { uniqueColumnCss } from '../../utils/unique-column-css';
 import { PblNgridComponent } from '../../ngrid.component';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
-import { uniqueColumnCss } from '../../utils/unique-column-css';
 import { COLUMN, PblColumnSizeInfo, isPblColumn } from '../model';
 import { widthBreakout } from '../width-logic/dynamic-column-width';
 

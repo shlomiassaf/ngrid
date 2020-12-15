@@ -27,14 +27,13 @@ import { Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
-import { PblNgridPaginatorKind } from '@pebula/ngrid/core';
+import { PblNgridPaginatorKind, unrx } from '@pebula/ngrid/core';
 
-import { unrx } from './utils';
 import { EXT_API_TOKEN, PblNgridExtensionApi, PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
 import { DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS, PblNgridOnDataSourceEvent } from '../data-source/index';
+import { resetColumnWidths } from './utils/width';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
-import { resetColumnWidths } from './utils';
 import { PblColumn, PblNgridColumnSet, PblNgridColumnDefinitionSet } from './column/model';
 import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column/management';
 import { PblNgridCellContext, PblNgridMetaCellContext, PblNgridContextApi, PblNgridRowContext } from './context/index';

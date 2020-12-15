@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, ComponentRef, ViewChild, ViewContainerRef, ViewEncapsulation, OnDestroy, OnInit } from '@angular/core';
 import { CdkRow } from '@angular/cdk/table';
 
+import { StylingDiffer, StylingDifferOptions, unrx } from '@pebula/ngrid/core';
+
 import { PblRowContext } from '../context/index';
-import { StylingDiffer, StylingDifferOptions } from '../utils/styling.differ';
 import { PblNgridCellComponent } from '../cell/cell.component';
 import { PblColumn } from '../column/model';
-import { unrx } from '../utils/unrx';
 import { PblNgridBaseRowComponent } from './base-row.component';
 import { PblNgridColumnDef } from '../column/directives/column-def';
 import { rowContextBridge } from './row-to-repeater-bridge';
@@ -43,7 +43,7 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
   protected prevRow: T | undefined;
   protected currRow: T | undefined;
 
-  private _classDiffer: StylingDiffer<{ [klass: string]: boolean }>;
+  private _classDiffer: StylingDiffer<{ [klass: string]: true }>;
   private _lastClass: Set<string>;
   private _rowIndex: number;
   private outOfView = false;
@@ -182,7 +182,7 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
     // it's better to set the frequency to `none` and return nothing from the function (replace it) so the differ is not nuked.
     if (this.grid.rowClassUpdate) {
       if (!this._classDiffer) {
-        this._classDiffer = new StylingDiffer<{ [klass: string]: boolean }>(
+        this._classDiffer = new StylingDiffer<{ [klass: string]: true }>(
           'NgClass',
           StylingDifferOptions.TrimProperties | StylingDifferOptions.AllowSubKeys | StylingDifferOptions.AllowStringValue | StylingDifferOptions.ForceAsMap,
         );
@@ -190,9 +190,9 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
       }
 
       const newValue = this.grid.rowClassUpdate(this.context);
-      this._classDiffer.setValue(newValue);
+      this._classDiffer.setInput(newValue);
 
-      if (this._classDiffer.hasValueChanged()) {
+      if (this._classDiffer.updateValue()) {
         const lastClass = this._lastClass;
         this._lastClass = new Set<string>();
 

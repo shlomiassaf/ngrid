@@ -21,7 +21,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { MetaService } from '@ngx-meta/core';
 
-import { utils } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
 import { PageFileAsset } from '@pebula-internal/webpack-markdown-pages';
 import { ExampleViewComponent } from '../exapmle-view/example-view.component';
 import { ContentChunkViewComponent } from '../content-chunk-view/content-chunk-view.component';
@@ -65,7 +65,7 @@ export class MarkdownPageViewerComponent implements OnDestroy {
               private _ngZone: NgZone,
               @Optional() container: MarkdownPageContainerComponent) {
     this.hasContainer = !!container;
-    route.data.pipe(utils.unrx(this)).subscribe( data => {
+    route.data.pipe(unrx(this)).subscribe( data => {
       if (data.documentUrl) {
         this.updateDocument(data.documentUrl);
       }
@@ -146,6 +146,6 @@ export class MarkdownPageViewerComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this._clearLiveExamples();
-    utils.unrx.kill(this);
+    unrx.kill(this);
   }
 }

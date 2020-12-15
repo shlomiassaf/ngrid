@@ -1,6 +1,7 @@
 import { OnDestroy, ElementRef, Directive, Inject } from '@angular/core';
+import { unrx } from '@pebula/ngrid/core';
+
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
-import { unrx } from '../utils/unrx';
 import { PblNgridBaseRowComponent } from '../row/base-row.component';
 import { GridRowType } from '../row/types';
 

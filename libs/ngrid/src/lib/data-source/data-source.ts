@@ -5,9 +5,8 @@ import { SelectionModel, CollectionViewer, ListRange } from '@angular/cdk/collec
 import { DataSource } from '@angular/cdk/table';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 
-import { PblNgridPaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPaginator } from '@pebula/ngrid/core';
+import { PblNgridPaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPaginator, unrx } from '@pebula/ngrid/core';
 import { PblNgridPluginContext } from '../ext/plugin-control';
-import { unrx } from '../grid/utils';
 import { PblColumn } from '../grid/column/model';
 import { PblNgridComponent } from '../grid/ngrid.component';
 import { DataSourcePredicate, DataSourceFilter, DataSourceFilterToken, PblNgridSortDefinition, PblNgridDataSourceSortChange } from './types';

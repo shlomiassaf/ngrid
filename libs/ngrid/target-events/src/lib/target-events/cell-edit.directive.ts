@@ -1,7 +1,8 @@
 import { Directive, Input, Injector, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { PblNgridComponent, PblNgridPluginController, utils } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
+import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 import { PblNgridTargetEventsPlugin } from './target-events-plugin';
 
 @Directive({
@@ -37,15 +38,15 @@ export class PblNgridCellEditDirective<T> implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    utils.unrx.kill(this);
+    unrx.kill(this);
   }
 
   private update(): void {
     if (this.targetEventsPlugin) {
-      utils.unrx.kill(this, this.targetEventsPlugin);
+      unrx.kill(this, this.targetEventsPlugin);
       if (this._click) {
         this.targetEventsPlugin.cellClick
-          .pipe(utils.unrx(this, this.targetEventsPlugin))
+          .pipe(unrx(this, this.targetEventsPlugin))
           .subscribe( event => {
             if (event.type === 'data' && event.column.editable) {
               event.context.startEdit(true);
@@ -55,7 +56,7 @@ export class PblNgridCellEditDirective<T> implements OnDestroy {
 
       if (this._dblClick) {
         this.targetEventsPlugin.cellDblClick
-          .pipe(utils.unrx(this, this.targetEventsPlugin))
+          .pipe(unrx(this, this.targetEventsPlugin))
           .subscribe( event => {
             if (event.type === 'data' && event.column.editable) {
               event.context.startEdit(true);

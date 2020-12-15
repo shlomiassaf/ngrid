@@ -1,9 +1,8 @@
 import { NgZone } from '@angular/core';
-import { ON_INVALIDATE_HEADERS } from '@pebula/ngrid/core';
+import { ON_INVALIDATE_HEADERS, unrx } from '@pebula/ngrid/core';
 import { PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { RowIntersectionTracker } from '../features/virtual-scroll/row-intersection';
 import { PblCdkTableComponent } from '../pbl-cdk-table/pbl-cdk-table.component';
-import { unrx } from '../utils/unrx';
 import { PblNgridBaseRowComponent } from './base-row.component';
 import { PblNgridCellFactoryResolver } from './cell-factory.service';
 import { PblNgridColumnRowComponent } from './columns-row.component';

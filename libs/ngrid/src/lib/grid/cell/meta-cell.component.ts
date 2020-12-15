@@ -5,10 +5,9 @@ import {
   ViewEncapsulation,
   ViewContainerRef,
   ViewChild,
-  Inject,
 } from '@angular/core';
+import { unrx } from '@pebula/ngrid/core';
 
-import { unrx } from '../utils';
 import { PblNgridComponent } from '../ngrid.component';
 import { PblMetaColumn, PblColumnGroup, isPblColumnGroup } from '../column/model';
 import { MetaCellContext } from '../context/index';

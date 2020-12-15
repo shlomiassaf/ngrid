@@ -17,13 +17,28 @@ export function initDefinitions<T extends PblBaseColumnDefinition>(def: PblBaseC
   }
 }
 
-export function isColumnDefinition(obj: any): obj is PblColumnDefinition {
-  // TODO: Get rid of this duck-type type matching. Accept solid instances in PblTable.columns instead of interfaces.
-  return !!obj.prop && !obj.hasOwnProperty('columnIds');
+/**
+ * Given an object (item) and a path, returns the value at the path
+ */
+export function deepPathGet(item: any, col: PblColumnDefinition): any {
+  if ( col.path ) {
+    for ( const p of col.path ) {
+      item = item[ p ];
+      if ( !item ) return;
+    }
+  }
+  return item[ col.prop ];
 }
 
-
-export function isColumnGroupDefinition(obj: any): obj is PblColumnGroupDefinition {
-  // TODO: Get rid of this duck-type type matching. Accept solid instances in PblTable.columns instead of interfaces.
-  return !!obj.prop && obj.hasOwnProperty('columnIds');
+/**
+ * Given an object (item) and a path, returns the value at the path
+ */
+export function deepPathSet(item: any, col: PblColumnDefinition, value: any): void {
+  if ( col.path ) {
+    for ( const p of col.path ) {
+      item = item[ p ];
+      if ( !item ) return;
+    }
+  }
+  item[ col.prop ] = value;
 }

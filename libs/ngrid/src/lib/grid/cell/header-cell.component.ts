@@ -14,9 +14,9 @@ import {
   EmbeddedViewRef,
   Inject,
 } from '@angular/core';
+import { unrx } from '@pebula/ngrid/core';
 
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
-import { unrx } from '../utils';
 import { PblNgridComponent } from '../ngrid.component';
 import { COLUMN, PblMetaColumn, PblColumn, PblColumnGroup, isPblColumn, isPblColumnGroup } from '../column/model';
 import { MetaCellContext, PblNgridMetaCellContext } from '../context/index';

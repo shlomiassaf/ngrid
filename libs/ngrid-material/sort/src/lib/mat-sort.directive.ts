@@ -1,8 +1,8 @@
 import { Directive, OnDestroy } from '@angular/core';
 import { Sort, MatSort, MatSortHeader, SortDirection } from '@angular/material/sort';
 
-import { ON_INVALIDATE_HEADERS } from '@pebula/ngrid/core';
-import { PblNgridComponent, PblNgridPluginController, PblNgridSortDefinition, PblDataSource, utils } from '@pebula/ngrid';
+import { ON_INVALIDATE_HEADERS, unrx } from '@pebula/ngrid/core';
+import { PblNgridComponent, PblNgridPluginController, PblNgridSortDefinition, PblDataSource } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -20,7 +20,7 @@ export class PblNgridMatSortDirective implements OnDestroy {
 
     let origin: 'ds' | 'click' = 'click';
     this.sort.sortChange
-      .pipe(utils.unrx(this))
+      .pipe(unrx(this))
       .subscribe( s => {
         this.onSort(s, origin);
         origin = 'click';
@@ -70,12 +70,12 @@ export class PblNgridMatSortDirective implements OnDestroy {
     pluginCtrl.events
       .subscribe( e => {
         if (e.kind === 'onDataSource') {
-          utils.unrx.kill(this, e.prev);
+          unrx.kill(this, e.prev);
           if (this.sort && this.sort.active) {
             this.onSort({ active: this.sort.active, direction: this.sort.direction || 'asc' }, origin);
           }
           table.ds.sortChange
-            .pipe(utils.unrx(this, e.curr))
+            .pipe(unrx(this, e.curr))
             .subscribe( event => { handleDataSourceSortChange(event); });
         }
       });
@@ -83,7 +83,7 @@ export class PblNgridMatSortDirective implements OnDestroy {
 
   ngOnDestroy(): void {
     this._removePlugin(this.table);
-    utils.unrx.kill(this);
+    unrx.kill(this);
   }
 
   private onSort(sort: Sort, origin: 'ds' | 'click'): void {

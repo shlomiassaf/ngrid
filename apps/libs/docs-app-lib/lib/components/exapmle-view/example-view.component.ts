@@ -10,7 +10,7 @@ import {
 import { trigger, transition, animate, style } from '@angular/animations'
 import { Angulartics2 } from 'angulartics2';
 
-import { utils } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
 import { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-examples';
 
 import { MarkdownDynamicComponentPortal } from '../markdown-dynamic-component-portal';
@@ -93,6 +93,6 @@ export class ExampleViewComponent extends MarkdownDynamicComponentPortal impleme
 
   ngOnDestroy(): void {
     this.sourceCode.complete();
-    utils.unrx.kill(this);
+    unrx.kill(this);
   }
 }
