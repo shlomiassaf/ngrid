@@ -1,10 +1,9 @@
 import { Observable, Subject, combineLatest, of, from, isObservable, asapScheduler } from 'rxjs';
 import { filter, map, switchMap, tap, debounceTime, observeOn } from 'rxjs/operators';
 
-import { PblPaginator, PblPaginatorChangeEvent } from '../paginator/types';
-import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
-import { filter as filteringFn } from './filtering';
-import { applySort } from './sorting';
+import { PblPaginator, PblPaginatorChangeEvent } from '../triggers/pagination/types';
+import { DataSourceFilter, filter as filteringFn } from '../triggers/filter';
+import { PblNgridDataSourceSortChange, applySort } from '../triggers/sort';
 
 import {
   RefreshDataWrapper,
@@ -15,9 +14,8 @@ import {
   TriggerChangedEventFor,
   PblDataSourceAdapterProcessedResult,
   PblDataSourceTriggerChangeHandler,
-} from './data-source-adapter.types';
-
-import { createChangeContainer, fromRefreshDataWrapper, EMPTY } from './data-source-adapter.helpers';
+} from './types';
+import { createChangeContainer, fromRefreshDataWrapper, EMPTY } from './utils';
 
 const CUSTOM_BEHAVIOR_TRIGGER_KEYS: Array<keyof PblDataSourceConfigurableTriggers> = ['sort', 'filter', 'pagination'];
 const TRIGGER_KEYS: Array<keyof PblDataSourceTriggers> = [...CUSTOM_BEHAVIOR_TRIGGER_KEYS, 'data'];
@@ -28,7 +26,9 @@ const DEFAULT_INITIAL_CACHE_STATE: PblDataSourceTriggerCache<any> = { filter: EM
 /**
  * An adapter that handles changes
  */
-export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSourceTriggerChangedEvent<TData> = PblDataSourceTriggerChangedEvent<TData>> {
+export class PblDataSourceAdapter<T = any,
+                                  TData = any,
+                                  TEvent extends PblDataSourceTriggerChangedEvent<TData> = PblDataSourceTriggerChangedEvent<TData>> {
 
   static hasCustomBehavior(config: Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>): boolean {
     for (const key of CUSTOM_BEHAVIOR_TRIGGER_KEYS) {
@@ -49,8 +49,8 @@ export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSo
     return false;
   }
 
-  onSourceChanged: Observable<T[]>;
-  onSourceChanging: Observable<void>;
+  readonly onSourceChanged: Observable<T[]>;
+  readonly onSourceChanging: Observable<void>;
 
   get inFlight() { return this._inPreFlight || this._inFlight.size > 0; }
 
@@ -110,7 +110,11 @@ export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSo
   constructor(public sourceFactory: PblDataSourceTriggerChangeHandler<T, TEvent>,
               config?: false | Partial<Record<keyof PblDataSourceConfigurableTriggers, boolean>>) {
     this.config = Object.assign({}, config || {});
-    this.initStreams();
+
+    this._refresh$ = new Subject<RefreshDataWrapper<TData>>();
+    this._onSourceChange$ = new Subject<T[]>();
+    this.onSourceChanged = this._onSourceChange$.pipe(filter( d => d !== SOURCE_CHANGING_TOKEN ));
+    this.onSourceChanging = this._onSourceChange$.pipe(filter( d => d === SOURCE_CHANGING_TOKEN ));
   }
 
   dispose(): void {
@@ -393,18 +397,5 @@ export class PblDataSourceAdapter<T = any, TData = any, TEvent extends PblDataSo
       observeOn(asapScheduler, 0), // run as a micro-task
       tap( data => this.emitOnSourceChanged(event, data as T[]) ),
     );
-  }
-
-  /* Note:  Currently this is only used in the constructor.
-            However, if called elsewhere (i.e. if we can re-init the adapter) we need to track all code that is using
-            `onSourceChanged` and or `onSourceChanging` and make it support the replacement of the observable.
-            Because the API is public it will probably won't work so the best solution might be to switch
-            `onSourceChanged` and `onSourceChanging` to subjects that are alive always and emit them internally in this class. */
-  private initStreams(): void {
-    this._onSourceChange$ = new Subject<T[]>();
-    this.onSourceChanged = this._onSourceChange$.pipe(filter( d => d !== SOURCE_CHANGING_TOKEN ));
-    this.onSourceChanging = this._onSourceChange$.pipe(filter( d => d === SOURCE_CHANGING_TOKEN ));
-    this._refresh$ = new Subject<RefreshDataWrapper<TData>>();
-    this._lastSource = undefined;
   }
 }

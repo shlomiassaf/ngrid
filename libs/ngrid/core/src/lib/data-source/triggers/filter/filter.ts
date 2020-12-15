@@ -1,5 +1,5 @@
-import { PblColumnDefinition } from '../models/column';
-import { getValue } from '../utils/column';
+import { PblColumnDefinition } from '../../../models/column';
+import { getValue } from '../../../utils/column';
 import { DataSourceFilter, DataSourceFilterToken, DataSourcePredicate, DataSourceColumnPredicate } from './types';
 
 export function createFilter(value: DataSourceFilterToken, columns: PblColumnDefinition[]): DataSourceFilter {

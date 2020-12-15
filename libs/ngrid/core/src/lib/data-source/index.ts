@@ -1,4 +1,28 @@
 export * from './events';
+
+export {
+  PblNgridPaginatorKind,
+  PblPaginator,
+  PblPaginatorChangeEvent,
+  PblPagingPaginator,
+  PblTokenPaginator,
+} from './triggers/pagination';
+
+export {
+  DataSourceFilterToken,
+  DataSourcePredicate,
+  DataSourceColumnPredicate,
+} from './triggers/filter';
+
+export {
+  PblNgridSortInstructions,
+  PblNgridSortDefinition,
+  PblNgridSorter,
+  PblNgridDataSourceSortChange,
+  PblNgridSortOrder,
+  applySort
+} from './triggers/sort';
+
 export {
   PblDataSourceConfigurableTriggers,
   PblDataSourceTriggers,
@@ -7,19 +31,10 @@ export {
   PblDataSourceTriggerChangedEventSource,
   PblDataSourceAdapterProcessedResult,
   PblDataSourceTriggerChangeHandler,
-} from './data-source-adapter.types';
-export { PblDataSourceAdapter } from './data-source-adapter';
-export {
-  PblNgridSortInstructions,
-  PblNgridSortDefinition,
-  DataSourceFilterToken,
-  DataSourcePredicate,
-  DataSourceColumnPredicate,
-  PblNgridSorter,
-  PblNgridDataSourceSortChange,
-  PblNgridSortOrder,
-} from './types';
-export { PblDataSource, PblDataSourceOptions, DataSourceOf } from './data-source';
-export { PblDataSourceBaseFactory } from './data-source-base-factory';
+  PblDataSourceAdapter,
+} from './adapter/index';
+
+export { DataSourceOf } from './types';
+export { PblDataSource, PblDataSourceOptions } from './data-source';
+export { PblDataSourceBaseFactory } from './base/factory';
 export { PblDataSourceFactory, createDS } from './factory';
-export { applySort, } from './sorting';

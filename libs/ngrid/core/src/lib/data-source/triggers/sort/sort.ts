@@ -1,5 +1,5 @@
-import { PblColumnDefinition } from '../models/column';
-import { getValue } from '../utils/column';
+import { PblColumnDefinition } from '../../../models/column';
+import { getValue } from '../../../utils/column';
 import { PblNgridSortDefinition, PblNgridSortInstructions, PblNgridSorter } from './types';
 
 /**
