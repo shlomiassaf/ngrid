@@ -18,7 +18,7 @@ export {
   PblDataSourceAdapter,
   PblDataSource, PblDataSourceOptions,
   PblNgridSortInstructions, PblNgridSortDefinition, PblNgridSorter, PblNgridSortOrder,
-  PblDataSourceBaseFactory, PblDataSourceFactory, DataSourceOf,
+  PblDataSourceFactory, DataSourceOf,
   DataSourceFilterToken, DataSourcePredicate, DataSourceColumnPredicate,
   PblDataSourceAdapterProcessedResult,
   createDS, applySort,

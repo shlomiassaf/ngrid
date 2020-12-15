@@ -1,4 +1,5 @@
-import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
+import { DataSourceFilter } from '../triggers/filter/types';
+import { PblNgridDataSourceSortChange } from '../triggers/sort/types';
 
 import {
   RefreshDataWrapper,
@@ -7,7 +8,7 @@ import {
   PblDataSourceTriggerCache,
   PblDataSourceTriggerChangedEvent,
   TriggerChangedEventFor,
-} from './data-source-adapter.types';
+} from './types';
 
 export const EMPTY: any = Object.freeze({});
 

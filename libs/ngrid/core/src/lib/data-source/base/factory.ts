@@ -1,10 +1,6 @@
-import { PblDataSource, PblDataSourceOptions } from './data-source';
-import { PblDataSourceAdapter } from './data-source-adapter';
-import {
-  PblDataSourceConfigurableTriggers,
-  PblDataSourceTriggerChangedEvent,
-  PblDataSourceTriggerChangeHandler,
- } from './data-source-adapter.types';
+import { PblDataSource, PblDataSourceOptions } from '../data-source';
+import { PblDataSourceAdapter } from '../adapter/adapter';
+import { PblDataSourceConfigurableTriggers, PblDataSourceTriggerChangedEvent, PblDataSourceTriggerChangeHandler } from '../adapter/types';
 
 interface AdapterParams<T, TEvent extends PblDataSourceTriggerChangedEvent<any> = PblDataSourceTriggerChangedEvent<any>> {
   onTrigger?: PblDataSourceTriggerChangeHandler<T, TEvent>;

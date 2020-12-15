@@ -1,6 +1,6 @@
 import { PblDataSource } from './data-source';
-import { PblDataSourceAdapter } from './data-source-adapter';
-import { PblDataSourceBaseFactory } from './data-source-base-factory';
+import { PblDataSourceAdapter } from './adapter/adapter';
+import { PblDataSourceBaseFactory } from './base/factory';
 
 export class PblDataSourceFactory<T, TData = any> extends PblDataSourceBaseFactory<T, TData> {
   protected createAdapter(): PblDataSourceAdapter<T, TData> {

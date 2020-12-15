@@ -1,4 +1,4 @@
-import { PblDataSourceBaseFactory, PblDataSourceAdapter } from '@pebula/ngrid';
+import { PblDataSourceBaseFactory, PblDataSourceAdapter } from '@pebula/ngrid/core';
 import { PblInfiniteScrollFactoryOptions, PblInfiniteScrollDsOptions, PblInfiniteScrollTriggerChangedEvent, PblInfiniteScrollCacheOptions } from './infinite-scroll-datasource.types';
 import { PblInfiniteScrollDSContext } from './infinite-scroll-datasource.context';
 import { PblInfiniteScrollDataSource } from './infinite-scroll-datasource';

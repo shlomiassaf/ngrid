@@ -6,17 +6,12 @@ import { DataSource } from '@angular/cdk/table';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 
 import { unrx } from '../utils/unrx';
-import { PblNgridPaginatorKind, PblPaginator } from '../paginator/types'
-import { PblPagingPaginator } from '../paginator/paging-paginator'
-import { PblTokenPaginator } from '../paginator/token-paginator'
 import { PblNgridEventEmitter } from '../events/events';
 import { PblColumnDefinition } from '../models/column';
-import { DataSourcePredicate, DataSourceFilter, DataSourceFilterToken, PblNgridSortDefinition, PblNgridDataSourceSortChange } from './types';
-import { createFilter } from './filtering';
-import { PblDataSourceAdapter } from './data-source-adapter';
-import { PblDataSourceTriggerCache, PblDataSourceTriggerChangedEvent, PblDataSourceAdapterProcessedResult } from './data-source-adapter.types';
-
-export type DataSourceOf<T> = T[] | Promise<T[]> | Observable<T[]>;
+import { PblNgridPaginatorKind, PblPaginator, PblPagingPaginator, PblTokenPaginator } from './triggers/pagination'
+import { DataSourcePredicate, DataSourceFilter, DataSourceFilterToken, createFilter } from './triggers/filter'
+import { PblNgridSortDefinition, PblNgridDataSourceSortChange } from './triggers/sort'
+import { PblDataSourceAdapter, PblDataSourceTriggerCache, PblDataSourceTriggerChangedEvent, PblDataSourceAdapterProcessedResult } from './adapter';
 
 const PROCESSING_SUBSCRIPTION_GROUP = {};
 

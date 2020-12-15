@@ -1,6 +1,7 @@
-import { PblPaginatorChangeEvent } from '../paginator/types';
-import { DataSourceOf } from './data-source';
-import { PblNgridDataSourceSortChange, DataSourceFilter } from './types';
+import { DataSourceOf } from '../types';
+import { PblPaginatorChangeEvent } from '../triggers/pagination/types';
+import { DataSourceFilter } from '../triggers/filter/types';
+import { PblNgridDataSourceSortChange } from '../triggers/sort/types';
 
 /** @internal */
 export type RefreshDataWrapper<T> = { data: T };
