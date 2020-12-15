@@ -1,5 +1,5 @@
-import { asapScheduler, animationFrameScheduler, fromEventPattern } from 'rxjs';
-import { filter, take, tap, observeOn, switchMap, map, mapTo, startWith, pairwise, debounceTime, skip } from 'rxjs/operators';
+import { asapScheduler, animationFrameScheduler } from 'rxjs';
+import { filter, take, tap, observeOn, switchMap, map, mapTo, startWith, pairwise } from 'rxjs/operators';
 import {
   AfterViewInit,
   Component,
@@ -42,12 +42,10 @@ import {
 
 import { EXT_API_TOKEN, PblNgridExtensionApi, PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
-import { resetColumnWidths } from './utils/width';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { PblColumn, PblNgridColumnSet,  } from './column/model';
 import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column/management';
 import { PblNgridCellContext, PblNgridMetaCellContext, PblNgridContextApi, PblNgridRowContext } from './context/index';
-import { DynamicColumnWidthLogic } from './column/width-logic/dynamic-column-width';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { PblNgridMetaRowService } from './meta-rows/meta-row.service';
 
@@ -181,7 +179,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     }
     if ( value !== this._pagination ) {
       this._pagination = value;
-      this.setupPaginator();
+      this._extApi.logicaps.pagination();
     }
   }
 
@@ -303,8 +301,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   get innerTableMinWidth() { return this._cdkTable?.minWidth }
 
   private _store: PblColumnStore;
-  private _noDateEmbeddedVRef: EmbeddedViewRef<any>;
-  private _paginatorEmbeddedVRef: EmbeddedViewRef<any>;
   private _pagination: PblNgridPaginatorKind | false;
   private _noCachePaginator = false;
   private _plugin: PblNgridPluginContext;
@@ -318,10 +314,12 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
               private config: PblNgridConfigService,
+              // TODO: Make private in v 4
+              /** @deprecated Will be removed in version 4 */
               public registry: PblNgridRegistryService,
               @Attribute('id') public readonly id: string,
               @Optional() dir?: Directionality) {
-    this._extApi = createApis(this, { config, ngZone, injector, vcRef, elRef, cdRef: cdr, dir });
+    this._extApi = createApis(this, { config, registry, ngZone, injector, vcRef, elRef, cdRef: cdr, dir });
 
     dir?.change
       .pipe(
@@ -347,37 +345,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   }
 
   ngAfterContentInit(): void {
-    // no need to unsubscribe, the reg service is per grid instance and it will destroy when this grid destroy.
-    // Also, at this point initial changes from templates provided in the content are already inside so they will not trigger
-    // the order here is very important, because component top of this grid will fire life cycle hooks AFTER this component
-    // so if we have a top level component registering a template on top it will not show unless we listen.
-    this.registry.changes.subscribe( changes => {
-      let gridCell = false;
-      let headerFooterCell = false;
-      for (const c of changes) {
-        switch (c.type) {
-          case 'tableCell':
-            gridCell = true;
-            break;
-          case 'headerCell':
-          case 'footerCell':
-            headerFooterCell = true;
-            break;
-          case 'noData':
-            this.setupNoData();
-            break;
-          case 'paginator':
-            this.setupPaginator();
-            break;
-        }
-      }
-      if (gridCell) {
-        this._store.attachCustomCellTemplates();
-      }
-      if (headerFooterCell) {
-        this._store.attachCustomHeaderCellTemplates();
-      }
-    });
+    this._extApi.logicaps.bindRegistry();
   }
 
   ngAfterViewInit(): void {
@@ -386,8 +354,7 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     Object.defineProperty(this, 'isInit', { value: true });
     this._plugin.emitEvent({ source: 'grid', kind: 'onInit' });
 
-    this.setupPaginator();
-    this.listenToResize();
+    this._extApi.logicaps.pagination();
 
     this.contextApi.focusChanged
       .subscribe( event => {
@@ -530,8 +497,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       this._dataSource = value;
       this._cdkTable.dataSource = value as any;
 
-      this.setupPaginator();
-      this.setupNoData(false);
+      this._extApi.logicaps.pagination();
+      this._extApi.logicaps.noData(false);
 
       if (prev?.hostGrid === this) {
         prev._detachEmitter();
@@ -596,9 +563,9 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
             startWith(null),
             pairwise(),
             tap( ([prev, curr]) => {
-              const noDataShowing = !!this._noDateEmbeddedVRef;
+              const noDataShowing = !!this._extApi.logicaps.noData.viewActive;
               if ( (curr > 0 && noDataShowing) || (curr === 0 && !noDataShowing) ) {
-                this.setupNoData();
+                this._extApi.logicaps.noData();
               }
             }),
             observeOn(animationFrameScheduler), // ww want to give the browser time to remove/add rows
@@ -651,81 +618,6 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     // Each row will rebuild it's own cells.
     // This will be done in the RowsApi, which listens to `onInvalidateHeaders`
     this._plugin.emitEvent({ source: 'grid', kind: 'onInvalidateHeaders' });
-  }
-
-  /**
-   * Updates the column sizes for all columns in the grid based on the column definition metadata for each column.
-   * The final width represent a static width, it is the value as set in the definition (except column without width, where the calculated global width is set).
-   */
-  resetColumnsWidth(): void {
-    resetColumnWidths(this._store.getStaticWidth(), this._store.visibleColumns, this._store.metaColumns);
-  }
-
-  /**
-   * Update the size of all group columns in the grid based on the size of their visible children (not hidden).
-   * @param dynamicWidthLogic - Optional logic container, if not set a new one is created.
-   */
-  syncColumnGroupsSize(dynamicWidthLogic?: DynamicColumnWidthLogic): void {
-    if (!dynamicWidthLogic) {
-      dynamicWidthLogic = this._extApi.dynamicColumnWidthFactory();
-    }
-
-    // From all meta columns (header/footer/headerGroup) we filter only `headerGroup` columns.
-    // For each we calculate it's width from all of the columns that the headerGroup "groups".
-    // We use the same strategy and the same RowWidthDynamicAggregator instance which will prevent duplicate calculations.
-    // Note that we might have multiple header groups, i.e. same columns on multiple groups with different row index.
-    for (const g of this._store.getAllHeaderGroup()) {
-      // We go over all columns because g.columns does not represent the current owned columns of the group
-      // it is static, representing the initial state.
-      // Only columns hold their group owners.
-      // TODO: find way to improve iteration
-      const colSizeInfos = this._store.visibleColumns.filter( c => !c.hidden && c.isInGroup(g)).map( c => c.sizeInfo );
-      if (colSizeInfos.length > 0) {
-        const groupWidth = dynamicWidthLogic.addGroup(colSizeInfos);
-        g.minWidth = groupWidth;
-        g.updateWidth(`${groupWidth}px`);
-      } else {
-        g.minWidth = undefined;
-        g.updateWidth(`0px`);
-      }
-    }
-  }
-
-  resizeColumns(columns?: PblColumn[]): void {
-    if (!columns) {
-      columns = this._store.visibleColumns;
-    }
-
-    // protect from per-mature resize.
-    // Will happen on additional header/header-group rows AND ALSO when vScrollNone is set
-    // This will cause size not to populate because it takes time to render the rows, since it's not virtual and happens immediately.
-    // TODO: find a better protection.
-    if (!columns[0].sizeInfo) {
-      return;
-    }
-
-    // stores and calculates width for columns added to it. Aggregate's the total width of all added columns.
-    const rowWidth = this._extApi.dynamicColumnWidthFactory();
-    this.syncColumnGroupsSize(rowWidth);
-
-    // if this is a grid without groups
-    if (rowWidth.minimumRowWidth === 0) {
-      rowWidth.addGroup(columns.map( c => c.sizeInfo ));
-    }
-
-    // if the max lock state has changed we need to update re-calculate the static width's again.
-    if (rowWidth.maxWidthLockChanged) {
-      resetColumnWidths(this._store.getStaticWidth(), this._store.visibleColumns, this._store.metaColumns);
-      this.resizeColumns(columns);
-      return;
-    }
-
-    this._cdkTable.minWidth = rowWidth.minimumRowWidth;
-
-    this.ngZone.run( () => {
-      this.rowsApi.syncRows('header');
-      this._plugin.emitEvent({ source: 'grid', kind: 'onResizeRow' });
-    });
   }
 
   /**
@@ -798,111 +690,11 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
     }
   }
 
-  private listenToResize(): void {
-    let resizeObserver: ResizeObserver;
-    const ro$ = fromEventPattern<[ResizeObserverEntry[], ResizeObserver]>(
-      handler => {
-        if (!resizeObserver) {
-          resizeObserver = new ResizeObserver(handler);
-          resizeObserver.observe(this.elRef.nativeElement);
-        }
-      },
-      handler => {
-        if (resizeObserver) {
-          resizeObserver.unobserve(this.elRef.nativeElement);
-          resizeObserver.disconnect();
-          resizeObserver = undefined;
-        }
-      }
-    );
-
-    // Skip the first emission
-    // Debounce all resizes until the next complete animation frame without a resize
-    // finally maps to the entries collection
-    // SKIP:  We should skip the first emission (`skip(1)`) before we debounce, since its called upon calling "observe" on the resizeObserver.
-    //        The problem is that some grid might require this because they do change size.
-    //        An example is a grid in a mat-tab that is hidden, the grid will hit the resize one when we focus the tab
-    //        which will require a resize handling because it's initial size is 0
-    //        To workaround this, we only skip elements not yet added to the DOM, which means they will not trigger a resize event.
-    let skipValue = document.body.contains(this.elRef.nativeElement) ? 1 : 0;
-
-    ro$
-      .pipe(
-        skip(skipValue),
-        debounceTime(0, animationFrameScheduler),
-        unrx(this),
-      )
-      .subscribe( (args: [ResizeObserverEntry[], ResizeObserver]) => {
-        if (skipValue === 0) {
-          skipValue = 1;
-          const columns = this._store.visibleColumns;
-          columns.forEach( c => c.sizeInfo.updateSize() );
-        }
-        this.onResize(args[0]);
-      });
-  }
-
-  private onResize(entries: ResizeObserverEntry[]): void {
-    this.viewport?.checkViewportSize();
-    // this.resetColumnsWidth();
-    this.resizeColumns();
-  }
-
-  private setupNoData(force?: boolean): void {
-    if (this._noDateEmbeddedVRef) {
-      this.removeView(this._noDateEmbeddedVRef, 'beforeContent');
-      this._noDateEmbeddedVRef = undefined;
-    }
-    if (force === false) {
-      return;
-    }
-
-    const noData = this._dataSource && this._dataSource.renderLength === 0;
-    if (noData) {
-      this.addClass('pbl-ngrid-empty');
-    } else {
-      this.removeClass('pbl-ngrid-empty');
-    }
-
-    if (noData || force === true) {
-      const noDataTemplate = this.registry.getSingle('noData');
-      if (noDataTemplate) {
-        this._noDateEmbeddedVRef = this.createView('beforeContent', noDataTemplate.tRef, { $implicit: this }, 0);
-      }
-    }
-  }
-
   private getInternalVcRef(location: 'beforeTable' | 'beforeContent' | 'afterContent'): ViewContainerRef {
     return location === 'beforeTable'
       ? this._vcRefBeforeTable
       : location === 'beforeContent' ? this._vcRefBeforeContent : this._vcRefAfterContent
     ;
-  }
-
-  private setupPaginator(): void {
-    const paginationKillKey = 'pblPaginationKillKey';
-    const usePagination = this.ds && this.usePagination;
-
-    if (usePagination) {
-      this.ds.pagination = this._pagination;
-      if (this.ds.paginator) {
-        this.ds.paginator.noCacheMode = this._noCachePaginator;
-      }
-    }
-
-    if (this.isInit) {
-      unrx.kill(this, paginationKillKey);
-      if (this._paginatorEmbeddedVRef) {
-        this.removeView(this._paginatorEmbeddedVRef, 'beforeContent');
-        this._paginatorEmbeddedVRef = undefined;
-      }
-      if (usePagination) {
-        const paginatorTemplate = this.registry.getSingle('paginator');
-        if (paginatorTemplate) {
-          this._paginatorEmbeddedVRef = this.createView('beforeContent', paginatorTemplate.tRef, { $implicit: this });
-        }
-      }
-    }
   }
 
   private resetHeaderRowDefs(): void {

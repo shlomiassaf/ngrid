@@ -2,20 +2,21 @@ import { Observable, of, Subject, EMPTY } from 'rxjs';
 import { ChangeDetectorRef, ElementRef, Injector, IterableDiffers, NgZone, ViewContainerRef } from '@angular/core';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 
-import { PblNgridConfigService, PblNgridEvents, ON_DESTROY, ON_CONSTRUCTED } from '@pebula/ngrid/core';
+import { PblNgridConfigService, PblNgridEvents, ON_DESTROY, ON_CONSTRUCTED, PblNgridRegistryService } from '@pebula/ngrid/core';
 import { PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
+import { PblNgridPluginContext } from '../ext/plugin-control';
+import { OnPropChangedEvent } from '../ext/types';
 import { ColumnApi, PblColumnStore } from './column/management';
+import { PblNgridColumnWidthCalc } from './column/width-logic/column-width-calc';
 import { PblNgridComponent } from './ngrid.component';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { PblRowsApi } from './row/rows-api';
 import { PblNgridCellFactoryResolver } from './row/cell-factory.service';
-import { DynamicColumnWidthLogic, DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY } from './column/width-logic/dynamic-column-width';
 import { ContextApi } from './context/api';
 import { PblNgridMetaRowService } from './meta-rows/meta-row.service';
-import { PblNgridPluginContext } from '../ext/plugin-control';
-import { OnPropChangedEvent } from '../ext/types';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { bindGridToDataSource } from './bind-grid-to-datasource';
+import { logicap, Logicaps } from './logicap/index';
 
 export interface RequiredAngularTokens {
   ngZone: NgZone;
@@ -24,6 +25,7 @@ export interface RequiredAngularTokens {
   cdRef: ChangeDetectorRef;
   elRef: ElementRef<HTMLElement>;
   config: PblNgridConfigService;
+  registry: PblNgridRegistryService;
   dir?: Directionality;
 }
 
@@ -33,6 +35,7 @@ export function createApis<T>(grid: PblNgridComponent<T>, tokens: RequiredAngula
 
 class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
   readonly config: PblNgridConfigService;
+  readonly registry: PblNgridRegistryService;
   readonly element: HTMLElement;
   readonly propChanged: Observable<OnPropChangedEvent>;
   readonly columnStore: PblColumnStore;
@@ -41,6 +44,8 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
   readonly rowsApi: PblRowsApi<T>;
   readonly events: Observable<PblNgridEvents>;
   readonly plugin: PblNgridPluginContext;
+  readonly widthCalc: PblNgridColumnWidthCalc;
+  readonly logicaps: Logicaps;
 
   get cdkTable() { return this._cdkTable; }
   get contextApi() { return this._contextApi || (this._contextApi = new ContextApi<T>(this)); }
@@ -58,6 +63,7 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     this.propChanged = this._propChanged = new Subject<OnPropChangedEvent>();
 
     this.config = tokens.config;
+    this.registry = tokens.registry;
     this.element = tokens.elRef.nativeElement;
     if (tokens.dir) {
       this.dir = tokens.dir;
@@ -67,7 +73,8 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     this._create = init;
     this.plugin = plugin;
     this.events = plugin.events;
-    this.columnStore = new PblColumnStore(grid, tokens.injector.get(IterableDiffers));
+    this.columnStore = new PblColumnStore(this, tokens.injector.get(IterableDiffers));
+    this.widthCalc = new PblNgridColumnWidthCalc(this);
 
     const cellFactory = tokens.injector.get(PblNgridCellFactoryResolver);
     this.rowsApi = new PblRowsApi<T>(this, tokens.ngZone, cellFactory);
@@ -75,10 +82,22 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     this.columnApi = ColumnApi.create<T>(this);
     this.metaRowService = new PblNgridMetaRowService(this);
     this._contextApi = new ContextApi<T>(this);
+    this.logicaps = logicap(this);
 
     bindGridToDataSource(this);
 
     this.events.pipe(ON_DESTROY).subscribe( e => this._propChanged.complete() );
+
+    this.widthCalc
+      .onWidthCalc
+      .subscribe( rowWidth => {
+        this._cdkTable.minWidth = rowWidth.minimumRowWidth;
+
+        tokens.ngZone.run( () => {
+          this.rowsApi.syncRows('header');
+          this.plugin.emitEvent({ source: 'grid', kind: 'onResizeRow' });
+        });
+      });
   }
 
   getDirection() {
@@ -111,10 +130,6 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
 
   setViewport(viewport: PblCdkVirtualScrollViewportComponent) {
     this._viewPort = viewport;
-  }
-
-  dynamicColumnWidthFactory(dir?: Direction): DynamicColumnWidthLogic {
-    return new DynamicColumnWidthLogic(DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY, dir ?? this.dir?.value);
   }
 
   notifyPropChanged(source, key, prev, curr) {

@@ -91,8 +91,8 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
     super();
     this.grid = extApi.grid;
 
-    const s = extApi.dynamicColumnWidthFactory().strategy;
-    this.widthBreakout = c => widthBreakout(s, c);
+    const { strategy } = extApi.widthCalc.dynamicColumnWidth;
+    this.widthBreakout = c => widthBreakout(strategy, c);
   }
 
   /**

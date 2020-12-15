@@ -1,6 +1,9 @@
 import { Subject, Observable } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { isDevMode, IterableDiffer, IterableDiffers } from '@angular/core';
-import { PblNgridColumnDefinitionSet, PblColumnSet, PblMetaRowDefinitions } from '@pebula/ngrid/core';
+import { ON_DESTROY, PblNgridColumnDefinitionSet, PblColumnSet, PblMetaRowDefinitions } from '@pebula/ngrid/core';
+
+import { PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
 import { PblNgridComponent } from '../../ngrid.component';
 import { findCellDef } from '../../cell/cell-def/utils';
 import {
@@ -9,12 +12,12 @@ import {
   isPblColumn, PblColumn, PblMetaColumn,
   PblNgridColumnSet,
 } from '../model';
+import { GridRowType } from '../../row/types';
+import { PblNgridBaseRowComponent } from '../../row/base-row.component';
 import { StaticColumnWidthLogic } from '../width-logic/static-column-width';
 import { resetColumnWidths } from '../../utils/width';
 import { PblMetaColumnStore, PblRowColumnsChangeEvent, PblRowTypeToColumnTypeMap } from './types';
 import { HiddenColumns } from './hidden-columns';
-import { GridRowType } from '../../row/types';
-import { PblNgridBaseRowComponent } from '../../row/base-row.component';
 import { MetaRowsStore } from './meta-rows-store';
 
 export class PblColumnStore {
@@ -40,8 +43,10 @@ export class PblColumnStore {
   private differ: IterableDiffer<PblColumn>;
   private _visibleChanged$ = new Subject<PblRowColumnsChangeEvent<PblColumn>>();
   private metaRowsStore: MetaRowsStore;
+  private grid: PblNgridComponent;
 
-  constructor(private readonly grid: PblNgridComponent, private readonly differs: IterableDiffers) {
+  constructor(private readonly extApi: PblNgridInternalExtensionApi, private readonly differs: IterableDiffers) {
+    this.grid = extApi.grid;
     this.metaRowsStore = new MetaRowsStore(differs);
     this.resetIds();
     this.resetColumns();
@@ -471,13 +476,13 @@ export class PblColumnStore {
   private afterColumnPositionChange(): void {
     // TODO: This shouldn't be here, it should be the responsibility of the caller to clear the context
     // Because now there is not option to control it.
-    this.grid.contextApi.clear(true);
+    this.extApi.contextApi.clear(true);
     this.updateGroups();
-    this.grid.resetColumnsWidth();
+    this.extApi.widthCalc.resetColumnsWidth();
     // now, any newly added column cells must first spin up to get a size
     // and most importantly have their ngAfterViewInit fired so the resize column will update the sizeInfo of the column!
-    this.grid.rowsApi.syncRows('header', true);
-    this.grid.resizeColumns();
+    this.extApi.rowsApi.syncRows('header', true);
+    this.extApi.widthCalc.calcColumnWidth();
   }
 }
 

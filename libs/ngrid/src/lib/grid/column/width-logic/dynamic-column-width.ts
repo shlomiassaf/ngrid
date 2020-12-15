@@ -39,6 +39,12 @@ export class DynamicColumnWidthLogic {
 
   constructor(public readonly strategy: BoxModelSpaceStrategy, public dir?: Direction) { }
 
+  reset() {
+    this.maxWidthLockChanged = false;
+    this._minimumRowWidth = 0;
+    this.cols.clear();
+  }
+
   /**
    * Returns a breakout of the width of the column, breaking it into the width of the content and the rest of the width
    */

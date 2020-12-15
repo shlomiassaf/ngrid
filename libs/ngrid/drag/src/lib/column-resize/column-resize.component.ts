@@ -201,7 +201,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
     if (this._lastWidth !== newWidth) {
       this._lastWidth = newWidth;
       this.column.updateWidth(`${newWidth}px`);
-      this.grid.resetColumnsWidth();
+      this._extApi.widthCalc.resetColumnsWidth();
       // `this.column.updateWidth` will update the grid width cell only, which will trigger a resize that will update all other cells
       // `this.grid.resetColumnsWidth()` will re-adjust all other grid width cells, and if their size changes they will trigger the resize event...
     }
