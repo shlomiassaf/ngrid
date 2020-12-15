@@ -2,7 +2,8 @@ import { Observable, isObservable } from 'rxjs';
 import { Directive, EmbeddedViewRef, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty, BooleanInput } from '@angular/cdk/coercion';
 
-import { PblNgridComponent, PblNgridPluginController, utils } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
+import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -50,11 +51,11 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
 
     if (isObservable(value) && this._blockUi !== value) {
       if (isObservable(this._blockUi)) {
-        utils.unrx.kill(this, this._blockUi);
+        unrx.kill(this, this._blockUi);
       }
       this._blockUi = value;
       value
-        .pipe(utils.unrx(this, this._blockUi))
+        .pipe(unrx(this, this._blockUi))
         .subscribe( state => {
           this._blockInProgress = state;
           this.setupBlocker();
@@ -98,10 +99,10 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
         if (event.kind === 'onDataSource') {
           const { prev, curr } = event;
           if (prev) {
-            utils.unrx.kill(this, prev);
+            unrx.kill(this, prev);
           }
           curr.onSourceChanging
-            .pipe(utils.unrx(this, curr))
+            .pipe(unrx(this, curr))
             .subscribe( () => {
               if (this._blockUi === 'auto') {
                 this._blockInProgress = true;
@@ -109,7 +110,7 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
               }
             });
           curr.onSourceChanged
-            .pipe(utils.unrx(this, curr))
+            .pipe(unrx(this, curr))
             .subscribe( () => {
               if (this._blockUi === 'auto') {
                 this._blockInProgress = false;
@@ -121,7 +122,7 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    utils.unrx.kill(this);
+    unrx.kill(this);
     this._removePlugin(this.grid);
   }
 
@@ -139,7 +140,7 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
       } else if (this._blockerEmbeddedVRef) {
         this.grid.removeView(this._blockerEmbeddedVRef, 'afterContent');
         this._blockerEmbeddedVRef = undefined;
-      } 
+      }
     }
   }
 }

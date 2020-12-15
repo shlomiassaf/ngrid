@@ -2,13 +2,13 @@ import { Component, Input, ViewChild, ViewEncapsulation, AfterViewInit, OnDestro
 import { SelectionModel } from '@angular/cdk/collections';
 import { ThemePalette } from '@angular/material/core';
 
+import { unrx } from '@pebula/ngrid/core';
 import {
   PblNgridComponent,
   PblNgridHeaderCellDefDirective,
   PblNgridCellDefDirective,
   PblNgridFooterCellDefDirective,
   PblNgridPluginController,
-  utils,
 } from '@pebula/ngrid';
 
 const ALWAYS_FALSE_FN = () => false;
@@ -93,7 +93,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit, OnDestroy {
   constructor(public table: PblNgridComponent<any>, private cdr: ChangeDetectorRef) {
     const pluginCtrl = PblNgridPluginController.find(table);
     pluginCtrl.events
-      .pipe(utils.unrx(this))
+      .pipe(unrx(this))
       .subscribe( e => {
         if (e.kind === 'onDataSource') {
           this.selection = e.curr.selection;
@@ -114,7 +114,7 @@ export class PblNgridCheckboxComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    utils.unrx.kill(this);
+    unrx.kill(this);
   }
 
   masterToggle(): void {
@@ -137,15 +137,15 @@ export class PblNgridCheckboxComponent implements AfterViewInit, OnDestroy {
   }
 
   private setupSelection(): void {
-    utils.unrx.kill(this, this.table);
+    unrx.kill(this, this.table);
     if (this._selection) {
       this.length = this.selection.selected.length;
       this.selection.changed
-        .pipe(utils.unrx(this, this.table))
+        .pipe(unrx(this, this.table))
         .subscribe(() => this.handleSelectionChanged());
       const changeSource = this.bulkSelectMode === 'view' ? this.table.ds.onRenderedDataChanged : this.table.ds.onSourceChanged;
       changeSource
-        .pipe(utils.unrx(this, this.table))
+        .pipe(unrx(this, this.table))
         .subscribe(() => this.handleSelectionChanged());
     } else {
       this.length = 0;

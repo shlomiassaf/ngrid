@@ -16,7 +16,8 @@ import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Platform} from '@angular/cdk/platform';
 import { TooltipPosition, MatTooltipDefaultOptions, MatTooltip, MAT_TOOLTIP_SCROLL_STRATEGY, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
-import { PblNgridComponent, PblNgridPluginController, PblNgridConfigService, utils } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
+import { PblNgridComponent, PblNgridPluginController, PblNgridConfigService } from '@pebula/ngrid';
 import { PblNgridCellEvent } from '@pebula/ngrid/target-events';
 
 declare module '@pebula/ngrid/lib/grid/services/config' {
@@ -107,7 +108,7 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     ];
 
     configService.onUpdate('cellTooltip')
-      .pipe(utils.unrx(this))
+      .pipe(unrx(this))
       .subscribe( cfg => this.lastConfig = cfg.curr );
 
     pluginCtrl.onInit().subscribe( () => this.init(pluginCtrl) );
@@ -120,7 +121,7 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
   ngOnDestroy(): void {
     this._removePlugin(this.table);
     this.killTooltip();
-    utils.unrx.kill(this);
+    unrx.kill(this);
   }
 
   private init(pluginCtrl: PblNgridPluginController): void {
@@ -128,11 +129,11 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     // if it's not set, create it.
     const targetEventsPlugin = pluginCtrl.getPlugin('targetEvents') || pluginCtrl.createPlugin('targetEvents');
     targetEventsPlugin.cellEnter
-      .pipe(utils.unrx(this))
+      .pipe(unrx(this))
       .subscribe( event => this.cellEnter(event) );
 
     targetEventsPlugin.cellLeave
-      .pipe(utils.unrx(this))
+      .pipe(unrx(this))
       .subscribe( event => this.cellLeave(event) );
   }
 

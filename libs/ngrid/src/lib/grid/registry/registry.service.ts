@@ -5,8 +5,7 @@ import {
   SkipSelf,
   OnDestroy,
 } from '@angular/core';
-
-import { unrx } from '../utils';
+import { unrx } from '@pebula/ngrid/core';
 
 import {
   PblNgridMultiRegistryMap,

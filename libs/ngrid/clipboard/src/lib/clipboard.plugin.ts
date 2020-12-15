@@ -3,7 +3,8 @@ import { Directive, Injector, OnDestroy, Input } from '@angular/core';
 
 import { Clipboard } from '@angular/cdk/clipboard';
 
-import { PblNgridComponent, PblNgridPluginController, PblNgridConfigService, utils } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
+import { PblNgridComponent, PblNgridPluginController, PblNgridConfigService } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -72,7 +73,7 @@ export class PblNgridClipboardPlugin implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    utils.unrx.kill(this);
+    unrx.kill(this);
     this._removePlugin(this.grid);
   }
 
@@ -153,7 +154,7 @@ export class PblNgridClipboardPlugin implements OnDestroy {
     targetEvents.keyDown
       .pipe(
         filter( event => this.isCopyEvent(event.source) ),
-        utils.unrx(this)
+        unrx(this)
       )
       .subscribe( event => this.doCopy() );
   }

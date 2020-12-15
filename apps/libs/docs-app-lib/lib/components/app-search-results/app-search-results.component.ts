@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, transition, style, animate } from '@angular/animations';
 
-import { utils } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
 import { SearchResults, SearchResult, SearchArea, SearchService } from '../../services/search';
 import { MarkdownPagesMenuService } from '../../services/markdown-pages-menu.service';
 import { ViewLayoutObserver } from '../../services/view-layout-observer.service';
@@ -52,7 +52,7 @@ export class AppSearchResults implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    utils.unrx.kill(this);
+    unrx.kill(this);
   }
 
   onResultSelected(page: SearchResult, event: MouseEvent) {
@@ -63,9 +63,9 @@ export class AppSearchResults implements OnChanges, OnDestroy {
   }
 
   doSearch(query: string) {
-    utils.unrx.kill(this, this.searchService);
+    unrx.kill(this, this.searchService);
     this.searchService.queryIndex(query)
-      .pipe(utils.unrx(this, this.searchService))
+      .pipe(unrx(this, this.searchService))
       .subscribe( results => {
         this.searchResults = results;
         if (this.searchResults) {

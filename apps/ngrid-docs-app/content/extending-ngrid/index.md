@@ -228,7 +228,6 @@ Because this is a simple example, we will use the same class for the plugin and 
 
 ```typescript
 @Directive({ selector: 'pbl-ngrid[clipboard]', exportAs: 'pblNgridClipboard' })
-@UnRx()
 export class PblNgridClipboardPlugin implements OnDestroy {
 
   static create(grid: PblNgridComponent, injector: Injector): PblNgridClipboardPlugin {
@@ -240,7 +239,6 @@ export class PblNgridClipboardPlugin implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-
   }
 }
 
@@ -271,6 +269,11 @@ In the constructor we use the injector to get the `Clipboard` service, which we 
 Next, we call the `init()` method:
 
 ```typescript
+
+  ngOnDestroy(): void {
+    unrx.kill(this);
+  }
+
   private init(): void {
     this._removePlugin = this.pluginCtrl.setPlugin(PLUGIN_KEY, this);
 
@@ -278,7 +281,7 @@ Next, we call the `init()` method:
 
     const targetEvents = this.pluginCtrl.getPlugin('targetEvents');
     targetEvents.keyDown
-      .pipe(UnRx(this))
+      .pipe(unrx(this))
       .subscribe( event => this.checkCopy(event) );
   }
 ```
@@ -295,6 +298,7 @@ Last thing to remember is to un-register the plugin un destruction:
 
 ```typescript
   ngOnDestroy(): void {
+    unrx.kill(this);
     this._removePlugin(this.grid);
   }
 ```

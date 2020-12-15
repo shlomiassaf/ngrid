@@ -3,9 +3,8 @@ import { TemplateRef } from '@angular/core';
 import { PblNgridMetaCellContext, PblNgridCellContext } from '../../context/types';
 import { DataSourceColumnPredicate, PblNgridSorter } from '../../../data-source/types';
 import { PblNgridColumnDef } from '../directives/column-def';
-import { deepPathGet, deepPathSet } from '../../utils';
 import { PblColumnDefinition, PblColumnTypeDefinition, PblColumnSizeInfo } from './types';
-import { initDefinitions, parseStyleWidth } from './utils';
+import { initDefinitions, parseStyleWidth, deepPathGet, deepPathSet } from './utils';
 import { PblColumnGroup, PblColumnGroupStore } from './group-column';
 
 const PBL_NGRID_COLUMN_MARK = Symbol('PblColumn');

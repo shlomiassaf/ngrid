@@ -1,8 +1,9 @@
 import { Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { unrx } from '@pebula/ngrid/core';
+
 import { PblNgridInternalExtensionApi, PblNgridExtensionApi } from '../../../../../ext/grid-ext-api';
 import { PblDataSource } from '../../../../../data-source/data-source';
-import { unrx } from '../../../../utils/unrx';
 import { PblCdkVirtualScrollViewportComponent } from '../../virtual-scroll-viewport.component';
 import { PblNgridVirtualScrollStrategy } from '../types';
 import { Sizer } from './sizer';

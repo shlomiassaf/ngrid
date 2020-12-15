@@ -10,8 +10,8 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
-import { PblPagingPaginator, PblPaginatorChangeEvent } from '@pebula/ngrid/core';
-import { PblNgridComponent, utils } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
+import { PblNgridComponent, PblPaginator, PblPaginatorChangeEvent } from '@pebula/ngrid';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
 
@@ -36,19 +36,19 @@ export class PblPaginatorComponent implements OnDestroy {
     this.updatePageSizes();
   }
 
-  @Input() get paginator(): PblPagingPaginator { return this._paginator; }
-  set paginator(value: PblPagingPaginator) {
+  @Input() get paginator(): PblPaginator<number> { return this._paginator; }
+  set paginator(value: PblPaginator<number>) {
     if (this._paginator === value) {
       return;
     }
     if (this._paginator) {
-      utils.unrx.kill(this, this._paginator);
+      unrx.kill(this, this._paginator);
     }
     this._paginator = value;
     if (value) {
       // pagination.onChange is BehaviorSubject so handlePageChange will trigger
       value.onChange
-        .pipe(utils.unrx(this, value))
+        .pipe(unrx(this, value))
         .subscribe( event => this.handlePageChange(event) );
       this.updatePageSizes();
     }
@@ -63,7 +63,7 @@ export class PblPaginatorComponent implements OnDestroy {
   set hideRangeSelect(value: boolean) { this._hideRangeSelect = coerceBooleanProperty(value); }
 
   private _pageSizeOptions: number[];
-  private _paginator: PblPagingPaginator;
+  private _paginator: PblPaginator<number>;
   private _hidePageSize = false;
   private _hideRangeSelect = false;
 
@@ -74,12 +74,12 @@ export class PblPaginatorComponent implements OnDestroy {
       this.table = table;
     }
     _intl.changes
-      .pipe(utils.unrx(this))
+      .pipe(unrx(this))
       .subscribe(() => this.cdr.markForCheck());
   }
 
   ngOnDestroy(): void {
-    utils.unrx.kill(this);
+    unrx.kill(this);
   }
 
   private updatePageSizes(): void {

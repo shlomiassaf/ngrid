@@ -3,7 +3,7 @@ import { filter, mapTo } from 'rxjs/operators';
 import { ComponentRef, Inject, INJECTOR, Injector, Type } from '@angular/core';
 import { ComponentPortal, CdkPortalOutletAttachedRef } from '@angular/cdk/portal';
 import { Directionality } from '@angular/cdk/bidi';
-import { utils } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
 import { LazyModuleStoreService } from '../services/lazy-module-store';
 
 const COMPONENT_WAIT_TIMEOUT = 1000 * 60; // 60 secs
@@ -23,7 +23,7 @@ export abstract class MarkdownDynamicComponentPortal {
   abstract getRenderTypes(selector: string): { component?: Type<any>; moduleType?: Type<any>; } | undefined;
 
   render(): void {
-    utils.unrx.kill(this, 'render');
+    unrx.kill(this, 'render');
     const { component, moduleType } = this.getRenderTypes(this.componentName) || <any>{};
     const lazyModuleStore = this._injector.get(LazyModuleStoreService, null);
     if (component) {
@@ -38,14 +38,14 @@ export abstract class MarkdownDynamicComponentPortal {
       this.selectedPortal$.next(null);
       if (lazyModuleStore) {
         const timeout = {};
-        const time$ = timer(COMPONENT_WAIT_TIMEOUT).pipe(mapTo(timeout), utils.unrx(this, 'render'));
+        const time$ = timer(COMPONENT_WAIT_TIMEOUT).pipe(mapTo(timeout), unrx(this, 'render'));
         const init$ = lazyModuleStore.moduleInit.pipe(
           filter( () => !!this.getRenderTypes(this.componentName) ),
-          utils.unrx(this, 'render')
+          unrx(this, 'render')
         );
 
         race(init$, time$)
-          .pipe(utils.unrx(this, 'render'))
+          .pipe(unrx(this, 'render'))
           .subscribe( event => {
             if (event === timeout) {
               this.logCantRender();

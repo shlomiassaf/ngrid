@@ -1,7 +1,7 @@
-import { filter, take } from 'rxjs/operators';
 import { Directive, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
+import { unrx } from '@pebula/ngrid/core';
 import {
   columnFactory,
   PblNgridConfigService,
@@ -10,7 +10,6 @@ import {
   PblNgridComponent,
   PblNgridPluginController,
   PblColumn,
-  utils,
 } from '@pebula/ngrid';
 
 import { TransposeTableSession, LOCAL_COLUMN_DEF, VIRTUAL_REFRESH } from './transpose-table-session';
@@ -131,7 +130,7 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
   ngOnDestroy() {
     this._removePlugin(this.grid);
     this.disable(false);
-    utils.unrx.kill(this);
+    unrx.kill(this);
   }
 
   disable(updateTable: boolean): void {

@@ -1,4 +1,12 @@
-import { isPblColumn, isPblMetaColumn, isPblColumnGroup, unrx, getRootElement } from './lib/grid/index';
+// Some symbols in `@pebula/ngrid/core` are also used by "regular" users of ngrid (as opposed to internal/plugin use) so we need to re-export them
+// from the main package so "regular" user will not have to specifically address `@pebula/ngrid/core`
+export {
+  PblNgridPaginatorKind, PblPaginator, PblPaginatorChangeEvent,
+
+
+} from '@pebula/ngrid/core';
+
+import { isPblColumn, isPblMetaColumn, isPblColumnGroup } from './lib/grid/index';
 
 export {
   PblDataSourceConfigurableTriggers,
@@ -60,11 +68,9 @@ export { ngridPlugin, NgridPluginMetadata } from './lib/ext/grid-plugin';
 export { PblNgridPluginController } from './lib/ext/plugin-control';
 
 export const utils = {
-  getRootElement,
   isPblColumn,
   isPblMetaColumn,
   isPblColumnGroup,
-  unrx,
 };
 
 export { PblNgridModule, provideCommon } from './lib/ngrid.module';

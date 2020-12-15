@@ -1,14 +1,13 @@
 import { filter } from 'rxjs/operators';
-import { OnDestroy, Component, ElementRef, DoCheck, TemplateRef } from '@angular/core';
-import { RowContext } from '@angular/cdk/table';
+import { Component, DoCheck, TemplateRef } from '@angular/core';
+import { unrx } from '@pebula/ngrid/core';
 
-import { unrx } from '../utils';
-import { COLUMN_EDITABLE_CELL_CLASS } from '../utils/unique-column-css';
 import { PblRowContext, PblCellContext } from '../context/index';
 import { PblColumn } from '../column/model';
 import { initCellElement } from './utils';
 import { PblNgridBaseCell } from './base-cell';
 
+const COLUMN_EDITABLE_CELL_CLASS = 'pbl-ngrid-editable-cell';
 
 function initDataCellElement(el: HTMLElement, column: PblColumn, prev?: PblColumn): void {
   if (prev?.editable && prev.editorTpl) {

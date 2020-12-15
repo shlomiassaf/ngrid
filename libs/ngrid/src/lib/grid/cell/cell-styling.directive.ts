@@ -1,5 +1,5 @@
 import { Directive, Input, ElementRef } from '@angular/core';
-import { StylingDiffer, StylingDifferOptions } from '../utils/styling.differ';
+import { StylingDiffer, StylingDifferOptions } from '@pebula/ngrid/core';
 
 /*
     We're using `StylingDiffer`, which is an exact copy of the style differ used for `ngStyle` and `ngClass`.
@@ -47,23 +47,23 @@ export class PblNgridCellStyling {
 
   @Input('ngridCellStyle') set style(value: { [key: string]: string }) {
     if (!this._styleDiffer) {
-      this._styleDiffer = new StylingDiffer<{ [key: string]: any } | null>('NgStyle', StylingDifferOptions.AllowUnits);
+      this._styleDiffer = new StylingDiffer<{ [key: string]: string | null }>('NgStyle', StylingDifferOptions.AllowUnits);
     }
-    this._styleDiffer.setValue(value);
+    this._styleDiffer.setInput(value);
   }
 
   @Input('ngridCellClass') set klass(value: string | string[] | Set<string> | { [klass: string]: any }) {
     if (!this._classDiffer) {
-      this._classDiffer = new StylingDiffer<{ [klass: string]: boolean }>(
+      this._classDiffer = new StylingDiffer<{ [klass: string]: true }>(
         'NgClass',
         StylingDifferOptions.TrimProperties | StylingDifferOptions.AllowSubKeys | StylingDifferOptions.AllowStringValue | StylingDifferOptions.ForceAsMap,
       );
     }
-    this._classDiffer.setValue(value);
+    this._classDiffer.setInput(value);
   }
 
-  private _styleDiffer: StylingDiffer<{ [key: string]: any } | null>;
-  private _classDiffer: StylingDiffer<{ [klass: string]: boolean }>;
+  private _styleDiffer: StylingDiffer<{ [key: string]: string | null }>;
+  private _classDiffer: StylingDiffer<{ [klass: string]: true }>;
   private _parent: HTMLElement;
   private _lastStyle = new Set<string>();
   private _lastClass = new Set<string>();
@@ -79,7 +79,7 @@ export class PblNgridCellStyling {
 
   private updateParent(): void {
     if (this._parent) {
-      if (this._styleDiffer && this._styleDiffer.hasValueChanged()) {
+      if (this._styleDiffer?.updateValue()) {
         const lastStyle = this._lastStyle;
         this._lastStyle = new Set<string>();
         for (const key of Object.keys(this._styleDiffer.value)) {
@@ -94,7 +94,7 @@ export class PblNgridCellStyling {
         }
       }
 
-      if (this._classDiffer && this._classDiffer.hasValueChanged()) {
+      if (this._classDiffer?.updateValue()) {
         const lastClass = this._lastClass;
         this._lastClass = new Set<string>();
         for (const key of Object.keys(this._classDiffer.value)) {

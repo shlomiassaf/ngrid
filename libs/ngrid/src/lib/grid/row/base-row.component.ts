@@ -9,11 +9,11 @@ import {
   ViewChild,
   ComponentRef,
 } from '@angular/core';
+import { unrx } from '@pebula/ngrid/core';
 
 import { PblNgridPluginController } from '../../ext/plugin-control';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { PblNgridComponent } from '../ngrid.component';
-import { unrx } from '../utils/unrx';
 import { moveItemInArrayExt } from '../column/management/column-store';
 import { GridRowType, PblRowTypeToCellTypeMap } from './types';
 import { PblRowTypeToColumnTypeMap } from '../column/management';

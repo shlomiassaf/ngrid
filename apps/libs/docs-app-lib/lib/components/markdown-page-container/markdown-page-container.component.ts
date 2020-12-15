@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Directionality } from '@angular/cdk/bidi';
 import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
 
-import { utils } from '@pebula/ngrid';
+import { unrx } from '@pebula/ngrid/core';
 import { TocAreaDirective } from '@pebula/apps/docs-app-lib/toc.module';
 
 import { MarkdownPagesMenuService, NavEntry } from '../../services/markdown-pages-menu.service';
@@ -59,12 +59,12 @@ export class MarkdownPageContainerComponent implements AfterViewInit, OnDestroy 
       .pipe(
         debounceTime(1),
         map( urlSegments => urlSegments.map(u => u.path) ),
-        utils.unrx(this)
+        unrx(this)
       )
       .subscribe( paths => this.handleUrlUpdate(paths) );
 
     this.viewLayout.isWeb$
-      .pipe(utils.unrx(this))
+      .pipe(unrx(this))
       .subscribe( isWeb => {
         if (isWeb) {
           this.mode = 'side';
@@ -78,7 +78,7 @@ export class MarkdownPageContainerComponent implements AfterViewInit, OnDestroy 
 
   ngOnDestroy(): void {
     this.menu$.complete();
-    utils.unrx.kill(this);
+    unrx.kill(this);
   }
 
   getRouterLink(path: string): any[] {

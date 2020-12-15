@@ -28,8 +28,8 @@ import {
   CdkVirtualForOf,
   ViewportRuler,
 } from '@angular/cdk/scrolling';
+import { unrx } from '@pebula/ngrid/core';
 
-import { unrx } from '../../utils';
 import { PblNgridConfigService } from '../../services/config';
 import { PblNgridComponent } from '../../ngrid.component';
 import { PblNgridBaseVirtualScrollDirective } from './strategies/base-v-scroll.directive'
