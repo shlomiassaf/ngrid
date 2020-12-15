@@ -5,6 +5,9 @@ import { isPblColumn, isPblMetaColumn, isPblColumnGroup } from './lib/grid/index
 /* Some symbols in `@pebula/ngrid/core` are also used by "regular" users of ngrid (as opposed to internal/plugin use) so we need to re-export them
    from the main package so "regular" user will not have to specifically address `@pebula/ngrid/core` */
 export {
+  // Configuration
+  PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService,
+
   // Pagination
   PblNgridPaginatorKind, PblPaginator, PblPaginatorChangeEvent,
 
@@ -32,8 +35,6 @@ export {
 } from '@pebula/ngrid/core';
 
 export {
-  PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService,
-
   PblColumn, PblMetaColumn, PblColumnGroup, PblColumnFactory, COLUMN, columnFactory,
   isPblMetaColumn, isPblColumnGroup, isPblColumn,
 

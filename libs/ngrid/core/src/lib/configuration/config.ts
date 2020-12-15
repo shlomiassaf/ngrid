@@ -1,15 +1,6 @@
 import { Observable, ReplaySubject } from 'rxjs';
-
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
-
-export interface PblNgridConfig {
-  table?: {
-    showHeader?: boolean;
-    showFooter?: boolean;
-    noFiller?: boolean;
-    clearContextOnSourceChanging?: boolean;
-  }
-}
+import { PblNgridConfig } from './type';
 
 const DEFAULT_TABLE_CONFIG: PblNgridConfig['table'] = {
   showHeader: true,
@@ -20,9 +11,7 @@ const DEFAULT_TABLE_CONFIG: PblNgridConfig['table'] = {
 
 export const PEB_NGRID_CONFIG = new InjectionToken<PblNgridConfig>('PEB_NGRID_CONFIG');
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PblNgridConfigService {
 
   private config = new Map<keyof PblNgridConfig, any>();

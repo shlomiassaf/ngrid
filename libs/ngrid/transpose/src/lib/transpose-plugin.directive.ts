@@ -1,10 +1,9 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-import { PblColumnDefinition, PblNgridColumnDefinitionSet, unrx } from '@pebula/ngrid/core';
+import { PblNgridConfigService, PblColumnDefinition, PblNgridColumnDefinitionSet, unrx } from '@pebula/ngrid/core';
 import {
   columnFactory,
-  PblNgridConfigService,
   PblNgridComponent,
   PblNgridPluginController,
   PblColumn,
@@ -15,7 +14,7 @@ import { getCellValueTransformed, createTransformedColumn } from './utils';
 
 const DEFAULT_HEADER_COLUMN = { prop: '__transpose__', css: 'pbl-ngrid-header-cell pbl-ngrid-transposed-header-cell' };
 
-declare module '@pebula/ngrid/lib/grid/services/config' {
+declare module '@pebula/ngrid/core/lib/configuration/type' {
   interface PblNgridConfig {
     transposePlugin?: {
       header?: Partial<PblColumnDefinition>;

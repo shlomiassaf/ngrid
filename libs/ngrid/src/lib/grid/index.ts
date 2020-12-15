@@ -1,4 +1,3 @@
-export * from './services/index';
 export * from './meta-rows/index';
 
 export {

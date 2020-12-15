@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
 
-import { PblNgridEvents } from '@pebula/ngrid/core';
+import { PblNgridConfigService, PblNgridEvents } from '@pebula/ngrid/core';
 import { PblCdkTableComponent } from '../grid/pbl-cdk-table/pbl-cdk-table.component';
 import { ContextApi } from '../grid/context/api';
 import { PblNgridComponent } from '../grid/ngrid.component';
@@ -12,7 +12,6 @@ import { PblCdkVirtualScrollViewportComponent } from '../grid/features/virtual-s
 import { NotifyPropChangeMethod, OnPropChangedEvent } from './types';
 import { PblNgridMetaRowService } from '../grid/meta-rows/meta-row.service';
 import { RowsApi, PblRowsApi } from '../grid/row';
-import { PblNgridConfigService } from '../grid/services/config';
 import { PblNgridPluginContext, PblNgridPluginController } from './plugin-control';
 
 export const EXT_API_TOKEN = new InjectionToken('PBL_NGRID_EXTERNAL_API');
