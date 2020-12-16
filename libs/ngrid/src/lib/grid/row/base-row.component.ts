@@ -37,6 +37,12 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
 
   get cellsLength() { return this._cells.length; }
 
+  /**
+   * An attached row will run change detection on it's children.
+   * All rows are attached by default.
+   */
+  get attached(): boolean { return this._attached; }
+
   abstract readonly rowType: TRowType;
 
   abstract get rowIndex(): number;
@@ -45,6 +51,8 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
   protected _cells: ComponentRef<PblRowTypeToCellTypeMap<TRowType>>[] = [];
 
   protected cellInjector: Injector;
+
+  private _attached = true;
 
   constructor(@Optional() grid: PblNgridComponent<T>,
               readonly cdRef: ChangeDetectorRef,
@@ -73,7 +81,7 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
   }
 
   ngDoCheck(): void {
-    if (this.grid) {
+    if (this._attached && this.grid) {
       this.detectChanges();
     }
   }
@@ -81,6 +89,33 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
   ngOnDestroy(): void {
     unrx.kill(this);
     this._extApi?.rowsApi.removeRow(this);
+  }
+
+  /**
+   * Marks the row as attached.
+   * Rows are attached by default.
+   * An attached row takes part in the change detection process
+   */
+  attach(): boolean {
+    if (!this._attached) {
+      this._attached = true;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Marks the row as detached.
+   * A detached row DOWS NOT take part in the change detection process.
+   *
+   * Usually when the rendering engine cache row elements for performance, these should be detached when cached and re-attached when returned into view.
+   */
+  detach(): boolean {
+    if (this._attached) {
+      this._attached = false;
+      return true;
+    }
+    return false;
   }
 
   _createCell(column: PblRowTypeToColumnTypeMap<TRowType>, atIndex?: number) {

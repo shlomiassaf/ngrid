@@ -98,9 +98,7 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
   }
 
   ngOnDestroy(): void {
-    if (this.cdkDropList) {
-      this.cdkDropList.removeDrag(this);
-    }
+    this.cdkDropList?.removeDrag(this);
     super.ngOnDestroy();
   }
 

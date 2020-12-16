@@ -17,7 +17,9 @@ export interface RowsApi<T = any> {
 
   findDataRowByIndex(index: number): PblNgridRowComponent<T> | undefined;
   findDataRowByDsIndex(index: number): PblNgridRowComponent<T> | undefined;
-  findDataRowByIdentity(identity: string): PblNgridRowComponent<T> | undefined;
+  findDataRowByIdentity(identity: string | number): PblNgridRowComponent<T> | undefined;
+  findRowByElement(element: Element): PblNgridBaseRowComponent<GridRowType, T> | undefined;
+
 }
 
 function isPblNgridRowComponent<T = any>(row: PblNgridBaseRowComponent<GridRowType, T>): row is PblNgridRowComponent {
@@ -231,9 +233,12 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
     }
   }
 
-
   dataRows() {
     return Array.from(this.rows.get('data')) as PblNgridRowComponent<T>[];
+  }
+
+  findRowByElement(element: Element): PblNgridBaseRowComponent<GridRowType, T> | undefined {
+    return this.allByElement.get(element);
   }
 
   findDataRowByDsIndex(index: number): PblNgridRowComponent<T> | undefined {
@@ -252,7 +257,7 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
     }
   }
 
-  findDataRowByIdentity(identity: string): PblNgridRowComponent<T> | undefined {
+  findDataRowByIdentity(identity: string | number): PblNgridRowComponent<T> | undefined {
     for (const r of this.dataRows()) {
       if (r.context?.identity === identity) {
         return r as PblNgridRowComponent<T>;

@@ -74,7 +74,6 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
     if (!(this.pblDropListRef instanceof PblDropListRef)) {
       throw new Error('Invalid `DropListRef` injection, the ref is not an instance of PblDropListRef')
     }
-    this.initDropListRef();
 
     // This is a workaround for https://github.com/angular/material2/pull/14153
     // Working around the missing capability for selecting a container element that is not the drop container host.
@@ -83,6 +82,8 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
     if (grid) {
       this.updateGrid(grid);
     }
+
+    this.initDropListRef();
   }
 
   ngOnInit(): void {

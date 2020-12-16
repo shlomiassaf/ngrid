@@ -20,15 +20,15 @@ import { PblNgridRowReorderPluginDirective, ROW_REORDER_PLUGIN_KEY } from './row
 export class PblNgridRowDragDirective<T = any> extends CdkLazyDrag<T, PblNgridRowReorderPluginDirective<T>> implements OnInit {
   rootElementSelector = 'pbl-ngrid-row';
 
-  get context(): Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>> {
+  get context(): PblNgridCellContext<T> {
     return this._context;
   }
 
-  @Input('pblNgridRowDrag') set context(value: Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>) {
+  @Input('pblNgridRowDrag') set context(value: PblNgridCellContext<T>) {
     this._context = value;
 
     const pluginCtrl = this.pluginCtrl = value && PblNgridPluginController.find(value.grid);
-    const plugin = pluginCtrl && pluginCtrl.getPlugin(ROW_REORDER_PLUGIN_KEY);
+    const plugin = pluginCtrl?.getPlugin(ROW_REORDER_PLUGIN_KEY);
     this.cdkDropList = plugin || undefined;
   }
 
@@ -43,7 +43,7 @@ export class PblNgridRowDragDirective<T = any> extends CdkLazyDrag<T, PblNgridRo
     return this._draggedContext;
   }
 
-  private _context: Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>;
+  private _context: PblNgridCellContext<T>;
   private _draggedContext: Pick<PblNgridCellContext<T>, 'col' | 'grid'> & Partial<Pick<PblNgridCellContext<T>, 'row' | 'value'>>;
 
   private pluginCtrl: PblNgridPluginController;
