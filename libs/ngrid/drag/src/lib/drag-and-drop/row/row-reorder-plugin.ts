@@ -10,6 +10,7 @@ import {
 import { PblNgridComponent } from '@pebula/ngrid';
 import { PblDragDrop, CdkLazyDropList } from '../core/index';
 import { PblNgridRowDragDirective } from './row-drag';
+import { patchDropListRef } from './row-drop-list-ref';
 
 declare module '@pebula/ngrid/lib/ext/types' {
   interface PblNgridPluginExtension {
@@ -55,8 +56,24 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkLazyDropList<
     this._removePlugin(this.grid);
   }
 
+  getSortedItems() {
+    const { rowsApi } = this.gridApi;
+    // The CdkTable has a view repeater that cache view's for performance (only when virtual scroll enabled)
+    // A cached view is not showing but still "living" so it's CdkDrag element is still up in the air
+    // We need to filter them out
+    // An alternative will be to catch the events of the rows attached/detached and add/remove them from the drop list.
+    return (super.getSortedItems() as PblNgridRowDragDirective[]).filter( item => {
+      return rowsApi.findRowByElement(item.getRootElement())?.attached;
+    });
+  }
+
+  protected initDropListRef(): void {
+    patchDropListRef(this.pblDropListRef as any, this.gridApi);
+  }
+
   protected gridChanged() {
     this._removePlugin = this.gridApi.pluginCtrl.setPlugin(ROW_REORDER_PLUGIN_KEY, this);
+    this.directContainerElement = '.pbl-ngrid-scroll-container';
 
     this.dropped.subscribe( (event: CdkDragDrop<T>) => {
       const item = event.item as PblNgridRowDragDirective<T>;
