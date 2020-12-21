@@ -1,3 +1,12 @@
+# 3.0.0-alpha.4 (2020-12-21)
+
+
+### Reverts
+
+* **ngrid:** PblNgridRegistryService back to main package ([9a194e8](https://github.com/shlomiassaf/ngrid/commit/9a194e84b3145510e1936cccecb2dfd6805dff8a))
+
+
+
 # 3.0.0-alpha.3 (2020-12-21)
 
 
