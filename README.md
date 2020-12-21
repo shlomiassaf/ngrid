@@ -27,11 +27,12 @@ For full documentation, walkthroughs and examples - [visit the official site](ht
 
 | nGrid Version    | Angular Version | Documentation | Starters  
 |------------------|-----------------|---------------|---------
-| 3.x.x (Current)  | 11.x.x          | [* Documentation](https://shlomiassaf.github.io/ngrid) | [Starter @ GitHub](https://github.com/shlomiassaf/ngrid-material-starter) / [Starter @ StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter?file=app%2Fapp.component.ts) |
-| 2.x.x            | 9.x.x - 10.x.x  | [* Documentation](https://shlomiassaf.github.io/ngrid/v2) | [Starter @ GitHub](https://github.com/shlomiassaf/ngrid-material-starter/tree/v2) / [Starter @ StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter-v2) |
-| 1.x.x            | 6.x.x - 8.x.x   | [* Documentation](https://shlomiassaf.github.io/ngrid/v1) | [Starter @ GitHub](https://github.com/shlomiassaf/ngrid-material-starter/tree/v8) / [Starter @ StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter-v8?file=app%2Fapp.component.ts) |
+| 3.x.x (Current)  | 11.x.x          | [Documentation](https://shlomiassaf.github.io/ngrid) | Starter @ [GitHub](https://github.com/shlomiassaf/ngrid-material-starter) / [StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter?file=app%2Fapp.component.ts) / [CodeSandbox](https://codesandbox.io/s/pebula-ngrid-starter-yrgdd) |
+| 2.x.x            | 9.x.x - 10.x.x  | [Documentation](https://shlomiassaf.github.io/ngrid/v2) | Starter @ [GitHub](https://github.com/shlomiassaf/ngrid-material-starter/tree/v2) / [StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter-v2) |
+| 1.x.x            | 6.x.x - 8.x.x   | [Documentation](https://shlomiassaf.github.io/ngrid/v1) | Starter @ [GitHub](https://github.com/shlomiassaf/ngrid-material-starter/tree/v8) / [StackBlitz](https://stackblitz.com/edit/pebula-ngrid-starter-v8?file=app%2Fapp.component.ts) |
 
 > * Documentation site contains live examples including source code.
+> * Live code demos (StackBlitz/CodeSandbox) might experience issues with some feature especially when IVY enabled, if you find it hard to use them please run your code locally.
 
 ## Setup
 
