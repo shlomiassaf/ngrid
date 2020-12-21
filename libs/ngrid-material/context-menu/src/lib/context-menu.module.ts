@@ -6,8 +6,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-import { PblNgridRegistryService, PblNgridConfigService } from '@pebula/ngrid/core';
-import { PblNgridModule, ngridPlugin } from '@pebula/ngrid';
+import { PblNgridConfigService } from '@pebula/ngrid/core';
+import { PblNgridRegistryService, PblNgridModule, ngridPlugin } from '@pebula/ngrid';
 import { PblNgridOverlayPanelModule, PblNgridOverlayPanelComponentExtension } from '@pebula/ngrid/overlay-panel';
 
 import { MatHeaderContextMenuTrigger } from './header-context/header-context-menu-trigger';
@@ -35,7 +35,7 @@ import { MatExcelStyleHeaderMenu } from './header-context/styles/excel-style-hea
     PblNgridMatHeaderContextMenuPlugin,
   ],
   entryComponents: [
-    // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
+    // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
     MatHeaderContextMenuTrigger,
     MatExcelStyleHeaderMenu,
   ],

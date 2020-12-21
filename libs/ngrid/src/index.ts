@@ -47,6 +47,7 @@ export {
   PblNgridComponent,
   AutoSizeToFitOptions, ColumnApi,
 
+  PblNgridRegistryService,
   PblNgridSingleTemplateRegistry, PblNgridMultiTemplateRegistry, PblNgridMultiComponentRegistry,
   PblNgridDataHeaderExtensionRef, PblNgridDataHeaderExtensionContext,
   PblNgridCellDefDirective,

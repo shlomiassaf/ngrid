@@ -30,18 +30,19 @@ import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table'
 import {
   PblNgridConfigService,
 
-  PblNgridRegistryService,
   PblNgridPaginatorKind,
 
   DataSourcePredicate, DataSourceFilterToken, PblNgridSortDefinition, PblDataSource, DataSourceOf, createDS, PblNgridOnDataSourceEvent,
 
   PblNgridColumnDefinitionSet,
+  PblMetaRowDefinitions,
 
   unrx,
 } from '@pebula/ngrid/core';
 
 import { EXT_API_TOKEN, PblNgridExtensionApi, PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
+import { PblNgridRegistryService } from './registry/registry.service';
 import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { PblColumn, PblNgridColumnSet,  } from './column/model';
 import { PblColumnStore, ColumnApi, AutoSizeToFitOptions } from './column/management';
@@ -288,7 +289,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   get metaHeaderRows() { return this._store.metaHeaderRows; }
   get metaFooterRows() { return this._store.metaFooterRows; }
   get metaColumns(): PblColumnStore['metaColumns'] { return this._store.metaColumns; }
-  get columnRowDef() { return { header: this._store.headerColumnDef, footer: this._store.footerColumnDef }; }
+  get columnRowDef(): { header: PblMetaRowDefinitions; footer: PblMetaRowDefinitions; } {
+    return {
+      header: this._store.headerColumnDef,
+      footer: this._store.footerColumnDef
+    };
+  }
+
   /**
    * True when the component is initialized (after AfterViewInit)
    */

@@ -14,7 +14,7 @@ import { PblNgridInfiniteRowComponent } from './infinite-virtual-row/row';
   imports: [ CommonModule, CdkTableModule, PblNgridModule, PblNgridTargetEventsModule ],
   declarations: [ PblNgridInfiniteVirtualRowRefDirective, PblNgridInfiniteRowComponent, PblNgridDefaultInfiniteVirtualRowComponent ],
   exports: [ PblNgridInfiniteVirtualRowRefDirective, PblNgridInfiniteRowComponent],
-  // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
+  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
   entryComponents: [ PblNgridDefaultInfiniteVirtualRowComponent ],
 })
 export class PblNgridInfiniteScrollModule {

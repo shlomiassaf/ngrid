@@ -125,7 +125,7 @@ export class PblColumn implements PblColumnDefinition {
    * Optional transformer that control the value output from the combination of a column and a row.
    * The value returned from this transformer will be returned from `PblColumn.getValue`
    */
-  transform?: (value: any, row?: any, col?: PblColumn) => any;
+  transform?: (value: any, row?: any, col?: PblColumnDefinition) => any;
 
   /**
    * The original value of `prop`.

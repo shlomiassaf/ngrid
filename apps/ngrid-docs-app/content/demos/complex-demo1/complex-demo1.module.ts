@@ -8,8 +8,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 
-import { PblNgridRegistryService } from '@pebula/ngrid/core';
-import { PblNgridModule } from '@pebula/ngrid';
+import { PblNgridRegistryService, PblNgridModule } from '@pebula/ngrid';
 import { PblNgridDragModule } from '@pebula/ngrid/drag';
 import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';

@@ -8,7 +8,7 @@ import { PblNgridRowComponent } from '../row/row.component';
 export class PblRowContext<T> implements PblNgridRowContext<T> {
   /** Data for the row that this cell is located within. */
   get $implicit(): T | undefined { return this._$implicit; }
-  set $implicit(value: T) {
+  set $implicit(value: T | undefined) {
     if (this._$implicit !== value) {
       this._$implicit = value;
       this.updateRowData();

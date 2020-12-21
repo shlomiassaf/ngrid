@@ -1,6 +1,6 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { PblNgridRegistryService } from '@pebula/ngrid/core';
 
+import { PblNgridRegistryService } from '../registry.service';
 import { PblNgridComponent } from '../../ngrid.component';
 import { PblNgridSingleTemplateRegistry } from './single-template.directives';
 

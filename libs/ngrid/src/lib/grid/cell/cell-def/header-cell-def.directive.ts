@@ -1,7 +1,7 @@
 // tslint:disable:use-input-property-decorator
 import { Directive, TemplateRef } from '@angular/core';
-import { PblNgridRegistryService } from '@pebula/ngrid/core';
 
+import { PblNgridRegistryService } from '../../registry/registry.service';
 import { PblNgridMetaCellContext } from '../../context/index';
 import { PblNgridBaseCellDef } from './base-cell-def.directive';
 

@@ -28,6 +28,7 @@ export {
   PblNgridMetaRowComponent,
 } from './row';
 
+export { PblNgridRegistryService } from './registry/registry.service';
 export {
   PblNgridHeaderExtensionRefDirective,
   PblNgridNoDataRefDirective,

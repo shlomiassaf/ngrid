@@ -15,10 +15,8 @@ import { CommonModule } from '@angular/common';
 import { ScrollingModule as ScrollingModuleExp } from '@angular/cdk-experimental/scrolling';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkTableModule } from '@angular/cdk/table';
-import {
-  PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService,
-  PblNgridRegistryService,
-} from '@pebula/ngrid/core';
+import { PEB_NGRID_CONFIG, PblNgridConfig, PblNgridConfigService } from '@pebula/ngrid/core';
+
 
 /**
  * NOTE ABOUT IMPORTS
@@ -29,6 +27,7 @@ import {
  * THE CIRCULAR RUNTIME DETECTION DOES NOT WORK IN THIS CASE BECAUSE THERE IS NO ACTUAL CIRCULAR REFERENCE
  * IT HAPPENS BECAUSE OF THE WAY ANGULAR RE-BUILDS THE D.TS FILES AND METADATA FILES
  */
+import { PblNgridRegistryService } from './grid/registry/registry.service';
 import { PblCdkTableComponent }  from './grid/pbl-cdk-table/pbl-cdk-table.component';
 import { PblNgridRowDef, PblNgridRowOverride } from './grid/row/row-def.directive';
 import { PblNgridRowComponent } from './grid/row/row.component';
@@ -139,6 +138,9 @@ export function provideCommon(components: CommonTemplateInit[]): any {
 
     PblNgridComponent,
   ],
+  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
+  // Since these are no longer part of the main grid template but now generated programmatically we need to put them here for non viewEngine compilation to work (e.g. stackblitz)
+  entryComponents: [ PblNgridHeaderCellComponent, PblNgridCellComponent, PblNgridFooterCellComponent , PblNgridMetaCellComponent]
 })
 export class PblNgridModule {
 

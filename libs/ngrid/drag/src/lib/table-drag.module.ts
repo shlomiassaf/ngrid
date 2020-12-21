@@ -4,23 +4,20 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { PblNgridModule, provideCommon, ngridPlugin } from '@pebula/ngrid';
 
-import {
-  colReorderExtendGrid,
-  PblNgridAggregationContainerDirective,
-  PblNgridCellDraggerRefDirective,
-  PblNgridColumnDragDirective,
-  PblNgridColumnDropContainerDirective,
-  COL_DRAG_CONTAINER_PLUGIN_KEY, PblNgridColumnDragContainerDirective,
-  COL_REORDER_PLUGIN_KEY, PblNgridColumnReorderPluginDirective,
-} from './drag-and-drop/column';
+import { colReorderExtendGrid } from './drag-and-drop/column/extend-grid'
+import { PblNgridAggregationContainerDirective } from './drag-and-drop/column/aggregation-column'
+import { PblNgridCellDraggerRefDirective } from './drag-and-drop/column/cell-dragger-ref'
+import { PblNgridColumnDragDirective } from './drag-and-drop/column/column-drag'
+import { PblNgridColumnDropContainerDirective } from './drag-and-drop/column/column-drop-container'
+import { PblNgridColumnDragContainerDirective, COL_DRAG_CONTAINER_PLUGIN_KEY } from './drag-and-drop/column/column-drag-container'
+import { PblNgridColumnReorderPluginDirective, COL_REORDER_PLUGIN_KEY } from './drag-and-drop/column/column-reorder-plugin'
 
-import {
-  CdkLazyDropList,
-  CdkLazyDrag,
-  PblDragHandle
-} from './drag-and-drop/core/index';
+import { CdkLazyDropList } from './drag-and-drop/core/drop-list';
+import { CdkLazyDrag } from './drag-and-drop/core/drag';
+import { PblDragHandle } from './drag-and-drop/core/drag-handle';
 
-import { PblNgridRowReorderPluginDirective, PblNgridRowDragDirective, ROW_REORDER_PLUGIN_KEY } from './drag-and-drop/row/index';
+import { PblNgridRowReorderPluginDirective, ROW_REORDER_PLUGIN_KEY } from './drag-and-drop/row/row-reorder-plugin';
+import { PblNgridRowDragDirective } from './drag-and-drop/row/row-drag';
 
 import { PblNgridDragResizeComponent, COL_RESIZE_PLUGIN_KEY } from './column-resize/column-resize.component';
 import { PblNgridCellResizerRefDirective } from './column-resize/cell-resizer-ref';
@@ -61,7 +58,7 @@ export function ngridPlugins() {
     PblNgridAggregationContainerDirective,
     PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
   ],
-  // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
+  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
   entryComponents: [ DragPluginDefaultTemplatesComponent ]
 })
 export class PblNgridDragModule {

@@ -2,9 +2,10 @@ import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
 
-import { PblNgridConfigService, PblNgridEvents, PblNgridRegistryService } from '@pebula/ngrid/core';
+import { PblNgridConfigService, PblNgridEvents } from '@pebula/ngrid/core';
 import { PblCdkTableComponent } from '../grid/pbl-cdk-table/pbl-cdk-table.component';
 import { ContextApi } from '../grid/context/api';
+import { PblNgridRegistryService } from '../grid/registry/registry.service';
 import { PblNgridComponent } from '../grid/ngrid.component';
 import { ColumnApi, PblColumnStore } from '../grid/column/management';
 import { PblNgridColumnWidthCalc } from '../grid/column/width-logic/column-width-calc';

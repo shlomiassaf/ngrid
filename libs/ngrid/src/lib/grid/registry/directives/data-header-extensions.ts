@@ -1,6 +1,6 @@
 import { Directive, TemplateRef, Injector, Input } from '@angular/core';
-import { PblNgridRegistryService } from '@pebula/ngrid/core';
 
+import { PblNgridRegistryService } from '../../registry/registry.service';
 import { PblColumn } from '../../column/model';
 import { MetaCellContext } from '../../context/index';
 import { PblNgridHeaderCellComponent } from '../../cell/header-cell.component'

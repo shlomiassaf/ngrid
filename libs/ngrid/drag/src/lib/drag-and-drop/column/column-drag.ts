@@ -1,4 +1,3 @@
-
 import { Directive, Input } from '@angular/core';
 import { DragDrop, CDK_DRAG_PARENT } from '@angular/cdk/drag-drop';
 

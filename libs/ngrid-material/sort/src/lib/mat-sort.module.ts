@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatSortModule, MatSortHeader } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 
-import { PblNgridRegistryService } from '@pebula/ngrid/core';
-import { PblNgridModule, ngridPlugin } from '@pebula/ngrid';
+import { PblNgridRegistryService, PblNgridModule, ngridPlugin } from '@pebula/ngrid';
 import { PblNgridMatSortDirective, PLUGIN_KEY } from './mat-sort.directive';
 import { MatSortExtension } from './mat-sort-component-extension';
 
@@ -12,7 +11,7 @@ import { MatSortExtension } from './mat-sort-component-extension';
   imports: [ CommonModule, MatButtonModule, MatSortModule, PblNgridModule ],
   declarations: [ PblNgridMatSortDirective ],
   exports: [ PblNgridMatSortDirective, MatSortModule ],
-  // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
+  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
   entryComponents: [ MatSortHeader ],
 })
 export class PblNgridMatSortModule {

@@ -1,28 +1,23 @@
-export {
-  CdkLazyDropList,
-  CdkLazyDrag,
-  PblDragHandle,
-  PblDragDrop,
-  PblDragRef,
-  PblDropListRef,
-} from './lib/drag-and-drop/core/index';
+export { CdkLazyDropList } from './lib/drag-and-drop/core/drop-list';
+export { CdkLazyDrag } from './lib/drag-and-drop/core/drag';
+export { PblDragHandle } from './lib/drag-and-drop/core/drag-handle';
+export { PblDragDrop } from './lib/drag-and-drop/core/drag-drop';
+export { PblDragRef } from './lib/drag-and-drop/core/drag-ref';
+export { PblDropListRef } from './lib/drag-and-drop/core/drop-list-ref';
 
-export {
-  PblNgridRowReorderPluginDirective,
-  PblNgridRowDragDirective
-} from './lib/drag-and-drop/row/index';
+export { PblNgridRowReorderPluginDirective } from './lib/drag-and-drop/row/row-reorder-plugin';
+export { PblNgridRowDragDirective } from './lib/drag-and-drop/row/row-drag';
 
-export {
-  PblNgridColumnDragDirective,
+export { PblNgridColumnDragDirective } from './lib/drag-and-drop/column/column-drag';
 
-  PblNgridColumnDropContainerDirective,
+export { PblNgridColumnDropContainerDirective } from './lib/drag-and-drop/column/column-drop-container';
+export {
   PblColumnDragDropContainerDrop,
   PblColumnDragDropContainerEnter,
   PblColumnDragDropContainerExit,
+} from './lib/drag-and-drop/column/column-drop-container.events';
 
-  PblNgridColumnReorderPluginDirective,
-} from './lib/drag-and-drop/column';
-
+export { PblNgridColumnReorderPluginDirective } from './lib/drag-and-drop/column/column-reorder-plugin';
 
 export { PblNgridDragResizeComponent } from './lib/column-resize/column-resize.component';
 export { PblNgridDragModule } from './lib/table-drag.module';

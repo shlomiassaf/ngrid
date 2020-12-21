@@ -8,8 +8,7 @@ import {
   Input,
 } from '@angular/core';
 
-import { PblNgridRegistryService } from '@pebula/ngrid/core';
-import { PblNgridSingleTemplateRegistry, PblNgridRowContext, PblNgridRowDef } from '@pebula/ngrid';
+import { PblNgridRegistryService, PblNgridSingleTemplateRegistry, PblNgridRowContext, PblNgridRowDef } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/core/lib/registry/types' {
   interface PblNgridSingleRegistryMap {

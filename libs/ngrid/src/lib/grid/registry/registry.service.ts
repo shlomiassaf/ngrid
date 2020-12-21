@@ -1,12 +1,12 @@
 import { Subject, Observable } from 'rxjs';
 import { Injectable, Optional, SkipSelf, OnDestroy } from '@angular/core';
 
-import { unrx } from '../utils/unrx';
 import {
+  unrx,
   PblNgridMultiRegistryMap,
   PblNgridSingleRegistryMap,
-  RegistryChangedEvent
-} from './types';
+  RegistryChangedEvent,
+}  from '@pebula/ngrid/core';
 
 /**
  * A Registry for templates of table parts.

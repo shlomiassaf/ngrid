@@ -1,6 +1,7 @@
 import { Directive, TemplateRef } from '@angular/core';
-import { PblColumnTypeDefinitionDataMap, PblNgridRegistryService } from '@pebula/ngrid/core';
+import { PblColumnTypeDefinitionDataMap } from '@pebula/ngrid/core';
 
+import { PblNgridRegistryService } from '../../registry/registry.service';
 import { PblNgridCellContext } from '../../context/index';
 import { PblNgridBaseCellDef } from './base-cell-def.directive';
 

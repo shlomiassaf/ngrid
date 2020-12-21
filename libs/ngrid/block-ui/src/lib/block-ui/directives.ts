@@ -1,7 +1,6 @@
 // tslint:disable:use-host-property-decorator
 import { Directive, TemplateRef } from '@angular/core';
-import { PblNgridRegistryService } from '@pebula/ngrid/core';
-import { PblNgridComponent, PblNgridSingleTemplateRegistry } from '@pebula/ngrid';
+import { PblNgridComponent, PblNgridRegistryService, PblNgridSingleTemplateRegistry } from '@pebula/ngrid';
 
 declare module '@pebula/ngrid/core/lib/registry/types' {
   interface PblNgridSingleRegistryMap {

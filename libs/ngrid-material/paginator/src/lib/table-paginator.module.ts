@@ -14,7 +14,7 @@ import { PblPaginatorComponent } from './table-paginator.component';
   imports: [ CommonModule, MatPaginatorModule, MatSelectModule, MatTooltipModule, MatButtonModule, PblNgridModule ],
   declarations: [ PblPaginatorComponent ],
   exports: [ PblPaginatorComponent ],
-  // TODO: remove when ViewEngine is no longer supported by angular (V11 ???)
+  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
   entryComponents: [ PblPaginatorComponent, MatPaginator ]
 })
 export class PblNgridPaginatorModule {
