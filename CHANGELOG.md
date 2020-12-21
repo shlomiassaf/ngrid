@@ -1,3 +1,41 @@
+# 3.0.0-alpha.3 (2020-12-21)
+
+
+### Bug Fixes
+
+* **ngrid:** column header sticky rows index is wrong ([c122e9d](https://github.com/shlomiassaf/ngrid/commit/c122e9da60a0d06f43e746c768b2884c4138982c))
+* **ngrid/drag:** support column & row reorder on the same host ([c1312c9](https://github.com/shlomiassaf/ngrid/commit/c1312c9cb51ded8b0f308dd598bbcfe0c3620ca6))
+* **ngrid/drag:** support row reordering in virtual scroll ([5a24eec](https://github.com/shlomiassaf/ngrid/commit/5a24eecf56bf33ef4fae75feca8360cfeaee441f))
+* **ngrid/infinite-scroll:** scroll page init without reason ([54a1b65](https://github.com/shlomiassaf/ngrid/commit/54a1b655474f47d68a04d110bddb3095c3782d93))
+
+
+### Code Refactoring
+
+* **ngrid:** move column (some) and datasource symbols to core package ([33d2bca](https://github.com/shlomiassaf/ngrid/commit/33d2bca06efd27e3605489697005d250dfb0780b))
+* **ngrid:** move configuration symbols to core package ([fc259ba](https://github.com/shlomiassaf/ngrid/commit/fc259ba343a98880bf9ccc39b9c6808007413f7d))
+* **ngrid:** move most of utils to `@pebula/ngrid/core` ([2990511](https://github.com/shlomiassaf/ngrid/commit/2990511c5bf3e68716bf2c08c87577fd6b2dc946))
+* **ngrid:** move registry to core package ([55e8f31](https://github.com/shlomiassaf/ngrid/commit/55e8f311691394cb2fe2bcbbd76fa5169d72ad15))
+* **ngrid:** moved pagination types to core ([cad0f5b](https://github.com/shlomiassaf/ngrid/commit/cad0f5bf13b9b1a57dcf304be0da797c524820be))
+
+
+### Performance Improvements
+
+* **ngrid:** disable wheel mode when virtual scroll paging is active ([25d269e](https://github.com/shlomiassaf/ngrid/commit/25d269eb3a79c417b96a6e1ce17215e949a7cbb2))
+
+
+### BREAKING CHANGES
+
+* **ngrid:** To reduce clutter in the main packge the configuration symbols moved to `@pebula/ngrid/core`.
+At this point all symbols were re-exported from the main module so this no effect there. However, if you've extended on of the symbols using augmentation you will need to update the augmentation module path.
+* **ngrid:** To reduce clutter in the main packge the datasource symbols (all) and some of the column model symbols moved to `@pebula/ngrid/core`.
+At this point all symbols we're re-exported from the main module so this no effect there. However, if you've extended on of the symbols using augmentation you will need to update the augmentation module path.
+* **ngrid:** Since the registry and it's type mapping symbols are for intenral or plugin use they are now part of the core pacakge. Currently the single/multi directives are still in the main package but they might also be moved in a later phase
+* **ngrid:** If you've used `unrx` in your code, it is not located in `@pebula/ngrid/core` since it is not for used by "regular" users, only required for plugin authoring.
+* **ngrid:** Pagination types have moved from `@pebula/ngrid` to `@pebula/ngrid/core` as part of the cleanup process to simplify the main package. `@pebula/ngrid` re-exports the interfaces and types but the concrete implementations for `PblPagingPaginator` and `PblTokenPaginator` are now in the core pacakge as they are
+not intended to be used by "regular" users, only plugin authors.
+
+
+
 # 3.0.0-alpha.2 (2020-12-03)
 
 

@@ -6,13 +6,13 @@ export {
   PblPaginatorChangeEvent,
   PblPagingPaginator,
   PblTokenPaginator,
-} from './triggers/pagination';
+} from './triggers/pagination/index';
 
 export {
   DataSourceFilterToken,
   DataSourcePredicate,
   DataSourceColumnPredicate,
-} from './triggers/filter';
+} from './triggers/filter/index';
 
 export {
   PblNgridSortInstructions,
@@ -21,7 +21,7 @@ export {
   PblNgridDataSourceSortChange,
   PblNgridSortOrder,
   applySort
-} from './triggers/sort';
+} from './triggers/sort/index';
 
 export {
   PblDataSourceConfigurableTriggers,

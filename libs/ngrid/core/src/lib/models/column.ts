@@ -1,4 +1,5 @@
-import { DataSourceColumnPredicate, PblNgridSorter } from '../data-source';
+import { DataSourceColumnPredicate } from '../data-source/triggers/filter/types';
+import { PblNgridSorter } from '../data-source/triggers/sort/types';
 
 export type META_COLUMN_TYPES = 'header' | 'headerGroup' | 'footer';
 export type COLUMN_TYPES = META_COLUMN_TYPES | 'table';
