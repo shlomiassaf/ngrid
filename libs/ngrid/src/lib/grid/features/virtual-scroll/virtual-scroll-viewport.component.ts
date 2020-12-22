@@ -240,7 +240,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
     this._minWidth$ = this.grid.columnApi.totalColumnWidthChange;
 
-    this.intersection = new RowIntersectionTracker(this.element, !!disableIntersectionObserver || true);
+    this.intersection = new RowIntersectionTracker(this.element, !!disableIntersectionObserver);
   }
 
   ngOnInit(): void {
@@ -316,7 +316,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   }
 
   setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
-    if (this.heightPaging) {
+    if (this.heightPaging?.active) {
       offset = this.heightPaging.transformRenderedContentOffset(offset, to);
     }
     super.setRenderedContentOffset(offset, to);
@@ -338,7 +338,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   }
 
   setTotalContentSize(size: number) {
-    if (this.heightPaging) {
+    if (this.heightPaging?.active) {
       size = this.heightPaging.transformTotalContentSize(size, super.measureScrollOffset());
     }
     super.setTotalContentSize(size);

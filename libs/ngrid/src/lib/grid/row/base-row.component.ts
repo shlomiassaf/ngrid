@@ -31,8 +31,7 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
   readonly element: HTMLElement;
 
   get height() {
-    const rect = this.element.getBoundingClientRect();
-    return rect.height;
+    return this.element.getBoundingClientRect().height;
   }
 
   get cellsLength() { return this._cells.length; }
@@ -96,7 +95,7 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
    * Rows are attached by default.
    * An attached row takes part in the change detection process
    */
-  attach(): boolean {
+  _attach(): boolean {
     if (!this._attached) {
       this._attached = true;
       return true;
@@ -110,7 +109,7 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
    *
    * Usually when the rendering engine cache row elements for performance, these should be detached when cached and re-attached when returned into view.
    */
-  detach(): boolean {
+  _detach(): boolean {
     if (this._attached) {
       this._attached = false;
       return true;
