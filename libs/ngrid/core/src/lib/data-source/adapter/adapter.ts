@@ -274,8 +274,13 @@ export class PblDataSourceAdapter<T = any,
 
                 // we check if filter was asked, but also if we have a filter we re-run
                 // Only sorting is cached at this point filtering is always calculated
-                if (withChanges.filter || (!config.filter && event.filter.curr && event.filter.curr.filter)) {
+                if (withChanges.filter || (!config.filter && event.filter.curr?.filter)) {
                   data = this._lastFilteredSource = this.applyFilter(data, event.filter.curr || event.filter.prev);
+                  if (!this.config.pagination) {
+                    if (withChanges.filter || !withChanges.pagination) {
+                      this.resetPagination(data.length);
+                    }
+                  }
                 }
 
                 if (withChanges.pagination) {
@@ -315,11 +320,7 @@ export class PblDataSourceAdapter<T = any,
   }
 
   protected applyFilter(data: T[], dataSourceFilter: DataSourceFilter): T[] {
-    data = filteringFn(data, dataSourceFilter);
-    if (!this.config.pagination) {
-      this.resetPagination(data.length);
-    }
-    return data;
+    return filteringFn(data, dataSourceFilter);
   }
 
   protected applySort(data: T[], event: PblNgridDataSourceSortChange): T[] {
