@@ -19,7 +19,7 @@ A Plugin for `pbl-ngrid` with a `Paginator` implementation using components from
 
 ```html
 <pbl-ngrid>
-  <pbl-ngrid-paginator *pblNgridPaginatorRef="let table" [table]="table" [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
+  <pbl-ngrid-paginator *pblNgridPaginatorRef="let grid" [grid]="grid" [paginator]="grid.ds.paginator"></pbl-ngrid-paginator>
 </pbl-ngrid>
 ```
 

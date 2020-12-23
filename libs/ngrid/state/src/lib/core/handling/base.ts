@@ -38,13 +38,22 @@ export class PblNgridStateChunkHandlerHost<T extends keyof StateChunks, Z extend
 
   register(): void {
     if (this.keys.size === 0) {
-      throw new Error('Invalid state chunk handler, no keys defined.');
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error('Invalid state chunk handler, no keys defined.');
+      }
+      return;
     }
     if (!this.sFn) {
-      throw new Error('Invalid state chunk handler, missing serialize handler.');
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error('Invalid state chunk handler, missing serialize handler.');
+      }
+      return;
     }
     if (!this.dFn) {
-      throw new Error('Invalid state chunk handler, missing deserialize handler.');
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error('Invalid state chunk handler, missing deserialize handler.');
+      }
+      return;
     }
 
     stateVisor.registerChunkHandlerDefinition({

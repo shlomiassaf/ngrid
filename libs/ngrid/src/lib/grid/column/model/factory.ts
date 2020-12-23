@@ -4,7 +4,8 @@ import {
   PblColumnGroupDefinition,
   PblMetaColumnDefinition,
   PblNgridColumnDefinitionSet,
-  PblMetaRowDefinitions
+  PblMetaRowDefinitions,
+  deprecatedWarning
 } from '@pebula/ngrid/core';
 import { PblNgridColumnSet } from './types';
 import { PblMetaColumn } from './meta-column';
@@ -277,6 +278,10 @@ export class PblColumnFactory {
     for (const d of defs) {
       // TODO: remove in V4, when prop & span are deprecated
       if (d.prop) {
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          deprecatedWarning('PblColumnGroupDefinition.prop', '4', 'PblColumnGroupDefinition.columnIds');
+          deprecatedWarning('PblColumnGroupDefinition.span', '4', 'PblColumnGroupDefinition.columnIds');
+        }
         const start = tableDefs.findIndex( c => c.orgProp === d.prop );
         d.columnIds = tableDefs.slice(start, start + d.span + 1).map( c => c.id );
         delete d.prop;

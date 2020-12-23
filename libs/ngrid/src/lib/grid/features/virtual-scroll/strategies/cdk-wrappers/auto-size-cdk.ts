@@ -14,8 +14,6 @@ import {
 } from '@angular/cdk/scrolling';
 import {Observable} from 'rxjs';
 
-declare const ngDevMode;
-
 /**
  * A class that tracks the size of items that have been seen and uses it to estimate the average
  * item size.

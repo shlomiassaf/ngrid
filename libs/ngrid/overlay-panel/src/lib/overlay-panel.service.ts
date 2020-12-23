@@ -76,7 +76,10 @@ export class PblNgridOverlayPanel<T = any> {
   openGridCell<T = any>(extName: string, columnId: string, rowRenderPosition: number | 'header' | 'footer', config?: PblNgridOverlayPanelConfig, data?: T): PblNgridOverlayPanelRef<T> {
     const column = this.grid.columnApi.findColumn(columnId);
     if (!column) {
-      throw new Error('Could not find the column ' + columnId);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error('Could not find the column ' + columnId);
+      }
+      return;
     }
 
     let section: 'table' | 'header' | 'footer';
@@ -95,12 +98,18 @@ export class PblNgridOverlayPanel<T = any> {
     }
 
     if (!section) {
-      throw new Error('Invalid "rowRenderPosition" provided, use "header", "footer" or any number >= 0.');
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error('Invalid "rowRenderPosition" provided, use "header", "footer" or any number >= 0.');
+      }
+      return;
     }
 
     const el = column && column.columnDef.queryCellElements(section)[rowRenderIndex];
     if (!el) {
-      throw new Error(`Could not find a cell for the column ${columnId} at render index ${rowRenderIndex}`);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error(`Could not find a cell for the column ${columnId} at render index ${rowRenderIndex}`);
+      }
+      return;
     }
 
     return this.open(extName, new ElementRef(el), config, data);
@@ -111,7 +120,10 @@ export class PblNgridOverlayPanel<T = any> {
     const match = this.findNamesExtension(extName);
 
     if (!match) {
-      throw new Error('Could not find the overlay panel with the name ' + extName);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error('Could not find the overlay panel with the name ' + extName);
+      }
+      return;
     }
 
     return this.zone.run(() => {

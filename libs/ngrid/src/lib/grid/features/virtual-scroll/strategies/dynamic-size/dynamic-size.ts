@@ -57,9 +57,9 @@ export class PblNgridDynamicVirtualScrollStrategy implements PblNgridVirtualScro
    * @param maxBufferPx The amount of buffer (in pixels) to render when rendering more.
    */
   updateItemAndBufferSize(itemSize: number, minBufferPx: number, maxBufferPx: number) {
-    // if (maxBufferPx < minBufferPx && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-    //   throw Error('CDK virtual scroll: maxBufferPx must be greater than or equal to minBufferPx');
-    // }
+    if (maxBufferPx < minBufferPx && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      throw Error('CDK virtual scroll: maxBufferPx must be greater than or equal to minBufferPx');
+    }
     this.sizer.itemSize = itemSize;
     this._minBufferPx = minBufferPx;
     this._maxBufferPx = maxBufferPx;
@@ -82,7 +82,9 @@ export class PblNgridDynamicVirtualScrollStrategy implements PblNgridVirtualScro
 
   attach(viewport: PblCdkVirtualScrollViewportComponent): void {
     if (!this.extApi) {
-      throw new Error('Invalid use of attach, you must first attach `PblNgridExtensionApi`');
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error('Invalid use of attach, you must first attach `PblNgridExtensionApi`');
+      }
     }
 
     this._viewport = viewport;

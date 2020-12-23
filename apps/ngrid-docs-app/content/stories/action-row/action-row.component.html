@@ -1,6 +1,6 @@
 <pbl-ngrid blockUi [dataSource]="ds" [columns]="columns" usePagination matSort>
   <my-grid-action-row filter label="My Grid"></my-grid-action-row>
-  <pbl-ngrid-paginator *pblNgridPaginatorRef="let table"
-                  [table]="table"
-                  [paginator]="table.ds.paginator"></pbl-ngrid-paginator>
+  <pbl-ngrid-paginator *pblNgridPaginatorRef="let grid"
+                       [grid]="grid"
+                       [paginator]="grid.ds.paginator"></pbl-ngrid-paginator>
 </pbl-ngrid>

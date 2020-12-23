@@ -37,7 +37,7 @@ import {
   PblNgridColumnDefinitionSet,
   PblMetaRowDefinitions,
 
-  unrx,
+  deprecatedWarning, unrx,
 } from '@pebula/ngrid/core';
 
 import { EXT_API_TOKEN, PblNgridExtensionApi, PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
@@ -262,8 +262,18 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
    * @deprecated see `minDataViewHeight`
    */
   // TODO: remove in v4.0.0
-  @Input() get fallbackMinHeight(): number { return this._minDataViewHeight > 0 ? this._minDataViewHeight : undefined; }
-  set fallbackMinHeight(value: number) { this.minDataViewHeight = value; }
+  @Input() get fallbackMinHeight(): number {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      deprecatedWarning('PblNgridComponent.fallbackMinHeight', '4', 'PblNgridComponent.minDataViewHeight');
+    }
+    return this._minDataViewHeight > 0 ? this._minDataViewHeight : undefined;
+  }
+  set fallbackMinHeight(value: number) {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      deprecatedWarning('PblNgridComponent.fallbackMinHeight', '4', 'PblNgridComponent.minDataViewHeight');
+    }
+    this.minDataViewHeight = value;
+  }
 
   get dir(): Direction { return this._dir };
 

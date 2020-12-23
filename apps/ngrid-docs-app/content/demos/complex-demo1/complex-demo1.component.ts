@@ -72,9 +72,8 @@ export class ComplexDemo1Example {
     .headerGroup(
       { type: 'row' },
       {
-        prop: 'name',
-        span: 7,
-        label: 'Marketing'
+        label: 'Marketing',
+        columnIds: ['name', 'email', 'country', 'language' ,'lead', 'rate', 'balance', 'gender'],
       }
     )
     .header(
@@ -83,25 +82,21 @@ export class ComplexDemo1Example {
     .headerGroup(
       { type: 'sticky' },
       {
-        prop: 'name',
-        span: 3,
         label: 'LOCKED GROUP',
         lockColumns: true,
+        columnIds: ['name', 'email', 'country', 'language'],
       },
       {
-        prop: 'gender',
-        span: 2,
-        label: 'Personal Info',
-      },
-      { // WE'RE NOT LINEAR HERE, GROUP COLUMNS ORDER IS BASED ON COLUMN ORDER
-        prop: 'rate',
-        span: 1,
         label: 'Finance',
+        columnIds: ['rate', 'balance'],
       },
       {
-        prop: 'settings.avatar',
-        span: 3,
+        label: 'Personal Info',
+        columnIds: ['gender', 'birthdate', 'bio'],
+      },
+      {
         label: 'User Settings',
+        columnIds: ['settings.avatar', 'settings.background', 'settings.timezone', 'settings.emailFrequency'],
       }
     )
     .build();

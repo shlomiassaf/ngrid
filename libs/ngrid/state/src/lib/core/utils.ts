@@ -21,7 +21,9 @@ export type PickPNP<T, P extends keyof T, NP extends keyof T> = Partial<Pick<T, 
 export function resolveId(grid: PblNgridComponent, options?: PblNgridStateOptions): string {
   const id = options.identResolver.resolveId(createChunkSectionContext(grid, options));
   if (!id) {
-    throw new Error('Could not resolve a unique id for an ngrid instance, state is disabled');
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      throw new Error('Could not resolve a unique id for an ngrid instance, state is disabled');
+    }
   }
   return id;
 }

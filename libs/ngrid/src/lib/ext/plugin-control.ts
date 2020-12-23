@@ -27,7 +27,10 @@ export class PblNgridPluginContext<T = any> implements PblNgridEventEmitter {
   // probably due to https://github.com/angular/angular-cli/commit/639198499973e0f437f059b3c933c72c733d93d8
   static create<T = any>(injector: Injector, extApi: PblNgridExtensionApi) {
     if (NGRID_PLUGIN_CONTEXT.has(extApi.grid)) {
-      throw new Error(`Table is already registered for extensions.`);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error(`Grid instance is already registered for extensions.`);
+      }
+      return;
     }
 
     const instance = new PblNgridPluginContext<T>();
@@ -62,7 +65,10 @@ export class PblNgridPluginContext<T = any> implements PblNgridEventEmitter {
 
   destroy(): void  {
     if (!NGRID_PLUGIN_CONTEXT.has(this.grid)) {
-      throw new Error(`Table is not registered.`);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error(`Grid is not registered.`);
+      }
+      return;
     }
     this._events.complete();
     NGRID_PLUGIN_CONTEXT.delete(this.grid);
@@ -136,10 +142,16 @@ export class PblNgridPluginController<T = any> {
    */
   setPlugin<P extends keyof PblNgridPluginExtension>(name: P, plugin: PblNgridPluginExtension[P]): (table: PblNgridComponent<any>) => void {
     if (!PLUGIN_STORE.has(name)) {
-      throw new Error(`Unknown plugin ${name}.`);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error(`Unknown plugin ${name}.`);
+      }
+      return;
     }
     if (this.plugins.has(name)) {
-      throw new Error(`Plugin ${name} is already registered for this grid.`);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error(`Plugin ${name} is already registered for this grid.`);
+      }
+      return;
     }
     this.plugins.set(name, plugin);
     return (tbl: PblNgridComponent<any>) => this.grid === tbl && this.plugins.delete(name);
@@ -158,14 +170,23 @@ export class PblNgridPluginController<T = any> {
   createPlugin<P extends keyof PblNgridPluginExtension>(name: P): PblNgridPluginExtension[P];
   createPlugin<P extends (keyof PblNgridPluginExtensionFactories & keyof PblNgridPluginExtension)>(name: P): PblNgridPluginExtension[P] {
     if (!PLUGIN_STORE.has(name)) {
-      throw new Error(`Unknown plugin ${name}.`);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error(`Unknown plugin ${name}.`);
+      }
+      return;
     }
     const metadata = PLUGIN_STORE.get(name);
     const methodName = metadata.factory;
     if (!methodName) {
-      throw new Error(`Invalid plugin configuration for ${name}, no factory metadata.`);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error(`Invalid plugin configuration for ${name}, no factory metadata.`);
+      }
+      return;
     } else if (typeof metadata.target[methodName] !== 'function') {
-      throw new Error(`Invalid plugin configuration for ${name}, factory metadata does not point to a function.`);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error(`Invalid plugin configuration for ${name}, factory metadata does not point to a function.`);
+      }
+      return;
     }
     return metadata.target[methodName](this.grid, this.context.injector);
   }

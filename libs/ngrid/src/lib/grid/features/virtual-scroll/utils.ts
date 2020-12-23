@@ -83,7 +83,10 @@ export function measureRangeSize(viewContainer: ViewContainerRef,
   }
 
   if (range.start < renderedRange.start || range.end > renderedRange.end) {
-    throw Error(`Error: attempted to measure an item that isn't rendered.`);
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      throw Error(`Attempt to measure an item that isn't rendered.`);
+    }
+    return;
   }
 
   // The index into the list of rendered views for the first item in the range.

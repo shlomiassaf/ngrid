@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": [
-      "@types/resize-observer-browser"
+      "@types/resize-observer-browser",
+      "dev-mode-types"
     ]
   },
 
@@ -16,5 +17,5 @@
     "./build/**/*.ts",
     "../libs/docs-app-lib/**/*.worker.ts"
   ],
-  "include": ["src/**/*.ts"]
+  "include": [ "src/**/*.ts" ]
 }

@@ -94,7 +94,9 @@ export class PblNgridMetaRowService<T = any> {
         if (index > -1) {
           this.addToSection(this.footer, metaRow, index);
         } else {
-          throw new Error('Invalid operation');
+          if (typeof ngDevMode === 'undefined' || ngDevMode) {
+            throw new Error('Invalid operation');
+          }
         }
       }
     }

@@ -13,6 +13,7 @@ async function compileNgcTransformer(taskContext: EntryPointTaskContext) {
 async function writeBundles(context: EntryPointTaskContext) {
   mergeUmdIds(context, {
     '@pebula/ngrid': 'pebula.ngrid',
+    '@pebula/ngrid/core': 'pebula.ngrid.core',
     '@pebula/ngrid/target-events': 'pebula.ngrid.target-events',
     '@pebula/ngrid/overlay-panel': 'pebula.ngrid.overlay-panel',
   });

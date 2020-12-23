@@ -31,7 +31,9 @@ export class PblCdkVirtualScrollDirective extends PblNgridBaseVirtualScrollDirec
               grid: PblNgridComponent<any>) {
     super(grid, vScrollDynamic === null ? 'vScrollNone' : 'vScrollDynamic');
     if (vScrollDynamic !== null && vScrollNone !== null) {
-      throw new Error(`Invalid vScroll instruction, only one value is allow.`);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error(`Invalid vScroll instruction, only one value is allow.`);
+      }
     }
   }
 

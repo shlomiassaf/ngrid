@@ -72,7 +72,10 @@ export class CdkLazyDropList<T = any, DRef = any> extends CdkDropList<T> impleme
     super(element, dragDrop, changeDetectorRef, _scrollDispatcher, dir, group, config);
 
     if (!(this.pblDropListRef instanceof PblDropListRef)) {
-      throw new Error('Invalid `DropListRef` injection, the ref is not an instance of PblDropListRef')
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error('Invalid `DropListRef` injection, the ref is not an instance of PblDropListRef')
+      }
+      return;
     }
 
     // This is a workaround for https://github.com/angular/material2/pull/14153

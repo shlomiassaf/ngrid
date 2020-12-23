@@ -11,7 +11,8 @@
     "target": "es2015",
     "module": "esnext",
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "libs-internal/local-types"
     ],
     "lib": [
       "es2017",

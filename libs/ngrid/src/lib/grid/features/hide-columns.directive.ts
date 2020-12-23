@@ -29,7 +29,10 @@ export class PblNgridHideColumns implements DoCheck {
         try {
           this.differ = this.differs.find(value).create();
         } catch (e) {
-          throw new Error(`Cannot find a differ supporting object '${value}. hideColumns only supports binding to Iterables such as Arrays.`);
+          if (typeof ngDevMode === 'undefined' || ngDevMode) {
+            throw new Error(`Cannot find a differ supporting object '${value}. hideColumns only supports binding to Iterables such as Arrays.`);
+          }
+          return;
         }
       }
     }
