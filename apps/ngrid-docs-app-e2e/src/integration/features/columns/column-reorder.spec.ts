@@ -14,20 +14,23 @@ describe('ngrid-docs-app', () => {
         expect(hr0.isGroup).to.eq(true);
         expect(hr0.type).to.eq('fixed');
         expect(Number(hr0.rowIndex)).to.eq(0);
-        expect(hr0.cells.length).to.eq(3);
+        expect(hr0.cells.length).to.eq(5);
         expect(hr0.cells[0].placeholder).to.eq(true);
         expect(hr0.cells[1].placeholder).to.eq(false);
         expect(hr0.cells[2].placeholder).to.eq(true);
+        expect(hr0.cells[3].placeholder).to.eq(false);
+        expect(hr0.cells[4].placeholder).to.eq(true);
         expect(hr0.cells[1].id).to.eq('name-gender');
 
 
         expect(hr1.isGroup).to.eq(true);
         expect(hr1.type).to.eq('fixed');
         expect(Number(hr1.rowIndex)).to.eq(1);
-        expect(hr1.cells.length).to.eq(3);
+        expect(hr1.cells.length).to.eq(4);
         expect(hr1.cells[0].placeholder).to.eq(true);
         expect(hr1.cells[1].placeholder).to.eq(false);
         expect(hr1.cells[2].placeholder).to.eq(true);
+        expect(hr1.cells[3].placeholder).to.eq(false);
         expect(hr1.cells[1].id).to.eq('gender-email-country');
     })
     .then( ngrid => ngrid.actions.dragMoveColumns('email', 'gender', { delay: 16, steps: 50, smooth: true }) )
@@ -43,7 +46,7 @@ describe('ngrid-docs-app', () => {
       expect(hr0.isGroup).to.eq(true);
       expect(hr0.type).to.eq('fixed');
       expect(Number(hr0.rowIndex)).to.eq(0);
-      expect(hr0.cells.length).to.eq(5);
+      expect(hr0.cells.length).to.eq(6);
       expect(hr0.cells[0].placeholder).to.eq(true);
       expect(hr0.cells[1].placeholder).to.eq(false);
       expect(hr0.cells[1].el.textContent).to.eq('Un-Locked');

@@ -36,10 +36,11 @@ describe('ngrid-docs-app', () => {
         expect(hr.isGroup).to.eq(true);
         expect(hr.type).to.eq('fixed');
         expect(Number(hr.rowIndex)).to.eq(0);
-        expect(hr.cells.length).to.eq(3);
+        expect(hr.cells.length).to.eq(4);
         expect(hr.cells[0].placeholder).to.eq(true);
         expect(hr.cells[1].placeholder).to.eq(false);
         expect(hr.cells[2].placeholder).to.eq(true);
+        expect(hr.cells[3].placeholder).to.eq(false);
         expect(hr.cells[1].id).to.eq('name-gender-birthdate');
 
 
@@ -58,7 +59,7 @@ describe('ngrid-docs-app', () => {
           expect(Number(hr1.rowIndex)).to.eq(0);
           expect(hr1.cells.length).to.eq(2);
           expect(hr1.cells[0].placeholder).to.eq(true);
-          expect(hr1.cells[1].placeholder).to.eq(true);
+          expect(hr1.cells[1].placeholder).to.eq(false);
         });
 
         cy.get('.cdk-overlay-backdrop').click();
