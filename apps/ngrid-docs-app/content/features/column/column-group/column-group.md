@@ -36,9 +36,7 @@ export interface PblColumnGroupDefinition extends PblBaseColumnDefinition {
 
   rowIndex: number;
 
-  prop: string;
-
-  span: number;
+  columnIds: string[];
 }
 ```
 

@@ -35,8 +35,8 @@ export class ColumnsAppContentChunk {
       {
         rowIndex: 1,
         cols: [
-          { prop: 'id' },
-          { prop: 'name', span: 1, label: 'Header Group: Name & Age', css: 'col-quickthrough-bg-group' },
+          { columnIds: ['id'] },
+          { columnIds: ['name', 'age'], label: 'Header Group: Name & Age', css: 'col-quickthrough-bg-group' },
         ]
       }
     ],
@@ -79,7 +79,7 @@ export class ColumnsAppContentChunk {
       { id: 'header', label: 'Header Column Cell' },
     )
     .headerGroup(
-      { prop: 'name', span: 1, label: 'Group Column Cell' },
+      { columnIds: ['name', 'gender'], label: 'Group Column Cell' },
     )
     .footer(
       { id: 'footer', label: 'Footer Column Cell' },
@@ -94,7 +94,7 @@ export class ColumnsAppContentChunk {
       { id: '__meta', width: '160px', type: 'metaRow', label: 'HEADER' },
     )
     .headerGroup(
-      { prop: '__', span: 0, type: 'metaRow', label: 'GROUP' },
+      { columnIds: ['__'], type: 'metaRow', label: 'GROUP' },
     )
     .footer(
       { id: '__meta2', width: '160px', type: 'metaRow', label: 'FOOTER' },

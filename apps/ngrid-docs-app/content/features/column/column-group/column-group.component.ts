@@ -23,8 +23,14 @@ export class ColumnGroupExample {
       { prop: 'language' },
     )
     .headerGroup(
-      { prop: 'name', span: 1, label: 'Name & Gender' },
-      { prop: 'country', span: 1, label: 'Country & Language' },
+      {
+        label: 'Name & Gender',
+        columnIds: ['name', 'gender'],
+      },
+      {
+        label: 'Country & Language',
+        columnIds: ['country', 'language'],
+      },
     )
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();

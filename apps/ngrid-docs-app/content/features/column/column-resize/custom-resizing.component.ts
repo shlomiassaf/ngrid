@@ -27,15 +27,13 @@ export class CustomResizingExample {
     )
     .headerGroup(
       {
-        prop: 'name',
-        span: 1,
-        label: 'Group A'
+        label: 'Group A',
+        columnIds: ['name', 'gender'],
       },
       {
-        prop: 'country',
-        span: 1,
         label: 'Group B',
-      }
+        columnIds: ['country', 'language'],
+      },
     )
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();

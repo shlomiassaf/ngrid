@@ -41,15 +41,13 @@ export class EnterAndLeaveEventsExample {
     )
     .headerGroup(
       {
-        prop: 'name',
-        span: 4,
         label: 'Personal Info',
+        columnIds: ['name', 'gender', 'birthdate', 'bio', 'email'],
       },
       {
-        prop: 'settings.avatar',
-        span: 3,
         label: 'User Settings',
-      }
+        columnIds: ['settings.avatar', 'settings.background', 'settings.timezone', 'settings.emailFrequency'],
+      },
     )
     .build();
 

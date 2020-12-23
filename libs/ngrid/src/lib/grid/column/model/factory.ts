@@ -225,11 +225,11 @@ export class PblColumnFactory {
    *   header2 -\>  d e f
    *   table   -\>  1 2 3
    */
-  headerGroup(rowOptions: PblMetaRowDefinitions, ...defs: Array<Pick<PblColumnGroupDefinition, 'prop'> & Partial<PblColumnGroupDefinition>>): this;
-  headerGroup(...defs: Array<Pick<PblColumnGroupDefinition, 'prop'> & Partial<PblColumnGroupDefinition>>): this;
-  headerGroup(...defs: Array<PblMetaRowDefinitions | ( Pick<PblColumnGroupDefinition, 'prop'> & Partial<PblColumnGroupDefinition>) >): this {
+  headerGroup(rowOptions: PblMetaRowDefinitions, ...defs: Array<Partial<Omit<PblColumnGroupDefinition, 'rowIndex' | 'kind'>>>): this;
+  headerGroup(...defs: Array<Partial<Omit<PblColumnGroupDefinition, 'rowIndex' | 'kind'>>>): this;
+  headerGroup(...defs: Array<PblMetaRowDefinitions | ( Partial<Omit<PblColumnGroupDefinition, 'rowIndex' | 'kind'>> ) >): this {
     const rowIndex = this._currentHeaderRow++;
-    const rowOptions = this.processRowOptions(defs, 'prop');
+    const rowOptions = this.processRowOptions(defs, 'columnIds', 'prop');
     const rowClassName = this.genRowClass(rowOptions, rowIndex);
 
     const headerGroups: any = defs.map( d => Object.assign({ rowIndex }, d) );
@@ -244,8 +244,16 @@ export class PblColumnFactory {
     return this;
   }
 
-  private processRowOptions(defs: any[], mustHaveProperty: string = 'id'): PblMetaRowDefinitions {
-    return defs[0][mustHaveProperty] ? undefined : defs.shift();
+  private processRowOptions(defs: any[], ...mustHaveProperty: string[]): PblMetaRowDefinitions {
+    if (mustHaveProperty.length === 0) {
+      mustHaveProperty = ['id'];
+    }
+    for (const prop of mustHaveProperty) {
+      if (prop in defs[0]) {
+        return;
+      }
+    }
+    return defs.shift();
   }
 
   private genRowClass(rowOptions: { rowClassName?: string }, fallbackRowIndex: number): string {
@@ -307,16 +315,14 @@ export class PblColumnFactory {
           headerGroup[marker] = hg.createSlave(columns);
           marker += 1;
         } else {
-          headerGroup.splice(existingGroupIndex, 1);
-          headerGroup[marker] = hg
-          marker += 1;
           while (hg.columnIds.indexOf(tableDefs[0]?.orgProp) > -1) {
             tableDefs.shift();
           }
+          marker += 1;
         }
       } else {
         const prev = headerGroup[marker - 1];
-        if (prev && prev.placeholder) {
+        if (prev?.placeholder) {
           const clone = Object.keys(prev).reduce( (p, c) => {
             p[c] = prev[c];
             return p;
@@ -331,39 +337,6 @@ export class PblColumnFactory {
         }
       }
     }
-
-
-    // for (let i = 0, len = tableDefs.length; i < len; i++) {
-    //   const orgProp = tableDefs[i].orgProp;
-    //   const idx = defs.findIndex( d => d.prop === orgProp);
-    //   const columnGroupDef: PblColumnGroupDefinition = idx !== -1
-    //     ? defs.splice(idx, 1)[0]
-    //     : defs.find( d => !d.prop ) || { prop: orgProp, rowIndex, span: undefined, kind: 'header' }
-    //   ;
-
-    //   const placeholder = idx === -1 && !!columnGroupDef.prop;
-
-    //   columnGroupDef.prop = orgProp;
-    //   columnGroupDef.rowIndex = rowIndex;
-
-    //   let take = columnGroupDef.span;
-    //   if (! (take >= 0) ) {
-    //     take = 0;
-    //     for (let z = i+1; z < len; z++) {
-    //       if (defs.findIndex( d => d.prop === tableDefs[z].orgProp) === -1) {
-    //         take++;
-    //       }
-    //       else {
-    //         break;
-    //       }
-    //     }
-    //   }
-    //   columnGroupDef.span = take;
-    //   const group = new PblColumnGroup(columnGroupDef, tableDefs.slice(i, i + take + 1), placeholder);
-    //   headerGroup.push(group);
-    //   i += take;
-    // }
-
     return headerGroup;
   }
 }
