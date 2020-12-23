@@ -27,28 +27,23 @@ export class GroupColumnsLockExample {
     )
     .headerGroup(
       {
-        prop: 'name',
-        span: 1,
-        label: 'Un-Locked'
+        label: 'Un-Locked',
+        columnIds: ['name', 'gender'],
       },
       {
-        prop: 'country',
-        span: 1,
         label: 'Locked',
-        lockColumns: true,
-      }
+        columnIds: ['country', 'language'],
+      },
     )
     .headerGroup(
       {
-        prop: 'gender',
-        span: 2,
-        label: 'Gender, Email & Country'
+        label: 'Gender, Email & Country',
+        columnIds: ['gender', 'email', 'country'],
       },
       {
-        prop: 'birthdate',
-        span: 1,
         label: 'Birthday & Balance',
-      }
+        columnIds: ['birthdate', 'balance'],
+      },
     )
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();

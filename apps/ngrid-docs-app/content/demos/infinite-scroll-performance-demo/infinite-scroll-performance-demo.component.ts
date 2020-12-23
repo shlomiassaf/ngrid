@@ -37,18 +37,16 @@ function createColumns(noType = false) {
     )
     .headerGroup(
       {
-        prop: 'name',
-        span: 2,
         label: 'Customer Info',
+        columnIds: ['name', 'country', 'jobTitle'],
       },
       {
-        prop: 'accountId',
-        span: 4,
         label: 'Account Info',
+        columnIds: ['accountId', 'accountType', 'primeAccount', 'creditScore', 'balance'],
       },
       {
-        prop: 'monthlyBalance.0',
         label: 'Monthly Balance',
+        columnIds: Array.from(new Array(12)).map( (item, idx) => `monthlyBalance.${idx}` ),
       }
     )
     .footer(

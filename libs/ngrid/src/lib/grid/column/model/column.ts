@@ -380,6 +380,10 @@ export class PblColumn implements PblColumnDefinition {
       if (gCurr.slaveOf === gNext) {
         return gCurr.slaveOf;
       }
+    } else {
+      if (gPrev?.placeholder && gCurr?.placeholder) {
+        return gPrev;
+      }
     }
     return gCurr;
   }

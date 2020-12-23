@@ -42,7 +42,7 @@ export class PblNgridColumnWidthCalc {
     // Will happen on additional header/header-group rows AND ALSO when vScrollNone is set
     // This will cause size not to populate because it takes time to render the rows, since it's not virtual and happens immediately.
     // TODO: find a better protection.
-    if (!columns[0].sizeInfo) {
+    if (!columns[0]?.sizeInfo) {
       return;
     }
 
@@ -53,7 +53,9 @@ export class PblNgridColumnWidthCalc {
 
     // if this is a grid without groups
     if (rowWidth.minimumRowWidth === 0) {
-      rowWidth.addGroup(columns.map( c => c.sizeInfo ));
+      // - We filter at the end because on add column we will have a column that still didn't get the resize event hence not having the size info
+      // We will ignore it because once it will get it a new resize event is triggered
+      rowWidth.addGroup(columns.map( c => c.sizeInfo ).filter( c => !!c ));
     }
 
     // if the max lock state has changed we need to update re-calculate the static width's again.
@@ -76,11 +78,12 @@ export class PblNgridColumnWidthCalc {
     // We use the same strategy and the same RowWidthDynamicAggregator instance which will prevent duplicate calculations.
     // Note that we might have multiple header groups, i.e. same columns on multiple groups with different row index.
     for (const g of this.columnStore.getAllHeaderGroup()) {
-      // We go over all columns because g.columns does not represent the current owned columns of the group
-      // it is static, representing the initial state.
+      // - We go over all columns because g.columns does not represent the current owned columns of the group it is static, representing the initial state.
       // Only columns hold their group owners.
+      // - We filter at the end because on add column we will have a column that still didn't get the resize event hence not having the size info
+      // We will ignore it because once it will get it a new resize event is triggered
       // TODO: find way to improve iteration
-      const colSizeInfos = this.columnStore.visibleColumns.filter( c => !c.hidden && c.isInGroup(g)).map( c => c.sizeInfo );
+      const colSizeInfos = this.columnStore.visibleColumns.filter( c => !c.hidden && c.isInGroup(g)).map( c => c.sizeInfo ).filter( c => !!c );
       if (colSizeInfos.length > 0) {
         const groupWidth = this.dynamicColumnWidth.addGroup(colSizeInfos);
         g.minWidth = groupWidth;

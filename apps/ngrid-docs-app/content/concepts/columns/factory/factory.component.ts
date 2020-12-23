@@ -27,14 +27,23 @@ export class ColumnsFactoryExample {
       { id: 'header2', label: 'Header 2'},
     )
     .headerGroup(
-      { prop: 'name', span: 1, label: 'Name & Gender' },
+      {
+        label: 'Name & Gender',
+        columnIds: ['name', 'gender'],
+      },
     )
     .header(
       { id: 'header3', label: 'Header 3'},
     )
     .headerGroup(
-      { prop: 'id', span: 2, label: 'ID, Name & Gender' },
-      { prop: 'country', span: 1, label: 'Country & Language' },
+      {
+        label: 'ID, Name & Gender',
+        columnIds: ['id', 'name', 'gender'],
+      },
+      {
+        label: 'Country & Language',
+        columnIds: ['country', 'language'],
+      },
     )
     .footer(
       { id: 'footer1', label: 'Footer 1', width: '25%'},

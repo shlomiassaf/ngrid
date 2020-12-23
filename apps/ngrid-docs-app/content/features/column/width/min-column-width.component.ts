@@ -26,8 +26,14 @@ export class MinColumnWidthFeatureExample {
       { prop: 'gender' },
     )
     .headerGroup(
-      { prop: 'name', span: 1, label: 'Name & Email' },
-      { prop: 'country', span: 1, label: 'Country & Language' },
+      {
+        label: 'Name & Email',
+        columnIds: ['name', 'email'],
+      },
+      {
+        label: 'Country & Language',
+        columnIds: ['country', 'language'],
+      },
     )
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 5) ).create();

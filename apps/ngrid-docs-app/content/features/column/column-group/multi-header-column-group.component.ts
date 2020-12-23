@@ -23,8 +23,14 @@ export class MultiHeaderColumnGroupExample {
       { prop: 'language' },
     )
     .headerGroup(
-      { prop: 'name', span: 1, label: 'Name & Gender' },
-      { prop: 'country', span: 1, label: 'Country & Language' },
+      {
+        label: 'Name & Gender',
+        columnIds: ['name', 'gender'],
+      },
+      {
+        label: 'Country & Language',
+        columnIds: ['country', 'language'],
+      },
     )
     .header(
       { id: 'header1', label: 'Header 1', width: '25%'},
@@ -32,8 +38,14 @@ export class MultiHeaderColumnGroupExample {
       { id: 'header3', label: 'Header 3', width: '25%'},
     )
     .headerGroup(
-      { prop: 'id', span: 2, label: 'ID, Name & Gender' },
-      { prop: 'country', span: 1, label: 'Country & Language' },
+      {
+        label: 'ID, Name & Gender',
+        columnIds: ['id', 'name', 'gender'],
+      },
+      {
+        label: 'Country & Language',
+        columnIds: ['country', 'language'],
+      },
     )
     .build();
   ds = createDS<Person>().onTrigger( () => this.datasource.getPeople(0, 500) ).create();
