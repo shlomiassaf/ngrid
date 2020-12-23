@@ -128,7 +128,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
     ;
 
     let minWidth = minWidthPx && `${minWidthPx}px`;
-    if (!minWidth && parsedWidth && parsedWidth.type === '%') {
+    if (!minWidth && parsedWidth?.type === '%') {
       minWidth = width;
     }
 

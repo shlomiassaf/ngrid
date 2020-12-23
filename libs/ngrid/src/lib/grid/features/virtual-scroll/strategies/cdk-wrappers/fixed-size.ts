@@ -26,7 +26,9 @@ export class PblNgridFixedSizeVirtualScrollStrategy extends FixedSizeVirtualScro
 
   attach(viewport: PblCdkVirtualScrollViewportComponent): void {
     if (!this.extApi) {
-      throw new Error('Invalid use of attach, you must first attach `PblNgridExtensionApi`');
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error('Invalid use of attach, you must first attach `PblNgridExtensionApi`');
+      }
     }
     super.attach(this.viewport = viewport);
   }

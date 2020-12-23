@@ -63,7 +63,10 @@ export class CdkLazyDrag<T = any, Z extends CdkLazyDropList<T> = CdkLazyDropList
 
   ngOnInit(): void {
     if (!(this.pblDragRef instanceof PblDragRef)) {
-      throw new Error('Invalid `DragRef` injection, the ref is not an instance of PblDragRef')
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        throw new Error('Invalid `DragRef` injection, the ref is not an instance of PblDragRef')
+      }
+      return;
     }
     this.pblDragRef.rootElementChanged.subscribe( event => {
       const rootElementSelectorClass = this._rootClass;

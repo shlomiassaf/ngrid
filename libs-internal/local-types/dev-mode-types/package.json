@@ -1,0 +1,21 @@
+{
+    "name": "@types/archy",
+    "version": "0.0.31",
+    "description": "TypeScript definitions for archy",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "vvakame",
+            "url": "https://github.com/vvakame"
+        }
+    ],
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "e89c99c65939a0485cb98a53bc9bce7b1c14ed300bd0d2da5a0f181a002db726",
+    "typeScriptVersion": "2.0"
+}

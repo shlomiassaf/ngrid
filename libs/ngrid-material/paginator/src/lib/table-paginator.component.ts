@@ -10,7 +10,7 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
-import { unrx } from '@pebula/ngrid/core';
+import { deprecatedWarning, unrx } from '@pebula/ngrid/core';
 import { PblNgridComponent, PblPaginator, PblPaginatorChangeEvent } from '@pebula/ngrid';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50, 100];
@@ -54,7 +54,26 @@ export class PblPaginatorComponent implements OnDestroy {
     }
   }
 
-  @Input() table: PblNgridComponent<any>;
+  /**
+   * @deprecated Use `grid` instead, will be removed in version 4
+   */
+  @Input() get table(): PblNgridComponent<any> {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      deprecatedWarning('PblPaginatorComponent.table', '4', 'PblPaginatorComponent.grid');
+    }
+    return this.grid;
+  }
+  /**
+   * @deprecated Use `grid` instead, will be removed in version 4
+   */
+  set table(value: PblNgridComponent<any>) {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      console.warn(`"PblPaginatorComponent.table" is deprecated and will be removed in version 4, use "grid" instead.`)
+    }
+    this.grid = value;
+  }
+
+  @Input() grid: PblNgridComponent<any>;
 
   @Input() get hidePageSize(): boolean { return this._hidePageSize; }
   set hidePageSize(value: boolean) { this._hidePageSize = coerceBooleanProperty(value); }
@@ -67,11 +86,11 @@ export class PblPaginatorComponent implements OnDestroy {
   private _hidePageSize = false;
   private _hideRangeSelect = false;
 
-  constructor(@Optional() table: PblNgridComponent<any>,
+  constructor(@Optional() grid: PblNgridComponent<any>,
               public _intl: MatPaginatorIntl,
               private cdr: ChangeDetectorRef) {
-    if (table) {
-      this.table = table;
+    if (grid) {
+      this.grid = grid;
     }
     _intl.changes
       .pipe(unrx(this))

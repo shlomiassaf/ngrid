@@ -93,7 +93,11 @@ export class StaticColumnWidthLogic {
           minWidth = width.value;
           break;
         default:
-          throw new Error(`Invalid width "${column.width}" in column ${column.prop}. Valid values are ##% or ##px (50% / 50px)`);
+          if (typeof ngDevMode === 'undefined' || ngDevMode) {
+            throw new Error(`Invalid width "${column.width}" in column ${column.prop}. Valid values are ##% or ##px (50% / 50px)`);
+          }
+          return;
+          
       }
     } else if (column.maxWidthLock) {
       agg.pxCount += 1;

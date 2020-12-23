@@ -18,14 +18,12 @@ const COLUMNS = columnFactory()
   )
   .headerGroup(
     {
-      prop: 'name',
-      span: 2,
       label: 'Personal Info',
+      columnIds: ['name', 'gender', 'birthdate'],
     },
     {
-      prop: 'email',
-      span: 2,
       label: 'Contact Info',
+      columnIds: ['email', 'country', 'language'],
     }
   )
   .build();

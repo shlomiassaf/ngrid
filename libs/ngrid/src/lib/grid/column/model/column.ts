@@ -42,7 +42,15 @@ export class PblColumn implements PblColumnDefinition {
   set width(value: string) {
     if (value !== this._width) {
       this._parsedWidth = parseStyleWidth(this._width = value);
-      const isFixedWidth = this._parsedWidth && this._parsedWidth.type === 'px';
+
+      // Error in dev, on prod just let it be unset
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        if (!this._parsedWidth && value) {
+          throw new Error(`Invalid width "${value}" in column ${this.prop}. Valid values are ##% or ##px (50% / 50px)`);
+        }
+      }
+
+      const isFixedWidth = this._parsedWidth?.type === 'px';
       Object.defineProperty(this, 'isFixedWidth', { value: isFixedWidth, configurable: true });
     }
   }

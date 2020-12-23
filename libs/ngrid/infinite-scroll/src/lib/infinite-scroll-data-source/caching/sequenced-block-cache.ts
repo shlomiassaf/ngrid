@@ -91,7 +91,10 @@ export class SequencedBlockCache implements PblNgridCacheAdapter<CacheAdapterOpt
         const offset = endRow - this.end;
         return this.add(this.end + 1, offset);
       } else {
-        throw new Error('Cache Error');
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          throw new Error('Infinite scroll - Sequenced block cache Error');
+        }
+        return;
       }
     } else {
       const result = this.clear();

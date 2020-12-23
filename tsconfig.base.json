@@ -10,7 +10,8 @@
     "experimentalDecorators": true,
     "target": "es2015",
     "module": "es2020",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["node_modules/@types", "libs-internal/local-types"],
+    "types": [ "dev-mode-types" ],
     "lib": ["es2017", "dom"],
     "baseUrl": ".",
     "paths": {

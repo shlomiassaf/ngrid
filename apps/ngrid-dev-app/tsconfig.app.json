@@ -3,12 +3,13 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": [
-      "@types/resize-observer-browser"
+      "@types/resize-observer-browser",
+      "dev-mode-types"
     ]
   },
   "exclude": [
     "./src/test.ts",
     "**/*.spec.ts",
   ],
-  "include": ["./src/**/*.ts"]
+  "include": [ "./src/**/*.ts" ]
 }

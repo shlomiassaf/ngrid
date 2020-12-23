@@ -135,7 +135,10 @@ export class DetailRowController {
 
       for (const [parent, op] of toRender) {
         if (this.viewMap.has(parent)) {
-          throw new Error('Invalid detail row state.');
+          if (typeof ngDevMode === 'undefined' || ngDevMode) {
+            throw new Error('Invalid detail row state.');
+          }
+          return;
         }
         if (toClear.length) {
           const [clearParent] = toClear.pop();
