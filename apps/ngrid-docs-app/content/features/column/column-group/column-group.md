@@ -19,13 +19,8 @@ W> Column group width definitions have no effect, their width is determined by t
 
 ## Column Group Definition
 
-The definition of a column group describe which child columns are in the group. This is done by providing the id of the first child column
-in the **prop** property and the number of column to take after the first child column in the **span** property.
-
-The definition is linear and does not allow picking random child columns by id, this is because:
-
-- The columns definition is also linear and static
-- Avoiding magic string (column id) references as much as possible
+The definition of a column group describe which child columns are in the group. This is done by providing the id's of the columns the belong to the
+groups in the **columnIds** property.
 
 In addition, each column group must describe which row it belongs to using the **rowIndex** property.
 
