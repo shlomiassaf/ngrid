@@ -1,0 +1,44 @@
+@import '~@angular/material/theming';
+@import '~bootstrap/dist/css/bootstrap'; /* Importing Bootstrap SCSS file. */
+
+@import '../../../../../../libs/ngrid/theming';
+@import '../../../../../../libs/ngrid-bootstrap/theming';
+
+$pbl-ngrid-theme: pbl-light-theme(pbl-palette($pbl-blue));
+
+$pbl-bs-spacing-theme-default: (
+  header-row-height: 50px,
+  row-height: 49px,
+  footer-row-height: 49px,
+  row-spacing: 12px,
+  cell-spacing: 12px,
+);
+
+$pbl-ngrid-theme: map-merge($pbl-ngrid-theme, ( spacing: $pbl-bs-spacing-theme-default ));
+
+// Include the default theme styles.
+@include pbl-ngrid-bootstrap-theme($pbl-ngrid-theme);
+
+.pbl-docs-bootstrap {
+
+  // @extend .mat-elevation-z7;
+
+  @include pbl-ngrid-bootstrap-theme($pbl-ngrid-theme);
+
+  pbl-ngrid {
+    height: 300px;
+  }
+
+  .pagination {
+
+    // cancel: .markdown-body ul
+    padding-left: 0;
+    margin-top: 0;
+    margin-bottom: 1rem;
+
+    // cancel: .markdown-body li + li
+    li + li {
+      margin-top: 0;
+    }
+  }
+}

@@ -1,0 +1,21 @@
+<div class="d-flex align-items-center justify-content-end p-2">
+
+  <div *ngIf="!hidePageSize" class="mr-4">
+    <label class="mr-2" for="selectPerPage">Item's per page</label>
+    <select *ngIf="pageSizes.length > 1" #selectPerPage id="selectPerPage"
+            class="custom-select" style="width: auto"
+            [value]="paginator.perPage"
+            (change)="_perPageChanged(selectPerPage.value)"
+            [disabled]="pageSizes[0] >= paginator.total && (!paginator.hasPrev() && !paginator.hasNext())">
+      <option *ngFor="let pageSizeOption of pageSizes" [value]="pageSizeOption" [selected]="pageSizeOption == paginator.perPage">
+        {{pageSizeOption}}
+      </option>
+    </select>
+    <div *ngIf="pageSizes.length <= 1">{{paginator?.perPage}}</div>
+  </div>
+
+  <ngb-pagination class="d-flex align-items-center justify-content-end"
+                  [collectionSize]="paginator.total" [page]="paginator.page" [pageSize]="paginator.perPage"
+                  [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
+                  (pageChange)="_pageChanged($event)"></ngb-pagination>
+</div>

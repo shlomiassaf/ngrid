@@ -34,7 +34,6 @@ export interface PblNgridExtensionApi<T = any> {
   columnApi: ColumnApi<T>;
   rowsApi: RowsApi<T>;
   events: Observable<PblNgridEvents>;
-  metaRowService: PblNgridMetaRowService;
   pluginCtrl: PblNgridPluginController<T>;
   widthCalc: PblNgridColumnWidthCalc;
   onConstructed(fn: () => void): void;

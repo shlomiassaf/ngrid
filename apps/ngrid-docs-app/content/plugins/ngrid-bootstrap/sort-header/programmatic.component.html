@@ -1,0 +1,11 @@
+<pbl-ngrid bsSortable [dataSource]="ds" [columns]="columns"></pbl-ngrid>
+
+<div fxLayout="row" fxLayoutGap="16px" style="padding: 8px">
+  <button *ngFor="let key of ['id', 'name', 'gender']"
+          type="button" class="btn btn-outline-primary"
+          fxFlex="noshrink" ngbButton (click)="toggleActive(key)">{{ key }} [{{ getNextDirection(key) }}]</button>
+
+  <div fxFlex="*"></div>
+
+  <button type="button" class="btn btn-outline-danger" ngbButton (click)="clear()">Clear</button>
+</div>

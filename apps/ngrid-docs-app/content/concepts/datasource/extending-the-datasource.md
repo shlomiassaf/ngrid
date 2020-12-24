@@ -2,7 +2,7 @@
 title: Extending The Datasource
 path: concepts/datasource/extending-the-datasource
 parent: concepts/datasource
-ordinal: 3
+ordinal: 4
 ---
 # Extending The Datasource
 

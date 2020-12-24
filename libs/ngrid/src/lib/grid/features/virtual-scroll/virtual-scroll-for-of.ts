@@ -74,11 +74,12 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
       });
     this.attachView(extApi.grid.ds);
 
-    extApi.metaRowService.sync
+    const { metaRowService } = extApi.rowsApi;
+    metaRowService.sync
       .pipe( takeUntil(this.destroyed) )
       .subscribe( () => {
-        const headers = extApi.metaRowService.header.row.concat(extApi.metaRowService.header.sticky).sort(sortByIndex);
-        const footers = extApi.metaRowService.footer.row.concat(extApi.metaRowService.footer.sticky).sort(sortByIndex);
+        const headers = metaRowService.header.row.concat(metaRowService.header.sticky).sort(sortByIndex);
+        const footers = metaRowService.footer.row.concat(metaRowService.footer.sticky).sort(sortByIndex);
 
         this.header.rows = headers.map( h => h.el );
         this.header.sticky = headers.map( h => h.rowDef.type === 'sticky' );

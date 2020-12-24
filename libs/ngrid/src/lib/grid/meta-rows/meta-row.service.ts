@@ -28,6 +28,10 @@ export class PblNgridMetaRowService<T = any> {
   header: MetaRowSection = metaRowSectionFactory();
   footer: MetaRowSection = metaRowSectionFactory();
 
+  /**
+   * Notifies that changes occured in one or more meta rows (added/removed)
+   * Multiple changes are aggregated (using asapScheduler)
+   */
   readonly sync: Observable<void>;
   readonly hzScroll: Observable<number>;
   private sync$ = new Subject<void>();
@@ -75,7 +79,6 @@ export class PblNgridMetaRowService<T = any> {
       if (metaRow.gridWidthRow === true) {
         // This is a dummy row used to measure width and get width resize notifications
         this.gridWidthRow = { rowDef, el: metaRow.element };
-        this.header.all.push(rowDef);
       } else {
         // This is the main header column row, it doesn't have an index but we will assign as if it's the last
         // so other features will be able to sort by physical location
@@ -110,10 +113,12 @@ export class PblNgridMetaRowService<T = any> {
       this.header.all.splice(index, 1);
       index = this.header[rowDef.type].findIndex( h => h.rowDef === rowDef );
       this.header[rowDef.type].splice(index, 1);
+      this.sync$.next();
     } else if ( (index = this.footer.all.indexOf(metaRow.meta)) > -1) {
       this.footer.all.splice(index, 1);
       index = this.footer[rowDef.type].findIndex( h => h.rowDef === rowDef );
       this.footer[rowDef.type].splice(index, 1);
+      this.sync$.next();
     }
   }
 

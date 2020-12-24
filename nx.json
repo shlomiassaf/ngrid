@@ -31,6 +31,9 @@
     "ngrid-dev-app-e2e": {
       "tags": [],
       "implicitDependencies": ["ngrid-dev-app"]
+    },
+    "ngrid-bootstrap": {
+      "tags": []
     }
   },
   "nx-enforce-module-boundaries": [

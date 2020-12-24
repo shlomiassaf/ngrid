@@ -1,0 +1,10 @@
+{
+  "name": "@pebula/ngrid-bootstrap",
+  "version": "3.0.0-alpha.4",
+  "peerDependencies": {
+    "@pebula/ngrid": "3.0.0-alpha.4"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

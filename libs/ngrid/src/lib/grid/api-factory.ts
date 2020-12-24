@@ -41,7 +41,6 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
   readonly propChanged: Observable<OnPropChangedEvent>;
   readonly columnStore: PblColumnStore;
   readonly columnApi: ColumnApi<T>;
-  readonly metaRowService: PblNgridMetaRowService<T>;
   readonly rowsApi: PblRowsApi<T>;
   readonly events: Observable<PblNgridEvents>;
   readonly plugin: PblNgridPluginContext;
@@ -81,7 +80,6 @@ class InternalExtensionApi<T = any> implements PblNgridInternalExtensionApi<T> {
     this.rowsApi = new PblRowsApi<T>(this, tokens.ngZone, cellFactory);
 
     this.columnApi = ColumnApi.create<T>(this);
-    this.metaRowService = new PblNgridMetaRowService(this);
     this._contextApi = new ContextApi<T>(this);
     this.logicaps = logicap(this);
 

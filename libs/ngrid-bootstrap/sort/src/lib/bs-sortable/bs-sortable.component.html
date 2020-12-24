@@ -1,0 +1,10 @@
+<div class="pbl-bs-sortable"
+     [class.pbl-bs-sortable-after]="_isAfter()"
+     [class.pbl-bs-sortable-sorted]="_isSorted()"
+     [class.pbl-bs-sortable-disabled]="_isDisabled()"
+     [class.asc]="_direction === 'asc'"
+     [class.desc]="_direction === 'desc'"
+     role="button">
+
+  <ng-content></ng-content>
+</div>

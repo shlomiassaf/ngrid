@@ -2,7 +2,7 @@
 title: Cell Tooltip
 path: plugins/ngrid-material/cell-tooltip
 parent: plugins/ngrid-material
-ordinal: 0
+ordinal: 1
 ---
 # Cell Tooltip
 

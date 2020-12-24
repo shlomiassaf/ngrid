@@ -13,7 +13,7 @@ export class MatSortExtension extends PblNgridMultiComponentRegistry<MatSortHead
   }
 
   shouldRender(context: PblNgridDataHeaderExtensionContext): boolean {
-    return !!context.col.sort && !!context.injector.get(MatSort, false);
+    return !!context.col.sort && !!context.injector.get<MatSort>(MatSort, false as any);
   }
 
   getFactory(context: PblNgridDataHeaderExtensionContext): ComponentFactory<MatSortHeader> {

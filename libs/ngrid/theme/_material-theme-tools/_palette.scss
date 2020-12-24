@@ -112,10 +112,18 @@ $pbl-spacing-theme-default: (
   cell-spacing: 12px,
 );
 
-$pbl-spacing-theme-narrow: (
+$pbl-ngrid-spacing-sm: (
   header-row-height: 32px,
-  row-height: 26px,
+  row-height: 32px,
   footer-row-height: 32px,
-  row-spacing: 24px,
-  cell-spacing: 12px,
+  row-spacing: 12px,
+  cell-spacing: 6px,
+);
+
+$pbl-ngrid-spacing-xs: (
+  header-row-height: 28px,
+  row-height: 28px,
+  footer-row-height: 28px,
+  row-spacing: 12px,
+  cell-spacing: 6px,
 );

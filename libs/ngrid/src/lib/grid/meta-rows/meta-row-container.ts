@@ -6,7 +6,7 @@ import { PblNgridMetaRowService } from './meta-row.service';
 
 @Component({
   selector: 'div[pbl-ngrid-fixed-meta-row-container]',
-  template: `<div class="pbl-cdk-table" [style.width.px]="_width"></div><div class="pbl-cdk-table" [style.width.px]="_width$ | async"></div>`,
+  template: `<div class="pbl-cdk-table" style="height: 0px; overflow: hidden;" [style.width.px]="_width"></div><div class="pbl-cdk-table" [style.width.px]="_width$ | async"></div>`,
   host: { // tslint:disable-line:no-host-metadata-property
     style: 'flex: 0 0 auto; overflow: hidden;',
     '[style.width.px]': '_innerWidth',

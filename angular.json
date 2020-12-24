@@ -560,6 +560,82 @@
           }
         }
       }
+    },
+    "ngrid-bootstrap": {
+      "root": "libs/ngrid-bootstrap",
+      "sourceRoot": "libs/ngrid-bootstrap/src",
+      "projectType": "library",
+      "prefix": "pbl",
+      "architect": {
+        "build": {
+          "builder": "ng-cli-packagr-tasks:build",
+          "options": {
+            "tsConfig": "libs/ngrid-bootstrap/tsconfig.lib.json",
+            "project": "libs/ngrid-bootstrap/ng-package.json",
+            "tasks": {
+              "config": "tools/ng-packagr.transformers/ngrid-bootstrap.transformers.ts",
+              "tsConfig": "tools/tsconfig.json",
+              "data": {
+                "copyFile": {
+                  "assets": [
+                    {
+                      "glob": "README.md",
+                      "input": ".",
+                      "output": "dist/@pebula/ngrid-bootstrap"
+                    }
+                  ]
+                },
+                "sassBundle": {
+                  "entries": [
+                    {
+                      "glob": "_theming.scss",
+                      "input": "libs/ngrid-bootstrap",
+                      "output": "dist/@pebula/ngrid-bootstrap"
+                    }
+                  ]
+                },
+                "sassCompile": {
+                  "entries": [
+                    {
+                      "glob": "*.scss",
+                      "input": "libs/ngrid-bootstrap/src/themes/prebuilt",
+                      "output": "dist/@pebula/ngrid-bootstrap/themes"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/ngrid-bootstrap/tsconfig.lib.prod.json",
+              "project": "libs/ngrid-bootstrap/ng-package.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ngrid-bootstrap/tsconfig.lib.json",
+              "libs/ngrid-bootstrap/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ngrid-bootstrap/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ngrid-bootstrap/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {

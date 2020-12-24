@@ -59,6 +59,9 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 // We use types from `@types/resize-observer-browser` so we import directly to prevent conflicts
 import 'resize-observer-polyfill/dist/ResizeObserver';
 
+// ng-bootstrap
+import '@angular/localize/init';
+
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */

@@ -1,4 +1,5 @@
 module.exports = {
+  displayName: 'ngrid-material',
   preset: '../../jest.preset.js',
   coverageDirectory: '../../coverage/libs/ngrid-material',
   snapshotSerializers: [
@@ -17,5 +18,4 @@ module.exports = {
       ],
     },
   },
-  displayName: 'ngrid-material',
 };
