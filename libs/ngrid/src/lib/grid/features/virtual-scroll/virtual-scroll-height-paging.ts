@@ -153,6 +153,15 @@ export class VirtualScrollHightPaging {
     return totalHeight;
   }
 
+  shouldTransformTotalContentSize(totalHeight: number): boolean {
+    if (totalHeight <= MAX_SCROLL_HEIGHT) {
+      this.active = false;
+    } else if (this.totalHeight !== totalHeight) {
+      return true;
+    }
+    return false;
+  }
+
   dispose() {
     this.activeChanged.complete();
   }

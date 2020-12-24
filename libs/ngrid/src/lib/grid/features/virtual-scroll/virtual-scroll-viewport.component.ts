@@ -338,7 +338,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   }
 
   setTotalContentSize(size: number) {
-    if (this.heightPaging?.active) {
+    if (this.heightPaging?.shouldTransformTotalContentSize(size)) {
       size = this.heightPaging.transformTotalContentSize(size, super.measureScrollOffset());
     }
     super.setTotalContentSize(size);
