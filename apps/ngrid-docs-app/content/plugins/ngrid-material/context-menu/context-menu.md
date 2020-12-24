@@ -2,7 +2,7 @@
 title: Context Menu
 path: plugins/ngrid-material/context-menu
 parent: plugins/ngrid-material
-ordinal: 8
+ordinal: 5
 ---
 # Context Menu
 

@@ -2,7 +2,7 @@
 title: Sorting Header (MatSort)
 path: plugins/ngrid-material/mat-sort
 parent: plugins/ngrid-material
-ordinal: 2
+ordinal: 3
 ---
 # Mat Sort
 

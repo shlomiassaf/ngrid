@@ -14,3 +14,5 @@ $pbl-ngrid-theme: pbl-dark-theme($theme);
 
 // Include the default theme styles.
 @include pbl-ngrid-material-theme($pbl-ngrid-theme);
+
+@include pbl-ngrid-predefined-spacing($pbl-ngrid-theme);

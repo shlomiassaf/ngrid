@@ -55,7 +55,7 @@ import { createApis } from './api-factory';
 
 export function internalApiFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi; }
 export function pluginControllerFactory(grid: { _plugin: PblNgridPluginContext; }) { return grid._plugin.controller; }
-export function metaRowServiceFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi.metaRowService; }
+export function metaRowServiceFactory(grid: { _extApi: PblNgridExtensionApi; }) { return grid._extApi.rowsApi.metaRowService; }
 
 declare module '../ext/types' {
   interface OnPropChangedSources {

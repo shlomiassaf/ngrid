@@ -97,7 +97,7 @@ export class PblNgridTargetEventsPlugin<T = any> {
         } else if (event.subType === 'meta') {
           // When multiple containers exists (fixed/sticky/row) the rowIndex we get is the one relative to the container..
           // We need to find the rowIndex relative to the definitions:
-          const { metaRowService } = this.pluginCtrl.extApi;
+          const { metaRowService } = this.pluginCtrl.extApi.rowsApi;
           const db = event.type === 'header' ? metaRowService.header : metaRowService.footer;
 
           for (const coll of [db.fixed, db.row, db.sticky]) {

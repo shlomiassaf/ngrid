@@ -1,0 +1,21 @@
+<div class="demo-spacing-theme-selector" fxLayout fxLayoutGap="24px">
+  <strong>Spacing Theme:</strong>
+  <mat-radio-group aria-label="Select an option" #matRadioGroup="matRadioGroup" value="">
+    <mat-radio-button value="">Normal</mat-radio-button>
+    <mat-radio-button value="gridSm">Small (grid-sm)</mat-radio-button>
+    <mat-radio-button value="gridXs">Extra Small (grid-xs)</mat-radio-button>
+  </mat-radio-group>
+</div>
+<pbl-ngrid style="height: 500px"
+           class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis"
+           [class.grid-sm]="matRadioGroup.value === 'gridSm'"
+           [class.grid-xs]="matRadioGroup.value === 'gridXs'"
+           rowReorder columnReorder
+           blockUi
+           matSort
+           cellTooltip
+           focusMode="cell"
+           [dataSource]="ds"
+           [columns]="columns">
+  <pbl-demo-action-row filter (refresh)="refresh()" ></pbl-demo-action-row>
+</pbl-ngrid>

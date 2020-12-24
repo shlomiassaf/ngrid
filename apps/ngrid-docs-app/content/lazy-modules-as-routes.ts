@@ -259,5 +259,25 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     path: 'features-grid-custom-row.module',
     pathMatch: 'full',
     loadChildren: () => import('./features/grid/custom-row/custom-row.module').then( m => m.CustomRowExampleModule ),
+  },
+  {
+    path: 'plugins-ngrid-bootstrap-cell-tooltip.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./plugins/ngrid-bootstrap/cell-tooltip/cell-tooltip.module').then( m => m.CellTooltipExampleModule ),
+  },
+  {
+    path: 'plugins-ngrid-bootstrap-sort-header.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./plugins/ngrid-bootstrap/sort-header/sort-header.module').then( m => m.SortHeaderExampleModule ),
+  },
+  {
+    path: 'plugins-ngrid-bootstrap-pagination.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./plugins/ngrid-bootstrap/pagination/pagination.module').then( m => m.PaginationExampleModule ),
+  },
+  {
+    path: 'concepts-theming-spacing.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./concepts/theming/spacing/spacing.module').then( m => m.SpacingExampleModule ),
   }
 ];

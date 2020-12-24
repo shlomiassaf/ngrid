@@ -1,4 +1,6 @@
 import { enableProdMode } from '@angular/core';
+import '@angular/localize/init'; // ng-bootstrap
+
 import { environment } from './environments/environment';
 
 if (environment.production) {

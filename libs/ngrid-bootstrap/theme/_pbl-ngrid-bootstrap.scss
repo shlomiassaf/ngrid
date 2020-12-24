@@ -1,0 +1,24 @@
+@mixin pbl-ngrid-bootstrap-theme($theme) {
+  @include pbl-ngrid-theme($theme);
+
+  .pbl-ngrid-first-header-row {
+    border-top-width: 1px;
+  }
+
+  .pbl-ngrid-last-header-row {
+    border-bottom-width: 2px;
+  }
+
+  .pbl-ngrid-last-footer-row {
+    border-bottom-width: 1px;
+  }
+
+  .pbl-ngrid-first-footer-row {
+    border-top-width: 2px;
+  }
+
+
+  .pbl-ngrid-header-cell {
+    font-weight: bold;
+  }
+}

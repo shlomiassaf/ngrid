@@ -2,7 +2,7 @@
 title: Compatibility & Browser APIs
 path: concepts/grid/browser-apis
 parent: concepts/grid
-ordinal: 4
+ordinal: 5
 ---
 # Compatibility & Browser APIs
 

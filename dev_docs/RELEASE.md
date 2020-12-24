@@ -23,6 +23,7 @@ Run any of the relevant commands:
 ```bash
 npm publish dist/@pebula/ngrid
 npm publish dist/@pebula/ngrid-material
+npm publish dist/@pebula/ngrid-bootstrap
 ```
 
 - Commit, Create Tag & Push

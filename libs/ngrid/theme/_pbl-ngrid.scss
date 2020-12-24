@@ -1,5 +1,6 @@
 @import './_pbl-cdk-table';
 @import './plugins/drag.plugin';
+@import './pbl-ngrid-spacing';
 
 @mixin pbl-ngrid-theme($theme) {
   @include _pbl-cdk-table-theme($theme);

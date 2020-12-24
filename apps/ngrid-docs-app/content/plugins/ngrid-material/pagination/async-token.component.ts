@@ -42,7 +42,7 @@ function emulateServerSideTokenPaginationCall(datasource: DynamicClientApi, toke
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-@Example('pbl-async-token-example', { title: 'Async Token' })
+@Example('pbl-async-token-example', { title: 'Async: Token' })
 export class AsyncTokenExample {
   columns = columnFactory()
     .default({minWidth: 100})

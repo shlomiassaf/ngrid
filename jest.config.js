@@ -4,5 +4,6 @@ module.exports = {
     '<rootDir>/libs/ngrid',
     '<rootDir>/libs/ngrid-material',
     '<rootDir>/libs/ngrid-cypress',
+    '<rootDir>/libs/ngrid-bootstrap',
   ],
 };

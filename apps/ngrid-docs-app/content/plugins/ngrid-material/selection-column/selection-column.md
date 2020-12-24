@@ -2,7 +2,7 @@
 title: Selection Column
 path: plugins/ngrid-material/selection-column
 parent: plugins/ngrid-material
-ordinal: 1
+ordinal: 2
 ---
 # Selection Column
 

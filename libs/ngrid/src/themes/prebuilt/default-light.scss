@@ -7,3 +7,5 @@ $pbl-ngrid-theme: pbl-light-theme(pbl-palette($pbl-blue));
 
 // Include the default theme styles.
 @include pbl-ngrid-theme($pbl-ngrid-theme);
+
+@include pbl-ngrid-predefined-spacing($pbl-ngrid-theme);

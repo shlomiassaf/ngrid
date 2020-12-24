@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["jest", "node", "@types/resize-observer-browser", "dev-mode-types"]
+  },
+  "include": [],
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

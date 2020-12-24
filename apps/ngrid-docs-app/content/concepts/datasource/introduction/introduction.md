@@ -6,14 +6,14 @@ ordinal: 1
 ---
 # The Data Source
 
-To render rows of data the table requires a source of data.
-A data source an be an array of items or a container of an array of items.
+To render rows of data the grid requires a source of data.  
+The obvious datasource is the array and in fact at the core of each grid or table an array is used to render the rows.
 
-You can provide the following datasources:
+You can provide the following datasource`s:
 
 - Array - Direct interface
-- Promise - Async interface
-- Observable - Async stream interface
+- Promise<Array> - Async interface
+- Observable<Array> - Async stream interface
 - `PblDataSource` - Async stream interface
 
 **nGrid** supports all of the above but works with `PblDataSource<T>`.
@@ -37,9 +37,10 @@ const dataSource = [
 
 Using a **Promise** adds async functionality and using an **Observable** adds streaming capabilities on top of that.
 
-In simple scenarios this is enough but it stops there, these datasources does not scale.
+In simple scenarios this is enough but it stops there, these datasource`s does not scale.
 
 ## Scaling up
+
 
 **nGrid** must support different scenarios with various a lot of features.  
 Each feature is required to work in all scenarios.
@@ -58,7 +59,8 @@ and the logic sits on the remote source.
 We need to find a simple way to support both modes in a single, easy to use API.  
 It has to be simple to use and easy to extend so we can create variations from these groups.
 
-## PblDataSource
+## NGrid's DataSource
+
 
 To scale up, **nGrid** provides the datasource container `PblDataSource<T>` with a simple to use datasource factory.
 

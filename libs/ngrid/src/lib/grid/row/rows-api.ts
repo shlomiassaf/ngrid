@@ -2,6 +2,7 @@ import { NgZone } from '@angular/core';
 import { ON_INVALIDATE_HEADERS, unrx } from '@pebula/ngrid/core';
 import { PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 import { RowIntersectionTracker } from '../features/virtual-scroll/row-intersection';
+import { PblNgridMetaRowService } from '../meta-rows/meta-row.service';
 import { PblCdkTableComponent } from '../pbl-cdk-table/pbl-cdk-table.component';
 import { PblNgridBaseRowComponent } from './base-row.component';
 import { PblNgridCellFactoryResolver } from './cell-factory.service';
@@ -9,8 +10,11 @@ import { PblNgridColumnRowComponent } from './columns-row.component';
 import { PblNgridMetaRowComponent } from './meta-row.component';
 import { PblNgridRowComponent } from './row.component';
 import { GridRowType } from './types';
+import { updateMetaRowFirstLastClass } from './utils';
 
 export interface RowsApi<T = any> {
+  readonly metaRowService: PblNgridMetaRowService<T>;
+
   syncRows(rowType?: 'all' | boolean, detectChanges?: boolean): void;
   syncRows(rowType: 'header' | 'data' | 'footer', detectChanges: boolean, ...rows: number[]): void;
   syncRows(rowType: 'header' | 'data' | 'footer', ...rows: number[]): void;
@@ -30,6 +34,8 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
 
   cdkTable: PblCdkTableComponent<T>;
 
+  readonly metaRowService: PblNgridMetaRowService<T>;
+
   private allByElement = new Map<Element, PblNgridBaseRowComponent<GridRowType, T>>();
   private allRows = new Set<PblNgridBaseRowComponent<GridRowType, T>>();
   private rows = new Map<GridRowType, Set<PblNgridBaseRowComponent<any, T>>>();
@@ -39,14 +45,29 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
   private gridWidthRow: PblNgridColumnRowComponent;
   private intersection?: RowIntersectionTracker;
 
+  private firstLast = {
+    header: {} as { first?: Element; last?: Element },
+    footer: {} as { first?: Element; last?: Element },
+  };
+
   constructor(private readonly extApi: PblNgridInternalExtensionApi<T>,
               private readonly zone: NgZone,
               public readonly cellFactory: PblNgridCellFactoryResolver) {
+
+    this.metaRowService = new PblNgridMetaRowService<T>(extApi);
     extApi.onConstructed(() => this.cdkTable = extApi.cdkTable);
 
     for (const type of ['header', 'data', 'footer', 'meta-header', 'meta-footer'] as GridRowType[]) {
       this.rows.set(type, new Set<PblNgridBaseRowComponent<any, T>>());
     }
+
+    /* List to sync events which notify about changes in meta rows and update the first/last rows to have the class marking it is the first/last */
+    this.metaRowService.sync
+      .pipe(unrx(this))
+      .subscribe(() => {
+        this.firstLast.header = updateMetaRowFirstLastClass('header', this.extApi.element, this.firstLast.header);
+        this.firstLast.footer = updateMetaRowFirstLastClass('footer', this.extApi.element, this.firstLast.footer);
+      });
 
     extApi.columnStore.columnRowChange()
       .pipe(unrx(this))
