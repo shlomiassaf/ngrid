@@ -6,8 +6,12 @@
 @import './_material-theme-tools/typography';
 @import './_material-theme-tools/theming';
 @import './utils';
+@import './grid-base-styles/cdk-table-base';
 
 @mixin _pbl-cdk-table-theme($theme) {
+
+  @include _cdk-table-base();
+
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);

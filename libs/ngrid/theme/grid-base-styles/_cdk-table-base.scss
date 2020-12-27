@@ -1,0 +1,32 @@
+@import './cdk-table.from-material';
+
+@mixin _cdk-table-base() {
+  @include _cdk-table-from-material();
+
+  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+    position: relative;
+  }
+
+  /* MULTI COLUMN AND COLUMN SPAN */
+  .pbl-ngrid-header-cell.pbl-header-group-cell {
+    display: flex;
+    align-items: center;
+
+    &.pbl-header-group-cell-placeholder {
+      border: none;
+    }
+  }
+
+  .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
+    position: relative;
+  }
+
+  .pbl-ngrid-cell {
+    cursor: default;
+    outline: none;
+  }
+
+  .pbl-ngrid-editable-cell {
+    cursor: text;
+  }
+}

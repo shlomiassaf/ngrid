@@ -1,0 +1,83 @@
+@mixin _ngrid-base() {
+  pbl-ngrid {
+    display: block;
+  }
+
+  // same idea as in .cdk-visually-hidden with adjustments:
+  // - Added precedence (!important)
+  // - Removed explicit width trimming
+  // - More specific border elimination (keep left/right remove top/bottom)
+  //
+  // The adjustments address the need to be able to keep the row aligned with the table so it can update
+  // the header cell size (width...) and publish events so other cells can follow (e.g. group rows)
+  // The header row is the key to all cell width's...
+  .pbl-ngrid-row-visually-hidden {
+    border-top: 0;
+    border-bottom: 0;
+    clip: rect(0 0 0 0);
+    height: 0px !important;
+    min-height: 0px !important;
+    max-height: 0px !important;
+    overflow: hidden !important;
+    visibility: collapse !important;
+
+    // Avoid browsers rendering the focus ring in some cases.
+    outline: 0;
+
+    // Avoid some cases where the browser will still render the native controls (see #9049).
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  .pbl-ngrid-row-hidden {
+    display: none !important;
+  }
+
+  .pbl-ngrid-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    box-sizing: border-box;
+    display: flex;
+    overflow: auto;
+    min-height: inherit;
+    // justify-content: flex-end;
+  }
+
+  .pbl-ngrid-scroll-container {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    min-height: auto;
+    &.cdk-virtual-scroll-disabled {
+      flex: 1 0 auto;
+    }
+  }
+
+  .pbl-ngrid-sticky-row-scroll-container {
+    position: fixed;
+    overflow: hidden;
+  }
+
+  .pbl-ngrid-empty {
+    .cdk-virtual-scroll-content-wrapper {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .pbl-cdk-table {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 100%;
+
+        & > * {
+          flex: 0 0 auto;
+        }
+      }
+    }
+  }
+
+  .pbl-ngrid-scrolling pbl-cdk-table {
+    pointer-events: none;
+  }
+}

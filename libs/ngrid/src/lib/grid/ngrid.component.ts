@@ -69,7 +69,6 @@ declare module '../ext/types' {
 @Component({
   selector: 'pbl-ngrid',
   templateUrl: './ngrid.component.html',
-  styleUrls: [ './ngrid.component.scss' ],
   providers: [
     PblNgridRegistryService,
     {

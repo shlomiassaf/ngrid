@@ -37,7 +37,6 @@ import { PblNgridCachedRowViewRepeaterStrategy } from './ngrid-cached-row-view-r
   selector: 'pbl-cdk-table',
   exportAs: 'pblCdkTable',
   template: CDK_TABLE_TEMPLATE,
-  styleUrls: ['./pbl-cdk-table.component.scss'],
   host: { // tslint:disable-line: no-host-metadata-property
     'class': 'pbl-cdk-table',
   },

@@ -1,0 +1,40 @@
+// BASED ON
+// https://github.com/angular/material2/blob/6df37099c3a1a026b961202df8755ec9933c3d14/src/lib/table/table.scss
+
+@mixin _cdk-table-from-material() {
+  /**
+  * Flex-based table structure
+  */
+  .pbl-cdk-table {
+    display: block;
+  }
+
+  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+    display: flex;
+    // Define a border style, but then widths default to 3px. Reset them to 0px except the bottom
+    // which should be 1px;
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-style: solid;
+    align-items: center;
+    box-sizing: border-box;
+
+    // Workaround for https://goo.gl/pFmjJD in IE 11. Adds a pseudo
+    // element that will stretch the row the correct height. See:
+    // https://connect.microsoft.com/IE/feedback/details/802625
+    &::after {
+      display: inline-block;
+      min-height: inherit;
+      content: '';
+    }
+  }
+
+  .pbl-ngrid-cell, .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    word-wrap: break-word;
+    min-height: inherit;
+  }
+}
