@@ -1,9 +1,11 @@
 @import './_pbl-cdk-table';
+@import './grid-base-styles/ngrid-base';
 @import './plugins/drag.plugin';
 @import './pbl-ngrid-spacing';
 
 @mixin pbl-ngrid-theme($theme) {
   @include _pbl-cdk-table-theme($theme);
+  @include _ngrid-base();
   @include pbl-ngrid-spacing($theme);
 
   $primary: map-get($theme, primary);
