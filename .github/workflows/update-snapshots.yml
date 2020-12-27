@@ -3,6 +3,11 @@ name: Cypress Update Snapshots
 
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Define branch name'
+        required: true
+        default: 'master'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,7 +15,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          ref: v3
+          ref: ${{ github.event.inputs.branch}}
           fetch-depth: 0
       - name: Install Node
         uses: actions/setup-node@v1
