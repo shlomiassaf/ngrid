@@ -1,8 +1,10 @@
 @import '~@angular/material/theming';
-@import '~bootstrap/dist/css/bootstrap'; /* Importing Bootstrap SCSS file. */
 
 @import '../../../../../../libs/ngrid/theming';
 @import '../../../../../../libs/ngrid-bootstrap/theming';
+
+// Loading mandatory bootstrap styles that must live in the open (e.g. tooltip, toast, modal - all overlays)
+@import './bootstrap/bootstrap-global';
 
 $pbl-ngrid-theme: pbl-light-theme(pbl-palette($pbl-blue));
 
@@ -16,13 +18,13 @@ $pbl-bs-spacing-theme-default: (
 
 $pbl-ngrid-theme: map-merge($pbl-ngrid-theme, ( spacing: $pbl-bs-spacing-theme-default ));
 
-// Include the default theme styles.
-@include pbl-ngrid-bootstrap-theme($pbl-ngrid-theme);
-
 .pbl-docs-bootstrap {
 
-  // @extend .mat-elevation-z7;
+  // Loading CSS for bootstrap elements which live within a container and can be rules by a parent class
+  // This is required to prevent collisions between our application and bootstrap (there are such!)
+  @import './bootstrap/bootstrap-boxed';
 
+  // Include the theme styles.
   @include pbl-ngrid-bootstrap-theme($pbl-ngrid-theme);
 
   pbl-ngrid {
