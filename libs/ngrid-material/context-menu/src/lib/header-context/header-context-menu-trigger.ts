@@ -18,6 +18,8 @@ const DEFAULT_CONFIG: PblNgridOverlayPanelConfig = { hasBackdrop: true, xPos: 'a
 })
 export class MatHeaderContextMenuTrigger {
 
+  @Input('matHeaderTriggerIcon') icon: string = 'more_vert'
+
   context: PblNgridDataHeaderExtensionContext;
 
   constructor(private plugin: PblNgridMatHeaderContextMenuPlugin, private elRef: ElementRef<HTMLElement>) { }
