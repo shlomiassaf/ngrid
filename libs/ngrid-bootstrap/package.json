@@ -1,8 +1,9 @@
 {
   "name": "@pebula/ngrid-bootstrap",
-  "version": "3.0.0-alpha.4",
+  "version": "3.0.0-alpha.5",
   "peerDependencies": {
-    "@pebula/ngrid": "3.0.0-alpha.4"
+    "@ng-bootstrap/ng-bootstrap": "^8.0.0",
+    "@pebula/ngrid": "3.0.0-alpha.5"
   },
   "dependencies": {
     "tslib": "^2.0.0"

@@ -1,3 +1,24 @@
+# 3.0.0-alpha.5 (2020-12-28)
+
+
+### Bug Fixes
+
+* **ngrid:** fix group logic ([e75e493](https://github.com/shlomiassaf/ngrid/commit/e75e493d45c83f97b0bb0aae87d0aab821a811f5))
+* **ngrid:** fix virtual page height ([633a37d](https://github.com/shlomiassaf/ngrid/commit/633a37d0321a6b5ba92da037e381e5fbce18bc38))
+* **ngrid:** pagination reset when filter is on ([468de4f](https://github.com/shlomiassaf/ngrid/commit/468de4f569386d9ec032d59f74f5083d0f82e531)), closes [#78](https://github.com/shlomiassaf/ngrid/issues/78)
+
+
+### Features
+
+* **ngrid-bootstrap:** initial bootstrap support ([80d6a85](https://github.com/shlomiassaf/ngrid/commit/80d6a852660828c5ac12a9a99370cedebcbeeaf4))
+
+
+### Performance Improvements
+
+* **ngrid:** support tree-shakable errors ([0fa90ff](https://github.com/shlomiassaf/ngrid/commit/0fa90ffe4a355643713078fda790de04c3b72691))
+
+
+
 # 3.0.0-alpha.4 (2020-12-21)
 
 
