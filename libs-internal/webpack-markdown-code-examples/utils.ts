@@ -27,8 +27,10 @@ export function parseExampleTsFile(fileName: string, content: string): ParsedPri
             const [ selector, exampleMeta ] = decorator.expression.arguments;
             primary = meta;
             primary.example = {
-              title: exampleMeta.properties[0].initializer.text,
+              title: exampleMeta.properties.find(p => p.name?.text === 'title' ).initializer.text,
+              additionalFiles: exampleMeta.properties.find(p => p.name?.text === 'additionalFiles' )?.initializer.elements.map( e => e.text),
             };
+
             primary.secondaries = secondaries;
             primary.selector = selector.text;
           } else if (decorator.expression.expression.text === 'Component') {
@@ -75,6 +77,9 @@ export function createInitialExampleFileAssets(primaryFileName: string, primary:
   const primaryAsset = createExampleFileAsset(primary.component, Path.basename(primaryFileName), primary.example.title);
   assets.push(primaryAsset, ...createTemplateAndStyleExampleFileAsset(primary));
 
+  if (primary.example.additionalFiles?.length) {
+    assets.push(...primary.example.additionalFiles.map( f => createExampleFileAsset('', Path.basename(f)) ));
+  }
   if (Array.isArray(primary.secondaries)) {
     for (const sec of primary.secondaries) {
       assets.push(...createTemplateAndStyleExampleFileAsset(sec));

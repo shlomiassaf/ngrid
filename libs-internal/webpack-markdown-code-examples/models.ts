@@ -8,6 +8,7 @@ export interface ParsedComponentMetadata {
 export interface ParsedPrimaryComponentMetadata extends ParsedComponentMetadata {
   example: {
     title: string;
+    additionalFiles?: string[];
   };
   secondaries: ParsedComponentMetadata[];
 }

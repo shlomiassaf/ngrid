@@ -155,20 +155,24 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
       const pathAssets = new Map<string, ExampleFileAsset>();
       for (const asset of assets) {
         if (asset.parent === primary.component && asset.lang === 'typescript') {
-          asset.source = source;
+          asset.source = source.split('\n').filter( line => !line.startsWith('@Example(') && !(line.startsWith('import') && line.includes(' Example '))).join('\n');
           pathAssets.set(fullPath, asset);
         } else {
           const secondaryFullPath = Path.join(root, asset.file);
           asset.source = FS.readFileSync(secondaryFullPath, { encoding: 'utf-8' });
-          pathAssets.set(secondaryFullPath, asset);
+          if (asset.source) {
+            pathAssets.set(secondaryFullPath, asset);
+          }
         }
-        const markdownAST = {
-          lang: asset.lang,
-          value: asset.source,
-          type: 'code',
-        };
-        remarkPrismJs({ markdownAST });
-        asset.contents = markdownAST.value;
+        if (asset.source) {
+          const markdownAST = {
+            lang: asset.lang,
+            value: asset.source,
+            type: 'code',
+          };
+          remarkPrismJs({ markdownAST });
+          asset.contents = markdownAST.value;
+        }
       }
 
 
@@ -176,7 +180,7 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
         cacheId: file,
         selector: primary.selector,
         root,
-        assets,
+        assets: assets.filter( a => !!a.source ),
         pathAssets,
         forceRender: true,
       };
