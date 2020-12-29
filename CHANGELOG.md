@@ -1,3 +1,17 @@
+# 3.0.0-alpha.6 (2020-12-29)
+
+
+### Bug Fixes
+
+* **ngrid:** don't attach global templates to the root registry ([0494678](https://github.com/shlomiassaf/ngrid/commit/0494678c09ff3412cf16f8ae08a199f98f069bd6))
+
+
+### Features
+
+* **ngrid-bootstrap:** selection column ([ab09209](https://github.com/shlomiassaf/ngrid/commit/ab09209a3f24ebe29d1cd5b74da79b7beeaaf35f))
+
+
+
 # 3.0.0-alpha.5 (2020-12-28)
 
 

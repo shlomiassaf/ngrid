@@ -211,7 +211,7 @@ if (require.main === module) {
     'shlomiassaf',
     'ngrid',
     'libs',
-    ['ngrid', 'ngrid-material']
+    ['ngrid', 'ngrid-material', 'ngrid-bootstrap']
   ).run();
 }
 
