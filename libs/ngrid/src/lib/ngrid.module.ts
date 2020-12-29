@@ -191,7 +191,7 @@ export class PblNgridModule {
 
     if (registry) {
       injector = Injector.create({
-        providers: [ { provide: PblNgridRegistryService, useValue: registry.getRoot() } ],
+        providers: [ { provide: PblNgridRegistryService, useValue: registry } ],
         parent: ngRef.injector
       });
     }
