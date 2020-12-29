@@ -267,6 +267,8 @@ MIT
 
 @pebula/ngrid-bootstrap/pagination
 
+@pebula/ngrid-bootstrap/selection-column
+
 @pebula/ngrid-bootstrap/sort
 
 @pebula/ngrid-material/cell-tooltip
