@@ -1,0 +1,18 @@
+<ng-container *pblNgridHeaderCellDef="name; col as col;">
+  <label *ngIf="bulkSelectMode !== 'none'"
+         [class]="selectionClass">
+    <input type="checkbox"
+           [checked]="allSelected"
+           (input)="masterToggle()">
+  </label>
+</ng-container>
+
+<label *pblNgridCellDef="name; row as row;">
+  <input type="checkbox"
+         [class]="selectionClass"
+         [checked]="selection.isSelected(row)"
+         [disabled]="isCheckboxDisabled(row)"
+         (input)="rowItemChange(row)">
+</label>
+
+<span *pblNgridFooterCellDef="name; col as col;">{{ length ? length : '' }}</span>
