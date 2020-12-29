@@ -1,7 +1,7 @@
 ---
 title: Action Row
-path: stories/action-row
-parent: stories
+path: recipes/action-row
+parent: recipes
 ordinal: 0
 ---
 # Action Row

@@ -1,0 +1,17 @@
+<pbl-ngrid class="pbl-ngrid-cell-ellipsis"
+           bsSelectionColumn="selection" [bulkSelectMode]="bulkSelectMode"
+           showFooter [dataSource]="ds" [columns]="columns"></pbl-ngrid>
+<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" style="margin: 8px 16px">
+  <h3>Bulk Mode: </h3>
+  <div class="btn-group btn-group-toggle">
+    <label class="btn btn-primary" [class.active]="bulkSelectMode === 'all'">
+      <input type="radio" [checked]="bulkSelectMode === 'all'" (input)="$event.target.checked ? bulkSelectMode = 'all' : null"> All
+    </label>
+    <label class="btn btn-primary" [class.active]="bulkSelectMode === 'view'">
+      <input type="radio" [checked]="bulkSelectMode === 'view'" (input)="$event.target.checked ? bulkSelectMode = 'view' : null"> View
+    </label>
+    <label class="btn btn-primary" [class.active]="bulkSelectMode === 'none'">
+      <input type="radio" [checked]="bulkSelectMode === 'none'" (input)="$event.target.checked ? bulkSelectMode = 'none' : null"> None
+    </label>
+  </div>
+</div>

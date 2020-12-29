@@ -1,7 +1,7 @@
 ---
 title: Column Header Menu
-path: stories/column-header-menu
-parent: stories
+path: recipes/column-header-menu
+parent: recipes
 ordinal: 2
 ---
 # Column Header Menu

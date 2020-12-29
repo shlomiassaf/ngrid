@@ -1,0 +1,14 @@
+<!-- DEFINING DEFAULT NO DATA TEMPLATE -->
+<div *pblNgridNoDataRef class="pbl-ngrid-no-data"><span>No Results</span></div>
+<!-- DEFINING DEFAULT NO DATA TEMPLATE -->
+
+<!-- DEFINING DEFAULT COLUMNS FOR PBL-NGRID -->
+<div *pblNgridCellDef="'*'; value as value;">{{value}}</div>
+<div *pblNgridCellTypeDef="'visualBool'; value as value;">{{ value ? '✅' : '🚫' }}</div>
+<div *pblNgridCellTypeDef="'date'; value as value;">{{value | date: 'MMM dd, yyyy'}}</div>
+<div *pblNgridCellTypeDef="'number'; value as value;">{{value | number: '1.0-2'}}</div>
+<div *pblNgridCellTypeDef="'datetime'; value as value;">{{value | date: 'MMM dd, yyyy  HH:mm'}}</div>
+<div *pblNgridCellDef="'gender'; value as value;">{{value == 'Male' ? '♀' : value == 'Female' ? '♂' : '×'}}</div>
+
+<div *pblNgridHeaderCellDef="'*'; col as col;"><span style="color: blue">{{col.label}}</span></div>
+<div *pblNgridFooterCellDef="'*'; col as col;">{{col.label}}</div>

@@ -1,7 +1,7 @@
 @import '~@angular/material/theming';
 
-@import '../../../../../../libs/ngrid/theming';
-@import '../../../../../../libs/ngrid-bootstrap/theming';
+@import '../../../../../../../libs/ngrid/theming';
+@import '../../../../../../../libs/ngrid-bootstrap/theming';
 
 // Loading mandatory bootstrap styles that must live in the open (e.g. tooltip, toast, modal - all overlays)
 @import './bootstrap/bootstrap-global';
@@ -16,7 +16,9 @@ $pbl-bs-spacing-theme-default: (
   cell-spacing: 12px,
 );
 
-$pbl-ngrid-theme: map-merge($pbl-ngrid-theme, ( spacing: $pbl-bs-spacing-theme-default ));
+$foreground: map-merge(map-get($pbl-ngrid-theme, foreground), ( ngrid-header-cell-color: black, ngrid-footer-cell-color: black ));
+
+$pbl-ngrid-theme: map-merge($pbl-ngrid-theme, ( foreground: $foreground, spacing: $pbl-bs-spacing-theme-default ));
 
 .pbl-docs-bootstrap {
 

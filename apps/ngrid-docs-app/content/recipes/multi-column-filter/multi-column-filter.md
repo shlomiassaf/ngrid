@@ -1,7 +1,7 @@
 ---
 title: Multi Column Filter
-path: stories/multi-column-filter
-parent: stories
+path: recipes/multi-column-filter
+parent: recipes
 ordinal: 1
 ---
 # Multi Column Filter

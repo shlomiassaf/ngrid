@@ -211,19 +211,19 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
   },
 
   {
-    path: 'stories-action-row.module',
+    path: 'recipes-action-row.module',
     pathMatch: 'full',
-    loadChildren: () => import('./stories/action-row/action-row.module').then( m => m.ActionRowExampleModule ),
+    loadChildren: () => import('./recipes/action-row/action-row.module').then( m => m.ActionRowExampleModule ),
   },
   {
-    path: 'stories-multi-column-filter.module',
+    path: 'recipes-multi-column-filter.module',
     pathMatch: 'full',
-    loadChildren: () => import('./stories/multi-column-filter/multi-column-filter.module').then( m => m.MultiColumnFilterExampleModule ),
+    loadChildren: () => import('./recipes/multi-column-filter/multi-column-filter.module').then( m => m.MultiColumnFilterExampleModule ),
   },
   {
-    path: 'stories-column-header-menu.module',
+    path: 'recipes-column-header-menu.module',
     pathMatch: 'full',
-    loadChildren: () => import('./stories/column-header-menu/column-header-menu.module').then( m => m.ColumnHeaderMenuExampleModule ),
+    loadChildren: () => import('./recipes/column-header-menu/column-header-menu.module').then( m => m.ColumnHeaderMenuExampleModule ),
   },
   {
     path: 'extending-ngrid-copy-selection.module',
@@ -266,6 +266,11 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     loadChildren: () => import('./plugins/ngrid-bootstrap/cell-tooltip/cell-tooltip.module').then( m => m.CellTooltipExampleModule ),
   },
   {
+    path: 'plugins-ngrid-bootstrap-selection-column.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./plugins/ngrid-bootstrap/selection-column/selection-column.module').then( m => m.SelectionColumnExampleModule ),
+  },
+  {
     path: 'plugins-ngrid-bootstrap-sort-header.module',
     pathMatch: 'full',
     loadChildren: () => import('./plugins/ngrid-bootstrap/sort-header/sort-header.module').then( m => m.SortHeaderExampleModule ),
@@ -279,5 +284,15 @@ export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
     path: 'concepts-theming-spacing.module',
     pathMatch: 'full',
     loadChildren: () => import('./concepts/theming/spacing/spacing.module').then( m => m.SpacingExampleModule ),
+  },
+  {
+    path: 'recipes-header-title-and-translation.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./recipes/header-title-and-translation/header-title-and-translation.module').then( m => m.HeaderTitleAndTranslationExampleModule ),
+  },
+  {
+    path: 'recipes-global-templates.module',
+    pathMatch: 'full',
+    loadChildren: () => import('./recipes/global-templates/global-templates.module').then( m => m.GlobalTemplatesExampleModule ),
   }
 ];
