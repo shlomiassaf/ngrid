@@ -1,3 +1,80 @@
+# 3.0.0 (2020-12-30)
+
+
+### Bug Fixes
+
+* **ngrid:** don't attach global templates to the root registry ([0494678](https://github.com/shlomiassaf/ngrid/commit/0494678c09ff3412cf16f8ae08a199f98f069bd6))
+* **ngrid:** fix group logic ([e75e493](https://github.com/shlomiassaf/ngrid/commit/e75e493d45c83f97b0bb0aae87d0aab821a811f5))
+* **ngrid:** fix virtual page height ([633a37d](https://github.com/shlomiassaf/ngrid/commit/633a37d0321a6b5ba92da037e381e5fbce18bc38))
+* **ngrid:** pagination reset when filter is on ([468de4f](https://github.com/shlomiassaf/ngrid/commit/468de4f569386d9ec032d59f74f5083d0f82e531)), closes [#78](https://github.com/shlomiassaf/ngrid/issues/78)
+* **ngrid:** column header sticky rows index is wrong ([c122e9d](https://github.com/shlomiassaf/ngrid/commit/c122e9da60a0d06f43e746c768b2884c4138982c))
+* **ngrid/drag:** support column & row reorder on the same host ([c1312c9](https://github.com/shlomiassaf/ngrid/commit/c1312c9cb51ded8b0f308dd598bbcfe0c3620ca6))
+* **ngrid/drag:** support row reordering in virtual scroll ([5a24eec](https://github.com/shlomiassaf/ngrid/commit/5a24eecf56bf33ef4fae75feca8360cfeaee441f))
+* **ngrid/infinite-scroll:** scroll page init without reason ([54a1b65](https://github.com/shlomiassaf/ngrid/commit/54a1b655474f47d68a04d110bddb3095c3782d93))
+* **ngrid:** do not auto-clear context on source changing ([e49d4ff](https://github.com/shlomiassaf/ngrid/commit/e49d4ff1c3ebcbe65219e1e48bff2c1c3e18779b))
+* **ngrid:** missed a row when measuring virtual height ([cf9ebfe](https://github.com/shlomiassaf/ngrid/commit/cf9ebfe33bc62be065fcb112249568e64c71e243))
+* **ngrid:** rtl not working with live changes in direction ([2956192](https://github.com/shlomiassaf/ngrid/commit/29561925478b58bb660d198c0de64941d10cc4f4)), closes [#141](https://github.com/shlomiassaf/ngrid/issues/141)
+* **ngrid:** workaround virtual scroll height limitation in browsers ([233e3b2](https://github.com/shlomiassaf/ngrid/commit/233e3b2b4dc1f66ac8df5cc309488446c64926e6))
+* **ngrid:** wrong ds index reference in context when using multirow setup ([58ab268](https://github.com/shlomiassaf/ngrid/commit/58ab2684e695e46bf99450d274f218e1c91e40f2))
+* **ngrid/block-ui:** allow BooleanInput for strict mode ([2a9770a](https://github.com/shlomiassaf/ngrid/commit/2a9770a55c0e9a71bb6d96453dc7d876012a61f0))
+* **ngrid/block-ui:** wait for grid init before creating view ([b9d1ea3](https://github.com/shlomiassaf/ngrid/commit/b9d1ea38fb148a992a08ef3ca9a5fc503b105a4e))
+* **ngrid/infinite-scroll:** proper reflection of refresh trigger state vs infitie scroll trigger state ([3340bc9](https://github.com/shlomiassaf/ngrid/commit/3340bc98b7ceb1369ac4d2fb7a04defb3a311927))
+* **ngrid/target-events:** keyboard focus does not sync when virtual scrolling ([b488d91](https://github.com/shlomiassaf/ngrid/commit/b488d917745becc5116e95d10dfcc27b0ff40029)), closes [#117](https://github.com/shlomiassaf/ngrid/issues/117)
+
+### Features
+
+* **ngrid-bootstrap:** selection column ([ab09209](https://github.com/shlomiassaf/ngrid/commit/ab09209a3f24ebe29d1cd5b74da79b7beeaaf35f))
+* **ngrid:** add schematics support ([1d7814c](https://github.com/shlomiassaf/ngrid/commit/1d7814cd75291da530c6ed61741841879b4acf68))
+* **ngrid-bootstrap:** initial bootstrap support ([80d6a85](https://github.com/shlomiassaf/ngrid/commit/80d6a852660828c5ac12a9a99370cedebcbeeaf4))
+* **ngrid:** 3rd party storage for context api ([#132](https://github.com/shlomiassaf/ngrid/issues/132)) ([0c9ca4c](https://github.com/shlomiassaf/ngrid/commit/0c9ca4c2a04750976e92d511b9cc8d46c85220f1)), closes [#10](https://github.com/shlomiassaf/ngrid/issues/10) [#127](https://github.com/shlomiassaf/ngrid/issues/127)
+* **ngrid:** allow minimum height based on row count ([296fe5d](https://github.com/shlomiassaf/ngrid/commit/296fe5d2f7b0c5c10800da87717ee43df6713e7e))
+* **ngrid:** cache when rendering rows ([170c2d4](https://github.com/shlomiassaf/ngrid/commit/170c2d406d6ba16bd3de30cf164984f988e7cd2c))
+* **ngrid:** custom row override ([fec9445](https://github.com/shlomiassaf/ngrid/commit/fec9445c786a83e7eddd353182aa60a7a159df65))
+* **ngrid:** implement dynamic virtual scroll strategy ([30117a3](https://github.com/shlomiassaf/ngrid/commit/30117a37223a601791ad4b0df3e78b0021f6799e))
+* **ngrid:** new api to add/remove columns ([7a79b2e](https://github.com/shlomiassaf/ngrid/commit/7a79b2e258f9125ad9375c7ea38fe56f18029de3))
+* **ngrid:** use intersection observer ([161371b](https://github.com/shlomiassaf/ngrid/commit/161371b34887ced340e2d16df1fe2438b48615a8))
+* **ngrid-cypress:** new package with cypress helpers (similar to harnesses) ([e33d638](https://github.com/shlomiassaf/ngrid/commit/e33d638fb6c459fd9094fbb07e8a8f3a6a2b4b7a))
+* **ngrid/detail-row:** implement global detail row instance manager ([f30c335](https://github.com/shlomiassaf/ngrid/commit/f30c33577d924a9ee3e171da89e93866fb02d1ba))
+* **ngrid/testing:** add test harnesses for ngrid, columns and data rows/cells ([19bbba6](https://github.com/shlomiassaf/ngrid/commit/19bbba66a7758313930fefcc8742a534159211df))
+
+### Performance Improvements
+
+* **ngrid:** support tree-shakable errors ([0fa90ff](https://github.com/shlomiassaf/ngrid/commit/0fa90ffe4a355643713078fda790de04c3b72691))
+* **ngrid:** disable wheel mode when virtual scroll paging is active ([25d269e](https://github.com/shlomiassaf/ngrid/commit/25d269eb3a79c417b96a6e1ce17215e949a7cbb2))
+* **ngrid:** rebuild columns/cells inside rows when invalidating ([35bbea8](https://github.com/shlomiassaf/ngrid/commit/35bbea8cd15105910f5b45584825ba3fd7848145))
+* **ngrid:** use internal row context ([f7f8367](https://github.com/shlomiassaf/ngrid/commit/f7f8367a2b30cd88a029db62040d36bd6d566ac4))
+
+### Code Refactoring
+
+* **ngrid:** move column (some) and datasource symbols to core package ([33d2bca](https://github.com/shlomiassaf/ngrid/commit/33d2bca06efd27e3605489697005d250dfb0780b))
+* **ngrid:** move configuration symbols to core package ([fc259ba](https://github.com/shlomiassaf/ngrid/commit/fc259ba343a98880bf9ccc39b9c6808007413f7d))
+* **ngrid:** move most of utils to `@pebula/ngrid/core` ([2990511](https://github.com/shlomiassaf/ngrid/commit/2990511c5bf3e68716bf2c08c87577fd6b2dc946))
+* **ngrid:** move registry to core package ([55e8f31](https://github.com/shlomiassaf/ngrid/commit/55e8f311691394cb2fe2bcbbd76fa5169d72ad15))
+* **ngrid:** moved pagination types to core ([cad0f5b](https://github.com/shlomiassaf/ngrid/commit/cad0f5bf13b9b1a57dcf304be0da797c524820be))
+* **ngrid:** refactor the cell rendering engine and refactor the group definitions ([4882e4a](https://github.com/shlomiassaf/ngrid/commit/4882e4a1064d01aefab792ea6d984ba51bb5f70e)), closes [#123](https://github.com/shlomiassaf/ngrid/issues/123) [#131](https://github.com/shlomiassaf/ngrid/issues/131)
+* **ngrid:** simplify working with rows ([a81b1af](https://github.com/shlomiassaf/ngrid/commit/a81b1afdc75f3a5c0fd8c9378a7519609c2d1dce))
+
+### BREAKING CHANGES
+
+* **ngrid:** To reduce clutter in the main packge the configuration symbols moved to `@pebula/ngrid/core`.
+At this point all symbols were re-exported from the main module so this no effect there. However, if you've extended on of the symbols using augmentation you will need to update the augmentation module path.
+* **ngrid:** To reduce clutter in the main packge the datasource symbols (all) and some of the column model symbols moved to `@pebula/ngrid/core`.
+At this point all symbols we're re-exported from the main module so this no effect there. However, if you've extended on of the symbols using augmentation you will need to update the augmentation module path.
+* **ngrid:** Since the registry and it's type mapping symbols are for intenral or plugin use they are now part of the core pacakge. Currently the single/multi directives are still in the main package but they might also be moved in a later phase
+* **ngrid:** If you've used `unrx` in your code, it is not located in `@pebula/ngrid/core` since it is not for used by "regular" users, only required for plugin authoring.
+* **ngrid:** Pagination types have moved from `@pebula/ngrid` to `@pebula/ngrid/core` as part of the cleanup process to simplify the main package. `@pebula/ngrid` re-exports the interfaces and types but the concrete implementations for `PblPagingPaginator` and `PblTokenPaginator` are now in the core pacakge as they are
+not intended to be used by "regular" users, only plugin authors.
+* **ngrid:** Binding `[grid]` and `[row]` is no longer required. Same for `detailRow` and `infiniteRow`
+* **ngrid:** `resize-observer-polyfill` is no longer a peerDependency and is not required by the library. If you want polyfill support please import the polyfill using polyfill.ts
+* **ngrid:** `prop` and `span` are deprecated from `PblColumnGroupDefinition` and will be removed from version 4.0.0
+`prop` and `span` are removed from `PblColumnGroup` and instread columnIds list is used
+* **ngrid:** If you used the hideColumns property (setter only) via code and not via html binding it will no longer work.
+Instead, use the new api to add/remove columns.
+If you used it via bindings, it will still work but it is not recommended because other plugins that use the API
+will override values from the array provided.
+
+
+
 # 3.0.0-alpha.6 (2020-12-30)
 
 
