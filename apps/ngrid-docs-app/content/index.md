@@ -12,7 +12,7 @@ type: index
 <br>
 
 ```bash
-yarn add @pebula/ngrid @pebula/ngrid-material
+ng add @pebula/ngrid
 ```
 
 <br>
