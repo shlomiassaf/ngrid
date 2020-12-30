@@ -11209,10 +11209,10 @@ next-tick@~1.0.0:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
   integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
 
-ng-cli-packagr-tasks@^11.0.0:
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/ng-cli-packagr-tasks/-/ng-cli-packagr-tasks-11.0.0.tgz#c5ed35f83f4d9401544ac257d370e40281457dd1"
-  integrity sha512-Tzu7hsyzxlG9s1sbpVXkX1U3d1s0pTOhoW0sANMn1nLiKpbrQejv+Wr8VBXtENf2ToYpY5/S/FqGCNjlf7dvhw==
+ng-cli-packagr-tasks@^11.0.2:
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/ng-cli-packagr-tasks/-/ng-cli-packagr-tasks-11.0.2.tgz#645469d74ae1982a79919ac6169b95cd5aa6de1a"
+  integrity sha512-2Qotuux+I7TwzBiiVNTg+KV9o+WNfxkSVkZpg5WbjeGrAh3NqM31Pd0wMCyS3sILkSO43o5FFNOBVbUDia2WoA==
 
 ng-packagr@^11.0.2:
   version "11.0.3"

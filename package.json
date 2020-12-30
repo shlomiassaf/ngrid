@@ -140,7 +140,7 @@
     "marked": "^1.2.3",
     "merge2": "^1.2.3",
     "mock-require": "^3.0.3",
-    "ng-cli-packagr-tasks": "^11.0.0",
+    "ng-cli-packagr-tasks": "^11.0.2",
     "node-sass-tilde-importer": "^1.0.2",
     "prettier": "2.0.4",
     "prismjs": "^1.21.0",

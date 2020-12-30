@@ -6,7 +6,7 @@ import { ensureUnixPath } from 'ng-packagr/lib/utils/path';
 import { CopyFile } from 'ng-cli-packagr-tasks/dist/tasks/copy-file';
 import { NodeLib } from 'ng-cli-packagr-tasks/dist/tasks/node-lib';
 
-import { writePackage } from './tasks';
+import { WritePackageJson } from './tasks';
 
 async function fixDtsReference(context: EntryPointTaskContext) {
   const { entryPoint } = context.epNode.data;
@@ -22,7 +22,7 @@ module.exports = function(ctx: NgPackagerHooksContext, registry: HookRegistry) {
   registry
     .register(NodeLib)
     .register('writePackage', { before: fixDtsReference })
-    .register('writePackage', { before: writePackage })
+    .register(WritePackageJson)
     .register(CopyFile);
 }
 

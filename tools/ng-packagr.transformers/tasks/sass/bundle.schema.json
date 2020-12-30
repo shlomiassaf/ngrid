@@ -16,21 +16,6 @@
       "required": [
         "entries"
       ]
-    },
-    "sassCompile": {
-      "type": "object",
-      "properties": {
-        "entries": {
-          "type": "array",
-          "description": "List of static SASS entry points.",
-          "items": {
-            "$ref": "#/definitions/assetPattern"
-          }
-        }
-      },
-      "required": [
-        "entries"
-      ]
     }
   },
   "definitions": {

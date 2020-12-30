@@ -1,0 +1,44 @@
+
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "ngrid-ng-add",
+  "title": "ngrid ng-add schematic",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Name of the project",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "uiPlugin": {
+      "description": "UI Plugin to add",
+      "type": "string",
+      "default": "none",
+      "x-prompt": {
+        "message": "Choose",
+        "type": "list",
+        "items": [
+          { "value": "none",       "label": "None" },
+          { "value": "material",   "label": "Material (@pebula/ngrid-material using @angular/components" },
+          { "value": "bootstrap",  "label": "Bootstrap (@pebula/ngrid-bootstrap using @ng-bootstrap/ng-bootstrap" }
+        ]
+      }
+    },
+    "theme": {
+      "description": "The theme to apply",
+      "type": "string",
+      "default": "light",
+      "x-prompt": {
+        "message": "Choose a prebuilt theme name, or \"custom\" for a custom theme:",
+        "type": "list",
+        "items": [
+          { "value": "light",       "label": "Light Theme" },
+          { "value": "dark",        "label": "Dark Theme" },
+          { "value": "custom",      "label": "Custom" }
+        ]
+      }
+    },
+  }
+}

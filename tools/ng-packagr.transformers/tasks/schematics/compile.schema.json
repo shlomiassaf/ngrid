@@ -1,0 +1,24 @@
+{
+  "title": "Webpack browser schema for Build Facade.",
+  "description": "Browser target options",
+  "properties": {
+    "schematicsCompile": {
+      "type": "object",
+      "properties": {
+        "libPath": {
+          "type": "string",
+          "description": "The relative path, from the primary package root, to the schematics lib folder"
+        },
+        "tsConfig": {
+          "type": "string",
+          "description": "The file path of the TypeScript configuration file, specific for node library generation.\n\n If not set will use the tsConfig of the project"
+        },
+        "compilerOptions": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": []
+    }
+  }
+}

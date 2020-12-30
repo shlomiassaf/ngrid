@@ -1,0 +1,35 @@
+import { Component<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { createDS, columnFactory } from '@pebula/ngrid';
+
+// TODO: Replace this with your own data model type
+export interface <%= classify(name) %>Item {
+  id: string;
+  name: string;
+}
+
+@Component({
+  selector: '<%= selector %>',<% if(inlineTemplate) { %>
+  template: `
+    <%= indentTextContent(resolvedFiles.template, 4) %>
+  `,<% } else { %>
+  templateUrl: './<%= dasherize(name) %>.component.html',<% } if(inlineStyle) { %>
+  styles: [`
+    <%= indentTextContent(resolvedFiles.stylesheet, 4) %>
+  `]<% } else { %>
+  styleUrls: ['./<%= dasherize(name) %>.component.<%= style %>']<% } %><% if(!!viewEncapsulation) { %>,
+  encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
+  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %>
+})
+export class <%= classify(name) %>Component {
+  columns = columnFactory()
+    .table(
+      { prop: 'id', width: '50px', pIndex: true },
+      { prop: 'name', width: '25%' },
+    )
+    .build();
+
+  ds = createDS<<%= classify(name) %>Item>()
+    .onTrigger( () => [{ id: '1', name: 'John Doe' }] ) // Replace with actual data fetching call (array, promise or observable)
+    .create();
+
+}

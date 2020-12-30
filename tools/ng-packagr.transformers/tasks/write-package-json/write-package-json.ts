@@ -1,19 +1,26 @@
 import * as fs from 'fs-extra';
-import * as path from 'path';
+import * as Path from 'path';
 import { NgEntryPoint } from 'ng-packagr/lib/ng-package/entry-point/entry-point';
 import { NgPackage } from 'ng-packagr/lib/ng-package/package';
 import * as log from 'ng-packagr/lib/utils/log';
 import { ensureUnixPath } from 'ng-packagr/lib/utils/path';
 import { rimraf } from 'ng-packagr/lib/utils/rimraf';
-import { EntryPointTaskContext } from 'ng-cli-packagr-tasks';
-import { getDistEntryFile } from './utils';
+import { EntryPointTaskContext, Job } from 'ng-cli-packagr-tasks';
+import { getDistEntryFile } from '../utils';
 
-export async function writePackage(context: EntryPointTaskContext) {
+declare module 'ng-cli-packagr-tasks/dist/build/hooks' {
+  interface NgPackagrBuilderTaskSchema {
+    writePackageJson: {
+    }
+  }
+}
+
+async function writePackage(context: EntryPointTaskContext) {
   const { tsConfig, entryPoint } = context.epNode.data;
   const ngPackage: NgPackage = context.graph.find(node => node.type === 'application/ng-package').data;
 
   log.info('Writing package metadata');
-  const relativeUnixFromDestPath = (filePath: string) => ensureUnixPath(path.relative(entryPoint.destinationPath, filePath));
+  const relativeUnixFromDestPath = (filePath: string) => ensureUnixPath(Path.relative(entryPoint.destinationPath, filePath));
 
   // TODO: This will map the entry file to it's emitted output path taking rootDir into account.
   // It might not be fully accurate, consider using the compiler host to create a direct map.
@@ -83,7 +90,7 @@ async function writePackageJson(entryPoint: NgEntryPoint,
 
   // `outputJson()` creates intermediate directories, if they do not exist
   // -- https://github.com/jprichardson/node-fs-extra/blob/master/docs/outputJson.md
-  await fs.outputJson(path.join(entryPoint.destinationPath, 'package.json'), packageJson, {
+  await fs.outputJson(Path.join(entryPoint.destinationPath, 'package.json'), packageJson, {
     spaces: 2,
   });
 }
@@ -104,3 +111,14 @@ function checkNonPeerDependencies(packageJson: Record<string, unknown>, property
     }
   }
 }
+
+@Job({
+  schema: Path.resolve(__dirname, 'write-package-json.schema.json'),
+  selector: 'writePackageJson',
+  hooks: {
+    writePackage: {
+      before: writePackage
+    }
+  }
+})
+export class WritePackageJson { }

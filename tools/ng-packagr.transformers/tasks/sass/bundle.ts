@@ -1,24 +1,19 @@
 import * as Path from 'path';
 import * as FS from 'fs';
-import { dest, task, series } from 'gulp';
 import { Bundler } from 'scss-bundle';
 import { writeFile } from 'fs-extra';
 import * as globby from 'globby';
-import { resolve, virtualFs } from '@angular-devkit/core';
-import { normalizeAssetPatterns } from '@angular-devkit/build-angular/src/utils/normalize-asset-patterns';
+import { virtualFs } from '@angular-devkit/core';
 import * as log from 'ng-packagr/lib/utils/log';
 
 import { EntryPointTaskContext, Job } from 'ng-cli-packagr-tasks';
-import { buildScssPipeline } from '../tasks/package-tools/gulp/build-scss-pipeline';
+import { CopyFile } from 'ng-cli-packagr-tasks/dist/tasks/copy-file';
 
 declare module 'ng-cli-packagr-tasks/dist/build/hooks' {
   interface NgPackagrBuilderTaskSchema {
     sassBundle: {
       entries: string[];
     };
-    sassCompile: {
-      entries: string[];
-    }
   }
 }
 
@@ -30,22 +25,18 @@ async function sassBundleTask(context: EntryPointTaskContext) {
   }
 
   const { builderContext, root, projectRoot, sourceRoot, options } = globalContext;
-  const host = new virtualFs.AliasHost(globalContext.host as virtualFs.Host<FS.Stats>);
-  const syncHost = new virtualFs.SyncDelegateHost<FS.Stats>(host);
 
   if (!options.tasks.data.sassBundle) {
     return;
   }
 
-  const assets = normalizeAssetPatterns(
+  const copyPatterns = CopyFile.createCopyPatterns(
     options.tasks.data.sassBundle.entries,
-    syncHost as any,
+    new virtualFs.AliasHost(globalContext.host as virtualFs.Host<FS.Stats>),
     root,
     projectRoot,
     sourceRoot,
   );
-
-  const copyPatterns = buildCopyPatterns(root, assets);
   const copyOptions = { ignore: ['.gitkeep', '**/.DS_Store', '**/Thumbs.db'] };
 
   log.info('Bundling a sass bundles...');
@@ -82,80 +73,6 @@ async function sassBundleTask(context: EntryPointTaskContext) {
   }
 }
 
-async function sassCompileTask(context: EntryPointTaskContext) {
-  const globalContext = context.context();
-  if (context.epNode.data.entryPoint.isSecondaryEntryPoint) {
-    return;
-  }
-
-  const { builderContext, root, projectRoot, sourceRoot, options } = globalContext;
-  const host = new virtualFs.AliasHost(globalContext.host as virtualFs.Host<FS.Stats>);
-  const syncHost = new virtualFs.SyncDelegateHost<FS.Stats>(host);
-
-  if (!options.tasks.data.sassCompile) {
-    return;
-  }
-
-  const assets = normalizeAssetPatterns(
-    options.tasks.data.sassCompile.entries,
-    syncHost as any,
-    root,
-    projectRoot,
-    sourceRoot,
-  );
-
-  const copyPatterns = buildCopyPatterns(root, assets);
-  log.info('Compiling sass bundles...');
-
-  const destPath = Path.join(root, copyPatterns[0].to);
-
-  const taskName = context.epNode.data.entryPoint.moduleId + ':css';
-  task(taskName, () => {
-    return buildScssPipeline(copyPatterns[0].context, [ Path.join(root, 'node_modules/') ], true).pipe(dest(destPath));
-  });
-
-  try {
-    await new Promise( (resolve, reject) => {
-      series(taskName)( (err?: any) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
-  } catch (err) {
-    builderContext.logger.error(err.toString());
-    throw err;
-  }
-}
-
-function buildCopyPatterns(root: string, assets: ReturnType< typeof normalizeAssetPatterns>) {
-  return assets.map( asset => {
-
-    // Resolve input paths relative to workspace root and add slash at the end.
-    asset.input = Path.resolve(root, asset.input).replace(/\\/g, '/');
-    asset.input = asset.input.endsWith('/') ? asset.input : asset.input + '/';
-    asset.output = asset.output.endsWith('/') ? asset.output : asset.output + '/';
-
-    if (asset.output.startsWith('..')) {
-      const message = 'An asset cannot be written to a location outside of the output path.';
-      throw new Error(message);
-    }
-
-    return {
-      context: asset.input,
-      // Now we remove starting slash to make Webpack place it from the output root.
-      to: asset.output.replace(/^\//, ''),
-      ignore: asset.ignore,
-      from: {
-        glob: asset.glob,
-        dot: true,
-      },
-    };
-  });
-}
-
 /** Bundles all SCSS files into a single file */
 async function bundleScss(root: string, src: string, dest: string) {
 
@@ -187,7 +104,7 @@ async function bundleScss(root: string, src: string, dest: string) {
 }
 
 @Job({
-  schema: Path.resolve(__dirname, 'sass-build.json'),
+  schema: Path.resolve(__dirname, 'bundle.schema.json'),
   selector: 'sassBundle',
   hooks: {
     writePackage: {
@@ -196,14 +113,3 @@ async function bundleScss(root: string, src: string, dest: string) {
   }
 })
 export class SassBundle { }
-
-@Job({
-  schema: Path.resolve(__dirname, 'sass-build.json'),
-  selector: 'sassCompile',
-  hooks: {
-    writePackage: {
-      before: sassCompileTask
-    }
-  }
-})
-export class SassCompile { }

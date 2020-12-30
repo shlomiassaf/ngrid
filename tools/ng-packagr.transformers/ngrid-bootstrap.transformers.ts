@@ -3,7 +3,7 @@ import { CopyFile } from 'ng-cli-packagr-tasks/dist/tasks/copy-file';
 import { Bump } from 'ng-cli-packagr-tasks/dist/tasks/bump';
 
 import { mergeUmdIds, updatePathsFromCache } from './base';
-import { SassBundle, SassCompile } from './sass-build-task';
+import { SassBundle, SassCompile } from './tasks';
 
 const COMPILED_PATH_MAPPINGS: { [key: string]: string[] } = {};
 async function compileNgcTransformer(taskContext: EntryPointTaskContext) {

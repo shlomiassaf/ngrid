@@ -1,0 +1,23 @@
+{
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "description": "Adds ngrid library to the project and installs dependencies",
+      "factory": "./ng-add/index",
+      "schema": "./ng-add/schema.json",
+      "aliases": ["install"]
+    },
+    "ng-add-setup-project": {
+      "private": true,
+      "description": "Sets up the project after dependencies have been installed",
+      "factory": "./ng-add/setup-project",
+      "schema": "./ng-add/schema.json"
+    },
+    "grid": {
+      "description": "Create a component that uses ngrid",
+      "factory": "./ng-generate/grid/index",
+      "schema": "./ng-generate/grid/schema.json",
+      "aliases": ["ngrid"]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Writes package.json file",
+  "description": "",
+  "properties": {
+    "writePackageJson": {
+      "type": "object",
+      "properties": { },
+      "required": [  ]
+    }
+  }
+}

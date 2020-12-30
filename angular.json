@@ -364,6 +364,14 @@
                       "output": "dist/@pebula/ngrid/themes"
                     }
                   ]
+                },
+                "schematicsCompile": {
+                  "libPath": "./schematics",
+                  "compilerOptions": {
+                    "sourceMap": false,
+                    "inlineSourceMap": true,
+                    "inlineSources": true
+                  }
                 }
               }
             }
@@ -538,6 +546,9 @@
                     "inlineSourceMap": true,
                     "inlineSources": true
                   }
+                },
+                "writePackageJson": {
+
                 }
               }
             }

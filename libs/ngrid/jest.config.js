@@ -1,5 +1,5 @@
 module.exports = {
-  preset: '../../jest.preset.js',
+  preset: './jest.preset.js',
   coverageDirectory: '../../coverage/libs/ngrid',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',

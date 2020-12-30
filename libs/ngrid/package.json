@@ -16,6 +16,7 @@
     "grid",
     "table"
   ],
+  "schematics": "./schematics/collection.json",
   "author": "Shlomi Assaf",
   "homepage": "https://github.com/shlomiassaf/ngrid",
   "bugs": {
