@@ -3,9 +3,9 @@ import { DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
 class TestDynamicClientApi extends DynamicClientApi {
   protected createAdapter() {
     const workerConstructor = Worker;
-    (global || window).Worker = undefined;
+    ((global || window) as any).Worker = undefined;
     super.createAdapter();
-    (global || window).Worker = workerConstructor;
+    ((global || window) as any).Worker = workerConstructor;
   }
 }
 const testDynamicClientApi = new TestDynamicClientApi();

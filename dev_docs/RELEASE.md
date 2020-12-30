@@ -24,6 +24,7 @@ Run any of the relevant commands:
 npm publish dist/@pebula/ngrid
 npm publish dist/@pebula/ngrid-material
 npm publish dist/@pebula/ngrid-bootstrap
+npm publish dist/@pebula/ngrid-cypress
 ```
 
 - Commit, Create Tag & Push
