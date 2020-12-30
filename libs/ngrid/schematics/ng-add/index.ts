@@ -33,11 +33,10 @@ export default function ngAdd(options: Schema): Rule {
     };
 
     // Installing dependencies
-    const angularCoreVersion = getPackageVersionFromPackageJson(tree, '@angular/core') !;
     const angularCdkVersion = getPackageVersionFromPackageJson(tree, '@angular/cdk');
 
     if (angularCdkVersion === null) {
-      addPackageToPackageJson(tree, '@angular/cdk', angularCoreVersion);
+      addPackageToPackageJson(tree, '@angular/cdk', meta.NG_MATERIAL_VERSION);
       setupSchema.withRules.push(() => externalSchematic('@angular/cdk', 'ng-add', project ? { name: project } : {}));
     }
 
