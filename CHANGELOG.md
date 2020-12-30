@@ -1,4 +1,4 @@
-# 3.0.0-alpha.6 (2020-12-29)
+# 3.0.0-alpha.6 (2020-12-30)
 
 
 ### Bug Fixes
@@ -9,7 +9,7 @@
 ### Features
 
 * **ngrid-bootstrap:** selection column ([ab09209](https://github.com/shlomiassaf/ngrid/commit/ab09209a3f24ebe29d1cd5b74da79b7beeaaf35f))
-
+* **ngrid:** add schematics support ([1d7814c](https://github.com/shlomiassaf/ngrid/commit/1d7814cd75291da530c6ed61741841879b4acf68))
 
 
 # 3.0.0-alpha.5 (2020-12-28)
