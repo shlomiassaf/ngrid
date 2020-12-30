@@ -23,6 +23,10 @@ For full documentation, walkthroughs and examples - [visit the official site](ht
 
 ## Quick Start
 
+```bash
+ng add @pebula/ngrid
+```
+
 [Documentation site](https://shlomiassaf.github.io/ngrid) with code samples.
 
 | nGrid Version    | Angular Version | Documentation | Starters  
@@ -37,7 +41,7 @@ For full documentation, walkthroughs and examples - [visit the official site](ht
 ## Setup
 
 ```bash
-yarn add @pebula/ngrid @pebula/ngrid-material
+ng add @pebula/ngrid
 ```
 
 > Packages include secondary packages / plugins (e.g: `@pebula/ngrid/detail-row`)
