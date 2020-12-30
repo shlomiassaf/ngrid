@@ -7,7 +7,6 @@
  */
 
 import {normalize, logging} from '@angular-devkit/core';
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
 import {
   chain,
   noop,
@@ -27,11 +26,14 @@ import {
 import {InsertChange} from '@schematics/angular/utility/change';
 import {getWorkspace, updateWorkspace} from '@schematics/angular/utility/workspace';
 import {join} from 'path';
-import {SetupSchema} from '../schema';
+import {SetupSchema} from '../setup-schema';
 import {createCustomTheme} from './create-custom-theme';
 
+type WorkspaceDefinition = Parameters<typeof getProjectFromWorkspace>[0];
+type ProjectDefinition = ReturnType<typeof getProjectFromWorkspace>;
+
 /** Path segment that can be found in paths that refer to a prebuilt theme. */
-const prebuiltThemePathSegment = '@angular/material/prebuilt-themes';
+const prebuiltThemePathSegment = '@pebula/ngrid/themes';
 
 /** Default file name of the custom theme that can be generated. */
 const defaultCustomThemeFilename = 'custom-theme.scss';
@@ -39,8 +41,7 @@ const defaultCustomThemeFilename = 'custom-theme.scss';
 /** Add pre-built styles to the main project style file. */
 export function addThemeToAppStyles(schema: SetupSchema): Rule {
   return (host: Tree, context: SchematicContext) => {
-    const { options } = schema;
-    const themeName = options.theme || 'light';
+    const themeName = schema.theme || 'light';
     return themeName === 'custom' ?
       insertCustomTheme(schema, host, context.logger) :
       insertPrebuiltTheme(schema, themeName, context.logger);
@@ -51,8 +52,10 @@ export function addThemeToAppStyles(schema: SetupSchema): Rule {
  * Scss file for the custom theme will be created.
  */
 async function insertCustomTheme(schema: SetupSchema, host: Tree, logger: logging.LoggerApi): Promise<Rule> {
-  const { project } = schema;
-  const projectName = schema.options.project;
+  const projectName = schema.project;
+  const workspace = (await getWorkspace(host)) as unknown as WorkspaceDefinition;
+  const project = getProjectFromWorkspace(workspace, projectName);
+
   const stylesPath = getProjectStyleFile(project, 'scss');
   const themeContent = createCustomTheme(projectName);
 
@@ -96,11 +99,14 @@ function insertPrebuiltTheme(schema: SetupSchema, theme: string, logger: logging
 }
 
 /** Adds a theming style entry to the given project target options. */
-function addThemeStyleToTarget(schema: SetupSchema, targetName: 'test' | 'build',
-                               assetPath: string, logger: logging.LoggerApi): Rule {
+function addThemeStyleToTarget(schema: SetupSchema,
+                               targetName: 'test' | 'build',
+                               assetPath: string,
+                               logger: logging.LoggerApi): Rule {
   return updateWorkspace(workspace => {
-    const { project } = schema;
-    const projectName = schema.options.project;
+    const projectName = schema.project;
+    const project = getProjectFromWorkspace(workspace as unknown as WorkspaceDefinition, projectName);
+
     // Do not update the builder options in case the target does not use the default CLI builder.
     if (!validateDefaultTargetBuilder(project, targetName, logger)) {
       return;

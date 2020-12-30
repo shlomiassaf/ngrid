@@ -1,7 +1,7 @@
 
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "ngrid-ng-add",
+  "id": "ngrid-ng-add-setup",
   "title": "ngrid ng-add schematic",
   "type": "object",
   "properties": {
@@ -38,6 +38,12 @@
           { "value": "dark",        "label": "Dark Theme" },
           { "value": "custom",      "label": "Custom" }
         ]
+      }
+    },
+    "externalSchematics": {
+      "type": "array",
+      "items": {
+        "type": "string"
       }
     }
   }

@@ -1,10 +1,11 @@
-import { Rule, SchematicContext, SchematicsException, Tree, externalSchematic } from '@angular-devkit/schematics';
+import { Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
 import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schematics/tasks';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import { ProjectType } from '@schematics/angular/utility/workspace-models';
 
 import * as meta from './metadata';
-import { Schema, SetupSchema } from './schema';
+import { Schema } from './schema';
+import { SetupSchema } from './setup-schema';
 import * as messages from './messages';
 import { addPackageToPackageJson, getPackageVersionFromPackageJson } from '../utils/package-config';
 
@@ -26,10 +27,10 @@ export default function ngAdd(options: Schema): Rule {
     }
 
     const setupSchema: SetupSchema = {
-      options: { project, uiPlugin, theme },
-      withRules: [],
-      workspace: workspace as any,
-      project: projectWorkspace as any,
+      project,
+      uiPlugin,
+      theme,
+      externalSchematics: [],
     };
 
     // Installing dependencies
@@ -37,7 +38,7 @@ export default function ngAdd(options: Schema): Rule {
 
     if (angularCdkVersion === null) {
       addPackageToPackageJson(tree, '@angular/cdk', meta.NG_MATERIAL_VERSION);
-      setupSchema.withRules.push(() => externalSchematic('@angular/cdk', 'ng-add', project ? { name: project } : {}));
+      setupSchema.externalSchematics.push('@angular/cdk');
     }
 
     addPackageToPackageJson(tree, getNgridPackageName('ngrid'), `^${meta.NGRID_VERSION}`);
@@ -47,7 +48,7 @@ export default function ngAdd(options: Schema): Rule {
         const ngBootstrapVersion = getPackageVersionFromPackageJson(tree, '@ng-bootstrap/ng-bootstrap');
         if (ngBootstrapVersion === null) {
           addPackageToPackageJson(tree, '@ng-bootstrap/ng-bootstrap', meta.NG_BOOTSTRAP_VERSION);
-          setupSchema.withRules.push(() => externalSchematic('@ng-bootstrap/ng-bootstrap', 'ng-add', project ? { project } : {}));
+          setupSchema.externalSchematics.push('@ng-bootstrap/ng-bootstrap');
         }
         addPackageToPackageJson(tree, getNgridPackageName('ngrid-bootstrap'), `^${meta.NGRID_VERSION}`);
         break;
@@ -55,7 +56,7 @@ export default function ngAdd(options: Schema): Rule {
         const ngMaterialVersion = getPackageVersionFromPackageJson(tree, '@angular/material');
         if (ngMaterialVersion === null) {
           addPackageToPackageJson(tree, '@angular/material', meta.NG_MATERIAL_VERSION);
-          setupSchema.withRules.push(() => externalSchematic('@angular/material', 'ng-add', project ? { name: project } : {}));
+          setupSchema.externalSchematics.push('@angular/material');
         }
         addPackageToPackageJson(tree, getNgridPackageName('ngrid-material'), `^${meta.NGRID_VERSION}`);
         break;
