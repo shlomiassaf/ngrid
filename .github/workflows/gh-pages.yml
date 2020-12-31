@@ -53,7 +53,9 @@ jobs:
               urlSuffix: docsVersion.urlSuffix,
               branch: docsVersion.branch,
               nodeVer: docsVersion.nodeVer,
-              projectName: docsVersion.projectName
+              projectName: docsVersion.projectName,
+              clean: docsVersion.clean,
+              cleanExclude: docsVersion.cleanExclude,
             };
       - name: Workflow Variables
         env:
