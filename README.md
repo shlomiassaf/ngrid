@@ -1,10 +1,13 @@
-![npm (scoped)](https://img.shields.io/npm/v/@pebula/ngrid?label=ngrid&style=flat-square)
-![npm (scoped)](https://img.shields.io/npm/v/@pebula/ngrid-material?label=ngrid-material&style=flat-square)
-![GitHub](https://img.shields.io/github/workflow/status/shlomiassaf/ngrid/Node%20CI?style=flat-square&token=abc123def456&label=Build%20%26%20Test)
-![GitHub](https://img.shields.io/github/workflow/status/shlomiassaf/ngrid-material-starter/GH%20Pages%20on%20release?style=flat-square&token=abc123def456&label=ngrid-material-starter)
-![GitHub](https://img.shields.io/github/license/shlomiassaf/ngrid?style=flat-square)
-
 # N-GRID
+
+[![npm (scoped)](https://img.shields.io/npm/v/@pebula/ngrid?logo=npm&logoColor=fff&label=ngrid&style=flat-square)](https://www.npmjs.com/package/@pebula/ngrid)
+[![npm (scoped)](https://img.shields.io/npm/v/@pebula/ngrid-material?logo=npm&logoColor=fff&label=ngrid-material&style=flat-square)](https://www.npmjs.com/package/@pebula/ngrid-material)
+[![npm (scoped)](https://img.shields.io/npm/v/@pebula/ngrid-bootstrap?logo=npm&logoColor=fff&label=ngrid-bootstrap&style=flat-square)](https://www.npmjs.com/package/@pebula/ngrid-bootstrap)
+
+[![GitHub](https://img.shields.io/github/workflow/status/shlomiassaf/ngrid/Node%20CI?logo=github&style=flat-square&token=abc123def456&label=build)](https://github.com/shlomiassaf/ngrid/actions?query=workflow%3A%22Node+CI%22)
+[![GitHub](https://img.shields.io/github/workflow/status/shlomiassaf/ngrid/GH%20Pages%20on%20release?style=flat-square&token=abc123def456&label=documentation)](https://shlomiassaf.github.io/ngrid/)
+[![GitHub](https://img.shields.io/github/workflow/status/shlomiassaf/ngrid-starters/GH%20Pages%20on%20release?style=flat-square&token=abc123def456&label=ngrid-starters)](https://shlomiassaf.github.io/ngrid-starters/material/)
+[![GitHub](https://img.shields.io/github/license/shlomiassaf/ngrid?style=flat-square)](https://github.com/shlomiassaf/ngrid/blob/master/LICENSE)
 
 An angular based grid based on `@angular/cdk`.
 
