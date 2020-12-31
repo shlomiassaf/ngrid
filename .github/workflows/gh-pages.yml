@@ -55,7 +55,7 @@ jobs:
               nodeVer: docsVersion.nodeVer,
               projectName: docsVersion.projectName,
               clean: docsVersion.clean,
-              cleanExclude: docsVersion.cleanExclude,
+              cleanExclude: JSON.stringify(docsVersion.cleanExclude),
             };
       - name: Workflow Variables
         env:
