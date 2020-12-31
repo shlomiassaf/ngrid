@@ -11,10 +11,6 @@ on:
         description: 'Docs Major Version'
         required: true
         default: '3'
-      clean:
-        description: 'Clean the context of the existing site'
-        required: true
-        default: 'true'
   release:
     types: [created]
 
@@ -30,20 +26,26 @@ jobs:
               branch: '${{ github.event.inputs.branch}}' || 'master',
               nodeVer: 14,
               urlSuffix: '',
-              projectName: 'ngrid-docs-app'
+              projectName: 'ngrid-docs-app',
+              clean: true,
+              cleanExclude: ['v1', 'v2'],
             };
             const OLD_VERSIONS = {
               '1': {
                 branch: '1.x.x-(angular-v8)',
                 nodeVer: 12,
                 urlSuffix: 'v1/',
-                projectName: 'ngrid-demo-app'
+                projectName: 'ngrid-demo-app',
+                clean: false,
+                cleanExclude: [],
               },
               '2': {
                 branch: '2.x.x',
                 nodeVer: 12,
                 urlSuffix: 'v2/',
-                projectName: 'ngrid-demo-app'
+                projectName: 'ngrid-demo-app',
+                clean: false,
+                cleanExclude: [],
               }
             };
             const docsVersion = OLD_VERSIONS['${{ github.event.inputs.docsVersion }}'] || CURRENT_VERSION;
@@ -86,6 +88,7 @@ jobs:
           FOLDER: dist/browser
           BASE_BRANCH: ${{ fromJson(steps.workflowVariables.outputs.result).branch }}
           TARGET_FOLDER: ${{fromJson(steps.workflowVariables.outputs.result).urlSuffix}}
-          CLEAN: ${{ github.event.inputs.clean == 'true' }}
+          CLEAN: ${{fromJson(steps.workflowVariables.outputs.result).clean}}
+          CLEAN_EXCLUDE: ${{fromJson(steps.workflowVariables.outputs.result).cleanExclude}}
 
 
