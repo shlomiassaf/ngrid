@@ -54,12 +54,12 @@ async function schematicsCompileTask(context: EntryPointTaskContext) {
   const copyPatterns = CopyFile.createCopyPatterns(
     [
       {
-        glob: "**/*.json",
+        glob: '**/*.json',
         input: Path.relative(root, rootDir),
         output: Path.relative(root, destDir),
       },
       {
-        glob: "**/*.template",
+        glob: '**/*.template',
         input: Path.relative(root, rootDir),
         output: Path.relative(root, destDir),
       }
@@ -69,7 +69,7 @@ async function schematicsCompileTask(context: EntryPointTaskContext) {
     rootDir,
     rootDir,
   );
-  const copyOptions = { ignore: ['.gitkeep', '**/.DS_Store', '**/Thumbs.db'] };
+  const copyOptions = { ignore: ['.gitkeep', '**/.DS_Store', '**/Thumbs.db', '**/tsconfig.json'] };
   const onCopy = (pattern: CopyPattern, from: string, to: string) => {
     log.success(` - from: ${from}`);
     log.success(` - to: ${to}`);
