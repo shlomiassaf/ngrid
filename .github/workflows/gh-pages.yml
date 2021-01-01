@@ -24,7 +24,7 @@ jobs:
           script: |
             const CURRENT_VERSION = {
               branch: '${{ github.event.inputs.branch}}' || 'master',
-              packageManager: 'yarn',
+              packageManager: 'npm',
               nodeVer: 14,
               urlSuffix: '',
               projectName: 'ngrid-docs-app',
@@ -34,7 +34,7 @@ jobs:
             const OLD_VERSIONS = {
               '1': {
                 branch: '1.x.x-(angular-v8)',
-                packageManager: 'npm',
+                packageManager: 'yarn',
                 nodeVer: 12,
                 urlSuffix: 'v1/',
                 projectName: 'ngrid-demo-app',
@@ -43,7 +43,7 @@ jobs:
               },
               '2': {
                 branch: '2.x.x',
-                packageManager: 'yarn',
+                packageManager: 'npm',
                 nodeVer: 12,
                 urlSuffix: 'v2/',
                 projectName: 'ngrid-demo-app',
