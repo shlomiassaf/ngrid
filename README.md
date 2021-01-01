@@ -20,17 +20,24 @@ With all the buzzwords you want:
 
 ---
 
-For full documentation, walkthroughs and examples - [visit the official site](https://shlomiassaf.github.io/ngrid)
+For full documentation, walk-through's and examples - [visit the official site](https://shlomiassaf.github.io/ngrid)
 
 ---
 
-## Quick Start
+## Quick Start / Setup
+
+Use the built-in schematics:
 
 ```bash
 ng add @pebula/ngrid
 ```
 
-[Documentation site](https://shlomiassaf.github.io/ngrid) with code samples.
+> * `@pebula/ngrid` include secondary packages / plugins (e.g: `@pebula/ngrid/detail-row`)  
+> * Use the *schematics* wizard to install additional plugins (e.g: `@pebula/ngrid-material` / `@pebula/ngrid-bootstrap`)
+
+For how-to's, concepts, recipes and more, [visit the documentation site](https://shlomiassaf.github.io/ngrid)
+
+## Versions 
 
 | nGrid Version    | Angular Version | Documentation | Starters  
 |------------------|-----------------|---------------|---------
@@ -41,14 +48,6 @@ ng add @pebula/ngrid
 > * Documentation site contains live examples including source code.
 > * Live code demos (StackBlitz/CodeSandbox) might experience issues with some feature especially when IVY enabled, if you find it hard to use them please run your code locally.
 
-## Setup
-
-```bash
-ng add @pebula/ngrid
-```
-
-> Packages include secondary packages / plugins (e.g: `@pebula/ngrid/detail-row`)
-> This setup will install ngrid with material design cell pack.
 
 ## Quick Feature Overview
 
@@ -83,6 +82,8 @@ To top that, a UI extension that make use of `@angular/material` components call
 - Pagination (with material pagination tools)
 - Context Menu (using MatMenu)
 
+A similar extension also exists for bootstrap at `@pebula/ngrid-bootstrap`
+
 ---
 
 ### If you like this product and want to help, WELCOME
@@ -114,11 +115,3 @@ We try to cut down complexity by splitting features into plugins and having a de
 Daily, mundane and repetitive routines like setting up a datasource or creating a column definition are packed into factories that make it easy to use.
 
 Templates should be shared and reused, define a template once and use it multiple times.
-
-## Versioning
-
-The `master` repository is for version 2.x.x and onwards of **nGrid** which aligns with angular 9.0.6+
-
-For angular 7-8 versions, use the 1.x.x versions [Code Here](https://github.com/shlomiassaf/ngrid/tree/1.x.x-(angular-v8))
-
-> Note that only critical patches will be issued to the existing 1.x.x version.
