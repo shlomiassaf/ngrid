@@ -34,7 +34,7 @@ jobs:
             const OLD_VERSIONS = {
               '1': {
                 branch: '1.x.x-(angular-v8)',
-                packageManager: 'yarn',
+                packageManager: 'npm',
                 nodeVer: 12,
                 urlSuffix: 'v1/',
                 projectName: 'ngrid-demo-app',
