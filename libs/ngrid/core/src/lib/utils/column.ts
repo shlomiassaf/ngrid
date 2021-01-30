@@ -29,7 +29,7 @@ export function deepPathSet(item: any, col: PblColumnDefinition, value: any): vo
 
 export function getValue<T = any>(col: PblColumnDefinition, row: any): T {
   if (col.transform) {
-    return col.transform(deepPathGet(row, this), row, this);
+    return col.transform(deepPathGet(row, col), row, col);
   }
   return deepPathGet(row, col);
 }
