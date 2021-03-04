@@ -1,3 +1,12 @@
+## 3.0.1 (2021-03-04)
+
+
+### Bug Fixes
+
+* **ngrid:** value and col args in transform function ([fbe95e4](https://github.com/shlomiassaf/ngrid/commit/fbe95e4b2cd7a63a57f71e20ad69fff5199e8b00))
+
+
+
 # 3.0.0 (2020-12-30)
 
 
