@@ -143,7 +143,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
     event.stopPropagation();
 
     // Abort if the user is already dragging or is using a mouse button other than the primary one.
-    if (this._isDragging() || (!this._isTouchEvent(event) && event.button !== 0)) {
+    if (this.isDragging() || (!this._isTouchEvent(event) && event.button !== 0)) {
       return;
     }
 
@@ -209,7 +209,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
 
   /** Handler that is invoked when the user lifts their pointer up, after initiating a drag. */
   private _pointerUp = () => {
-    if (!this._isDragging()) {
+    if (!this.isDragging()) {
       return;
     }
 
@@ -237,7 +237,15 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
     return event.type.startsWith('touch');
   }
 
+  /**
+   *
+   * @deprecated Removed in 4, use `isDragging()` instead
+   */
   _isDragging() {
+    return this.isDragging()
+  }
+
+  isDragging() {
     return this._dragDropRegistry.isDragging(this);
   }
 
