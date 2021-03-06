@@ -39,12 +39,21 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
 
 
   // push the new plugin AFTER the angular compiler plugin
-  const AngularCompilerPlugin = require('@ngtools/webpack').AngularCompilerPlugin;
-  const idx = webpackConfig.plugins.findIndex( p => p instanceof AngularCompilerPlugin );
+  const { ivy: { AngularWebpackPlugin }, AngularCompilerPlugin } = require('@ngtools/webpack');
 
-  const oldOptions = (webpackConfig.plugins[idx] as any)._options;
-  oldOptions.directTemplateLoading = false;
-  webpackConfig.plugins[idx] = new AngularCompilerPlugin(oldOptions);
+  let idx = webpackConfig.plugins.findIndex( p => p instanceof AngularCompilerPlugin );
+  if (idx > -1) {
+    const oldOptions = (webpackConfig.plugins[idx] as any)._options;
+    oldOptions.directTemplateLoading = false;
+    webpackConfig.plugins[idx] = new AngularCompilerPlugin(oldOptions);
+  } else if ( (idx = webpackConfig.plugins.findIndex( p => p instanceof AngularWebpackPlugin )) > -1) {
+    const oldOptions = (webpackConfig.plugins[idx] as any).options;
+    oldOptions.directTemplateLoading = false;
+    webpackConfig.plugins[idx] = new AngularWebpackPlugin(oldOptions);
+  } else {
+    throw new Error('Invalid webpack configuration, could not find "AngularCompilerPlugin" or "AngularWebpackPlugin" in the plugins registered');
+  }
+
 
   const remarkSlug = require('remark-slug')
   const remarkAutolinkHeadings = require('@rigor789/remark-autolink-headings');
@@ -58,7 +67,7 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
     'E>': 'error icon',
   }};
 
-  const dynamicModule = new PebulaDynamicModuleWebpackPlugin(Path.join(process.cwd(), 'markdown-pages.js'));
+  const dynamicModule = new PebulaDynamicModuleWebpackPlugin('markdown-pages.js');
   webpackConfig.plugins.push(dynamicModule);
 
   webpackConfig.plugins.push(new MarkdownPagesWebpackPlugin({
