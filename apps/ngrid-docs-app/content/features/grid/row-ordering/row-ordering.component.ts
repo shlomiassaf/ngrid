@@ -15,7 +15,7 @@ import { Example } from '@pebula/apps/docs-app-lib';
 export class RowOrderingExample {
   columns = columnFactory()
     .table(
-      { prop: 'drag_and_drop_handle', type: 'drag_and_drop_handle', minWidth: 24, width: '', maxWidth: 24 },
+      { prop: 'drag_and_drop_handle', reorder: true, type: 'drag_and_drop_handle', minWidth: 24, width: '', maxWidth: 24 },
       { prop: 'id', width: '100px' },
       { prop: 'name', width: '100px' },
       { prop: 'gender', width: '50px' },

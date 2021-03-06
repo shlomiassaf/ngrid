@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+
 import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridDragModule } from '@pebula/ngrid/drag';
 
@@ -10,6 +12,7 @@ import { RowOrderingExample } from './row-ordering.component';
   declarations: [ RowOrderingExample ],
   imports: [
     ExampleCommonModule,
+    MatIconModule,
     PblNgridModule,
     PblNgridDragModule.withDefaultTemplates(),
   ],

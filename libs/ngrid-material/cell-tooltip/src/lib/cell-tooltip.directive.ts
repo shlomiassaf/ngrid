@@ -7,6 +7,7 @@ import {
   NgZone,
   ViewContainerRef,
 } from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AriaDescriber, FocusMonitor } from '@angular/cdk/a11y';
@@ -81,7 +82,7 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
   /** See Material docs for MatTooltip */
   @Input() hideDelay: number;
 
-  private initArgs: [ Overlay, ElementRef<any>, ScrollDispatcher, ViewContainerRef, NgZone, Platform, AriaDescriber, FocusMonitor, any, Directionality, MatTooltipDefaultOptions ];
+  private initArgs: [ Overlay, ElementRef<HTMLElement>, ScrollDispatcher, ViewContainerRef, NgZone, Platform, AriaDescriber, FocusMonitor, any, Directionality, MatTooltipDefaultOptions, any];
 
   private toolTip: MatTooltip;
   private lastConfig: CellTooltipOptions;
@@ -105,6 +106,7 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
       injector.get(MAT_TOOLTIP_SCROLL_STRATEGY),
       injector.get(Directionality),
       injector.get(MAT_TOOLTIP_DEFAULT_OPTIONS),
+      injector.get(DOCUMENT),
     ];
 
     configService.onUpdate('cellTooltip')

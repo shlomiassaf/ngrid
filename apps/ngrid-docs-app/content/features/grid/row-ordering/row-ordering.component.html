@@ -1,2 +1,8 @@
 <pbl-ngrid rowReorder vScrollNone minDataViewHeight="150"
-           [dataSource]="ds" [columns]="columns"></pbl-ngrid>
+           [dataSource]="ds" [columns]="columns">
+  <div *pblNgridHeaderCellTypeDef="'drag_and_drop_handle'"></div>
+  <div *pblNgridCellTypeDef="'drag_and_drop_handle'; let ctx" [pblNgridRowDrag]="ctx" cdkDragRootElement="pbl-ngrid-row" style="cursor: move">
+    <mat-icon pblDragHandle class="pbl-ngrid-row-drag-handle">drag_handle</mat-icon>
+    <div class="pbl-ngrid-row-drag-placeholder" *cdkDragPlaceholder></div>
+  </div>
+</pbl-ngrid>
