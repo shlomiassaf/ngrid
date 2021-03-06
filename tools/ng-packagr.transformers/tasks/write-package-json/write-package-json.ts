@@ -4,7 +4,7 @@ import { NgEntryPoint } from 'ng-packagr/lib/ng-package/entry-point/entry-point'
 import { NgPackage } from 'ng-packagr/lib/ng-package/package';
 import * as log from 'ng-packagr/lib/utils/log';
 import { ensureUnixPath } from 'ng-packagr/lib/utils/path';
-import { rimraf } from 'ng-packagr/lib/utils/rimraf';
+import { rimraf } from 'ng-packagr/lib/utils/fs';
 import { EntryPointTaskContext, Job } from 'ng-cli-packagr-tasks';
 import { getDistEntryFile } from '../utils';
 
@@ -45,7 +45,7 @@ async function writePackageJson(entryPoint: NgEntryPoint,
 
   // Verify non-peerDependencies as they can easily lead to duplicate installs or version conflicts
   // in the node_modules folder of an application
-  const whitelist = pkg.whitelistedNonPeerDependencies.map(value => new RegExp(value));
+  const whitelist = pkg.allowedNonPeerDependencies.map(value => new RegExp(value));
   try {
     checkNonPeerDependencies(packageJson, 'dependencies', whitelist);
   } catch (e) {
