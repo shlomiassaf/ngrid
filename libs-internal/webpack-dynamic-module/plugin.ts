@@ -45,8 +45,21 @@ export class PebulaDynamicModuleWebpackPlugin implements webpack.Plugin {
     compiler.hooks.pebulaDynamicModuleUpdater = new SyncHook(['pebulaDynamicModuleUpdater']);
 
     compiler.hooks.afterEnvironment.tap(pluginName, () => {
+      // The angular CLI will "fake" non watch mode within watch mode when dev-server is running
+      // This will trick `VirtualModulesPlugin` to think it's watch mode but it's not so it will error
+      // This is the fix
+      // See: https://github.com/angular/angular-cli/blob/a7b9497b63f8608e4640f68e24558aa6b20f6f7a/packages/angular_devkit/build_angular/src/webpack/configs/dev-server.ts#L63
+      const wfs = compiler['watchFileSystem'];
+      if (wfs?.watch && !wfs.watcher ) {
+        Object.defineProperty(this.virtualModules, '_watcher', {
+          get: () => null,
+          set: v => {},
+        })
+      }
+
       updateModule();
       compiler.hooks.pebulaDynamicModuleUpdater.call(notifier);
     });
+
   }
 }
