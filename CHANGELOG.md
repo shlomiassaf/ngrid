@@ -1,3 +1,13 @@
+# 3.1.0 (2021-03-07)
+
+
+### Bug Fixes
+
+* **ngrid:** wrong tracking of removed columns ([c75334d](https://github.com/shlomiassaf/ngrid/commit/c75334df6cb68d9b4db7020fff4b7b3e4e289c15))
+* **ngrid:** refactor to support CDK & Material breaking changes ([f3eba68](https://github.com/shlomiassaf/ngrid/commit/f3eba6823a8dc7a2c5d434573af7540bed3c70d0)), closes [#161](https://github.com/shlomiassaf/ngrid/issues/161)
+
+
+
 ## 3.0.1 (2021-03-04)
 
 
