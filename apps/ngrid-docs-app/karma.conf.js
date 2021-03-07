@@ -25,11 +25,11 @@ const monkeyPatch = (karmaPlugins) => {
   const init = (config, ...args) => {
     const virtualModulePlugin = {
       apply: (compiler) => {
+        const virtualModules = new (require('webpack-virtual-modules'))();
+        virtualModules.apply(compiler);
+
         compiler.hooks.afterEnvironment.tap('markdown-pages-mock', () => {
-          compiler
-            .inputFileSystem
-            ._webpackCompilerHost
-            .writeFile(join(process.cwd(), 'markdown-pages.js'), `module.exports = ${JSON.stringify({}, null, 2)};`);
+          virtualModules.writeModule(`node_modules/markdown-pages.js`, `module.exports = ${JSON.stringify({}, null, 2)};`);
         });
     },
     }
