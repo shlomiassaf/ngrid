@@ -134,8 +134,11 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
     if (cell) {
       const index = this._cells.indexOf(cell);
       if (!this.canDestroyCell || this.canDestroyCell(cell)) {
+        const len = this._cells.length;
         this._viewRef.remove(index);
-        this._cells.splice(index, 1);
+        if (len === this._cells.length) {
+          this._cells.splice(index, 1);
+        }
         if (this.cellDestroyed) {
           this.cellDestroyed(cell, index);
         }
