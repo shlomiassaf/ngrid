@@ -97,7 +97,7 @@ export class PblNgridRowComponent<T = any> extends PblNgridBaseRowComponent<'dat
    */
   _rebuildCells() {
     const columns = this._extApi.columnStore.getColumnsOf(this);
-    this.context._rebuildCells(columns);
+    this.context._rebuildCells(this._extApi.columnStore.allColumns);
     const targetLen = columns.length;
     for (let i = 0; i < targetLen; i++) {
       const cellCmpRef = this._cells[i];
