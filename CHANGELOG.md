@@ -1,3 +1,12 @@
+## 3.1.1 (2021-03-22)
+
+
+### Bug Fixes
+
+* rebuild all cells context instead of only the visible upon onInvalidateHeaders event ([5779d94](https://github.com/shlomiassaf/ngrid/commit/5779d942346ead4cbe47732b8e0400a0e6534993))
+
+
+
 # 3.1.0 (2021-03-07)
 
 
