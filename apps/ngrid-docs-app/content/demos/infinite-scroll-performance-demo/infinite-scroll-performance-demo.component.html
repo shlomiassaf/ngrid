@@ -19,7 +19,7 @@
                 blockUi
                 matSort
                 cellTooltip>
-      <pbl-demo-action-row filter label="Infinite Scroll Performance" showFps></pbl-demo-action-row>
+      <pbl-demo-action-row label="Infinite Scroll Performance" showFps></pbl-demo-action-row>
       <div *pblNgridCellTypeDef="'accountBalance'; let ctx; value as value; col as col; row as row"
             [ngridCellClass]="value < 0 ? col.type.data.pbl : col.type.data.pos">{{ value | currency:col.type.data.meta.currency(row):'symbol':col.type.data.format }}</div>
       <div *pblNgridCellTypeDef="'flagAndCountry'; col as col; row as row">{{ col.type.data.flagAndCountry(row) }}</div>

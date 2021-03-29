@@ -7,9 +7,9 @@ import {
   NgZone,
   ViewContainerRef,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AriaDescriber, FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay } from '@angular/cdk/overlay';
@@ -184,4 +184,6 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
       this.toolTip = undefined;
     }
   }
+
+  static ngAcceptInputType_canShow: BooleanInput;
 }

@@ -3,7 +3,7 @@ import { debounceTime, map, distinctUntilChanged } from 'rxjs/operators';
 import { AfterContentInit, Directive, ElementRef, Input, OnDestroy, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { TocHeadDirective } from './toc-head.directive';
 import { tocLinkfromStaticElement } from './toc-link';
 import { TOC_AREA_DIRECTIVE_TOKEN } from './toc-area.token';
@@ -331,4 +331,7 @@ export class TocAreaDirective implements AfterContentInit, OnDestroy {
   static get defaultSelector(): typeof DEFAULT_SELECTOR {
     return DEFAULT_SELECTOR;
   }
+
+  static ngAcceptInputType_staticHtmlMode: BooleanInput;
+
 }

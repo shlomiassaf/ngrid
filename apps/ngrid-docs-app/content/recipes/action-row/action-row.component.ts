@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewEncapsulation, Input, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
 
@@ -62,4 +62,6 @@ export class MyGridActionRowComponent implements AfterViewInit {
   actionRowFilter(filterValue: string) {
     this.grid.ds.setFilter(filterValue.trim(), this.grid.columnApi.visibleColumns);
   }
+
+  static ngAcceptInputType_filter: BooleanInput;
 }

@@ -1,7 +1,7 @@
 // tslint:disable:no-output-rename
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Directive, Input, Output } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DragDrop, CDK_DROP_LIST, CdkDropList } from '@angular/cdk/drag-drop';
 
 import { COLUMN, PblNgridComponent } from '@pebula/ngrid';
@@ -109,4 +109,6 @@ export class PblNgridColumnDragContainerDirective<T = any> extends CdkLazyDropLi
 
     this.sortingDisabled = true;
   }
+
+  static ngAcceptInputType_columnDrag: BooleanInput;
 }
