@@ -1,6 +1,6 @@
 // tslint:disable:no-output-rename
 import { Directive, Input, OnInit } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DragDrop, CdkDragDrop, CDK_DROP_LIST } from '@angular/cdk/drag-drop';
 
 import { PblColumn, COLUMN } from '@pebula/ngrid';
@@ -76,4 +76,8 @@ export class PblNgridColumnReorderPluginDirective<T = any> extends PblNgridColum
       }
     });
   }
+
+  static ngAcceptInputType_columnReorder: BooleanInput;
+  static ngAcceptInputType_manualOverride: BooleanInput;
+
 }

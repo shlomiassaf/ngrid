@@ -8,6 +8,9 @@
       "dev-mode-types"
     ]
   },
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  },
   "references": [
     {
       "path": "./tsconfig.spec.jest.json"

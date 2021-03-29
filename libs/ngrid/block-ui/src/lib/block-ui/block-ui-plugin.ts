@@ -143,4 +143,6 @@ export class PblNgridBlockUiPluginDirective<T> implements OnDestroy {
       }
     }
   }
+
+  static ngAcceptInputType_blockUi: BooleanInput;
 }

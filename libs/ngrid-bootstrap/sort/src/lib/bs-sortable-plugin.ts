@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { Directive, OnDestroy, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ON_INVALIDATE_HEADERS, unrx } from '@pebula/ngrid/core';
 import { PblNgridComponent, PblNgridPluginController, PblNgridSortDefinition, PblDataSource } from '@pebula/ngrid';
 import { PblNgridSortable, PblNgridBsSortDirection, PblNgridBsSortState } from './types';
@@ -221,6 +221,8 @@ export class PblNgridBsSortablePlugin implements OnChanges, OnDestroy {
       });
   }
 
+  static ngAcceptInputType_bsSortableDisabled: BooleanInput;
+  static ngAcceptInputType_disableClear: BooleanInput;
 }
 
 function getSortDirectionCycle(start: 'asc' | 'desc',

@@ -29,5 +29,6 @@
   "debug.javascript.terminalOptions": {
     "autoAttachChildProcesses": true,
     "nodeVersionHint": 14
-  }
+  },
+  "angular.log": "verbose"
 }

@@ -1,5 +1,5 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   DragDrop,
   CdkDropListGroup,
@@ -84,4 +84,6 @@ export class PblNgridRowReorderPluginDirective<T = any> extends CdkLazyDropList<
       this.grid.rowsApi.syncRows('data');
     });
   }
+
+  static ngAcceptInputType_rowReorder: BooleanInput;
 }

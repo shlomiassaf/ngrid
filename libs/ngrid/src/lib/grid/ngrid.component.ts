@@ -24,7 +24,7 @@ import {
 } from '@angular/core';
 
 import { Direction, Directionality } from '@angular/cdk/bidi';
-import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
 import {
@@ -736,4 +736,9 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
       }
     }
   }
+
+  static ngAcceptInputType_showHeader: BooleanInput;
+  static ngAcceptInputType_showFooter: BooleanInput;
+  static ngAcceptInputType_noFiller: BooleanInput;
+  static ngAcceptInputType_noCachePaginator: BooleanInput;
 }

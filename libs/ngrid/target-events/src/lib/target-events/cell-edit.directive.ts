@@ -1,5 +1,5 @@
 import { Directive, Input, Injector, OnDestroy } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { unrx } from '@pebula/ngrid/core';
 import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
@@ -65,4 +65,7 @@ export class PblNgridCellEditDirective<T> implements OnDestroy {
       }
     }
   }
+
+  static ngAcceptInputType_cellEditClick: BooleanInput;
+  static ngAcceptInputType_cellEditDblClick: BooleanInput;
 }

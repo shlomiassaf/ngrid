@@ -7,7 +7,7 @@ import {
   ViewEncapsulation,
   OnDestroy,
 } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { unrx } from '@pebula/ngrid/core';
 import { PblNgridComponent, PblPaginator, PblPaginatorChangeEvent } from '@pebula/ngrid';
@@ -99,4 +99,7 @@ export class PblNgridBsPagination implements OnDestroy {
     this.cdr.detectChanges();
     this.cdr.markForCheck();
   }
+
+  static ngAcceptInputType_hidePageSize: BooleanInput;
+  static ngAcceptInputType_hideRangeSelect: BooleanInput;
 }

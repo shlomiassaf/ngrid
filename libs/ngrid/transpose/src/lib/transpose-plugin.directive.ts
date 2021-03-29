@@ -1,5 +1,5 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 import { PblNgridConfigService, PblColumnDefinition, PblNgridColumnDefinitionSet, unrx } from '@pebula/ngrid/core';
 import {
@@ -246,4 +246,7 @@ export class PblNgridTransposePluginDirective implements OnDestroy {
       this.selfColumn = new PblColumn(this._header, this.pluginCtrl.extApi.columnStore.groupStore);
     }
   }
+
+  static ngAcceptInputType_transpose: BooleanInput;
+  static ngAcceptInputType_matchTemplates: BooleanInput;
 }

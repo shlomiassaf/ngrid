@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { NgbTooltip, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import { unrx, PblNgridConfigService } from '@pebula/ngrid/core';
@@ -178,4 +178,6 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
       this.toolTip = undefined;
     }
   }
+
+  static ngAcceptInputType_canShow: BooleanInput;
 }
