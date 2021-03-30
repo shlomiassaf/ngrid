@@ -11,7 +11,7 @@ export function paginationViewLogicap(extApi: PblNgridInternalExtensionApi) {
     const usePagination = ds && extApi.grid.usePagination;
 
     if (usePagination) {
-      ds.pagination = extApi.grid.usePagination;
+      ds.pagination = extApi.grid.usePagination || false;
       if (ds.paginator) {
         ds.paginator.noCacheMode = extApi.grid.noCachePaginator;
       }

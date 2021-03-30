@@ -2,7 +2,7 @@
            [dataSource]="ds" [columns]="columns">
 
   <div *pblNgridCellEditorDef="'name'; let ctx">
-    <input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = $event.target.value" (blur)="ctx.stopEdit()" />
+    <input #input [value]="ctx.value" [pblCellEditAutoFocus]="ctx" (change)="ctx.value = input.value" (blur)="ctx.stopEdit()" />
   </div>
   <div *pblNgridCellEditorDef="'lead'; let ctx">
     <input #cb type="checkbox" [checked]="ctx.value"

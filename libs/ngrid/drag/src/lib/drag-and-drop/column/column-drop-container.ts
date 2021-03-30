@@ -27,8 +27,8 @@ export class PblNgridColumnDropContainerDirective<T = any> extends CdkLazyDropLi
   orientation: 'horizontal' | 'vertical' = 'horizontal';
 
   @Output() columnEntered: EventEmitter<PblColumnDragDropContainerEnter<T>> = this.entered as any;
-  @Output() columnExited: EventEmitter<PblColumnDragDropContainerDrop<T>> = this.exited as any;
-  @Output() columnDropped: EventEmitter<PblColumnDragDropContainerExit<T>> = this.dropped as any;
+  @Output() columnExited: EventEmitter<PblColumnDragDropContainerExit<T>> = this.exited as any;
+  @Output() columnDropped: EventEmitter<PblColumnDragDropContainerDrop<T>> = this.dropped as any;
 
   get columnContainer(): PblNgridColumnDragContainerDirective { return this._columnContainer; }
   private _columnContainer: PblNgridColumnDragContainerDirective;

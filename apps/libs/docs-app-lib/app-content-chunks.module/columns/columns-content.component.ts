@@ -1,5 +1,5 @@
 import { Input, ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { createDS, columnFactory } from '@pebula/ngrid';
+import { createDS, columnFactory, PblNgridColumnDefinitionSet } from '@pebula/ngrid';
 import { Person, DynamicClientApi } from '@pebula/apps/docs-app-lib/client-api';
 
 @Component({
@@ -13,7 +13,7 @@ export class ColumnsAppContentChunk {
 
   @Input() section: number;
 
-  columns = {
+  columns: PblNgridColumnDefinitionSet = {
     table: {
       cols: [
         { prop: 'id' },
@@ -25,9 +25,9 @@ export class ColumnsAppContentChunk {
       {
         rowIndex: 0,
         cols: [
-          { id: 'h1', label: 'Meta Header 1' },
-          { id: 'h2', label: 'Meta Header 2', css: 'col-quickthrough-bg-header' },
-          { id: 'h3', label: 'Meta Header 3' },
+          { id: 'h1', label: 'Meta Header 1', kind:'header', rowIndex: 0, },
+          { id: 'h2', label: 'Meta Header 2', css: 'col-quickthrough-bg-header', kind:'header', rowIndex: 0, },
+          { id: 'h3', label: 'Meta Header 3', kind:'header', rowIndex: 0, },
         ]
       }
     ],
@@ -35,8 +35,8 @@ export class ColumnsAppContentChunk {
       {
         rowIndex: 1,
         cols: [
-          { columnIds: ['id'] },
-          { columnIds: ['name', 'age'], label: 'Header Group: Name & Age', css: 'col-quickthrough-bg-group' },
+          { columnIds: ['id'], kind:'header', rowIndex: 1 },
+          { columnIds: ['name', 'age'], label: 'Header Group: Name & Age', css: 'col-quickthrough-bg-group', kind:'header', rowIndex: 1 },
         ]
       }
     ],
@@ -44,9 +44,9 @@ export class ColumnsAppContentChunk {
       {
         rowIndex: 0,
         cols: [
-          { id: 'f1' },
-          { id: 'f2', label: 'Meta Footer 2', css: 'col-quickthrough-bg-footer', width: '50%' },
-          { id: 'f3' },
+          { id: 'f1', kind:'footer', rowIndex: 0 },
+          { id: 'f2', label: 'Meta Footer 2', css: 'col-quickthrough-bg-footer', width: '50%', kind:'footer', rowIndex: 0 },
+          { id: 'f3', kind:'footer', rowIndex: 0 },
         ]
       }
     ],

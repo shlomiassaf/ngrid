@@ -7,7 +7,7 @@ import { MatMenu } from '@angular/material/menu';
 import { MatSelect } from '@angular/material/select';
 
 import { MarkdownPagesMenuService, LocationService, ViewLayoutObserver, SearchService, SearchResults } from '@pebula/apps/docs-app-lib';
-import { PageAssetNavEntry } from '@pebula-internal/webpack-markdown-pages/models';
+import type { PageAssetNavEntry } from '@pebula-internal/webpack-markdown-pages';
 
 @Component({
   selector: 'pbl-demo-home-page',

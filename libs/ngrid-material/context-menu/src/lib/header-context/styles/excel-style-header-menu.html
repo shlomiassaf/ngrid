@@ -36,7 +36,7 @@
   <div class="mat-menu-item pbl-mat-menu-row" (click)="clickTrap($event)">
     <mat-form-field>
       <mat-label>Search</mat-label>
-      <input matInput (keyup)="filterColumn($event.target.value)" [value]="currentFilter">
+      <input #input matInput (keyup)="filterColumn(input.value)" [value]="currentFilter">
       <mat-icon matPrefix>search</mat-icon>
       <button mat-button [style.visibility]="currentFilter ? 'visible' : 'hidden'" matSuffix mat-icon-button aria-label="Clear"
               (click)="filterColumn('')">

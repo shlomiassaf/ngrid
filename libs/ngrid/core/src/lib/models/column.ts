@@ -220,7 +220,7 @@ export interface PblNgridColumnDefinitionSet {
     footer?: PblMetaRowDefinitions;
     cols: PblColumnDefinition[];
   };
-  header: PblColumnSet<PblMetaColumnDefinition>[];
-  footer: PblColumnSet<PblMetaColumnDefinition>[];
-  headerGroup: PblColumnSet<PblColumnGroupDefinition>[];
+  header?: PblColumnSet<PblMetaColumnDefinition>[];
+  footer?: PblColumnSet<PblMetaColumnDefinition>[];
+  headerGroup?: PblColumnSet<PblColumnGroupDefinition>[];
 }

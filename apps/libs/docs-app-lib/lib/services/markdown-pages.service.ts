@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { PageNavigationMetadata, PageFileAsset } from '@pebula-internal/webpack-markdown-pages';
+import type { PageNavigationMetadata, PageFileAsset } from '@pebula-internal/webpack-markdown-pages';
 import { ContentMapService } from './content-map.service';
 
 @Injectable({ providedIn: 'root' })

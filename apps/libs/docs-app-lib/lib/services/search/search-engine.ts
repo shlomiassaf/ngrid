@@ -1,5 +1,5 @@
 import * as lunr from 'lunr';
-import { SearchableSource } from '@pebula-internal/webpack-markdown-app-search';
+import type { SearchableSource } from '@pebula-internal/webpack-markdown-app-search';
 import { SearchResult } from './models';
 
 export class SearchEngine {

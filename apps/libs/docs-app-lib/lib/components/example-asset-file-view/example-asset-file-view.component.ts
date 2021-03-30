@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-examples';
+import type { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-examples';
 
 @Component({
   selector: 'div[exampleAssetFileView]', // tslint:disable-line:component-selector

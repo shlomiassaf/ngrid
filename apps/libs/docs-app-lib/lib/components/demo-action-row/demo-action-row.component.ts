@@ -34,7 +34,7 @@ export class DemoActionRowComponent implements AfterViewInit {
       return behavior;
     }
   };
-  autoSizeColumnToFitOptionsForever = { ...this.autoSizeColumnToFitOptions, forceWidthType: '%' };
+  autoSizeColumnToFitOptionsForever = { ...this.autoSizeColumnToFitOptions, forceWidthType: '%' as const };
 
   @Input() get showFps(): boolean { return this._showFps; }
   set showFps(value: boolean) {

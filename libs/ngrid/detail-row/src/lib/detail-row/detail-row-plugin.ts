@@ -1,5 +1,5 @@
 import { Directive, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef, NgZone, ViewContainerRef } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
 import { PblNgridDetailRowComponent } from './row';
@@ -282,4 +282,6 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
     // for example, if material will chack for change in `multiTemplateDataRows` setter from previous value...
     this.pluginCtrl.extApi.cdkTable.multiTemplateDataRows = !!this._detailRow;
   }
+
+  static ngAcceptInputType_detailRow: BooleanInput | ( (index: number, rowData: any) => boolean );
 }

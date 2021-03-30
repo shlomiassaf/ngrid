@@ -25,11 +25,15 @@ export interface PblNgridDataMatrixRow<T = any> extends PblNgridMatrixRow<'data'
 
 export interface PblNgridColumnMatrixPoint<RType extends ROW_TYPE, RMetaType extends keyof ROW_META_TYPE = 'data'> extends PblNgridMatrixPoint<RType, RMetaType> {
   column: ROW_META_TYPE[RMetaType];
+  /**
+   * The context of the cell.
+   * Only applicable when the event is coming from a data cell or a column header of a data cell.
+   */
+  context?: PblNgridCellContext;
 }
 
 export interface PblNgridDataMatrixPoint<T = any> extends PblNgridColumnMatrixPoint<'data'> {
   row: T;
-  context: PblNgridCellContext;
 }
 
 export type PblNgridBaseCellEvent<TEvent extends Event = MouseEvent | KeyboardEvent> = {
@@ -37,6 +41,7 @@ export type PblNgridBaseCellEvent<TEvent extends Event = MouseEvent | KeyboardEv
   cellTarget: HTMLElement;
   rowTarget: HTMLElement;
 };
+
 export type PblNgridDataCellEvent<T = any, TEvent extends Event = MouseEvent | KeyboardEvent> = PblNgridBaseCellEvent<TEvent> & PblNgridDataMatrixPoint<T>;
 export type PblNgridMetaCellEvent<TEvent extends Event = MouseEvent | KeyboardEvent> = PblNgridBaseCellEvent<TEvent> & (PblNgridColumnMatrixPoint<'header' | 'footer'> | PblNgridColumnMatrixPoint<'header' | 'footer', 'meta'>  | PblNgridColumnMatrixPoint<'header' | 'footer', 'meta-group'>);
 export type PblNgridCellEvent<T = any, TEvent extends Event = MouseEvent | KeyboardEvent> = PblNgridBaseCellEvent<TEvent> & (PblNgridDataCellEvent<T, TEvent> | PblNgridMetaCellEvent<TEvent>);

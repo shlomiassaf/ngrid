@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty, NumberInput } from '@angular/cdk/coercion';
 import { AriaDescriber, FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay } from '@angular/cdk/overlay';
@@ -186,4 +186,6 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
   }
 
   static ngAcceptInputType_canShow: BooleanInput;
+  static ngAcceptInputType_showDelay: NumberInput;
+  static ngAcceptInputType_hideDelay: NumberInput;
 }

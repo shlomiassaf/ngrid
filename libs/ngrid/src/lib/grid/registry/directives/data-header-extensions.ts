@@ -78,6 +78,8 @@ export class PblNgridHeaderExtensionRefDirective extends PblNgridMultiTemplateRe
   @Input('pblNgridHeaderExtensionRef') shouldRender?: (context: PblNgridDataHeaderExtensionContext) => boolean;
 
   constructor(tRef: TemplateRef<PblNgridDataHeaderExtensionContext>, registry: PblNgridRegistryService) { super(tRef, registry); }
+
+  static ngAcceptInputType_shouldRender: string | ( (context: PblNgridDataHeaderExtensionContext) => boolean );
 }
 
 declare module '@pebula/ngrid/core/lib/registry/types' {

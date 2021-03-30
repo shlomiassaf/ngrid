@@ -5,7 +5,7 @@
       <div fxFlex="*"></div>
       <mat-form-field *ngIf="filter" appearance="outline" class="search-form-field">
         <mat-label>Filter</mat-label>
-        <input matInput (keyup)="actionRowFilter($event.target.value)">
+        <input #input matInput (keyup)="actionRowFilter(input.value)">
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
       <button mat-stroked-button class="pbl-stroked-icon" color="primary" (click)="refresh()"><mat-icon>refresh</mat-icon></button>

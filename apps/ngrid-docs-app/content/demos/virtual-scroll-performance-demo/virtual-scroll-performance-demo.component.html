@@ -7,7 +7,7 @@
     </mat-radio-group>
     <mat-slider *ngIf="wheelModeState === 'threshold'" thumbLabel min="1" max="55" [value]="wheelMode" (change)="wheelMode = $event.value"></mat-slider>
   </div>
-  <mat-checkbox [value]="plainColumns" (change)="togglePlainColumns()">Use plain columns (higher frame rate)</mat-checkbox>
+  <mat-checkbox [checked]="plainColumns" (change)="togglePlainColumns()">Use plain columns (higher frame rate)</mat-checkbox>
   <mat-form-field fxFlex="nogrow" style="width:200px">
     <mat-select [value]="collectionSize" (selectionChange)="collectionSizeChange($event.value)">
       <mat-option [value]="10">10</mat-option>

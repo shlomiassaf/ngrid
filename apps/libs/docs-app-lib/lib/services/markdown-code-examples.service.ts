@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-examples';
+import type { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-examples';
 import { ContentMapService } from './content-map.service';
 
 @Injectable({ providedIn: 'root' })
