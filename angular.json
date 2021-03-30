@@ -33,6 +33,7 @@
               "apps/ngrid-docs-app/src/styles/main.scss"
             ],
             "scripts": [],
+            "extractLicenses": false,
             "webWorkerTsConfig": "apps/ngrid-docs-app/tsconfig.worker.json",
             "allowedCommonJsDependencies": [
               "country-data",
@@ -211,6 +212,7 @@
             "styles": [
               "apps/ngrid-dev-app/src/theme.scss"
             ],
+            "extractLicenses": false,
             "scripts": []
           },
           "configurations": {
