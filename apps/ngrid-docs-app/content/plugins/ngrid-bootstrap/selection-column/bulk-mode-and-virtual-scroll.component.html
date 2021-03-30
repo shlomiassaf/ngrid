@@ -5,13 +5,13 @@
   <h3>Bulk Mode: </h3>
   <div class="btn-group btn-group-toggle">
     <label class="btn btn-primary" [class.active]="bulkSelectMode === 'all'">
-      <input type="radio" [checked]="bulkSelectMode === 'all'" (input)="$event.target.checked ? bulkSelectMode = 'all' : null"> All
+      <input #inputAll type="radio" [checked]="bulkSelectMode === 'all'" (input)="inputAll.checked ? bulkSelectMode = 'all' : null"> All
     </label>
     <label class="btn btn-primary" [class.active]="bulkSelectMode === 'view'">
-      <input type="radio" [checked]="bulkSelectMode === 'view'" (input)="$event.target.checked ? bulkSelectMode = 'view' : null"> View
+      <input #inputView type="radio" [checked]="bulkSelectMode === 'view'" (input)="inputView.checked ? bulkSelectMode = 'view' : null"> View
     </label>
     <label class="btn btn-primary" [class.active]="bulkSelectMode === 'none'">
-      <input type="radio" [checked]="bulkSelectMode === 'none'" (input)="$event.target.checked ? bulkSelectMode = 'none' : null"> None
+      <input #inputNone type="radio" [checked]="bulkSelectMode === 'none'" (input)="inputNone.checked ? bulkSelectMode = 'none' : null"> None
     </label>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <div fxLayout="row" fxLayoutGap="16px" style="padding: 8px">
   <mat-form-field  appearance="outline">
     <mat-label>Name</mat-label>
-    <input matInput (keyup)="doFilter(inputValue = $event.target.value)">
+    <input #input matInput (keyup)="doFilter(inputValue = input.value)">
     <mat-icon matPrefix>search</mat-icon>
   </mat-form-field>
   <mat-form-field>

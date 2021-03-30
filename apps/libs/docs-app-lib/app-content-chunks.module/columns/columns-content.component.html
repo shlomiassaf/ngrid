@@ -16,7 +16,8 @@
     <div *pblNgridCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data">DATA ROW</div>
     <div *pblNgridFooterCellTypeDef="'dataRow'; let ctx" ngridCellClass="column-model-demo-highlight-data highlight-data-footer">DATA ROW (FOOTER)</div>
   </pbl-ngrid>
-  <pbl-ngrid style="height: 260px" class="pbl-flex-row-fill pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis" showFooter [dataSource]="ds2" [columns]="columnsSimpleModel">
+  <pbl-ngrid [dataSource]="ds2" [columns]="columnsSimpleModel"
+             style="height: 260px"class="pbl-flex-row-fill pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis" showFooter>
     <div *pblNgridHeaderCellDef="'*'; col as col" style="text-decoration: underline">{{ col.label | uppercase }}</div>
     <div *pblNgridCellDef="'*'; value as value">-> {{value}} <-</div>
     <div *pblNgridFooterCellDef="'*'; col as col">({{ col.label }})</div>

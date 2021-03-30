@@ -3,7 +3,7 @@
 <div fxLayout="column" fxLayoutGap="16px">
   <div fxLayout="row" fxLayoutGap="16px">
     <button mat-flat-button color="primary"
-            (click)="grid.contextApi.focusCell({ rowIdent: fRow.value, colIndex: fCol.value }, true)">Set Focus:</button>
+            (click)="grid.contextApi.focusCell({ rowIdent: fRow.value, colIndex: fCol.value })">Set Focus:</button>
     <mat-form-field>
       <mat-label>Row To Focus</mat-label>
       <mat-select #fRow>

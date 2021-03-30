@@ -24,7 +24,7 @@ import {
 } from '@angular/core';
 
 import { Direction, Directionality } from '@angular/cdk/bidi';
-import { BooleanInput, coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { CdkHeaderRowDef, CdkFooterRowDef, CdkRowDef } from '@angular/cdk/table';
 
 import {
@@ -172,13 +172,13 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
 
   get ds(): PblDataSource<T> { return this._dataSource; };
 
-  @Input() get usePagination(): PblNgridPaginatorKind | false { return this._pagination; }
-  set usePagination(value: PblNgridPaginatorKind | false) {
+  @Input() get usePagination(): PblNgridPaginatorKind | false | '' { return this._pagination; }
+  set usePagination(value: PblNgridPaginatorKind | false | '') {
     if ((value as any) === '') {
       value = 'pageNumber';
     }
     if ( value !== this._pagination ) {
-      this._pagination = value;
+      this._pagination = value as any;
       this._extApi.logicaps.pagination();
     }
   }
@@ -741,4 +741,5 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   static ngAcceptInputType_showFooter: BooleanInput;
   static ngAcceptInputType_noFiller: BooleanInput;
   static ngAcceptInputType_noCachePaginator: BooleanInput;
+  static ngAcceptInputType_minDataViewHeight: NumberInput;
 }

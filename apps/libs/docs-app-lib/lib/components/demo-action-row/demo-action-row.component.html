@@ -12,7 +12,7 @@
       </p>
       <mat-form-field *ngIf="filter" appearance="outline" class="search-form-field">
         <mat-label>Filter</mat-label>
-        <input matInput (keyup)="actionRowFilter($event.target.value)">
+        <input matInput (keyup)="actionRowFilter($any($event).target.value)">
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
       <button mat-stroked-button class="pbl-stroked-icon" color="primary" (click)="_refresh()"><mat-icon>refresh</mat-icon></button>

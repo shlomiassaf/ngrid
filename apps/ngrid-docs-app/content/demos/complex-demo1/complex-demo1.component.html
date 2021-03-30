@@ -14,7 +14,7 @@
              [wheelMode]="'passive'"
              [dataSource]="ds"
              [columns]="columns"
-             (cellClick)="$event.context && $event.context.startEdit()"
+             (cellClick)="$event.context?.startEdit()"
              class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis">
     <pbl-demo-action-row filter label="Demo #1"></pbl-demo-action-row>
     <!-- DEFINING DEFAULT UI BLOCKER (BUSY) FOR THIS PBL-NGRID -->

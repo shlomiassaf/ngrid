@@ -83,7 +83,7 @@ jobs:
         run: ${{ fromJson(steps.workflowVariables.outputs.result).packageManager }} install
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/${{fromJson(steps.workflowVariables.outputs.result).urlSuffix}} --deploy-url /ngrid/${{fromJson(steps.workflowVariables.outputs.result).urlSuffix}}
-      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ${{fromJson(steps.workflowVariables.outputs.result).projectName}}:server:production --bundleDependencies all
+      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ${{fromJson(steps.workflowVariables.outputs.result).projectName}}:server:production --bundle-dependencies all
       - run: npm run compile:server
       - run: node dist/server
       - run: cp dist/browser/index.html dist/browser/404.html

@@ -22,7 +22,7 @@ import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { MetaService } from '@ngx-meta/core';
 
 import { unrx } from '@pebula/ngrid/core';
-import { PageFileAsset } from '@pebula-internal/webpack-markdown-pages';
+import type { PageFileAsset } from '@pebula-internal/webpack-markdown-pages';
 import { ExampleViewComponent } from '../exapmle-view/example-view.component';
 import { ContentChunkViewComponent } from '../content-chunk-view/content-chunk-view.component';
 import { MarkdownDynamicComponentPortal } from '../markdown-dynamic-component-portal';

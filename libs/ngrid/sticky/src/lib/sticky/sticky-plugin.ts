@@ -191,7 +191,7 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
     if (!this.grid.isInit) {
       this.pluginCtrl.onInit()
         .subscribe(() => {
-          this.applyColumnDiff(type, value, differ);
+          this.pluginCtrl.events.pipe(ON_INVALIDATE_HEADERS).subscribe( () => this.applyColumnDiff(type, value, differ) );
         });
       return;
     }

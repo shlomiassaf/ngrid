@@ -2,8 +2,6 @@ import { ConnectableObservable, Observable, ReplaySubject, from, of, race, timer
 import { concatMap, first, publishReplay, switchMap } from 'rxjs/operators';
 
 import { Injectable, NgZone } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { DynamicExportedObject } from '@pebula-internal/webpack-dynamic-dictionary';
 import { ContentMapService } from '../content-map.service';
 import { SearchWebWorkerMessage, SearchResults } from './models';
 

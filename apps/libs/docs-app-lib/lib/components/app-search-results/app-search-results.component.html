@@ -4,7 +4,7 @@
     <div fxLayoutAlign="start center" style="margin-bottom: 16px;">
       <app-search-input (onSearch)="doSearch($event)"></app-search-input>
       <div style="flex:1 0 auto"></div>
-      <button mat-icon-button (click)="resultSelected.emit({query: '', results: []})">
+      <button mat-icon-button (click)="resultSelected.emit(undefined)">
         <mat-icon>close</mat-icon>
       </button>
     </div>

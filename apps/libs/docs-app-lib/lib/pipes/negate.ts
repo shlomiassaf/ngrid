@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name:"negate"
 })
 export class PblNegatePipe implements PipeTransform {
-  transform(value: string): boolean {
+  transform(value: any): boolean {
     return !value;
   }
 }
