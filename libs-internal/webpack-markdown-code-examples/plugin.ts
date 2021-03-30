@@ -7,11 +7,11 @@ const remarkPrismJs = require('gatsby-remark-prismjs');
 
 const { util: { createHash } } = webpack as any;
 
-import { DynamicModuleUpdater } from '@pebula-internal/webpack-dynamic-module';
+import { PebulaDynamicDictionaryWebpackPlugin } from '@pebula-internal/webpack-dynamic-dictionary';
 import { ParsedExampleMetadata, ExampleFileAsset } from './models';
 import { createInitialExampleFileAssets, parseExampleTsFile } from './utils';
 
-declare module '@pebula-internal/webpack-dynamic-module/plugin' {
+declare module '@pebula-internal/webpack-dynamic-dictionary/plugin' {
   interface DynamicExportedObject {
     markdownCodeExamples: string;
   }
@@ -41,11 +41,11 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
 
   apply(compiler: webpack.Compiler & { watchMode?: boolean }): void {
     this.compiler = compiler;
-    compiler.hooks.pebulaDynamicModuleUpdater.tap(pluginName, notifier => {
-      compiler.hooks.run.tapPromise(pluginName, async () => { await this.run(compiler); });
-      compiler.hooks.watchRun.tapPromise(pluginName, async () => { await this.run(compiler); });
-      compiler.hooks.compilation.tap(pluginName, compilation => { this.emit(compilation, notifier) });
-      compiler.hooks.afterCompile.tapPromise(pluginName, async compilation => {
+    compiler.hooks.run.tapPromise(pluginName, async () => { await this.run(compiler); });
+    compiler.hooks.watchRun.tapPromise(pluginName, async () => { await this.run(compiler); });
+    compiler.hooks.thisCompilation.tap(pluginName, compilation => {
+      this.emit(compilation);
+      compilation.hooks.afterSeal.tapPromise(pluginName, async () => {
         for (const obj of Array.from(this.cache.values())) {
           for (const fullPath of Array.from(obj.pathAssets.keys())) {
             compilation.fileDependencies.add(fullPath);
@@ -53,20 +53,31 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
         }
         this.prevTimestamps = compilation.fileTimestamps;
       });
-
     });
   }
 
-  private emit(compilation: webpack.compilation.Compilation, notifier: DynamicModuleUpdater) {
-    let changedFiles: Set<string>;
+  private emit(compilation: webpack.compilation.Compilation) {
+    let changedFiles: Set<ParsedExampleMetadata>;
 
     if (!this.firstRun && this.watchMode) {
-      changedFiles = new Set<string>();
-      for (const watchFile of Array.from(compilation.fileTimestamps.keys())) {
-        if ( (this.prevTimestamps.get(watchFile) || this.startTime) < (compilation.fileTimestamps.get(watchFile) || Infinity) ) {
-          changedFiles.add(watchFile);
+      changedFiles = new Set<ParsedExampleMetadata>();
+      for (const obj of Array.from(this.cache.values())) {
+        if (obj.forceRender || !obj.postRenderMetadata) {
+          changedFiles.add(obj);
+        } else {
+          for (const watchFile of Array.from(obj.pathAssets.keys())) {
+            if ( (this.prevTimestamps.get(watchFile) || this.startTime) < (compilation.fileTimestamps.get(watchFile) || Infinity) ) {
+              changedFiles.add(obj);
+            }
+          }
         }
       }
+    } else {
+      changedFiles = new Set(this.cache.values());
+    }
+
+    if (changedFiles.size === 0) {
+      return;
     }
 
     const { hashFunction, hashDigest, hashDigestLength } = compilation.outputOptions;
@@ -96,23 +107,24 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
 
     for (let obj of Array.from(this.cache.values())) {
 
-      if (obj.forceRender || !obj.postRenderMetadata || !changedFiles) {
+      if (changedFiles.has(obj)) {
+        if (!obj.forceRender && !!obj.postRenderMetadata) {
+          obj = this.processFile(obj.cacheId);
+        }
         obj.forceRender = false;
         renderPage(obj);
-      } else if (changedFiles) {
-        for (const fullPath of Array.from(obj.pathAssets.keys())) {
-          if (changedFiles.has(fullPath)) {
-            obj = this.processFile(obj.cacheId);
-            obj.forceRender = false;
-            renderPage(obj);
-            break;
-          }
-        }
       }
 
       if (obj.postRenderMetadata.outputAssetPath) {
         navMetadata[obj.selector] = obj.postRenderMetadata.outputAssetPath;
       }
+
+      const now = Date.now();
+      for (const watchFile of Array.from(obj.pathAssets.keys())) {
+        compilation.fileTimestamps.set(watchFile, now);
+        this.prevTimestamps.set(watchFile, now);
+      }
+
     }
 
     const navEntriesSource = JSON.stringify(navMetadata);
@@ -125,7 +137,8 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
       source: () => navEntriesSource,
       size: () => navEntriesSource.length
     };
-    notifier('markdownCodeExamples', navEntriesAssetPath);
+
+    PebulaDynamicDictionaryWebpackPlugin.find(this.compiler).update('markdownCodeExamples', navEntriesAssetPath);
 
     this.firstRun = false;
   }

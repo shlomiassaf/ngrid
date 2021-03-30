@@ -1,13 +1,13 @@
 import * as webpack from 'webpack';
 // import * as domino from 'domino';
-import { DynamicModuleUpdater } from '@pebula-internal/webpack-dynamic-module';
+import { PebulaDynamicDictionaryWebpackPlugin } from '@pebula-internal/webpack-dynamic-dictionary';
 import { ParsedPage } from '@pebula-internal/webpack-markdown-pages';
 import { SearchableSource } from './models';
 
 const domino = require('domino');
 const { util: { createHash } } = webpack as any;
 
-declare module '@pebula-internal/webpack-dynamic-module/plugin' {
+declare module '@pebula-internal/webpack-dynamic-dictionary/plugin' {
   interface DynamicExportedObject {
     searchContent: string;
   }
@@ -29,11 +29,6 @@ export class MarkdownAppSearchWebpackPlugin implements webpack.Plugin {
   apply(compiler: webpack.Compiler): void {
 
     const sources = new Map<string, SearchableSource>();
-    let notifier: DynamicModuleUpdater;
-
-    compiler.hooks.pebulaDynamicModuleUpdater.tap(pluginName, _notifier => {
-      notifier = _notifier;
-    });
 
     compiler.hooks.markdownPageParsed.tap(pluginName, (context) => {
       const { parsedPage, compilation } = context;
@@ -49,8 +44,7 @@ export class MarkdownAppSearchWebpackPlugin implements webpack.Plugin {
       const hash = createHash(hashFunction);
       hash.update(searchContent);
       const sourceContentPath = `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
-
-      notifier('searchContent', sourceContentPath);
+      PebulaDynamicDictionaryWebpackPlugin.find(compiler).update('searchContent', sourceContentPath);
 
       compilation.assets[sourceContentPath] = {
         source: () => searchContent,

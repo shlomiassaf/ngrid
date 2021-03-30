@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { DynamicExportedObject } from '@pebula-internal/webpack-dynamic-module';
 import { PageNavigationMetadata, PageFileAsset } from '@pebula-internal/webpack-markdown-pages';
-
-/*  There is no package called `markdown-pages` in "node_modules"
-    We optimistically expect it to exist in `InputFileSystem` of the webpack compiler.
-    This is added by the webpack-dynamic-module plugin.
-    SEE "libs-internal/webpack-dynamic-module/plugin.ts"
-*/
-const DYNAMIC_EXPORTED_OBJECT: DynamicExportedObject = require('markdown-pages');
+import { ContentMapService } from './content-map.service';
 
 @Injectable({ providedIn: 'root' })
 export class MarkdownPagesService {
@@ -18,7 +11,8 @@ export class MarkdownPagesService {
   get ready(): Promise<MarkdownPagesService> {
     if (!this.markdownPages) {
       if (!this.fetching) {
-        this.fetching = this.httpClient.get<PageNavigationMetadata>(DYNAMIC_EXPORTED_OBJECT.markdownPages).toPromise()
+        this.fetching = this.contentMapping.getMapping
+          .then(({ markdownPages }) => this.httpClient.get<PageNavigationMetadata>(markdownPages).toPromise() )
           .then( markdownPages => this.markdownPages = markdownPages );
       }
       return this.fetching.then( () => this);
@@ -31,7 +25,7 @@ export class MarkdownPagesService {
 
   private _cache = new Map<string, PageFileAsset>();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private contentMapping: ContentMapService) { }
 
   getPage(path: string): Promise<PageFileAsset> {
     if (this._cache.has(path)) {
