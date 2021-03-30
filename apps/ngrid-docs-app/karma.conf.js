@@ -23,17 +23,9 @@ const monkeyPatch = (karmaPlugins) => {
 
   // wrap the original init function so we can hijack the webpackConfig and add our plugin
   const init = (config, ...args) => {
-    const virtualModulePlugin = {
-      apply: (compiler) => {
-        const virtualModules = new (require('webpack-virtual-modules'))();
-        virtualModules.apply(compiler);
-
-        compiler.hooks.afterEnvironment.tap('markdown-pages-mock', () => {
-          virtualModules.writeModule(`node_modules/markdown-pages.js`, `module.exports = ${JSON.stringify({}, null, 2)};`);
-        });
-    },
-    }
-    config.buildWebpack.webpackConfig.plugins.unshift(virtualModulePlugin);
+    const webpackDynamicDictionary = require('../../libs-internal/webpack-dynamic-dictionary/index.ts');
+    const NGRID_CONTENT_MAPPING_FILE = 'ngrid-content-mapping.json';
+    config.buildWebpack.webpackConfig.plugins.unshift(new webpackDynamicDictionary.PebulaDynamicDictionaryWebpackPlugin(NGRID_CONTENT_MAPPING_FILE));
 
     // now run the original init function, passing the values.
     originalInitFn(config, ...args);

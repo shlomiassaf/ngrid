@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { DynamicExportedObject } from '@pebula-internal/webpack-dynamic-module';
 import { ExampleFileAsset } from '@pebula-internal/webpack-markdown-code-examples';
-
-/*  There is no package called `markdown-pages` in "node_modules"
-    We optimistically expect it to exist in `InputFileSystem` of the webpack compiler.
-    This is added by the webpack-dynamic-module plugin.
-    SEE "libs-internal/webpack-dynamic-module/plugin.ts"
-*/
-const DYNAMIC_EXPORTED_OBJECT: DynamicExportedObject = require('markdown-pages');
+import { ContentMapService } from './content-map.service';
 
 @Injectable({ providedIn: 'root' })
 export class MarkdownCodeExamplesService {
@@ -18,7 +11,8 @@ export class MarkdownCodeExamplesService {
   get ready(): Promise<MarkdownCodeExamplesService> {
     if (!this.markdownCodeExamples) {
       if (!this.fetching) {
-        this.fetching = this.httpClient.get<{ [cmpSelector: string]: string }>(DYNAMIC_EXPORTED_OBJECT.markdownCodeExamples).toPromise()
+        this.fetching = this.contentMapping.getMapping
+          .then(({ markdownCodeExamples }) => this.httpClient.get<{ [cmpSelector: string]: string }>(markdownCodeExamples).toPromise() )
           .then( markdownCodeExamples => this.markdownCodeExamples = markdownCodeExamples );
       }
       return this.fetching.then( () => this);
@@ -31,7 +25,7 @@ export class MarkdownCodeExamplesService {
 
   private _cache = new Map<string, ExampleFileAsset[]>();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private contentMapping: ContentMapService) { }
 
   getExample(cmpSelector: string): Promise<ExampleFileAsset[]> {
     if (this._cache.has(cmpSelector)) {

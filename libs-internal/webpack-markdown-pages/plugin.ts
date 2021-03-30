@@ -10,7 +10,7 @@ import * as remarkHtml from 'remark-html';
 
 const { util: { createHash } } = webpack as any;
 
-import { DynamicModuleUpdater } from '@pebula-internal/webpack-dynamic-module';
+import { PebulaDynamicDictionaryWebpackPlugin } from '@pebula-internal/webpack-dynamic-dictionary';
 import { ParsedPage, PageNavigationMetadata, PageAttributes } from './models';
 import { createPageFileAsset, sortPageAssetNavEntry } from './utils';
 
@@ -23,7 +23,7 @@ declare module 'webpack' {
   }
 }
 
-declare module '@pebula-internal/webpack-dynamic-module/plugin' {
+declare module '@pebula-internal/webpack-dynamic-dictionary/plugin' {
   interface DynamicExportedObject {
     markdownPages: string;
   }
@@ -83,33 +83,41 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
 
     this.compiler = compiler;
 
-    compiler.hooks.pebulaDynamicModuleUpdater.tap(pluginName, notifier => {
-      compiler.hooks.run.tapPromise(pluginName, async () => { await this.run(compiler); });
-      compiler.hooks.watchRun.tapPromise(pluginName, async () => { await this.run(compiler); });
-      compiler.hooks.compilation.tap(pluginName, compilation => { this.emit(compilation, notifier) });
-      compiler.hooks.afterCompile.tapPromise(pluginName, async compilation => {
+    compiler.hooks.run.tapPromise(pluginName, async () => { await this.run(compiler); });
+    compiler.hooks.watchRun.tapPromise(pluginName, async () => { await this.run(compiler); });
+    compiler.hooks.thisCompilation.tap(pluginName, compilation => {
+      this.emit(compilation);
+      compilation.hooks.afterSeal.tapPromise(pluginName, async () => {
         for (const obj of Array.from(this.cache.values())) {
           compilation.fileDependencies.add(obj.fullPath);
         }
         this.prevTimestamps = compilation.fileTimestamps;
       });
-
     });
 
     compiler.hooks.markdownPageNavigationMetadataReady = new SyncHook(['markdownPageNavigationMetadataReady']);
     compiler.hooks.markdownPageParsed = new SyncHook(['markdownPageParsed']);
   }
 
-  private emit(compilation: webpack.compilation.Compilation, notifier: DynamicModuleUpdater) {
-    let changedFiles: Set<string>;
+  private emit(compilation: webpack.compilation.Compilation) {
+    let changedFiles: Set<ParsedPage>;
 
     if (!this.firstRun && this.watchMode) {
-      changedFiles = new Set<string>();
-      for (const watchFile of Array.from(compilation.fileTimestamps.keys())) {
-        if ( (this.prevTimestamps.get(watchFile) || this.startTime) < (compilation.fileTimestamps.get(watchFile) || Infinity) ) {
-          changedFiles.add(watchFile);
+
+      changedFiles = new Set<ParsedPage>();
+      for (const obj of Array.from(this.cache.values())) {
+        if (obj.forceRender
+            || !obj.postRenderMetadata
+            || (this.prevTimestamps.get(obj.fullPath) || this.startTime) < (compilation.fileTimestamps.get(obj.fullPath) || Infinity) ) {
+          changedFiles.add(obj);
         }
       }
+    } else {
+      changedFiles = new Set(this.cache.values());
+    }
+
+    if (changedFiles.size === 0) {
+      return;
     }
 
     const { hashFunction, hashDigest, hashDigestLength } = compilation.outputOptions;
@@ -156,7 +164,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
       if (!obj.attr.empty) {
         this.compiler.hooks.markdownPageParsed.call({ parsedPage: obj, compilation })
       }
-    }
+    };
 
     const navMetadata: PageNavigationMetadata = {
       entries: {
@@ -167,8 +175,8 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
 
     for (let obj of Array.from(this.cache.values())) {
 
-      if (obj.forceRender || !obj.postRenderMetadata || !changedFiles || changedFiles.has(obj.fullPath)) {
-        if (changedFiles && changedFiles.has(obj.fullPath)) {
+      if (changedFiles.has(obj)) {
+        if (!obj.forceRender && !!obj.postRenderMetadata) {
           obj = this.processFile(obj.file);
         }
         obj.forceRender = false;
@@ -186,6 +194,10 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
       if (obj.postRenderMetadata.outputAssetPath) {
         navMetadata.entryData[obj.attr.path] = obj.postRenderMetadata.outputAssetPath;
       }
+
+      const now = Date.now();
+      compilation.fileTimestamps.set(obj.fullPath,now);
+      this.prevTimestamps.set(obj.fullPath, now);
     }
 
     let len: number;
@@ -225,8 +237,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
     };
 
     this.compiler.hooks.markdownPageNavigationMetadataReady.call({ navMetadata, compilation });
-
-    notifier('markdownPages', navEntriesAssetPath);
+    PebulaDynamicDictionaryWebpackPlugin.find(this.compiler).update('markdownPages', navEntriesAssetPath);
 
     this.firstRun = false;
   }

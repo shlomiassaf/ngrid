@@ -1,23 +1,28 @@
 import { ConnectableObservable, Observable, ReplaySubject, from, of, race, timer } from 'rxjs';
-import { concatMap, first, publishReplay } from 'rxjs/operators';
+import { concatMap, first, publishReplay, switchMap } from 'rxjs/operators';
 
 import { Injectable, NgZone } from '@angular/core';
-import { DynamicExportedObject } from '@pebula-internal/webpack-dynamic-module';
-import { SearchWebWorkerMessage, SearchResults, SearchResult } from './models';
-
-const DYNAMIC_EXPORTED_OBJECT: DynamicExportedObject = require('markdown-pages');
+import { HttpClient } from '@angular/common/http';
+import { DynamicExportedObject } from '@pebula-internal/webpack-dynamic-dictionary';
+import { ContentMapService } from '../content-map.service';
+import { SearchWebWorkerMessage, SearchResults } from './models';
 
 class WorkerSearchAdapter {
 
   private worker: Worker;
   private nextId = 0;
 
-  constructor(private zone: NgZone) {
+  constructor(private zone: NgZone, private contentMapping: ContentMapService) {
     this.worker = new Worker('./search.worker', { name: 'searchWorker', type: 'module' });
   }
 
 
-  loadIndex(): Observable<boolean> { return this.sendMessage<boolean>('loadIndex', DYNAMIC_EXPORTED_OBJECT.searchContent) };
+  loadIndex(): Observable<boolean> {
+    return from(this.contentMapping.getMapping)
+      .pipe(
+        switchMap( ({ searchContent }) => this.sendMessage<boolean>('loadIndex', searchContent) )
+      );
+  };
   queryIndex(query: string): Observable<SearchResults> {
     return this.sendMessage<SearchResults>('queryIndex', query);
   }
@@ -64,10 +69,12 @@ class WorkerSearchAdapter {
 class WindowSearchAdapter {
   private searchEngine: import('./search-engine').SearchEngine;
 
+  constructor(private contentMapping: ContentMapService) { }
+
   loadIndex(): Observable<boolean> {
-    const p = import('./search-engine')
-      .then( searchEngine => {
-        this.searchEngine = new searchEngine.SearchEngine(DYNAMIC_EXPORTED_OBJECT.searchContent);
+    const p = Promise.all([ import('./search-engine'), this.contentMapping.getMapping ])
+      .then( ([searchEngine, contentMapping]) => {
+        this.searchEngine = new searchEngine.SearchEngine(contentMapping.searchContent);
         return this.searchEngine.loadIndex();
       });
     return from(p);
@@ -100,11 +107,11 @@ export class SearchService {
   private searchesSubject = new ReplaySubject<string>(1);
   private adapter: WorkerSearchAdapter | WindowSearchAdapter | WindowNoopSearchAdapter;
 
-  constructor(ngZone: NgZone) {
+  constructor(ngZone: NgZone, contentMapping: ContentMapService) {
     this.hasWorker = typeof Worker !== 'undefined';
 
     if (this.hasWorker) {
-      this.adapter = new WorkerSearchAdapter(ngZone);
+      this.adapter = new WorkerSearchAdapter(ngZone, contentMapping);
     } else {
       this.adapter = new WindowNoopSearchAdapter(); // new WindowSearchAdapter();
     }
