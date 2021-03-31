@@ -143,7 +143,7 @@
     "ng-cli-packagr-tasks": "^11.0.2",
     "node-sass-tilde-importer": "^1.0.2",
     "prettier": "2.2.1",
-    "prismjs": "^1.21.0",
+    "prismjs": "^1.23.0",
     "protractor": "~7.0.0",
     "puppeteer": "^5.4.1",
     "remark": "^10.0.1",
