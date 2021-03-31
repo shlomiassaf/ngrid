@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of as observableOf, } from 'rxjs';
 import {
   Attribute,
   ChangeDetectionStrategy,
@@ -11,17 +11,31 @@ import {
   Optional,
   ViewEncapsulation,
   Injector,
+  SkipSelf,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Platform } from '@angular/cdk/platform';
 import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } from '@angular/cdk/collections';
-import { CDK_TABLE_TEMPLATE, CdkTable, DataRowOutlet, CdkHeaderRowDef, CdkFooterRowDef, RowContext, CDK_TABLE, _COALESCED_STYLE_SCHEDULER, _CoalescedStyleScheduler, RenderRow } from '@angular/cdk/table';
-import { Directionality } from '@angular/cdk/bidi';
+import {
+  CDK_TABLE_TEMPLATE,
+  CdkTable,
+  DataRowOutlet,
+  CdkHeaderRowDef,
+  CdkFooterRowDef,
+  RowContext,
+  CDK_TABLE,
+  _COALESCED_STYLE_SCHEDULER,
+  _CoalescedStyleScheduler,
+  RenderRow,
+  STICKY_POSITIONING_LISTENER,
+  StickyPositioningListener,
+  StickyStyler,
+} from '@angular/cdk/table';
+import { Direction, Directionality } from '@angular/cdk/bidi';
 
-import { ON_BEFORE_INVALIDATE_HEADERS } from '@pebula/ngrid/core';
+import { unrx } from '@pebula/ngrid/core';
 import { PblNgridComponent } from '../ngrid.component';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
-import { PblNgridColumnDef } from '../column/directives/column-def';
 
 import { PblNgridDisposedRowViewRepeaterStrategy } from './ngrid-disposed-row-view-repeater-strategy';
 import { PblNgridCachedRowViewRepeaterStrategy } from './ngrid-cached-row-view-repeater-strategy';
@@ -44,6 +58,8 @@ import { PblNgridCachedRowViewRepeaterStrategy } from './ngrid-cached-row-view-r
     {provide: CDK_TABLE, useExisting: PblCdkTableComponent},
     {provide: _VIEW_REPEATER_STRATEGY, useClass: PblNgridCachedRowViewRepeaterStrategy},
     {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
+    // Prevent nested tables from seeing this table's StickyPositioningListener.
+    {provide: STICKY_POSITIONING_LISTENER, useValue: null},
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,9 +93,9 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
   private _minWidth: number | null = null;
   private beforeRenderRows$: Subject<void>;
   private onRenderRows$: Subject<DataRowOutlet>;
-  private _lastSticky: PblNgridColumnDef;
-  private _lastStickyEnd: PblNgridColumnDef;
   private _isStickyPending: boolean;
+  private pblStickyStyler: StickyStyler;
+  private pblStickyColumnStylesNeedReset = false;
 
   constructor(_differs: IterableDiffers,
               _changeDetectorRef: ChangeDetectorRef,
@@ -90,28 +106,42 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
               protected grid: PblNgridComponent<T>,
               @Inject(EXT_API_TOKEN) protected extApi: PblNgridInternalExtensionApi<T>,
               @Inject(DOCUMENT) _document: any,
-              platform: Platform,
+              protected platform: Platform,
               @Inject(_VIEW_REPEATER_STRATEGY) _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>,
-              @Inject(_COALESCED_STYLE_SCHEDULER) _coalescedStyleScheduler: _CoalescedStyleScheduler) {
-    super(_differs, _changeDetectorRef, _elementRef, role, _dir, _document, platform, _viewRepeater, _coalescedStyleScheduler);
+              @Inject(_COALESCED_STYLE_SCHEDULER) _coalescedStyleScheduler: _CoalescedStyleScheduler,
+              @Optional() @SkipSelf() @Inject(STICKY_POSITIONING_LISTENER) _stickyPositioningListener?: StickyPositioningListener) {
+    super(_differs, _changeDetectorRef, _elementRef, role, _dir, _document, platform, _viewRepeater, _coalescedStyleScheduler, _stickyPositioningListener);
     this.cdRef = _changeDetectorRef;
     extApi.setCdkTable(this);
     this.trackBy = this.grid.trackBy;
+  }
 
-    extApi.events
-      .pipe(ON_BEFORE_INVALIDATE_HEADERS)
-      .subscribe( e => {
-      if (this._lastSticky) {
-        this._lastSticky.queryCellElements('header', 'table', 'footer')
-          .forEach( el => el.classList.remove('pbl-ngrid-sticky-start'));
-        this._lastSticky = undefined;
-      }
-      if (this._lastStickyEnd) {
-        this._lastStickyEnd.queryCellElements('header', 'table', 'footer')
-          .forEach( el => el.classList.remove('pbl-ngrid-sticky-end'));
-        this._lastStickyEnd = undefined;
-      }
-    });
+  ngOnInit(): void {
+    // We implement our own sticky styler because we don't have access to the one at CdkTable (private)
+    // We need it because our CdkRowDef classes does not expose columns, it's always an empty array
+    // This is to prevent CdkTable from rendering cells, we do that.
+    // This is why the styler will not work on columns, cause internall in CdkTable it sees nothing.
+    this.pblStickyStyler = new StickyStyler(this._isNativeHtmlTable,
+                                            this.stickyCssClass,
+                                            this._dir?.value || 'ltr',
+                                            this._coalescedStyleScheduler,
+                                            this.platform.isBrowser,
+                                            this.needsPositionStickyOnElement,
+                                            this._stickyPositioningListener);
+
+    // This will also run from CdkTable and `updateStickyColumnStyles()` is invoked multiple times
+    // but we don't care, we have a window
+    (this._dir?.change ?? observableOf<Direction>())
+      .pipe(unrx(this))
+      .subscribe(value => {
+        this.pblStickyStyler.direction = value;
+        this.pblStickyColumnStylesNeedReset = true;
+        this.updateStickyColumnStyles();
+      });
+
+    // It's imperative we register to dir changes before super.ngOnInit because it register there as well
+    // and it will come first and make sticky state pending, cancelling our pblStickyStyler.
+    super.ngOnInit();
   }
 
   updateStickyColumnStyles() {
@@ -129,6 +159,7 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
+    unrx.kill(this);
     if (this.onRenderRows$) {
       this.onRenderRows$.complete();
     }
@@ -206,43 +237,32 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
   }
 
   private _updateStickyColumnStyles() {
-    const columns = this.grid.columnApi.visibleColumns;
-    let sticky: PblNgridColumnDef, stickyEnd: PblNgridColumnDef;
-
-    for (let i = 0, len = columns.length; i < len; i++) {
-      if (columns[i].columnDef && columns[i].columnDef.sticky) {
-        sticky = columns[i].columnDef;
-      }
-    }
-
-    for (let i = columns.length - 1; i > -1; i--) {
-      if (columns[i].columnDef && columns[i].columnDef.stickyEnd) {
-        stickyEnd = columns[i].columnDef;
-      }
-    }
-
-    if (this._lastSticky) {
-      this._lastSticky.queryCellElements('header', 'table', 'footer')
-        .forEach( el => el.classList.remove('pbl-ngrid-sticky-start'));
-    }
-
-    if (sticky) {
-      sticky.queryCellElements('header', 'table', 'footer')
-        .forEach( el => el.classList.add('pbl-ngrid-sticky-start'));
-    }
-    this._lastSticky = sticky;
-
-    if (this._lastStickyEnd) {
-      this._lastStickyEnd.queryCellElements('header', 'table', 'footer')
-        .forEach( el => el.classList.remove('pbl-ngrid-sticky-end'));
-    }
-
-    if (stickyEnd) {
-      stickyEnd.queryCellElements('header', 'table', 'footer')
-        .forEach( el => el.classList.add('pbl-ngrid-sticky-end'));
-    }
-    this._lastStickyEnd = stickyEnd;
-
+    // We let the parent do the work on rows, it will see 0 columns so then we act.
     super.updateStickyColumnStyles();
+
+    const stickyStartStates = this.extApi.columnApi.visibleColumns.map( c => c.columnDef?.sticky ?? false );
+    const stickyEndStates = this.extApi.columnApi.visibleColumns.map( c => c.columnDef?.stickyEnd ?? false );
+    const headerRow = this.extApi.rowsApi.findColumnRow('header');
+    const footerRow = this.extApi.rowsApi.findColumnRow('footer');
+    const rows = this.extApi.rowsApi.dataRows().map(r => r.element);
+    if (headerRow) {
+      rows.unshift(headerRow.element);
+    }
+    if (footerRow) {
+      rows.push(footerRow.element);
+    }
+
+    // internal reset, coming from Dir change
+    // It will probably get added to CDK ask well, remove when addedd
+    if (this.pblStickyColumnStylesNeedReset) {
+      this.pblStickyStyler.clearStickyPositioning(rows, ['left', 'right']);
+      this.pblStickyColumnStylesNeedReset = false;
+    }
+
+    this.pblStickyStyler.updateStickyColumns(rows, stickyStartStates, stickyEndStates, true);
+
+    // Reset the dirty state of the sticky input change since it has been used.
+    this.extApi.columnApi.columns.forEach(c => c.columnDef?.resetStickyChanged());
   }
+
 }

@@ -48,6 +48,45 @@
   .pbl-ngrid-footer-cell {
     color: $footer-cell-color;
   }
+
+  .cdk-table-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+
+  .cdk-table-sticky-border-elem-top {
+    border-bottom: 2px solid $border-color;
+  }
+
+  .cdk-table-sticky-border-elem-right {
+    &:before {
+      transition: all 250ms ease-in;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-right: 2px solid $border-color;
+    }
+  }
+
+  .cdk-table-sticky-border-elem-bottom {
+    border-top: 2px solid $border-color;
+  }
+
+  .cdk-table-sticky-border-elem-left {
+    &:after {
+      transition: all 250ms ease-in;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0px;
+      height: 100%;
+      border-right: 2px solid $border-color;
+    }
+  }
 }
 
 @mixin _pbl-cdk-table-typography($config: null) {
