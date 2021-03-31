@@ -237,7 +237,7 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
       this._detailRowDef = undefined;
     }
     if (this.detailRow) {
-      let detailRow = grid.registry.getSingle('detailRowParent');
+      let detailRow = this.pluginCtrl.extApi.registry.getSingle('detailRowParent');
       if (detailRow) {
         this._detailRowDef = detailRow = detailRow.clone();
         Object.defineProperty(detailRow, 'when', { enumerable: true,  get: () => this._isDetailRow });

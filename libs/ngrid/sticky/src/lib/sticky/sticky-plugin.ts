@@ -1,4 +1,4 @@
-import { Directive, Input, IterableDiffers, IterableDiffer, IterableChangeRecord, OnDestroy } from '@angular/core';
+import { Directive, Input, IterableDiffers, IterableDiffer, IterableChangeRecord, OnDestroy, AfterViewInit } from '@angular/core';
 
 import { ON_INVALIDATE_HEADERS, ON_RESIZE_ROW } from '@pebula/ngrid/core';
 import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
@@ -81,7 +81,7 @@ export function setStickyColumns(grid: PblNgridComponent<any>, type: 'start' | '
 }
 
 @Directive({ selector: 'pbl-ngrid[stickyColumnStart], pbl-ngrid[stickyColumnEnd], pbl-ngrid[stickyHeader], pbl-ngrid[stickyFooter]' })
-export class PblNgridStickyPluginDirective implements OnDestroy {
+export class PblNgridStickyPluginDirective implements AfterViewInit, OnDestroy {
   /**
    * Set the header rows you want to apply sticky positioning to.
    * Valid values are:
@@ -153,6 +153,7 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
 
   private _columnCache: { start: Array<string | number>; end: Array<string | number>; } = { start: [], end: [] };
   private _removePlugin: (grid: PblNgridComponent<any>) => void;
+  private viewInitialized = false;
 
   constructor (protected readonly grid: PblNgridComponent<any>,
                protected readonly _differs: IterableDiffers,
@@ -183,16 +184,17 @@ export class PblNgridStickyPluginDirective implements OnDestroy {
         });
   }
 
+  ngAfterViewInit(): void {
+    this.viewInitialized = true;
+  }
+
   ngOnDestroy(): void {
     this._removePlugin(this.grid);
   }
 
   protected applyColumnDiff(type: 'start' | 'end', value: Array<string | number>, differ: IterableDiffer<string | number>): void {
-    if (!this.grid.isInit) {
-      this.pluginCtrl.onInit()
-        .subscribe(() => {
-          this.pluginCtrl.events.pipe(ON_INVALIDATE_HEADERS).subscribe( () => this.applyColumnDiff(type, value, differ) );
-        });
+    if (!this.viewInitialized) {
+      requestAnimationFrame(() => this.applyColumnDiff(type, value, differ));
       return;
     }
 

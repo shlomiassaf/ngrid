@@ -286,6 +286,11 @@ export class PblRowsApi<T = any> implements RowsApi<T> {
     }
   }
 
+  findColumnRow(type: 'header' | 'footer'): PblNgridColumnRowComponent {
+    return Array.from(this.rows.get(type))
+      .find( r => (r as unknown as PblNgridColumnRowComponent).gridWidthRow === false) as unknown as PblNgridColumnRowComponent;
+  }
+
   /**
    * Force run change detection for rows.
    * You can run it for specific groups or for all rows.
