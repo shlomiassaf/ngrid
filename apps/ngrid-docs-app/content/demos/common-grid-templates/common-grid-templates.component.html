@@ -40,7 +40,8 @@
   {{ value === 5 ? '★' : '☆' }}
 </div>
 
-<div *pblNgridCellTypeDef="'progressBar'; value as value; col as col"
-     [ngStyle]="col.type.data.style(value)" [style.width]="value + '%'">
-  <div>{{ value }}%</div>
+<div *pblNgridCellTypeDef="'progressBar'; value as value; col as col" style="width:  100%;">
+  <div [ngStyle]="col.type.data.style(value)" [style.width]="value + '%'">
+    <div>{{ value }}%</div>
+  </div>
 </div>
