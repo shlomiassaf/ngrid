@@ -4,13 +4,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FlexLayoutServerModule } from '@angular/flex-layout/server';
 import { makeStateKey, TransferState } from '@angular/platform-browser';
 import { ServerModule, ServerTransferStateModule } from '@angular/platform-server';
-import { CACHE, CacheService, STORAGE } from '@ngx-cache/core';
-import { fsStorageFactory, FsStorageLoader } from '@ngx-cache/fs-storage';
-import { FsCacheService, ServerCacheModule } from '@ngx-cache/platform-server';
 import { Request } from 'express';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 
-import { UniversalInterceptor, FsStorageService } from './ssr';
+import { UniversalInterceptor } from './ssr';
 import { AppModule, REQ_KEY } from './app.module';
 import { AppComponent } from './app.component';
 
@@ -20,20 +17,6 @@ import { AppComponent } from './app.component';
     ServerModule,
     ServerTransferStateModule,
     FlexLayoutServerModule,
-    ServerCacheModule.forRoot([
-      {
-        provide: CACHE,
-        useClass: FsCacheService
-      },
-      {
-        provide: STORAGE,
-        useClass: FsStorageService
-      },
-      {
-        provide: FsStorageLoader,
-        useFactory: fsStorageFactory
-      }
-    ]),
   ],
   providers: [
     {
@@ -43,7 +26,7 @@ import { AppComponent } from './app.component';
     },
     {
       provide: APP_BOOTSTRAP_LISTENER,
-      useFactory: (appRef: ApplicationRef, transferState: TransferState, request: Request, cache: CacheService) => () =>
+      useFactory: (appRef: ApplicationRef, transferState: TransferState, request: Request) => () =>
         appRef.isStable
           .pipe(
             filter(stable => stable),
@@ -55,11 +38,9 @@ import { AppComponent } from './app.component';
               originalUrl: request.originalUrl,
               referer: request.get('referer')
             });
-
-            transferState.set<any>(makeStateKey(cache.key), JSON.stringify(cache.dehydrate()));
           }),
       multi: true,
-      deps: [ApplicationRef, TransferState, REQUEST, CacheService]
+      deps: [ApplicationRef, TransferState, REQUEST]
     }
   ],
   bootstrap: [AppComponent],
