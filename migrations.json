@@ -1,11 +1,12 @@
 {
   "migrations": [
     {
-      "version": "11.1.0-beta",
-      "description": "Removes `canActivate` from a `Route` config when `redirectTo` is also present",
-      "factory": "./migrations/can-activate-with-redirect-to/index",
-      "package": "@angular/core",
-      "name": "migration-v11.1-can-activate-with-redirect-to"
+      "cli": "nx",
+      "version": "11.5.0-beta.0",
+      "description": "Update project .eslintrc.json files to always use project level tsconfigs",
+      "factory": "./src/migrations/update-11-5-0/always-use-project-level-tsconfigs-with-eslint",
+      "package": "@nrwl/linter",
+      "name": "always-use-project-level-tsconfigs-with-eslint"
     }
   ]
 }

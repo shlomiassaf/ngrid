@@ -13,18 +13,18 @@ An angular based grid based on `@angular/cdk`.
 
 With all the buzzwords you want:
 
-- Enterprise grade
-- Highly extensible
-- UI Agnostic
-- Feature loaded
+- 👌 &nbsp; Enterprise grade
+- 🧩 &nbsp; Highly extensible
+- ✨ &nbsp; UI Agnostic
+- 🏷️ &nbsp; Feature loaded
 
 ---
 
-For full documentation, walk-through's and examples - [visit the official site](https://shlomiassaf.github.io/ngrid)
+For full documentation, walk-through's and examples 📜 &nbsp; [visit the official site](https://shlomiassaf.github.io/ngrid)
 
 ---
 
-## Quick Start / Setup
+## ⚡&nbsp; Quick Start / Setup
 
 Use the built-in schematics:
 
@@ -37,7 +37,7 @@ ng add @pebula/ngrid
 
 For how-to's, concepts, recipes and more, [visit the documentation site](https://shlomiassaf.github.io/ngrid)
 
-## Versions 
+## 🧅&nbsp; Versions 
 
 | nGrid Version    | Angular Version | Documentation | Starters  
 |------------------|-----------------|---------------|---------
@@ -49,7 +49,7 @@ For how-to's, concepts, recipes and more, [visit the documentation site](https:/
 > * Live code demos (StackBlitz/CodeSandbox) might experience issues with some feature especially when IVY enabled, if you find it hard to use them please run your code locally.
 
 
-## Quick Feature Overview
+## 🏄‍♀️&nbsp; Quick Feature Overview
 
 `@pebula/ngrid` comes with building blocks and features tied to the core of the grid.
 
@@ -93,7 +93,7 @@ documentation is the KEY
 
 ---
 
-## Structure
+## 🏗️ Structure
 
 N-Grid is built on top of building block taken from `@angular/cdk`. The most obvious is the `CdkTable` but other constructs are used as well (e.g. selection, drag & drop, etc...)
 
@@ -102,7 +102,7 @@ The grid is highly extensible. The design aims to support plugins and extensions
 To support this structure there are several packages, some having secondary
 packages inside them:
 
-## Design goals
+## 🥅 Design goals
 
 - Developer ergonomics
 - Performance
