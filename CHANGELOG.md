@@ -1,3 +1,13 @@
+## 3.1.2 (2021-03-31)
+
+
+### Bug Fixes
+
+* **ngrid/sticky:** refactor sticky columns to work again ([bacd12a](https://github.com/shlomiassaf/ngrid/commit/bacd12af6509da970112ebd08f3ded9079efa5ad)), closes [#160](https://github.com/shlomiassaf/ngrid/issues/160)
+* proper boolean template type for strict type checking ([9a29552](https://github.com/shlomiassaf/ngrid/commit/9a295526febdca175c68ab3532b1c0291a02c7c1))
+
+
+
 ## 3.1.1 (2021-03-22)
 
 
