@@ -8,7 +8,6 @@ import { ExtendedModule } from '@angular/flex-layout/extended';
 import { Angulartics2Module } from 'angulartics2';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { MetaModule } from '@ngx-meta/core';
-import { CacheModule } from '@ngx-cache/core';
 import { BidiModule } from '@angular/cdk/bidi';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -60,7 +59,6 @@ export const REQ_KEY = makeStateKey<string>('req');
     FlexModule,
     ExtendedModule,
     MetaModule.forRoot(),
-    CacheModule.forRoot(),
     NxModule.forRoot(),
     PblDocsAppSharedModule,
     AppContentChunksModule,
