@@ -1,3 +1,12 @@
+## 3.1.3 (2021-03-31)
+
+
+### Bug Fixes
+
+* **ngrid:** autofit is not accurate ([55b5c75](https://github.com/shlomiassaf/ngrid/commit/55b5c75c05f03ef55aab367136cdfb20619b5b21)), closes [#172](https://github.com/shlomiassaf/ngrid/issues/172)
+
+
+
 ## 3.1.2 (2021-03-31)
 
 
