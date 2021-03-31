@@ -9,7 +9,7 @@ import { DynamicColumnWidthLogic, DYNAMIC_PADDING_BOX_MODEL_SPACE_STRATEGY } fro
 
 export class PblNgridColumnWidthCalc {
 
-  readonly dynamicColumnWidth: DynamicColumnWidthLogic
+  readonly dynamicColumnWidth: DynamicColumnWidthLogic;
   readonly onWidthCalc = new Subject<DynamicColumnWidthLogic>();
   private readonly columnStore: PblColumnStore
 

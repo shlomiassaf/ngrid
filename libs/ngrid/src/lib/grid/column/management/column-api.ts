@@ -3,6 +3,7 @@ import { map } from 'rxjs/operators';
 
 import { ON_RESIZE_ROW } from '@pebula/ngrid/core';
 import { PblNgridExtensionApi } from '../../../ext/grid-ext-api';
+import { PblNgridColumnRowComponent } from '../../row/columns-row.component';
 import { PblNgridComponent } from '../../ngrid.component';
 import { PblColumn, isPblColumn } from '../model/column';
 import { PblColumnStore } from './column-store';
@@ -268,11 +269,37 @@ export class ColumnApi<T> {
   private findColumnAutoSize(column: PblColumn): number {
     const { columnDef } = column;
     const cells = columnDef.queryCellElements();
+    for (let i = 0, len = cells.length; i < len; i++) {
+      const parentRow = this.extApi.rowsApi.findRowByElement(cells[i].parentElement);
+      if (parentRow.rowType === 'header' && (parentRow as unknown as PblNgridColumnRowComponent).gridWidthRow) {
+        cells.splice(i, 1);
+        break;
+      }
+    }
+
     let size = 0;
+    let internalWidth: number;
     for (const c of cells) {
-      const element = (c.firstElementChild || c) as HTMLElement;
-      if (element.scrollWidth > size) {
-        size = element.scrollWidth + 1;
+      if (c.childElementCount <= 1) {
+        const element = (c.firstElementChild || c) as HTMLElement;
+        internalWidth = element.scrollWidth;
+      } else {
+        internalWidth = 0;
+        let el: Element = c.firstElementChild;
+        do {
+          switch (getComputedStyle(el).position) {
+            case 'sticky':
+            case 'absolute':
+            case 'fixed':
+              break;
+            default:
+              internalWidth += el.scrollWidth;
+              break;
+          }
+        } while (el = el.nextElementSibling)
+      }
+      if (internalWidth > size) {
+        size = internalWidth + 1;
         // we add 1 pixel because `element.scrollWidth` does not support subpixel values, the width is converted to an integer removing subpixel values (fractions).
       }
     }
