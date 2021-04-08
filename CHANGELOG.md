@@ -1,3 +1,12 @@
+## 3.1.4 (2021-04-08)
+
+
+### Bug Fixes
+
+* **ngrid/target-events:** underfined rowContext ([80d0e9d](https://github.com/shlomiassaf/ngrid/commit/80d0e9dd796f96c46262abf61174d528ec6f2fd2)), closes [#181](https://github.com/shlomiassaf/ngrid/issues/181)
+
+
+
 ## 3.1.3 (2021-03-31)
 
 
