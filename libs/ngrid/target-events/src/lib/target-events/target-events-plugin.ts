@@ -121,6 +121,10 @@ export class PblNgridTargetEventsPlugin<T = any> {
           const columnIndex = this.grid.columnApi.indexOf(column);
           event.column = column;
           (event as Events.PblNgridDataMatrixPoint<T>).context = this.pluginCtrl.extApi.contextApi.getCell(event.rowIndex, columnIndex);
+          if (!(event as Events.PblNgridDataMatrixPoint<T>).context) {
+            this.pluginCtrl.extApi.contextApi.clear(true);
+            (event as Events.PblNgridDataMatrixPoint<T>).context = this.pluginCtrl.extApi.contextApi.getCell(event.rowIndex, columnIndex);
+          }
         } else {
           const store = this.pluginCtrl.extApi.columnStore;
           const rowInfo = (matrixPoint.type === 'header' ? store.metaHeaderRows : store.metaFooterRows)[event.rowIndex];
