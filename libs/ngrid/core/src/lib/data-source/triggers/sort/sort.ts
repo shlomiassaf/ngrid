@@ -26,12 +26,17 @@ export function applySort<T>(column: PblColumnDefinition, sort: PblNgridSortDefi
 
 function defaultSorter<T>(column: PblColumnDefinition, sort: PblNgridSortInstructions, data: T[]): T[] {
   return data.sort((a, b) => {
+    const directionMultiplier = (sort.order === 'asc' ? 1 : -1);
     let valueA = getValue(column, a);
     let valueB = getValue(column, b);
 
     valueA = isNaN(+valueA) ? valueA : +valueA;
     valueB = isNaN(+valueB) ? valueB : +valueB;
 
-    return (valueA < valueB ? -1 : valueA === valueB ? 0 : 1) * (sort.order === 'asc' ? 1 : -1);
+    if (valueA && valueB) {
+      return (valueA < valueB ? -1 : valueA === valueB ? 0 : 1) * directionMultiplier;
+    }
+
+    return (valueA ? 1 : -1) * directionMultiplier;
   });
 }
