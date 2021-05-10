@@ -24,6 +24,12 @@ For full documentation, walk-through's and examples 📜 &nbsp; [visit the offic
 
 ---
 
+Need help? Want to talk about a feature? Or just a casual chat...
+
+[![Support Server](https://img.shields.io/discord/841313360289333254.svg?label=Discord&logo=Discord&colorB=7289da&style=for-the-badge)](https://discord.gg/DtkA8mbWeP)
+
+Join to the discord channel and lets create a community together!
+
 ## ⚡&nbsp; Quick Start / Setup
 
 Use the built-in schematics:
