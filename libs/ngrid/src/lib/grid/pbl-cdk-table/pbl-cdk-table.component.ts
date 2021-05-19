@@ -16,6 +16,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { Platform } from '@angular/cdk/platform';
 import { _DisposeViewRepeaterStrategy, _ViewRepeater, _VIEW_REPEATER_STRATEGY } from '@angular/cdk/collections';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 import {
   CDK_TABLE_TEMPLATE,
   CdkTable,
@@ -109,8 +110,10 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
               protected platform: Platform,
               @Inject(_VIEW_REPEATER_STRATEGY) _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>,
               @Inject(_COALESCED_STYLE_SCHEDULER) _coalescedStyleScheduler: _CoalescedStyleScheduler,
+              _viewportRuler: ViewportRuler,
               @Optional() @SkipSelf() @Inject(STICKY_POSITIONING_LISTENER) _stickyPositioningListener?: StickyPositioningListener) {
-    super(_differs, _changeDetectorRef, _elementRef, role, _dir, _document, platform, _viewRepeater, _coalescedStyleScheduler, _stickyPositioningListener);
+    super(_differs, _changeDetectorRef, _elementRef, role, _dir, _document, platform, _viewRepeater, _coalescedStyleScheduler, _viewportRuler, _stickyPositioningListener);
+
     this.cdRef = _changeDetectorRef;
     extApi.setCdkTable(this);
     this.trackBy = this.grid.trackBy;

@@ -37,16 +37,11 @@ function applyLoaders(webpackConfig: Configuration) {
 function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   applyLoaders(webpackConfig);
 
-
   // push the new plugin AFTER the angular compiler plugin
-  const { ivy: { AngularWebpackPlugin }, AngularCompilerPlugin } = require('@ngtools/webpack');
+  const { AngularWebpackPlugin } = require('@ngtools/webpack');
 
-  let idx = webpackConfig.plugins.findIndex( p => p instanceof AngularCompilerPlugin );
+  let idx = webpackConfig.plugins.findIndex( p => p instanceof AngularWebpackPlugin );
   if (idx > -1) {
-    const oldOptions = (webpackConfig.plugins[idx] as any)._options;
-    oldOptions.directTemplateLoading = false;
-    webpackConfig.plugins[idx] = new AngularCompilerPlugin(oldOptions);
-  } else if ( (idx = webpackConfig.plugins.findIndex( p => p instanceof AngularWebpackPlugin )) > -1) {
     const oldOptions = (webpackConfig.plugins[idx] as any).options;
     oldOptions.directTemplateLoading = false;
     webpackConfig.plugins[idx] = new AngularWebpackPlugin(oldOptions);

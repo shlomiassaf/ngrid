@@ -11,7 +11,7 @@ class WorkerSearchAdapter {
   private nextId = 0;
 
   constructor(private zone: NgZone, private contentMapping: ContentMapService) {
-    this.worker = new Worker('./search.worker', { name: 'searchWorker', type: 'module' });
+    this.worker = new Worker(new URL('./search.worker', import.meta.url), { name: 'searchWorker', type: 'module' });
   }
 
 

@@ -24,7 +24,7 @@ export class WorkerStoreAdapter {
   private messageEventListener = (event: IncomingServerMessageEvent) => this.onMessage(event);
 
   constructor() {
-    const worker = this.worker = new Worker('./datastore/datastore.worker', { name: 'dataSourceWorker', type: 'module' });
+    const worker = this.worker = new Worker(new URL('./datastore/datastore.worker', import.meta.url), { name: 'dataSourceWorker', type: 'module' });
     worker.onerror = (errorEvent: ErrorEvent) => { console.error(errorEvent.message) };
     worker.onmessageerror = event => { console.log(event) };
     this.ready = eventWaitUntil(worker, 'message', event => event.data === 'ready')

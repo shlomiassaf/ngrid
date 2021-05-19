@@ -3,6 +3,7 @@ import * as webpack from 'webpack';
 import { PebulaDynamicDictionaryWebpackPlugin } from '@pebula-internal/webpack-dynamic-dictionary';
 import { ParsedPage } from '@pebula-internal/webpack-markdown-pages';
 import { SearchableSource } from './models';
+import { MarkdownPagesWebpackPlugin } from '../webpack-markdown-pages/plugin';
 
 const domino = require('domino');
 const { util: { createHash } } = webpack as any;
@@ -18,7 +19,7 @@ const pluginName = 'markdown-app-search-webpack-plugin';
 export interface MarkdownAppSearchWebpackPluginOptions {
 }
 
-export class MarkdownAppSearchWebpackPlugin implements webpack.Plugin {
+export class MarkdownAppSearchWebpackPlugin {
 
   private options: MarkdownAppSearchWebpackPluginOptions;
 
@@ -30,13 +31,13 @@ export class MarkdownAppSearchWebpackPlugin implements webpack.Plugin {
 
     const sources = new Map<string, SearchableSource>();
 
-    compiler.hooks.markdownPageParsed.tap(pluginName, (context) => {
+    MarkdownPagesWebpackPlugin.getCompilationHooks(compiler).markdownPageParsed.tap(pluginName, (context) => {
       const { parsedPage, compilation } = context;
       const searchable = createSearchableSource(parsedPage);
       sources.set(searchable.path, searchable);
     });
 
-    compiler.hooks.markdownPageNavigationMetadataReady.tap(pluginName, (context) => {
+    MarkdownPagesWebpackPlugin.getCompilationHooks(compiler).markdownPageNavigationMetadataReady.tap(pluginName, (context) => {
       const { compilation } = context;
       const { hashFunction, hashDigest, hashDigestLength } = compilation.outputOptions;
 
@@ -46,10 +47,7 @@ export class MarkdownAppSearchWebpackPlugin implements webpack.Plugin {
       const sourceContentPath = `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
       PebulaDynamicDictionaryWebpackPlugin.find(compiler).update('searchContent', sourceContentPath);
 
-      compilation.assets[sourceContentPath] = {
-        source: () => searchContent,
-        size: () => searchContent.length
-      };
+      compilation.assets[sourceContentPath] = new webpack.sources.RawSource(searchContent);
     });
   }
 

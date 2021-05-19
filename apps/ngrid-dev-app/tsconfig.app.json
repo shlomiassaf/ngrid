@@ -3,7 +3,6 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": [
-      "@types/resize-observer-browser",
       "dev-mode-types"
     ]
   },

@@ -55,8 +55,7 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js/dist/zone';  // Included with Angular CLI.
-// We use types from `@types/resize-observer-browser` so we import directly to prevent conflicts
+import 'zone.js';  // Included with Angular CLI.
 import 'resize-observer-polyfill/dist/ResizeObserver';
 
 // ng-bootstrap

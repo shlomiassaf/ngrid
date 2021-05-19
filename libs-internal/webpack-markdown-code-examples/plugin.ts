@@ -24,7 +24,7 @@ export interface MarkdownCodeExamplesWebpackPluginOptions {
   docsPath: string | string[];
 }
 
-export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
+export class MarkdownCodeExamplesWebpackPlugin {
 
   startTime = Date.now();
   prevTimestamps = new Map<string, number>();
@@ -51,12 +51,12 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
             compilation.fileDependencies.add(fullPath);
           }
         }
-        this.prevTimestamps = compilation.fileTimestamps;
+        this.prevTimestamps = compilation.fileSystemInfo.getDeprecatedFileTimestamps();
       });
     });
   }
 
-  private emit(compilation: webpack.compilation.Compilation) {
+  private emit(compilation: webpack.Compilation) {
     let changedFiles: Set<ParsedExampleMetadata>;
 
     if (!this.firstRun && this.watchMode) {
@@ -66,7 +66,7 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
           changedFiles.add(obj);
         } else {
           for (const watchFile of Array.from(obj.pathAssets.keys())) {
-            if ( (this.prevTimestamps.get(watchFile) || this.startTime) < (compilation.fileTimestamps.get(watchFile) || Infinity) ) {
+            if ( (this.prevTimestamps.get(watchFile) || this.startTime) < (compilation.fileSystemInfo.getDeprecatedFileTimestamps().get(watchFile) || Infinity) ) {
               changedFiles.add(obj);
             }
           }
@@ -93,10 +93,7 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
       hash.update(source);
       outputAssetPath = `${obj.selector}-${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
 
-      compilation.assets[outputAssetPath] = {
-        source: () => source,
-        size: () => source.length
-      };
+      compilation.assets[outputAssetPath] = new webpack.sources.RawSource(source);
 
       obj.postRenderMetadata = {
         outputAssetPath,
@@ -121,7 +118,7 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
 
       const now = Date.now();
       for (const watchFile of Array.from(obj.pathAssets.keys())) {
-        compilation.fileTimestamps.set(watchFile, now);
+        compilation.fileSystemInfo.getDeprecatedFileTimestamps().set(watchFile, now);
         this.prevTimestamps.set(watchFile, now);
       }
 
@@ -133,10 +130,7 @@ export class MarkdownCodeExamplesWebpackPlugin implements webpack.Plugin {
     const navEntriesAssetPath = `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
 
     // TODO: Remove previous asset
-    compilation.assets[navEntriesAssetPath] = {
-      source: () => navEntriesSource,
-      size: () => navEntriesSource.length
-    };
+    compilation.assets[navEntriesAssetPath] = new webpack.sources.RawSource(navEntriesSource);
 
     PebulaDynamicDictionaryWebpackPlugin.find(this.compiler).update('markdownCodeExamples', navEntriesAssetPath);
 

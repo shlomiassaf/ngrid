@@ -33,6 +33,11 @@
               "apps/ngrid-docs-app/src/styles/main.scss"
             ],
             "scripts": [],
+            "vendorChunk": true,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
             "extractLicenses": false,
             "webWorkerTsConfig": "apps/ngrid-docs-app/tsconfig.worker.json",
             "allowedCommonJsDependencies": [
@@ -208,12 +213,16 @@
             "main": "apps/ngrid-dev-app/src/main.ts",
             "polyfills": "apps/ngrid-dev-app/src/polyfills.ts",
             "tsConfig": "apps/ngrid-dev-app/tsconfig.app.json",
-            "aot": true,
             "styles": [
               "apps/ngrid-dev-app/src/theme.scss"
             ],
             "extractLicenses": false,
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -528,6 +537,7 @@
           },
           "configurations": {
             "ci": {
+              "jestConfig": "libs/ngrid-material/jest.config.js",
               "watch": false,
               "progress": false,
               "browsers": "ChromeHeadlessCI"

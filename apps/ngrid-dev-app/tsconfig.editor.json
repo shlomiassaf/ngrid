@@ -2,6 +2,6 @@
   "extends": "./tsconfig.json",
   "include": ["**/*.ts"],
   "compilerOptions": {
-    "types": ["jasmine", "node", "@types/resize-observer-browser", "dev-mode-types"]
+    "types": ["jasmine", "node", "dev-mode-types"]
   }
 }

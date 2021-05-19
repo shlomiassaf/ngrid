@@ -26,5 +26,9 @@
     },
     "rootDir": "."
   },
+  "angularCompilerOptions": {
+    "strictInjectionParameters": true,
+    "strictTemplates": true
+  },
   "exclude": ["dist", "node_modules", "tmp"]
 }
