@@ -17,9 +17,9 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { Meta, MetaDefinition, Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
-import { MetaService } from '@ngx-meta/core';
 
 import { unrx } from '@pebula/ngrid/core';
 import type { PageFileAsset } from '@pebula-internal/webpack-markdown-pages';
@@ -55,7 +55,8 @@ export class MarkdownPageViewerComponent implements OnDestroy {
   private _portalHosts: DomPortalOutlet[] = [];
 
   constructor(private mdPages: MarkdownPagesService,
-              private meta: MetaService,
+              private metaService: Meta,
+              private titleService: Title,
               private locationService: LocationService,
               route: ActivatedRoute,
               private _appRef: ApplicationRef,
@@ -87,17 +88,24 @@ export class MarkdownPageViewerComponent implements OnDestroy {
     return true;
   }
 
+  ngOnDestroy(): void {
+    this._clearLiveExamples();
+    unrx.kill(this);
+  }
+
   private updateDocument(url: string) {
     this.page = undefined;
     this._clearLiveExamples();
     if (!url) {
-      this.meta.setTitle(``);
+      this.titleService.setTitle(``);
+      this.addOrModifyTag({ property: 'og:title', content: `` });
       return;
     }
     this.mdPages.getPage(url)
       .then( p => {
         this.page = p;
-        this.meta.setTitle(`NGrid: ${p.title}`);
+        this.titleService.setTitle(`NGrid: ${p.title}`);
+        this.addOrModifyTag({ property: 'og:title', content: `NGrid: ${p.title}` });
         this.elementRef.nativeElement.innerHTML = p.contents;
 
         if (typeof this.elementRef.nativeElement.getBoundingClientRect === 'function') {
@@ -144,8 +152,9 @@ export class MarkdownPageViewerComponent implements OnDestroy {
     this._portalHosts = [];
   }
 
-  ngOnDestroy(): void {
-    this._clearLiveExamples();
-    unrx.kill(this);
+  private addOrModifyTag(tag: MetaDefinition) {
+    if (!this.metaService.updateTag(tag)) {
+      this.metaService.addTag(tag);
+    }
   }
 }
