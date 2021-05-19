@@ -4,7 +4,6 @@
     "types": [
       "node",
       "jest",
-      "@types/resize-observer-browser",
       "dev-mode-types"
     ]
   },

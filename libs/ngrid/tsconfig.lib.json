@@ -11,7 +11,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "types": ["@types/resize-observer-browser", "dev-mode-types"],
+    "types": ["dev-mode-types"],
     "lib": ["dom", "es2015"]
   },
   "exclude": ["src/__test-runners/*.ts", "**/*.spec.ts", "karma.conf.ts"]

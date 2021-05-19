@@ -14,15 +14,6 @@ import { PebulaDynamicDictionaryWebpackPlugin } from '@pebula-internal/webpack-d
 import { ParsedPage, PageNavigationMetadata, PageAttributes } from './models';
 import { createPageFileAsset, sortPageAssetNavEntry } from './utils';
 
-declare module 'webpack' {
-  export namespace compilation {
-    export interface CompilerHooks {
-      markdownPageNavigationMetadataReady: SyncHook<{ navMetadata: PageNavigationMetadata, compilation: webpack.compilation.Compilation }>;
-      markdownPageParsed: SyncHook<{ parsedPage: ParsedPage, compilation: webpack.compilation.Compilation }>;
-    }
-  }
-}
-
 declare module '@pebula-internal/webpack-dynamic-dictionary/plugin' {
   interface DynamicExportedObject {
     markdownPages: string;
@@ -30,6 +21,12 @@ declare module '@pebula-internal/webpack-dynamic-dictionary/plugin' {
 }
 
 const pluginName = 'markdown-pages-webpack-plugin';
+const compilerHooksMap = new WeakMap<webpack.Compiler, MarkdownPagesWebpackPluginCompilerHooks>();
+
+export interface MarkdownPagesWebpackPluginCompilerHooks {
+  markdownPageNavigationMetadataReady: SyncHook<{ navMetadata: PageNavigationMetadata, compilation: webpack.Compilation }>;
+  markdownPageParsed: SyncHook<{ parsedPage: ParsedPage, compilation: webpack.Compilation }>;
+}
 
 export interface MarkdownPagesWebpackPluginOptions {
   context: string;
@@ -39,7 +36,24 @@ export interface MarkdownPagesWebpackPluginOptions {
   remarkPlugins: any[];
 }
 
-export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
+export class MarkdownPagesWebpackPlugin {
+
+  static getCompilationHooks(compiler: webpack.Compiler): MarkdownPagesWebpackPluginCompilerHooks {
+		if (!(compiler instanceof webpack.Compiler)) {
+			throw new TypeError(
+				"The 'compiler' argument must be an instance of Compiler"
+			);
+		}
+		let hooks = compilerHooksMap.get(compiler);
+		if (hooks === undefined) {
+      hooks = {
+        markdownPageNavigationMetadataReady: new SyncHook(['markdownPageNavigationMetadataReady']),
+        markdownPageParsed: new SyncHook(['markdownPageParsed']),
+      }
+      compilerHooksMap.set(compiler, hooks);
+    }
+    return hooks;
+  }
 
   startTime = Date.now();
   prevTimestamps = new Map<string, number>();
@@ -91,24 +105,22 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
         for (const obj of Array.from(this.cache.values())) {
           compilation.fileDependencies.add(obj.fullPath);
         }
-        this.prevTimestamps = compilation.fileTimestamps;
+        this.prevTimestamps = compilation.fileSystemInfo.getDeprecatedFileTimestamps();
       });
     });
 
-    compiler.hooks.markdownPageNavigationMetadataReady = new SyncHook(['markdownPageNavigationMetadataReady']);
-    compiler.hooks.markdownPageParsed = new SyncHook(['markdownPageParsed']);
+
   }
 
-  private emit(compilation: webpack.compilation.Compilation) {
+  private emit(compilation: webpack.Compilation) {
     let changedFiles: Set<ParsedPage>;
 
     if (!this.firstRun && this.watchMode) {
-
       changedFiles = new Set<ParsedPage>();
       for (const obj of Array.from(this.cache.values())) {
         if (obj.forceRender
             || !obj.postRenderMetadata
-            || (this.prevTimestamps.get(obj.fullPath) || this.startTime) < (compilation.fileTimestamps.get(obj.fullPath) || Infinity) ) {
+            || (this.prevTimestamps.get(obj.fullPath) || this.startTime) < (compilation.fileSystemInfo.getDeprecatedFileTimestamps().get(obj.fullPath) || Infinity) ) {
           changedFiles.add(obj);
         }
       }
@@ -134,10 +146,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
         hash.update(source);
         outputAssetPath = this.outputAssetPathRoot + Path.join(Path.dirname(obj.file), `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`);
 
-        compilation.assets[outputAssetPath] = {
-          source: () => source,
-          size: () => source.length
-        };
+        compilation.assets[outputAssetPath] = new webpack.sources.RawSource(source);
       }
 
       obj.postRenderMetadata = {
@@ -162,7 +171,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
         obj.postRenderMetadata.navEntry.ordinal = obj.attr.ordinal;
       }
       if (!obj.attr.empty) {
-        this.compiler.hooks.markdownPageParsed.call({ parsedPage: obj, compilation })
+        MarkdownPagesWebpackPlugin.getCompilationHooks(this.compiler).markdownPageParsed.call({ parsedPage: obj, compilation })
       }
     };
 
@@ -196,7 +205,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
       }
 
       const now = Date.now();
-      compilation.fileTimestamps.set(obj.fullPath,now);
+      compilation.fileSystemInfo.getDeprecatedFileTimestamps().set(obj.fullPath,now);
       this.prevTimestamps.set(obj.fullPath, now);
     }
 
@@ -220,7 +229,7 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
     }
 
     if (children.length) {
-      compilation.errors.push(new Error(`Could not find a parent/child relationship in ${children.map(c => c.file).join(', ')}`));
+      compilation.errors.push(new webpack.WebpackError(`Could not find a parent/child relationship in ${children.map(c => c.file).join(', ')}`));
     }
 
     Object.values(navMetadata.entries).forEach(sortPageAssetNavEntry);
@@ -231,12 +240,11 @@ export class MarkdownPagesWebpackPlugin implements webpack.Plugin {
     const navEntriesAssetPath = `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
 
     // TODO: Remove previous asset
-    compilation.assets[navEntriesAssetPath] = {
-      source: () => navEntriesSource,
-      size: () => navEntriesSource.length
-    };
+    compilation.assets[navEntriesAssetPath] = new webpack.sources.RawSource(navEntriesSource);
 
-    this.compiler.hooks.markdownPageNavigationMetadataReady.call({ navMetadata, compilation });
+    MarkdownPagesWebpackPlugin.getCompilationHooks(this.compiler)
+      .markdownPageNavigationMetadataReady.call({ navMetadata, compilation });
+
     PebulaDynamicDictionaryWebpackPlugin.find(this.compiler).update('markdownPages', navEntriesAssetPath);
 
     this.firstRun = false;

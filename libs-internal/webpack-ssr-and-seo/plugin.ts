@@ -1,5 +1,6 @@
 import * as webpack from 'webpack';
 import SitemapPlugin from 'sitemap-webpack-plugin';
+import { MarkdownPagesWebpackPlugin } from '../webpack-markdown-pages/plugin';
 
 const pluginName = 'ssr-and-seo-webpack-plugin';
 
@@ -16,7 +17,7 @@ export interface SsrAndSeoWebpackPluginOptions {
   };
 }
 
-export class SsrAndSeoWebpackPlugin implements webpack.Plugin {
+export class SsrAndSeoWebpackPlugin {
 
   private options: SsrAndSeoWebpackPluginOptions;
 
@@ -25,25 +26,19 @@ export class SsrAndSeoWebpackPlugin implements webpack.Plugin {
   }
 
   apply(compiler: webpack.Compiler): void {
-    compiler.hooks.markdownPageNavigationMetadataReady.tap(pluginName, (context) => {
+    MarkdownPagesWebpackPlugin.getCompilationHooks(compiler).markdownPageNavigationMetadataReady.tap(pluginName, (context) => {
       const { navMetadata, compilation } = context;
 
       const navEntriesSource = JSON.stringify(navMetadata);
 
       if (this.options.ssrPagesFilename) {
-        compilation.assets[this.options.ssrPagesFilename] = {
-          source: () => navEntriesSource,
-          size: () => navEntriesSource.length
-        };
+        compilation.assets[this.options.ssrPagesFilename] = new webpack.sources.RawSource(navEntriesSource);
       }
 
       if (this.options.sitemap) {
         const siteMapGen = new SitemapPlugin(this.options.sitemap.basePath, Object.keys(navMetadata.entryData));
         const sitemap = siteMapGen.generate();
-        compilation.assets[this.options.sitemap.fileName || 'sitemap.xml'] = {
-          source: () => sitemap,
-          size: () => Buffer.byteLength(sitemap, 'utf8'),
-        };
+        compilation.assets[this.options.sitemap.fileName || 'sitemap.xml'] = new webpack.sources.RawSource(sitemap);
       }
 
     });
