@@ -7,7 +7,6 @@ import { FlexModule } from '@angular/flex-layout/flex';
 import { ExtendedModule } from '@angular/flex-layout/extended';
 import { Angulartics2Module } from 'angulartics2';
 import { TransferHttpCacheModule } from '@nguniversal/common';
-import { MetaModule } from '@ngx-meta/core';
 import { BidiModule } from '@angular/cdk/bidi';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -58,7 +57,6 @@ export const REQ_KEY = makeStateKey<string>('req');
     BrowserAnimationsModule,
     FlexModule,
     ExtendedModule,
-    MetaModule.forRoot(),
     NxModule.forRoot(),
     PblDocsAppSharedModule,
     AppContentChunksModule,
