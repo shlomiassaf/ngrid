@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Inject,
   Input,
   ViewEncapsulation,
   Optional,
@@ -14,7 +15,7 @@ import {
 import { CdkHeaderRow } from '@angular/cdk/table';
 import { PblMetaRowDefinitions } from '@pebula/ngrid/core';
 
-import { PblNgridComponent } from '../ngrid.component';
+import { _PblNgridComponent, PBL_NGRID_COMPONENT } from '../../tokens';
 import { PblNgridMetaCellComponent } from '../cell/meta-cell.component';
 import { PblNgridBaseRowComponent, PBL_NGRID_BASE_ROW_TEMPLATE } from './base-row.component';
 import { PblColumnGroup, PblMetaColumn } from '../column/model';
@@ -52,7 +53,7 @@ export class PblNgridMetaRowComponent extends PblNgridBaseRowComponent<'meta-hea
   private _meta: PblMetaRowDefinitions;
   private _row: PblColumnStoreMetaRow;
 
-  constructor(@Optional() grid: PblNgridComponent,
+  constructor(@Inject(PBL_NGRID_COMPONENT) @Optional() grid: _PblNgridComponent,
               cdRef: ChangeDetectorRef,
                el: ElementRef<HTMLElement>,
               private readonly metaRows: PblNgridMetaRowService,

@@ -3,15 +3,14 @@ import { InjectionToken } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
 
 import { PblNgridConfigService, PblNgridEvents } from '@pebula/ngrid/core';
+import { _PblNgridComponent } from '../tokens';
 import { PblCdkTableComponent } from '../grid/pbl-cdk-table/pbl-cdk-table.component';
 import { ContextApi } from '../grid/context/api';
 import { PblNgridRegistryService } from '../grid/registry/registry.service';
-import { PblNgridComponent } from '../grid/ngrid.component';
 import { ColumnApi, PblColumnStore } from '../grid/column/management';
 import { PblNgridColumnWidthCalc } from '../grid/column/width-logic/column-width-calc';
 import { PblCdkVirtualScrollViewportComponent } from '../grid/features/virtual-scroll/virtual-scroll-viewport.component'
 import { NotifyPropChangeMethod, OnPropChangedEvent } from './types';
-import { PblNgridMetaRowService } from '../grid/meta-rows/meta-row.service';
 import { RowsApi, PblRowsApi } from '../grid/row';
 import { PblNgridPluginContext, PblNgridPluginController } from './plugin-control';
 import { Logicaps } from '../grid/logicap/index';
@@ -19,7 +18,7 @@ import { Logicaps } from '../grid/logicap/index';
 export const EXT_API_TOKEN = new InjectionToken('PBL_NGRID_EXTERNAL_API');
 
 export interface PblNgridExtensionApi<T = any> {
-  grid: PblNgridComponent<T>;
+  grid: _PblNgridComponent<T>;
   element: HTMLElement;
   config: PblNgridConfigService;
   /**

@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { RowContext } from '@angular/cdk/table';
 import { PblColumnTypeDefinitionDataMap } from '@pebula/ngrid/core';
 
-import { PblNgridComponent } from '../ngrid.component';
+import { _PblNgridComponent } from '../../tokens';
 import { PblMetaColumn, PblColumn } from '../column/model';
 import { PblRowContext } from './row';
 
@@ -58,7 +58,7 @@ export interface PblNgridMetaCellContext<T = any, TCol extends PblMetaColumn | P
   $implicit: PblNgridMetaCellContext<T>;
   col: TCol;
 
-  grid: PblNgridComponent<T>;
+  grid: _PblNgridComponent<T>;
 }
 
 export interface PblNgridCellContext<T = any, P extends keyof PblColumnTypeDefinitionDataMap = keyof PblColumnTypeDefinitionDataMap> {
@@ -67,7 +67,7 @@ export interface PblNgridCellContext<T = any, P extends keyof PblColumnTypeDefin
   row: T,
   value: any;
   col: PblColumn;
-  grid: PblNgridComponent<T>;
+  grid: _PblNgridComponent<T>;
   readonly index: number;
   readonly editing: boolean;
   readonly focused: boolean;
@@ -104,7 +104,7 @@ export interface PblNgridRowContext<T = any> extends RowContext<T> {
   /** The index at the datasource */
   dsIndex: number;
 
-  readonly grid: PblNgridComponent<T>;
+  readonly grid: _PblNgridComponent<T>;
 
   /**
    * Returns the length of cells context stored in this row

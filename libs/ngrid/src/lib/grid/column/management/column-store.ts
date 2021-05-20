@@ -1,10 +1,9 @@
 import { Subject, Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { isDevMode, IterableDiffer, IterableDiffers } from '@angular/core';
-import { ON_DESTROY, PblNgridColumnDefinitionSet, PblColumnSet, PblMetaRowDefinitions } from '@pebula/ngrid/core';
+import { PblNgridColumnDefinitionSet, PblColumnSet, PblMetaRowDefinitions } from '@pebula/ngrid/core';
 
+import { _PblNgridComponent } from '../../../tokens';
 import { PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
-import { PblNgridComponent } from '../../ngrid.component';
 import { findCellDef } from '../../cell/cell-def/utils';
 import {
   PblColumnFactory,
@@ -43,7 +42,7 @@ export class PblColumnStore {
   private differ: IterableDiffer<PblColumn>;
   private _visibleChanged$ = new Subject<PblRowColumnsChangeEvent<PblColumn>>();
   private metaRowsStore: MetaRowsStore;
-  private grid: PblNgridComponent;
+  private grid: _PblNgridComponent;
 
   constructor(private readonly extApi: PblNgridInternalExtensionApi, private readonly differs: IterableDiffers) {
     this.grid = extApi.grid;

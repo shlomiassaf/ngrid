@@ -40,6 +40,7 @@ import {
   deprecatedWarning, unrx,
 } from '@pebula/ngrid/core';
 
+import { PBL_NGRID_COMPONENT } from '../tokens';
 import { EXT_API_TOKEN, PblNgridExtensionApi, PblNgridInternalExtensionApi } from '../ext/grid-ext-api';
 import { PblNgridPluginController, PblNgridPluginContext } from '../ext/plugin-control';
 import { PblNgridRegistryService } from './registry/registry.service';
@@ -70,6 +71,7 @@ declare module '../ext/types' {
   selector: 'pbl-ngrid',
   templateUrl: './ngrid.component.html',
   providers: [
+    {provide: PBL_NGRID_COMPONENT, useExisting: PblNgridComponent},
     PblNgridRegistryService,
     {
       provide: PblNgridPluginController,

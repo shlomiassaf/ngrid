@@ -30,7 +30,7 @@ import {
 } from '@angular/cdk/scrolling';
 import { PblNgridConfigService, unrx } from '@pebula/ngrid/core';
 
-import { PblNgridComponent } from '../../ngrid.component';
+import { _PblNgridComponent } from '../../../tokens';
 import { PblNgridBaseVirtualScrollDirective } from './strategies/base-v-scroll.directive'
 import { PblNgridVirtualScrollStrategy } from './strategies/types';
 import { NgeVirtualTableRowInfo, PblVirtualScrollForOf } from './virtual-scroll-for-of';
@@ -202,7 +202,7 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
   private _isScrolling = false;
 
   private wheelModeDefault:  PblNgridBaseVirtualScrollDirective['wheelMode'];
-  private grid: PblNgridComponent<any>;
+  private grid: _PblNgridComponent<any>;
   private forOf?: PblVirtualScrollForOf<any>;
   private _boundingClientRects: PblCdkVirtualScrollViewportComponent['getBoundingClientRects'];
   private heightPaging: VirtualScrollHightPaging;

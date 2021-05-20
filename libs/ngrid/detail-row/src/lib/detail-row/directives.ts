@@ -103,13 +103,3 @@ export class PblNgridDetailRowParentRefDirective<T> extends PblNgridRowDef<T> im
     }
   }
 }
-
-/**
- * Use to set the a default `pblNgridDetailRowParentRef` if the user did not set one.
- * @internal
- */
-@Component({
-  selector: 'pbl-ngrid-default-detail-row-parent',
-  template: `<pbl-ngrid-row *pblNgridDetailRowParentRef="let row;" detailRow></pbl-ngrid-row>`,
-})
-export class PblNgridDefaultDetailRowParentComponent { }

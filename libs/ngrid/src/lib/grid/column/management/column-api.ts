@@ -2,9 +2,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ON_RESIZE_ROW } from '@pebula/ngrid/core';
+import { _PblNgridComponent } from '../../../tokens';
 import { PblNgridExtensionApi } from '../../../ext/grid-ext-api';
 import { PblNgridColumnRowComponent } from '../../row/columns-row.component';
-import { PblNgridComponent } from '../../ngrid.component';
 import { PblColumn, isPblColumn } from '../model/column';
 import { PblColumnStore } from './column-store';
 import { AutoSizeToFitOptions } from './types';
@@ -43,7 +43,7 @@ export class ColumnApi<T> {
     return this._totalColumnWidthChange;
   }
 
-  private grid: PblNgridComponent<T>;
+  private grid: _PblNgridComponent<T>;
   private store: PblColumnStore;
   private extApi: PblNgridExtensionApi;
   private _totalColumnWidthChange: Observable<number>;

@@ -1,9 +1,9 @@
+import { _PblNgridComponent } from '../../../tokens';
 import { PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
-import { PblNgridComponent } from '../../ngrid.component';
 import { PblColumn } from '../../column/model/column';
 import { PblColumnSizeObserver } from './column-size-observer';
 
-const PBL_NGRID_MAP = new Map<PblNgridComponent<any>, PblNgridColumnSizeObserverGroup>();
+const PBL_NGRID_MAP = new Map<_PblNgridComponent<any>, PblNgridColumnSizeObserverGroup>();
 
 /**
  * A controller that groups columns of a grid and listens to resize events

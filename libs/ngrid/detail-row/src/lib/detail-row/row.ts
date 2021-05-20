@@ -12,7 +12,7 @@ import { CdkRow } from '@angular/cdk/table';
 
 import { unrx } from '@pebula/ngrid/core';
 import { PblNgridRowComponent } from '@pebula/ngrid';
-import { PblNgridDetailRowPluginDirective, PblDetailsRowToggleEvent, PLUGIN_KEY } from './detail-row-plugin';
+import { PblDetailsRowToggleEvent, PLUGIN_KEY } from './tokens';
 import { DetailRowController } from './detail-row-controller';
 
 declare module '@pebula/ngrid/lib/grid/context/types' {
@@ -58,7 +58,7 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
   @ViewChild('viewRef', { read: ViewContainerRef, static: true }) _viewRef: ViewContainerRef;
 
   private opened = false;
-  private plugin: PblNgridDetailRowPluginDirective<any>;
+  private plugin: import('./detail-row-plugin').PblNgridDetailRowPluginDirective<any>;
   private controller: DetailRowController;
 
   ngOnInit(): void {
