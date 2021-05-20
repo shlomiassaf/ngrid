@@ -7,6 +7,8 @@
     "src/__test-runners/*.ts",
     "**/*.spec.ts",
     "./build/**/*.ts",
+    "src/app/app.browser.module.ts",
+    "src/main.ts",
     "../libs/docs-app-lib/**/*.worker.ts"
   ],
   "angularCompilerOptions": {
