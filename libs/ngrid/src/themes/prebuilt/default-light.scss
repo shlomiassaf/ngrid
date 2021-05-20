@@ -1,11 +1,11 @@
-@import '../../../theming';
+@use '../../../index' as ngrid;
 
-$pbl-ngrid-theme: pbl-light-theme(pbl-palette($pbl-blue));
+$pbl-ngrid-theme: ngrid.define-light-theme(ngrid.define-palette(ngrid.$blue-palette));
 
 // Include all theme styles for the components.
-@include pbl-ngrid-typography();
+@include ngrid.ngrid-typography();
 
 // Include the default theme styles.
-@include pbl-ngrid-theme($pbl-ngrid-theme);
+@include ngrid.ngrid-theme($pbl-ngrid-theme);
+@include ngrid.predefined-spacing($pbl-ngrid-theme);
 
-@include pbl-ngrid-predefined-spacing($pbl-ngrid-theme);

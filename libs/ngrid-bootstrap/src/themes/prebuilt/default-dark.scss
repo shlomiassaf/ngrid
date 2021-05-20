@@ -1,10 +1,11 @@
-@import '../../../../ngrid/theming';
-@import '../../../theming';
+@use 'sass:map';
+@use '../../../../ngrid' as ngrid;
+@use '../../../index' as ngrid-bs;
 
-$pbl-ngrid-theme: pbl-dark-theme(pbl-palette($pbl-blue));
+$pbl-ngrid-theme: ngrid.define-dark-theme(ngrid.define-palette(ngrid.$blue-palette));
 
 // Include all theme styles for the components.
-@include pbl-ngrid-typography();
+@include ngrid.ngrid-typography();
 
 $pbl-bs-spacing-theme-default: (
   header-row-height: 50px,
@@ -14,11 +15,11 @@ $pbl-bs-spacing-theme-default: (
   cell-spacing: 12px,
 );
 
-$foreground: map-merge(map-get($pbl-ngrid-theme, foreground), ( ngrid-header-cell-color: white, ngrid-footer-cell-color: white ));
+$foreground: map.merge(map.get($pbl-ngrid-theme, foreground), ( ngrid-header-cell-color: white, ngrid-footer-cell-color: white ));
 
-$pbl-ngrid-theme: map-merge($pbl-ngrid-theme, ( foreground: $foreground, spacing: $pbl-bs-spacing-theme-default ));
+$pbl-ngrid-theme: map.merge($pbl-ngrid-theme, ( foreground: $foreground, spacing: $pbl-bs-spacing-theme-default ));
 
 // Include the default theme styles.
-@include pbl-ngrid-bootstrap-theme($pbl-ngrid-theme);
+@include ngrid-bs.ngrid-bootstrap-theme($pbl-ngrid-theme);
+@include ngrid.predefined-spacing($pbl-ngrid-theme);
 
-@include pbl-ngrid-predefined-spacing($pbl-ngrid-theme);

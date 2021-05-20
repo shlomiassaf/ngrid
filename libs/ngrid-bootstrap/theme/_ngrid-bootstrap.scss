@@ -1,5 +1,7 @@
-@mixin pbl-ngrid-bootstrap-theme($theme) {
-  @include pbl-ngrid-theme($theme);
+@use '../../ngrid' as ngrid;
+
+@mixin ngrid-bootstrap-theme($theme) {
+  @include ngrid.ngrid-theme($theme);
 
   .pbl-ngrid-first-header-row {
     border-top-width: 1px;

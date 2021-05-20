@@ -1,58 +1,64 @@
-$primary: map-get($pbl-shell-theme, primary);
-$accent: map-get($pbl-shell-theme, accent);
-$warn: map-get($pbl-shell-theme, warn);
-$background: map-get($pbl-shell-theme, background);
-$foreground: map-get($pbl-shell-theme, foreground);
+@use 'sass:map';
+@use 'sass:color';
+@use '~@angular/material' as mat;
 
-$link: mat-color($foreground, secondary-text);
-$linkSelected: mat-color($primary);
-$linkHover: lighten($linkSelected, 10);
-$borderColor: mat-color($foreground, divider);
+@mixin render($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
 
-.pbl-demo-app-style .pbl-content-toc-inner {
-  .pbl-content-toc-heading.secondary {
-    &:hover {
-      color: $linkHover;
-    }
-  }
+  $link: mat.get-color-from-palette($foreground, secondary-text);
+  $linkSelected: mat.get-color-from-palette($primary);
+  $linkHover: color.scale($linkSelected, $lightness: 25%);
+  $borderColor: mat.get-color-from-palette($foreground, divider);
 
-  button.toc-heading {
-    &:hover:not(.embedded) {
-      color: $linkHover;
-    }
-  }
-
-  ul.pbl-content-toc-list {
-    li.pbl-content-toc-link {
-      &.pbl-content-toc-level-1:after {
-        background: $borderColor;
-      }
-
-      a {
-        color: lighten($link, 10);
-      }
-
-      &:hover a {
+  .pbl-demo-app-style .pbl-content-toc-inner {
+    .pbl-content-toc-heading.secondary {
+      &:hover {
         color: $linkHover;
       }
+    }
 
-      &.active {
+    button.toc-heading {
+      &:hover:not(.embedded) {
+        color: $linkHover;
+      }
+    }
+
+    ul.pbl-content-toc-list {
+      li.pbl-content-toc-link {
+        &.pbl-content-toc-level-1:after {
+          background: $borderColor;
+        }
+
         a {
-          color: $linkSelected;
-          &:before {
-            background: $linkSelected;
+          color: color.scale($link, $lightness: 25%);
+        }
+
+        &:hover a {
+          color: $linkHover;
+        }
+
+        &.active {
+          a {
+            color: $linkSelected;
+            &:before {
+              background: $linkSelected;
+            }
           }
         }
       }
-    }
 
-    &:not(.embedded) li {
-      &:before {
-        border-left: 1px solid $borderColor;
-      }
+      &:not(.embedded) li {
+        &:before {
+          border-left: 1px solid $borderColor;
+        }
 
-      &:not(.active):hover a:before {
-        background: $borderColor;
+        &:not(.active):hover a:before {
+          background: $borderColor;
+        }
       }
     }
   }

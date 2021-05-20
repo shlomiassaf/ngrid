@@ -1,11 +1,14 @@
-@mixin pbl-ngrid-material-context-menu-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin ngrid-material-context-menu-theme($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
 
   .mat-menu-item.menu-item-selected {
-    color: mat-color($primary);
+    color: mat.get-color-from-palette($primary);
   }
 }

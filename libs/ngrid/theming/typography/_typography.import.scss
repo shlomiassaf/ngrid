@@ -1,0 +1,6 @@
+@forward 'typography-utils' as ngrid-* hide ngrid-font-shorthand, ngrid-get-type-value, ngrid-typography-level;
+@forward 'typography-utils' as ngrid-typography-* hide ngrid-typography-font-family,
+ngrid-typography-font-size, ngrid-typography-font-weight, ngrid-typography-get-type-value,
+ngrid-typography-line-height, ngrid-typography-letter-spacing;
+
+@forward 'typography' as ngrid-typography-*;

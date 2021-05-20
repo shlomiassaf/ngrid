@@ -1,0 +1,194 @@
+@use 'sass:map';
+@use 'sass:color';
+@use '~@angular/material' as mat;
+
+@import "~primer-support/index.scss";
+@import "~primer-markdown/lib/markdown-body.scss";
+@import "~primer-markdown/lib/headings.scss";
+@import "~primer-markdown/lib/lists.scss";
+@import "~primer-markdown/lib/tables.scss";
+@import "~primer-markdown/lib/images.scss";
+// @import "~primer-markdown/lib/code.scss"; // SEE MANUAL BELOW
+@import "~primer-markdown/lib/blob-csv.scss";
+
+// local customization for markdown + fixes for collisions with material
+// Font style in github's markdown-body is different in size and family, this will fix
+
+@mixin render($theme, $typography-config) {
+
+  $font-family: map.get($typography-config, font-family);
+  $foreground: map.get($theme, foreground);
+
+  .markdown-body {
+    @include mat.typography-level((body-1: mat.define-typography-level(16px, 24px, 400, $font-family)), body-1);
+
+    strong {
+      letter-spacing: 0.5px;
+    }
+
+    &.overflow-container {
+      height: 100%;
+      width: 100%;
+      .markdown-content {
+        width: 100%;
+        height: 100%;
+      }
+      pre {
+        height: 100%;
+        width: 100%;
+        overflow: auto;
+        box-sizing: border-box;
+      }
+    }
+
+    p {
+      margin: 16px 0 0;
+
+      & + ul, & + ol {
+        margin-top: 4px;
+      }
+    }
+
+    $block-indent: 54px;
+    blockquote {
+      position: relative;
+      padding: 16px;
+      margin: 24px 0;
+      padding-left: $block-indent;
+      color: color.scale(mat.get-color-from-palette($foreground, text), $lightness: -25%);
+
+      .icon-location {
+        position: absolute;
+        width: $block-indent;
+        left: 0;
+        top: 0;
+        bottom: 0;
+      }
+
+      &.icon .icon-location:before {
+        display: inline-block;
+        position: absolute;
+        top: 4px;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        color: #ffffff;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+        vertical-align: middle;
+        border-radius: 50%;
+        margin-right: 16px;
+      }
+    }
+
+    blockquote {
+      border-left: 10px solid rgb(65, 168, 134);
+      background: rgba(65, 168, 134, 0.356);
+    }
+
+    blockquote.info {
+      border-left: 10px solid mat.get-color-from-palette(mat.$blue-palette, 600);
+      background: rgba(mat.get-color-from-palette(mat.$blue-palette, 600), 0.1);
+      &.icon .icon-location:before {
+        content: 'ℹ️';
+      }
+    }
+    div.info, blockquote.info {
+      border-left: 10px solid mat.get-color-from-palette(mat.$blue-palette, 600);
+      background: rgba(mat.get-color-from-palette(mat.$blue-palette, 600), 0.1);
+      &.icon .icon-location:before {
+        content: 'ℹ️';
+      }
+    }
+
+    div.warn, blockquote.warn {
+      border-left: 10px solid mat.get-color-from-palette(mat.$orange-palette, 600);
+      background: rgba(mat.get-color-from-palette(mat.$orange-palette, 600), 0.1);
+      &.icon .icon-location:before {
+        content: '⚠️';
+      }
+    }
+
+    div.error, blockquote.error {
+      border-left: 10px solid mat.get-color-from-palette(mat.$red-palette, 600);
+      background: rgba(mat.get-color-from-palette(mat.$red-palette, 600), 0.1);
+      &.icon .icon-location:before {
+        content: '❌';
+      }
+    }
+
+  }
+
+  // WE CAN'T @import "~primer-markdown/lib/code.scss" because it is inclusive and overrides the highlight.js theme
+  // SO WE SET IT MANUALLY WITH AN EXCLUSIVE MODIFICATION
+  .markdown-body {
+    // Inline code snippets
+    code:not(.hljs),
+    tt {
+      padding: 0.2em 0.4em;
+      margin: 0;
+      font-size: 85%;
+      background-color: rgba($black, 0.05);
+      color: inherit;
+      border-radius: $border-radius;
+
+      br { display: none; }
+
+      .language-text {
+        padding: 0.5em;
+        border-radius: 8px;
+        color: $black;
+      }
+    }
+
+    del code { text-decoration: inherit; }
+
+    pre {
+      word-wrap: normal;
+
+      // Code tags within code blocks (<pre>s)
+      > code:not(.hljs) {
+        padding: 0;
+        margin: 0;
+        font-size: 100%;
+        word-break: normal;
+        white-space: pre;
+        background: transparent;
+        border: 0;
+      }
+    }
+
+    .highlight {
+      margin-bottom: $spacer-3;
+
+      pre {
+        margin-bottom: 0;
+        word-break: normal;
+      }
+    }
+
+    // .highlight pre,
+    // pre {
+    //   padding: $spacer-3;
+    //   overflow: auto;
+    //   font-size: 85%;
+    //   line-height: 1.45;
+    //   background-color: $gray-100;
+    //   border-radius: $border-radius;
+    // }
+
+    pre code:not(.hljs),
+    pre tt {
+      display: inline;
+      max-width: auto;
+      padding: 0;
+      margin: 0;
+      overflow: visible;
+      line-height: inherit;
+      word-wrap: normal;
+      background-color: transparent;
+      border: 0;
+    }
+  }
+}

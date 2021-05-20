@@ -1,88 +1,25 @@
-$pbl-shell-primary: mat-palette($mat-blue);
-$pbl-shell-accent:  mat-palette($mat-light-green);
+@use 'sass:map';
+@use 'sass:color';
+@use '~@angular/material' as mat;
 
-@function pbl-default-light-theme() {
-  $pbl-shell-theme: mat-light-theme($pbl-shell-primary, $pbl-shell-accent);
-
-  $background-background: #F8F9FD;
-
-  $pbl-default-light-theme-background: (
-    app-bar: #ffffff, // overwriting default color, when no primary/accent/warn are set.
-    background: $background-background,
-  );
-
-  $foreground-text: #444;
-
-  $pbl-default-light-theme-foreground: (
-    text: $foreground-text,
-    text-header: #3F5972,
-    text-success: #4caf50,
-    text-error: #f44336,
-  );
-
-  $pbl-shell-theme: map-merge($pbl-shell-theme, (
-    background: map-merge($mat-light-theme-background, $pbl-default-light-theme-background),
-    foreground: map-merge($mat-light-theme-foreground, $pbl-default-light-theme-foreground)
-  ));
-
-  @return pbl-light-theme($pbl-shell-theme);
-}
-
-@function pbl-default-dark-theme() {
-  $pbl-shell-theme: mat-dark-theme($pbl-shell-primary, $pbl-shell-accent);
-
-  $pbl-default-dark-theme-background: (
-  );
-
-  $pbl-default-dark-theme-foreground: (
-    text-header: rgb(64, 90, 114),
-    text-success: #4caf50,
-    text-error: #f44336
-  );
-
-  $pbl-shell-theme: map-merge($pbl-shell-theme, (
-    background: map-merge($mat-dark-theme-background, $pbl-default-dark-theme-background),
-    foreground: map-merge($mat-dark-theme-foreground, $pbl-default-dark-theme-foreground)
-  ));
-
-  @return pbl-dark-theme($pbl-shell-theme);
-
-}
-
-@function shell-typography-config() {
-  @return mat-typography-config(
-    // $font-family:   '-apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-    $display-3:     mat-typography-level(56px, 56px, 300),
-    $display-2:     mat-typography-level(45px, 48px, 300),
-    $display-1:     mat-typography-level(34px, 40px, 300),
-    $headline:      mat-typography-level(40px, 32px, 300),
-    $title:         mat-typography-level(20px, 32px, 500),
-    $subheading-2:  mat-typography-level(16px, 28px, 400),
-    $subheading-1:  mat-typography-level(15px, 24px, 400),
-    $body-2:        mat-typography-level(16px, 24px, 500),
-    $body-1:        mat-typography-level(14px, 24px, 400),
-    $caption:       mat-typography-level(14px, 20px, 400),
-  );
-}
-
-@mixin pbl-shell-app-theme($theme, $typography-config, $typography-selector: '.mat-typography') {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@mixin render-shell-app-theme($theme, $typography-config, $typography-selector: '.mat-typography') {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
 
   $schemes-colors: (
-    primary:  mat-color($primary, default),
-    accent:  mat-color($accent, default),
-    warn:  mat-color($warn, default),
-    primary-contrast:  mat-color($primary, default-contrast),
-    accent-contrast:  mat-color($accent, default-contrast),
-    warn-contrast:  mat-color($warn, default-contrast),
-    header:  mat-color($foreground, text-header),
-    success:  mat-color($foreground, text-success),
-    error:  mat-color($foreground, text-error),
-    disabled:  mat-color($foreground, disabled)
+    primary:  mat.get-color-from-palette($primary, default),
+    accent:  mat.get-color-from-palette($accent, default),
+    warn:  mat.get-color-from-palette($warn, default),
+    primary-contrast:  mat.get-color-from-palette($primary, default-contrast),
+    accent-contrast:  mat.get-color-from-palette($accent, default-contrast),
+    warn-contrast:  mat.get-color-from-palette($warn, default-contrast),
+    header:  mat.get-color-from-palette($foreground, text-header),
+    success:  mat.get-color-from-palette($foreground, text-success),
+    error:  mat.get-color-from-palette($foreground, text-error),
+    disabled:  mat.get-color-from-palette($foreground, disabled)
   );
 
   @each $key, $color in $schemes-colors {
@@ -96,7 +33,7 @@ $pbl-shell-accent:  mat-palette($mat-light-green);
   .mat-display-1, #{$typography-selector} .mat-display-1
   .mat-h1, .mat-headline, #{$typography-selector} h1,
   .mat-h2, .mat-title, #{$typography-selector} h2  {
-    color: mat-color($foreground, text-header);
+    color: mat.get-color-from-palette($foreground, text-header);
   }
 
   .mat-body p,
@@ -104,13 +41,13 @@ $pbl-shell-accent:  mat-palette($mat-light-green);
   .mat-typography p,
   input, li, ol, p, ul {
     letter-spacing: normal;
-    color: mat-color($foreground, text);
+    color: mat.get-color-from-palette($foreground, text);
   }
 
   // TOOLTIP
   .pbl-large-tooltip {
     font-size: 16px;
-    background: transparentize(mat-color($primary, default), .1);
+    background: color.scale(mat.get-color-from-palette($primary, default), $alpha: -10%);
   }
 
   .mat-icon-button, .mat-menu-item {

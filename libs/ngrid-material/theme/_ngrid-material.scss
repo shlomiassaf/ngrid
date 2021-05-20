@@ -1,0 +1,7 @@
+@use '../../ngrid' as ngrid;
+@use '../context-menu/src/theme' as context-menu;
+
+@mixin ngrid-material-theme($theme) {
+  @include ngrid.ngrid-theme($theme);
+  @include context-menu.ngrid-material-context-menu-theme($theme);
+}

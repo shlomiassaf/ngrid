@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $blue: #1976D2;
 $accentblue: #1E88E5;
 $lightgray: #DBDBDB;
@@ -127,7 +129,7 @@ ul.pbl-content-toc-list {
     }
 
     a {
-      color: lighten($darkgray, 10);
+      color: color.scale($darkgray, $lightness: 25%);
       display:table-cell;
       overflow: visible;
       font-size: 12px;

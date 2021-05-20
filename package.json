@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "nx",
     "start": "ng serve",
-    "build-grid": "ng build ngrid --prod && ng build ngrid-material --prod && ng build ngrid-bootstrap --prod && ng build ngrid-cypress --prod",
+    "build-grid": "ng build ngrid --configuration production && ng build ngrid-material --configuration production && ng build ngrid-bootstrap --configuration production && ng build ngrid-cypress --configuration production",
     "test": "ng test",
     "lint": "./node_modules/.bin/nx workspace-lint && ng lint",
     "e2e": "ng e2e",
@@ -73,7 +73,7 @@
     "primer-markdown": "^3.7.13",
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "6.6.3",
-    "tslib": "^2.0.0",
+    "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
@@ -121,8 +121,8 @@
     "gray-matter": "^4.0.2",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.2.0",
+    "gulp-dart-sass": "^1.0.2",
     "gulp-if": "^2.0.2",
-    "gulp-sass": "^4.1.0",
     "highlight.js": "^10.4.1",
     "html-loader": "^0.5.5",
     "inquirer": "^6.3.1",
@@ -138,7 +138,6 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "marked": "^2.0.0",
     "merge2": "^1.2.3",
-    "mock-require": "^3.0.3",
     "ng-cli-packagr-tasks": "^11.0.2",
     "node-sass-tilde-importer": "^1.0.2",
     "prettier": "2.2.1",

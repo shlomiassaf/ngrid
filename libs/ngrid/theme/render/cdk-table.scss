@@ -3,26 +3,28 @@
 
 // Because `@pebula/ngrid` depends on the `@angular/cdk` and because all SCSS theme tools are in `@angular/material` we
 // must hard-copy some of them so that `@pebula/ngrid` does not require `@angular/material`
-@import './_material-theme-tools/typography';
-@import './_material-theme-tools/theming';
-@import './utils';
-@import './grid-base-styles/cdk-table-base';
+@use 'sass:map';
+@use '../../theming/theming' as theming;
+@use '../../theming/typography/typography' as typography;
+@use '../../theming/typography/typography-utils' as typography-utils;
 
-@mixin _pbl-cdk-table-theme($theme) {
+@use '../base';
 
-  @include _cdk-table-base();
+@mixin cdk-table-theme($theme) {
 
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+  @include base.cdk-table-base();
 
-  $row-background: map-get($background, ngrid-row-color);
-  $border-color: map-get($foreground, ngrid-border-color);
-  $header-cell-color: map-get($foreground, ngrid-header-cell-color);
-  $cell-color: map-get($foreground, ngrid-cell-color);
-  $footer-cell-color: map-get($foreground, ngrid-footer-cell-color);
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+
+  $row-background: map.get($background, ngrid-row-color);
+  $border-color: map.get($foreground, ngrid-border-color);
+  $header-cell-color: map.get($foreground, ngrid-header-cell-color);
+  $cell-color: map.get($foreground, ngrid-cell-color);
+  $footer-cell-color: map.get($foreground, ngrid-footer-cell-color);
 
   .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row,
   .pbl-ngrid-header-cell, .pbl-ngrid-cell, .pbl-ngrid-footer-cell {
@@ -89,12 +91,12 @@
   }
 }
 
-@mixin _pbl-cdk-table-typography($config: null) {
+@mixin cdk-table-typography($config: null) {
   @if $config == null {
-    $config: pbl-typography-config();
+    $config: typography.define-typography-config();
   }
 
   .pbl-cdk-table {
-    font-family: pbl-font-family($config);
+    font-family: typography-utils.font-family($config);
   }
 }

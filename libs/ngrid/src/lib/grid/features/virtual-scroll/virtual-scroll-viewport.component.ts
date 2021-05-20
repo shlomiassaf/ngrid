@@ -56,8 +56,8 @@ const APP_DEFAULT_VIRTUAL_SCROLL_STRATEGY = () => new PblNgridAutoSizeVirtualScr
 @Component({
   selector: 'pbl-cdk-virtual-scroll-viewport',
   templateUrl: 'virtual-scroll-viewport.component.html',
-  styleUrls: [ './virtual-scroll-viewport.component.scss' ],
-  host: { // tslint:disable-line: no-host-metadata-property
+  styleUrls: [ 'virtual-scroll-viewport.component.scss' ],
+  host: {
     class: 'cdk-virtual-scroll-viewport',
     '[class.cdk-virtual-scroll-disabled]': '!enabled',
     '[class.cdk-virtual-scroll-orientation-horizontal]': 'orientation === "horizontal"',
