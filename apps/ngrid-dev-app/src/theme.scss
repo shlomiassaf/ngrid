@@ -1,18 +1,18 @@
-@import '~@angular/material/theming';
-@import '../../../libs/ngrid/theming';
-@import '../../../libs/ngrid-material/theming';
+@use '~@angular/material' as mat;
+@use '../../../libs/ngrid' as ngrid;
+@use '../../../libs/ngrid-material' as ngrid-material;
 
-$typography-config: mat-typography-config();
-$ngrid-material-starter-primary: mat-palette($mat-indigo);
-$ngrid-material-starter-accent: mat-palette($mat-pink, A200, A100, A400);
-$ngrid-material-starter-warn: mat-palette($mat-red);
-$ngrid-material-starter-theme: mat-light-theme($ngrid-material-starter-primary, $ngrid-material-starter-accent, $ngrid-material-starter-warn);
-$ngrid-material-starter-theme: pbl-light-theme($ngrid-material-starter-theme);
+$typography-config: mat.define-typography-config();
+$ngrid-material-starter-primary: mat.define-palette(mat.$indigo-palette);
+$ngrid-material-starter-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$ngrid-material-starter-warn: mat.define-palette(mat.$red-palette);
+$ngrid-material-starter-theme: mat.define-light-theme($ngrid-material-starter-primary, $ngrid-material-starter-accent, $ngrid-material-starter-warn);
+$ngrid-material-starter-theme: ngrid.define-light-theme($ngrid-material-starter-theme);
 
-@include mat-core($typography-config);
-@include pbl-ngrid-typography($typography-config);
-@include angular-material-theme($ngrid-material-starter-theme);
-@include pbl-ngrid-theme($ngrid-material-starter-theme);
+@include mat.core($typography-config);
+@include ngrid.ngrid-typography($typography-config);
+@include mat.all-component-themes($ngrid-material-starter-theme);
+@include ngrid.ngrid-theme($ngrid-material-starter-theme);
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
