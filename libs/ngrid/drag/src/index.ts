@@ -1,3 +1,4 @@
+
 export { CdkLazyDropList } from './lib/drag-and-drop/core/drop-list';
 export { CdkLazyDrag } from './lib/drag-and-drop/core/drag';
 export { PblDragHandle } from './lib/drag-and-drop/core/drag-handle';
@@ -21,3 +22,8 @@ export { PblNgridColumnReorderPluginDirective } from './lib/drag-and-drop/column
 
 export { PblNgridDragResizeComponent } from './lib/column-resize/column-resize.component';
 export { PblNgridDragModule } from './lib/table-drag.module';
+
+export { PblNgridColumnDragContainerDirective } from './lib/drag-and-drop/column/column-drag-container';
+export { PblNgridCellDraggerRefDirective } from './lib/drag-and-drop/column/cell-dragger-ref';
+export { PblNgridAggregationContainerDirective } from './lib/drag-and-drop/column/aggregation-column';
+export { PblNgridCellResizerRefDirective } from './lib/column-resize/cell-resizer-ref';
