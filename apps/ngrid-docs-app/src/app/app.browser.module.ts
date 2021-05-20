@@ -1,5 +1,4 @@
-
-import { NgModule, Inject, PLATFORM_ID, Injectable } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserTransferStateModule, TransferState } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REQUEST } from '@nguniversal/express-engine/tokens';

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DATA_TYPES, Customer, Person, Seller, BaseClientApi } from '@pebula/apps/client-api';
-import { WindowStoreAdapter, WorkerStoreAdapter } from './api-client-adapters';
+import WindowStoreAdapter from './client-adapters/window';
+import WorkerStoreAdapter from './client-adapters/worker';
 
 const MAX_ITEMS = { people: Number.MAX_SAFE_INTEGER, sellers: Number.MAX_SAFE_INTEGER, customers: Number.MAX_SAFE_INTEGER };
 

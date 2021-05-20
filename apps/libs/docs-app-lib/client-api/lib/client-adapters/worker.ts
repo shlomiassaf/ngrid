@@ -8,7 +8,7 @@ import {
   ClientProtocol,
   ClientRequest,
   ClientPostMessageEvent
-} from './datastore/shared';
+} from '../datastore/shared';
 
 interface IncomingServerMessageEvent<T extends keyof ServerProtocol = keyof ServerProtocol> extends MessageEvent {
   data: {
@@ -24,7 +24,7 @@ export class WorkerStoreAdapter {
   private messageEventListener = (event: IncomingServerMessageEvent) => this.onMessage(event);
 
   constructor() {
-    const worker = this.worker = new Worker(new URL('./datastore/datastore.worker', import.meta.url), { name: 'dataSourceWorker', type: 'module' });
+    const worker = this.worker = new Worker(new URL('../datastore/datastore.worker', import.meta.url), { name: 'dataSourceWorker', type: 'module' });
     worker.onerror = (errorEvent: ErrorEvent) => { console.error(errorEvent.message) };
     worker.onmessageerror = event => { console.log(event) };
     this.ready = eventWaitUntil(worker, 'message', event => event.data === 'ready')
@@ -81,29 +81,6 @@ export class WorkerStoreAdapter {
   }
 }
 
-export class WindowStoreAdapter {
-  ready: Promise<void>;
-  protected store: import('./datastore/datastore').DataStore;
-
-  constructor() {
-    this.setStore();
-  }
-
-  reset(...collections: Array<DATA_TYPES>): void { this.store.reset(...collections); }
-  getCustomers(delay = 1000, limit = 500): Promise<Customer[]> { return this.store.getCustomers(delay, limit); }
-  getPeople(delay = 1000, limit = 500): Promise<Person[]> { return this.store.getPeople(delay, limit); }
-  getSellers(delay = 1000, limit = 500): Promise<Seller[]> { return this.store.getSellers(delay, limit); }
-
-  dispose(): void { }
-
-  protected setStore() {
-    this.ready = import('./datastore/datastore')
-      .then( datastore => {
-        this.store = new  datastore.DataStore();
-      });
-  }
-}
-
 /**
  * Wait until an event matches given conditions
  */
@@ -117,3 +94,5 @@ export function eventWaitUntil(target: any, event: string, comparer: (event: Mes
     });
   });
 }
+
+export default WorkerStoreAdapter;

@@ -150,6 +150,14 @@
                 {
                   "replace": "apps/ngrid-docs-app/src/environments/environment.ts",
                   "with": "apps/ngrid-docs-app/src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "apps/libs/docs-app-lib/client-api/lib/client-adapters/worker.ts",
+                  "with": "apps/libs/docs-app-lib/client-api/lib/client-adapters/window.ts"
+                },
+                {
+                  "replace": "apps/libs/docs-app-lib/lib/services/search/search-adapters/worker.ts",
+                  "with": "apps/libs/docs-app-lib/lib/services/search/search-adapters/noop.ts"
                 }
               ],
               "sourceMap": false,
@@ -391,7 +399,7 @@
                       "output": "dist/@pebula/ngrid"
                     },
                     {
-                      "glob": "*.scss",
+                      "glob": "**/*.scss",
                       "input": "libs/ngrid",
                       "output": "dist/@pebula/ngrid"
                     }
@@ -496,7 +504,7 @@
                       "output": "dist/@pebula/ngrid-material"
                     },
                     {
-                      "glob": "*.scss",
+                      "glob": "**/*.scss",
                       "input": "libs/ngrid-material",
                       "output": "dist/@pebula/ngrid-material"
                     }
@@ -649,7 +657,7 @@
                       "output": "dist/@pebula/ngrid-bootstrap"
                     },
                     {
-                      "glob": "*.scss",
+                      "glob": "**/*.scss",
                       "input": "libs/ngrid-bootstrap",
                       "output": "dist/@pebula/ngrid-bootstrap"
                     }
