@@ -34,10 +34,10 @@ export class DataStore {
               accountId: faker.finance.account(),
               accountType: faker.finance.accountName(),
               currencyCode: faker.finance.currencyCode(),
-              primeAccount: faker.random.boolean(),
-              balance: faker.random.number({ min: -50000, max: 50000, precision: 2 }),
-              creditScore: faker.random.number(4) + 1,
-              monthlyBalance: Array.from(new Array(12)).map( () => faker.random.number({ min: -15000, max: 15000, precision: 2 }) )
+              primeAccount: faker.datatype.boolean(),
+              balance: faker.datatype.number({ min: -50000, max: 50000, precision: 2 }),
+              creditScore: faker.datatype.number(4) + 1,
+              monthlyBalance: Array.from(new Array(12)).map( () => faker.datatype.number({ min: -15000, max: 15000, precision: 2 }) )
             }
             this.customers.push(customer);
           }
@@ -65,8 +65,8 @@ export class DataStore {
               birthdate: faker.date.past().toISOString(),
               bio: faker.lorem.paragraph(),
               language: 'EN',
-              lead: faker.random.boolean(),
-              balance: faker.random.number({ min: -20000, max: 20000, precision: 2 }),
+              lead: faker.datatype.boolean(),
+              balance: faker.datatype.number({ min: -20000, max: 20000, precision: 2 }),
               settings: {
                 background: faker.internet.color(),
                 timezone: 'UTC',
@@ -100,9 +100,9 @@ export class DataStore {
               department: faker.commerce.department(),
               country: faker.address.countryCode(),
               email: faker.internet.email(),
-              sales: faker.random.number({ min: 0, max: 200000, precision: 2 }),
-              rating: faker.random.number(4) + 1,
-              feedback: faker.random.number({ min: 5, max: 100 }),
+              sales: faker.datatype.number({ min: 0, max: 200000, precision: 2 }),
+              rating: faker.datatype.number(4) + 1,
+              feedback: faker.datatype.number({ min: 5, max: 100 }),
               address: [
                 faker.address.streetAddress(),
                 faker.address.city(),
