@@ -3,7 +3,7 @@ import { mapTo } from 'rxjs/operators';
 import { InjectFlags, Injector } from '@angular/core';
 
 import { PblNgridEvents, ON_INIT, PblNgridEventEmitter } from '@pebula/ngrid/core';
-import { PblNgridComponent } from '../grid/ngrid.component';
+import { _PblNgridComponent } from '../tokens';
 import {
   PblNgridPlugin,
   PblNgridPluginExtension,
@@ -12,9 +12,9 @@ import {
 import { PblNgridExtensionApi } from './grid-ext-api';
 import { PLUGIN_STORE } from './grid-plugin';
 
-const NGRID_PLUGIN_CONTEXT = new WeakMap<PblNgridComponent<any>, PblNgridPluginContext>();
+const NGRID_PLUGIN_CONTEXT = new WeakMap<_PblNgridComponent, PblNgridPluginContext>();
 
-const CREATED$ = new Subject<{ table: PblNgridComponent<any>, controller: PblNgridPluginController<any> }>();
+const CREATED$ = new Subject<{ table: _PblNgridComponent, controller: PblNgridPluginController<any> }>();
 
 const REGISTERED_TO_CREATE = new WeakSet<any>();
 
@@ -48,7 +48,7 @@ export class PblNgridPluginContext<T = any> implements PblNgridEventEmitter {
     };
   }
 
-  grid: PblNgridComponent<any>;
+  grid: _PblNgridComponent;
   injector: Injector;
   extApi: PblNgridExtensionApi;
   controller: PblNgridPluginController<T>;
@@ -79,21 +79,21 @@ export class PblNgridPluginController<T = any> {
 
   static readonly created = CREATED$.asObservable();
 
-  static onCreatedSafe(token: any, fn: (grid: PblNgridComponent<any>, controller: PblNgridPluginController<any>) => void) {
+  static onCreatedSafe(token: any, fn: (grid: _PblNgridComponent, controller: PblNgridPluginController<any>) => void) {
     if (!REGISTERED_TO_CREATE.has(token)) {
       REGISTERED_TO_CREATE.add(token);
       PblNgridPluginController.created.subscribe( event => fn(event.table, event.controller));
     }
   }
 
-  static find<T = any>(grid: PblNgridComponent<T>): PblNgridPluginController<T> | undefined {
+  static find<T = any>(grid: _PblNgridComponent<T>): PblNgridPluginController<T> | undefined {
     const context = NGRID_PLUGIN_CONTEXT.get(grid);
     if (context) {
       return context.controller;
     }
   }
 
-  static findPlugin<P extends keyof PblNgridPluginExtension, T = any>(grid: PblNgridComponent<T>, name: P): PblNgridPluginExtension[P] | undefined {
+  static findPlugin<P extends keyof PblNgridPluginExtension, T = any>(grid: _PblNgridComponent<T>, name: P): PblNgridPluginExtension[P] | undefined {
     return PblNgridPluginController.find(grid)?.getPlugin(name);
   }
 
@@ -101,7 +101,7 @@ export class PblNgridPluginController<T = any> {
 
   readonly extApi: PblNgridExtensionApi
   readonly events: Observable<PblNgridEvents>;
-  private readonly grid: PblNgridComponent<T>
+  private readonly grid: _PblNgridComponent<T>
   private readonly plugins = new Map<keyof PblNgridPluginExtension, PblNgridPlugin>();
 
   constructor(private context: PblNgridPluginContext) {
@@ -140,7 +140,7 @@ export class PblNgridPluginController<T = any> {
   /**
    * Registers the `plugin` with the `name` with the `table`
    */
-  setPlugin<P extends keyof PblNgridPluginExtension>(name: P, plugin: PblNgridPluginExtension[P]): (table: PblNgridComponent<any>) => void {
+  setPlugin<P extends keyof PblNgridPluginExtension>(name: P, plugin: PblNgridPluginExtension[P]): (table: _PblNgridComponent<any>) => void {
     if (!PLUGIN_STORE.has(name)) {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
         throw new Error(`Unknown plugin ${name}.`);
@@ -154,7 +154,7 @@ export class PblNgridPluginController<T = any> {
       return;
     }
     this.plugins.set(name, plugin);
-    return (tbl: PblNgridComponent<any>) => this.grid === tbl && this.plugins.delete(name);
+    return (tbl: _PblNgridComponent<any>) => this.grid === tbl && this.plugins.delete(name);
   }
 
   /**

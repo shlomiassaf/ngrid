@@ -1,12 +1,12 @@
+import { _PblNgridComponent } from '../../tokens';
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
-import { PblNgridComponent } from '../ngrid.component';
 import { CellContextState, ExternalCellContextState, PblNgridCellContext, PblNgridMetaCellContext, PblNgridRowContext } from './types';
 import { PblColumn, PblMetaColumn } from '../column/model';
 import { PblRowContext } from './row';
 
 export class MetaCellContext<T = any, TCol extends PblMetaColumn | PblColumn = PblMetaColumn> implements PblNgridMetaCellContext<T, TCol> {
   col: TCol;
-  grid: PblNgridComponent<any>;
+  grid: _PblNgridComponent<any>;
   get $implicit(): MetaCellContext<T, TCol> { return this; }
 
   protected constructor() {}
@@ -15,7 +15,7 @@ export class MetaCellContext<T = any, TCol extends PblMetaColumn | PblColumn = P
   // Non @Injectable classes are now getting addded with hard reference to the ctor params which at the class creation point are undefined
   // forwardRef() will not help since it's not inject by angular, we instantiate the class..
   // probably due to https://github.com/angular/angular-cli/commit/639198499973e0f437f059b3c933c72c733d93d8
-  static create<T = any, TCol extends PblMetaColumn | PblColumn = PblMetaColumn>(col: TCol, grid: PblNgridComponent<T>): MetaCellContext<T, TCol> {
+  static create<T = any, TCol extends PblMetaColumn | PblColumn = PblMetaColumn>(col: TCol, grid: _PblNgridComponent<T>): MetaCellContext<T, TCol> {
     const instance = new MetaCellContext<T, TCol>();
     instance.col = col;
     instance.grid = grid;
@@ -35,7 +35,7 @@ export class PblCellContext<T = any> implements PblNgridCellContext<T> {
   get focused(): boolean { return this._focused; }
   get selected(): boolean { return this._selected; }
 
-  readonly grid: PblNgridComponent<any>;
+  readonly grid: _PblNgridComponent<any>;
   readonly index: number;
 
   private _editing = false;

@@ -1,9 +1,10 @@
-import { Directive, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef, NgZone, ViewContainerRef } from '@angular/core';
+import { Directive, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef, NgZone, ViewContainerRef, Component } from '@angular/core';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
+import { PblDetailsRowToggleEvent, PLUGIN_KEY } from './tokens';
 import { PblNgridDetailRowComponent } from './row';
-import { PblNgridDetailRowParentRefDirective, PblNgridDefaultDetailRowParentComponent } from './directives';
+import { PblNgridDetailRowParentRefDirective } from './directives';
 import { DetailRowController } from './detail-row-controller';
 
 declare module '@pebula/ngrid/lib/ext/types' {
@@ -11,8 +12,6 @@ declare module '@pebula/ngrid/lib/ext/types' {
     detailRow?: PblNgridDetailRowPluginDirective<any>;
   }
 }
-
-export const PLUGIN_KEY: 'detailRow' = 'detailRow';
 
 export const ROW_WHEN_TRUE = () => true;
 export const ROW_WHEN_FALSE = () => false;
@@ -25,12 +24,6 @@ export function toggleDetailRow<T = any>(grid: PblNgridComponent<T>, row: T, for
       return plugin.toggleDetailRow(row, forceState);
     }
   }
-}
-
-export interface PblDetailsRowToggleEvent<T = any> {
-  row: T;
-  expended: boolean;
-  toggle(): void;
 }
 
 @Directive({ selector: 'pbl-ngrid[detailRow]', exportAs: 'pblNgridDetailRow' })
@@ -285,3 +278,13 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
 
   static ngAcceptInputType_detailRow: BooleanInput | ( (index: number, rowData: any) => boolean );
 }
+
+/**
+ * Use to set the a default `pblNgridDetailRowParentRef` if the user did not set one.
+ * @internal
+ */
+ @Component({
+  selector: 'pbl-ngrid-default-detail-row-parent',
+  template: `<pbl-ngrid-row *pblNgridDetailRowParentRef="let row;" detailRow></pbl-ngrid-row>`,
+})
+export class PblNgridDefaultDetailRowParentComponent { }

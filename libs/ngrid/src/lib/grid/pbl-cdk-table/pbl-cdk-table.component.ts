@@ -35,7 +35,7 @@ import {
 import { Direction, Directionality } from '@angular/cdk/bidi';
 
 import { unrx } from '@pebula/ngrid/core';
-import { PblNgridComponent } from '../ngrid.component';
+import { PBL_NGRID_COMPONENT, _PblNgridComponent } from '../../tokens';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
 
 import { PblNgridDisposedRowViewRepeaterStrategy } from './ngrid-disposed-row-view-repeater-strategy';
@@ -104,7 +104,7 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
               @Attribute('role') role: string,
               @Optional() _dir: Directionality,
               protected injector: Injector,
-              protected grid: PblNgridComponent<T>,
+              @Inject(PBL_NGRID_COMPONENT) protected grid: _PblNgridComponent<T>,
               @Inject(EXT_API_TOKEN) protected extApi: PblNgridInternalExtensionApi<T>,
               @Inject(DOCUMENT) _document: any,
               protected platform: Platform,

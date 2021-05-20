@@ -1,7 +1,7 @@
 import { Directive, TemplateRef } from '@angular/core';
 
+import { _PblNgridComponent } from '../../../tokens';
 import { PblNgridRegistryService } from '../registry.service';
-import { PblNgridComponent } from '../../ngrid.component';
 import { PblNgridSingleTemplateRegistry } from './single-template.directives';
 
 /**
@@ -17,9 +17,9 @@ import { PblNgridSingleTemplateRegistry } from './single-template.directives';
  * ```
  */
 @Directive({ selector: '[pblNgridNoDataRef]' })
-export class PblNgridNoDataRefDirective extends PblNgridSingleTemplateRegistry<{ $implicit: PblNgridComponent<any> }, 'noData'> {
+export class PblNgridNoDataRefDirective extends PblNgridSingleTemplateRegistry<{ $implicit: _PblNgridComponent<any> }, 'noData'> {
   readonly kind: 'noData' = 'noData';
-  constructor(tRef: TemplateRef<{ $implicit: PblNgridComponent<any> }>, registry: PblNgridRegistryService) { super(tRef, registry); }
+  constructor(tRef: TemplateRef<{ $implicit: _PblNgridComponent<any> }>, registry: PblNgridRegistryService) { super(tRef, registry); }
 }
 
 declare module '@pebula/ngrid/core/lib/registry/types' {

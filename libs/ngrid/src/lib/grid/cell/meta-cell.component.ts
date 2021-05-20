@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { unrx } from '@pebula/ngrid/core';
 
-import { PblNgridComponent } from '../ngrid.component';
+import { _PblNgridComponent } from '../../tokens';
 import { PblMetaColumn, PblColumnGroup, isPblColumnGroup } from '../column/model';
 import { MetaCellContext } from '../context/index';
 import { PblNgridColumnDef } from '../column/directives/column-def';
@@ -44,7 +44,7 @@ export class PblNgridMetaCellComponent<T extends PblMetaColumn | PblColumnGroup 
   cellCtx: MetaCellContext<any, PblMetaColumn>;
 
   get columnDef(): PblNgridColumnDef<PblMetaColumn> { return this.column.columnDef; }
-  get grid(): PblNgridComponent { return this.extApi.grid; }
+  get grid(): _PblNgridComponent { return this.extApi.grid; }
 
   setColumn(column: T, isFooter: boolean) {
     const prev = this.column;

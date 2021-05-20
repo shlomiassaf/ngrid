@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { _PblNgridComponent } from '../../../../tokens';
 import { PblNgridExtensionApi } from '../../../../ext/grid-ext-api';
-import { PblNgridComponent } from '../../../ngrid.component';
 import { PblCdkVirtualScrollViewportComponent } from '../virtual-scroll-viewport.component';
 import { PblNgridVirtualScrollStrategy, PblNgridVirtualScrollStrategyMap } from './types';
 
@@ -44,7 +44,7 @@ export abstract class PblNgridBaseVirtualScrollDirective<T extends keyof PblNgri
   protected _maxBufferPx = 200;
   protected _minBufferPx = 100;
 
-  constructor(protected grid: PblNgridComponent, public readonly type: T) { }
+  constructor(protected grid: _PblNgridComponent, public readonly type: T) { }
 
   /** The scroll strategy used by this directive. */
   _scrollStrategy: PblNgridVirtualScrollStrategyMap[T];

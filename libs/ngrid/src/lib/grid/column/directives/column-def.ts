@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { CdkColumnDef } from '@angular/cdk/table';
 
+import { _PblNgridComponent } from '../../../tokens';
 import { uniqueColumnCss } from '../../utils/unique-column-css';
-import { PblNgridComponent } from '../../ngrid.component';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
 import { COLUMN, PblColumnSizeInfo, isPblColumn } from '../model';
 import { widthBreakout } from '../width-logic/dynamic-column-width';
@@ -58,7 +58,7 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
 
   isDragging = false;
 
-  readonly grid: PblNgridComponent<any>;
+  readonly grid: _PblNgridComponent<any>;
 
   /**
    * An event emitted when width of this column has changed.

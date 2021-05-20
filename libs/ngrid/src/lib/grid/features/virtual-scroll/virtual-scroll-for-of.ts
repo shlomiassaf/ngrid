@@ -5,8 +5,8 @@ import { NgZone, ViewContainerRef } from '@angular/core';
 import { CollectionViewer, ListRange } from '@angular/cdk/collections';
 import { PblDataSource } from '@pebula/ngrid/core';
 
+import { _PblNgridComponent } from '../../../tokens';
 import { PblNgridInternalExtensionApi } from '../../../ext/grid-ext-api';
-import { PblNgridComponent } from '../../ngrid.component';
 import { PblCdkTableComponent } from '../../pbl-cdk-table/pbl-cdk-table.component';
 import { PblCdkVirtualScrollViewportComponent } from './virtual-scroll-viewport.component';
 import { splitRange, updateStickyRows, measureRangeSize } from './utils';
@@ -53,7 +53,7 @@ export class PblVirtualScrollForOf<T> implements CollectionViewer, NgeVirtualTab
   private header = { rows: [] as HTMLElement[], sticky: [] as boolean[], rendered: [] as boolean[] };
   private footer = { rows: [] as HTMLElement[], sticky: [] as boolean[], rendered: [] as boolean[] };
 
-  private grid: PblNgridComponent<T>;
+  private grid: _PblNgridComponent<T>;
   private cdkTable: PblCdkTableComponent<T>;
   private viewport: PblCdkVirtualScrollViewportComponent;
 

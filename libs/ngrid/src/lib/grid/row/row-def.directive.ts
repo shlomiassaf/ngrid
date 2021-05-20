@@ -1,9 +1,9 @@
 import { Directive, Inject, IterableDiffers, Optional, TemplateRef, OnInit } from '@angular/core';
 import { CdkRowDef, CDK_TABLE } from '@angular/cdk/table';
 
+import { _PblNgridComponent } from '../../tokens';
 import { PblNgridRegistryService } from '../registry/registry.service';
 import { PblNgridRowContext } from '../context/types';
-import { PblNgridComponent } from '../ngrid.component';
 import { PblNgridPluginController } from '../../ext/plugin-control';
 import { EXT_API_TOKEN, PblNgridExtensionApi } from '../../ext/grid-ext-api';
 
@@ -69,7 +69,7 @@ export class PblNgridRowDef<T> extends CdkRowDef<T> {
 })
 export class PblNgridRowOverride<T> extends PblNgridRowDef<T> implements OnInit {
 
-  grid: PblNgridComponent<T>;
+  grid: _PblNgridComponent<T>;
 
   constructor(template: TemplateRef<PblNgridRowContext<T>>,
               _differs: IterableDiffers,

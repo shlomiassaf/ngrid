@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, ComponentRef, Attribute, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation, Optional, ComponentRef, Attribute, ChangeDetectorRef, OnDestroy, OnInit, Inject } from '@angular/core';
 import { CdkHeaderRow } from '@angular/cdk/table';
 import { PblMetaRowDefinitions, unrx } from '@pebula/ngrid/core';
 
-import { PblNgridComponent } from '../ngrid.component';
+import { _PblNgridComponent, PBL_NGRID_COMPONENT } from '../../tokens';
 import { PblNgridBaseRowComponent, PBL_NGRID_BASE_ROW_TEMPLATE } from './base-row.component';
 import { PblColumn } from '../column/model';
 import { PblNgridMetaRowService, PblMetaRow } from '../meta-rows/meta-row.service';
@@ -41,7 +41,7 @@ export class PblNgridColumnRowComponent extends PblNgridBaseRowComponent<'header
   readonly gridWidthRow: boolean;
   private _meta: PblMetaRowDefinitions;
 
-  constructor(@Optional() grid: PblNgridComponent,
+  constructor(@Inject(PBL_NGRID_COMPONENT) @Optional() grid: _PblNgridComponent,
               cdRef: ChangeDetectorRef,
               el: ElementRef<HTMLElement>,
               private readonly metaRows: PblNgridMetaRowService,

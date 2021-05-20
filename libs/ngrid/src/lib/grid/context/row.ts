@@ -1,6 +1,6 @@
+import { _PblNgridComponent } from '../../tokens';
 import { PblColumn } from '../column/model';
 import { PblNgridExtensionApi } from '../../ext/grid-ext-api';
-import { PblNgridComponent } from '../ngrid.component';
 import { CellContextState, RowContextState, PblNgridRowContext, ExternalRowContextState } from './types';
 import { PblCellContext } from './cell';
 import { PblNgridRowComponent } from '../row/row.component';
@@ -40,7 +40,7 @@ export class PblRowContext<T> implements PblNgridRowContext<T> {
   firstRender: boolean;
   outOfView: boolean;
 
-  readonly grid: PblNgridComponent<T>;
+  readonly grid: _PblNgridComponent<T>;
   private _attachedRow: PblNgridRowComponent<T>;
   private external: any = {};
 

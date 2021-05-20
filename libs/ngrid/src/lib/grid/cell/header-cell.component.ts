@@ -16,8 +16,8 @@ import {
 } from '@angular/core';
 import { unrx, PblNgridMultiRegistryMap } from '@pebula/ngrid/core';
 
+import { _PblNgridComponent } from '../../tokens';
 import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-api';
-import { PblNgridComponent } from '../ngrid.component';
 import { COLUMN, PblMetaColumn, PblColumn } from '../column/model';
 import { MetaCellContext, PblNgridMetaCellContext } from '../context/index';
 import { PblNgridDataHeaderExtensionContext, PblNgridMultiComponentRegistry, PblNgridMultiTemplateRegistry } from '../registry';
@@ -26,7 +26,7 @@ import { applySourceWidth, applyWidth, initCellElement } from './utils';
 import { PblNgridBaseCell } from './base-cell';
 import { PblColumnSizeObserver } from '../features/column-size-observer/column-size-observer';
 
-const lastDataHeaderExtensions = new Map<PblNgridComponent<any>, PblNgridMultiRegistryMap['dataHeaderExtensions'][]>();
+const lastDataHeaderExtensions = new Map<_PblNgridComponent, PblNgridMultiRegistryMap['dataHeaderExtensions'][]>();
 
 /**
  * Header cell component.
@@ -55,7 +55,7 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
   cellCtx: PblNgridDataHeaderExtensionContext | MetaCellContext;
 
   get columnDef(): PblNgridColumnDef<PblColumn> { return this.column?.columnDef; }
-  get grid(): PblNgridComponent { return this.extApi.grid; }
+  get grid(): _PblNgridComponent { return this.extApi.grid; }
 
   private resizeObserver: PblColumnSizeObserver;
 
