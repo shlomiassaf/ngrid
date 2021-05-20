@@ -93,6 +93,16 @@
             "tsConfig": "apps/ngrid-docs-app/tsconfig.spec.karma.json",
             "karmaConfig": "apps/ngrid-docs-app/karma.conf.js",
             "polyfills": "apps/ngrid-docs-app/src/polyfills.ts",
+            "fileReplacements": [
+              {
+                "replace": "apps/libs/docs-app-lib/client-api/lib/client-adapters/worker.ts",
+                "with": "apps/libs/docs-app-lib/client-api/lib/client-adapters/window.ts"
+              },
+              {
+                "replace": "apps/libs/docs-app-lib/lib/services/search/search-adapters/worker.ts",
+                "with": "apps/libs/docs-app-lib/lib/services/search/search-adapters/noop.ts"
+              }
+            ],
             "styles": [
               "apps/ngrid-docs-app/src/__test-runners/main-test.scss"
             ],
