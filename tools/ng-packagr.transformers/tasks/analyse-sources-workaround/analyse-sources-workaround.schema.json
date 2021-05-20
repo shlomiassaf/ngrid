@@ -1,0 +1,11 @@
+{
+  "title": "analyse-sources-workaround",
+  "description": "SEE https://github.com/ng-packagr/ng-packagr/issues/1982",
+  "properties": {
+    "analyseSourcesWorkaround": {
+      "type": "object",
+      "properties": { },
+      "required": [  ]
+    }
+  }
+}
