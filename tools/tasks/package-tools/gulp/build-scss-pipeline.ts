@@ -24,9 +24,9 @@ export function buildScssPipeline(sourceDir: string,
 
       TODO: Once `gulp-sass` has no direct reference, remove this patch.
    */
-  const mock = require('mock-require');
-  mock('node-sass', 'sass');
-  const gulpSass = require('gulp-sass');
+  const gulpSass = require('gulp-dart-sass');
+  const sass = require('sass');
+  gulpSass.compiler = sass;
 
   return src(join(sourceDir, '**/!(test-).scss'))
     .pipe(

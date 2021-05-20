@@ -1,45 +1,49 @@
-// CLONE from https://github.com/angular/components/blob/11a4ff0a6d08e225d4b1f70d21bb0dde8011ae9a/src/material/core/typography/_typography-utils.scss
+// Taken from https://github.com/angular/components/blob/9295ce5c788690f2420e8368db7ed3e827861311/src/material/core/typography/_typography-utils.scss#L15
+
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
 
 // Utility for fetching a nested value from a typography config.
-@function _pbl-get-type-value($config, $level, $name) {
-  @return map-get(map-get($config, $level), $name);
+@function get-type-value($config, $level, $name) {
+  @return map.get(map.get($config, $level), $name);
 }
 
 // Gets the font size for a level inside a typography config.
-@function pbl-font-size($config, $level) {
-  @return _pbl-get-type-value($config, $level, font-size);
+@function font-size($config, $level) {
+  @return get-type-value($config, $level, font-size);
 }
 
 // Gets the line height for a level inside a typography config.
-@function pbl-line-height($config, $level) {
-  @return _pbl-get-type-value($config, $level, line-height);
+@function line-height($config, $level) {
+  @return get-type-value($config, $level, line-height);
 }
 
 // Gets the font weight for a level inside a typography config.
-@function pbl-font-weight($config, $level) {
-  @return _pbl-get-type-value($config, $level, font-weight);
+@function font-weight($config, $level) {
+  @return get-type-value($config, $level, font-weight);
 }
 
 // Gets the letter spacing for a level inside a typography config.
-@function pbl-letter-spacing($config, $level) {
-  @return _pbl-get-type-value($config, $level, letter-spacing);
+@function letter-spacing($config, $level) {
+  @return get-type-value($config, $level, letter-spacing);
 }
 
 // Gets the font-family from a typography config and removes the quotes around it.
-@function pbl-font-family($config, $level: null) {
-  $font-family: map-get($config, font-family);
+@function font-family($config, $level: null) {
+  $font-family: map.get($config, font-family);
 
   @if $level != null {
-    $font-family: _pbl-get-type-value($config, $level, font-family);
+    $font-family: get-type-value($config, $level, font-family);
   }
 
   // Guard against unquoting non-string values, because it's deprecated.
-  @return if(type-of($font-family) == string, unquote($font-family), $font-family);
+  @return if(meta.type-of($font-family) == string, string.unquote($font-family), $font-family);
 }
 
 // Outputs the shorthand `font` CSS property, based on a set of typography values. Falls back to
 // the individual properties if a value that isn't allowed in the shorthand is passed in.
-@mixin pbl-typography-font-shorthand($font-size, $font-weight, $line-height, $font-family) {
+@mixin font-shorthand($font-size, $font-weight, $line-height, $font-family) {
   // If any of the values are set to `inherit`, we can't use the shorthand
   // so we fall back to passing in the individual properties.
   @if ($font-size == inherit or
@@ -65,12 +69,12 @@
 }
 
 // Converts a typography level into CSS styles.
-@mixin pbl-typography-level-to-styles($config, $level) {
-  $font-size: pbl-font-size($config, $level);
-  $font-weight: pbl-font-weight($config, $level);
-  $line-height: pbl-line-height($config, $level);
-  $font-family: pbl-font-family($config, $level);
+@mixin typography-level($config, $level) {
+  $font-size: font-size($config, $level);
+  $font-weight: font-weight($config, $level);
+  $line-height: line-height($config, $level);
+  $font-family: font-family($config, $level);
 
-  @include pbl-typography-font-shorthand($font-size, $font-weight, $line-height, $font-family);
-  letter-spacing: pbl-letter-spacing($config, $level);
+  @include font-shorthand($font-size, $font-weight, $line-height, $font-family);
+  letter-spacing: letter-spacing($config, $level);
 }

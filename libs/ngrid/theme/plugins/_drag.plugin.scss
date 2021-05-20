@@ -1,12 +1,14 @@
+@use 'sass:map';
+@use 'sass:color';
 
-@mixin pbl-ngrid-drag-plugin-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@mixin drag-plugin-theme($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
 
-  $border-color: map-get($foreground, ngrid-border-color);
+  $border-color: map.get($foreground, ngrid-border-color);
 
   .pbl-ngrid-header-cell.pbl-ngrid-column-resize {
     &:after {
@@ -17,13 +19,13 @@
       top: calc(50% - 8px);
       height: 16px;
       right: 0;
-      border-right: 0px solid darken($border-color, 25%);
+      border-right: 0px solid color.scale($border-color, $lightness: -25%);
 
       [dir='rtl'] & {
         right: unset;
         left: 0;
         border-right: none;
-        border-left: 0px solid darken($border-color, 25%);
+        border-left: 0px solid color.scale($border-color, $lightness: -25%);
       }
     }
 }
@@ -44,12 +46,12 @@
       &:after {
         right: 0px;
         width: 3px;
-        border-left: 2px solid darken($border-color, 25%);
+        border-left: 2px solid color.scale($border-color, $lightness: -25%);
 
         [dir='rtl'] & {
           right: unset;
           left: 0px;
-          border-right: 2px solid darken($border-color, 25%);
+          border-right: 2px solid color.scale($border-color, $lightness: -25%);
         }
       }
     }
@@ -59,11 +61,11 @@
       &:before {
         top: calc(50% - 8px);
         height: 16px;
-        border-right: 2px solid darken($border-color, 25%);
+        border-right: 2px solid color.scale($border-color, $lightness: -25%);
 
         [dir='rtl'] & {
           border-right: none;
-          border-left: 2px solid darken($border-color, 25%);
+          border-left: 2px solid color.scale($border-color, $lightness: -25%);
         }
       }
     }

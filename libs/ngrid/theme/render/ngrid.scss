@@ -1,0 +1,108 @@
+@use 'sass:map';
+@use 'sass:color';
+@use '../base';
+@use '../../theming/typography/typography' as typography;
+@use '../../theming/typography/typography-utils' as typography-utils;
+@use './cdk-table';
+@use './ngrid-spacing';
+
+@use '../plugins//drag.plugin' as drag;
+
+@mixin ngrid-theme($theme) {
+  @include cdk-table.cdk-table-theme($theme);
+  @include base.ngrid-base();
+  @include ngrid-spacing.spacing-theme($theme);
+
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+
+  $space-fill-background: map.get($background, grid-space-fill-color);
+  $border-color: map.get($foreground, ngrid-border-color);
+  $cell-focus-color: map.get($foreground, ngrid-cell-focus-color);
+
+  .pbl-ngrid-scroll-container {
+    .pbl-ngrid-space-fill {
+      background: $space-fill-background;
+    }
+  }
+
+  .pbl-ngrid-cell-ellipsis {
+    .pbl-ngrid-cell, .pbl-ngrid-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .pbl-ngrid-header-cell-ellipsis {
+    .pbl-ngrid-header-cell, .pbl-ngrid-header-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .pbl-ngrid-footer-cell-ellipsis {
+    .pbl-ngrid-footer-cell, .pbl-ngrid-footer-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .pbl-ngrid-cell {
+    &.pbl-ngrid-cell-focused {
+      // outline: 1px solid $cell-focus-color;
+      box-shadow: inset 0px 0px 0px 1px $cell-focus-color;
+      // box-shadow: inset 0px 0px 0px 1px $cell-focus-color;
+    }
+    &.pbl-ngrid-cell-selected:not(.pbl-ngrid-cell-focused) {
+      background-color: color.scale($cell-focus-color, $alpha: -75%);
+    }
+  }
+
+  // HEADER CELL BORDERS
+  .pbl-ngrid-header-cell:not(:first-child, .cdk-table-sticky-border-elem-left, .cdk-table-sticky-border-elem-right),
+  .pbl-ngrid-footer-cell:not(:last-child, .cdk-table-sticky-border-elem-left, .cdk-table-sticky-border-elem-right) {
+    &:before {
+      transition: all 250ms ease-in;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-right: 1px solid $border-color;
+
+      [dir='rtl'] & {
+        left: unset;
+        right: 0;
+        border-right: none;
+        border-left: 1px solid $border-color;
+
+      }
+    }
+  }
+
+  @include drag.drag-plugin-theme($theme);
+}
+
+@mixin ngrid-typography($config: null) {
+  @if $config == null {
+    $config: typography.define-typography-config();
+  }
+
+  @include cdk-table.cdk-table-typography($config);
+
+  .pbl-ngrid-header-cell {
+    font-size: typography-utils.font-size($config, caption);
+    font-weight: typography-utils.font-weight($config, body-2);
+  }
+
+  .pbl-ngrid-cell, .pbl-ngrid-footer-cell {
+    font-size: typography-utils.font-size($config, body-1);
+  }
+}

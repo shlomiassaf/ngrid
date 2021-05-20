@@ -81,3 +81,11 @@ export const utils = {
 };
 
 export { PblNgridModule, provideCommon } from './lib/ngrid.module';
+
+export { PblCdkAutoSizeVirtualScrollDirective } from './lib/grid/features/virtual-scroll/strategies/cdk-wrappers/v-scroll-auto.directive';
+export { PblCdkFixedSizedVirtualScrollDirective } from './lib/grid/features/virtual-scroll/strategies/cdk-wrappers/v-scroll-fixed.directive';
+export {
+  PblNgridOuterSectionDirective, PblNgridCellComponent, PblNgridFooterCellComponent, PblNgridMetaCellComponent, PblNgridHeaderCellComponent, PblNgridScrolling,
+  PblNgridPaginatorRefDirective, PblNgridHeaderExtensionRefDirective, PblNgridHideColumns, PblCdkVirtualScrollDirective,
+  PblNgridCellEditAutoFocusDirective, PblNgridEditorCellDefDirective,
+} from './lib/grid/index';

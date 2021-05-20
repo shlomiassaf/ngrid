@@ -1,18 +1,18 @@
-@import '~@angular/material/theming';
-@import '../../../../ngrid/theming';
-@import '../../../theming';
+@use '~@angular/material/theming' as mat;
+@use '../../../../ngrid' as ngrid;
+@use '../../../index' as ngrid-material;
 
 // Define a theme.
-$primary: mat-palette($mat-deep-purple);
-$accent:  mat-palette($mat-amber, A200, A100, A400);
+$primary: mat.define-palette(mat.$deep-purple-palette);
+$accent:  mat.define-palette(mat.$amber-palette, A200, A100, A400);
 
-$theme: mat-light-theme($primary, $accent);
-$pbl-ngrid-theme: pbl-light-theme($theme);
+$theme: mat.define-light-theme($primary, $accent);
+$pbl-ngrid-theme: ngrid.define-light-theme($theme);
 
 // Include all theme styles for the components.
-@include pbl-ngrid-typography();
+@include ngrid.ngrid-typography();
 
 // Include the default theme styles.
-@include pbl-ngrid-material-theme($pbl-ngrid-theme);
+@include ngrid-material.ngrid-material-theme($pbl-ngrid-theme);
+@include ngrid.predefined-spacing($pbl-ngrid-theme);
 
-@include pbl-ngrid-predefined-spacing($pbl-ngrid-theme);

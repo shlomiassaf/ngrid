@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $dark-primary-text: rgba(black, 0.87);
 $dark-secondary-text: rgba(black, 0.54);
 $dark-disabled-text: rgba(black, 0.38);
@@ -9,7 +11,7 @@ $light-disabled-text: rgba(white, 0.5);
 $light-dividers: rgba(white, 0.12);
 $light-focused: rgba(white, 0.12);
 
-$pbl-blue: (
+$blue-palette: (
   50: #e3f2fd,
   100: #bbdefb,
   200: #90caf9,
@@ -42,7 +44,7 @@ $pbl-blue: (
   )
 );
 
-$pbl-grey: (
+$grey-palette: (
   50: #fafafa,
   100: #f5f5f5,
   200: #eeeeee,
@@ -75,55 +77,54 @@ $pbl-grey: (
   )
 );
 
-$pbl-light-theme-background: (
-  ngrid-space-fill-color: map_get($pbl-grey, 50),
-  ngrid-row-color: white,
+$light-theme-palette: (
+  background: (
+    ngrid-space-fill-color: map.get($grey-palette, 50),
+    ngrid-row-color: white,
+  ),
+  foreground: (
+    ngrid-border-color: $dark-dividers,
+    ngrid-header-cell-color: $dark-secondary-text,
+    ngrid-cell-color: rgba(black, 0.87),
+    ngrid-footer-cell-color: rgba(black, 0.87),
+    ngrid-cell-focus-color: rgba(black, 0.87),
+  ),
 );
 
-// Background palette for dark themes.
-$pbl-dark-theme-background: (
-  ngrid-space-fill-color: #303030,
-  ngrid-row-color: map_get($pbl-grey, 800),
+$dark-theme-palette: (
+  background: (
+    ngrid-space-fill-color: #303030,
+    ngrid-row-color: map.get($grey-palette, 800),
+  ),
+  foreground: (
+    ngrid-border-color: $light-dividers,
+    ngrid-header-cell-color: $light-secondary-text,
+    ngrid-cell-color: white,
+    ngrid-footer-cell-color: white,
+    ngrid-cell-focus-color: white,
+  ),
 );
 
-// Foreground palette for light themes.
-$pbl-light-theme-foreground: (
-  ngrid-border-color: $dark-dividers,
-  ngrid-header-cell-color: $dark-secondary-text,
-  ngrid-cell-color: rgba(black, 0.87),
-  ngrid-footer-cell-color: rgba(black, 0.87),
-  ngrid-cell-focus-color: rgba(black, 0.87),
-);
-
-// Foreground palette for dark themes.
-$pbl-dark-theme-foreground: (
-  ngrid-border-color: $light-dividers,
-  ngrid-header-cell-color: $light-secondary-text,
-  ngrid-cell-color: white,
-  ngrid-footer-cell-color: white,
-  ngrid-cell-focus-color: white,
-);
-
-$pbl-spacing-theme-default: (
-  header-row-height: 56px,
-  row-height: 48px,
-  footer-row-height: 48px,
-  row-spacing: 24px,
-  cell-spacing: 12px,
-);
-
-$pbl-ngrid-spacing-sm: (
-  header-row-height: 32px,
-  row-height: 32px,
-  footer-row-height: 32px,
-  row-spacing: 12px,
-  cell-spacing: 6px,
-);
-
-$pbl-ngrid-spacing-xs: (
-  header-row-height: 28px,
-  row-height: 28px,
-  footer-row-height: 28px,
-  row-spacing: 12px,
-  cell-spacing: 6px,
+$spacing-theme-defaults: (
+  xs: (
+    header-row-height: 28px,
+    row-height: 28px,
+    footer-row-height: 28px,
+    row-spacing: 12px,
+    cell-spacing: 6px,
+  ),
+  sm: (
+    header-row-height: 32px,
+    row-height: 32px,
+    footer-row-height: 32px,
+    row-spacing: 12px,
+    cell-spacing: 6px,
+  ),
+  normal: (
+    header-row-height: 56px,
+    row-height: 48px,
+    footer-row-height: 48px,
+    row-spacing: 24px,
+    cell-spacing: 12px,
+  )
 );

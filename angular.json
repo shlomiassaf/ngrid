@@ -389,13 +389,9 @@
                       "glob": "LICENSE",
                       "input": ".",
                       "output": "dist/@pebula/ngrid"
-                    }
-                  ]
-                },
-                "sassBundle": {
-                  "entries": [
+                    },
                     {
-                      "glob": "_theming.scss",
+                      "glob": "*.scss",
                       "input": "libs/ngrid",
                       "output": "dist/@pebula/ngrid"
                     }
@@ -498,13 +494,9 @@
                       "glob": "README.md",
                       "input": ".",
                       "output": "dist/@pebula/ngrid-material"
-                    }
-                  ]
-                },
-                "sassBundle": {
-                  "entries": [
+                    },
                     {
-                      "glob": "_theming.scss",
+                      "glob": "*.scss",
                       "input": "libs/ngrid-material",
                       "output": "dist/@pebula/ngrid-material"
                     }
@@ -655,13 +647,9 @@
                       "glob": "README.md",
                       "input": ".",
                       "output": "dist/@pebula/ngrid-bootstrap"
-                    }
-                  ]
-                },
-                "sassBundle": {
-                  "entries": [
+                    },
                     {
-                      "glob": "_theming.scss",
+                      "glob": "*.scss",
                       "input": "libs/ngrid-bootstrap",
                       "output": "dist/@pebula/ngrid-bootstrap"
                     }

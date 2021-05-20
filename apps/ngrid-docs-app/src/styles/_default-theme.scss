@@ -1,0 +1,73 @@
+@use 'sass:map';
+@use '~@angular/material' as mat;
+@use '../../../../libs/ngrid' as ngrid;
+
+@function shell-light-theme($primary-palette, $accent-palette) {
+  $pbl-shell-theme: mat.define-light-theme(
+    mat.define-palette($primary-palette),
+    mat.define-palette($accent-palette)
+  );
+
+  $background-background: #F8F9FD;
+
+  $pbl-default-light-theme-background: (
+    app-bar: #ffffff, // overwriting default color, when no primary/accent/warn are set.
+    background: $background-background,
+  );
+
+  $foreground-text: #444;
+
+  $pbl-default-light-theme-foreground: (
+    text: $foreground-text,
+    text-header: #3F5972,
+    text-success: #4caf50,
+    text-error: #f44336,
+  );
+
+  $pbl-shell-theme: map.merge($pbl-shell-theme, (
+    background: map.merge(mat.$light-theme-background-palette, $pbl-default-light-theme-background),
+    foreground: map.merge(mat.$light-theme-foreground-palette, $pbl-default-light-theme-foreground)
+  ));
+
+  @return ngrid.define-light-theme($pbl-shell-theme);
+}
+
+@function shell-dark-theme($primary-palette, $accent-palette) {
+  $pbl-shell-theme: mat.define-dark-theme(
+    mat.define-palette($primary-palette),
+    mat.define-palette($accent-palette)
+  );
+
+  $pbl-default-dark-theme-background: (
+  );
+
+  $pbl-default-dark-theme-foreground: (
+    text-header: rgb(64, 90, 114),
+    text-success: #4caf50,
+    text-error: #f44336
+  );
+
+  $pbl-shell-theme: map.merge($pbl-shell-theme, (
+    background: map.merge(mat.$dark-theme-background-palette, $pbl-default-dark-theme-background),
+    foreground: map.merge(mat.$dark-theme-foreground-palette, $pbl-default-dark-theme-foreground)
+  ));
+
+  @return ngrid.define-dark-theme($pbl-shell-theme);
+
+}
+
+@function shell-typography-config() {
+  @return mat.define-typography-config(
+    // $font-family:   '-apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+    $display-3:     mat.define-typography-level(56px, 56px, 300),
+    $display-2:     mat.define-typography-level(45px, 48px, 300),
+    $display-1:     mat.define-typography-level(34px, 40px, 300),
+    $headline:      mat.define-typography-level(40px, 32px, 300),
+    $title:         mat.define-typography-level(20px, 32px, 500),
+    $subheading-2:  mat.define-typography-level(16px, 28px, 400),
+    $subheading-1:  mat.define-typography-level(15px, 24px, 400),
+    $body-2:        mat.define-typography-level(16px, 24px, 500),
+    $body-1:        mat.define-typography-level(14px, 24px, 400),
+    $caption:       mat.define-typography-level(14px, 20px, 400),
+  );
+}

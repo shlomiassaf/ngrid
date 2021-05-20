@@ -4,7 +4,7 @@ import { NgEntryPoint } from 'ng-packagr/lib/ng-package/entry-point/entry-point'
 import { NgPackage } from 'ng-packagr/lib/ng-package/package';
 import * as log from 'ng-packagr/lib/utils/log';
 import { ensureUnixPath } from 'ng-packagr/lib/utils/path';
-import { rimraf } from 'ng-packagr/lib/utils/fs';
+import { rmdir } from 'ng-packagr/lib/utils/fs';
 import { EntryPointTaskContext, Job } from 'ng-cli-packagr-tasks';
 import { getDistEntryFile } from '../utils';
 
@@ -49,7 +49,7 @@ async function writePackageJson(entryPoint: NgEntryPoint,
   try {
     checkNonPeerDependencies(packageJson, 'dependencies', whitelist);
   } catch (e) {
-    await rimraf(entryPoint.destinationPath);
+    await rmdir(entryPoint.destinationPath);
     throw e;
   }
 

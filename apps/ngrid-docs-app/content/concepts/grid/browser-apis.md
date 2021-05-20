@@ -60,22 +60,6 @@ There are more options for this polyfill, including a demo how to load it async 
 I> **nGrid** makes minimal use of the API so changes in the final spec should have no effect.
 @types/resize-observer-brow
 
-### ResizeObserver Types
-
-If you enable library type checking and TypeScript is complaining about `ResizeObserver` types missing, install the following:
-
-```bash
-yarn add -D @types/resize-observer-browser
-
-# OR
-
-npm install -D @types/resize-observer-browser
-```
-
-This should not happen as both polyfills come with types build in...
-
-> If you have specific `types` defined in your `tsconfig.json` add it there as well.
-
 ### IntersectionObserver
 
 The [IntersectionObserver API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) is used for performance.

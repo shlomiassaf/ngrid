@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $data-cell-color: red;
 $header-cell-color: yellow;
 $header-cell-group-color: blue;
@@ -28,27 +30,27 @@ $footer-cell-color: pink;
     background: $data-cell-color;
 
     &.row-cell-hovered {
-      background: transparentize($data-cell-color, 0.75);
+      background: color.scale($data-cell-color, $alpha: -75%);
     }
 
     &.pbl-ngrid-header-row {
       background: $header-cell-color;
       &.row-cell-hovered {
-        background: transparentize($header-cell-color, 0.75);
+        background: color.scale($header-cell-color, $alpha: -75%);
       }
     }
 
     &.pbl-meta-group-row {
       background: $header-cell-group-color;
       &.row-cell-hovered {
-        background: transparentize($header-cell-group-color, 0.75);
+        background: color.scale($header-cell-group-color, $alpha: -75%);
       }
     }
 
     &.pbl-ngrid-footer-row {
       background: $footer-cell-color;
       &.row-cell-hovered {
-        background: transparentize($footer-cell-color, 0.75);
+        background: color.scale($footer-cell-color, $alpha: -75%);
       }
     }
   }

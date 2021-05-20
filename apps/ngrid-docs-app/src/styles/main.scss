@@ -1,23 +1,33 @@
-@import './variables';
+@use '~@angular/material' as mat;
+@use 'default-theme';
+@use 'shell-app.theme' as shell;
+@use 'markdown' as md;
+@use 'toc' as toc;
 
-$typography-config: shell-typography-config();
-@include mat-core($typography-config);
+@use '../../../../libs/ngrid' as ngrid;
+@use '../../../../libs/ngrid-material' as ngrid-material;
 
-@include pbl-ngrid-typography($typography-config);
+$typography-config: default-theme.shell-typography-config();
+$pbl-shell-theme: default-theme.shell-light-theme(mat.$blue-palette, mat.$light-green-palette);
+
+@include mat.core($typography-config);
+
+@include ngrid.ngrid-typography($typography-config);
 
 // Include the default theme styles.
-@include angular-material-theme($pbl-shell-theme);
-@include pbl-shell-app-theme($pbl-shell-theme, $typography-config);
+@include mat.all-component-themes($pbl-shell-theme);
+@include shell.render-shell-app-theme($pbl-shell-theme, $typography-config);
 
-// @include pbl-ngrid-theme($pbl-shell-theme);
-@include pbl-ngrid-material-theme($pbl-shell-theme);
+// @include ngrid.ngrid-theme($pbl-shell-theme);
+@include ngrid-material.ngrid-material-theme($pbl-shell-theme);
 
-@include pbl-ngrid-predefined-spacing($pbl-shell-theme);
+@include ngrid.predefined-spacing($pbl-shell-theme);
 
-@import './markdown'; // load markdown styles
+@include md.render($pbl-shell-theme, $typography-config); // render markdown styles
 @import './prismjs'; // load prismJs styles
 @import './helpers';
-@import './toc';
+@include toc.render($pbl-shell-theme); // render markdown styles
+
 
 html {
   font-size: 62.5%;
