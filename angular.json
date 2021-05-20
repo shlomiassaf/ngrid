@@ -386,6 +386,7 @@
               "config": "tools/ng-packagr.transformers/ngrid.transformers.ts",
               "tsConfig": "tools/tsconfig.json",
               "data": {
+                "analyseSourcesWorkaround": { },
                 "copyFile": {
                   "assets": [
                     {
