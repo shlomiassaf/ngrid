@@ -5,7 +5,8 @@
     "outDir": "../../dist/out-tsc",
     "allowJs": true,
     "types": ["cypress", "node"],
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*.ts", "src/**/*.js"],
   "angularCompilerOptions": {
