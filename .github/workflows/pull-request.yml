@@ -34,7 +34,7 @@ jobs:
       - name: Restore git history
         run: git fetch --no-tags --prune --depth=5 origin ${{ github.event.pull_request.base.ref }}
       - name: Install dependencies
-        run: yarn install --ignore-optional
+        run: yarn install --ignore-platform
       - name: Create Cache Directory
         run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - name: Test
