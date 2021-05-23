@@ -1,0 +1,22 @@
+/**
+ * Legacy support, will be removed in v5 (TODO: Remove in v5)
+ */
+
+ @mixin pbl-ngrid-material-context-menu-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .mat-menu-item.menu-item-selected {
+    color: mat-color($primary);
+  }
+}
+
+
+@mixin pbl-ngrid-material-theme($theme) {
+  @include pbl-ngrid-theme($theme);
+  @include pbl-ngrid-material-context-menu-theme($theme);
+}
+

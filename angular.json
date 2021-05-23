@@ -410,9 +410,14 @@
                       "output": "dist/@pebula/ngrid"
                     },
                     {
-                      "glob": "**/*.scss",
+                      "glob": "*.scss",
                       "input": "libs/ngrid",
                       "output": "dist/@pebula/ngrid"
+                    },
+                    {
+                      "glob": "**/*.scss",
+                      "input": "libs/ngrid/theming",
+                      "output": "dist/@pebula/ngrid/theming"
                     }
                   ]
                 },
@@ -420,7 +425,7 @@
                   "entries": [
                     {
                       "glob": "*.scss",
-                      "input": "libs/ngrid/src/themes/prebuilt",
+                      "input": "libs/ngrid/theming/prebuilt",
                       "output": "dist/@pebula/ngrid/themes"
                     }
                   ]
@@ -515,9 +520,14 @@
                       "output": "dist/@pebula/ngrid-material"
                     },
                     {
-                      "glob": "**/*.scss",
+                      "glob": "*.scss",
                       "input": "libs/ngrid-material",
                       "output": "dist/@pebula/ngrid-material"
+                    },
+                    {
+                      "glob": "**/*.scss",
+                      "input": "libs/ngrid-material/theming",
+                      "output": "dist/@pebula/ngrid-material/theming"
                     }
                   ]
                 },
@@ -525,7 +535,7 @@
                   "entries": [
                     {
                       "glob": "*.scss",
-                      "input": "libs/ngrid-material/src/themes/prebuilt",
+                      "input": "libs/ngrid-material/theming/prebuilt",
                       "output": "dist/@pebula/ngrid-material/themes"
                     }
                   ]
@@ -668,9 +678,14 @@
                       "output": "dist/@pebula/ngrid-bootstrap"
                     },
                     {
-                      "glob": "**/*.scss",
+                      "glob": "*.scss",
                       "input": "libs/ngrid-bootstrap",
                       "output": "dist/@pebula/ngrid-bootstrap"
+                    },
+                    {
+                      "glob": "**/*.scss",
+                      "input": "libs/ngrid-bootstrap/theming",
+                      "output": "dist/@pebula/ngrid-bootstrap/theming"
                     }
                   ]
                 },
@@ -678,7 +693,7 @@
                   "entries": [
                     {
                       "glob": "*.scss",
-                      "input": "libs/ngrid-bootstrap/src/themes/prebuilt",
+                      "input": "libs/ngrid-bootstrap/theming/prebuilt",
                       "output": "dist/@pebula/ngrid-bootstrap/themes"
                     }
                   ]

@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../theming/palette';
+@use '../../palette';
 
 @mixin spacing-theme($theme) {
   $spacingTheme: map.get($theme, spacing);
