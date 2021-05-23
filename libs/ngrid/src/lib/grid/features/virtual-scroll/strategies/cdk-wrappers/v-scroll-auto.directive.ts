@@ -5,10 +5,9 @@ import { PblNgridComponent } from '../../../../ngrid.component';
 import { PblNgridBaseVirtualScrollDirective } from '../base-v-scroll.directive';
 import { PblNgridAutoSizeVirtualScrollStrategy, PblNgridItemSizeAverager } from './auto-size';
 
-// TODO: Move to an independent package in v4
-
 /**
- * @deprecated `vScrollAuto` will move to an independent package in v4,. Note that the recommended dynamic strategy for nGrid is `vScrollDynamic`
+ * @deprecated Will be removed in v5
+ * `vScrollAuto` will move to an independent package in v5. Note that the recommended dynamic strategy for nGrid is `vScrollDynamic`
  * Note that the default virtual scroll strategy will also change from `vScrollAuto` to `vScrollDynamic`
  */
 @Directive({
@@ -25,7 +24,7 @@ export class PblCdkAutoSizeVirtualScrollDirective extends PblNgridBaseVirtualScr
    * The size of the items in the list (in pixels).
    * If this value is not set the height is calculated from the first rendered row item.
    *
-   * @deprecated `vScrollAuto` will move to an independent package in v4,. Note that the recommended dynamic strategy for nGrid is `vScrollDynamic`
+   * @deprecated Will be removed in v5: `vScrollAuto` will move to an independent package in v5. Note that the recommended dynamic strategy for nGrid is `vScrollDynamic`
    */
   @Input() get vScrollAuto(): NumberInput { return this._vScrollAuto; }
   set vScrollAuto(value: NumberInput) { this._vScrollAuto = coerceNumberProperty(value); }

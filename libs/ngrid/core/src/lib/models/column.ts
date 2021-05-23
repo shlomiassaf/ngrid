@@ -101,7 +101,7 @@ export interface PblColumnGroupDefinition extends PblBaseColumnDefinition {
 
   /**
    * The grid's column that is the first child column for this group.
-   * @deprecated Removed in 4.0.0, use columnIds instead
+   * @deprecated Will be removed in v5, use columnIds instead
    */
   prop?: string;
 
@@ -113,7 +113,7 @@ export interface PblColumnGroupDefinition extends PblBaseColumnDefinition {
    * For example, if a we have a span of 2 and the column at the 2nd position is hidden it will still count as
    * being spanned although the UI will span only 1 column... (because the 2nd is hidden...)
    *
-   * @deprecated Removed in 4.0.0, use columnIds instead
+   * @deprecated Will be removed in v5, use columnIds instead
    */
   span?: number;
 

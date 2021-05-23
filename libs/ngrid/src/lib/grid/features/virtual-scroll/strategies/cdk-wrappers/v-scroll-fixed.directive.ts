@@ -5,10 +5,10 @@ import { PblNgridComponent } from '../../../../ngrid.component';
 import { PblNgridBaseVirtualScrollDirective } from '../base-v-scroll.directive';
 import { PblNgridFixedSizeVirtualScrollStrategy } from './fixed-size';
 
-// TODO: Move to an independent package in v4
-
 /**
- * @deprecated `vScrollFixed` will move to an independent package in v4,. Note that the recommended dynamic strategy for nGrid is `vScrollDynamic`
+ * @deprecated Will be removed in v5
+ * `vScrollFixed` will move to an independent package in v5.
+ * Note that the recommended dynamic strategy for nGrid is `vScrollDynamic`
  */
 @Directive({
   selector: 'pbl-ngrid[vScrollFixed]', // tslint:disable-line: directive-selector
@@ -24,7 +24,7 @@ export class PblCdkFixedSizedVirtualScrollDirective extends PblNgridBaseVirtualS
    * The size of the items in the list (in pixels).
    * If this value is not set the height is calculated from the first rendered row item.
    *
-   * @deprecated `vScrollFixed` will move to an independent package in v4,. Note that the recommended dynamic strategy for nGrid is `vScrollDynamic`
+   * @deprecated Will be removed in v5: `vScrollFixed` will move to an independent package in v5. Note that the recommended dynamic strategy for nGrid is `vScrollDynamic`
    */
   @Input() get vScrollFixed(): NumberInput { return this._vScrollFixed; }
   set vScrollFixed(value: NumberInput) { this._vScrollFixed = coerceNumberProperty(value); }

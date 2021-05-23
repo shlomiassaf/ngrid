@@ -284,7 +284,8 @@ export class PblColumnFactory {
     const defs = headerGroupDefs.slice();
 
     for (const d of defs) {
-      // TODO: remove in V4, when prop & span are deprecated
+      // TODO: remove in V5, when prop & span are deprecated
+      // @deprecated Will be removed in v5
       if (d.prop) {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
           deprecatedWarning('PblColumnGroupDefinition.prop', '4', 'PblColumnGroupDefinition.columnIds');

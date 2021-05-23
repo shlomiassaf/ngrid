@@ -260,9 +260,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
   }
 
   /**
-   * @deprecated see `minDataViewHeight`
+   * @deprecated Will be removed in v5, see `minDataViewHeight`
    */
-  // TODO: remove in v4.0.0
   @Input() get fallbackMinHeight(): number {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       deprecatedWarning('PblNgridComponent.fallbackMinHeight', '4', 'PblNgridComponent.minDataViewHeight');
@@ -332,8 +331,8 @@ export class PblNgridComponent<T = any> implements AfterContentInit, AfterViewIn
               private ngZone: NgZone,
               private cdr: ChangeDetectorRef,
               private config: PblNgridConfigService,
-              // TODO: Make private in v 4
-              /** @deprecated Will be removed in version 4 */
+              // TODO: Make private in v5
+              /** @deprecated Will be removed in v5 */
               public registry: PblNgridRegistryService,
               @Attribute('id') public readonly id: string,
               @Optional() dir?: Directionality) {
