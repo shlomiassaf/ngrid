@@ -239,7 +239,7 @@ export class PblNgridDragResizeComponent implements AfterViewInit, OnDestroy {
 
   /**
    *
-   * @deprecated Removed in 4, use `isDragging()` instead
+   * @deprecated Will be removed in v5, use `isDragging()` instead
    */
   _isDragging() {
     return this.isDragging()
