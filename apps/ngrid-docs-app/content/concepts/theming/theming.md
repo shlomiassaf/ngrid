@@ -19,13 +19,13 @@ If you're using Angular CLI & SCSS, this is as simple as including one line in y
 @import '@pebula/ngrid/themes/default-light.css';
 ```
 
-Alternatively, you can just reference the file directly. This would look something like:
+Alternatively, you can [add your chosen CSS file to the styles array of your project's angular.json file](https://angular.io/guide/workspace-config#styles-and-scripts-configuration) or just reference the file directly. This would look something like:
 
 ```html
 <link href="node_modules/@pebula/ngrid/themes/default-light.css" rel="stylesheet">
 ```
 
-I> Most changes are you're using a custom UI plugin (e.g `@pebula/ngrid-material`).  
+I> Most chances are you're using a custom UI plugin (e.g `@pebula/ngrid-material`).  
 UI plugins usually offer additional pre-built themes, see the relevant plugin documentation for more details.
 
 ## Customized Themes (SCSS)
@@ -35,29 +35,31 @@ When you want more customization than a pre-built theme offers, you can create y
 To create a custom theme:
 
 1. Create a palette from a color schema
-2. Create a theme from your palette using `pbl-light-theme` or `pbl-dark-theme`
-3. Render the theme by including the mixin `pbl-ngrid-theme`
+2. Create a theme from your palette using `ngrid.define-light-theme` or `ngrid.define-dark-theme`
+3. Render the theme by including the mixin `ngrid.ngrid-theme`
+
+> We assume the **ngrid** namespace defined (`@use '~@pebula/ngrid' as ngrid`)
 
 A typical theme file will look something like this:
 
 ```scss
-@import '~@pebula/ngrid/theming';
+@use '~@pebula/ngrid' as ngrid;
 
 // 1. Create a palette from a color schema
-// `$pbl-blue` is a predefined color palette provided by `@pebula/ngrid/theming`
-$ngrid-palette: pbl-palette($pbl-blue);
+// `ngrid.$blue-palett` is a predefined color palette provided by `@pebula/ngrid/theming`
+$ngrid-palette: ngrid.define-palette(ngrid.$blue-palette);
 
 // 2. Create a theme from your palette using `pbl-light-theme` or `pbl-dark-theme`
-$pbl-ngrid-theme: pbl-dark-theme($ngrid-palette);
+$pbl-ngrid-theme: ngrid.define-dark-theme($ngrid-palette);
 
 // Definitions for the grid's typography, documented below...
-@include pbl-ngrid-typography();
+@include ngrid.ngrid-typography();
 
 // 3. Render the theme by including the mixin `pbl-ngrid-theme`
-@include pbl-ngrid-theme($pbl-ngrid-theme);
+@include ngrid.ngrid-theme($pbl-ngrid-theme);
 ```
 
-> Note that pre-built CSS themes are located in `@pebula/ngrid/themes` and the SCSS theming utilities are located in `@pebula/ngrid/theming`
+> Note that pre-built CSS themes are located in `@pebula/ngrid/themes` and the SCSS theming utilities are located in `@pebula/ngrid`
 
 This is the most basic, straight forward setup.
 
