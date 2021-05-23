@@ -1,4 +1,4 @@
 @forward './theming/palette' show $blue-palette, $grey-palette, $light-theme-palette, $dark-theme-palette, $spacing-theme-defaults;
 @forward './theming/theming' show define-palette, get-color-from-palette, define-light-theme, define-dark-theme;
-@forward './theme/render/ngrid' show ngrid-theme, ngrid-typography;
-@forward './theme/render/ngrid-spacing.scss' show spacing-theme, predefined-spacing;
+@forward './theming/style/render/ngrid' show ngrid-theme, ngrid-typography;
+@forward './theming/style/render/ngrid-spacing.scss' show spacing-theme, predefined-spacing;

@@ -1,8 +1,8 @@
 @use 'sass:map';
 @use 'sass:color';
 @use '../base';
-@use '../../theming/typography/typography' as typography;
-@use '../../theming/typography/typography-utils' as typography-utils;
+@use '../../typography/typography' as typography;
+@use '../../typography/typography-utils' as typography-utils;
 @use './cdk-table';
 @use './ngrid-spacing';
 

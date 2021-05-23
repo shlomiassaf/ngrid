@@ -1,0 +1,968 @@
+/**
+ * Legacy support, will be removed in v5 (TODO: Remove in v5)
+ */
+
+// BASED ON:
+// https://github.com/angular/material2/blob/edbbc1bd7299df96a2f9c4200c3832d433f9cf5c/src/lib/table/_table-theme.scss
+
+// Because `@pebula/ngrid` depends on the `@angular/cdk` and because all SCSS theme tools are in `@angular/material` we
+// must hard-copy some of them so that `@pebula/ngrid` does not require `@angular/material`
+// CLONE from https://github.com/angular/components/blob/11a4ff0a6d08e225d4b1f70d21bb0dde8011ae9a/src/material/core/typography/_typography.scss
+// CLONE from https://github.com/angular/components/blob/11a4ff0a6d08e225d4b1f70d21bb0dde8011ae9a/src/material/core/typography/_typography-utils.scss
+
+// Utility for fetching a nested value from a typography config.
+
+@function _pbl-get-type-value($config, $level, $name) {
+  @return map-get(map-get($config, $level), $name);
+}
+
+// Gets the font size for a level inside a typography config.
+@function pbl-font-size($config, $level) {
+  @return _pbl-get-type-value($config, $level, font-size);
+}
+
+// Gets the line height for a level inside a typography config.
+@function pbl-line-height($config, $level) {
+  @return _pbl-get-type-value($config, $level, line-height);
+}
+
+// Gets the font weight for a level inside a typography config.
+@function pbl-font-weight($config, $level) {
+  @return _pbl-get-type-value($config, $level, font-weight);
+}
+
+// Gets the letter spacing for a level inside a typography config.
+@function pbl-letter-spacing($config, $level) {
+  @return _pbl-get-type-value($config, $level, letter-spacing);
+}
+
+// Gets the font-family from a typography config and removes the quotes around it.
+@function pbl-font-family($config, $level: null) {
+  $font-family: map-get($config, font-family);
+
+  @if $level != null {
+    $font-family: _pbl-get-type-value($config, $level, font-family);
+  }
+
+  // Guard against unquoting non-string values, because it's deprecated.
+  @return if(type-of($font-family) == string, unquote($font-family), $font-family);
+}
+
+// Outputs the shorthand `font` CSS property, based on a set of typography values. Falls back to
+// the individual properties if a value that isn't allowed in the shorthand is passed in.
+@mixin pbl-typography-font-shorthand($font-size, $font-weight, $line-height, $font-family) {
+  // If any of the values are set to `inherit`, we can't use the shorthand
+  // so we fall back to passing in the individual properties.
+  @if ($font-size == inherit or
+       $font-weight == inherit or
+       $line-height == inherit or
+       $font-family == inherit or
+       $font-size == null or
+       $font-weight == null or
+       $line-height == null or
+       $font-family == null) {
+
+    font-size: $font-size;
+    font-weight: $font-weight;
+    line-height: $line-height;
+    font-family: $font-family;
+  }
+  @else {
+    // Otherwise use the shorthand `font`, because it's the least amount of bytes. Note
+    // that we need to use interpolation for `font-size/line-height` in order to prevent
+    // Sass from dividing the two values.
+    font: $font-weight #{$font-size}/#{$line-height} $font-family;
+  }
+}
+
+// Converts a typography level into CSS styles.
+@mixin pbl-typography-level-to-styles($config, $level) {
+  $font-size: pbl-font-size($config, $level);
+  $font-weight: pbl-font-weight($config, $level);
+  $line-height: pbl-line-height($config, $level);
+  $font-family: pbl-font-family($config, $level);
+
+  @include pbl-typography-font-shorthand($font-size, $font-weight, $line-height, $font-family);
+  letter-spacing: pbl-letter-spacing($config, $level);
+}
+
+
+// Represents a typography level from the Material design spec.
+@function pbl-typography-level(
+  $font-size,
+  $line-height: $font-size,
+  $font-weight: 400,
+  $font-family: null,
+  $letter-spacing: null) {
+
+  @return (
+    font-size: $font-size,
+    line-height: $line-height,
+    font-weight: $font-weight,
+    font-family: $font-family,
+    letter-spacing: $letter-spacing
+  );
+}
+
+// Represents a collection of typography levels.
+// Defaults come from https://material.io/guidelines/style/typography.html
+// Note: The spec doesn't mention letter spacing. The values here come from
+// eyeballing it until it looked exactly like the spec examples.
+@function pbl-typography-config(
+  $font-family:   'Roboto, "Helvetica Neue", sans-serif',
+  $display-4:     pbl-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
+  $display-3:     pbl-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
+  $display-2:     pbl-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
+  $display-1:     pbl-typography-level(34px, 40px, 400),
+  $headline:      pbl-typography-level(24px, 32px, 400),
+  $title:         pbl-typography-level(20px, 32px, 500),
+  $subheading-2:  pbl-typography-level(16px, 28px, 400),
+  $subheading-1:  pbl-typography-level(15px, 24px, 400),
+  $body-2:        pbl-typography-level(14px, 24px, 500),
+  $body-1:        pbl-typography-level(14px, 20px, 400),
+  $caption:       pbl-typography-level(12px, 20px, 400),
+  $button:        pbl-typography-level(14px, 14px, 500),
+  // Line-height must be unit-less fraction of the font-size.
+  $input:         pbl-typography-level(inherit, 1.125, 400)
+) {
+
+  // Declare an initial map with all of the levels.
+  $config: (
+    display-4:      $display-4,
+    display-3:      $display-3,
+    display-2:      $display-2,
+    display-1:      $display-1,
+    headline:       $headline,
+    title:          $title,
+    subheading-2:   $subheading-2,
+    subheading-1:   $subheading-1,
+    body-2:         $body-2,
+    body-1:         $body-1,
+    caption:        $caption,
+    button:         $button,
+    input:          $input,
+  );
+
+  // Loop through the levels and set the `font-family` of the ones that don't have one to the base.
+  // Note that Sass can't modify maps in place, which means that we need to merge and re-assign.
+  @each $key, $level in $config {
+    @if map-get($level, font-family) == null {
+      $new-level: map-merge($level, (font-family: $font-family));
+      $config: map-merge($config, ($key: $new-level));
+    }
+  }
+
+  // Add the base font family to the config.
+  @return map-merge($config, (font-family: $font-family));
+}
+
+$dark-primary-text: rgba(black, 0.87);
+$dark-secondary-text: rgba(black, 0.54);
+$dark-disabled-text: rgba(black, 0.38);
+$dark-dividers: rgba(black, 0.12);
+$dark-focused: rgba(black, 0.12);
+$light-primary-text: white;
+$light-secondary-text: rgba(white, 0.7);
+$light-disabled-text: rgba(white, 0.5);
+$light-dividers: rgba(white, 0.12);
+$light-focused: rgba(white, 0.12);
+
+$pbl-blue: (
+  50: #e3f2fd,
+  100: #bbdefb,
+  200: #90caf9,
+  300: #64b5f6,
+  400: #42a5f5,
+  500: #2196f3,
+  600: #1e88e5,
+  700: #1976d2,
+  800: #1565c0,
+  900: #0d47a1,
+  A100: #82b1ff,
+  A200: #448aff,
+  A400: #2979ff,
+  A700: #2962ff,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $light-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text,
+  )
+);
+
+$pbl-grey: (
+  50: #fafafa,
+  100: #f5f5f5,
+  200: #eeeeee,
+  300: #e0e0e0,
+  400: #bdbdbd,
+  500: #9e9e9e,
+  600: #757575,
+  700: #616161,
+  800: #424242,
+  900: #212121,
+  A100: #ffffff,
+  A200: #eeeeee,
+  A400: #bdbdbd,
+  A700: #616161,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $dark-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $light-primary-text,
+  )
+);
+
+$pbl-light-theme-background: (
+  ngrid-space-fill-color: map_get($pbl-grey, 50),
+  ngrid-row-color: white,
+);
+
+// Background palette for dark themes.
+$pbl-dark-theme-background: (
+  ngrid-space-fill-color: #303030,
+  ngrid-row-color: map_get($pbl-grey, 800),
+);
+
+// Foreground palette for light themes.
+$pbl-light-theme-foreground: (
+  ngrid-border-color: $dark-dividers,
+  ngrid-header-cell-color: $dark-secondary-text,
+  ngrid-cell-color: rgba(black, 0.87),
+  ngrid-footer-cell-color: rgba(black, 0.87),
+  ngrid-cell-focus-color: rgba(black, 0.87),
+);
+
+// Foreground palette for dark themes.
+$pbl-dark-theme-foreground: (
+  ngrid-border-color: $light-dividers,
+  ngrid-header-cell-color: $light-secondary-text,
+  ngrid-cell-color: white,
+  ngrid-footer-cell-color: white,
+  ngrid-cell-focus-color: white,
+);
+
+$pbl-spacing-theme-default: (
+  header-row-height: 56px,
+  row-height: 48px,
+  footer-row-height: 48px,
+  row-spacing: 24px,
+  cell-spacing: 12px,
+);
+
+$pbl-ngrid-spacing-sm: (
+  header-row-height: 32px,
+  row-height: 32px,
+  footer-row-height: 32px,
+  row-spacing: 12px,
+  cell-spacing: 6px,
+);
+
+$pbl-ngrid-spacing-xs: (
+  header-row-height: 28px,
+  row-height: 28px,
+  footer-row-height: 28px,
+  row-spacing: 12px,
+  cell-spacing: 6px,
+);
+
+
+
+// For a given hue in a palette, return the contrast color from the map of contrast palettes.
+// @param $color-map
+// @param $hue
+@function pbl-contrast($palette, $hue) {
+  @return map-get(map-get($palette, contrast), $hue);
+}
+
+
+// Creates a map of hues to colors for a theme. This is used to define a theme palette in terms
+// of the Material Design hues.
+// @param $color-map
+// @param $primary
+// @param $lighter
+@function pbl-palette($base-palette, $default: 500, $lighter: 100, $darker: 700, $text: $default) {
+  $result: map_merge($base-palette, (
+    default: map-get($base-palette, $default),
+    lighter: map-get($base-palette, $lighter),
+    darker: map-get($base-palette, $darker),
+    text: map-get($base-palette, $text),
+
+    default-contrast: pbl-contrast($base-palette, $default),
+    lighter-contrast: pbl-contrast($base-palette, $lighter),
+    darker-contrast: pbl-contrast($base-palette, $darker)
+  ));
+
+  // For each hue in the palette, add a "-contrast" color to the map.
+  @each $hue, $color in $base-palette {
+    $result: map_merge($result, (
+      '#{$hue}-contrast': pbl-contrast($base-palette, $hue)
+    ));
+  }
+
+  @return $result;
+}
+
+
+// Gets a color from a theme palette (the output of pbl-palette).
+// The hue can be one of the standard values (500, A400, etc.), one of the three pre-configured
+// hues (default, lighter, darker), or any of the aforementioned prefixed with "-contrast".
+//
+// @param $color-map The theme palette (output of pbl-palette).
+// @param $hue The hue from the palette to use. If this is a value between 0 and 1, it will
+//     be treated as opacity.
+// @param $opacity The alpha channel value for the color.
+@function pbl-color($palette, $hue: default, $opacity: null) {
+  // If hueKey is a number between zero and one, then it actually contains an
+  // opacity value, so recall this function with the default hue and that given opacity.
+  @if type-of($hue) == number and $hue >= 0 and $hue <= 1 {
+    @return pbl-color($palette, default, $hue);
+  }
+
+  $color: map-get($palette, $hue);
+
+  @if (type-of($color) != color) {
+    // If the $color resolved to something different from a color (e.g. a CSS variable),
+    // we can't apply the opacity anyway so we return the value as is, otherwise Sass can
+    // throw an error or output something invalid.
+    @return $color;
+  }
+
+  @return rgba($color, if($opacity == null, opacity($color), $opacity));
+}
+
+
+// Creates a container object for a light theme to be given to individual component theme mixins.
+@function pbl-light-theme($primaryOrTheme, $accent: pbl-palette($pbl-blue), $warn: pbl-palette($pbl-blue)) {
+  $primary: null;
+
+  @if map-has-key($primaryOrTheme, primary) {
+    $primary: map-get($primaryOrTheme, primary);
+    $accent: map-get($primaryOrTheme, accent);
+    $warn: map-get($primaryOrTheme, warn);
+  } @else {
+    $primary: $primaryOrTheme;
+  }
+
+  $pbl-updated-theme-background: (
+  );
+
+  $pbl-updated-theme-foreground: (
+    ngrid-cell-focus-color: pbl-color($primary)
+  );
+
+  $foreground: map-merge($pbl-light-theme-foreground, $pbl-updated-theme-foreground);
+  $background: map-merge($pbl-light-theme-background, $pbl-updated-theme-background);
+
+  @if map-has-key($primaryOrTheme, primary) {
+    $foreground: map-merge($foreground, map-get($primaryOrTheme, foreground));
+    $background: map-merge($background, map-get($primaryOrTheme, background));
+  }
+
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: false,
+    foreground: $foreground,
+    background: $background,
+    spacing: $pbl-spacing-theme-default,
+  );
+}
+
+// Creates a container object for a dark theme to be given to individual component theme mixins.
+@function pbl-dark-theme($primaryOrTheme, $accent: pbl-palette($pbl-blue), $warn: pbl-palette($pbl-blue)) {
+  $primary: null;
+
+  @if map-has-key($primaryOrTheme, primary) {
+    $primary: map-get($primaryOrTheme, primary);
+    $accent: map-get($primaryOrTheme, accent);
+    $warn: map-get($primaryOrTheme, warn);
+  } @else {
+    $primary: $primaryOrTheme;
+  }
+
+  $pbl-updated-theme-background: (
+  );
+
+  $pbl-updated-theme-foreground: (
+    ngrid-cell-focus-color: pbl-color($primary)
+  );
+
+  $foreground: map-merge($pbl-dark-theme-foreground, $pbl-updated-theme-foreground);
+  $background: map-merge($pbl-dark-theme-background, $pbl-updated-theme-background);
+
+  @if map-has-key($primaryOrTheme, primary) {
+    $foreground: map-merge($foreground, map-get($primaryOrTheme, foreground));
+    $background: map-merge($background, map-get($primaryOrTheme, background));
+  }
+
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: true,
+    foreground: $foreground,
+    background: $background,
+    spacing: $pbl-spacing-theme-default,
+  );
+}
+
+
+// BASED ON
+// https://github.com/angular/material2/blob/6df37099c3a1a026b961202df8755ec9933c3d14/src/lib/table/table.scss
+
+@mixin _cdk-table-from-material() {
+  /**
+  * Flex-based table structure
+  */
+  .pbl-cdk-table {
+    display: block;
+  }
+
+  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+    display: flex;
+    // Define a border style, but then widths default to 3px. Reset them to 0px except the bottom
+    // which should be 1px;
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-style: solid;
+    align-items: center;
+    box-sizing: border-box;
+
+    // Workaround for https://goo.gl/pFmjJD in IE 11. Adds a pseudo
+    // element that will stretch the row the correct height. See:
+    // https://connect.microsoft.com/IE/feedback/details/802625
+    &::after {
+      display: inline-block;
+      min-height: inherit;
+      content: '';
+    }
+  }
+
+  .pbl-ngrid-cell, .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    word-wrap: break-word;
+    min-height: inherit;
+  }
+}
+
+
+@mixin _cdk-table-base() {
+  @include _cdk-table-from-material();
+
+  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+    position: relative;
+  }
+
+  /* MULTI COLUMN AND COLUMN SPAN */
+  .pbl-ngrid-header-cell.pbl-header-group-cell {
+    display: flex;
+    align-items: center;
+
+    &.pbl-header-group-cell-placeholder {
+      border: none;
+    }
+  }
+
+  .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
+    position: relative;
+  }
+
+  .pbl-ngrid-cell {
+    cursor: default;
+    outline: none;
+  }
+
+  .pbl-ngrid-editable-cell {
+    cursor: text;
+  }
+}
+
+
+@mixin _pbl-cdk-table-theme($theme) {
+
+  @include _cdk-table-base();
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $row-background: map-get($background, ngrid-row-color);
+  $border-color: map-get($foreground, ngrid-border-color);
+  $header-cell-color: map-get($foreground, ngrid-header-cell-color);
+  $cell-color: map-get($foreground, ngrid-cell-color);
+  $footer-cell-color: map-get($foreground, ngrid-footer-cell-color);
+
+  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row,
+  .pbl-ngrid-header-cell, .pbl-ngrid-cell, .pbl-ngrid-footer-cell {
+    border-color: $border-color;
+  }
+
+  .pbl-ngrid-header-cell.pbl-header-group-cell:before {
+    border-color: $border-color;
+  }
+
+  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+    background: $row-background;
+  }
+
+  .pbl-ngrid-header-cell {
+    color: $header-cell-color;
+  }
+
+  .pbl-ngrid-cell {
+    color: $cell-color;
+  }
+
+  .pbl-ngrid-footer-cell {
+    color: $footer-cell-color;
+  }
+}
+
+@mixin _pbl-cdk-table-typography($config: null) {
+  @if $config == null {
+    $config: pbl-typography-config();
+  }
+
+  .pbl-cdk-table {
+    font-family: pbl-font-family($config);
+  }
+}
+
+@mixin _ngrid-base() {
+  pbl-ngrid {
+    display: block;
+  }
+
+  // same idea as in .cdk-visually-hidden with adjustments:
+  // - Added precedence (!important)
+  // - Removed explicit width trimming
+  // - More specific border elimination (keep left/right remove top/bottom)
+  //
+  // The adjustments address the need to be able to keep the row aligned with the table so it can update
+  // the header cell size (width...) and publish events so other cells can follow (e.g. group rows)
+  // The header row is the key to all cell width's...
+  .pbl-ngrid-row-visually-hidden {
+    border-top: 0;
+    border-bottom: 0;
+    clip: rect(0 0 0 0);
+    height: 0px !important;
+    min-height: 0px !important;
+    max-height: 0px !important;
+    overflow: hidden !important;
+    visibility: collapse !important;
+
+    // Avoid browsers rendering the focus ring in some cases.
+    outline: 0;
+
+    // Avoid some cases where the browser will still render the native controls (see #9049).
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  .pbl-ngrid-row-hidden {
+    display: none !important;
+  }
+
+  .pbl-ngrid-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    box-sizing: border-box;
+    display: flex;
+    overflow: auto;
+    min-height: inherit;
+    // justify-content: flex-end;
+  }
+
+  .pbl-ngrid-scroll-container {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    min-height: auto;
+    &.cdk-virtual-scroll-disabled {
+      flex: 1 0 auto;
+    }
+  }
+
+  .pbl-ngrid-sticky-row-scroll-container {
+    position: fixed;
+    overflow: hidden;
+  }
+
+  .pbl-ngrid-empty {
+    .cdk-virtual-scroll-content-wrapper {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .pbl-cdk-table {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 100%;
+
+        & > * {
+          flex: 0 0 auto;
+        }
+      }
+    }
+  }
+
+  .pbl-ngrid-scrolling pbl-cdk-table {
+    pointer-events: none;
+  }
+}
+
+
+@mixin pbl-ngrid-drag-plugin-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $border-color: map-get($foreground, ngrid-border-color);
+
+  .pbl-ngrid-header-cell.pbl-ngrid-column-resize {
+    &:after {
+      transition: all 250ms ease-in;
+      content: ' ';
+      display: block;
+      position: absolute;
+      top: calc(50% - 8px);
+      height: 16px;
+      right: 0;
+      border-right: 0px solid darken($border-color, 25%);
+
+      [dir='rtl'] & {
+        right: unset;
+        left: 0;
+        border-right: none;
+        border-left: 0px solid darken($border-color, 25%);
+      }
+    }
+}
+
+  pbl-ngrid:not(.pbl-ngrid-column-list-dragging) .pbl-ngrid-header-row-main:hover .pbl-ngrid-header-cell.pbl-ngrid-column-resize {
+    &:after {
+      right: 2px;
+      border-right-width: 2px;
+
+      [dir='rtl'] & {
+        right: unset;
+        left: 2px;
+        border-right-width: 0;
+        border-left-width: 2px;
+      }
+    }
+    &:last-child {
+      &:after {
+        right: 0px;
+        width: 3px;
+        border-left: 2px solid darken($border-color, 25%);
+
+        [dir='rtl'] & {
+          right: unset;
+          left: 0px;
+          border-right: 2px solid darken($border-color, 25%);
+        }
+      }
+    }
+
+    & + .pbl-ngrid-header-cell {
+      box-shadow: none;
+      &:before {
+        top: calc(50% - 8px);
+        height: 16px;
+        border-right: 2px solid darken($border-color, 25%);
+
+        [dir='rtl'] & {
+          border-right: none;
+          border-left: 2px solid darken($border-color, 25%);
+        }
+      }
+    }
+  }
+
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  .pbl-ngrid-column-list-dragging {
+    .pbl-ngrid-cell, .pbl-ngrid-header-cell {
+      transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    }
+    .cdk-drag-placeholder {
+      position: relative;
+      &:before, [dir='rtl'] &:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: auto;
+        border-color: $border-color;
+        border-width: 2px;
+        border-style: dashed;
+      }
+
+    }
+  }
+}
+
+
+
+@mixin pbl-ngrid-predefined-spacing($theme) {
+
+  pbl-ngrid.grid-sm {
+    @include pbl-ngrid-spacing(map-merge($theme, ( spacing: $pbl-ngrid-spacing-sm )));
+  }
+
+  pbl-ngrid.grid-xs {
+    @include pbl-ngrid-spacing(map-merge($theme, ( spacing: $pbl-ngrid-spacing-xs )));
+  }
+}
+
+
+@mixin pbl-ngrid-theme($theme) {
+  @include _pbl-cdk-table-theme($theme);
+  @include _ngrid-base();
+  @include pbl-ngrid-spacing($theme);
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $border-color: map-get($foreground, ngrid-border-color);
+  $space-fill-background: map-get($background, grid-space-fill-color);
+  $border-color: map-get($foreground, ngrid-border-color);
+  $cell-focus-color: map-get($foreground, ngrid-cell-focus-color);
+
+  .pbl-ngrid-scroll-container {
+    .pbl-ngrid-space-fill {
+      background: $space-fill-background;
+    }
+  }
+
+  .pbl-ngrid-cell-ellipsis {
+    .pbl-ngrid-cell, .pbl-ngrid-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .pbl-ngrid-header-cell-ellipsis {
+    .pbl-ngrid-header-cell, .pbl-ngrid-header-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .pbl-ngrid-footer-cell-ellipsis {
+    .pbl-ngrid-footer-cell, .pbl-ngrid-footer-cell > *:first-child {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .pbl-ngrid-cell {
+    &.pbl-ngrid-cell-focused {
+      // outline: 1px solid $cell-focus-color;
+      box-shadow: inset 0px 0px 0px 1px $cell-focus-color;
+      // box-shadow: inset 0px 0px 0px 1px $cell-focus-color;
+    }
+    &.pbl-ngrid-cell-selected:not(.pbl-ngrid-cell-focused) {
+      background-color: transparentize($cell-focus-color, 0.75);
+    }
+  }
+
+  .pbl-ngrid-header-cell:not(:first-child), .pbl-ngrid-footer-cell:not(:last-child) {
+    &:before {
+      transition: all 250ms ease-in;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-right: 1px solid $border-color;
+
+      [dir='rtl'] & {
+        left: unset;
+        right: 0;
+        border-right: none;
+        border-left: 1px solid $border-color;
+
+      }
+    }
+  }
+
+  .pbl-ngrid-cell.pbl-ngrid-sticky-start {
+    overflow: visible;
+    &:after {
+      transition: all 250ms ease-in;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: -1px;
+      height: 100%;
+      border-right: 1px solid $border-color;
+
+      [dir='rtl'] & {
+        right: unset;
+        left: -1px;
+        border-right: none;
+        border-left: 1px solid $border-color;
+      }
+    }
+  }
+
+  .pbl-ngrid-cell.pbl-ngrid-sticky-end:before {
+    transition: all 250ms ease-in;
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-right: 1px solid $border-color;
+
+    [dir='rtl'] & {
+      left: unset;
+      right: 0;
+      border-right: none;
+      border-left: 1px solid $border-color;
+    }
+  }
+
+  @include pbl-ngrid-drag-plugin-theme($theme);
+}
+
+@mixin pbl-ngrid-spacing($theme) {
+  $spacingTheme: map-get($theme, spacing);
+
+  $header-row-height: map-get($spacingTheme, header-row-height);
+  $row-height: map-get($spacingTheme, row-height);
+  $footer-row-height: map-get($spacingTheme, footer-row-height);
+  $row-spacing: map-get($spacingTheme, row-spacing);
+  $cell-spacing: map-get($spacingTheme, cell-spacing);
+
+  .pbl-ngrid-header-row {
+    min-height: $header-row-height;
+  }
+
+  .pbl-ngrid-row {
+    min-height: $row-height;
+  }
+
+  .pbl-ngrid-footer-row {
+    min-height: $footer-row-height;
+  }
+
+  .pbl-ngrid-cell, .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
+    padding-left: $cell-spacing;
+
+    [dir='rtl'] & {
+      padding-left: 0;
+      padding-right: $cell-spacing;
+    }
+
+    &:first-of-type {
+      padding-left: $row-spacing;
+
+      [dir='rtl'] & {
+        padding-left: 0;
+        padding-right: $row-spacing;
+      }
+    }
+
+    &:last-of-type {
+      padding-right: $row-spacing;
+
+      [dir='rtl'] & {
+        padding-right: $cell-spacing;
+        padding-left: $row-spacing;
+      }
+    }
+
+    &.cdk-table-sticky {
+      background: inherit;
+    }
+  }
+
+  // row-reorder (drag & drop)
+  .pbl-ngrid-row-prefix {
+    display: none;
+    position: absolute;
+    cursor: move;
+    width: $row-spacing;
+    height: 100%;
+  }
+
+  .pbl-row-reorder .pbl-ngrid-row-prefix {
+    display: block;
+  }
+
+}
+
+@mixin pbl-ngrid-typography($config: null) {
+  @if $config == null {
+    $config: pbl-typography-config();
+  }
+
+  @include _pbl-cdk-table-typography($config);
+
+  .pbl-ngrid-header-cell {
+    font-size: pbl-font-size($config, caption);
+    font-weight: pbl-font-weight($config, body-2);
+  }
+
+  .pbl-ngrid-cell, .pbl-ngrid-footer-cell {
+    font-size: pbl-font-size($config, body-1);
+  }
+}
+
+
+

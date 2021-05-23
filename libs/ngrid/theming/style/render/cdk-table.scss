@@ -4,9 +4,9 @@
 // Because `@pebula/ngrid` depends on the `@angular/cdk` and because all SCSS theme tools are in `@angular/material` we
 // must hard-copy some of them so that `@pebula/ngrid` does not require `@angular/material`
 @use 'sass:map';
-@use '../../theming/theming' as theming;
-@use '../../theming/typography/typography' as typography;
-@use '../../theming/typography/typography-utils' as typography-utils;
+@use '../../theming' as theming;
+@use '../../typography/typography' as typography;
+@use '../../typography/typography-utils' as typography-utils;
 
 @use '../base';
 
