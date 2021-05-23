@@ -1,6 +1,6 @@
 @use '~@angular/material' as mat;
-@use '../../../../ngrid' as ngrid;
-@use '../../../index' as ngrid-material;
+@use '../../../ngrid' as ngrid;
+@use '../../index' as ngrid-material;
 
 // Define a theme.
 $primary: mat.define-palette(mat.$pink-palette, 700, 500, 900);
