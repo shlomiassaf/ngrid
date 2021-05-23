@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../../../ngrid' as ngrid;
-@use '../index' as ngrid-bs;
+@use '../../index' as ngrid-bs;
 
 $pbl-ngrid-theme: ngrid.define-dark-theme(ngrid.define-palette(ngrid.$blue-palette));
 
