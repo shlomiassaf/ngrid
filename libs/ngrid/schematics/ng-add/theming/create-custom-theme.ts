@@ -9,15 +9,15 @@
 /** Create custom theme for the given application configuration. */
 export function createCustomTheme(name: string = 'app') {
 return `
-@import '~@pebula/ngrid/theming';
+@use '~@pebula/ngrid' as ngrid;
 
-$${name}-palette: pbl-palette($pbl-blue);
+$${name}-palette: ngrid.define-palette(ngrid.$blue-palette);
 
-$${name}-theme: pbl-light-theme($${name}-palette);
+$${name}-theme: ngrid.define-light-theme($${name}-palette);
 
-@include pbl-ngrid-typography();
+@include ngrid.ngrid-typography();
 
-@include pbl-ngrid-theme($${name}-theme);
+@include ngrid.ngrid-theme($${name}-theme);
 
 `;
 }
