@@ -1,3 +1,37 @@
+# 4.0.0-alpha.0 (2021-05-23)
+
+## Highlights
+
+### Sass
+Sass theming API has been reworked so that clients can take advantage of @use. This includes:
+
+- A single entry point into `@pebula/ngrid`, `@pebula/ngrid-material` and `@pebula/ngrid-bootstrap`
+- Renamed functions, mixins, and variables to be a better reflection of what they do
+- Applications still using node-sass will need to switch to the sass package
+For more information, check out [the new material theming guide](https://github.com/angular/components/blob/25665dcc219fbbb76d0ba7f79982672500f78644/guides/theming.md) and [ngrid's theming docs](https://shlomiassaf.github.io/ngrid/concepts/theming/introduction).
+- For convinience, legacy theming API is still availavle at `@pebula/ngrid/theming`, `@pebula/ngrid-material/theming` and `@pebula/ngrid-bootstrap/theming`. The legacy API will be removed in v5.0.0
+
+### IVY APF v12
+
+Starting from version 4 of **nGrid**, the library is packaged using the new IVY [**A**ngular **P**acakge **F**ormat (v12)](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs) in [partial-ivy mode](https://angular.io/guide/creating-libraries#transitioning-libraries-to-partial-ivy-format) which is the recommended approach by the angular team.
+
+It is still new and has [it's quirks](https://github.com/angular/angular/issues/42208) which required some shellow API changes to work around it's issues.  
+There should be no effect, however, if you experience strange behaviour please report.
+
+In addition, symboles exposes in public modules are now required to be exposed in the public API as well. This resulted in multiple symboles which were previously private now exposed.  
+
+### Aligned with v12 of the angular eco-system
+
+Library is now on par with version 12 of `angular`, `@angular/cdk` and `@angular/components` (material).
+
+Since `nGrid@v4` is IVY compiled and the CDK does not support previous versions, v4 of **nGrid** will only run on angular version 12 and up. 
+
+### Bug Fixes
+
+* **sort:** support empty strings when sorting ([6a1023e](https://github.com/shlomiassaf/ngrid/commit/6a1023e066a297f6b87c8a37554fc73ac723e114))
+
+
+
 ## 3.1.4 (2021-04-08)
 
 
