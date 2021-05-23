@@ -1,6 +1,6 @@
 @use '~@angular/material' as mat;
-@use '../../../../ngrid' as ngrid;
-@use '../../../index' as ngrid-material;
+@use '../../../ngrid' as ngrid;
+@use '../../index' as ngrid-material;
 
 // Define a theme.
 $primary: mat.define-palette(mat.$deep-purple-palette);
