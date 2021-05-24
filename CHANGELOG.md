@@ -1,3 +1,12 @@
+# 4.0.0-alpha.3 (2021-05-24)
+
+
+### Bug Fixes
+
+* revert to using ViewEngine package ([3a1fe8f](https://github.com/shlomiassaf/ngrid/commit/3a1fe8f3202f4760d53085874279b26cfd902e88))
+
+
+
 # 4.0.0-alpha.2 (2021-05-24)
 
 * update package dependencies
