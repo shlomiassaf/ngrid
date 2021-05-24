@@ -1,8 +1,8 @@
 {
   "name": "@pebula/ngrid-material",
-  "version": "4.0.0-alpha.1",
+  "version": "4.0.0-alpha.2",
   "peerDependencies": {
     "@angular/material": "^12.0.0",
-    "@pebula/ngrid": "4.0.0-alpha.1"
+    "@pebula/ngrid": "4.0.0-alpha.2"
   }
 }
