@@ -55,7 +55,7 @@ jobs:
                 packageManager: 'yarn install --ignore-platform',
                 nodeVer: 14,
                 urlSuffix: 'v3/',
-                projectName: 'ngrid-demo-app',
+                projectName: 'ngrid-docs-app',
                 clean: false,
                 cleanExclude: [],
               }
