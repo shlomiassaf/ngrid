@@ -1,6 +1,6 @@
 # 4.0.0-alpha.2 (2021-05-24)
 
-
+* update package dependencies
 
 # 4.0.0-alpha.1 (2021-05-24)
 
