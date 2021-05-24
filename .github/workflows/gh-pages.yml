@@ -24,12 +24,12 @@ jobs:
           script: |
             const CURRENT_VERSION = {
               branch: '${{ github.event.inputs.branch}}' || 'master',
-              packageManager: 'yarn install --ignore-optional --ignore-engines --ignore-platform',
+              packageManager: 'yarn install --ignore-platform',
               nodeVer: 14,
               urlSuffix: '',
               projectName: 'ngrid-docs-app',
               clean: true,
-              cleanExclude: ['v1', 'v2'],
+              cleanExclude: ['v1', 'v2', 'v3'],
             };
             const OLD_VERSIONS = {
               '1': {
@@ -46,6 +46,15 @@ jobs:
                 packageManager: 'npm install',
                 nodeVer: 12,
                 urlSuffix: 'v2/',
+                projectName: 'ngrid-demo-app',
+                clean: false,
+                cleanExclude: [],
+              },
+              '3': {
+                branch: '3.x.x',
+                packageManager: 'yarn install --ignore-platform',
+                nodeVer: 14,
+                urlSuffix: 'v3/',
                 projectName: 'ngrid-demo-app',
                 clean: false,
                 cleanExclude: [],
