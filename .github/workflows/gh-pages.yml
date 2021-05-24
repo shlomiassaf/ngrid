@@ -10,7 +10,7 @@ on:
       docsVersion:
         description: 'Docs Major Version'
         required: true
-        default: '3'
+        default: '4'
   release:
     types: [created]
 
