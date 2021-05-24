@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:color';
 
-@mixin drag-plugin-theme($theme) {
+@mixin ngrid-drag-plugin-theme($theme) {
   $primary: map.get($theme, primary);
   $accent: map.get($theme, accent);
   $warn: map.get($theme, warn);

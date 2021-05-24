@@ -418,6 +418,11 @@
                       "glob": "**/*.scss",
                       "input": "libs/ngrid/theming",
                       "output": "dist/@pebula/ngrid/theming"
+                    },
+                    {
+                      "glob": "*/theming/**/*.scss",
+                      "input": "libs/ngrid",
+                      "output": "dist/@pebula/ngrid"
                     }
                   ]
                 },
@@ -528,6 +533,11 @@
                       "glob": "**/*.scss",
                       "input": "libs/ngrid-material/theming",
                       "output": "dist/@pebula/ngrid-material/theming"
+                    },
+                    {
+                      "glob": "*/theming/**/*.scss",
+                      "input": "libs/ngrid-material",
+                      "output": "dist/@pebula/ngrid-material"
                     }
                   ]
                 },
@@ -686,6 +696,11 @@
                       "glob": "**/*.scss",
                       "input": "libs/ngrid-bootstrap/theming",
                       "output": "dist/@pebula/ngrid-bootstrap/theming"
+                    },
+                    {
+                      "glob": "*/theming/**/*.scss",
+                      "input": "libs/ngrid-bootstrap",
+                      "output": "dist/@pebula/ngrid-bootstrap"
                     }
                   ]
                 },
