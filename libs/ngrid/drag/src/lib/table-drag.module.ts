@@ -4,6 +4,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { PblNgridModule, provideCommon, ngridPlugin } from '@pebula/ngrid';
 
+import './drag-and-drop/column/extend-grid'; // to make sure d.ts stay in published lib and so agumentation kicks in
 import { colReorderExtendGrid } from './drag-and-drop/column/extend-grid'
 import { PblNgridAggregationContainerDirective } from './drag-and-drop/column/aggregation-column'
 import { PblNgridCellDraggerRefDirective } from './drag-and-drop/column/cell-dragger-ref'
@@ -21,7 +22,9 @@ import { PblNgridRowDragDirective } from './drag-and-drop/row/row-drag';
 
 import { PblNgridDragResizeComponent, COL_RESIZE_PLUGIN_KEY } from './column-resize/column-resize.component';
 import { PblNgridCellResizerRefDirective } from './column-resize/cell-resizer-ref';
+import './column-resize/extend-grid'; // to make sure d.ts stay in published lib and so agumentation kicks in
 import { colResizeExtendGrid } from './column-resize/extend-grid';
+
 
 import { DragPluginDefaultTemplatesComponent } from './default-settings.component';
 
