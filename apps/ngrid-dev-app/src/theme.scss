@@ -12,7 +12,7 @@ $ngrid-material-starter-theme: ngrid.define-light-theme($ngrid-material-starter-
 @include mat.core($typography-config);
 @include ngrid.ngrid-typography($typography-config);
 @include mat.all-component-themes($ngrid-material-starter-theme);
-@include ngrid.ngrid-theme($ngrid-material-starter-theme);
+@include ngrid-material.all-ngrid-material-theme($ngrid-material-starter-theme);
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

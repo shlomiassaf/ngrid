@@ -19,7 +19,7 @@ $pbl-shell-theme: default-theme.shell-light-theme(mat.$blue-palette, mat.$light-
 @include shell.render-shell-app-theme($pbl-shell-theme, $typography-config);
 
 // @include ngrid.ngrid-theme($pbl-shell-theme);
-@include ngrid-material.ngrid-material-theme($pbl-shell-theme);
+@include ngrid-material.all-ngrid-material-theme($pbl-shell-theme);
 
 @include ngrid.predefined-spacing($pbl-shell-theme);
 

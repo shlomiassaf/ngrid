@@ -1,12 +1,13 @@
 @use 'sass:map';
 @use 'sass:color';
+
+@use '../../../drag/theming' as drag;
 @use '../base';
 @use '../../typography/typography' as typography;
 @use '../../typography/typography-utils' as typography-utils;
 @use './cdk-table';
 @use './ngrid-spacing';
 
-@use '../plugins//drag.plugin' as drag;
 
 @mixin ngrid-theme($theme) {
   @include cdk-table.cdk-table-theme($theme);
@@ -87,7 +88,11 @@
     }
   }
 
-  @include drag.drag-plugin-theme($theme);
+}
+
+@mixin all-ngrid-theme($theme) {
+  @include ngrid-theme($theme);
+  @include drag.ngrid-drag-plugin-theme($theme);
 }
 
 @mixin ngrid-typography($config: null) {
