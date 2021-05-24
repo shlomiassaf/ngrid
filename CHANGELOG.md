@@ -1,3 +1,12 @@
+# 4.0.0-alpha.1 (2021-05-24)
+
+
+### Bug Fixes
+
+* scss bundles proper export ([7d4c7f3](https://github.com/shlomiassaf/ngrid/commit/7d4c7f33c43d736e77406db2d964636e4829d6dc))
+* force export augmenting d.ts files ([f2c60ab](https://github.com/shlomiassaf/ngrid/commit/f2c60ab8910aad3e6775441f71111a6f670cc1e8))
+
+
 # 4.0.0-alpha.0 (2021-05-23)
 
 ## Highlights
