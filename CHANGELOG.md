@@ -1,26 +1,25 @@
 # 4.0.0-alpha.3 (2021-05-24)
 
+### ngrid
 
-### Bug Fixes
-
-* revert to using ViewEngine package ([3a1fe8f](https://github.com/shlomiassaf/ngrid/commit/3a1fe8f3202f4760d53085874279b26cfd902e88))
-
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  revert to using ViewEngine package ([3a1fe8f3202f4760d53085874279b26cfd902e88](https://github.com/shlomiassaf/ngrid/commit/3a1fe8f3202f4760d53085874279b26cfd902e88)) |
 
 
 # 4.0.0-alpha.2 (2021-05-24)
 
-* update package dependencies
 
 # 4.0.0-alpha.1 (2021-05-24)
 
+### ngrid
 
-### Bug Fixes
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  scss bundles proper export ([c86b9b5140e584971aeeaf50223a03a72e014e36](https://github.com/shlomiassaf/ngrid/commit/c86b9b5140e584971aeeaf50223a03a72e014e36)) |
+| bug fix |  force export augmenting d.ts files ([f2c60ab](https://github.com/shlomiassaf/ngrid/commit/f2c60ab8910aad3e6775441f71111a6f670cc1e8)) |
 
-* scss bundles proper export ([7d4c7f3](https://github.com/shlomiassaf/ngrid/commit/7d4c7f33c43d736e77406db2d964636e4829d6dc))
-* force export augmenting d.ts files ([f2c60ab](https://github.com/shlomiassaf/ngrid/commit/f2c60ab8910aad3e6775441f71111a6f670cc1e8))
-
-
-# 4.0.0-alpha.0 (2021-05-23)
+# 4.0.0-alpha.0 (2021-05-24)
 
 ## Highlights
 
@@ -35,10 +34,17 @@ For more information, check out [the new material theming guide](https://github.
 
 ### IVY APF v12
 
-Starting from version 4 of **nGrid**, the library is packaged using the new IVY [**A**ngular **P**acakge **F**ormat (v12)](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs) in [partial-ivy mode](https://angular.io/guide/creating-libraries#transitioning-libraries-to-partial-ivy-format) which is the recommended approach by the angular team.
+Starting from version 4 of **nGrid**, the library is packaged using the new IVY [**A**ngular **P**acakge **F**ormat (v12)](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs).
 
-It is still new and has [it's quirks](https://github.com/angular/angular/issues/42208) which required some shellow API changes to work around it's issues.  
-There should be no effect, however, if you experience strange behaviour please report.
+Compilation is done in `ViewEngine` mode.  
+While angular recommends compiling in [partial-ivy mode](https://angular.io/guide/creating-libraries#transitioning-libraries-to-partial-ivy-format), it has several limitations:
+
+- Support is still not wide-spread so several tools will not load **nGrid** (StackBlitz, CodeSandbox, etc...)
+- Applcations still running in `ViewEnginge` will not be able to run **nGrid** while IVY application can use NGCC
+- NGCC in v12 is still fully operational, so why limit?
+- `@angular/components` (material) is also publishing v12 libaraies in `ViewEngine`
+
+However, as part of the CI process we still compile with partial-ivy mode enabled to catch errors since it is still new and has [it's quirks](https://github.com/angular/angular/issues/42208) which required some shellow API changes to work around it's issues. There should be no effect and used to ensure futute competability, however, if you experience strange behaviour please report.
 
 In addition, symboles exposes in public modules are now required to be exposed in the public API as well. This resulted in multiple symboles which were previously private now exposed.  
 
@@ -48,10 +54,11 @@ Library is now on par with version 12 of `angular`, `@angular/cdk` and `@angular
 
 Since `nGrid@v4` is IVY compiled and the CDK does not support previous versions, v4 of **nGrid** will only run on angular version 12 and up. 
 
-### Bug Fixes
+### ngrid
 
-* **sort:** support empty strings when sorting ([6a1023e](https://github.com/shlomiassaf/ngrid/commit/6a1023e066a297f6b87c8a37554fc73ac723e114))
-
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **sort:** support empty strings when sorting ([6a1023e066a297f6b87c8a37554fc73ac723e114](https://github.com/shlomiassaf/ngrid/commit/6a1023e066a297f6b87c8a37554fc73ac723e114)) |
 
 
 ## 3.1.4 (2021-04-08)
