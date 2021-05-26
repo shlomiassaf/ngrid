@@ -8,7 +8,7 @@ import * as log from 'ng-packagr/lib/utils/log';
 import { EntryPointTaskContext, Job } from 'ng-cli-packagr-tasks';
 import { CopyFile } from 'ng-cli-packagr-tasks/dist/tasks/copy-file';
 
-import { buildScssPipeline } from '../../../tasks/package-tools/gulp/build-scss-pipeline';
+import { buildScssPipeline } from './build-scss-pipeline';
 
 declare module 'ng-cli-packagr-tasks/dist/build/hooks' {
   interface NgPackagrBuilderTaskSchema {
