@@ -56,3 +56,5 @@ jobs:
           retention-days: 30
       - name: Build Libraries
         run: npm run build-grid
+      - name: Build Libraries (IVY)
+        run: npm run build-grid:ivy

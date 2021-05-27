@@ -448,8 +448,10 @@
           },
           "configurations": {
             "production": {
-              "tsConfig": "libs/ngrid/tsconfig.lib.prod.json",
-              "project": "libs/ngrid/ng-package.prod.json"
+              "tsConfig": "libs/ngrid/tsconfig.lib.prod.json"
+            },
+            "production-ivy": {
+              "tsConfig": "libs/ngrid/tsconfig.lib.prod.ivy.json"
             }
           }
         },
@@ -555,8 +557,10 @@
           },
           "configurations": {
             "production": {
-              "tsConfig": "libs/ngrid-material/tsconfig.lib.prod.json",
-              "project": "libs/ngrid-material/ng-package.prod.json"
+              "tsConfig": "libs/ngrid-material/tsconfig.lib.prod.json"
+            },
+            "production-ivy": {
+              "tsConfig": "libs/ngrid-material/tsconfig.lib.prod.ivy.json"
             }
           }
         },
@@ -645,8 +649,10 @@
           },
           "configurations": {
             "production": {
-              "tsConfig": "libs/ngrid-cypress/tsconfig.lib.prod.json",
-              "project": "libs/ngrid-cypress/ng-package.prod.json"
+              "tsConfig": "libs/ngrid-cypress/tsconfig.lib.prod.json"
+            },
+            "production-ivy": {
+              "tsConfig": "libs/ngrid-cypress/tsconfig.lib.prod.ivy.json"
             }
           }
         },
@@ -718,8 +724,10 @@
           },
           "configurations": {
             "production": {
-              "tsConfig": "libs/ngrid-bootstrap/tsconfig.lib.prod.json",
-              "project": "libs/ngrid-bootstrap/ng-package.prod.json"
+              "tsConfig": "libs/ngrid-bootstrap/tsconfig.lib.prod.json"
+            },
+            "production-ivy": {
+              "tsConfig": "libs/ngrid-bootstrap/tsconfig.lib.prod.ivy.json"
             }
           }
         },
