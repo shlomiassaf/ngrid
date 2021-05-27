@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "paths": {
+      "@pebula-internal/*": ["libs-internal/*/src/index.ts", "libs-internal/*"],
+      "@pebula/apps/*": ["apps/libs/*", "apps/libs/*/src/index.ts"],
+      "@pebula/ngrid/core/lib/*": ["dist/@pebula/ngrid/core/lib/*"],
+      "@pebula/ngrid/lib/*": ["dist/@pebula/ngrid/lib/*"],
+      "@pebula/ngrid-material/lib/*": ["dist/@pebula/ngrid-material/lib/*"],
+      "@pebula/ngrid-bootstrap/lib/*": ["dist/@pebula/ngrid-bootstrap/lib/*"],
+      "@pebula/ngrid-cypress/lib/*": ["dist/@pebula/ngrid-cypress/lib/*"],
+      "@pebula/*": ["dist/@pebula/*"]
+    }
+  }
+}

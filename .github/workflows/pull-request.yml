@@ -39,8 +39,10 @@ jobs:
         run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - name: Test
         run: ./node_modules/.bin/nx affected:test --base=origin/${{ github.event.pull_request.base.ref }} --configuration=ci
+      - name: Build Libraries
+        run: npm run build-grid
       - name: E2E
-        run: ./node_modules/.bin/nx affected:e2e --base=origin/${{ github.event.pull_request.base.ref }}
+        run: ./node_modules/.bin/nx affected:e2e --configuration=production-dist --base=origin/${{ github.event.pull_request.base.ref }}
       - name: E2E Upload Artifacts
         if: failure()
         uses: actions/upload-artifact@v2
@@ -48,7 +50,5 @@ jobs:
           name: cypress-artifacts
           path: dist/cypress/**/*.png
           retention-days: 30
-      - name: Build Libraries
-        run: npm run build-grid
       - name: Build Libraries (IVY)
         run: npm run build-grid:ivy
