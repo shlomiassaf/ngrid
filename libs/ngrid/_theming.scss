@@ -237,12 +237,17 @@ $pbl-grey: (
 $pbl-light-theme-background: (
   ngrid-space-fill-color: map_get($pbl-grey, 50),
   ngrid-row-color: white,
+  ngrid-header-row-color: white,
+  ngrid-footer-row-color: white,
 );
 
+$dark-theme-row-color: map.get($grey-palette, 800);
 // Background palette for dark themes.
 $pbl-dark-theme-background: (
   ngrid-space-fill-color: #303030,
-  ngrid-row-color: map_get($pbl-grey, 800),
+  ngrid-row-color: $dark-theme-row-color,
+  ngrid-header-row-color: $dark-theme-row-color,
+  ngrid-footer-row-color: $dark-theme-row-color,
 );
 
 // Foreground palette for light themes.
@@ -514,7 +519,9 @@ $pbl-ngrid-spacing-xs: (
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
+  $header-row-background: map.get($background, ngrid-header-row-color);
   $row-background: map-get($background, ngrid-row-color);
+  $footer-row-background: map.get($background, ngrid-footer-row-color);
   $border-color: map-get($foreground, ngrid-border-color);
   $header-cell-color: map-get($foreground, ngrid-header-cell-color);
   $cell-color: map-get($foreground, ngrid-cell-color);
@@ -529,8 +536,16 @@ $pbl-ngrid-spacing-xs: (
     border-color: $border-color;
   }
 
-  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+  .pbl-ngrid-header-row {
+    background: $header-row-background;
+  }
+
+  .pbl-ngrid-row {
     background: $row-background;
+  }
+
+  .pbl-ngrid-footer-row {
+    background: $footer-row-background;
   }
 
   .pbl-ngrid-header-cell {

@@ -147,6 +147,7 @@ Take one of the spacing configuration and use it to create a new modified versio
 Now use it to create a spacing class:
 
 ```scss
+@use '~@pebula/ngrid' as ngrid;
 
 $my-custom-spacing: (
   header-row-height: 28px,
@@ -157,7 +158,7 @@ $my-custom-spacing: (
 );
 
 pbl-ngrid.grid-custom-space {
-  @include pbl-ngrid-spacing(map-merge($theme, ( spacing: $my-custom-spacing )));
+  @include ngrid.spacing-theme(map-merge($theme, ( spacing: $my-custom-spacing )));
 }
 ```
 

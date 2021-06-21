@@ -20,7 +20,9 @@
   $background: map.get($theme, background);
   $foreground: map.get($theme, foreground);
 
+  $header-row-background: map.get($background, ngrid-header-row-color);
   $row-background: map.get($background, ngrid-row-color);
+  $footer-row-background: map.get($background, ngrid-footer-row-color);
   $border-color: map.get($foreground, ngrid-border-color);
   $header-cell-color: map.get($foreground, ngrid-header-cell-color);
   $cell-color: map.get($foreground, ngrid-cell-color);
@@ -35,8 +37,16 @@
     border-color: $border-color;
   }
 
-  .pbl-ngrid-row, .pbl-ngrid-header-row, .pbl-ngrid-footer-row {
+  .pbl-ngrid-header-row {
+    background: $header-row-background;
+  }
+
+  .pbl-ngrid-row {
     background: $row-background;
+  }
+
+  .pbl-ngrid-footer-row {
+    background: $footer-row-background;
   }
 
   .pbl-ngrid-header-cell {

@@ -80,7 +80,9 @@ $grey-palette: (
 $light-theme-palette: (
   background: (
     ngrid-space-fill-color: map.get($grey-palette, 50),
+    ngrid-header-row-color: white,
     ngrid-row-color: white,
+    ngrid-footer-row-color: white,
   ),
   foreground: (
     ngrid-border-color: $dark-dividers,
@@ -91,10 +93,13 @@ $light-theme-palette: (
   ),
 );
 
+$dark-theme-row-color: map.get($grey-palette, 800);
 $dark-theme-palette: (
   background: (
     ngrid-space-fill-color: #303030,
-    ngrid-row-color: map.get($grey-palette, 800),
+    ngrid-header-row-color: $dark-theme-row-color,
+    ngrid-row-color: $dark-theme-row-color,
+    ngrid-footer-row-color: $dark-theme-row-color,
   ),
   foreground: (
     ngrid-border-color: $light-dividers,
