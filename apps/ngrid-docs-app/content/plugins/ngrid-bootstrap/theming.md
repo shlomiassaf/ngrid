@@ -15,7 +15,7 @@ There are 2 pre-built CSS themes provided in `@pebula/ngrid-bootstrap/themes`:
 If you're using Angular CLI & SCSS, this is as simple as including one line in your `styles.scss` file:
 
 ```scss
-@use '~bootstrap/dist/css/bootstrap';
+@use 'bootstrap/dist/css/bootstrap';
 @use '@pebula/ngrid-bootstrap/themes/default-light.css';
 ```
 

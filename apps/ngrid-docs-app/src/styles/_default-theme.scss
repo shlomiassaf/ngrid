@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 @use '../../../../libs/ngrid' as ngrid;
 
 @function shell-light-theme($primary-palette, $accent-palette) {

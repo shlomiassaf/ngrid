@@ -50,7 +50,7 @@ To create a custom theme:
 A typical theme file will look something like this:
 
 ```scss
-@use '~@pebula/ngrid' as ngrid;
+@use '@pebula/ngrid' as ngrid;
 
 // 1. Create a palette from a color schema
 // `ngrid.$blue-palett` is a predefined color palette provided by `@pebula/ngrid/theming`
