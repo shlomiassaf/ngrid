@@ -44,7 +44,7 @@ we create a custom **nGrid** theme (which is no surprise):
 2. Create a theme from the palettes using `mat.define-light-theme` or `mat.define-dark-theme`
 3. Render the theme by including the mixin `mat.all-component-themes(`
 
-> We assume the **mat** namespace defined (`@use '~@angular/material' as mat`)
+> We assume the **mat** namespace defined (`@use '@angular/material' as mat`)
 
 Let's [recall](../../../concepts/theming/introduction#customized-themes-scss) the steps required for creating an **nGrid** theme:
 
@@ -52,7 +52,7 @@ Let's [recall](../../../concepts/theming/introduction#customized-themes-scss) th
 2. Create a theme from your palette using `ngrid.define-light-theme` or `ngrid.define-dark-theme`
 3. Render the theme by including the mixin `ngrid.ngrid-theme`
 
-> We assume the **ngrid** namespace defined (`@use '~@pebula/ngrid' as ngrid`)
+> We assume the **ngrid** namespace defined (`@use '@pebula/ngrid' as ngrid`)
 
 When working with material we use the material tools to create a theme object and render the styles. (Step 3)  
 We can use the same theme to render the **nGrid** theme!
@@ -64,9 +64,9 @@ missing definitions and create a new theme that you can send to `ngrid.ngrid-the
 `ngrid.define-light-theme` and `ngrid.define-dark-theme` accept a palette **or a theme**!!
 
 ```scss
-@use '~@angular/material' as mat;
-@use '~@pebula/ngrid' as ngrid;
-@use '~@pebula/ngrid-material' as ngrid-material;
+@use '@angular/material' as mat;
+@use '@pebula/ngrid' as ngrid;
+@use '@pebula/ngrid-material' as ngrid-material;
 
 $typography-config: mat.define-typography-config();
 @include mat.core($typography-config);

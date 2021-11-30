@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'sass:color';
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @mixin render-shell-app-theme($theme, $typography-config, $typography-selector: '.mat-typography') {
   $primary: map.get($theme, primary);

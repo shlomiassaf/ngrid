@@ -38,12 +38,12 @@ To create a custom theme:
 2. Create a theme from your palette using `ngrid.define-light-theme` or `ngrid.define-dark-theme`
 3. Render the theme by including the mixin `ngrid.ngrid-theme`
 
-> We assume the **ngrid** namespace defined (`@use '~@pebula/ngrid' as ngrid`)
+> We assume the **ngrid** namespace defined (`@use '@pebula/ngrid' as ngrid`)
 
 A typical theme file will look something like this:
 
 ```scss
-@use '~@pebula/ngrid' as ngrid;
+@use '@pebula/ngrid' as ngrid;
 
 // 1. Create a palette from a color schema
 // `ngrid.$blue-palett` is a predefined color palette provided by `@pebula/ngrid/theming`

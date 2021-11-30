@@ -9,7 +9,7 @@
 /** Create custom theme for the given application configuration. */
 export function createCustomTheme(name: string = 'app') {
 return `
-@use '~@pebula/ngrid' as ngrid;
+@use '@pebula/ngrid' as ngrid;
 
 $${name}-palette: ngrid.define-palette(ngrid.$blue-palette);
 
