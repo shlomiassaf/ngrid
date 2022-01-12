@@ -1,3 +1,12 @@
+# 4.0.0 (2022-01-12)
+
+### ngrid
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  remove tilde from use rule ([66a48ad11c814f17d332d4c4e1e7261ea92122e3](https://github.com/shlomiassaf/ngrid/commit/66a48ad11c814f17d332d4c4e1e7261ea92122e3)) |
+
+
 # 4.0.0-alpha.3 (2021-05-24)
 
 ### ngrid

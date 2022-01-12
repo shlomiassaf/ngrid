@@ -1,6 +1,6 @@
 {
   "name": "pebula",
-  "version": "4.0.0-alpha.3",
+  "version": "4.0.0",
   "description": "Angular Grid",
   "license": "MIT",
   "scripts": {
