@@ -1,5 +1,5 @@
 import { asapScheduler, BehaviorSubject, Observable, Subject } from 'rxjs';
-import { buffer, debounceTime, filter, map, take } from 'rxjs/operators';
+import { buffer, debounceTime, endWith, filter, map, skipLast, take } from 'rxjs/operators';
 import { ViewContainerRef } from '@angular/core';
 
 import { ON_DESTROY, removeFromArray } from '@pebula/ngrid/core';
@@ -43,8 +43,9 @@ export class ContextApi<T = any> {
   readonly focusChanged: Observable<PblNgridFocusChangedEvent> =
     this.focusChanged$.pipe(
       buffer<PblNgridFocusChangedEvent>(
-        this.focusChanged$.pipe(debounceTime(0, asapScheduler))
+        this.focusChanged$.pipe(debounceTime(0, asapScheduler), endWith(true))
       ),
+      skipLast(1),
       map((events) => ({
         prev: events[0].prev,
         curr: events[events.length - 1].curr,
