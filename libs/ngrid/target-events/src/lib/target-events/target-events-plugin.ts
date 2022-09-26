@@ -160,8 +160,12 @@ export class PblNgridTargetEventsPlugin<T = any> {
         if (matrixPoint) {
           const event: Events.PblNgridRowEvent<T> = { ...matrixPoint, source, rowTarget } as any;
           if (matrixPoint.type === 'data') {
-            (event as Events.PblNgridDataMatrixRow<T>).context = this.pluginCtrl.extApi.contextApi.getRow(matrixPoint.rowIndex);
-            (event as Events.PblNgridDataMatrixRow<T>).row = (event as Events.PblNgridDataMatrixRow<T>).context.$implicit;
+            const row = this.pluginCtrl.extApi.contextApi.getRow(matrixPoint.rowIndex);
+            if (!row) {
+              return undefined;
+            }
+            (event as Events.PblNgridDataMatrixRow<T>).context = row;
+            (event as Events.PblNgridDataMatrixRow<T>).row = row.$implicit;
           }
 
           /*  If `subType !== 'data'` it can only be `meta` because `metadataFromElement()` does not handle `meta-group` subType.
