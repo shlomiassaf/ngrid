@@ -41,11 +41,11 @@ jobs:
       - name: Create Cache Directory
         run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - name: Test
-        run: ./node_modules/.bin/nx affected:test --configuration=ci
+        run: ./node_modules/.bin/nx affected:test --configuration=ci --base=$NX_BASE --head=$NX_HEAD
       - name: Build Libraries
         run: npm run build-grid
       - name: E2E
-        run: ./node_modules/.bin/nx affected:e2e --configuration=production-dist
+        run: ./node_modules/.bin/nx affected:e2e --configuration=production-dist --base=$NX_BASE --head=$NX_HEAD
       - name: E2E Upload Artifacts
         if: failure()
         uses: actions/upload-artifact@v2
