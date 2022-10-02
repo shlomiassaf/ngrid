@@ -117,7 +117,8 @@
             "exclude": ["**/node_modules/**", "!libs/ngrid/**/*"]
           }
         }
-      }
+      },
+      "tags": ["name:ngrid", "type:lib"]
     },
     "ngrid-bootstrap": {
       "root": "libs/ngrid-bootstrap",
@@ -202,7 +203,8 @@
         "@schematics/angular:component": {
           "style": "scss"
         }
-      }
+      },
+      "tags": []
     },
     "ngrid-cypress": {
       "root": "libs/ngrid-cypress",
@@ -273,7 +275,8 @@
             "exclude": ["**/node_modules/**", "!libs/ngrid-cypress/**/*"]
           }
         }
-      }
+      },
+      "tags": []
     },
     "ngrid-dev-app": {
       "projectType": "application",
@@ -386,7 +389,8 @@
           },
           "outputs": ["coverage/apps/ngrid-dev-app"]
         }
-      }
+      },
+      "tags": []
     },
     "ngrid-dev-app-e2e": {
       "root": "apps/ngrid-dev-app-e2e",
@@ -426,7 +430,9 @@
             "exclude": ["**/node_modules/**", "!apps/ngrid-dev-app-e2e/**/*"]
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["ngrid-dev-app"]
     },
     "ngrid-docs-app": {
       "root": "apps/ngrid-docs-app/",
@@ -607,7 +613,8 @@
             }
           }
         }
-      }
+      },
+      "tags": ["type:app", "ngrid-docs-app"]
     },
     "ngrid-docs-app-e2e": {
       "root": "apps/ngrid-docs-app-e2e",
@@ -643,7 +650,9 @@
             "exclude": ["**/node_modules/**", "!apps/ngrid-docs-app-e2e/**/*"]
           }
         }
-      }
+      },
+      "tags": ["type:e2e-app", "parent:ngrid-docs-app"],
+      "implicitDependencies": ["ngrid-docs-app"]
     },
     "ngrid-material": {
       "root": "libs/ngrid-material",
@@ -736,7 +745,8 @@
             "exclude": ["**/node_modules/**", "!libs/ngrid-material/**/*"]
           }
         }
-      }
+      },
+      "tags": ["name:material", "type:child-lib", "parent:ngrid"]
     }
   }
 }

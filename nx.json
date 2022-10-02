@@ -8,34 +8,6 @@
     "tsconfig.base.json": "*",
     ".eslintrc.json": "*"
   },
-  "projects": {
-    "ngrid-docs-app": {
-      "tags": ["type:app", "ngrid-docs-app"]
-    },
-    "ngrid-docs-app-e2e": {
-      "tags": ["type:e2e-app", "parent:ngrid-docs-app"],
-      "implicitDependencies": ["ngrid-docs-app"]
-    },
-    "ngrid": {
-      "tags": ["name:ngrid", "type:lib"]
-    },
-    "ngrid-material": {
-      "tags": ["name:material", "type:child-lib", "parent:ngrid"]
-    },
-    "ngrid-cypress": {
-      "tags": []
-    },
-    "ngrid-dev-app": {
-      "tags": []
-    },
-    "ngrid-dev-app-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ngrid-dev-app"]
-    },
-    "ngrid-bootstrap": {
-      "tags": []
-    }
-  },
   "nx-enforce-module-boundaries": [
     true,
     {
