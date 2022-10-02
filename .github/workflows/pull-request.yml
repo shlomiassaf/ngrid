@@ -27,12 +27,8 @@ jobs:
           node-version: 14
       - name: NX Git environment setup
         uses: nrwl/nx-set-shas@v3
-          with:
-            # The "main" branch of your repository (the base branch which you target with PRs).
-            # Common names for this branch include main and master.
-            #
-            # Default: main
-            main-branch-name: 'master'
+        with:
+          main-branch-name: 'master'
       - name: Restore Cache
         uses: actions/cache@v1
         with:
