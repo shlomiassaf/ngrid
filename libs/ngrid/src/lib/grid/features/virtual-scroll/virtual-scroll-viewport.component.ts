@@ -461,6 +461,6 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
 
 declare global {
   interface CSSStyleDeclaration {
-    contain: 'none' | 'strict' | 'content' | 'size' | 'layout' | 'style' | 'paint' | 'inherit' | 'initial' | 'unset';
+    contain: string;
   }
 }
