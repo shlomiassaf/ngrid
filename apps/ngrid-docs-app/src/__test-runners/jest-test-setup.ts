@@ -1,4 +1,4 @@
-import 'jest-preset-angular';
+import 'jest-preset-angular/setup-jest';
 
 class ResizeObserver {
   observe() { }
@@ -6,7 +6,6 @@ class ResizeObserver {
   disconnect() { }
 }
 ResizeObserver['default'] = ResizeObserver;
-
 jest.mock('resize-observer-polyfill', () => ResizeObserver);
 
 jest.mock('markdown-pages', () => {

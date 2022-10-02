@@ -1,7 +1,7 @@
 
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "ngrid-ng-add",
+  "$id": "ngrid-ng-add",
   "title": "ngrid ng-add schematic",
   "type": "object",
   "properties": {

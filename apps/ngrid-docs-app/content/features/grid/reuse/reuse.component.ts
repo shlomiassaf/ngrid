@@ -70,7 +70,7 @@ export class ReuseExample {
 
   toggleViewMode(): void {
     this.viewMode = this.viewMode === 'person' ? 'seller' : 'person';
-    this.ds = createSource(this.viewMode, this.datasource);
+    this.ds = createSource(this.viewMode, this.datasource) as any;
     this.columns = buildColumns(this.viewMode);
     this.ds.refresh();
   }
