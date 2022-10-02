@@ -3,8 +3,10 @@ name: Pull Request
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,12 +20,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
       - name: Install Node
         uses: actions/setup-node@v1
         with:
           node-version: 14
+      - name: NX Git environment setup
+        uses: nrwl/nx-set-shas@v3
       - name: Restore Cache
         uses: actions/cache@v1
         with:
@@ -31,18 +34,16 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Restore git history
-        run: git fetch --no-tags --prune --depth=5 origin ${{ github.event.pull_request.base.ref }}
       - name: Install dependencies
         run: yarn install --ignore-platform
       - name: Create Cache Directory
         run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - name: Test
-        run: ./node_modules/.bin/nx affected:test --base=origin/${{ github.event.pull_request.base.ref }} --configuration=ci
+        run: ./node_modules/.bin/nx affected:test --configuration=ci
       - name: Build Libraries
         run: npm run build-grid
       - name: E2E
-        run: ./node_modules/.bin/nx affected:e2e --configuration=production-dist --base=origin/${{ github.event.pull_request.base.ref }}
+        run: ./node_modules/.bin/nx affected:e2e --configuration=production-dist
       - name: E2E Upload Artifacts
         if: failure()
         uses: actions/upload-artifact@v2
