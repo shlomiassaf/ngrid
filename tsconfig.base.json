@@ -16,13 +16,13 @@
     "baseUrl": ".",
     "paths": {
       "@pebula-internal/*": ["libs-internal/*/src/index.ts", "libs-internal/*"],
+      "@pebula/*": ["libs/*/src/index.ts", "libs/*"],
       "@pebula/apps/*": ["apps/libs/*", "apps/libs/*/src/index.ts"],
-      "@pebula/ngrid/core/lib/*": ["libs/ngrid/core/src/lib/*"],
-      "@pebula/ngrid/lib/*": ["libs/ngrid/src/lib/*"],
-      "@pebula/ngrid-material/lib/*": ["libs/ngrid-material/src/lib/*"],
       "@pebula/ngrid-bootstrap/lib/*": ["libs/ngrid-bootstrap/src/lib/*"],
       "@pebula/ngrid-cypress/lib/*": ["libs/ngrid-cypress/src/lib/*"],
-      "@pebula/*": ["libs/*/src/index.ts", "libs/*"]
+      "@pebula/ngrid-material/lib/*": ["libs/ngrid-material/src/lib/*"],
+      "@pebula/ngrid/core/lib/*": ["libs/ngrid/core/src/lib/*"],
+      "@pebula/ngrid/lib/*": ["libs/ngrid/src/lib/*"]
     },
     "rootDir": "."
   },

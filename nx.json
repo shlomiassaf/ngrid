@@ -70,5 +70,33 @@
   },
   "affected": {
     "defaultBase": "master"
+  },
+  "targetDependencies": {
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ]
+  },
+  "cli": {
+    "warnings": {
+      "versionMismatch": false
+    },
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "ngrid-docs-app",
+  "generators": {
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress",
+      "strict": true
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/schematics:node-application": {
+      "framework": "express"
+    }
   }
 }
