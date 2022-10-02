@@ -1,3 +1,13 @@
+## 4.0.1 (2022-10-02)
+
+### ngrid
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **core:** fix issue with TypeScript DOM library update ([db0b8ca93c526c5604b28c56dff8c6457c3d38f5](https://github.com/shlomiassaf/ngrid/commit/db0b8ca93c526c5604b28c56dff8c6457c3d38f5)) |
+| bug fix |  support header & footer background colors in theming ([e825e4fe16ef07093ef41b665dbf596f305f614c](https://github.com/shlomiassaf/ngrid/commit/e825e4fe16ef07093ef41b665dbf596f305f614c)) |
+| bug fix |  **target-events:** expose mouseUp & mouseDown events in target events plugin ([c460d3bd1ce7cb7f026712c2f3d5baac84eab50c](https://github.com/shlomiassaf/ngrid/commit/c460d3bd1ce7cb7f026712c2f3d5baac84eab50c)) |
+
 # 4.0.0 (2022-01-12)
 
 ### ngrid
