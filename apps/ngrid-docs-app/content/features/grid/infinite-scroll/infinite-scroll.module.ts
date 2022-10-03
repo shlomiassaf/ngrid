@@ -13,15 +13,14 @@ import { IndexBasedPagingExample } from './index-based-paging.component';
 import { CustomTriggersExample } from './custom-triggers.component';
 
 @NgModule({
-  declarations: [ InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample ],
-  imports: [
-    CommonModule,
-    ExampleCommonModule,
-    MatProgressBarModule,
-    PblNgridModule, PblNgridTargetEventsModule, PblNgridInfiniteScrollModule,
-  ],
-  exports: [ InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample ],
-  entryComponents: [InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample ],
+    declarations: [InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample],
+    imports: [
+        CommonModule,
+        ExampleCommonModule,
+        MatProgressBarModule,
+        PblNgridModule, PblNgridTargetEventsModule, PblNgridInfiniteScrollModule,
+    ],
+    exports: [InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample]
 })
 @BindNgModule(InfiniteScrollExample, InfiniteScrollDataSourceExample, IndexBasedPagingExample, CustomTriggersExample)
 export class InfiniteScrollExampleModule { }

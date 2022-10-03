@@ -8,11 +8,9 @@ import { PblNgridMatSortDirective, PLUGIN_KEY } from './mat-sort.directive';
 import { MatSortExtension } from './mat-sort-component-extension';
 
 @NgModule({
-  imports: [ CommonModule, MatButtonModule, MatSortModule, PblNgridModule ],
-  declarations: [ PblNgridMatSortDirective ],
-  exports: [ PblNgridMatSortDirective, MatSortModule ],
-  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
-  entryComponents: [ MatSortHeader ],
+    imports: [CommonModule, MatButtonModule, MatSortModule, PblNgridModule],
+    declarations: [PblNgridMatSortDirective],
+    exports: [PblNgridMatSortDirective, MatSortModule]
 })
 export class PblNgridMatSortModule {
   static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY }, PblNgridMatSortDirective);

@@ -12,11 +12,9 @@ import { PblNgridDefaultInfiniteVirtualRowComponent } from './default-infinite-v
 import { PblNgridInfiniteRowComponent } from './infinite-virtual-row/row';
 
 @NgModule({
-  imports: [ CommonModule, CdkTableModule, PblNgridModule, PblNgridTargetEventsModule ],
-  declarations: [ PblNgridInfiniteVirtualRowRefDirective, PblNgridInfiniteRowComponent, PblNgridDefaultInfiniteVirtualRowComponent ],
-  exports: [ PblNgridInfiniteVirtualRowRefDirective, PblNgridInfiniteRowComponent],
-  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
-  entryComponents: [ PblNgridDefaultInfiniteVirtualRowComponent ],
+    imports: [CommonModule, CdkTableModule, PblNgridModule, PblNgridTargetEventsModule],
+    declarations: [PblNgridInfiniteVirtualRowRefDirective, PblNgridInfiniteRowComponent, PblNgridDefaultInfiniteVirtualRowComponent],
+    exports: [PblNgridInfiniteVirtualRowRefDirective, PblNgridInfiniteRowComponent]
 })
 export class PblNgridInfiniteScrollModule {
   static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY, factory: 'create' }, PblNgridInfiniteScrollPlugin);

@@ -16,29 +16,24 @@ import { PblNgridMatHeaderContextMenuPlugin, PLUGIN_KEY } from './header-context
 import { MatExcelStyleHeaderMenu } from './header-context/styles/excel-style-header-menu';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatFormFieldModule,
-    MatInputModule,
-    PblNgridModule,
-    PblNgridOverlayPanelModule,
-  ],
-  declarations: [
-    MatHeaderContextMenuTrigger,
-    PblNgridMatHeaderContextMenuPlugin,
-    MatExcelStyleHeaderMenu,
-  ],
-  exports: [
-    PblNgridMatHeaderContextMenuPlugin,
-  ],
-  entryComponents: [
-    // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
-    MatHeaderContextMenuTrigger,
-    MatExcelStyleHeaderMenu,
-  ],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatFormFieldModule,
+        MatInputModule,
+        PblNgridModule,
+        PblNgridOverlayPanelModule,
+    ],
+    declarations: [
+        MatHeaderContextMenuTrigger,
+        PblNgridMatHeaderContextMenuPlugin,
+        MatExcelStyleHeaderMenu,
+    ],
+    exports: [
+        PblNgridMatHeaderContextMenuPlugin,
+    ]
 })
 export class PblNgridContextMenuModule {
   static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY }, PblNgridMatHeaderContextMenuPlugin);

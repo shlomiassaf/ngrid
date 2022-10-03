@@ -11,11 +11,9 @@ import { PblPaginatorComponent } from './table-paginator.component';
 // set the styles in the SCSS.
 
 @NgModule({
-  imports: [ CommonModule, MatPaginatorModule, MatSelectModule, MatTooltipModule, MatButtonModule, PblNgridModule ],
-  declarations: [ PblPaginatorComponent ],
-  exports: [ PblPaginatorComponent ],
-  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
-  entryComponents: [ PblPaginatorComponent, MatPaginator ]
+    imports: [CommonModule, MatPaginatorModule, MatSelectModule, MatTooltipModule, MatButtonModule, PblNgridModule],
+    declarations: [PblPaginatorComponent],
+    exports: [PblPaginatorComponent]
 })
 export class PblNgridPaginatorModule {
   constructor(cf: ComponentFactoryResolver, injector: Injector) {
