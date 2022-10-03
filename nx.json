@@ -27,9 +27,7 @@
         },
         {
           "sourceTag": "*",
-          "onlyDependOnLibsWithTags": [
-            "*"
-          ]
+          "onlyDependOnLibsWithTags": ["*"]
         }
       ]
     }
@@ -38,12 +36,7 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "parallel": 1
       }
     }
@@ -78,5 +71,6 @@
     "@nrwl/schematics:node-application": {
       "framework": "express"
     }
-  }
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json"
 }
