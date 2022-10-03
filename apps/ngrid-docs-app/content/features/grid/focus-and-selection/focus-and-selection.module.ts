@@ -14,15 +14,14 @@ import { FocusAndSelectionExample } from './focus-and-selection.component';
 const COMPONENTS = [ FocusAndSelectionExample ];
 
 @NgModule({
-  declarations: COMPONENTS,
-  imports: [
-    CommonModule,
-    MatButtonModule, MatFormFieldModule, MatSelectModule,
-    ExampleCommonModule,
-    PblNgridModule, PblNgridBlockUiModule,
-  ],
-  exports: COMPONENTS,
-  entryComponents: COMPONENTS,
+    declarations: COMPONENTS,
+    imports: [
+        CommonModule,
+        MatButtonModule, MatFormFieldModule, MatSelectModule,
+        ExampleCommonModule,
+        PblNgridModule, PblNgridBlockUiModule,
+    ],
+    exports: COMPONENTS
 })
 @BindNgModule(FocusAndSelectionExample)
 export class FocusAndSelectionExampleModule { }

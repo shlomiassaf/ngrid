@@ -18,11 +18,9 @@ const DETAIL_ROW = [
 ];
 
 @NgModule({
-  imports: [ CommonModule, CdkTableModule, PblNgridModule, PblNgridTargetEventsModule ],
-  declarations: [ DETAIL_ROW, PblNgridDefaultDetailRowParentComponent ],
-  exports: [ DETAIL_ROW ],
-  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
-  entryComponents: [ PblNgridDetailRowComponent, PblNgridDefaultDetailRowParentComponent ],
+    imports: [CommonModule, CdkTableModule, PblNgridModule, PblNgridTargetEventsModule],
+    declarations: [DETAIL_ROW, PblNgridDefaultDetailRowParentComponent],
+    exports: [DETAIL_ROW]
 })
 export class PblNgridDetailRowModule {
   static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY }, PblNgridDetailRowPluginDirective);

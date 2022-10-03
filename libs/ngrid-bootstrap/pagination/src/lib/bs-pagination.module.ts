@@ -6,10 +6,8 @@ import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridBsPagination } from './bs-pagination.component';
 
 @NgModule({
-  imports: [ CommonModule, NgbPaginationModule, PblNgridModule ],
-  declarations: [ PblNgridBsPagination ],
-  exports: [ NgbPaginationModule, PblNgridBsPagination ],
-  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
-  entryComponents: [ PblNgridBsPagination ]
+    imports: [CommonModule, NgbPaginationModule, PblNgridModule],
+    declarations: [PblNgridBsPagination],
+    exports: [NgbPaginationModule, PblNgridBsPagination]
 })
 export class PblNgridBsPaginationModule { }

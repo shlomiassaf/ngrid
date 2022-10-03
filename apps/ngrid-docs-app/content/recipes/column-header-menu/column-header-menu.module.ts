@@ -14,15 +14,14 @@ import { ColumnHeaderMenuExample } from './column-header-menu.component';
 const COMPONENTS = [ ColumnHeaderMenuExample ];
 
 @NgModule({
-  declarations: COMPONENTS,
-  imports: [
-    CommonModule,
-    MatIconModule, MatMenuModule,
-    ExampleCommonModule,
-    PblNgridModule, PblNgridBlockUiModule, PblNgridMatSortModule,
-  ],
-  exports: COMPONENTS,
-  entryComponents: COMPONENTS,
+    declarations: COMPONENTS,
+    imports: [
+        CommonModule,
+        MatIconModule, MatMenuModule,
+        ExampleCommonModule,
+        PblNgridModule, PblNgridBlockUiModule, PblNgridMatSortModule,
+    ],
+    exports: COMPONENTS
 })
 @BindNgModule(ColumnHeaderMenuExample)
 export class ColumnHeaderMenuExampleModule { }

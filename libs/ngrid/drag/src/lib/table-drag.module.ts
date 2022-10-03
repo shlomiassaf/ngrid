@@ -38,31 +38,29 @@ export function ngridPlugins() {
 }
 
 @NgModule({
-  imports: [
-    CommonModule,
-    PblNgridModule,
-    DragDropModule
-  ],
-  declarations: [
-    DragPluginDefaultTemplatesComponent,
-    CdkLazyDropList, CdkLazyDrag, PblDragHandle,
-    PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
-    PblNgridColumnDragContainerDirective,
-    PblNgridColumnDropContainerDirective, PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
-    PblNgridAggregationContainerDirective,
-    PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
-  ],
-  exports: [
-    DragDropModule,
-    CdkLazyDropList, CdkLazyDrag, PblDragHandle,
-    PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
-    PblNgridColumnDragContainerDirective,
-    PblNgridColumnDropContainerDirective, PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
-    PblNgridAggregationContainerDirective,
-    PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
-  ],
-  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
-  entryComponents: [ DragPluginDefaultTemplatesComponent ]
+    imports: [
+        CommonModule,
+        PblNgridModule,
+        DragDropModule
+    ],
+    declarations: [
+        DragPluginDefaultTemplatesComponent,
+        CdkLazyDropList, CdkLazyDrag, PblDragHandle,
+        PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
+        PblNgridColumnDragContainerDirective,
+        PblNgridColumnDropContainerDirective, PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
+        PblNgridAggregationContainerDirective,
+        PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
+    ],
+    exports: [
+        DragDropModule,
+        CdkLazyDropList, CdkLazyDrag, PblDragHandle,
+        PblNgridRowReorderPluginDirective, PblNgridRowDragDirective,
+        PblNgridColumnDragContainerDirective,
+        PblNgridColumnDropContainerDirective, PblNgridColumnReorderPluginDirective, PblNgridColumnDragDirective, PblNgridCellDraggerRefDirective,
+        PblNgridAggregationContainerDirective,
+        PblNgridDragResizeComponent, PblNgridCellResizerRefDirective,
+    ]
 })
 export class PblNgridDragModule {
 

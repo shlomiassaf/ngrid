@@ -7,11 +7,9 @@ import { PblBsSortableExtension } from './bs-sortable-component-extension';
 import { PblNgridBsSortable } from './bs-sortable/bs-sortable.component';
 
 @NgModule({
-  imports: [ CommonModule, PblNgridModule ],
-  declarations: [ PblNgridBsSortablePlugin, PblNgridBsSortable ],
-  exports: [ PblNgridBsSortablePlugin, PblNgridBsSortable ],
-  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
-  entryComponents: [ PblNgridBsSortable ],
+    imports: [CommonModule, PblNgridModule],
+    declarations: [PblNgridBsSortablePlugin, PblNgridBsSortable],
+    exports: [PblNgridBsSortablePlugin, PblNgridBsSortable]
 })
 export class PblNgridBsSortableModule {
   static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY }, PblNgridBsSortablePlugin);

@@ -77,70 +77,60 @@ export function provideCommon(components: CommonTemplateInit[]): any {
 }
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ScrollingModule, ScrollingModuleExp,
-    CdkTableModule,
-  ],
-  declarations: [
-    PblNgridMetaRowContainerComponent,
-    PblCdkTableComponent,
-    PblNgridColumnDef,
-    PblNgridRowDef, PblNgridRowOverride, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
-    PblNgridCellStyling,
-    PblNgridOuterSectionDirective,
-    PblNgridHeaderExtensionRefDirective,
-    PblNgridNoDataRefDirective,
-    PblNgridPaginatorRefDirective,
-    PblNgridHeaderCellDefDirective,
-    PblNgridFooterCellDefDirective,
-    PblNgridCellDefDirective, PblNgridEditorCellDefDirective,
-    PblNgridHeaderCellComponent,
-    PblNgridCellComponent,
-    PblNgridFooterCellComponent,
-    PblNgridMetaCellComponent,
-
-    PblNgridHideColumns,
-
-    PblCdkVirtualScrollViewportComponent, PblNgridScrolling,
-    PblCdkVirtualScrollDirective,
-    // TODO: Move to an independent package in v4
-    PblCdkAutoSizeVirtualScrollDirective, PblCdkFixedSizedVirtualScrollDirective,
-
-    PblNgridCellEditAutoFocusDirective,
-
-    PblNgridComponent,
-  ],
-  providers: [
-    ...PROVIDERS,
-  ],
-  exports: [
-    PblNgridRowDef, PblNgridRowOverride, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
-    PblNgridCellStyling,
-    PblNgridOuterSectionDirective,
-    PblNgridHeaderExtensionRefDirective,
-    PblNgridNoDataRefDirective,
-    PblNgridPaginatorRefDirective,
-    PblNgridHeaderCellDefDirective,
-    PblNgridFooterCellDefDirective,
-    PblNgridCellDefDirective, PblNgridEditorCellDefDirective, PblNgridScrolling,
-    PblNgridHeaderCellComponent,
-    PblNgridCellComponent,
-    PblNgridFooterCellComponent,
-    PblNgridMetaCellComponent,
-
-    PblNgridHideColumns,
-    PblCdkVirtualScrollDirective,
-    // TODO: Move to an independent package in v4
-    PblCdkAutoSizeVirtualScrollDirective, PblCdkFixedSizedVirtualScrollDirective,
-
-    PblNgridCellEditAutoFocusDirective,
-
-    PblNgridComponent,
-  ],
-  // TODO(REFACTOR_REF 2): remove when ViewEngine is no longer supported by angular (V12 ???)
-  // Since these are no longer part of the main grid template but now generated programmatically we need to put them here for non viewEngine compilation to work (e.g. stackblitz)
-  entryComponents: [ PblNgridHeaderCellComponent, PblNgridCellComponent, PblNgridFooterCellComponent , PblNgridMetaCellComponent]
+    imports: [
+        CommonModule,
+        ScrollingModule, ScrollingModuleExp,
+        CdkTableModule,
+    ],
+    declarations: [
+        PblNgridMetaRowContainerComponent,
+        PblCdkTableComponent,
+        PblNgridColumnDef,
+        PblNgridRowDef, PblNgridRowOverride, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
+        PblNgridCellStyling,
+        PblNgridOuterSectionDirective,
+        PblNgridHeaderExtensionRefDirective,
+        PblNgridNoDataRefDirective,
+        PblNgridPaginatorRefDirective,
+        PblNgridHeaderCellDefDirective,
+        PblNgridFooterCellDefDirective,
+        PblNgridCellDefDirective, PblNgridEditorCellDefDirective,
+        PblNgridHeaderCellComponent,
+        PblNgridCellComponent,
+        PblNgridFooterCellComponent,
+        PblNgridMetaCellComponent,
+        PblNgridHideColumns,
+        PblCdkVirtualScrollViewportComponent, PblNgridScrolling,
+        PblCdkVirtualScrollDirective,
+        // TODO: Move to an independent package in v4
+        PblCdkAutoSizeVirtualScrollDirective, PblCdkFixedSizedVirtualScrollDirective,
+        PblNgridCellEditAutoFocusDirective,
+        PblNgridComponent,
+    ],
+    providers: [
+        ...PROVIDERS,
+    ],
+    exports: [
+        PblNgridRowDef, PblNgridRowOverride, PblNgridRowComponent, PblNgridColumnRowComponent, PblNgridMetaRowComponent,
+        PblNgridCellStyling,
+        PblNgridOuterSectionDirective,
+        PblNgridHeaderExtensionRefDirective,
+        PblNgridNoDataRefDirective,
+        PblNgridPaginatorRefDirective,
+        PblNgridHeaderCellDefDirective,
+        PblNgridFooterCellDefDirective,
+        PblNgridCellDefDirective, PblNgridEditorCellDefDirective, PblNgridScrolling,
+        PblNgridHeaderCellComponent,
+        PblNgridCellComponent,
+        PblNgridFooterCellComponent,
+        PblNgridMetaCellComponent,
+        PblNgridHideColumns,
+        PblCdkVirtualScrollDirective,
+        // TODO: Move to an independent package in v4
+        PblCdkAutoSizeVirtualScrollDirective, PblCdkFixedSizedVirtualScrollDirective,
+        PblNgridCellEditAutoFocusDirective,
+        PblNgridComponent,
+    ]
 })
 export class PblNgridModule {
 
