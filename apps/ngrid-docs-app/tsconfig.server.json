@@ -6,6 +6,7 @@
   "exclude": [
     "src/__test-runners/*.ts",
     "**/*.spec.ts",
+    "**/*.test.ts",
     "./build/**/*.ts",
     "src/app/app.browser.module.ts",
     "src/main.ts",

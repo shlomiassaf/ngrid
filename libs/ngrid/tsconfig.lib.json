@@ -14,5 +14,10 @@
     "types": ["dev-mode-types"],
     "lib": ["dom", "es2015"]
   },
-  "exclude": ["src/__test-runners/*.ts", "**/*.spec.ts", "karma.conf.ts"]
+  "exclude": [
+    "src/__test-runners/*.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "karma.conf.ts"
+  ]
 }

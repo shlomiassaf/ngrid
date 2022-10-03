@@ -2,18 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": [
-      "jasmine",
-      "node",
-      "dev-mode-types"
-    ]
+    "types": ["jasmine", "node", "dev-mode-types"]
   },
-  "files": [
-    "src/__test-runners/karma-test.ts",
-    "src/polyfills.ts"
-  ],
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
+  "files": ["src/__test-runners/karma-test.ts", "src/polyfills.ts"],
+  "include": ["**/*.spec.ts", "**/*.test.ts", "**/*.d.ts"]
 }
