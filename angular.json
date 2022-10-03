@@ -109,20 +109,6 @@
           "outputs": [
             "coverage/libs/ngrid"
           ]
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ngrid/tsconfig.lib.json",
-              "libs/ngrid/tsconfig.spec.json",
-              "libs/ngrid/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ngrid/**/*"
-            ]
-          }
         }
       },
       "tags": [
@@ -188,19 +174,6 @@
             "production-ivy": {
               "tsConfig": "libs/ngrid-bootstrap/tsconfig.lib.prod.ivy.json"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ngrid-bootstrap/tsconfig.lib.json",
-              "libs/ngrid-bootstrap/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ngrid-bootstrap/**/*"
-            ]
           }
         },
         "test": {
@@ -278,19 +251,6 @@
             "production-ivy": {
               "tsConfig": "libs/ngrid-cypress/tsconfig.lib.prod.ivy.json"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ngrid-cypress/tsconfig.lib.json",
-              "libs/ngrid-cypress/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ngrid-cypress/**/*"
-            ]
           }
         }
       },
@@ -380,20 +340,6 @@
             "browserTarget": "ngrid-dev-app:build"
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/ngrid-dev-app/tsconfig.app.json",
-              "apps/ngrid-dev-app/tsconfig.spec.json",
-              "apps/ngrid-dev-app/tsconfig.editor.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ngrid-dev-app/**/*"
-            ]
-          }
-        },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -449,18 +395,6 @@
             "production-dist": {
               "devServerTarget": "ngrid-dev-app:serve:production"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/ngrid-dev-app-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ngrid-dev-app-e2e/**/*"
-            ]
           }
         }
       },
@@ -612,22 +546,6 @@
             "coverage/apps/ngrid-docs-app/"
           ]
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/ngrid-docs-app/tsconfig.app.json",
-              "apps/ngrid-docs-app/tsconfig.spec.json",
-              "apps/ngrid-docs-app/tsconfig.worker.json",
-              "apps/ngrid-docs-app/tsconfig.spec.json",
-              "apps/ngrid-docs-app/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ngrid-docs-app/**"
-            ]
-          }
-        },
         "server": {
           "builder": "./tools/ngx-build-plus.server:server",
           "options": {
@@ -692,18 +610,6 @@
             }
           },
           "defaultConfiguration": "development"
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/ngrid-docs-app-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ngrid-docs-app-e2e/**/*"
-            ]
-          }
         }
       },
       "tags": [
@@ -796,19 +702,6 @@
           "outputs": [
             "coverage/libs/ngrid-material"
           ]
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ngrid-material/tsconfig.lib.json",
-              "libs/ngrid-material/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ngrid-material/**/*"
-            ]
-          }
         }
       },
       "tags": [
