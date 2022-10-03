@@ -7,7 +7,7 @@ module.exports = {
     'ts-jest': {
       stringifyContentPathRegex: '\\.(html|svg)$',
 
-      tsconfig: '<rootDir>/tsconfig.spec.jest.json',
+      tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
   displayName: 'ngrid',
