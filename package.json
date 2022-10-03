@@ -80,7 +80,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "14.2.4",
     "@angular-devkit/schematics": "14.2.4",
-    "@angular/cli": "~14.0.0",
+    "@angular/cli": "~14.1.0",
     "@angular/compiler-cli": "14.2.4",
     "@angular/language-service": "14.2.4",
     "@ngrx/schematics": "14.0.2",
