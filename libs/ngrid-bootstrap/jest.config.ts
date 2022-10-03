@@ -1,3 +1,4 @@
+/* eslint-disable */
 module.exports = {
   displayName: 'ngrid-bootstrap',
   preset: '../../jest.preset.js',
