@@ -5,5 +5,6 @@
     "types": ["jasmine", "node", "dev-mode-types"]
   },
   "files": ["src/__test-runners/karma-test.ts"],
-  "include": ["**/*.spec.ts", "**/*.test.ts", "**/*.d.ts"]
+  "include": ["**/*.spec.ts", "**/*.test.ts", "**/*.d.ts"],
+  "exclude": ["jest.config.ts"]
 }

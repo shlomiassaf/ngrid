@@ -96,25 +96,18 @@
               "browsers": "ChromeHeadlessCI"
             }
           },
-          "outputs": [
-            "coverage/libs/ngrid"
-          ]
+          "outputs": ["coverage/libs/ngrid"]
         },
         "testJest": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/ngrid/jest.config.js",
+            "jestConfig": "libs/ngrid/jest.config.ts",
             "passWithNoTests": true
           },
-          "outputs": [
-            "coverage/libs/ngrid"
-          ]
+          "outputs": ["coverage/libs/ngrid"]
         }
       },
-      "tags": [
-        "name:ngrid",
-        "type:lib"
-      ]
+      "tags": ["name:ngrid", "type:lib"]
     },
     "ngrid-bootstrap": {
       "root": "libs/ngrid-bootstrap",
@@ -179,12 +172,10 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/ngrid-bootstrap/jest.config.js",
+            "jestConfig": "libs/ngrid-bootstrap/jest.config.ts",
             "passWithNoTests": true
           },
-          "outputs": [
-            "coverage/libs/ngrid-bootstrap"
-          ]
+          "outputs": ["coverage/libs/ngrid-bootstrap"]
         }
       },
       "schematics": {
@@ -275,9 +266,7 @@
             "main": "apps/ngrid-dev-app/src/main.ts",
             "polyfills": "apps/ngrid-dev-app/src/polyfills.ts",
             "tsConfig": "apps/ngrid-dev-app/tsconfig.app.json",
-            "styles": [
-              "apps/ngrid-dev-app/src/theme.scss"
-            ],
+            "styles": ["apps/ngrid-dev-app/src/theme.scss"],
             "extractLicenses": false,
             "scripts": [],
             "vendorChunk": true,
@@ -315,9 +304,7 @@
               ]
             }
           },
-          "outputs": [
-            "{options.outputPath}"
-          ]
+          "outputs": ["{options.outputPath}"]
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -359,9 +346,7 @@
               "browsers": "ChromeHeadlessCI"
             }
           },
-          "outputs": [
-            "coverage/apps/ngrid-dev-app"
-          ]
+          "outputs": ["coverage/apps/ngrid-dev-app"]
         }
       },
       "tags": []
@@ -399,9 +384,7 @@
         }
       },
       "tags": [],
-      "implicitDependencies": [
-        "ngrid-dev-app"
-      ]
+      "implicitDependencies": ["ngrid-dev-app"]
     },
     "ngrid-docs-app": {
       "root": "apps/ngrid-docs-app/",
@@ -428,9 +411,7 @@
               "apps/ngrid-docs-app/src/google1a0455c97ead32c8.html",
               "apps/ngrid-docs-app/src/assets"
             ],
-            "styles": [
-              "apps/ngrid-docs-app/src/styles/main.scss"
-            ],
+            "styles": ["apps/ngrid-docs-app/src/styles/main.scss"],
             "scripts": [],
             "webWorkerTsConfig": "apps/ngrid-docs-app/tsconfig.worker.json",
             "allowedCommonJsDependencies": [
@@ -518,9 +499,7 @@
                 "with": "apps/libs/docs-app-lib/lib/services/search/search-adapters/noop.ts"
               }
             ],
-            "styles": [
-              "apps/ngrid-docs-app/src/__test-runners/main-test.scss"
-            ],
+            "styles": ["apps/ngrid-docs-app/src/__test-runners/main-test.scss"],
             "scripts": [],
             "assets": []
           },
@@ -532,19 +511,15 @@
               "browsers": "ChromeHeadlessCI"
             }
           },
-          "outputs": [
-            "coverage/apps/ngrid-docs-app/"
-          ]
+          "outputs": ["coverage/apps/ngrid-docs-app/"]
         },
         "testJest": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/ngrid-docs-app/jest.config.js",
+            "jestConfig": "apps/ngrid-docs-app/jest.config.ts",
             "passWithNoTests": true
           },
-          "outputs": [
-            "coverage/apps/ngrid-docs-app/"
-          ]
+          "outputs": ["coverage/apps/ngrid-docs-app/"]
         },
         "server": {
           "builder": "./tools/ngx-build-plus.server:server",
@@ -579,10 +554,7 @@
           }
         }
       },
-      "tags": [
-        "type:app",
-        "ngrid-docs-app"
-      ]
+      "tags": ["type:app", "ngrid-docs-app"]
     },
     "ngrid-docs-app-e2e": {
       "root": "apps/ngrid-docs-app-e2e",
@@ -612,13 +584,8 @@
           "defaultConfiguration": "development"
         }
       },
-      "tags": [
-        "type:e2e-app",
-        "parent:ngrid-docs-app"
-      ],
-      "implicitDependencies": [
-        "ngrid-docs-app"
-      ]
+      "tags": ["type:e2e-app", "parent:ngrid-docs-app"],
+      "implicitDependencies": ["ngrid-docs-app"]
     },
     "ngrid-material": {
       "root": "libs/ngrid-material",
@@ -688,7 +655,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/ngrid-material/jest.config.js",
+            "jestConfig": "libs/ngrid-material/jest.config.ts",
             "passWithNoTests": true
           },
           "configurations": {
@@ -699,16 +666,10 @@
               "browsers": "ChromeHeadlessCI"
             }
           },
-          "outputs": [
-            "coverage/libs/ngrid-material"
-          ]
+          "outputs": ["coverage/libs/ngrid-material"]
         }
       },
-      "tags": [
-        "name:material",
-        "type:child-lib",
-        "parent:ngrid"
-      ]
+      "tags": ["name:material", "type:child-lib", "parent:ngrid"]
     }
   }
 }
