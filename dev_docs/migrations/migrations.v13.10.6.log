@@ -1,0 +1,472 @@
+➜  ngrid git:(update-env-nx-ng-14) ./node_modules/.bin/nx migrate @nrwl/workspace@13.10.6
+Fetching meta data about packages.
+It may take a few minutes.
+Fetching @nrwl/workspace@13.10.6
+Fetching @nrwl/cypress@13.10.6
+Fetching @nrwl/angular@13.10.6
+Fetching @nrwl/node@13.10.6
+Fetching @nrwl/jest@13.10.6
+Fetching @nrwl/express@13.10.6
+Fetching @angular/core@13.3.11
+Fetching @ngrx/component-store@13.0.2
+Fetching @angular/cli@13.3.9
+Fetching @ngrx/store@13.0.2
+Fetching @angular/material@13.3.9
+Fetching @angular/cdk@13.3.9
+Fetching @angular/cli@~13.3.0
+Fetching @ngrx/router-store@13.0.2
+Fetching @ngrx/store-devtools@13.0.2
+Fetching @ngrx/schematics@13.0.2
+Fetching @ngrx/effects@13.0.2
+
+ >  NX   The migrate command has run successfully.
+
+   - Package.json has been updated.
+   - Migrations.json has been generated.
+
+
+ >  NX   Next steps:
+
+   - Make sure package.json changes make sense and then run 'yarn',
+   - Run 'yarn nx migrate --run-migrations'
+   - To learn more go to https://nx.dev/using-nx/updating-nx
+   - You may run 'yarn nx connect-to-nx-cloud' to get faster builds, GitHub integration, and more. Check out https://nx.app
+
+➜  ngrid git:(update-env-nx-ng-14) ✗ ./node_modules/.bin/nx migrate --run-migrations --create-commits --verbose
+
+ >  NX   Running 'yarn' to make sure necessary packages are installed
+
+yarn install v1.22.18
+[1/4] 🔍  Resolving packages...
+warning ngx-build-plus > @angular-devkit/build-angular > core-js@3.20.3: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+[2/4] 🚚  Fetching packages...
+[3/4] 🔗  Linking dependencies...
+warning " > @angular/cdk-experimental@12.0.0" has incorrect peer dependency "@angular/cdk@12.0.0".
+warning " > @angular/flex-layout@12.0.0-beta.34" has incorrect peer dependency "@angular/cdk@^12.0.0".
+warning " > @ng-bootstrap/ng-bootstrap@9.1.0" has incorrect peer dependency "@angular/common@^11.0.0".
+warning " > @ng-bootstrap/ng-bootstrap@9.1.0" has incorrect peer dependency "@angular/core@^11.0.0".
+warning " > @ng-bootstrap/ng-bootstrap@9.1.0" has incorrect peer dependency "@angular/forms@^11.0.0".
+warning " > @ng-bootstrap/ng-bootstrap@9.1.0" has incorrect peer dependency "@angular/localize@^11.0.0".
+warning " > @nguniversal/common@12.0.0" has incorrect peer dependency "@angular/common@^12.0.0".
+warning " > @nguniversal/common@12.0.0" has incorrect peer dependency "@angular/core@^12.0.0".
+warning " > @nguniversal/express-engine@12.0.0" has incorrect peer dependency "@angular/common@^12.0.0".
+warning " > @nguniversal/express-engine@12.0.0" has incorrect peer dependency "@angular/core@^12.0.0".
+warning " > @nguniversal/express-engine@12.0.0" has incorrect peer dependency "@angular/platform-server@^12.0.0".
+warning "@nrwl/angular > @nrwl/cypress > @cypress/webpack-preprocessor@5.13.0" has unmet peer dependency "@babel/core@^7.0.1".
+warning "@nrwl/angular > @nrwl/cypress > @cypress/webpack-preprocessor@5.13.0" has unmet peer dependency "@babel/preset-env@^7.0.0".
+warning "@nrwl/angular > @nrwl/cypress > @cypress/webpack-preprocessor@5.13.0" has unmet peer dependency "babel-loader@^8.0.2".
+warning "@nrwl/angular > @nrwl/devkit@13.10.6" has unmet peer dependency "nx@>= 13.10 <= 15".
+warning " > bootstrap@4.6.0" has unmet peer dependency "jquery@1.9.1 - 3".
+warning " > bootstrap@4.6.0" has unmet peer dependency "popper.js@^1.16.1".
+warning " > ng-packagr@13.3.1" has incorrect peer dependency "tslib@^2.3.0".
+warning "ng-packagr > postcss-preset-env > @csstools/postcss-progressive-custom-properties@1.3.0" has incorrect peer dependency "postcss@^8.3".
+warning "ng-packagr > postcss-preset-env > css-blank-pseudo@3.0.3" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > css-has-pseudo@3.0.4" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > css-prefers-color-scheme@6.0.3" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > postcss-color-hex-alpha@8.0.4" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > postcss-custom-media@8.0.2" has incorrect peer dependency "postcss@^8.3".
+warning "ng-packagr > postcss-preset-env > postcss-custom-selectors@6.0.3" has incorrect peer dependency "postcss@^8.3".
+warning "ng-packagr > postcss-preset-env > postcss-env-function@4.0.6" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > postcss-focus-visible@6.0.4" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > postcss-focus-within@5.0.4" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > postcss-clamp@4.1.0" has incorrect peer dependency "postcss@^8.4.6".
+warning "ng-packagr > postcss-preset-env > postcss-logical@5.0.4" has incorrect peer dependency "postcss@^8.4".
+warning " > codelyzer@5.0.1" has incorrect peer dependency "@angular/compiler@>=2.3.1 <9.0.0 || >8.0.0-beta <9.0.0".
+warning " > codelyzer@5.0.1" has incorrect peer dependency "@angular/core@>=2.3.1 <9.0.0 || >8.0.0-beta <9.0.0".
+warning " > codelyzer@5.0.1" has incorrect peer dependency "tslint@^5.0.0".
+warning "cypress-image-snapshot > jest-image-snapshot@4.2.0" has incorrect peer dependency "jest@>=20 <=26".
+warning " > gatsby-remark-prismjs@3.13.0" has unmet peer dependency "gatsby@^2.0.0".
+warning " > ng-cli-packagr-tasks@11.0.2" has unmet peer dependency "@angular-devkit/architect@0.1100.0".
+warning " > ng-cli-packagr-tasks@11.0.2" has unmet peer dependency "@angular-devkit/core@0.1100.0".
+warning " > ng-cli-packagr-tasks@11.0.2" has incorrect peer dependency "globby@^7.1.1".
+warning " > ng-cli-packagr-tasks@11.0.2" has incorrect peer dependency "ng-packagr@^11.0.0".
+warning " > tsickle@0.39.1" has incorrect peer dependency "typescript@~3.9.5".
+warning " > webpack-cli@4.7.0" has unmet peer dependency "webpack@4.x.x || 5.x.x".
+warning "webpack-cli > @webpack-cli/configtest@1.0.3" has unmet peer dependency "webpack@4.x.x || 5.x.x".
+[4/4] 🔨  Building fresh packages...
+success Saved lockfile.
+$ npx rimraf ./node_modules/node-sass && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main
+
+ >  NX   Angular CLI has been decorated to enable computation caching.
+
+Processing legacy "View Engine" libraries:
+- angulartics2 [es2015/esm2015] (angulartics/angulartics2)
+- @angular/flex-layout/core [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/cdk-experimental/popover-edit [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/combobox [es2015/esm2015] (https://github.com/angular/components.git)
+- @nguniversal/common/engine [es2015/esm2015] (https://github.com/angular/universal)
+- @angular/flex-layout/extended [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/flex [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/grid [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @nguniversal/express-engine/tokens [es2015/esm2015] (https://github.com/angular/universal)
+- @angular/flex-layout/server [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/cdk-experimental/column-resize [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/flex-layout [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/cdk-experimental/dialog [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/listbox [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/menu [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/scrolling [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/selection [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/table-scroll-container [es2015/esm2015] (https://github.com/angular/components.git)
+- @ng-bootstrap/ng-bootstrap [es2015/esm2015] (git+https://github.com/ng-bootstrap/ng-bootstrap.git)
+- @nguniversal/common [es2015/esm2015] (https://github.com/angular/universal)
+- @nguniversal/common/clover [es2015/esm2015] (https://github.com/angular/universal)
+- @nguniversal/express-engine [es2015/esm2015] (https://github.com/angular/universal)
+- angulartics2/adobeanalytics [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/amplitude [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/appinsights [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/baidu [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/clicky [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/facebook [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/ga [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/ga-enhanced-ecom [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/gosquared [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/gst [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/gtm [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/hubspot [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/ibm-digital-analytics [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/intercom [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/kissmetrics [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/launch [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/mixpanel [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/piwik [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/pyze [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/routerlessmodule [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/segment [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/splunk [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/woopra [es2015/esm2015] (angulartics/angulartics2)
+- @angular/cdk-experimental/popover-edit [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/column-resize [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/dialog [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/combobox [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/listbox [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/menu [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/scrolling [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/selection [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/table-scroll-container [main/umd] (https://github.com/angular/components.git)
+- @angular/flex-layout/core [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/core [main/umd] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/extended [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/extended [main/umd] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/flex [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/grid [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/flex [main/umd] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/grid [main/umd] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout [main/umd] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/server [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/server [main/umd] (https://github.com/angular/flex-layout.git)
+- @nguniversal/common [main/umd] (https://github.com/angular/universal)
+- @nguniversal/common/clover [main/umd] (https://github.com/angular/universal)
+- @ng-bootstrap/ng-bootstrap [main/umd] (git+https://github.com/ng-bootstrap/ng-bootstrap.git)
+- @nguniversal/common/engine [main/umd] (https://github.com/angular/universal)
+- @nguniversal/express-engine/tokens [main/umd] (https://github.com/angular/universal)
+- @nguniversal/express-engine [main/umd] (https://github.com/angular/universal)
+- angulartics2 [main/umd] (angulartics/angulartics2)
+- angulartics2/adobeanalytics [main/umd] (angulartics/angulartics2)
+- angulartics2/amplitude [main/umd] (angulartics/angulartics2)
+- angulartics2/appinsights [main/umd] (angulartics/angulartics2)
+- angulartics2/baidu [main/umd] (angulartics/angulartics2)
+- angulartics2/clicky [main/umd] (angulartics/angulartics2)
+- angulartics2/facebook [main/umd] (angulartics/angulartics2)
+- angulartics2/ga [main/umd] (angulartics/angulartics2)
+- angulartics2/ga-enhanced-ecom [main/umd] (angulartics/angulartics2)
+- angulartics2/gosquared [main/umd] (angulartics/angulartics2)
+- angulartics2/gst [main/umd] (angulartics/angulartics2)
+- angulartics2/gtm [main/umd] (angulartics/angulartics2)
+- angulartics2/hubspot [main/umd] (angulartics/angulartics2)
+- angulartics2/ibm-digital-analytics [main/umd] (angulartics/angulartics2)
+- angulartics2/intercom [main/umd] (angulartics/angulartics2)
+- angulartics2/kissmetrics [main/umd] (angulartics/angulartics2)
+- angulartics2/launch [main/umd] (angulartics/angulartics2)
+- angulartics2/mixpanel [main/umd] (angulartics/angulartics2)
+- angulartics2/piwik [main/umd] (angulartics/angulartics2)
+- angulartics2/pyze [main/umd] (angulartics/angulartics2)
+- angulartics2/routerlessmodule [main/umd] (angulartics/angulartics2)
+- angulartics2/segment [main/umd] (angulartics/angulartics2)
+- angulartics2/splunk [main/umd] (angulartics/angulartics2)
+- angulartics2/woopra [main/umd] (angulartics/angulartics2)
+Encourage the library authors to publish an Ivy distribution.
+✨  Done in 82.52s.
+
+ >  NX   Running migrations from 'migrations.json', with each applied in a dedicated commit
+
+Ran set-parallel-default from @nrwl/workspace
+  Set --parallel=1 for existing repos to preserve the existing behavior
+
+  UPDATE nx.json
+  UPDATE angular.json
+- Commit created for changes: 53a4bc2a19ffb09b85558a4c2ce825be78ab5c78
+---------------------------------------------------------
+Ran 13-6-0-remove-old-task-runner-options from @nrwl/workspace
+  Remove old options that are no longer used
+
+  UPDATE nx.json
+  UPDATE angular.json
+- Commit created for changes: 2e0b0ad14ac8a8f4d87f286653b511eec97789fe
+---------------------------------------------------------
+Please run yarn to ensure the correct version of Nx is installed.
+Ran 13-9-0-replace-tao-with-nx from @nrwl/workspace
+  Replace @nrwl/tao with nx
+
+  UPDATE package.json
+- Commit created for changes: 9371626bee8c2ef965e6644d23db62598c2f3210
+---------------------------------------------------------
+Ran 13-10-0-update-tasks-runner from @nrwl/workspace
+  Update the tasks runner property to import it from the nx package instead of @nrwl/worksapce
+
+  UPDATE nx.json
+- Commit created for changes: 0fdae5fea7f00dbe759c8fc3831bf11005058158
+---------------------------------------------------------
+Ran update-angular-jest-config from @nrwl/angular
+  Update jest config to support jest-preset-angular
+
+  UPDATE libs/ngrid-bootstrap/jest.config.js
+  UPDATE libs/ngrid-material/jest.config.js
+- Commit created for changes: 42f22ae11293490f3df85213f87be10e73978500
+---------------------------------------------------------
+Ran opt-out-testbed-teardown from @nrwl/angular
+  In Angular version 13, the `teardown` flag in `TestBed` will be enabled by default. This migration automatically opts out existing apps from the new teardown behavior.
+
+  UPDATE libs/ngrid-bootstrap/src/test-setup.ts
+  UPDATE libs/ngrid-material/src/test-setup.ts
+- Commit created for changes: 653f920175c4590751924c44eca56b8db8619cd0
+---------------------------------------------------------
+Ran migrate-karma-config from @nrwl/angular
+  Karma coverage is broken since Angular 13 upgarde and the karma config is severely out of date. Bring it up to date fixing the coverage issue.
+
+  UPDATE karma.conf.js
+  UPDATE package.json
+- Commit created for changes: edcb21144afe7a051522e74af81d889a284d8c00
+---------------------------------------------------------
+Ran update-angular-config-v13 from @angular/cli
+  Remove deprecated options from 'angular.json' that are no longer present in v13.
+
+  UPDATE angular.json
+- Commit created for changes: 47ea6062336f43bab34770941ebbd319d2cda167
+---------------------------------------------------------
+Ran drop-ie-polyfills from @angular/cli
+  Remove polyfills required only for Internet Explorer which is no longer supported.
+
+  UPDATE apps/ngrid-dev-app/src/polyfills.ts
+  UPDATE apps/ngrid-docs-app/src/polyfills.ts
+- Commit created for changes: ffe552531faadb88d0e7ce1c0a4a5ae95ffef221
+---------------------------------------------------------
+Ran update-gitignore from @angular/cli
+  Updating '.gitignore' to include '.angular/cache'.
+
+  UPDATE .gitignore
+- Commit created for changes: e6c5f2caa57cb9885f2c4c4315d55e597c73c8ba
+---------------------------------------------------------
+Ran migration-v13-testbed-teardown from @angular/core
+  In Angular version 13, the `teardown` flag in `TestBed` will be enabled by default. This migration automatically opts out existing apps from the new teardown behavior.
+
+  UPDATE libs/ngrid/src/__test-runners/karma-test.ts
+  UPDATE apps/ngrid-dev-app/src/test.ts
+  UPDATE apps/ngrid-docs-app/src/__test-runners/karma-test.ts
+- Commit created for changes: 9116586d050db14415b0c5e9c8b5be9c9592402b
+---------------------------------------------------------
+Ran migration-v13.1-entry-components from @angular/core
+  As of Angular version 13, `entryComponents` are no longer necessary.
+
+  UPDATE libs/ngrid/detail-row/src/lib/table-detail-row.module.ts
+  UPDATE libs/ngrid/drag/src/lib/table-drag.module.ts
+  UPDATE libs/ngrid/infinite-scroll/src/lib/grid-infinite-scroll.module.ts
+  UPDATE libs/ngrid/src/lib/ngrid.module.ts
+  UPDATE libs/ngrid-bootstrap/pagination/src/lib/bs-pagination.module.ts
+  UPDATE libs/ngrid-bootstrap/selection-column/src/lib/bs-selection.module.ts
+  UPDATE libs/ngrid-bootstrap/sort/src/lib/bs-sortable.module.ts
+  UPDATE libs/ngrid-material/sort/src/lib/mat-sort.module.ts
+  UPDATE libs/ngrid-material/paginator/src/lib/table-paginator.module.ts
+  UPDATE libs/ngrid-material/context-menu/src/lib/context-menu.module.ts
+  UPDATE libs/ngrid-material/selection-column/src/lib/table-checkbox.module.ts
+  UPDATE apps/ngrid-docs-app/content/features/grid/focus-and-selection/focus-and-selection.module.ts
+  UPDATE apps/ngrid-docs-app/content/features/grid/infinite-scroll/infinite-scroll.module.ts
+  UPDATE apps/ngrid-docs-app/content/recipes/column-header-menu/column-header-menu.module.ts
+- Commit created for changes: c68014745415dc876bfc819d8b1e94c3af6a9d61
+---------------------------------------------------------
+    Skipping migration for project ngrid-dev-app-e2e. Unable to determine 'tsconfig.json' file in workspace config.
+    Skipping migration for project ngrid-docs-app-e2e. Unable to determine 'tsconfig.json' file in workspace config.
+    
+      ✓  Updated Angular Material to version 13
+    
+    Skipping migration for project ngrid-dev-app-e2e. Unable to determine 'tsconfig.json' file in workspace config.
+    Skipping migration for project ngrid-docs-app-e2e. Unable to determine 'tsconfig.json' file in workspace config.
+    
+      ✓  Updated Angular CDK to version 13
+    
+Unable to update libs/ngrid/schematics/tsconfig.json.
+Unable to update libs/ngrid/tsconfig.spec.json.
+Ran update-ts-config-for-test-filenames from @nrwl/jest
+  Support .test. file names in tsconfigs
+
+  UPDATE libs/ngrid/tsconfig.lib.json
+  UPDATE libs/ngrid/tsconfig.lib.prod.json
+  UPDATE libs/ngrid/tsconfig.spec.karma.json
+  UPDATE libs/ngrid-bootstrap/tsconfig.lib.json
+  UPDATE libs/ngrid-bootstrap/tsconfig.lib.prod.json
+  UPDATE libs/ngrid-bootstrap/tsconfig.spec.json
+  UPDATE apps/ngrid-docs-app/tsconfig.app.json
+  UPDATE apps/ngrid-docs-app/tsconfig.server.json
+  UPDATE apps/ngrid-docs-app/tsconfig.spec.json
+  UPDATE apps/ngrid-docs-app/tsconfig.spec.karma.json
+  UPDATE libs/ngrid-material/tsconfig.lib.json
+  UPDATE libs/ngrid-material/tsconfig.lib.prod.json
+  UPDATE libs/ngrid-material/tsconfig.spec.json
+- Commit created for changes: 31da476c14447df9895ba935d68eea10d0c88e7f
+---------------------------------------------------------
+
+ >  NX   Running 'yarn' to make sure necessary packages are installed
+
+yarn install v1.22.18
+[1/4] 🔍  Resolving packages...
+[2/4] 🚚  Fetching packages...
+[3/4] 🔗  Linking dependencies...
+warning " > @angular/cdk-experimental@12.0.0" has incorrect peer dependency "@angular/cdk@12.0.0".
+warning " > @angular/flex-layout@12.0.0-beta.34" has incorrect peer dependency "@angular/cdk@^12.0.0".
+warning " > @ng-bootstrap/ng-bootstrap@9.1.0" has incorrect peer dependency "@angular/common@^11.0.0".
+warning " > @ng-bootstrap/ng-bootstrap@9.1.0" has incorrect peer dependency "@angular/core@^11.0.0".
+warning " > @ng-bootstrap/ng-bootstrap@9.1.0" has incorrect peer dependency "@angular/forms@^11.0.0".
+warning " > @ng-bootstrap/ng-bootstrap@9.1.0" has incorrect peer dependency "@angular/localize@^11.0.0".
+warning " > @nguniversal/common@12.0.0" has incorrect peer dependency "@angular/common@^12.0.0".
+warning " > @nguniversal/common@12.0.0" has incorrect peer dependency "@angular/core@^12.0.0".
+warning " > @nguniversal/express-engine@12.0.0" has incorrect peer dependency "@angular/common@^12.0.0".
+warning " > @nguniversal/express-engine@12.0.0" has incorrect peer dependency "@angular/core@^12.0.0".
+warning " > @nguniversal/express-engine@12.0.0" has incorrect peer dependency "@angular/platform-server@^12.0.0".
+warning "@nrwl/angular > @nrwl/cypress > @cypress/webpack-preprocessor@5.13.0" has unmet peer dependency "@babel/core@^7.0.1".
+warning "@nrwl/angular > @nrwl/cypress > @cypress/webpack-preprocessor@5.13.0" has unmet peer dependency "@babel/preset-env@^7.0.0".
+warning "@nrwl/angular > @nrwl/cypress > @cypress/webpack-preprocessor@5.13.0" has unmet peer dependency "babel-loader@^8.0.2".
+warning " > bootstrap@4.6.0" has unmet peer dependency "jquery@1.9.1 - 3".
+warning " > bootstrap@4.6.0" has unmet peer dependency "popper.js@^1.16.1".
+warning " > ng-packagr@13.3.1" has incorrect peer dependency "tslib@^2.3.0".
+warning "ng-packagr > postcss-preset-env > @csstools/postcss-progressive-custom-properties@1.3.0" has incorrect peer dependency "postcss@^8.3".
+warning "ng-packagr > postcss-preset-env > css-blank-pseudo@3.0.3" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > css-has-pseudo@3.0.4" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > css-prefers-color-scheme@6.0.3" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > postcss-clamp@4.1.0" has incorrect peer dependency "postcss@^8.4.6".
+warning "ng-packagr > postcss-preset-env > postcss-color-hex-alpha@8.0.4" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > postcss-custom-media@8.0.2" has incorrect peer dependency "postcss@^8.3".
+warning "ng-packagr > postcss-preset-env > postcss-custom-selectors@6.0.3" has incorrect peer dependency "postcss@^8.3".
+warning "ng-packagr > postcss-preset-env > postcss-env-function@4.0.6" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > postcss-focus-visible@6.0.4" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > postcss-focus-within@5.0.4" has incorrect peer dependency "postcss@^8.4".
+warning "ng-packagr > postcss-preset-env > postcss-logical@5.0.4" has incorrect peer dependency "postcss@^8.4".
+warning " > codelyzer@5.0.1" has incorrect peer dependency "@angular/compiler@>=2.3.1 <9.0.0 || >8.0.0-beta <9.0.0".
+warning " > codelyzer@5.0.1" has incorrect peer dependency "@angular/core@>=2.3.1 <9.0.0 || >8.0.0-beta <9.0.0".
+warning " > codelyzer@5.0.1" has incorrect peer dependency "tslint@^5.0.0".
+warning "cypress-image-snapshot > jest-image-snapshot@4.2.0" has incorrect peer dependency "jest@>=20 <=26".
+warning " > gatsby-remark-prismjs@3.13.0" has unmet peer dependency "gatsby@^2.0.0".
+warning " > ng-cli-packagr-tasks@11.0.2" has unmet peer dependency "@angular-devkit/architect@0.1100.0".
+warning " > ng-cli-packagr-tasks@11.0.2" has unmet peer dependency "@angular-devkit/core@0.1100.0".
+warning " > ng-cli-packagr-tasks@11.0.2" has incorrect peer dependency "globby@^7.1.1".
+warning " > ng-cli-packagr-tasks@11.0.2" has incorrect peer dependency "ng-packagr@^11.0.0".
+warning " > tsickle@0.39.1" has incorrect peer dependency "typescript@~3.9.5".
+warning " > webpack-cli@4.7.0" has unmet peer dependency "webpack@4.x.x || 5.x.x".
+warning "webpack-cli > @webpack-cli/configtest@1.0.3" has unmet peer dependency "webpack@4.x.x || 5.x.x".
+[4/4] 🔨  Building fresh packages...
+success Saved lockfile.
+$ npx rimraf ./node_modules/node-sass && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main
+
+ >  NX   Angular CLI has been decorated to enable computation caching.
+
+Processing legacy "View Engine" libraries:
+- angulartics2 [es2015/esm2015] (angulartics/angulartics2)
+- @angular/flex-layout/core [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/cdk-experimental/popover-edit [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/combobox [es2015/esm2015] (https://github.com/angular/components.git)
+- @nguniversal/common/engine [es2015/esm2015] (https://github.com/angular/universal)
+- @angular/flex-layout/extended [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/flex [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/grid [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @nguniversal/express-engine/tokens [es2015/esm2015] (https://github.com/angular/universal)
+- @angular/flex-layout/server [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/cdk-experimental/column-resize [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/flex-layout [es2015/esm2015] (https://github.com/angular/flex-layout.git)
+- @angular/cdk-experimental/dialog [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/listbox [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/menu [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/scrolling [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/selection [es2015/esm2015] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/table-scroll-container [es2015/esm2015] (https://github.com/angular/components.git)
+- @ng-bootstrap/ng-bootstrap [es2015/esm2015] (git+https://github.com/ng-bootstrap/ng-bootstrap.git)
+- @nguniversal/common [es2015/esm2015] (https://github.com/angular/universal)
+- @nguniversal/common/clover [es2015/esm2015] (https://github.com/angular/universal)
+- @nguniversal/express-engine [es2015/esm2015] (https://github.com/angular/universal)
+- angulartics2/adobeanalytics [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/amplitude [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/appinsights [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/baidu [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/clicky [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/facebook [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/ga [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/ga-enhanced-ecom [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/gosquared [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/gst [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/gtm [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/hubspot [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/ibm-digital-analytics [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/intercom [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/kissmetrics [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/launch [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/mixpanel [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/piwik [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/pyze [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/routerlessmodule [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/segment [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/splunk [es2015/esm2015] (angulartics/angulartics2)
+- angulartics2/woopra [es2015/esm2015] (angulartics/angulartics2)
+- @angular/cdk-experimental/popover-edit [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/column-resize [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/dialog [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/combobox [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/listbox [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/scrolling [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/menu [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/selection [main/umd] (https://github.com/angular/components.git)
+- @angular/cdk-experimental/table-scroll-container [main/umd] (https://github.com/angular/components.git)
+- @angular/flex-layout/core [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/core [main/umd] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/extended [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/flex [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/extended [main/umd] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/flex [main/umd] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/grid [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/grid [main/umd] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout [main/umd] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/server [module/esm5] (https://github.com/angular/flex-layout.git)
+- @angular/flex-layout/server [main/umd] (https://github.com/angular/flex-layout.git)
+- @nguniversal/common [main/umd] (https://github.com/angular/universal)
+- @ng-bootstrap/ng-bootstrap [main/umd] (git+https://github.com/ng-bootstrap/ng-bootstrap.git)
+- @nguniversal/common/clover [main/umd] (https://github.com/angular/universal)
+- @nguniversal/express-engine/tokens [main/umd] (https://github.com/angular/universal)
+- @nguniversal/common/engine [main/umd] (https://github.com/angular/universal)
+- @nguniversal/express-engine [main/umd] (https://github.com/angular/universal)
+- angulartics2 [main/umd] (angulartics/angulartics2)
+- angulartics2/adobeanalytics [main/umd] (angulartics/angulartics2)
+- angulartics2/amplitude [main/umd] (angulartics/angulartics2)
+- angulartics2/appinsights [main/umd] (angulartics/angulartics2)
+- angulartics2/baidu [main/umd] (angulartics/angulartics2)
+- angulartics2/clicky [main/umd] (angulartics/angulartics2)
+- angulartics2/facebook [main/umd] (angulartics/angulartics2)
+- angulartics2/ga [main/umd] (angulartics/angulartics2)
+- angulartics2/ga-enhanced-ecom [main/umd] (angulartics/angulartics2)
+- angulartics2/gosquared [main/umd] (angulartics/angulartics2)
+- angulartics2/gst [main/umd] (angulartics/angulartics2)
+- angulartics2/gtm [main/umd] (angulartics/angulartics2)
+- angulartics2/hubspot [main/umd] (angulartics/angulartics2)
+- angulartics2/ibm-digital-analytics [main/umd] (angulartics/angulartics2)
+- angulartics2/intercom [main/umd] (angulartics/angulartics2)
+- angulartics2/kissmetrics [main/umd] (angulartics/angulartics2)
+- angulartics2/launch [main/umd] (angulartics/angulartics2)
+- angulartics2/mixpanel [main/umd] (angulartics/angulartics2)
+- angulartics2/piwik [main/umd] (angulartics/angulartics2)
+- angulartics2/pyze [main/umd] (angulartics/angulartics2)
+- angulartics2/routerlessmodule [main/umd] (angulartics/angulartics2)
+- angulartics2/splunk [main/umd] (angulartics/angulartics2)
+- angulartics2/segment [main/umd] (angulartics/angulartics2)
+- angulartics2/woopra [main/umd] (angulartics/angulartics2)
+Encourage the library authors to publish an Ivy distribution.
+✨  Done in 18.37s.
+
+ >  NX   Successfully finished running migrations from 'migrations.json'. This workspace is up to date!
