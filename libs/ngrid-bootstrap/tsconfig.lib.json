@@ -11,10 +11,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "types": [
-      "dev-mode-types"
-    ],
+    "types": ["dev-mode-types"],
     "lib": ["dom", "es2018"]
   },
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
+  "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"]
 }
