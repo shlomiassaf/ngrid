@@ -1,4 +1,5 @@
-export const ELEMENT_MODULE_PATHS_AS_ROUTES = [
+import { Routes } from "@angular/router";
+export const ELEMENT_MODULE_PATHS_AS_ROUTES: Routes = [
   {
     path: 'c3c34r2wedcasfawef-seller-demo.module',
     pathMatch: 'full',
