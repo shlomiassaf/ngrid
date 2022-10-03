@@ -36,7 +36,7 @@
     "gh-pages": "npm run gh-pages:build && npm run gh-pages:publish",
     "compile:server": "webpack --config webpack.config.ssr.js --progress --color",
     "nx": "./node_modules/.bin/nx",
-    "postinstall": "npx rimraf ./node_modules/node-sass && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main"
+    "postinstall": "npx rimraf ./node_modules/node-sass && node ./decorate-angular-cli.js && ngcc --properties es2020 browser module main"
   },
   "private": true,
   "dependencies": {
