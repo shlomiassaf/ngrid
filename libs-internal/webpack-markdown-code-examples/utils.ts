@@ -14,12 +14,15 @@ export function parseExampleTsFile(fileName: string, content: string): ParsedPri
 
   const visitNode = (node: any): void => {
     if (node.kind === ts.SyntaxKind.ClassDeclaration) {
-      if (node.decorators && node.decorators.length) {
+        
+      var decorators = [...(node.decorators || []), ...(node.modifiers?.filter(m => m.kind == ts.SyntaxKind.Decorator) || [])];
+      
+      if (decorators.length) {
         const meta: ParsedPrimaryComponentMetadata = <any> {
           component: node.name.text
         };
 
-        for (const decorator of node.decorators) {
+        for (const decorator of decorators) {
           if (decorator.expression.expression.text === 'Example') {
             if (primary) {
               throw new Error('Multiple examples in a single module are not supported.');

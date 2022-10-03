@@ -24,9 +24,11 @@ import { ListRange } from '@angular/cdk/collections';
 import {
   CdkVirtualScrollViewport,
   VIRTUAL_SCROLL_STRATEGY,
+  VIRTUAL_SCROLLABLE,
   ScrollDispatcher,
   CdkVirtualForOf,
   ViewportRuler,
+  CdkVirtualScrollable,
 } from '@angular/cdk/scrolling';
 import { PblNgridConfigService, unrx } from '@pebula/ngrid/core';
 
@@ -216,7 +218,8 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
               scrollDispatcher: ScrollDispatcher,
               viewportRuler: ViewportRuler,
               @Inject(EXT_API_TOKEN) private extApi: PblNgridInternalExtensionApi,
-              @Optional() @Inject(DISABLE_INTERSECTION_OBSERVABLE) disableIntersectionObserver?: boolean) {
+              @Optional() @Inject(DISABLE_INTERSECTION_OBSERVABLE) disableIntersectionObserver?: boolean,
+              @Optional() @Inject(VIRTUAL_SCROLLABLE) scrollable?: CdkVirtualScrollable,) {
     super(elRef,
           cdr,
           ngZone,
@@ -224,7 +227,8 @@ export class PblCdkVirtualScrollViewportComponent extends CdkVirtualScrollViewpo
           pblScrollStrategy = resolveScrollStrategy(config, pblScrollStrategy, APP_DEFAULT_VIRTUAL_SCROLL_STRATEGY),
           dir,
           scrollDispatcher,
-          viewportRuler);
+          viewportRuler,
+          scrollable);
     this.element = elRef.nativeElement;
     this.grid = extApi.grid;
 

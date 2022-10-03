@@ -31,6 +31,7 @@ export interface DragCSSStyleDeclaration extends CSSStyleDeclaration {
   msScrollSnapType: string;
   scrollSnapType: string;
   msUserSelect: string;
+  webkitTapHighlightColor: string;
 }
 
 /**
