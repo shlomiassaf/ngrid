@@ -55,8 +55,7 @@
   "cli": {
     "warnings": {
       "versionMismatch": false
-    },
-    "defaultCollection": "@nrwl/angular"
+    }
   },
   "defaultProject": "ngrid-docs-app",
   "generators": {
