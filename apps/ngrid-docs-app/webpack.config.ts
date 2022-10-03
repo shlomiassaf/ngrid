@@ -15,21 +15,18 @@ function applyLoaders(webpackConfig: Configuration) {
   // We have custom loaders, for webpack to be aware of them we tell it the directory the are in.
   // make sure that each folder behaves like a node module, that is it has an index file inside root or a package.json pointing to it.
   // the default lib generation of nx and angular/cli does not do that.
-  webpackConfig.resolveLoader.modules.push('libs-internal');
+  if (!webpackConfig.resolveLoader.modules)
+    webpackConfig.resolveLoader.modules = ["node_modules"];
 
+  webpackConfig.resolveLoader.modules.push("libs-internal");
 
   // We push new loader rules to handle the scenarios
   // we also add a loader to handle markdown files.
   webpackConfig.module.rules.push(
     {
       test: [ /\.html$/ ],
-      rules: [
-        {
-          use: [
-            'html-loader',
-          ]
-        },
-      ]
+      use: [ "html-loader" ],
+      resourceQuery: { not: [/\\?ngResource/] },
     },
   );
 }
@@ -40,15 +37,20 @@ function updateWebpackConfig(webpackConfig: Configuration): Configuration {
   // push the new plugin AFTER the angular compiler plugin
   const { AngularWebpackPlugin } = require('@ngtools/webpack');
 
-  let idx = webpackConfig.plugins.findIndex( p => p instanceof AngularWebpackPlugin );
-  if (idx > -1) {
-    const oldOptions = (webpackConfig.plugins[idx] as any).options;
-    oldOptions.directTemplateLoading = false;
-    webpackConfig.plugins[idx] = new AngularWebpackPlugin(oldOptions);
-  } else {
+  var hasOne = false;
+  webpackConfig.plugins
+    .forEach((plugin, idx) => {
+    if (plugin instanceof AngularWebpackPlugin) {
+      hasOne = true;
+      const oldOptions = (plugin as any).options;
+      oldOptions.directTemplateLoading = false;
+      webpackConfig.plugins[idx] = new AngularWebpackPlugin(oldOptions);
+    }
+  });
+
+  if (!hasOne) {
     throw new Error('Invalid webpack configuration, could not find "AngularCompilerPlugin" or "AngularWebpackPlugin" in the plugins registered');
   }
-
 
   const remarkSlug = require('remark-slug')
   const remarkAutolinkHeadings = require('@rigor789/remark-autolink-headings');

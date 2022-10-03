@@ -2,14 +2,14 @@
 @use 'sass:color';
 @use '@angular/material' as mat;
 
-@import "~primer-support/index.scss";
-@import "~primer-markdown/lib/markdown-body.scss";
-@import "~primer-markdown/lib/headings.scss";
-@import "~primer-markdown/lib/lists.scss";
-@import "~primer-markdown/lib/tables.scss";
-@import "~primer-markdown/lib/images.scss";
+@import "primer-support/index.scss";
+@import "primer-markdown/lib/markdown-body.scss";
+@import "primer-markdown/lib/headings.scss";
+@import "primer-markdown/lib/lists.scss";
+@import "primer-markdown/lib/tables.scss";
+@import "primer-markdown/lib/images.scss";
 // @import "~primer-markdown/lib/code.scss"; // SEE MANUAL BELOW
-@import "~primer-markdown/lib/blob-csv.scss";
+@import "primer-markdown/lib/blob-csv.scss";
 
 // local customization for markdown + fixes for collisions with material
 // Font style in github's markdown-body is different in size and family, this will fix

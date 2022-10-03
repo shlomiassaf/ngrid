@@ -7,7 +7,6 @@ import {
   NgZone,
   ViewContainerRef,
   Renderer2,
-  ComponentFactoryResolver,
   ChangeDetectorRef,
   ApplicationRef,
 } from '@angular/core';
@@ -76,12 +75,12 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
   @Input() showDelay: number;
   @Input() hideDelay: number;
 
-  private initArgs: [ Renderer2, Injector, ComponentFactoryResolver, ViewContainerRef, NgbTooltipConfig, NgZone, any, ChangeDetectorRef, ApplicationRef ];
+  private initArgs: [ Renderer2, Injector, ViewContainerRef, NgbTooltipConfig, NgZone, any, ChangeDetectorRef, ApplicationRef ];
 
   private toolTip: NgbTooltip;
   private lastConfig: CellTooltipOptions;
   private _removePlugin: (table: PblNgridComponent<any>) => void;
-  private _canShow: (event: PblNgridCellEvent<T>) => boolean;
+  private _canShow?: (event: PblNgridCellEvent<T>) => boolean;
 
   constructor(private table: PblNgridComponent<any>, private injector: Injector, pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);
@@ -91,7 +90,6 @@ export class PblNgridCellTooltipDirective<T> implements CellTooltipOptions, OnDe
     this.initArgs = [
       injector.get(Renderer2),
       injector,
-      injector.get(ComponentFactoryResolver),
       injector.get(ViewContainerRef),
       injector.get(NgbTooltipConfig),
       injector.get(NgZone),

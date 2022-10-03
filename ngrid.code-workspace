@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "ngrid @ d8ab36f",
+			"uri": "gitlens://7b22726566223a2264386162333666323137646132313036626564613234396365393766393838376637326631643766222c227265706f50617468223a222f55736572732f73686c6f6d6961737361662f4465736b746f702f436f64652f73672f62726f777365722f6e67726964227d/Users/shlomiassaf/Desktop/Code/sg/browser/ngrid?{\"ref\":\"d8ab36f\"}"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "node_modules/typescript/lib",
+		"explorer.compactFolders": false,
+		"debug.javascript.autoAttachFilter": "always",
+		"debug.javascript.terminalOptions": {
+			"autoAttachChildProcesses": true,
+			"nodeVersionHint": 14
+		},
+		"angular.log": "verbose"
+	}
+}

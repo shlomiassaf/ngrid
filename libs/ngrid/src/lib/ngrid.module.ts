@@ -176,7 +176,7 @@ export class PblNgridModule {
                                  /** When set will destroy the component when the module is destroyed. */
                                  destroy?: boolean;
                                 }): ComponentRef<T> {
-    let { injector } = ngRef;
+    let injector: Injector = ngRef.injector;
     const { registry, destroy } = options || ({} as any);
 
     if (registry) {
