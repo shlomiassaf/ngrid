@@ -93,6 +93,7 @@
             "ci": {
               "watch": false,
               "progress": false,
+              "karmaConfig": "libs/ngrid/karma.conf.js",
               "browsers": "ChromeHeadlessCI"
             }
           },
@@ -384,6 +385,7 @@
             "ci": {
               "watch": false,
               "progress": false,
+              "karmaConfig": "apps/ngrid-dev-app/karma.conf.js",
               "browsers": "ChromeHeadlessCI"
             }
           },
@@ -555,6 +557,7 @@
             "ci": {
               "watch": false,
               "progress": false,
+              "karmaConfig": "apps/ngrid-docs-app/karma.conf.js",
               "browsers": "ChromeHeadlessCI"
             }
           },
