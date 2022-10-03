@@ -1,5 +1,5 @@
 /* eslint-disable */
-module.exports = {
+export default {
   preset: './jest.preset.js',
   coverageDirectory: '../../coverage/apps/ngrid-docs-app',
 
