@@ -1,5 +1,5 @@
 /* eslint-disable */
-module.exports = {
+export default {
   displayName: 'ngrid-bootstrap',
   preset: '../../jest.preset.js',
   coverageDirectory: '../../coverage/libs/ngrid-bootstrap',
