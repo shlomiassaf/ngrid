@@ -18,6 +18,7 @@ const getBaseKarmaConfig = require('../../karma.conf');
  * This patch will add a plugin to the webpack config to mock that.
  */
 const monkeyPatch = (karmaPlugins) => {
+  require("ts-node/register");
   const karmaPluginTuple = karmaPlugins[karmaPlugins.length - 1]['framework:@angular-devkit/build-angular'];
   const originalInitFn = karmaPluginTuple[1];  // karmaPluginTuple = ['factory', init];
 
@@ -40,8 +41,8 @@ module.exports = function(config) {
   monkeyPatch(baseConfig.plugins);
   config.set({
     ...baseConfig,
-    coverageIstanbulReporter: {
-      ...baseConfig.coverageIstanbulReporter,
+    coverageReporter: {
+      ...baseConfig.coverageReporter,
       dir: join(__dirname, '../../coverage/apps/ngrid-docs-app/')
     }
   });
