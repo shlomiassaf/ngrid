@@ -1,6 +1,7 @@
 import * as webpack from 'webpack';
 // import * as domino from 'domino';
 import { PebulaDynamicDictionaryWebpackPlugin } from '@pebula-internal/webpack-dynamic-dictionary';
+import { PebulaNoCleanIfAnyWebpackPlugin } from '@pebula-internal/webpack-no-clean-if-any';
 import { ParsedPage } from '@pebula-internal/webpack-markdown-pages';
 import { SearchableSource } from './models';
 import { MarkdownPagesWebpackPlugin } from '../webpack-markdown-pages/plugin';
@@ -22,6 +23,7 @@ export interface MarkdownAppSearchWebpackPluginOptions {
 export class MarkdownAppSearchWebpackPlugin {
 
   private options: MarkdownAppSearchWebpackPluginOptions;
+  private lastSourceContentPath: string;
 
   constructor(options: MarkdownAppSearchWebpackPluginOptions) {
     this.options = Object.assign({}, options);
@@ -44,11 +46,16 @@ export class MarkdownAppSearchWebpackPlugin {
       const searchContent = JSON.stringify(Array.from(sources.values()));
       const hash = createHash(hashFunction);
       hash.update(searchContent);
-      const sourceContentPath = `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
-      PebulaDynamicDictionaryWebpackPlugin.find(compiler).update('searchContent', sourceContentPath);
+      this.lastSourceContentPath = `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
+      PebulaDynamicDictionaryWebpackPlugin.find(compiler).update('searchContent', this.lastSourceContentPath);
+      compilation.emitAsset(this.lastSourceContentPath, new webpack.sources.RawSource(searchContent));
 
-      compilation.assets[sourceContentPath] = new webpack.sources.RawSource(searchContent);
+      compilation.hooks.fullHash.tap(pluginName, hash => {
+        hash.update(this.lastSourceContentPath);
+      });
     });
+
+    PebulaNoCleanIfAnyWebpackPlugin.getCompilationHooks(compiler).keep.tap(pluginName, asset => this.lastSourceContentPath === asset );
   }
 
 }

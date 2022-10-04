@@ -11,6 +11,7 @@ import * as remarkHtml from 'remark-html';
 const { util: { createHash } } = webpack as any;
 
 import { PebulaDynamicDictionaryWebpackPlugin } from '@pebula-internal/webpack-dynamic-dictionary';
+import { PebulaNoCleanIfAnyWebpackPlugin } from '@pebula-internal/webpack-no-clean-if-any';
 import { ParsedPage, PageNavigationMetadata, PageAttributes } from './models';
 import { createPageFileAsset, sortPageAssetNavEntry } from './utils';
 
@@ -60,6 +61,10 @@ export class MarkdownPagesWebpackPlugin {
 
   private options: MarkdownPagesWebpackPluginOptions;
   private cache = new Map<string, ParsedPage>();
+  private urlCache = new Map<string, ParsedPage>();
+  private recentChangedFiles = new Set<ParsedPage>();
+  private lastNavEntriesAssetPath: string;
+
   private firstRun = true;
   private compiler: webpack.Compiler & { watchMode?: boolean };
   private watchMode?: boolean;
@@ -99,36 +104,44 @@ export class MarkdownPagesWebpackPlugin {
 
     compiler.hooks.run.tapPromise(pluginName, async () => { await this.run(compiler); });
     compiler.hooks.watchRun.tapPromise(pluginName, async () => { await this.run(compiler); });
+    PebulaNoCleanIfAnyWebpackPlugin.getCompilationHooks(this.compiler).keep.tap(
+      pluginName,
+      asset => this.lastNavEntriesAssetPath === asset || (this.urlCache.has(asset) && !this.recentChangedFiles.has(this.urlCache.get(asset))));
+
+
     compiler.hooks.thisCompilation.tap(pluginName, compilation => {
       this.emit(compilation);
+
+      compilation.hooks.fullHash.tap(pluginName, hash => {
+        hash.update(this.lastNavEntriesAssetPath);
+      });
+
       compilation.hooks.afterSeal.tapPromise(pluginName, async () => {
         for (const obj of Array.from(this.cache.values())) {
           compilation.fileDependencies.add(obj.fullPath);
         }
         this.prevTimestamps = compilation.fileSystemInfo.getDeprecatedFileTimestamps();
+
       });
     });
-
-
   }
 
   private emit(compilation: webpack.Compilation) {
-    let changedFiles: Set<ParsedPage>;
+    this.recentChangedFiles.clear();
 
     if (!this.firstRun && this.watchMode) {
-      changedFiles = new Set<ParsedPage>();
       for (const obj of Array.from(this.cache.values())) {
         if (obj.forceRender
             || !obj.postRenderMetadata
             || (this.prevTimestamps.get(obj.fullPath) || this.startTime) < (compilation.fileSystemInfo.getDeprecatedFileTimestamps().get(obj.fullPath) || Infinity) ) {
-          changedFiles.add(obj);
+          this.recentChangedFiles.add(obj);
         }
       }
     } else {
-      changedFiles = new Set(this.cache.values());
+      this.recentChangedFiles = new Set(this.cache.values());
     }
 
-    if (changedFiles.size === 0) {
+    if (this.recentChangedFiles.size === 0) {
       return;
     }
 
@@ -146,7 +159,18 @@ export class MarkdownPagesWebpackPlugin {
         hash.update(source);
         outputAssetPath = this.outputAssetPathRoot + Path.join(Path.dirname(obj.file), `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`);
 
-        compilation.assets[outputAssetPath] = new webpack.sources.RawSource(source);
+        if (!this.urlCache.has(outputAssetPath))
+        {
+          var prev = obj.postRenderMetadata?.outputAssetPath;
+          if (!!prev && this.urlCache.has(prev))
+          {
+            this.urlCache.delete(prev);
+          }
+
+          this.urlCache.set(outputAssetPath, obj);
+          compilation.emitAsset(outputAssetPath, new webpack.sources.RawSource(source));
+        }
+        
       }
 
       obj.postRenderMetadata = {
@@ -184,12 +208,13 @@ export class MarkdownPagesWebpackPlugin {
 
     for (let obj of Array.from(this.cache.values())) {
 
-      if (changedFiles.has(obj)) {
+      if (this.recentChangedFiles.has(obj)) {
         if (!obj.forceRender && !!obj.postRenderMetadata) {
           obj = this.processFile(obj.file);
         }
         obj.forceRender = false;
         renderPage(obj);
+
       }
 
       delete obj.postRenderMetadata.navEntry.children;
@@ -232,22 +257,24 @@ export class MarkdownPagesWebpackPlugin {
       compilation.errors.push(new webpack.WebpackError(`Could not find a parent/child relationship in ${children.map(c => c.file).join(', ')}`));
     }
 
+    this.firstRun = false;
+
     Object.values(navMetadata.entries).forEach(sortPageAssetNavEntry);
 
     const navEntriesSource = JSON.stringify(navMetadata);
     const hash = createHash(hashFunction);
     hash.update(navEntriesSource);
-    const navEntriesAssetPath = `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
+    const lastNavEntriesAssetPath = this.lastNavEntriesAssetPath;
+    this.lastNavEntriesAssetPath = `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
+    if (lastNavEntriesAssetPath === this.lastNavEntriesAssetPath)
+      return;
 
-    // TODO: Remove previous asset
-    compilation.assets[navEntriesAssetPath] = new webpack.sources.RawSource(navEntriesSource);
-
+    // compilation.emitAsset(this.lastNavEntriesAssetPath, new webpack.sources.RawSource(navEntriesSource));
+    compilation.assets[this.lastNavEntriesAssetPath] = new webpack.sources.RawSource(navEntriesSource);
     MarkdownPagesWebpackPlugin.getCompilationHooks(this.compiler)
       .markdownPageNavigationMetadataReady.call({ navMetadata, compilation });
 
-    PebulaDynamicDictionaryWebpackPlugin.find(this.compiler).update('markdownPages', navEntriesAssetPath);
-
-    this.firstRun = false;
+    PebulaDynamicDictionaryWebpackPlugin.find(this.compiler).update('markdownPages', this.lastNavEntriesAssetPath);
   }
 
   private async run(compiler: webpack.Compiler & { watchMode?: boolean }) {
