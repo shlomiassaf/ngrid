@@ -660,7 +660,7 @@
           },
           "configurations": {
             "ci": {
-              "jestConfig": "libs/ngrid-material/jest.config.js",
+              "jestConfig": "libs/ngrid-material/jest.config.ts",
               "watch": false,
               "progress": false,
               "browsers": "ChromeHeadlessCI"
