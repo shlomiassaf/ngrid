@@ -41,7 +41,7 @@ export class PebulaDynamicDictionaryWebpackPlugin {
   apply(compiler: webpack.Compiler): void {
     store.set(compiler, this);
     compiler.hooks.thisCompilation.tap(pluginName, compilation => {
-      compilation.assets[this.writePath] = this.lazySource.toSource();
+      compilation.emitAsset(this.writePath, this.lazySource.toSource());
     });
   }
 

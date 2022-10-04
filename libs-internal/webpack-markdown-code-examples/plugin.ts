@@ -8,6 +8,7 @@ const remarkPrismJs = require('gatsby-remark-prismjs');
 const { util: { createHash } } = webpack as any;
 
 import { PebulaDynamicDictionaryWebpackPlugin } from '@pebula-internal/webpack-dynamic-dictionary';
+import { PebulaNoCleanIfAnyWebpackPlugin } from '@pebula-internal/webpack-no-clean-if-any';
 import { ParsedExampleMetadata, ExampleFileAsset } from './models';
 import { createInitialExampleFileAssets, parseExampleTsFile } from './utils';
 
@@ -31,6 +32,8 @@ export class MarkdownCodeExamplesWebpackPlugin {
 
   private options: MarkdownCodeExamplesWebpackPluginOptions;
   private cache = new Map<string, ParsedExampleMetadata>();
+  private urlCache = new Map<string, ParsedExampleMetadata>();
+  private lastNavEntriesAssetPath: string;
   private firstRun = true;
   private compiler: webpack.Compiler & { watchMode?: boolean };
   private watchMode?: boolean;
@@ -43,8 +46,14 @@ export class MarkdownCodeExamplesWebpackPlugin {
     this.compiler = compiler;
     compiler.hooks.run.tapPromise(pluginName, async () => { await this.run(compiler); });
     compiler.hooks.watchRun.tapPromise(pluginName, async () => { await this.run(compiler); });
+    PebulaNoCleanIfAnyWebpackPlugin.getCompilationHooks(this.compiler).keep.tap(pluginName, asset => this.lastNavEntriesAssetPath === asset || this.urlCache.has(asset));
     compiler.hooks.thisCompilation.tap(pluginName, compilation => {
       this.emit(compilation);
+
+      compilation.hooks.fullHash.tap(pluginName, hash => {
+        hash.update(this.lastNavEntriesAssetPath);
+      });
+
       compilation.hooks.afterSeal.tapPromise(pluginName, async () => {
         for (const obj of Array.from(this.cache.values())) {
           for (const fullPath of Array.from(obj.pathAssets.keys())) {
@@ -93,7 +102,17 @@ export class MarkdownCodeExamplesWebpackPlugin {
       hash.update(source);
       outputAssetPath = `${obj.selector}-${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
 
-      compilation.assets[outputAssetPath] = new webpack.sources.RawSource(source);
+      if (!this.urlCache.has(outputAssetPath))
+      {
+        var prev = obj.postRenderMetadata?.outputAssetPath;
+        if (!!prev && this.urlCache.has(prev))
+        {
+          this.urlCache.delete(prev);
+        }
+
+        this.urlCache.set(outputAssetPath, obj);
+        compilation.emitAsset(outputAssetPath, new webpack.sources.RawSource(source));
+      }
 
       obj.postRenderMetadata = {
         outputAssetPath,
@@ -124,17 +143,21 @@ export class MarkdownCodeExamplesWebpackPlugin {
 
     }
 
+    this.firstRun = false;
+
+
     const navEntriesSource = JSON.stringify(navMetadata);
     const hash = createHash(hashFunction);
     hash.update(navEntriesSource);
-    const navEntriesAssetPath = `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
 
-    // TODO: Remove previous asset
-    compilation.assets[navEntriesAssetPath] = new webpack.sources.RawSource(navEntriesSource);
+    const lastNavEntriesAssetPath = this.lastNavEntriesAssetPath;
+    this.lastNavEntriesAssetPath = `${hash.digest(hashDigest).substring(0, hashDigestLength)}.json`;
+    if (lastNavEntriesAssetPath === this.lastNavEntriesAssetPath)
+      return;
 
-    PebulaDynamicDictionaryWebpackPlugin.find(this.compiler).update('markdownCodeExamples', navEntriesAssetPath);
+    compilation.emitAsset(this.lastNavEntriesAssetPath, new webpack.sources.RawSource(navEntriesSource));
 
-    this.firstRun = false;
+    PebulaDynamicDictionaryWebpackPlugin.find(this.compiler).update('markdownCodeExamples', this.lastNavEntriesAssetPath);
   }
 
   private async run(compiler: webpack.Compiler & { watchMode?: boolean }) {
@@ -181,7 +204,6 @@ export class MarkdownCodeExamplesWebpackPlugin {
           asset.contents = markdownAST.value;
         }
       }
-
 
       const parsedExample: ParsedExampleMetadata = {
         cacheId: file,
