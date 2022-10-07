@@ -1,15 +1,12 @@
 import * as Path from 'path';
-import * as FS from 'fs';
 import * as ts from 'typescript';
-import * as ng from '@angular/compiler-cli';
-import * as globby from 'globby';
 
-import { virtualFs, normalize } from '@angular-devkit/core';
+import { normalize } from '@angular-devkit/core';
 import * as log from 'ng-packagr/lib/utils/log';
 
-import { isEntryPoint, EntryPointNode } from 'ng-packagr/lib/ng-package/nodes';
 import { EntryPointTaskContext, Job } from 'ng-cli-packagr-tasks';
 import { CopyFile, CopyPattern } from 'ng-cli-packagr-tasks/dist/tasks/copy-file';
+import { ngCompilerCli } from 'ng-cli-packagr-tasks/dist/tasks/ngc-cli-utils';
 
 declare module 'ng-cli-packagr-tasks/dist/build/hooks' {
   interface NgPackagrBuilderTaskSchema {
@@ -64,7 +61,6 @@ async function schematicsCompileTask(context: EntryPointTaskContext) {
         output: Path.relative(root, destDir),
       }
     ],
-    new virtualFs.AliasHost(globalContext.host as virtualFs.Host<FS.Stats>),
     root,
     rootDir,
     rootDir,
@@ -85,10 +81,11 @@ async function schematicsCompileTask(context: EntryPointTaskContext) {
   const tsConfigPath = Path.join(rootDir, schematicsCompile.tsConfig || './tsconfig.json');
   const parsedTsConfig = readTsConfig(tsConfigPath);
 
+  const { exitCodeFromResult, formatDiagnostics } = await ngCompilerCli();
   if (parsedTsConfig.errors.length > 0) {
-    const exitCode = ng.exitCodeFromResult(parsedTsConfig.errors);
+    const exitCode = exitCodeFromResult(parsedTsConfig.errors);
     if (exitCode !== 0) {
-      return Promise.reject(new Error(ng.formatDiagnostics(parsedTsConfig.errors)));
+      return Promise.reject(new Error(formatDiagnostics(parsedTsConfig.errors)));
     }
   }
 
@@ -112,10 +109,9 @@ async function schematicsCompileTask(context: EntryPointTaskContext) {
   const emitResult = program.emit();
   const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
-
-  const exitCode = ng.exitCodeFromResult(allDiagnostics);
+  const exitCode = exitCodeFromResult(allDiagnostics);
   if (exitCode !== 0) {
-    throw new Error(ng.formatDiagnostics(allDiagnostics));
+    throw new Error(formatDiagnostics(allDiagnostics));
   }
 }
 
