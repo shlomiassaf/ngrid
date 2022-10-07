@@ -53,5 +53,3 @@ jobs:
           name: cypress-artifacts
           path: dist/cypress/**/*.png
           retention-days: 30
-      - name: Build Libraries (IVY)
-        run: npm run build-grid:ivy
