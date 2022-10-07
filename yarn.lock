@@ -3947,7 +3947,7 @@ array-sort@^1.0.0:
 array-union@^1.0.1, array-union@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/array-union/-/array-union-1.0.2.tgz#9a34410e4f4e3da23dea375be5be70f24778ec39"
-  integrity sha1-mjRBDk9OPaI96jdb5b5w8kd47Dk=
+  integrity sha512-Dxr6QJj/RdU/hCaBjOfxW+q6lyuVE6JFWIrAUpuOOhoJJoQ99cUn3igRaHVB5P9WrgFVN0FfArM3x0cueOU8ng==
   dependencies:
     array-uniq "^1.0.1"
 
@@ -10987,10 +10987,12 @@ next-tick@~1.0.0:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
   integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
 
-ng-cli-packagr-tasks@^11.0.2:
-  version "11.0.2"
-  resolved "https://registry.yarnpkg.com/ng-cli-packagr-tasks/-/ng-cli-packagr-tasks-11.0.2.tgz#645469d74ae1982a79919ac6169b95cd5aa6de1a"
-  integrity sha512-2Qotuux+I7TwzBiiVNTg+KV9o+WNfxkSVkZpg5WbjeGrAh3NqM31Pd0wMCyS3sILkSO43o5FFNOBVbUDia2WoA==
+ng-cli-packagr-tasks@14.2.0-alpha.4:
+  version "14.2.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/ng-cli-packagr-tasks/-/ng-cli-packagr-tasks-14.2.0-alpha.4.tgz#ff2d73156ab80d744d07c2c90d7db65ee6c1539e"
+  integrity sha512-url5mBREQl9s0Dxxx4I7gHhoDRN8FrvrNIe0+vli8egbr081JGpX9OzNL346GqobXWg/oxYYdk0XJgZ9fxkvBw==
+  dependencies:
+    globby "^9.0.0"
 
 ng-packagr@14.2.1:
   version "14.2.1"

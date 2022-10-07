@@ -3,8 +3,9 @@ import * as Path from 'path';
 import { EntryPointNode, isEntryPoint, isPackage, PackageNode } from 'ng-packagr/lib/ng-package/nodes';
 import { cacheCompilerHost } from 'ng-packagr/lib/ts/cache-compiler-host';
 import { BuildGraph } from 'ng-packagr/lib/graph/build-graph';
-
+import { debug } from 'ng-packagr/lib/utils/log';
 import { ensureUnixPath } from 'ng-packagr/lib/utils/path';
+
 import { EntryPointTaskContext, Job } from 'ng-cli-packagr-tasks';
 
 declare module 'ng-cli-packagr-tasks/dist/build/hooks' {
@@ -41,7 +42,8 @@ async function analyseSourcesWorkaround(context: EntryPointTaskContext) {
   const primaryModuleId = packageNode.data.primary.moduleId;
 
   const tsConfigOptions: ts.CompilerOptions = {
-    ...entryPoint.data.tsConfig.options,
+    // Needed because of `Property 'extendedDiagnostics' is incompatible with index signature.`
+    ...(entryPoint.data.tsConfig.options as ts.CompilerOptions),
     skipLibCheck: true,
     noLib: true,
     noEmit: true,
@@ -56,13 +58,46 @@ async function analyseSourcesWorkaround(context: EntryPointTaskContext) {
     tsConfigOptions,
     moduleResolutionCache,
     undefined,
+    undefined,
     analysesSourcesFileCache,
-    false,
-  );
+  ) as ts.CompilerHost;
 
   const potentialDependencies = new Set<string>();
 
-  compilerHost.resolveModuleNames = (moduleNames: string[], containingFile: string) => {
+  compilerHost.resolveTypeReferenceDirectives = (
+    moduleNames: string[] | ts.FileReference[],
+    containingFile: string,
+    redirectedReference: ts.ResolvedProjectReference | undefined,
+    options: ts.CompilerOptions,
+  ) => {
+    return moduleNames.map(name => {
+      const moduleName = typeof name === 'string' ? name : name.fileName;
+
+      if (!moduleName.startsWith('.')) {
+        if (moduleName === primaryModuleId || moduleName.startsWith(`${primaryModuleId}/`)) {
+          potentialDependencies.add(moduleName);
+        }
+
+        return undefined;
+      }
+
+      const result = ts.resolveTypeReferenceDirective(
+        moduleName,
+        ensureUnixPath(containingFile),
+        options,
+        compilerHost,
+        redirectedReference,
+      ).resolvedTypeReferenceDirective;
+
+      return result;
+    });
+  };
+
+  compilerHost.resolveModuleNames = (moduleNames: string[],
+                                     containingFile: string,
+                                     _reusedNames: string[] | undefined,
+                                     redirectedReference: ts.ResolvedProjectReference | undefined,
+                                     options: ts.CompilerOptions) => {
     return moduleNames.map(moduleName => {
       if (!moduleName.startsWith('.')) {
         if (moduleName === primaryModuleId || moduleName.startsWith(`${primaryModuleId}/`)) {
@@ -75,9 +110,10 @@ async function analyseSourcesWorkaround(context: EntryPointTaskContext) {
       const { resolvedModule } = ts.resolveModuleName(
         moduleName,
         ensureUnixPath(containingFile),
-        tsConfigOptions,
+        options,
         compilerHost,
         moduleResolutionCache,
+        redirectedReference,
       );
 
       return resolvedModule;

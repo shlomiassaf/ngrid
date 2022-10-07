@@ -1,9 +1,9 @@
 import { EntryPointTaskContext } from 'ng-cli-packagr-tasks';
 
 export function mergeUmdIds(context: EntryPointTaskContext, umdModuleIds: { [ tsPath: string ]: string }): void {
-  const { entryPoint } = context.epNode.data;
-  const orgUmdModuleIds = entryPoint.umdModuleIds || {};
-  entryPoint.ngPackageJson.lib.umdModuleIds = { ...orgUmdModuleIds, ...umdModuleIds };
+  // const { entryPoint } = context.epNode.data;
+  // const orgUmdModuleIds = entryPoint.umdModuleIds || {};
+  // entryPoint.ngPackageJson.lib.umdModuleIds = { ...orgUmdModuleIds, ...umdModuleIds };
 }
 
 export function updatePathsFromCache(taskContext: EntryPointTaskContext, pathMappingsCache: { [ tsPath: string ]: string[] }): void {

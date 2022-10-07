@@ -2,8 +2,7 @@ import * as Path from 'path';
 import * as FS from 'fs';
 import { Bundler } from 'scss-bundle';
 import { writeFile } from 'fs-extra';
-import * as globby from 'globby';
-import { virtualFs } from '@angular-devkit/core';
+import globby from 'globby';
 import * as log from 'ng-packagr/lib/utils/log';
 
 import { EntryPointTaskContext, Job } from 'ng-cli-packagr-tasks';
@@ -32,7 +31,6 @@ async function sassBundleTask(context: EntryPointTaskContext) {
 
   const copyPatterns = CopyFile.createCopyPatterns(
     options.tasks.data.sassBundle.entries,
-    new virtualFs.AliasHost(globalContext.host as virtualFs.Host<FS.Stats>),
     root,
     projectRoot,
     sourceRoot,

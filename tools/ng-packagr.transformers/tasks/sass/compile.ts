@@ -1,8 +1,6 @@
 import * as Path from 'path';
-import * as FS from 'fs';
 import { dest, task, series } from 'gulp';
 
-import { virtualFs } from '@angular-devkit/core';
 import * as log from 'ng-packagr/lib/utils/log';
 
 import { EntryPointTaskContext, Job } from 'ng-cli-packagr-tasks';
@@ -32,7 +30,6 @@ async function sassCompileTask(context: EntryPointTaskContext) {
 
   const copyPatterns = CopyFile.createCopyPatterns(
     options.tasks.data.sassCompile.entries,
-    new virtualFs.AliasHost(globalContext.host as virtualFs.Host<FS.Stats>),
     root,
     projectRoot,
     sourceRoot,
