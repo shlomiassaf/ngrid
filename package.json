@@ -93,6 +93,7 @@
     "@octokit/rest": "^19.0.4",
     "@rigor789/remark-autolink-headings": "^5.1.0",
     "@simonsmith/cypress-image-snapshot": "^6.0.0",
+    "@types/cypress-image-snapshot": "^3.1.6",
     "@types/express-serve-static-core": "4.17.31",
     "@types/faker": "^5.5.5",
     "@types/globby": "^8.0.0",

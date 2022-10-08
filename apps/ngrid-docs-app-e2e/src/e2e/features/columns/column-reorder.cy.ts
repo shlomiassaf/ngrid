@@ -1,7 +1,7 @@
 describe('ngrid-docs-app', () => {
   beforeEach(() => cy.visit('/features/column/column-reorder'));
 
-  it('should reorder dragged columns with groups', () => {
+  it('should reorder dragged columns with groups', { defaultCommandTimeout: 10000 }, () => {
     cy.get('pbl-group-columns-lock-example > pbl-ngrid')
       .scrollIntoView()
       .nGrid()
