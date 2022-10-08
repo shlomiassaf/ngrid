@@ -79,7 +79,7 @@ function getFrameElement(currentWindow: Window): HTMLElement {
 
   // fallback to querying using the parent window, mainly to grab the AUT iframe
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return [...currentWindow.parent.document.querySelectorAll("iframe")].find(
+  return [...Array.from(currentWindow.parent.document.querySelectorAll("iframe"))].find(
     (iframe) => iframe.contentWindow === currentWindow
   )!;
 }
