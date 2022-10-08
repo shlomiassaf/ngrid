@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 14
       - name: Restore Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
@@ -30,8 +30,6 @@ jobs:
             ${{ runner.os }}-node-
       - name: Install dependencies
         run: yarn install
-      - name: Create Cache Directory
-        run: mkdir /home/runner/work/ngrid/ngrid/.cache
       - name: E2E
         run: ./node_modules/.bin/nx run-many --configuration=updateSnapshots --target=e2e --all
       - name: Remove package-lock.json
