@@ -1,6 +1,7 @@
 import { defineConfig } from 'cypress';
+import { addMatchImageSnapshotPlugin } from '@simonsmith/cypress-image-snapshot/plugin';
+
 import { nxE2EPreset } from '@nrwl/cypress/plugins/cypress-preset';
-import setupNodeEvents from './src/plugins/index';
 
 const cypressJsonConfig = {
   fileServerFolder: '.',
@@ -12,10 +13,13 @@ const cypressJsonConfig = {
   specPattern: 'src/e2e/**/*.cy.{js,jsx,ts,tsx}',
   supportFile: 'src/support/e2e.ts',
 };
+
 export default defineConfig({
   e2e: {
     ...nxE2EPreset(__dirname),
     ...cypressJsonConfig,
-    setupNodeEvents,
+    setupNodeEvents(on, config) {
+      addMatchImageSnapshotPlugin(on, config);
+    },
   },
 });
