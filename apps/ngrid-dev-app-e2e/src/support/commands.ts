@@ -1,6 +1,6 @@
 // import '@pebula/ngrid-cypress';
 import '../../../../libs/ngrid-cypress/src/index';
-import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
+import { addMatchImageSnapshotCommand } from '@simonsmith/cypress-image-snapshot/command';
 
 declare global {
   namespace Cypress {
