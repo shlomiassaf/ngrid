@@ -660,5 +660,8 @@
       },
       "tags": ["name:material", "type:child-lib", "parent:ngrid"]
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
