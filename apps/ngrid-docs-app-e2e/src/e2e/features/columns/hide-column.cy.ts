@@ -4,8 +4,15 @@ describe('ngrid-docs-app', () => {
   it('should hide and show columns', () => {
     cy.get('pbl-hide-columns-example-component > pbl-ngrid')
       .nGrid()
-      .should( ngrid => {
-        expect(ngrid.getColumns()).to.deep.eq(['id', 'name', 'gender', 'birthdate', 'email', 'language']);
+      .should((ngrid) => {
+        expect(ngrid.getColumns()).to.deep.eq([
+          'id',
+          'name',
+          'gender',
+          'birthdate',
+          'email',
+          'language',
+        ]);
         cy.get('pbl-hide-columns-example-component mat-select').click();
         cy.get('#mat-option-3 > .mat-option-text').click();
         cy.get('#mat-option-2 > .mat-option-text').click();
@@ -19,17 +26,34 @@ describe('ngrid-docs-app', () => {
         cy.get('#mat-option-4 > .mat-option-text').click();
         cy.get('#mat-option-5 > .mat-option-text').click();
         cy.wait(100).should(() => {
-          expect(ngrid.getColumns()).to.deep.eq(['id', 'name', 'gender', 'birthdate', 'bio', 'email', 'language']);
+          expect(ngrid.getColumns()).to.deep.eq([
+            'id',
+            'name',
+            'gender',
+            'birthdate',
+            'bio',
+            'email',
+            'language',
+          ]);
         });
         cy.get('.cdk-overlay-backdrop').click();
-    });
+      });
   });
 
   it('should hide and show group columns when child columns hide/show', () => {
     cy.get('pbl-hide-columns-with-group-headers-example-component > pbl-ngrid')
       .nGrid()
-      .should( ngrid => {
-        expect(ngrid.getColumns()).to.deep.eq(['id', 'name', 'gender', 'birthdate', 'bio', 'email', 'country', 'language']);
+      .should((ngrid) => {
+        expect(ngrid.getColumns()).to.deep.eq([
+          'id',
+          'name',
+          'gender',
+          'birthdate',
+          'bio',
+          'email',
+          'country',
+          'language',
+        ]);
         const headerRows = ngrid.getHeaderMetaRows();
         expect(headerRows.length).to.eq(1);
         const hr = headerRows[0];
@@ -43,13 +67,26 @@ describe('ngrid-docs-app', () => {
         expect(hr.cells[3].placeholder).to.eq(false);
         expect(hr.cells[1].id).to.eq('name-gender-birthdate');
 
-
-        cy.get('pbl-hide-columns-with-group-headers-example-component mat-select').click();
-        cy.get('span.mat-option-text').contains('name').then(option => option[0].click());
-        cy.get('span.mat-option-text').contains('gender').then(option => option[0].click());
-        cy.get('span.mat-option-text').contains('birthdate').then(option => option[0].click());
+        cy.get(
+          'pbl-hide-columns-with-group-headers-example-component mat-select'
+        ).click();
+        cy.get('span.mat-option-text')
+          .contains('name')
+          .then((option) => option[0].click());
+        cy.get('span.mat-option-text')
+          .contains('gender')
+          .then((option) => option[0].click());
+        cy.get('span.mat-option-text')
+          .contains('birthdate')
+          .then((option) => option[0].click());
         cy.wait(100).should(() => {
-          expect(ngrid.getColumns()).to.deep.eq(['id', 'bio', 'email', 'country', 'language']);
+          expect(ngrid.getColumns()).to.deep.eq([
+            'id',
+            'bio',
+            'email',
+            'country',
+            'language',
+          ]);
 
           const headerRows1 = ngrid.getHeaderMetaRows();
           expect(headerRows1.length).to.eq(1);
@@ -63,6 +100,6 @@ describe('ngrid-docs-app', () => {
         });
 
         cy.get('.cdk-overlay-backdrop').click();
-    });
+      });
   });
 });

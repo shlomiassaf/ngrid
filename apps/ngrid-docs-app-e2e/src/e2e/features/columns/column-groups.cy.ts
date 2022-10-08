@@ -4,8 +4,15 @@ describe('ngrid-docs-app', () => {
   it('should show column groups', () => {
     cy.get('pbl-column-group-example > pbl-ngrid')
       .nGrid()
-      .should( ngrid => {
-        expect(ngrid.getColumns()).to.deep.eq(['id', 'name', 'gender', 'email', 'country', 'language']);
+      .should((ngrid) => {
+        expect(ngrid.getColumns()).to.deep.eq([
+          'id',
+          'name',
+          'gender',
+          'email',
+          'country',
+          'language',
+        ]);
         const headerRows = ngrid.getHeaderMetaRows();
         expect(headerRows.length).to.eq(1);
         const hr = headerRows[0];
@@ -18,14 +25,21 @@ describe('ngrid-docs-app', () => {
         expect(hr.cells[2].placeholder).to.eq(true);
         expect(hr.cells[3].placeholder).to.eq(false);
         expect(hr.cells[1].id).to.eq('name-gender');
-    });
+      });
   });
 
   it('should show column groups complex', () => {
     cy.get('pbl-multi-header-column-group-example > pbl-ngrid')
       .nGrid()
-      .should( ngrid => {
-        expect(ngrid.getColumns()).to.deep.eq(['id', 'name', 'gender', 'email', 'country', 'language']);
+      .should((ngrid) => {
+        expect(ngrid.getColumns()).to.deep.eq([
+          'id',
+          'name',
+          'gender',
+          'email',
+          'country',
+          'language',
+        ]);
         const headerRows = ngrid.getHeaderMetaRows();
         expect(headerRows.length).to.eq(3);
         const [hr0, hr1, hr2] = headerRows;
@@ -39,7 +53,6 @@ describe('ngrid-docs-app', () => {
         expect(hr0.cells[2].placeholder).to.eq(true);
         expect(hr0.cells[3].placeholder).to.eq(false);
         expect(hr0.cells[1].id).to.eq('name-gender');
-
 
         expect(hr1.isGroup).to.eq(false);
         expect(hr1.type).to.eq('fixed');
@@ -57,7 +70,6 @@ describe('ngrid-docs-app', () => {
         expect(hr2.cells[1].placeholder).to.eq(true);
         expect(hr2.cells[2].placeholder).to.eq(false);
         expect(hr2.cells[0].id).to.eq('id-name-gender');
-
-    });
+      });
   });
 });
