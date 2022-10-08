@@ -561,7 +561,7 @@
           },
           "configurations": {
             "development": {
-              "devServerTarget": "ngrid-docs-app:servedevelopment"
+              "devServerTarget": "ngrid-docs-app:serve:development"
             },
             "development-dist": {
               "devServerTarget": "ngrid-docs-app:serve:development-dist"

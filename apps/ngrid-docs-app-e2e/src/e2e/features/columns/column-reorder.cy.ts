@@ -41,21 +41,10 @@ describe('ngrid-docs-app', () => {
         expect(hr1.cells[3].placeholder).to.eq(false);
         expect(hr1.cells[1].id).to.eq('gender-email-country');
       })
-      .then((ngrid) =>
-        ngrid.actions.dragMoveColumns1('email', 'gender', {
-          delay: 16,
-          steps: 50,
-          smooth: true,
-        })
-      )
+      .wait(500)
+      .then((ngrid) => ngrid.actions.dragMoveColumns('email', 'gender', { delay: 16, steps: 25, smooth: true }))
       .wait(200)
-      .then((ngrid) =>
-        ngrid.actions.dragMoveColumns1('country', 'language', {
-          delay: 16,
-          steps: 25,
-          smooth: true,
-        })
-      )
+      .then((ngrid) => ngrid.actions.dragMoveColumns('country', 'language', { delay: 16, steps: 25, smooth: true }))
       .wait(200)
       .should((ngrid) => {
         expect(ngrid.getColumns()).to.deep.eq([

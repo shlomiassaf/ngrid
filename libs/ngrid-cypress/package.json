@@ -16,6 +16,9 @@
     "grid",
     "table"
   ],
+  "peerDependencies": {
+    "cypress-real-events": "^1.7.1"
+  },
   "author": "Shlomi Assaf",
   "homepage": "https://github.com/shlomiassaf/ngrid",
   "bugs": {
