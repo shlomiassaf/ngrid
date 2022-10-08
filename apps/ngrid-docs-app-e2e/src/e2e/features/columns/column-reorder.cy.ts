@@ -43,9 +43,9 @@ describe('ngrid-docs-app', () => {
       })
       .wait(500)
       .then((ngrid) => ngrid.actions.dragMoveColumns('email', 'gender', { delay: 16, steps: 25, smooth: true }))
-      .wait(200)
+      .wait(500)
       .then((ngrid) => ngrid.actions.dragMoveColumns('country', 'language', { delay: 16, steps: 25, smooth: true }))
-      .wait(200)
+      .wait(500)
       .should((ngrid) => {
         expect(ngrid.getColumns()).to.deep.eq([
           'id',
