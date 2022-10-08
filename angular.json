@@ -361,7 +361,6 @@
               "baseUrl": "http://host.docker.internal:4200"
             },
             "updateSnapshots": {
-              "headless": true,
               "env": {
                 "updateSnapshots": true
               }
