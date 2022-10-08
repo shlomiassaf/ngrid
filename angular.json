@@ -350,9 +350,10 @@
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/ngrid-dev-app-e2e/cypress.json",
+            "cypressConfig": "apps/ngrid-dev-app-e2e/cypress.config.ts",
             "tsConfig": "apps/ngrid-dev-app-e2e/tsconfig.e2e.json",
-            "devServerTarget": "ngrid-dev-app:serve"
+            "devServerTarget": "ngrid-dev-app:serve",
+            "testingType": "e2e"
           },
           "configurations": {
             "docker": {
@@ -554,8 +555,9 @@
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/ngrid-docs-app-e2e/cypress.json",
-            "tsConfig": "apps/ngrid-docs-app-e2e/tsconfig.e2e.json"
+            "cypressConfig": "apps/ngrid-docs-app-e2e/cypress.config.ts",
+            "tsConfig": "apps/ngrid-docs-app-e2e/tsconfig.e2e.json",
+            "testingType": "e2e"
           },
           "configurations": {
             "development": {

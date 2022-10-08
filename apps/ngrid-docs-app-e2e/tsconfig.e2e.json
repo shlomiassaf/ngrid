@@ -4,5 +4,5 @@
     "sourceMap": false,
     "outDir": "../../dist/out-tsc"
   },
-  "include": ["src/**/*.ts", "src/support/index.d.ts"]
+  "include": ["src/**/*.ts", "src/support/index.d.ts", "cypress.config.ts"]
 }
