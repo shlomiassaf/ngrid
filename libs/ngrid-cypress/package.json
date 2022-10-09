@@ -1,6 +1,6 @@
 {
   "name": "@pebula/ngrid-cypress",
-  "version": "3.0.0",
+  "version": "5.0.0-alpha.0",
   "license": "MIT",
   "description": "Cypress Test Helpers For @pebula/ngrid",
   "repository": {
@@ -16,9 +16,6 @@
     "grid",
     "table"
   ],
-  "peerDependencies": {
-    "cypress-real-events": "^1.7.1"
-  },
   "author": "Shlomi Assaf",
   "homepage": "https://github.com/shlomiassaf/ngrid",
   "bugs": {
