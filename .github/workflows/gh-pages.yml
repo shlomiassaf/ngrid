@@ -10,7 +10,7 @@ on:
       docsVersion:
         description: 'Docs Major Version'
         required: true
-        default: '4'
+        default: '5'
   release:
     types: [created]
 
@@ -29,7 +29,7 @@ jobs:
               urlSuffix: '',
               projectName: 'ngrid-docs-app',
               clean: true,
-              cleanExclude: ['v1', 'v2', 'v3'],
+              cleanExclude: ['v1', 'v2', 'v3', 'v4'],
             };
             const OLD_VERSIONS = {
               '1': {
@@ -55,6 +55,15 @@ jobs:
                 packageManager: 'yarn install --ignore-platform',
                 nodeVer: 14,
                 urlSuffix: 'v3/',
+                projectName: 'ngrid-docs-app',
+                clean: false,
+                cleanExclude: [],
+              },
+              '4': {
+                branch: '4.0.x',
+                packageManager: 'yarn install --ignore-platform',
+                nodeVer: 14,
+                urlSuffix: 'v4/',
                 projectName: 'ngrid-docs-app',
                 clean: false,
                 cleanExclude: [],
