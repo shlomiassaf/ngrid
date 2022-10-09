@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "create-dev-app-module",
+  "$id": "create-dev-app-module",
   "type": "object",
   "properties": {
     "name": {

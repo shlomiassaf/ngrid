@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "create-docs-app-module",
+  "$id": "create-docs-app-module",
   "type": "object",
   "properties": {
     "name": {
