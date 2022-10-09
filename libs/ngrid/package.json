@@ -1,10 +1,10 @@
 {
   "name": "@pebula/ngrid",
-  "version": "4.0.1",
+  "version": "5.0.0-alpha.0",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/core": ">=12.0.0",
-    "@angular/cdk": ">=12.0.0"
+    "@angular/core": ">=14.0.0",
+    "@angular/cdk": ">=14.0.0"
   },
   "description": "Angular Grid",
   "repository": {
@@ -21,5 +21,25 @@
   "homepage": "https://github.com/shlomiassaf/ngrid",
   "bugs": {
     "url": "https://github.com/shlomiassaf/ngrid/issues"
+  },
+  "exports": {
+    ".": {
+      "sass": "./_index.scss"
+    },
+    "./theming": {
+      "sass": "./_theming.scss"
+    },
+    "./_theming": {
+      "sass": "./_theming.scss"
+    },
+    "./themes/default-dark.css": {
+      "style": "./themes/default-dark.css"
+    },
+    "./themes/default-light.css": {
+      "style": "./themes/default-light.css"
+    },
+    "./themes/*": {
+      "style": "./themes/*.css"
+    }
   }
 }

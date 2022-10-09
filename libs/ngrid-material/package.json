@@ -1,8 +1,34 @@
 {
   "name": "@pebula/ngrid-material",
-  "version": "4.0.1",
+  "version": "5.0.0-alpha.0",
   "peerDependencies": {
-    "@angular/material": "^12.0.0",
-    "@pebula/ngrid": "4.0.1"
+    "@angular/material": "^14.0.0",
+    "@pebula/ngrid": "5.0.0-alpha.0"
+  },
+  "exports": {
+    ".": {
+      "sass": "./_index.scss"
+    },
+    "./theming": {
+      "sass": "./_theming.scss"
+    },
+    "./_theming": {
+      "sass": "./_theming.scss"
+    },
+    "./themes/deeppurple-amber.css": {
+      "style": "./themes/deeppurple-amber.css"
+    },
+    "./themes/indigo-pink.css": {
+      "style": "./themes/indigo-pink.css"
+    },
+    "./themes/pink-bluegrey.css": {
+      "style": "./themes/pink-bluegrey.css"
+    },
+    "./themes/purple-green.css": {
+      "style": "./themes/purple-green.css"
+    },
+    "./themes/*": {
+      "style": "./themes/*.css"
+    }
   }
 }
