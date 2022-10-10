@@ -1,6 +1,6 @@
 {
   "name": "@pebula/ngrid-cypress",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0",
   "license": "MIT",
   "description": "Cypress Test Helpers For @pebula/ngrid",
   "repository": {
