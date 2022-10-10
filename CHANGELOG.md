@@ -1,4 +1,47 @@
+# 5.0.0 (2022-10-10)
+
+
+## Highlights
+
+Migrate to angular 14
+
+
+
+# 5.0.0-alpha.0 (2022-10-09)
+
+
+## Highlights
+
+Support angular v14 from current supported angular version (12).  
+It includes a refactor of the build system to nx 14 (from nx 12)
+
+This is a huge change since it include multiple monorepo management system changes (nx 14)
+as well as internal angular changes in it's own build process.
+
+Since we are using fancy code to generate the documentation the code is refactored
+so the dev server documentation app works.
+
+Additional changes:
+- TS language breaking changes
+- CDK breaking changes
+- Build uitils changes (nx-build-plux, angular package format changes, etc...)
+
+Upgrade process done in steps:
+
+| Step                | From Commit | To Commit |
+| ------------------- | ----------- | --------- |
+| Current to nx@13    | [60ebd31](https://github.com/shlomiassaf/ngrid/commit/d8f17892cab9501ed86fe39d16d2215d50fed783) | [599fac5](https://github.com/shlomiassaf/ngrid/commit/599fac5335d6b7c851ca103a8d83a5d34f804708) |
+| nx@13 to nx@13.10.6 | [e32e17d](https://github.com/shlomiassaf/ngrid/commit/e32e17d0632456b7de4eb719451114e29efbc673) | [5b61c6f](https://github.com/shlomiassaf/ngrid/commit/5b61c6fb7f6b5ea449fc77dda190416c4505a252) |
+| nx@13.10.6 to nx@14.8.2 | [5cac67d](https://github.com/shlomiassaf/ngrid/commit/5cac67d5ccbf9034188848ba1bf3ec4f9ed47732) | [a5cba17](https://github.com/shlomiassaf/ngrid/commit/a5cba173db672208805674fa96d811e2b28188ba) |
+| Fix Docs App | [962fe17](https://github.com/shlomiassaf/ngrid/commit/962fe177f62de89375145aafe72aee75a12a2d12) | [88b5c36](https://github.com/shlomiassaf/ngrid/commit/88b5c36badba4a89d40b7c12b3fbff5b8553c901) |
+| Fix Unit & E2E tests | [a2edbeb](https://github.com/shlomiassaf/ngrid/commit/a2edbeb26edab36db90be91b06918479629b1308) | [f3d9831](https://github.com/shlomiassaf/ngrid/commit/f3d983188cc8ed8e70f40d922c839767c9841dd5) |
+| Fix Lib Packaging | [d9de8e4](https://github.com/shlomiassaf/ngrid/commit/d9de8e4ddf5ccf4b44a9e948dd5cba15e4733b05), [0eddaa5](https://github.com/shlomiassaf/ngrid/commit/0eddaa51dbe301d926b05c482a8e5821d54ed883) |
+| Fix SSR + GH Pages | [fd06369](https://github.com/shlomiassaf/ngrid/commit/fd0636938c38d310aa75c58a3a0bf2a60328407c), [53394eb](https://github.com/shlomiassaf/ngrid/commit/53394eb6c6780c80cd621cc6f31dc86af0791731) |
+
+
+
 ## 4.0.1 (2022-10-02)
+
 
 ### ngrid
 
@@ -8,7 +51,10 @@
 | bug fix |  support header & footer background colors in theming ([e825e4fe16ef07093ef41b665dbf596f305f614c](https://github.com/shlomiassaf/ngrid/commit/e825e4fe16ef07093ef41b665dbf596f305f614c)) |
 | bug fix |  **target-events:** expose mouseUp & mouseDown events in target events plugin ([c460d3bd1ce7cb7f026712c2f3d5baac84eab50c](https://github.com/shlomiassaf/ngrid/commit/c460d3bd1ce7cb7f026712c2f3d5baac84eab50c)) |
 
+
+
 # 4.0.0 (2022-01-12)
+
 
 ### ngrid
 
@@ -19,6 +65,7 @@
 
 # 4.0.0-alpha.3 (2021-05-24)
 
+
 ### ngrid
 
 |            |                       |
@@ -26,10 +73,14 @@
 | bug fix |  revert to using ViewEngine package ([3a1fe8f3202f4760d53085874279b26cfd902e88](https://github.com/shlomiassaf/ngrid/commit/3a1fe8f3202f4760d53085874279b26cfd902e88)) |
 
 
+
+
 # 4.0.0-alpha.2 (2021-05-24)
 
 
+
 # 4.0.0-alpha.1 (2021-05-24)
+
 
 ### ngrid
 
@@ -38,7 +89,10 @@
 | bug fix |  scss bundles proper export ([c86b9b5140e584971aeeaf50223a03a72e014e36](https://github.com/shlomiassaf/ngrid/commit/c86b9b5140e584971aeeaf50223a03a72e014e36)) |
 | bug fix |  force export augmenting d.ts files ([f2c60ab](https://github.com/shlomiassaf/ngrid/commit/f2c60ab8910aad3e6775441f71111a6f670cc1e8)) |
 
+
+
 # 4.0.0-alpha.0 (2021-05-24)
+
 
 ## Highlights
 
@@ -78,6 +132,7 @@ Since `nGrid@v4` is IVY compiled and the CDK does not support previous versions,
 |            |                       |
 | ---------- | --------------------- |
 | bug fix |  **sort:** support empty strings when sorting ([6a1023e066a297f6b87c8a37554fc73ac723e114](https://github.com/shlomiassaf/ngrid/commit/6a1023e066a297f6b87c8a37554fc73ac723e114)) |
+
 
 
 ## 3.1.4 (2021-04-08)
