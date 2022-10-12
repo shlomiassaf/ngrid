@@ -8,7 +8,7 @@ export default {
     'ts-jest': {
       stringifyContentPathRegex: '\\.(html|svg)$',
 
-      tsconfig: '<rootDir>/tsconfig.spec.json',
+      tsconfig: '<rootDir>/tsconfig.spec.jest.json',
     },
   },
   displayName: 'ngrid',

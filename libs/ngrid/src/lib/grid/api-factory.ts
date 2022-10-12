@@ -14,7 +14,6 @@ import { PblCdkTableComponent } from './pbl-cdk-table/pbl-cdk-table.component';
 import { PblRowsApi } from './row/rows-api';
 import { PblNgridCellFactoryResolver } from './row/cell-factory.service';
 import { ContextApi } from './context/api';
-import { PblNgridMetaRowService } from './meta-rows/meta-row.service';
 import { PblCdkVirtualScrollViewportComponent } from './features/virtual-scroll/virtual-scroll-viewport.component';
 import { bindGridToDataSource } from './bind-grid-to-datasource';
 import { logicap, Logicaps } from './logicap/index';

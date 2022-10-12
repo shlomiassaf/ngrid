@@ -10,30 +10,6 @@
     "nx.json": "*",
     "tsconfig.base.json": "*"
   },
-  "nx-enforce-module-boundaries": [
-    true,
-    {
-      "allow": [],
-      "depConstraints": [
-        {
-          "sourceTag": "name:ngrid",
-          "onlyDependOnLibsWithTags": []
-        },
-        {
-          "sourceTag": "parent:ngrid",
-          "onlyDependOnLibsWithTags": [
-            "name:ngrid",
-            "parent:ngrid",
-            "parent:material"
-          ]
-        },
-        {
-          "sourceTag": "*",
-          "onlyDependOnLibsWithTags": ["*"]
-        }
-      ]
-    }
-  ],
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx/tasks-runners/default",

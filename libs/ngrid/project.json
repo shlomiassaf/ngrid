@@ -88,7 +88,7 @@
       "outputs": ["coverage/libs/ngrid"],
       "options": {
         "main": "libs/ngrid/src/__test-runners/karma-test.ts",
-        "tsConfig": "libs/ngrid/tsconfig.spec.karma.json",
+        "tsConfig": "libs/ngrid/tsconfig.spec.json",
         "karmaConfig": "libs/ngrid/karma.conf.js"
       },
       "configurations": {

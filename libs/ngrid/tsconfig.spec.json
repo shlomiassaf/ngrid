@@ -2,9 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
-    "types": ["jest", "node", "dev-mode-types"]
+    "types": ["jasmine", "node", "dev-mode-types"]
   },
-  "files": ["src/__test-runners/jest-test-setup.ts"],
-  "include": ["**/*.spec.ts", "**/*.d.ts", "jest.config.ts"]
+  "files": ["src/__test-runners/karma-test.ts"],
+  "include": ["**/*.spec.ts", "**/*.test.ts", "**/*.d.ts"],
+  "exclude": ["jest.config.ts"]
 }
