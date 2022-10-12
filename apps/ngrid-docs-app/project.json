@@ -178,6 +178,33 @@
           }
         }
       }
+    },
+    "ghPages": {
+      "executor": "@pebula-internal/nx-repo-plugins:gh-pages",
+      "options": {
+        "buildTarget": "ngrid-docs-app:build:production",
+        "serverTarget": "ngrid-docs-app:server:production",
+        "baseHref": "ngrid",
+        "ssrWebpackConfig": "apps/ngrid-docs-app/build/webpack.config.ssr.js",
+        "ssrProccessingScript": "dist/server.js",
+        "assets": [
+          {
+            "glob": "index.html",
+            "input": "dist/browser",
+            "output": "dist/browser",
+            "explicitFileName": "404.html"
+          }
+        ]
+      },
+      "configurations": {
+        "ci": {
+          "runLocalServer": false
+        },
+        "development": {
+          "runLocalServer": true
+        }
+      },
+      "defaultConfiguration": "ci"
     }
   }
 }

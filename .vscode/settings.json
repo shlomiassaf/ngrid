@@ -30,5 +30,6 @@
     "autoAttachChildProcesses": true,
     "nodeVersionHint": 14
   },
-  "angular.log": "verbose"
+  "angular.log": "verbose",
+  "eslint.validate": ["json"]
 }
