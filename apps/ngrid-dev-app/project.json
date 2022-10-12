@@ -1,0 +1,106 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "ngrid-dev-app",
+  "tags": [],
+  "projectType": "application",
+  "sourceRoot": "apps/ngrid-dev-app/src",
+  "prefix": "pbl",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/ngrid-dev-app",
+        "index": "apps/ngrid-dev-app/src/index.html",
+        "main": "apps/ngrid-dev-app/src/main.ts",
+        "polyfills": "apps/ngrid-dev-app/src/polyfills.ts",
+        "tsConfig": "apps/ngrid-dev-app/tsconfig.app.json",
+        "styles": ["apps/ngrid-dev-app/src/theme.scss"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/ngrid-dev-app/src/environment.ts",
+              "with": "apps/ngrid-dev-app/src/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "ngrid-dev-app:build"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "ngrid-dev-app:build:production"
+        },
+        "development": {
+          "browserTarget": "ngrid-dev-app:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "ngrid-dev-app:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/ngrid-dev-app/**/*.ts",
+          "apps/ngrid-dev-app/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@angular-devkit/build-angular:karma",
+      "outputs": ["coverage/apps/ngrid-dev-app"],
+      "options": {
+        "main": "apps/ngrid-dev-app/src/test.ts",
+        "tsConfig": "apps/ngrid-dev-app/tsconfig.spec.json",
+        "karmaConfig": "apps/ngrid-dev-app/karma.conf.js",
+        "polyfills": "apps/ngrid-dev-app/src/polyfills.ts",
+        "styles": [],
+        "scripts": [],
+        "assets": []
+      },
+      "configurations": {
+        "ci": {
+          "watch": false,
+          "progress": false,
+          "karmaConfig": "apps/ngrid-dev-app/karma.conf.js",
+          "browsers": "ChromeHeadlessCI"
+        }
+      }
+    }
+  }
+}

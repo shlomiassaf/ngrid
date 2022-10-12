@@ -33,7 +33,7 @@
     "gh-pages:build": "./tools/scripts/build.gh-pages.sh",
     "gh-pages:publish": "./tools/scripts/publish.gh-pages.sh",
     "gh-pages": "npm run gh-pages:build && npm run gh-pages:publish",
-    "compile:server": "webpack --config webpack.config.ssr.js --progress --color",
+    "compile:server": "webpack --config apps/ngrid-docs-app/build/webpack.config.ssr.js --progress --color",
     "nx": "./node_modules/.bin/nx",
     "postinstall": "npx rimraf ./node_modules/node-sass && node ./decorate-angular-cli.js && ngcc --properties es2020 browser module main"
   },
@@ -72,7 +72,7 @@
     "ngx-build-plus": "14.0.0",
     "primer-markdown": "^3.7.13",
     "resize-observer-polyfill": "^1.5.1",
-    "rxjs": "6.6.3",
+    "rxjs": "^6.5.0",
     "tslib": "^2.2.0",
     "zone.js": "0.11.8"
   },

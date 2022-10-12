@@ -1,0 +1,84 @@
+{
+  "name": "ngrid-material",
+  "tags": [
+    "name:material",
+    "type:lib",
+    "parent:ngrid"
+  ],
+  "sourceRoot": "libs/ngrid-material/src",
+  "projectType": "library",
+  "prefix": "pbl",
+  "targets": {
+    "build": {
+      "executor": "ng-cli-packagr-tasks:build",
+      "outputs": ["dist/@pebula/ngrid-material"],
+      "options": {
+        "tsConfig": "libs/ngrid-material/tsconfig.lib.json",
+        "project": "libs/ngrid-material/ng-package.json",
+        "tasks": {
+          "config": "tools/ng-packagr.transformers/ngrid-material.transformers.ts",
+          "tsConfig": "tools/tsconfig.json",
+          "data": {
+            "copyFile": {
+              "assets": [
+                {
+                  "glob": "README.md",
+                  "input": ".",
+                  "output": "dist/@pebula/ngrid-material"
+                },
+                {
+                  "glob": "*.scss",
+                  "input": "libs/ngrid-material",
+                  "output": "dist/@pebula/ngrid-material"
+                },
+                {
+                  "glob": "**/*.scss",
+                  "input": "libs/ngrid-material/theming",
+                  "output": "dist/@pebula/ngrid-material/theming"
+                },
+                {
+                  "glob": "*/theming/**/*.scss",
+                  "input": "libs/ngrid-material",
+                  "output": "dist/@pebula/ngrid-material"
+                }
+              ]
+            },
+            "sassCompile": {
+              "entries": [
+                {
+                  "glob": "*.scss",
+                  "input": "libs/ngrid-material/theming/prebuilt",
+                  "output": "dist/@pebula/ngrid-material/themes"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/ngrid-material/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/ngrid-material/tsconfig.lib.json"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/ngrid-material"],
+      "options": {
+        "jestConfig": "libs/ngrid-material/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "jestConfig": "libs/ngrid-material/jest.config.ts",
+          "watch": false,
+          "progress": false,
+          "browsers": "ChromeHeadlessCI"
+        }
+      }
+    }
+  }
+}

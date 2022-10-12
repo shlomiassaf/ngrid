@@ -1,10 +1,6 @@
 {
-  "extends": "../../tsconfig.lib.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": ".",
-    "paths": {
-      "@pebula/*": ["dist/@pebula/*"]
-    },
     "target": "es2016",
     "module": "commonjs",
     "types": ["cypress", "node"],

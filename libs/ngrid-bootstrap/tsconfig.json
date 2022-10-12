@@ -1,11 +1,14 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "types": ["jest", "node", "dev-mode-types"]
-  },
-  "include": [],
+  "extends": "../../tsconfig.lib.json",
   "files": [],
+  "include": [],
   "references": [
+    {
+      "path": "./tsconfig.lib.json"
+    },
+    {
+      "path": "./tsconfig.lib.prod.json"
+    },
     {
       "path": "./tsconfig.spec.json"
     }

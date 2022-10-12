@@ -1,0 +1,76 @@
+{
+  "name": "ngrid-bootstrap",
+  "tags": [
+    "name:bootstrap",
+    "type:lib",
+    "parent:ngrid"
+  ],
+  "sourceRoot": "libs/ngrid-bootstrap/src",
+  "projectType": "library",
+  "prefix": "pbl",
+  "targets": {
+    "build": {
+      "executor": "ng-cli-packagr-tasks:build",
+      "outputs": ["dist/@pebula/ngrid-bootstrap"],
+      "options": {
+        "tsConfig": "libs/ngrid-bootstrap/tsconfig.lib.json",
+        "project": "libs/ngrid-bootstrap/ng-package.json",
+        "tasks": {
+          "config": "tools/ng-packagr.transformers/ngrid-bootstrap.transformers.ts",
+          "tsConfig": "tools/tsconfig.json",
+          "data": {
+            "copyFile": {
+              "assets": [
+                {
+                  "glob": "README.md",
+                  "input": ".",
+                  "output": "dist/@pebula/ngrid-bootstrap"
+                },
+                {
+                  "glob": "*.scss",
+                  "input": "libs/ngrid-bootstrap",
+                  "output": "dist/@pebula/ngrid-bootstrap"
+                },
+                {
+                  "glob": "**/*.scss",
+                  "input": "libs/ngrid-bootstrap/theming",
+                  "output": "dist/@pebula/ngrid-bootstrap/theming"
+                },
+                {
+                  "glob": "*/theming/**/*.scss",
+                  "input": "libs/ngrid-bootstrap",
+                  "output": "dist/@pebula/ngrid-bootstrap"
+                }
+              ]
+            },
+            "sassCompile": {
+              "entries": [
+                {
+                  "glob": "*.scss",
+                  "input": "libs/ngrid-bootstrap/theming/prebuilt",
+                  "output": "dist/@pebula/ngrid-bootstrap/themes"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/ngrid-bootstrap/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/ngrid-bootstrap/tsconfig.lib.json"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/ngrid-bootstrap"],
+      "options": {
+        "jestConfig": "libs/ngrid-bootstrap/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

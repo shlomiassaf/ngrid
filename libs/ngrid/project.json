@@ -1,0 +1,114 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "ngrid",
+  "tags": [
+    "name:ngrid",
+    "type:lib"
+  ],
+  "sourceRoot": "libs/ngrid/src",
+  "projectType": "library",
+  "prefix": "pbl",
+  "generators": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
+  "targets": {
+    "build": {
+      "executor": "ng-cli-packagr-tasks:build",
+      "outputs": ["dist/@pebula/ngrid"],
+      "options": {
+        "tsConfig": "libs/ngrid/tsconfig.lib.json",
+        "project": "libs/ngrid/ng-package.json",
+        "tasks": {
+          "config": "tools/ng-packagr.transformers/ngrid.transformers.ts",
+          "tsConfig": "tools/tsconfig.json",
+          "data": {
+            "analyseSourcesWorkaround": {},
+            "copyFile": {
+              "assets": [
+                {
+                  "glob": "README.md",
+                  "input": ".",
+                  "output": "dist/@pebula/ngrid"
+                },
+                {
+                  "glob": "LICENSE",
+                  "input": ".",
+                  "output": "dist/@pebula/ngrid"
+                },
+                {
+                  "glob": "*.scss",
+                  "input": "libs/ngrid",
+                  "output": "dist/@pebula/ngrid"
+                },
+                {
+                  "glob": "**/*.scss",
+                  "input": "libs/ngrid/theming",
+                  "output": "dist/@pebula/ngrid/theming"
+                },
+                {
+                  "glob": "*/theming/**/*.scss",
+                  "input": "libs/ngrid",
+                  "output": "dist/@pebula/ngrid"
+                }
+              ]
+            },
+            "sassCompile": {
+              "entries": [
+                {
+                  "glob": "*.scss",
+                  "input": "libs/ngrid/theming/prebuilt",
+                  "output": "dist/@pebula/ngrid/themes"
+                }
+              ]
+            },
+            "schematicsCompile": {
+              "libPath": "./schematics",
+              "compilerOptions": {
+                "sourceMap": false,
+                "inlineSourceMap": true,
+                "inlineSources": true
+              }
+            }
+          }
+        }
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/ngrid/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/ngrid/tsconfig.lib.json"
+        }
+      }
+    },
+    "test": {
+      "executor": "@angular-devkit/build-angular:karma",
+      "outputs": ["coverage/libs/ngrid"],
+      "options": {
+        "main": "libs/ngrid/src/__test-runners/karma-test.ts",
+        "tsConfig": "libs/ngrid/tsconfig.spec.karma.json",
+        "karmaConfig": "libs/ngrid/karma.conf.js"
+      },
+      "configurations": {
+        "ci": {
+          "watch": false,
+          "progress": false,
+          "karmaConfig": "libs/ngrid/karma.conf.js",
+          "browsers": "ChromeHeadlessCI"
+        }
+      }
+    },
+    "testJest": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/libs/ngrid"
+      ],
+      "options": {
+        "jestConfig": "libs/ngrid/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

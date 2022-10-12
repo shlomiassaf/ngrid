@@ -1,5 +1,5 @@
 import * as Path from 'path';
-import { Compiler, Configuration, DefinePlugin, WebpackOptionsNormalized } from 'webpack';
+import { Compiler, DefinePlugin, WebpackOptionsNormalized } from 'webpack';
 import * as simplegit from 'simple-git/promise';
 
 import { PebulaDynamicDictionaryWebpackPlugin } from '@pebula-internal/webpack-dynamic-dictionary';
@@ -9,7 +9,9 @@ import { SsrAndSeoWebpackPlugin } from '@pebula-internal/webpack-ssr-and-seo';
 import { MarkdownAppSearchWebpackPlugin } from '@pebula-internal/webpack-markdown-app-search';
 import { MarkdownCodeExamplesWebpackPlugin } from '@pebula-internal/webpack-markdown-code-examples';
 import type { AngularWebpackPlugin as _AngularWebpackPlugin } from '@ngtools/webpack';
-import * as remarkPlugins from './build/remark';
+import * as remarkPlugins from './remark';
+
+const appRoot = Path.resolve(__dirname, "..");
 
 // ** CONFIG VALUES **
 function applyLoaders(webpackConfig: WebpackOptionsNormalized) {
@@ -63,7 +65,7 @@ function updateWebpackConfig(webpackConfig: WebpackOptionsNormalized): WebpackOp
   webpackConfig.plugins.push(new PebulaNoCleanIfAnyWebpackPlugin());
 
   webpackConfig.plugins.push(new MarkdownPagesWebpackPlugin({
-    context: __dirname,
+    context: appRoot,
     docsPath: '**/*.md',
     docsRoot: './content',
     outputAssetPathRoot: 'md-content',
@@ -86,7 +88,7 @@ function updateWebpackConfig(webpackConfig: WebpackOptionsNormalized): WebpackOp
   webpackConfig.plugins.push(new MarkdownAppSearchWebpackPlugin({ }));
 
   webpackConfig.plugins.push(new MarkdownCodeExamplesWebpackPlugin({
-    context: __dirname,
+    context: appRoot,
     docsPath: './content/**/*.ts',
   }));
 

@@ -1,18 +1,16 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "types": [
-      "jest",
-      "node",
-      "dev-mode-types"
-    ]
-  },
+  "extends": "../../tsconfig.lib.json",
+  "files": [],
+  "include": [],
   "references": [
     {
-      "path": "./tsconfig.spec.json"
+      "path": "./tsconfig.lib.json"
     },
     {
-      "path": "./tsconfig.spec.karma.json"
+      "path": "./tsconfig.lib.prod.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
     }
   ]
 }
