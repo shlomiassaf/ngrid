@@ -1,18 +1,11 @@
 {
-  "extends": "../../tsconfig.lib.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../out-tsc",
-    "target": "es2015",
-    "module": "es2015",
-    "moduleResolution": "node",
+    "outDir": "../../dist/out-tsc",
     "declaration": true,
-    "sourceMap": true,
+    "declarationMap": true,
     "inlineSources": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "types": ["dev-mode-types"],
-    "lib": ["dom", "es2015"]
+    "types": ["dev-mode-types"]
   },
   "exclude": [
     "src/__test-runners/*.ts",

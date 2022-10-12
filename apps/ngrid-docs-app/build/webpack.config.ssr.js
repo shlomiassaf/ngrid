@@ -3,11 +3,14 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const appRoot = path.resolve(__dirname, "..");
+const workspaceRoot = path.resolve(appRoot, "..", "..");
+
 module.exports = {
   mode: 'none',
   entry: {
     // This is our Express server for Dynamic universal
-    server: './ssr/server.ts'
+    server: path.resolve(__dirname, "ssr/server.ts")
   },
   externals: {
     './dist/server/main': 'require("./server/main")'
@@ -19,7 +22,7 @@ module.exports = {
   },
   output: {
     // Puts the output at the root of the dist folder
-    path: path.join(__dirname, 'dist'),
+    path: path.join(workspaceRoot, 'dist'),
     filename: '[name].js'
   },
   module: {
@@ -38,13 +41,13 @@ module.exports = {
     new webpack.ContextReplacementPlugin(
       // fixes WARNING Critical dependency: the request of a dependency is an expression
       /(.+)?angular(\\|\/)core(.+)?/,
-      path.join(__dirname, 'src'), // location of your src
+      path.join(workspaceRoot, 'src'), // location of your src
       {} // a map of your routes
     ),
     new webpack.ContextReplacementPlugin(
       // fixes WARNING Critical dependency: the request of a dependency is an expression
       /(.+)?express(\\|\/)(.+)?/,
-      path.join(__dirname, 'src'),
+      path.join(workspaceRoot, 'src'),
       {}
     )
   ]

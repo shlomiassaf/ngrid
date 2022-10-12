@@ -4,6 +4,7 @@
     "outDir": "../../dist/out-tsc",
     "types": ["dev-mode-types"]
   },
+  "include": ["src/**/*.ts"],
   "exclude": [
     "src/__test-runners/*.ts",
     "src/main.server.ts",
@@ -13,6 +14,5 @@
     "**/*.test.ts",
     "./build/**/*.ts",
     "../libs/docs-app-lib/**/*.worker.ts"
-  ],
-  "include": ["src/**/*.ts"]
+  ]
 }

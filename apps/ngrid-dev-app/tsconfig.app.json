@@ -2,13 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": [
-      "dev-mode-types"
-    ]
+    "types": ["dev-mode-types"]
   },
-  "exclude": [
-    "./src/test.ts",
-    "**/*.spec.ts",
-  ],
-  "include": [ "./src/**/*.ts" ]
+  "files": ["src/main.ts", "src/polyfills.ts"],
+  "include": ["src/**/*.d.ts"],
+  "exclude": ["./src/test.ts", "**/*.spec.ts"]
 }

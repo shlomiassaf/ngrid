@@ -4,8 +4,7 @@ const Path = require('path');
 function config(cfg) {
   const OLD_TS_NODE_PROJECT = process.env.TS_NODE_PROJECT;
 
-  const projectRoot = Path.resolve(__dirname, '..');
-  const project = Path.resolve(projectRoot, 'tsconfig.es6.json');
+  const project = Path.resolve(__dirname, 'tsconfig.json');
   process.env.TS_NODE_PROJECT = project;
 
   require('tsconfig-paths/register');
@@ -15,7 +14,7 @@ function config(cfg) {
     project,
   });
 
-  const additionalConfig = require(Path.resolve(projectRoot, 'webpack.config.ts'));
+  const additionalConfig = require(Path.resolve(__dirname, 'webpack.config.ts'));
 
   if (OLD_TS_NODE_PROJECT) {
     process.env.TS_NODE_PROJECT = OLD_TS_NODE_PROJECT;

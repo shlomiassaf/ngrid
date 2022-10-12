@@ -1,18 +1,20 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "downlevelIteration": true,
-    "importHelpers": true,
+    "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "importHelpers": true,
     "target": "es2015",
-    "module": "es2020",
+    "module": "esnext",
     "typeRoots": ["node_modules/@types", "libs-internal/local-types"],
     "types": ["dev-mode-types"],
     "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@pebula-internal/*": ["libs-internal/*/src/index.ts", "libs-internal/*"],
@@ -23,12 +25,7 @@
       "@pebula/ngrid-material/lib/*": ["libs/ngrid-material/src/lib/*"],
       "@pebula/ngrid/core/lib/*": ["libs/ngrid/core/src/lib/*"],
       "@pebula/ngrid/lib/*": ["libs/ngrid/src/lib/*"]
-    },
-    "rootDir": "."
-  },
-  "angularCompilerOptions": {
-    "strictInjectionParameters": true,
-    "strictTemplates": true
+    }
   },
   "exclude": ["dist", "node_modules", "tmp"]
 }

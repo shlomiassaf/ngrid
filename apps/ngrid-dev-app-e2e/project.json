@@ -1,0 +1,38 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "ngrid-dev-app-e2e",
+  "tags": [],
+  "sourceRoot": "apps/ngrid-dev-app-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/ngrid-dev-app-e2e/cypress.config.ts",
+        "devServerTarget": "ngrid-dev-app:serve",
+        "testingType": "e2e"
+      },
+      "configurations": {
+        "updateSnapshots": {
+          "env": {
+            "updateSnapshots": true
+          }
+        },
+        "production": {
+          "devServerTarget": "ngrid-dev-app:serve:production"
+        },
+        "production-dist": {
+          "devServerTarget": "ngrid-dev-app:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/ngrid-dev-app-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "implicitDependencies": ["ngrid-dev-app"]
+}

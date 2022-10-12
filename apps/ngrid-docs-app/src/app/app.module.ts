@@ -17,8 +17,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
-import { NxModule } from '@nrwl/angular';
-
 import {
   PblDocsAppSharedModule,
   MarkdownPageContainerComponent,
@@ -27,12 +25,12 @@ import {
   CONTENT_CHUNKS_COMPONENTS,
   LocationService,
   LazyModuleStoreService,
-  LazyModulePreloader
+  LazyModulePreloader,
 } from '@pebula/apps/docs-app-lib';
 
 import {
   AppContentChunksModule,
-  APP_CONTENT_CHUNKS
+  APP_CONTENT_CHUNKS,
 } from '@pebula/apps/docs-app-lib/app-content-chunks.module';
 
 import { environment } from '../environments/environment';
@@ -57,7 +55,6 @@ export const REQ_KEY = makeStateKey<string>('req');
     BrowserAnimationsModule,
     FlexModule,
     ExtendedModule,
-    NxModule.forRoot(),
     PblDocsAppSharedModule,
     AppContentChunksModule,
     BidiModule,
@@ -77,40 +74,40 @@ export const REQ_KEY = makeStateKey<string>('req');
           children: [
             {
               path: '**',
-              component: MarkdownPageContainerComponent
-            }
-          ]
-        }
+              component: MarkdownPageContainerComponent,
+            },
+          ],
+        },
       ],
       {
-          useHash: false,
-          initialNavigation: 'enabledBlocking',
-          preloadingStrategy: LazyModulePreloader,
-          relativeLinkResolution: 'legacy'
-      },
+        useHash: false,
+        initialNavigation: 'enabledBlocking',
+        preloadingStrategy: LazyModulePreloader,
+        relativeLinkResolution: 'legacy',
+      }
     ),
     Angulartics2Module.forRoot({
       developerMode: !environment.production,
       pageTracking: {
-        autoTrackVirtualPages: true
-      }
-    })
+        autoTrackVirtualPages: true,
+      },
+    }),
   ],
   providers: [
     { provide: CONTENT_CHUNKS_COMPONENTS, useValue: APP_CONTENT_CHUNKS },
     {
       provide: EXAMPLE_COMPONENTS_TOKEN,
-      useFactory: EXAMPLE_COMPONENTS_FACTORY
+      useFactory: EXAMPLE_COMPONENTS_FACTORY,
     },
-    LocationService
+    LocationService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {
   constructor(
     store: LazyModuleStoreService,
     lazyPreloader: LazyModulePreloader
   ) {
-    lazyPreloader.onCompile.subscribe(event => store.moduleRegistered(event));
+    lazyPreloader.onCompile.subscribe((event) => store.moduleRegistered(event));
   }
 }

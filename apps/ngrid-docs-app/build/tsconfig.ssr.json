@@ -18,7 +18,7 @@
       "es2017",
       "dom"
     ],
-    "baseUrl": ".",
+    "baseUrl": "../../..",
     "paths": {
       "@pebula-internal/*": [
         "libs-internal/*/src/index.ts",
