@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.lib.json",
+  "extends": "../../tsconfig.base.json",
   "files": [],
   "include": [],
   "references": [
@@ -12,5 +12,18 @@
     {
       "path": "./tsconfig.spec.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "rootDir": ".",
+    "paths": {
+      "@pebula/*": ["dist/@pebula/*"]
+    },
+    "target": "es2020",
+    "forceConsistentCasingInFileNames": true,
+    // "strict": true,
+    // "noImplicitOverride": true,
+    // "noPropertyAccessFromIndexSignature": true,
+    // "noImplicitReturns": true,
+    // "noFallthroughCasesInSwitch": true
+  }
 }

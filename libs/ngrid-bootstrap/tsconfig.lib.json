@@ -1,6 +1,10 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "rootDir": ".",
+    "paths": {
+      "@pebula/*": ["dist/@pebula/*"]
+    },
     "outDir": "../../dist/out-tsc",
     "declaration": true,
     "declarationMap": true,
