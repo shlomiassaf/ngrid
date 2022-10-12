@@ -100,12 +100,7 @@ jobs:
       - name: Install Dependencies
         run: ${{ fromJson(steps.workflowVariables.outputs.result).packageManager }}
       - run: mkdir /home/runner/work/ngrid/ngrid/.cache
-      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng build --prod --base-href /ngrid/${{fromJson(steps.workflowVariables.outputs.result).urlSuffix}} --deploy-url /ngrid/${{fromJson(steps.workflowVariables.outputs.result).urlSuffix}}
-      - run: node --max-old-space-size=8192 ./node_modules/.bin/ng run ${{fromJson(steps.workflowVariables.outputs.result).projectName}}:server:production --bundle-dependencies all
-      - run: npm run compile:server
-      - run: node dist/server
-      - run: cp dist/browser/index.html dist/browser/404.html
-
+      - run: ./node_modules/.bin/nx run ngrid-docs-app:ghPages:ci
       - uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

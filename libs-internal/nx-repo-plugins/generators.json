@@ -1,0 +1,6 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "name": "libs-internal-nx-repo-plugins",
+  "version": "0.0.1",
+  "generators": {}
+}

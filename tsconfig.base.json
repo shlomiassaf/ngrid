@@ -18,6 +18,9 @@
     "baseUrl": ".",
     "paths": {
       "@pebula-internal/*": ["libs-internal/*/src/index.ts", "libs-internal/*"],
+      "@pebula-internal/nx-repo-plugins": [
+        "libs-internal/nx-repo-plugins/src/index.ts"
+      ],
       "@pebula/*": ["libs/*/src/index.ts", "libs/*"],
       "@pebula/apps/*": ["apps/libs/*", "apps/libs/*/src/index.ts"],
       "@pebula/ngrid-bootstrap/lib/*": ["libs/ngrid-bootstrap/src/lib/*"],

@@ -1,0 +1,53 @@
+{
+  "name": "libs-internal-nx-repo-plugins",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs-internal/nx-repo-plugins/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs-internal/nx-repo-plugins",
+        "main": "libs-internal/nx-repo-plugins/src/index.ts",
+        "tsConfig": "libs-internal/nx-repo-plugins/tsconfig.lib.json",
+        "assets": [
+          "libs-internal/nx-repo-plugins/*.md",
+          {
+            "input": "./libs-internal/nx-repo-plugins/src",
+            "glob": "**/!(*.ts)",
+            "output": "./src"
+          },
+          {
+            "input": "./libs-internal/nx-repo-plugins/src",
+            "glob": "**/*.d.ts",
+            "output": "./src"
+          },
+          {
+            "input": "./libs-internal/nx-repo-plugins",
+            "glob": "generators.json",
+            "output": "."
+          },
+          {
+            "input": "./libs-internal/nx-repo-plugins",
+            "glob": "executors.json",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs-internal/nx-repo-plugins/**/*.ts",
+          "libs-internal/nx-repo-plugins/generators.json",
+          "libs-internal/nx-repo-plugins/executors.json",
+          "libs-internal/nx-repo-plugins/package.json"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
