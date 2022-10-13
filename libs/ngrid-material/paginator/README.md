@@ -23,4 +23,4 @@ A Plugin for `pbl-ngrid` with a `Paginator` implementation using components from
 </pbl-ngrid>
 ```
 
-> TIP: You can use `pblNgridPaginatorRef` outside of the table, (root component), to define a gloal paginator.
+> TIP: You can use `pblNgridPaginatorRef` outside of the table, (root component), to define a global paginator.
