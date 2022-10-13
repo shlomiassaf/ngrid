@@ -1,4 +1,4 @@
-import { ComponentFactory, ComponentRef } from '@angular/core';
+import { ComponentRef, Type } from '@angular/core';
 import { PblNgridMultiRegistryMap } from '@pebula/ngrid/core';
 
 import { PblColumn } from '../../column/model';
@@ -7,6 +7,7 @@ import { PblNgridMetaCellContext } from '../../context/index';
 export abstract class PblNgridMultiComponentRegistry<T, TKind extends keyof PblNgridMultiRegistryMap> {
   abstract readonly name: string;
   abstract readonly kind: TKind;
+  abstract readonly componentType: Type<unknown>;
 
   /**
    * When set to true the component will be created with projected content.
@@ -17,6 +18,5 @@ export abstract class PblNgridMultiComponentRegistry<T, TKind extends keyof PblN
    */
   readonly projectContent?: boolean;
 
-  abstract getFactory(context: PblNgridMetaCellContext<any, PblColumn>): ComponentFactory<T>;
   onCreated?(context: PblNgridMetaCellContext<any, PblColumn>, cmpRef: ComponentRef<T>): void;
 }

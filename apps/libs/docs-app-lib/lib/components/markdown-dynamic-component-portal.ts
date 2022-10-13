@@ -32,8 +32,8 @@ export abstract class MarkdownDynamicComponentPortal {
         providers: [{ provide: Directionality, useValue: this._injector.get(Directionality) }],
         parent: ngModule?.injector
       });
-      const componentFactoryResolver = ngModule?.componentFactoryResolver;
-      this.selectedPortal$.next(new ComponentPortal(component, null, injector, componentFactoryResolver));
+      // TODO: deprecate ComponentFactoryResolver once done in @angular/components
+      this.selectedPortal$.next(new ComponentPortal(component, null, injector, ngModule?.componentFactoryResolver));
     } else {
       this.selectedPortal$.next(null);
       if (lazyModuleStore) {

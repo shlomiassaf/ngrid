@@ -10,16 +10,16 @@
       "path": "./tsconfig.lib.prod.json"
     },
     {
-      "path": "./tsconfig.spec.json"
+      "path": "./tsconfig.spec.jest.json"
     },
     {
-      "path": "./tsconfig.spec.jest.json"
+      "path": "./tsconfig.editor.json"
     }
   ],
   "compilerOptions": {
     "target": "es2020",
     "forceConsistentCasingInFileNames": true,
-    // "strict": true,
+      // "strict": true,
     // "noImplicitOverride": true,
     // "noPropertyAccessFromIndexSignature": true,
     // "noImplicitReturns": true,

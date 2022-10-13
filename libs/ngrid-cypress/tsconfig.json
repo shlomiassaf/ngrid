@@ -11,13 +11,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./tsconfig.editor.json"
     }
   ],
   "compilerOptions": {
-    "rootDir": ".",
-    "paths": {
-      "@pebula/*": ["dist/@pebula/*"]
-    },
     "target": "es2020",
     "forceConsistentCasingInFileNames": true,
     // "strict": true,

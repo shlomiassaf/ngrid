@@ -1,4 +1,4 @@
-import { Injector, ComponentFactoryResolver, ComponentRef } from '@angular/core';
+import { Injector, ComponentRef, createComponent, EnvironmentInjector } from '@angular/core';
 
 import { ON_DESTROY } from '@pebula/ngrid/core';
 import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
@@ -91,9 +91,10 @@ export class PblNgridInfiniteScrollPlugin<T = any> {
         Object.defineProperty(infiniteVirtualRow, 'when', { enumerable: true,  get: () => IS_INFINITE_VIRTUAL_ROW });
       } else if (!this._infiniteVirtualRowRef) {
         // TODO: move to module? set in root registry? put elsewhere to avoid grid sync (see event of registry change)...
-        this._infiniteVirtualRowRef = this.injector.get(ComponentFactoryResolver)
-          .resolveComponentFactory(PblNgridDefaultInfiniteVirtualRowComponent)
-          .create(this.injector);
+        this._infiniteVirtualRowRef = createComponent(PblNgridDefaultInfiniteVirtualRowComponent, {
+          environmentInjector: this.injector.get(EnvironmentInjector),
+          elementInjector: this.injector,
+        });
         this._infiniteVirtualRowRef.changeDetectorRef.detectChanges();
         return;
       }

@@ -1,4 +1,4 @@
-import { NgModule, Optional, SkipSelf, ComponentFactoryResolver } from '@angular/core';
+import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,12 +40,11 @@ export class PblNgridContextMenuModule {
 
   constructor(@Optional() @SkipSelf() parentModule: PblNgridContextMenuModule,
               registry: PblNgridRegistryService,
-              cfr: ComponentFactoryResolver,
               configService: PblNgridConfigService) {
     if (parentModule) {
       return;
     }
-    registry.addMulti('dataHeaderExtensions', new MatHeaderContextMenuExtension(cfr));
-    registry.addMulti('overlayPanels', new PblNgridOverlayPanelComponentExtension('excelMenu', MatExcelStyleHeaderMenu, cfr));
+    registry.addMulti('dataHeaderExtensions', new MatHeaderContextMenuExtension());
+    registry.addMulti('overlayPanels', new PblNgridOverlayPanelComponentExtension('excelMenu', MatExcelStyleHeaderMenu));
   }
 }

@@ -197,7 +197,7 @@ export class PblNgridOverlayPanel<T = any> {
       ],
       parent: componentExtension.injector || this.injector,
     });
-    return new ComponentPortal(componentExtension.component, this.vcRef, portalInjector, componentExtension.cfr || null)
+    return new ComponentPortal(componentExtension.componentType, this.vcRef, portalInjector)
   }
 
   private _setPosition(positionStrategy: FlexibleConnectedPositionStrategy, config: PblNgridOverlayPanelConfig) {

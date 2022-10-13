@@ -177,7 +177,8 @@ export abstract class PblNgridBaseRowComponent<TRowType extends GridRowType, T =
       atIndex = viewRefLength;
     }
     atIndex = Math.min(viewRefLength, atIndex);
-    const cell = this._viewRef.createComponent(this._extApi.rowsApi.cellFactory.getComponentFactory(this), atIndex, this.cellInjector);
+    const cell = this._viewRef.createComponent(this._extApi.rowsApi.cellFactory.getComponentFactory(this), { index: atIndex, injector: this.cellInjector });
+
     this._cells.splice(atIndex, 0, cell);
     cell.onDestroy(() => this._cells.splice(this._cells.indexOf(cell), 1));
     return cell;

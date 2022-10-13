@@ -1,4 +1,4 @@
-import { NgModule, ComponentFactoryResolver } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSortModule, MatSortHeader } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +15,7 @@ import { MatSortExtension } from './mat-sort-component-extension';
 export class PblNgridMatSortModule {
   static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY }, PblNgridMatSortDirective);
 
-  constructor(private registry: PblNgridRegistryService, cfr: ComponentFactoryResolver) {
-    registry.addMulti('dataHeaderExtensions', new MatSortExtension(cfr));
+  constructor(private registry: PblNgridRegistryService) {
+    registry.addMulti('dataHeaderExtensions', new MatSortExtension());
   }
 }
