@@ -222,13 +222,30 @@ export class PblNgridColumnDef<T extends COLUMN = COLUMN> extends CdkColumnDef i
   }
 
   updatePin(pin?: 'start' | 'end'): void {
-    this.sticky = this.stickyEnd = false;
     switch(pin) {
       case 'start':
-        this.sticky = true;
+        if (!this.sticky) {
+          this.sticky = true;
+        }
+        if (this.stickyEnd) {
+          this.stickyEnd = false;
+        }
         break;
       case 'end':
-        this.stickyEnd = true;
+        if (!this.stickyEnd) {
+          this.stickyEnd = true;
+        }
+        if (this.sticky) {
+          this.sticky = false;
+        }
+        break;
+      default:
+        if (this.stickyEnd) {
+          this.stickyEnd = false;
+        }
+        if (this.sticky) {
+          this.sticky = false;
+        }
         break;
     }
     if (this.grid.isInit) {

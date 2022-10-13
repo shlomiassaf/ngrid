@@ -40,6 +40,8 @@ import { EXT_API_TOKEN, PblNgridInternalExtensionApi } from '../../ext/grid-ext-
 
 import { PblNgridDisposedRowViewRepeaterStrategy } from './ngrid-disposed-row-view-repeater-strategy';
 import { PblNgridCachedRowViewRepeaterStrategy } from './ngrid-cached-row-view-repeater-strategy';
+import { PblNgridColumnDef } from '../column/directives';
+import { PblColumn } from '../column/model';
 
 /**
  * Wrapper for the CdkTable that extends it's functionality to support various table features.
@@ -89,8 +91,11 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     this._element.style.minWidth = value ? value + 'px' : null;
   }
 
+  get stickyActive(): boolean { return this._stickyActive; }
+
   readonly cdRef: ChangeDetectorRef;
 
+  private _stickyActive: boolean = false;
   private _minWidth: number | null = null;
   private beforeRenderRows$: Subject<void>;
   private onRenderRows$: Subject<DataRowOutlet>;
@@ -243,8 +248,31 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
     // We let the parent do the work on rows, it will see 0 columns so then we act.
     super.updateStickyColumnStyles();
 
-    const stickyStartStates = this.extApi.columnApi.visibleColumns.map( c => c.columnDef?.sticky ?? false );
-    const stickyEndStates = this.extApi.columnApi.visibleColumns.map( c => c.columnDef?.stickyEnd ?? false );
+    let stickyActive = false;
+    const stickyStartStates: boolean[] = [];
+    const stickyEndStates: boolean[] = [];
+    for (const c of this.extApi.columnApi.visibleColumns)
+    {
+      const sticky = c.columnDef?.sticky;
+      const stickyEnd = c.columnDef?.stickyEnd;
+
+      stickyStartStates.push(!!sticky);
+      stickyEndStates.push(!!stickyEnd);
+
+      if (!stickyActive && (sticky || stickyEnd)) {
+        stickyActive = true;
+      }
+    }
+
+    if (stickyActive != this._stickyActive)
+    {
+      if (this._stickyActive = stickyActive) {
+        this.grid.addClass("pbl-ngrid-sticky-active");
+      } else {
+        this.grid.removeClass("pbl-ngrid-sticky-active");
+      }
+    }
+
     const headerRow = this.extApi.rowsApi.findColumnRow('header');
     const footerRow = this.extApi.rowsApi.findColumnRow('footer');
     const rows = this.extApi.rowsApi.dataRows().map(r => r.element);
@@ -255,6 +283,14 @@ export class PblCdkTableComponent<T> extends CdkTable<T> implements OnDestroy {
       rows.push(footerRow.element);
     }
 
+    if (!this.pblStickyColumnStylesNeedReset) {
+      const stickyCheckReducer = (acc, d: PblNgridColumnDef<PblColumn>) => {
+          return acc || (d?.hasStickyChanged() ?? false);
+      };
+
+      this.pblStickyColumnStylesNeedReset = this.extApi.columnApi.columns.map(c => c.columnDef).reduce(stickyCheckReducer, false);
+    }
+    
     // internal reset, coming from Dir change
     // It will probably get added to CDK ask well, remove when addedd
     if (this.pblStickyColumnStylesNeedReset) {

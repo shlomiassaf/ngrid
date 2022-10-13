@@ -15,3 +15,9 @@ div.mat-header-context-menu-trigger {
     margin-left: 12px;
   }
 }
+
+.pbl-ngrid-sticky-active {
+  .pbl-ngrid-cell, .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
+    z-index: 0;  
+  }
+}
