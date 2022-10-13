@@ -139,7 +139,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "5.1.0",
     "karma-jasmine-html-reporter": "2.0.0",
-    "marked": "^2.0.0",
+    "marked": "^4.0.10",
     "merge2": "^1.2.3",
     "ng-cli-packagr-tasks": "14.2.2",
     "node-sass-tilde-importer": "^1.0.2",
