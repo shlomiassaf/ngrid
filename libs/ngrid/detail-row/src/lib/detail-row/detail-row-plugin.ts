@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Injector, Input, OnDestroy, Output, ComponentFactoryResolver, ComponentRef, NgZone, ViewContainerRef, Component } from '@angular/core';
+import { Directive, EventEmitter, Injector, Input, OnDestroy, Output, ComponentRef, NgZone, ViewContainerRef, Component, createComponent, EnvironmentInjector } from '@angular/core';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
@@ -237,9 +237,10 @@ export class PblNgridDetailRowPluginDirective<T> implements OnDestroy {
       } else if (!this._defaultParentRef) {
         // We don't have a template in the registry, so we register the default component which will push a new template to the registry
         // TODO: move to module? set in root registry? put elsewhere to avoid grid sync (see event of registry change)...
-        this._defaultParentRef = this.injector.get(ComponentFactoryResolver)
-          .resolveComponentFactory(PblNgridDefaultDetailRowParentComponent)
-          .create(this.injector);
+        this._defaultParentRef = createComponent(PblNgridDefaultDetailRowParentComponent, {
+          environmentInjector: this.injector.get(EnvironmentInjector),
+          elementInjector: this.injector
+        });
         this._defaultParentRef.changeDetectorRef.detectChanges(); // kick it for immediate emission of the registry value
         return;
       }

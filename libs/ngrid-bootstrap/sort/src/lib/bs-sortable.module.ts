@@ -1,4 +1,4 @@
-import { NgModule, ComponentFactoryResolver } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PblNgridRegistryService, PblNgridModule, ngridPlugin } from '@pebula/ngrid';
@@ -14,7 +14,7 @@ import { PblNgridBsSortable } from './bs-sortable/bs-sortable.component';
 export class PblNgridBsSortableModule {
   static readonly NGRID_PLUGIN = ngridPlugin({ id: PLUGIN_KEY }, PblNgridBsSortablePlugin);
 
-  constructor(private registry: PblNgridRegistryService, cfr: ComponentFactoryResolver) {
-    registry.addMulti('dataHeaderExtensions', new PblBsSortableExtension(cfr));
+  constructor(private registry: PblNgridRegistryService) {
+    registry.addMulti('dataHeaderExtensions', new PblBsSortableExtension());
   }
 }

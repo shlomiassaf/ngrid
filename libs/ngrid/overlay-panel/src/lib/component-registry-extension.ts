@@ -1,22 +1,17 @@
 
-import { ComponentRef, Type, ComponentFactoryResolver, ComponentFactory, Injector } from '@angular/core';
+import { ComponentRef, Type, Injector } from '@angular/core';
 import { PblNgridMultiComponentRegistry } from '@pebula/ngrid';
 
 export class PblNgridOverlayPanelComponentExtension<T> extends PblNgridMultiComponentRegistry<T, 'overlayPanels'> {
   readonly name: string;
   readonly kind: 'overlayPanels' = 'overlayPanels';
+  readonly componentType: Type<unknown>;
   readonly projectContent = false;
 
-  constructor(name: string,
-              public component: Type<T>,
-              public cfr?: ComponentFactoryResolver,
-              public injector?: Injector) {
+  constructor(name: string, component: Type<T>, public injector?: Injector) {
     super();
+    this.componentType = component;
     this.name = name;
-  }
-
-  getFactory(context: any): ComponentFactory<T> {
-    return this.cfr.resolveComponentFactory(this.component);
   }
 
   onCreated(context: any, cmpRef: ComponentRef<T>): void {

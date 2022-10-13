@@ -1,4 +1,4 @@
-import { ComponentFactory, ComponentRef, ComponentFactoryResolver } from '@angular/core';
+import { ComponentRef, Type } from '@angular/core';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 
 import { PblNgridMultiComponentRegistry, PblNgridDataHeaderExtensionContext } from '@pebula/ngrid';
@@ -6,18 +6,15 @@ import { PblNgridMultiComponentRegistry, PblNgridDataHeaderExtensionContext } fr
 export class MatSortExtension extends PblNgridMultiComponentRegistry<MatSortHeader, 'dataHeaderExtensions'> {
   readonly name: 'sortContainer' = 'sortContainer';
   readonly kind: 'dataHeaderExtensions' = 'dataHeaderExtensions';
+  readonly componentType: Type<unknown> = MatSortHeader;
   readonly projectContent = true;
 
-  constructor(private cfr: ComponentFactoryResolver) {
+  constructor() {
     super();
   }
 
   shouldRender(context: PblNgridDataHeaderExtensionContext): boolean {
     return !!context.col.sort && !!context.injector.get<MatSort>(MatSort, false as any);
-  }
-
-  getFactory(context: PblNgridDataHeaderExtensionContext): ComponentFactory<MatSortHeader> {
-    return this.cfr.resolveComponentFactory(MatSortHeader);
   }
 
   onCreated(context: PblNgridDataHeaderExtensionContext, cmpRef: ComponentRef<MatSortHeader>): void {

@@ -1,37 +1,12 @@
 {
   "version": "0.2.0",
   "configurations": [
-  {
-    "name": "Attach by Process ID",
-    "processId": "${command:PickProcess}",
-    "request": "attach",
-    "skipFiles": [
-      "<node_internals>/**"
-    ],
-    "type": "node"
-  },
     {
-      "name": "browser: ng serve (launch: CLI)",
       "type": "chrome",
+      "name": "Debug: Browser",
       "request": "launch",
-      "preLaunchTask": "npm: start",
-      "url": "http://localhost:4201/#",
+      "url": "http://localhost:4201",
       "webRoot": "${workspaceFolder}"
-    },
-    {
-      "name": "browser: ng serve",
-      "type": "chrome",
-      "request": "launch",
-      "url": "http://localhost:4201/#",
-      "webRoot": "${workspaceFolder}"
-    },
-    {
-      "name": "browser: ng serve (attach only)",
-      "type": "chrome",
-      "request": "attach",
-      "urlFilter": "http://localhost:4201*",
-      "webRoot": "${workspaceFolder}",
-      "port": 9222
     },
     {
       "name": "ng test",
@@ -46,47 +21,18 @@
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/protractor/bin/protractor",
       "protocol": "inspector",
-      "args": ["${workspaceFolder}/protractor.conf.js"]
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "node: ng serve",
-      "program": "${workspaceFolder}/node_modules/.bin/ng",
       "args": [
-        "serve"
+        "${workspaceFolder}/protractor.conf.js"
       ]
     },
     {
-      "type": "node",
-      "request": "launch",
-      "name": "node: ng build",
-      "program": "${workspaceFolder}/node_modules/.bin/ng",
-      "args": [
-        "build",
-        "ngrid",
-        "--prod"
-      ]
-    },
-    {
-      "name": "[Node] Current TS File",
-      "type": "node",
-      "request": "launch",
-      "args": [ "./${fileBasename}" ],
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
-      "sourceMaps": true,
-      "cwd": "${fileDirname}",
-      "protocol": "inspector",
-      "internalConsoleOptions": "openOnSessionStart"
-    },
-    {
-      "name": "[Node] Current JS File",
-      "type": "node",
-      "request": "launch",
-      "args": [ "${relativeFile}" ],
-      "sourceMaps": true,
-      "cwd": "${workspaceRoot}",
-      "protocol": "inspector"
+      "name": "Attach by Process ID",
+      "processId": "${command:PickProcess}",
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
     }
   ]
 }

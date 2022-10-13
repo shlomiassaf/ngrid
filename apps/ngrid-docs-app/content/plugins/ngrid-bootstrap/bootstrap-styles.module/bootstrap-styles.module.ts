@@ -1,4 +1,4 @@
-import { NgModule, ComponentFactoryResolver, Injector, INJECTOR, Inject } from '@angular/core';
+import { NgModule,  Injector, INJECTOR, Inject, ViewContainerRef, createComponent, EnvironmentInjector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { PblNgridModule, PblNgridRegistryService } from '@pebula/ngrid';
@@ -26,12 +26,10 @@ const CSS_LOAD_MARK = Symbol('CSS Load Mark!');
   providers: [ PblNgridRegistryService ],
 })
 export class PblNgridDocsAppBootstrapStylesModule {
-  constructor(cfr: ComponentFactoryResolver,
-              @Inject(INJECTOR) injector: Injector) {
+  constructor(@Inject(INJECTOR) injector: Injector) {
     if (!(CSS_LOAD_MARK in PblNgridDocsAppBootstrapStylesModule)) {
       PblNgridDocsAppBootstrapStylesModule[CSS_LOAD_MARK] = true;
-      const factory = cfr.resolveComponentFactory(PblNgridDocsAppBootstrapStyleLoaderComponent);
-      factory.create(injector);
+      createComponent(PblNgridDocsAppBootstrapStyleLoaderComponent, { environmentInjector: injector.get(EnvironmentInjector) });
     }
   }
 }

@@ -9,6 +9,9 @@ import {
   NgModuleRef,
   ModuleWithProviders,
   Self,
+  ViewContainerRef,
+  createComponent,
+  EnvironmentInjector,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -186,7 +189,7 @@ export class PblNgridModule {
       });
     }
 
-    const cmpRef = ngRef.componentFactoryResolver.resolveComponentFactory<T>(component).create(injector);
+    const cmpRef = createComponent(component, { environmentInjector: injector.get(EnvironmentInjector) });
     cmpRef.changeDetectorRef.detectChanges();
     if (destroy) {
       ngRef.onDestroy( () => {

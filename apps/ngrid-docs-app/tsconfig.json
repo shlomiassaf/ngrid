@@ -19,16 +19,12 @@
   "compilerOptions": {
     "target": "es2020",
     "forceConsistentCasingInFileNames": true,
+    "types": ["node", "jest", "dev-mode-types"],
     // "strict": true,
     // "noImplicitOverride": true,
     // "noPropertyAccessFromIndexSignature": true,
     // "noImplicitReturns": true,
     // "noFallthroughCasesInSwitch": true,
-    "types": [
-      "node",
-      "jest",
-      "dev-mode-types"
-    ]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

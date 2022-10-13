@@ -1,4 +1,4 @@
-import { ComponentFactory, ComponentRef, ComponentFactoryResolver } from '@angular/core';
+import { ComponentRef, Type } from '@angular/core';
 import { PblNgridMultiComponentRegistry, PblNgridDataHeaderExtensionContext } from '@pebula/ngrid';
 import { PblNgridBsSortablePlugin } from './bs-sortable-plugin';
 import { PblNgridBsSortable } from './bs-sortable/bs-sortable.component';
@@ -6,19 +6,13 @@ import { PblNgridBsSortable } from './bs-sortable/bs-sortable.component';
 export class PblBsSortableExtension extends PblNgridMultiComponentRegistry<PblNgridBsSortable, 'dataHeaderExtensions'> {
   readonly name: 'bsSortContainer' = 'bsSortContainer';
   readonly kind: 'dataHeaderExtensions' = 'dataHeaderExtensions';
+  readonly componentType: Type<unknown> = PblNgridBsSortable;
   readonly projectContent = true;
-
-  constructor(private cfr: ComponentFactoryResolver) {
-    super();
-  }
 
   shouldRender(context: PblNgridDataHeaderExtensionContext): boolean {
     return !!context.col.sort && !!context.injector.get<PblNgridBsSortablePlugin>(PblNgridBsSortablePlugin, false as any);
   }
 
-  getFactory(context: PblNgridDataHeaderExtensionContext): ComponentFactory<PblNgridBsSortable> {
-    return this.cfr.resolveComponentFactory(PblNgridBsSortable);
-  }
 
   onCreated(context: PblNgridDataHeaderExtensionContext, cmpRef: ComponentRef<PblNgridBsSortable>): void {
     // We assign the ID and also verify that it does not exist on the `MatSort` container

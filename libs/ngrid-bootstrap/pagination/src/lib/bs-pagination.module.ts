@@ -1,4 +1,4 @@
-import { NgModule, ComponentFactoryResolver, Injector } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 

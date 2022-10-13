@@ -1,4 +1,4 @@
-import { Directive, Injector, Input, OnDestroy, ComponentFactoryResolver, ComponentRef } from '@angular/core';
+import { Directive, Injector, Input, OnDestroy, ComponentRef, EnvironmentInjector, createComponent } from '@angular/core';
 
 import { PblNgridComponent, PblNgridPluginController } from '@pebula/ngrid';
 
@@ -40,7 +40,7 @@ export class PblNgridBsSelectionPlugin implements OnDestroy {
         }
       } else {
         if (!this.cmpRef) {
-          this.cmpRef = this.cfr.resolveComponentFactory(PblNgridBsSelectionComponent).create(this.injector);
+          this.cmpRef = createComponent(PblNgridBsSelectionComponent, { environmentInjector: this.injector.get(EnvironmentInjector), elementInjector: this.injector });
           this.cmpRef.instance.table = this.table;
           if (this._bulkSelectMode) {
             this.cmpRef.instance.bulkSelectMode = this._bulkSelectMode;
@@ -93,7 +93,6 @@ export class PblNgridBsSelectionPlugin implements OnDestroy {
   private _isCheckboxDisabled: (row: any) => boolean;
 
   constructor(private table: PblNgridComponent<any>,
-              private cfr: ComponentFactoryResolver,
               private injector: Injector,
               pluginCtrl: PblNgridPluginController) {
     this._removePlugin = pluginCtrl.setPlugin(PLUGIN_KEY, this);

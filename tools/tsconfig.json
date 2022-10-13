@@ -2,6 +2,8 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "rootDir": ".",
     "module": "commonjs",
     "target": "es5",

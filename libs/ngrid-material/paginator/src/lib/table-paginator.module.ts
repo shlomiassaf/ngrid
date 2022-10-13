@@ -1,4 +1,4 @@
-import { NgModule, ComponentFactoryResolver, Injector } from '@angular/core';
+import { NgModule, Injector, createComponent, EnvironmentInjector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
@@ -16,8 +16,8 @@ import { PblPaginatorComponent } from './table-paginator.component';
     exports: [PblPaginatorComponent]
 })
 export class PblNgridPaginatorModule {
-  constructor(cf: ComponentFactoryResolver, injector: Injector) {
+  constructor(injector: Injector) {
     // this is a workaround to ensure CSS from mat slider is loaded, otherwise it is omitted.
-    cf.resolveComponentFactory(MatPaginator).create(injector);
+    createComponent(MatPaginator, { environmentInjector: injector.get(EnvironmentInjector) });
   }
 }

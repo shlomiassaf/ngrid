@@ -170,14 +170,13 @@ export class PblNgridHeaderCellComponent<T extends COLUMN = COLUMN> extends PblN
   }
 
   protected createComponent(ext: PblNgridMultiComponentRegistry<any, "dataHeaderExtensions">, context: PblNgridDataHeaderExtensionContext, rootNodes: any[]): any[] {
-    const factory = ext.getFactory(context);
     const projectedContent: any[][] = [];
 
     if (ext.projectContent) {
       projectedContent.push(rootNodes);
     }
 
-    const cmpRef = this.vcRef.createComponent(factory, this.vcRef.length, null, projectedContent);
+    const cmpRef = this.vcRef.createComponent(ext.componentType, { index: this.vcRef.length, injector: null, projectableNodes: projectedContent });
 
     if (ext.projectContent) {
       rootNodes = [ cmpRef.location.nativeElement ];
