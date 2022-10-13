@@ -854,45 +854,6 @@ $pbl-ngrid-spacing-xs: (
     }
   }
 
-  .pbl-ngrid-cell.pbl-ngrid-sticky-start {
-    overflow: visible;
-    &:after {
-      transition: all 250ms ease-in;
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      right: -1px;
-      height: 100%;
-      border-right: 1px solid $border-color;
-
-      [dir='rtl'] & {
-        right: unset;
-        left: -1px;
-        border-right: none;
-        border-left: 1px solid $border-color;
-      }
-    }
-  }
-
-  .pbl-ngrid-cell.pbl-ngrid-sticky-end:before {
-    transition: all 250ms ease-in;
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    border-right: 1px solid $border-color;
-
-    [dir='rtl'] & {
-      left: unset;
-      right: 0;
-      border-right: none;
-      border-left: 1px solid $border-color;
-    }
-  }
-
   @include pbl-ngrid-drag-plugin-theme($theme);
 }
 

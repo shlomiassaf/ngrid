@@ -60,8 +60,45 @@
       box-shadow: inset 0px 0px 0px 1px $cell-focus-color;
       // box-shadow: inset 0px 0px 0px 1px $cell-focus-color;
     }
+
     &.pbl-ngrid-cell-selected:not(.pbl-ngrid-cell-focused) {
       background-color: color.scale($cell-focus-color, $alpha: -75%);
+    }
+  }
+
+  .pbl-ngrid-cell, .pbl-ngrid-header-cell, .pbl-ngrid-footer-cell {
+    &.cdk-table-sticky-border-elem-left {
+      overflow: visible;
+
+      &::after {
+        transition: all 250ms ease-in;
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        right: -1px;
+        height: 100%;
+        border-right: 1px solid $border-color;
+  
+        [dir='rtl'] & {
+          left: unset;
+        }
+      }
+    }
+
+    &.cdk-table-sticky-border-elem-right:before {
+      transition: all 250ms ease-in;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-right: 1px solid $border-color;
+
+      [dir='rtl'] & {
+        right: unset;
+      }
     }
   }
 

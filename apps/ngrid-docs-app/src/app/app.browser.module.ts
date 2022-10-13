@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserTransferStateModule, TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 
@@ -9,7 +9,6 @@ import { AppModule, REQ_KEY } from './app.module';
 // TODO: remove workaround once ngx-cache supports v9
 @NgModule({
   imports: [
-    BrowserTransferStateModule,
     BrowserAnimationsModule,
     AppModule
   ],
