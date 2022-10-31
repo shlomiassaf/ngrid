@@ -1,5 +1,5 @@
 {
-  "name": "pebula",
+  "name": "@pebula/ngrid",
   "version": "5.0.0",
   "description": "Angular Grid",
   "license": "MIT",
@@ -99,7 +99,6 @@
     "@types/cypress-image-snapshot": "^3.1.6",
     "@types/express-serve-static-core": "4.17.31",
     "@types/faker": "^5.5.5",
-    "@types/globby": "^8.0.0",
     "@types/gulp": "^4.0.6",
     "@types/jasmine": "4.0.3",
     "@types/jest": "28.1.8",
@@ -118,6 +117,7 @@
     "dotenv": "10.0.0",
     "gatsby-remark-prismjs": "^3.2.0",
     "glob": "^7.1.4",
+    "globby": "9.0.0",
     "gray-matter": "^4.0.2",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.2.0",
@@ -178,5 +178,14 @@
   "homepage": "https://github.com/shlomiassaf/ngrid",
   "bugs": {
     "url": "https://github.com/shlomiassaf/ngrid/issues"
+  },
+  "packageConfig": {
+    "defaultCommitProejct": "ngrid",
+    "angularPackageVersion": "^14.0.0",
+    "releasePackages": [
+      "ngrid",
+      "ngrid-material",
+      "ngrid-bootstrap",
+    ]
   }
 }

@@ -7,9 +7,6 @@
       "path": "./tsconfig.spec.json"
     },
     {
-      "path": "./tsconfig.spec.json"
-    },
-    {
       "path": "./tsconfig.spec.karma.json"
     },
     {

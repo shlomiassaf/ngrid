@@ -1,8 +1,22 @@
-/** Packages that will be published to NPM by the publish release task. */
-export const releasePackages = [
-  'ngrid',
-  'ngrid-material',
-  'ngrid-bootstrap',
-];
+import { join } from 'path';
+import { readFileSync } from 'fs';
 
-export const ANGULAR_PACKAGE_VERSION = '^12.0.0 || ^13.0.0-0';
+const cache = new Map<string,  { packageJsonPath: string, packageJson: any, packageConfig: PackageConfig }>();
+
+export interface PackageConfig {
+  defaultCommitProejct: string;
+  releasePackages: string[];
+  angularPackageVersion: string;
+}
+
+export function GetProjectConfig(projectDir: string)
+{
+  if (!cache.has(projectDir))
+  {
+    const packageJsonPath = join(projectDir, 'package.json');
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+    const packageConfig = packageJson.packageConfig as PackageConfig;
+    cache.set(projectDir, { packageJsonPath, packageJson, packageConfig });
+  }
+  return cache.get(projectDir)!;
+}

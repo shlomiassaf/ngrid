@@ -1,9 +1,8 @@
 import {Octokit} from '@octokit/rest';
 import * as chalk from 'chalk';
-import {existsSync, readFileSync, writeFileSync} from 'fs';
+import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 
-import * as pkgConfig from './.package-config';
 import {BaseReleaseTask} from './base-release-task';
 import {promptAndGenerateChangelog} from './changelog';
 import {GitClient} from './git/git-client';
@@ -11,6 +10,7 @@ import {getGithubBranchCommitsUrl} from './git/github-urls';
 import {promptForNewVersion} from './prompt/new-version-prompt';
 import {checkPackageJsonMigrations} from './release-output/output-validations';
 import {parseVersionName, Version} from './version-name/parse-version';
+import { GetProjectConfig, PackageConfig } from './.package-config';
 
 /** Default filename for the changelog. */
 export const CHANGELOG_FILE_NAME = 'CHANGELOG.md';
@@ -41,6 +41,8 @@ class StageReleaseTask extends BaseReleaseTask {
   /** Serialized package.json of the specified project. */
   packageJson: any;
 
+  packageConfig: PackageConfig;
+
   /** Parsed current version of the project. */
   currentVersion: Version;
 
@@ -49,15 +51,29 @@ class StageReleaseTask extends BaseReleaseTask {
 
   /** Octokit API instance that can be used to make Github API calls. */
   githubApi: Octokit;
+  
+  repositoryOwner: string;
+  repositoryName: string;
 
   constructor(public projectDir: string,
-              public packagesDir: string,
-              public repositoryOwner: string,
-              public repositoryName: string) {
-    super(new GitClient(projectDir, `https://github.com/${repositoryOwner}/${repositoryName}.git`));
+              public packagesDir: string) {
+    super(null as any);
 
-    this.packageJsonPath = join(projectDir, 'package.json');
-    this.packageJson = JSON.parse(readFileSync(this.packageJsonPath, 'utf-8'));
+    var packageInfo = GetProjectConfig(projectDir);
+    this.packageJsonPath = packageInfo.packageJsonPath;
+    this.packageJson = packageInfo.packageJson;
+    this.packageConfig = packageInfo.packageConfig;
+
+    const gitRepoInfo = this.resolveGitRepo();
+
+    this.repositoryOwner = gitRepoInfo.repositoryOwner;
+    this.repositoryName = gitRepoInfo.repositoryName;
+    this.git = new GitClient(projectDir, gitRepoInfo.url);
+
+    console.log();
+    console.log(chalk.cyan(`👍 ${this.repositoryOwner}/${this.repositoryName} | ${gitRepoInfo.url}`));
+    console.log();
+
     this.currentVersion = parseVersionName(this.packageJson.version)!;
 
     if (!this.currentVersion) {
@@ -73,7 +89,7 @@ class StageReleaseTask extends BaseReleaseTask {
   async run() {
     console.log();
     console.log(chalk.cyan('-----------------------------------------'));
-    console.log(chalk.cyan('  nGrid stage release script'));
+    console.log(chalk.cyan(`  ${this.packageJson.name} stage release script`));
     console.log(chalk.cyan('-----------------------------------------'));
     console.log();
 
@@ -114,7 +130,7 @@ class StageReleaseTask extends BaseReleaseTask {
       console.log();
     }
 
-    await promptAndGenerateChangelog(join(this.projectDir, CHANGELOG_FILE_NAME));
+    await promptAndGenerateChangelog(join(this.projectDir, CHANGELOG_FILE_NAME), this.packageConfig);
 
     console.log();
     console.log(chalk.green(
@@ -159,7 +175,7 @@ class StageReleaseTask extends BaseReleaseTask {
   private _updateLibPackageJsonVersion(newVersionName: string) {
     const possibleDependencies: string[] = [];
 
-    for (const p of pkgConfig.releasePackages) {
+    for (const p of this.packageConfig.releasePackages) {
       const pkgJsonPath = join(this.packagesDir, p, 'package.json');
       const pkgJson = JSON.parse(readFileSync(pkgJsonPath, 'utf-8'));
 
@@ -186,7 +202,7 @@ class StageReleaseTask extends BaseReleaseTask {
    *   `N.0.0-x` requires Angular `^N.0.0-0 || (N+1).0.0-0`
    */
   private _verifyAngularPeerDependencyVersion(newVersion: Version) {
-    const currentVersionRange = pkgConfig.ANGULAR_PACKAGE_VERSION;
+    const currentVersionRange = this.packageConfig.angularPackageVersion;
     const isMajorWithPrerelease =
         newVersion.minor === 0 && newVersion.patch === 0 && newVersion.prereleaseLabel !== null;
     const requiredRange = isMajorWithPrerelease ?
@@ -250,7 +266,7 @@ class StageReleaseTask extends BaseReleaseTask {
    */
   private _checkUpdateMigrationCollection(newVersion: Version) {
     const failures: string[] = [];
-    pkgConfig.releasePackages.forEach(packageName => {
+    this.packageConfig.releasePackages.forEach(packageName => {
       failures.push(...checkPackageJsonMigrations(
                         join(this.packagesDir, packageName, 'package.json'), newVersion)
                         .map(f => chalk.yellow(`       ⮑  ${chalk.bold(packageName)}: ${f}`)));
@@ -261,10 +277,56 @@ class StageReleaseTask extends BaseReleaseTask {
       process.exit(1);
     }
   }
+
+  private resolveGitRepo(): { repositoryOwner: string, repositoryName: string, url: string }
+  {  
+    let repo = this.packageJson.repository;
+    let repositoryOwner = "";
+    let repositoryName = "";
+    let url = "";
+    if (typeof(repo) === 'string')
+    {
+      let match = /^(.+):(.+)\/(.+)$/.exec(repo);
+      if (match === null)
+      {
+        throw new Error(`Invalid repository in package.json. Got: ${repo}`);
+      }
+
+      repositoryOwner = match[2];
+      repositoryName = match[3];
+      url = "";
+      switch (match[1])
+      {
+        case "github":
+          url = `https://github.com/${repositoryOwner}/${repositoryName}.git`;
+          break;
+        case "bitbucket":
+          url = `https://bitbucket.org/${repositoryOwner}/${repositoryName}.git`;
+          break;
+        case "gitlab":
+          url = `https://gitlab.com/${repositoryOwner}/${repositoryName}.git`;
+          break;
+        default:
+          throw new Error(`Invalid repository in package.json. Got: ${repo}`);
+      }
+    } else if (typeof(repo) === 'object')
+    {
+      url = repo.url;
+      let match = /^https?:\/\/.+\/(.+)\/(.+)\.git$/.exec(url);
+      if (match === null)
+      {
+        throw new Error(`Invalid repository object in package.json.`);
+      }
+      repositoryOwner = match[1];
+      repositoryName = match[2];
+    }
+    return { repositoryOwner, repositoryName, url };
+  }
+
 }
 
 /** Entry-point for the release staging script. */
 if (require.main === module) {
   const projectDir = join(__dirname, '../../../');
-  new StageReleaseTask(projectDir, join(projectDir, 'libs/'), 'shlomiassaf', 'ngrid').run();
+  new StageReleaseTask(projectDir, join(projectDir, 'libs/')).run();
 }

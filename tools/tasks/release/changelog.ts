@@ -3,7 +3,7 @@ import {createReadStream, createWriteStream, readFileSync} from 'fs';
 import {prompt} from 'inquirer';
 import {join} from 'path';
 import {Readable} from 'stream';
-import { releasePackages } from './.package-config';
+import { GetProjectConfig, PackageConfig } from './.package-config';
 
 // These imports lack type definitions.
 const conventionalChangelog = require('conventional-changelog');
@@ -30,9 +30,9 @@ interface ChangelogPackage {
 const excludedChangelogPackages: string[] = [];
 
 /** Prompts for a changelog release name and prepends the new changelog. */
-export async function promptAndGenerateChangelog(changelogPath: string) {
+export async function promptAndGenerateChangelog(changelogPath: string, packageConfig: PackageConfig) {
   const releaseName = await promptChangelogReleaseName();
-  await prependChangelogFromLatestTag(changelogPath, releaseName);
+  await prependChangelogFromLatestTag(changelogPath, releaseName, packageConfig);
 }
 
 /**
@@ -40,7 +40,7 @@ export async function promptAndGenerateChangelog(changelogPath: string) {
  * @param changelogPath Path to the changelog file.
  * @param releaseName Name of the release that should show up in the changelog.
  */
-export async function prependChangelogFromLatestTag(changelogPath: string, releaseName: string) {
+export async function prependChangelogFromLatestTag(changelogPath: string, releaseName: string, packageConfig: PackageConfig) {
   const angularPresetWriterOptions = await require('conventional-changelog-angular/writer-opts');
   const outputStream: Readable = conventionalChangelog(
       /* core options */ {preset: 'angular', releaseCount: 5},
@@ -53,7 +53,7 @@ export async function prependChangelogFromLatestTag(changelogPath: string, relea
         headerCorrespondence: ['type', 'package', 'scope', 'subject'],
         noteKeywords: [CommitNote.BreakingChange, CommitNote.Deprecation],
       },
-      /* writer options */ createChangelogWriterOptions(changelogPath, angularPresetWriterOptions));
+      /* writer options */ createChangelogWriterOptions(changelogPath, angularPresetWriterOptions, packageConfig));
 
   // Stream for reading the existing changelog. This is necessary because we want to
   // actually prepend the new changelog to the existing one.
@@ -95,10 +95,10 @@ export async function promptChangelogReleaseName(): Promise<string> {
  * build the changelog from last major version to master's HEAD when a new major version is being
  * published from the "master" branch.
  */
-function createChangelogWriterOptions(changelogPath: string, presetWriterOptions: any) {
+function createChangelogWriterOptions(changelogPath: string, presetWriterOptions: any, packageConfig: PackageConfig) {
   const existingChangelogContent = readFileSync(changelogPath, 'utf8');
   const commitSortFunction = changelogCompare.functionify(['type', 'scope', 'subject']);
-  const allPackages = [...releasePackages, ...excludedChangelogPackages];
+  const allPackages = [...packageConfig.releasePackages, ...excludedChangelogPackages];
 
   return {
     // Overwrite the changelog templates so that we can render the commits grouped
@@ -145,7 +145,7 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
           // TODO(devversion): once we formalize the commit message format and
           // require specifying the "material" package explicitly, we can remove
           // the fallback to the "material" package.
-          const packageName = commit.package || 'ngrid';
+          const packageName = commit.package || this.packageJson.packageConfig.defaultCommitProejct;
           const type = getTypeOfCommitGroupDescription(group.title);
 
           if (!packageGroups[packageName]) {
@@ -171,7 +171,7 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
       const sortedPackageGroupNames =
           Object.keys(packageGroups)
               .filter(pkgName => !excludedChangelogPackages.includes(pkgName))
-              .sort(preferredOrderComparator);
+              .sort(preferredOrderComparator(packageConfig));
 
       context.packageGroups = sortedPackageGroupNames.map(pkgName => {
         const packageGroup = packageGroups[pkgName];
@@ -193,17 +193,20 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
  * hardcoded changelog package order. Entries which are not hardcoded are
  * sorted in alphabetical order after the hardcoded entries.
  */
-function preferredOrderComparator(a: string, b: string): number {
-  const aIndex = releasePackages.indexOf(a);
-  const bIndex = releasePackages.indexOf(b);
-  // If a package name could not be found in the hardcoded order, it should be
-  // sorted after the hardcoded entries in alphabetical order.
-  if (aIndex === -1) {
-    return bIndex === -1 ? a.localeCompare(b) : 1;
-  } else if (bIndex === -1) {
-    return -1;
-  }
-  return aIndex - bIndex;
+function preferredOrderComparator(packageConfig: PackageConfig)
+{
+  return (a: string, b: string): number => {
+    const aIndex = packageConfig.releasePackages.indexOf(a);
+    const bIndex = packageConfig.releasePackages.indexOf(b);
+    // If a package name could not be found in the hardcoded order, it should be
+    // sorted after the hardcoded entries in alphabetical order.
+    if (aIndex === -1) {
+      return bIndex === -1 ? a.localeCompare(b) : 1;
+    } else if (bIndex === -1) {
+      return -1;
+    }
+    return aIndex - bIndex;
+  };
 }
 
 /** Gets the type of a commit group description. */
@@ -226,7 +229,9 @@ function getTypeOfCommitGroupDescription(description: string): string {
 
 /** Entry-point for generating the changelog when called through the CLI. */
 if (require.main === module) {
-  promptAndGenerateChangelog(join(__dirname, '../../CHANGELOG.md')).then(() => {
+  const projectDir = join(__dirname, '../../../');
+  const packageInfo = GetProjectConfig(projectDir);
+  promptAndGenerateChangelog(join(__dirname, '../../CHANGELOG.md'), packageInfo.packageConfig).then(() => {
     console.log(chalk.green('  ✓   Successfully updated the changelog.'));
   });
 }

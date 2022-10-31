@@ -7,6 +7,9 @@ import { SearchResults } from './models';
 import { SearchAdapter } from './search-adapters/adapter';
 import WorkerSearchAdapter from './search-adapters/worker';
 import WindowNoopSearchAdapter from './search-adapters/noop';
+// Required for type augmentation when WorkerSearchAdapter is replaced with WindowNoopSearchAdapter (server SSR build)
+// When this happen, WorkerSearchAdapter is not loaded and so it will not load SearchEngine which triggers the augmentation loading.
+import type { SearchableSource } from '@pebula-internal/webpack-markdown-app-search';
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
@@ -72,7 +75,3 @@ export class SearchService {
 
   dispose(): void { this.adapter.dispose(); }
 }
-
-// Required for type augmentation when WorkerSearchAdapter is replaced with WindowNoopSearchAdapter (server SSR build)
-// When this happen, WorkerSearchAdapter is not loaded and so it will not load SearchEngine which triggers the augmentation loading.
-import type { SearchableSource } from '@pebula-internal/webpack-markdown-app-search';
