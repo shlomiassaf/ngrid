@@ -185,7 +185,7 @@
     "releasePackages": [
       "ngrid",
       "ngrid-material",
-      "ngrid-bootstrap",
+      "ngrid-bootstrap"
     ]
   }
 }
