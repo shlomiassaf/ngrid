@@ -154,7 +154,7 @@
     "remark-html": "^9.0.0",
     "remark-parse": "^6.0.3",
     "remark-slug": "^5.1.1",
-    "simple-git": "^1.124.0",
+    "simple-git": "^3.15.0",
     "sitemap-webpack-plugin": "^0.6.0",
     "ts-jest": "28.0.8",
     "ts-loader": "^9.3.1",
