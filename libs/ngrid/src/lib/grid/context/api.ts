@@ -40,6 +40,7 @@ export class ContextApi<T = any> {
   readonly focusChanged: Observable<PblNgridFocusChangedEvent> = this.focusChanged$
     .pipe(
       buffer<PblNgridFocusChangedEvent>(this.focusChanged$.pipe(debounceTime(0, asapScheduler))),
+      filter(events => events.length > 0),
       map( events => ({ prev: events[0].prev, curr: events[events.length - 1].curr }) )
     );
 
