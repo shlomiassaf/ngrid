@@ -133,7 +133,7 @@ export class PblNgridColumnWidthCalc {
       .subscribe( (args: [ResizeObserverEntry[], ResizeObserver]) => {
         if (skipValue === 0) {
           skipValue = 1;
-          this.extApi.columnStore.visibleColumns.forEach( c => c.sizeInfo.updateSize() );
+          this.extApi.columnStore.visibleColumns.forEach( c => c.sizeInfo?.updateSize() );
         }
         this.onResize(args[0]);
       });
