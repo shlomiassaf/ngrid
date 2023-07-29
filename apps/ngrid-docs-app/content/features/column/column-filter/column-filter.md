@@ -20,7 +20,7 @@ In addition, you can configure a column specific filtering behaviour in the colu
 
 ## Activating a filter
 
-Activating is done through on of the APIs (DataSource or Grid).
+Activation is done through one of the APIs (DataSource or Grid).
 
 There are 2 filter types:
 
