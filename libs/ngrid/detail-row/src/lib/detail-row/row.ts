@@ -69,7 +69,9 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     tradeEvents.cellClick
       .pipe(unrx(this))
       .subscribe( event => {
-        if (event.type === 'data' && event.row === this.context.$implicit) {
+        if (event.type === 'data' && 
+            !this.context.outOfView && 
+            event.row === this.context.$implicit) {
           const { excludeToggleFrom } = this.plugin;
           if (!excludeToggleFrom || !excludeToggleFrom.some( c => event.column.id === c )) {
             this.toggle();
@@ -80,7 +82,9 @@ export class PblNgridDetailRowComponent extends PblNgridRowComponent implements 
     tradeEvents.rowClick
       .pipe(unrx(this))
       .subscribe( event => {
-        if (!event.root && event.type === 'data' && event.row === this.context.$implicit) {
+        if (!event.root && 
+            !this.context.outOfView && 
+            event.type === 'data' && event.row === this.context.$implicit) {
           this.toggle();
         }
       });
